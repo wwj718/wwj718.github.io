@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用ImageMagick在命令行下处理图片 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="一直不会用ps之类的处理软件，花花绿绿遍布按钮的界面令人很是头疼 偶尔又有处理图片的需求，转化一下图片格式，或是调整一下图片尺寸 每当遇到这种需" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/use-imagemagick/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用ImageMagick在命令行下处理图片" />
+<meta property="og:description" content="一直不会用ps之类的处理软件，花花绿绿遍布按钮的界面令人很是头疼 偶尔又有处理图片的需求，转化一下图片格式，或是调整一下图片尺寸 每当遇到这种需" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/use-imagemagick/" />
+<meta property="article:published_time" content="2016-01-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-01-27T00:00:00+00:00" />
+<meta itemprop="name" content="使用ImageMagick在命令行下处理图片">
+<meta itemprop="description" content="一直不会用ps之类的处理软件，花花绿绿遍布按钮的界面令人很是头疼 偶尔又有处理图片的需求，转化一下图片格式，或是调整一下图片尺寸 每当遇到这种需">
+
+
+<meta itemprop="datePublished" content="2016-01-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-01-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1333">
+
+
+
+<meta itemprop="keywords" content="dev-tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用ImageMagick在命令行下处理图片"/>
+<meta name="twitter:description" content="一直不会用ps之类的处理软件，花花绿绿遍布按钮的界面令人很是头疼 偶尔又有处理图片的需求，转化一下图片格式，或是调整一下图片尺寸 每当遇到这种需"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用ImageMagick在命令行下处理图片</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-01-27 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>一直不会用ps之类的处理软件，花花绿绿遍布按钮的界面令人很是头疼</p>
+
+<p>偶尔又有处理图片的需求，转化一下图片格式，或是调整一下图片尺寸</p>
+
+<p>每当遇到这种需求，总是习惯性地打开<a href="http://xiuxiu.web.meitu.com/">美图秀秀网页版</a></p>
+
+<p>对于批量处理图片，最好的方式当然是命令行了，一翻搜索，找到了<a href="http://www.imagemagick.org/script/index.php">ImageMagick</a></p>
+
+<p>#ImageMagick</p>
+
+<blockquote>
+<p>ImageMagick is a software suite to create, edit, compose, or convert bitmap images. It can read and write images in a variety of formats (over 200) including PNG, JPEG, JPEG-2000, GIF, TIFF, DPX, EXR, WebP, Postscript, PDF, and SVG. Use ImageMagick to resize, flip, mirror, rotate, distort, shear and transform images, adjust image colors, apply various special effects, or draw text, lines, polygons, ellipses and Bézier curves.</p>
+</blockquote>
+
+<p>ImageMagick的强大可见一斑</p>
+
+<p>ImageMagick既提供命令行操作，当然你也可以选择你喜欢的语言的客户端，好比python的<a href="https://github.com/dahlia/wand">wand</a></p>
+
+<hr />
+
+<p>###Install
+brew install ImageMagick</p>
+
+<p>###命令概览
+*  convert：转换图像格式和大小，模糊，裁剪，驱除污点，抖动，临近，图片上画图片，加入新图片，生成缩略图等。
+*  identify：描述一个或较多图像文件的格式和特性。
+*  mogrify：Mogrify改写最初的图像文件然后写到一个不同的图像文件。
+*  composite：根据一个图片或多个图片组合生成图片。
+*  montage：创建一些分开的要素图像。在含有要素图像任意的装饰图片，如边框、结构、图片名称等。
+*  display：如果你拥有一个X server的系统，它可以按次序的显示图片
+*  animate：利用X server显示动画图片
+*  import：在X server或任何可见的窗口上输出图片文件。 你可以捕获单一窗口，整个的荧屏或任何荧屏的矩形部分。用于截屏
+*  conjure：解释执行 MSL (Magick Scripting Language) 写的脚本。</p>
+
+<p>###Usage(command-line)
+###identify
+identify var.jpg</p>
+
+<p>ImageMagick有一个小工具identify，它可以用来显示一个图片文件的详悉信息，比如格式、分辨率、大小、色深等等</p>
+
+<p>####begin
+<code>convert image.jpg image.png</code></p>
+
+<p>####文件名通配符
+convert *.jpg images.gif</p>
+
+<p>####Built-in Images and Patterns</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">convert -size 640x480 pattern:checkerboard checkerboard.png 
+convert -size 32x32 pattern:BRICKS BRICKS.png</code></pre></td></tr></table>
+</div>
+</div>
+<p>所有可用的pattern参考<a href="http://www.imagemagick.org/script/formats.php#builtin-patterns">Built-in Patterns</a></p>
+
+<p>####选取图片的某些帧(Selecting Frames)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">convert <span class="s1">&#39;dog.gif[0]&#39;</span> dog.png
+convert <span class="s1">&#39;images.gif[0-3]&#39;</span> images.mng
+convert <span class="s1">&#39;images.gif[3,2,4]&#39;</span> images.mng</code></pre></td></tr></table>
+</div>
+</div>
+<p>####选取一张图片中的部分区域
+<code>convert -size 6000x4000 -depth 8 -extract 600x400+1900+2900 rgb:image image.jpg</code><br />
+我们要处理的图片是一个8位的 RGB 位图, 宽是 6000, 高为 4000, 而我们只需要获取一块中心附近 600×400 的图像信息</p>
+
+<p><code>convert -crop 300x300+0+0 -resize 200x200 -colors 100 +profile &quot;*&quot; 1.jpg 1.png</code><br />
+把当前目录1.jpg图片文件，从左上角(0,0)坐标为起点，裁剪一块300x300像素的部分。</p>
+
+<p>convert -crop  100(长)x200(高)+10(x坐标)+10(y坐标)   22.jpg(源图片路径)   11.jpg(缩放后存放路径)</p>
+
+<p>####缩放内嵌图像(缩略图)
+convert &lsquo;*.jpg&rsquo; -resize 120x120 thumbnail%03d.png</p>
+
+<p>####裁切内嵌图像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">convert <span class="s1">&#39;*.jpg&#39;</span> -crop 120x120+10+5 thumbnail%03d.png <span class="c1">#or</span>
+convert <span class="s1">&#39;*.jpg[120x120+10+5]&#39;</span> thumbnail%03d.png</code></pre></td></tr></table>
+</div>
+</div>
+<p>###实用例子
+#####把图片变为黑白颜色
+convert -monochrome foo.png bar.png</p>
+
+<p>#####添加图片水印处理
+convert src.jpg logo.gif -gravity southeast -geometry +5+10 -composite dest.jpg</p>
+
+<p>把名为logo.gif的水印图标添加在原始图片（src.jpg）右下角，且水印的下边缘距原始图片10像素、右边缘距原始图片5像素</p>
+
+<p>先安装ghostscript：<code>brew install ghostscript</code></p>
+
+<p>convert  -fill red -pointsize 24 -draw &ldquo;text 10,15 &lsquo;lifesinger 2006&rsquo; &rdquo;  1.png  2.png</p>
+
+<p>convert  -fill green -pointsize 40 -draw &ldquo;text 10,50 &lsquo;添加中文&rsquo;&rdquo; 1.jpg 2.jpg  #添加中文</p>
+
+<p>mac下字体：</p>
+
+<ul>
+<li><a href="https://support.apple.com/en-us/HT201722">Mac OS X: Font locations and their purposes
+</a></li>
+<li><a href="http://gothick.org.uk/2008/03/14/using-os-x-fonts-in-imagemagick/">Using OS X fonts in ImageMagick</a></li>
+</ul>
+
+<p>#####旋转
+convert -rotate 30 foo.png bar.png</p>
+
+<p>#####批量转化
+mogrify -format png *.jpg #把目录下面所有的jpg文件转化为png格式</p>
+
+<p>#####按百分比缩略图像
+convert -resize 50%x50% foo.jpg thumbnail.jpg</p>
+
+<p>#参考
+*  <a href="http://www.imagemagick.org/script/command-line-processing.php">Command Line Processing</a>
+*  <a href="http://www.zouyesheng.com/imagemagick.html">ImageMagick命令行使用方法</a>
+*  <a href="http://www.charry.org/docs/linux/ImageMagick/ImageMagick.html">我的ImageMagick使用心得</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-01-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/dogwood-use-ipython-notebook/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">use ipython notebook in edx dogwood</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/command-tricks/">
+            <span class="next-text nav-default">command tricks</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用backup异地备份edX数据 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="Don&amp;rsquo;t put all your eggs in one basket 为了提升逼格，我决定使用英文版的的这句作为开头，尽管我最初想到的是中文版orz 天灾人祸这种事，总归是有的。尽管服务器的灾难性" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/use-backup-for-edx/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用backup异地备份edX数据" />
+<meta property="og:description" content="Don&rsquo;t put all your eggs in one basket 为了提升逼格，我决定使用英文版的的这句作为开头，尽管我最初想到的是中文版orz 天灾人祸这种事，总归是有的。尽管服务器的灾难性" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/use-backup-for-edx/" />
+<meta property="article:published_time" content="2015-06-04T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-06-04T00:00:00+00:00" />
+<meta itemprop="name" content="使用backup异地备份edX数据">
+<meta itemprop="description" content="Don&rsquo;t put all your eggs in one basket 为了提升逼格，我决定使用英文版的的这句作为开头，尽管我最初想到的是中文版orz 天灾人祸这种事，总归是有的。尽管服务器的灾难性">
+
+
+<meta itemprop="datePublished" content="2015-06-04T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-06-04T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2172">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用backup异地备份edX数据"/>
+<meta name="twitter:description" content="Don&rsquo;t put all your eggs in one basket 为了提升逼格，我决定使用英文版的的这句作为开头，尽管我最初想到的是中文版orz 天灾人祸这种事，总归是有的。尽管服务器的灾难性"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用backup异地备份edX数据</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-06-04 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>Don&rsquo;t put all your eggs in one basket</p>
+</blockquote>
+
+<p>为了提升逼格，我决定使用英文版的的这句作为开头，尽管我最初想到的是中文版orz</p>
+
+<p>天灾人祸这种事，总归是有的。尽管服务器的灾难性故障不常发生，概率也比遇到鬼或是遇到爱情来得高些，将风险考虑在内总归是好的，所谓有备无患。如果你已经在自己的架构中将单点故障考虑进去了，就不必往下拉啦，继续舔酸奶盖去吧~如果你的云服务商已经考虑了单点故障，你也没啥好做啦。</p>
+
+<p>如果两者都没有，你应该请我喝杯星冰乐再往下拉。</p>
+
+<p>ps：我最近多是在处理性能优化，数据迁移，安全策略，系统稳定性这类事，简直是伪装成开发的运维orz</p>
+
+<p>#策略
+采用异地备份来应对单点故障导致的数据丢失</p>
+
+<p>#最初的思路
+首先明确我们需要备份哪些数据,关于edX数据，可以参考我此前的<a href="http://wwj718.github.io/edx-data-migrate.html">这篇文章</a></p>
+
+<p>一番深(hu)思(si)熟(luan)虑(xiang)之后，你会发现，我们关心的数据无非是数据库(mongodb/mysql)里存的，以及静态文件(/edx/var/edxapp/staticfiles)</p>
+
+<p>思路很简单，每天定时备份数据库和静态文件，将其同步到远程服务器。只保存最近3，5天的备份文件，逾期的删除</p>
+
+<p>这里需要注意的问题可能有三点：</p>
+
+<ul>
+<li>不要影响到用户使用，备份是消耗服务器资源的，会造成服务器压力，写个定时任务，让其在凌晨做</li>
+<li>采用增量同步的方式节省带宽</li>
+<li>任务完成后，给自己发个邮件，确定成功执行了</li>
+</ul>
+
+<p>那么写个shell脚本基本就完事啦，主要可能涉及的工具：</p>
+
+<ul>
+<li>mongodump</li>
+<li>mysqldump</li>
+<li>tar<br /></li>
+<li>scp/rsync</li>
+<li>crontab</li>
+</ul>
+
+<p>#backup闪亮登场
+就在我shell脚本快写完的时候，在github上发现了这个东西：<a href="https://github.com/backup/backup">backup</a></p>
+
+<p>一言话概括就是</p>
+
+<blockquote>
+<p>Easy full stack backup operations on UNIX-like systems</p>
+</blockquote>
+
+<p>稍微扫一眼<a href="http://backup.github.io/backup/v4/">Overview</a>,分分钟爱不释手啊。</p>
+
+<p>从文档中不难发现，backup本质上是对以上我们提到的工具做了封装。</p>
+
+<p>能不写shell，我是尽量不写shell的。</p>
+
+<p>先读下<a href="http://backup.github.io/backup/v4/getting-started/">文档</a>吧。</p>
+
+<p>##install backup
+backup是ruby写的，使用gem安装。不得不说ruby的DSL能力真强啊</p>
+
+<p><code>sudo gem install backup</code></p>
+
+<p>哦，顺便说下，我在ruby1.8.7和ruby1.9.3下都没成功，之后在ubuntu12.04上手动编译了ruby2.0.0才安装好backup。也是蛮诡异的，可能是我机器的问题，文档里说ruby1.8.7和ruby1.9.3应该都是没有问题的</p>
+
+<p>安装新版本的ruby建议用rvm，可以参考<a href="http://blog.just4fun.site/language-version.html">Ruby/Nodejs解释器版本依赖笔记</a></p>
+
+<p>##backup demo
+从一个简单的案例开始。</p>
+
+<p>任务描述：备份我的home目录下的所有文件，同步到远程服务器的<code>~/backup_my_home</code>目录，只保留最近的5个备份</p>
+
+<p>在shell里执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+backup generate:model --trigger backup_my_home \
+  --archives --storages=&#39;scp&#39;  --compressor=&#39;gzip&#39;</pre></td></tr></table>
+</div>
+</div>
+<p>会生成:<code>Generated model file: '/home/USERNAME/Backup/models/backup_my_home.rb'</code></p>
+
+<p>编辑以上文件就行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="c1"># encoding: utf-8</span>
+<span class="no">Model</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:backup_my_home</span><span class="p">,</span> <span class="s1">&#39;Description for backup_my_home&#39;</span><span class="p">)</span> <span class="k">do</span>
+
+  <span class="n">archive</span> <span class="ss">:my_archive</span> <span class="k">do</span> <span class="o">|</span><span class="n">archive</span><span class="o">|</span>
+    <span class="c1"># Run the `tar` command using `sudo`</span>
+    <span class="c1"># archive.use_sudo</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span> <span class="s2">&#34;/home/USERNAME&#34;</span>
+  <span class="k">end</span>
+  
+  <span class="c1"># SCP (Secure Copy) [Storage]</span>
+  <span class="c1">#</span>
+  <span class="n">store_with</span> <span class="no">SCP</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="o">|</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">username</span>   <span class="o">=</span> <span class="s2">&#34;my_username&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">password</span>   <span class="o">=</span> <span class="s2">&#34;my_password&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">ip</span>         <span class="o">=</span> <span class="s2">&#34;123.45.678.90&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">port</span>       <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">path</span>       <span class="o">=</span> <span class="s2">&#34;~/backup_my_home/&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">keep</span>       <span class="o">=</span> <span class="mi">5</span>
+  <span class="k">end</span>
+
+  <span class="c1"># Gzip [Compressor]</span>
+  <span class="n">compress_with</span> <span class="no">Gzip</span>
+
+<span class="k">end</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>几乎无需解释对吧:)</p>
+
+<p>开始备份:<code>backup perform -t backup_my_home</code></p>
+
+<p>#开始备份edX</p>
+
+<p>##静态文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+backup generate:model --trigger edx_staticfile_backup \
+  --archives --storages=&#39;scp&#39;  --compressor=&#39;gzip&#39;</pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="c1"># encoding: utf-8</span>
+<span class="no">Model</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:edx_staticfile_backup</span><span class="p">,</span> <span class="s1">&#39;Description for edx_staticfile_backup&#39;</span><span class="p">)</span> <span class="k">do</span>
+
+
+  <span class="c1">#   archive.root &#39;/path/to/archive/root&#39;</span>
+  <span class="c1">#</span>
+  <span class="n">archive</span> <span class="ss">:my_archive</span> <span class="k">do</span> <span class="o">|</span><span class="n">archive</span><span class="o">|</span>
+    <span class="c1"># Run the `tar` command using `sudo`</span>
+    <span class="c1"># archive.use_sudo</span>
+    <span class="c1">#archive.add &#34;/path/to/a/file.rb&#34;</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span> <span class="s2">&#34;/edx/var/edxapp/staticfiles&#34;</span>
+    <span class="c1">#archive.exclude &#34;/path/to/a/excluded_file.rb&#34;</span>
+    <span class="c1">#archive.exclude &#34;/path/to/a/excluded_folder&#34;</span>
+  <span class="k">end</span>
+
+  
+  <span class="c1">##</span>
+  <span class="c1"># SCP (Secure Copy) [Storage]</span>
+  <span class="c1">#你需要先去目标服务器建立~/edx_backups/staticfile目录</span>
+  <span class="n">store_with</span> <span class="no">SCP</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="o">|</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">username</span>   <span class="o">=</span> <span class="s2">&#34;my_username&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">password</span>   <span class="o">=</span> <span class="s2">&#34;my_password&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">ip</span>         <span class="o">=</span> <span class="s2">&#34;123.45.678.90&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">port</span>       <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">path</span>       <span class="o">=</span> <span class="s2">&#34;~/edx_backups/staticfile&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">keep</span>       <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="c1"># Additional options for the SSH connection.</span>
+    <span class="c1"># server.ssh_options = {}</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># Gzip [Compressor]</span>
+  <span class="c1">#</span>
+  <span class="n">compress_with</span> <span class="no">Gzip</span> 
+
+<span class="k">end</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>##备份mongo</p>
+
+<p>##databases</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+&gt;mongo
+&gt;show dbs
+admin                            
+cs_comments_service_development  
+edxapp                           
+local                            </pre></td></tr></table>
+</div>
+</div>
+<p>##为mongo添加用户</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+&gt;mongo
+&gt;use edxapp
+&gt;db.addUser(“wwj”, “xxx”)</pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+backup generate:model --trigger edx_mongodb_backup \
+  --databases=&#34;mongodb&#34; --storages=&#39;scp&#39;  --compressor=&#39;gzip&#39; --notifiers=&#39;mail&#39;</pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="c1"># encoding: utf-8</span>
+<span class="no">Model</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:edx_mongodb_backup</span><span class="p">,</span> <span class="s1">&#39;Description for edx_mongodb_backup&#39;</span><span class="p">)</span> <span class="k">do</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># MongoDB [Database]</span>
+  <span class="c1">#</span>
+  <span class="n">database</span> <span class="no">MongoDB</span> <span class="k">do</span> <span class="o">|</span><span class="n">db</span><span class="o">|</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">name</span>              <span class="o">=</span> <span class="s2">&#34;edxapp&#34;</span>
+    <span class="c1">#db.name						= :all</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">username</span>           <span class="o">=</span> <span class="s2">&#34;wwj&#34;</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">password</span>           <span class="o">=</span> <span class="s2">&#34;xxx&#34;</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">host</span>               <span class="o">=</span> <span class="s2">&#34;localhost&#34;</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">port</span>               <span class="o">=</span> <span class="mi">27017</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">ipv6</span>               <span class="o">=</span> <span class="kp">false</span>
+    <span class="c1">#db.only_collections   = [&#34;only&#34;, &#34;these&#34;, &#34;collections&#34;]</span>
+    <span class="c1">#db.additional_options = []</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">lock</span>               <span class="o">=</span> <span class="kp">false</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">oplog</span>              <span class="o">=</span> <span class="kp">false</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># SCP (Secure Copy) [Storage]</span>
+  <span class="c1">#</span>
+  <span class="n">store_with</span> <span class="no">SCP</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="o">|</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">username</span>   <span class="o">=</span> <span class="s2">&#34;my_username&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">password</span>   <span class="o">=</span> <span class="s2">&#34;my_password&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">ip</span>         <span class="o">=</span> <span class="s2">&#34;123.45.678.90&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">port</span>       <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">path</span>       <span class="o">=</span> <span class="s2">&#34;~/edx_backups/mongo&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">keep</span>       <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="c1"># Additional options for the SSH connection.</span>
+    <span class="c1"># server.ssh_options = {}</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># Gzip [Compressor]</span>
+  <span class="c1">#</span>
+  <span class="n">compress_with</span> <span class="no">Gzip</span>
+
+  <span class="n">notify_by</span> <span class="no">Mail</span> <span class="k">do</span> <span class="o">|</span><span class="n">mail</span><span class="o">|</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">on_success</span>           <span class="o">=</span> <span class="kp">true</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">on_warning</span>           <span class="o">=</span> <span class="kp">true</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">on_failure</span>           <span class="o">=</span> <span class="kp">true</span>
+
+    <span class="n">mail</span><span class="o">.</span><span class="n">from</span>                 <span class="o">=</span> <span class="s2">&#34;sender@email.com&#34;</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">to</span>                   <span class="o">=</span> <span class="s2">&#34;receiver@email.com&#34;</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">address</span>              <span class="o">=</span> <span class="s2">&#34;smtp.gmail.com&#34;</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">port</span>                 <span class="o">=</span> <span class="mi">587</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">domain</span>               <span class="o">=</span> <span class="s2">&#34;your.host.name&#34;</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">user_name</span>            <span class="o">=</span> <span class="s2">&#34;sender@email.com&#34;</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">password</span>             <span class="o">=</span> <span class="s2">&#34;my_password&#34;</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">authentication</span>       <span class="o">=</span> <span class="s2">&#34;plain&#34;</span>
+    <span class="n">mail</span><span class="o">.</span><span class="n">encryption</span>           <span class="o">=</span> <span class="ss">:starttls</span>
+  <span class="k">end</span>
+
+<span class="k">end</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>##备份mysql</p>
+
+<p>###databases</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">text
+&gt;mysql -u root
+&gt;show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| edxapp             |
+| mysql              |
+| ora                |
+| performance_schema |
+| test               |
+| xqueue             |
++--------------------+</pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+backup generate:model --trigger edx_mysql_backup \
+  --databases=&#34;mysql&#34; --storages=&#39;scp&#39;  --compressor=&#39;gzip&#39;</pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="c1"># encoding: utf-8</span>
+
+<span class="no">Model</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:edx_mysql_backup</span><span class="p">,</span> <span class="s1">&#39;Description for edx_mysql_backup&#39;</span><span class="p">)</span> <span class="k">do</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># MySQL [Database]</span>
+  <span class="c1">#</span>
+  <span class="n">database</span> <span class="no">MySQL</span> <span class="k">do</span> <span class="o">|</span><span class="n">db</span><span class="o">|</span>
+    <span class="c1"># To dump all databases, set `db.name = :all` (or leave blank)</span>
+    <span class="c1">#db.name              = &#34;my_database_name&#34;</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">name</span>               <span class="o">=</span> <span class="s2">&#34;edxapp&#34;</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">username</span>           <span class="o">=</span> <span class="s2">&#34;root&#34;</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">password</span>           <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">host</span>               <span class="o">=</span> <span class="s2">&#34;localhost&#34;</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">port</span>               <span class="o">=</span> <span class="mi">3306</span>
+    <span class="c1">#mysql.sock  位置有变</span>
+    <span class="c1">#db.socket             = &#34;/tmp/mysql.sock&#34;</span>
+    <span class="c1"># Note: when using `skip_tables` with the `db.name = :all` option,</span>
+    <span class="c1"># table names should be prefixed with a database name.</span>
+    <span class="c1"># e.g. [&#34;db_name.table_to_skip&#34;, ...]</span>
+    <span class="c1">#db.skip_tables        = [&#34;skip&#34;, &#34;these&#34;, &#34;tables&#34;]</span>
+    <span class="c1">#db.only_tables        = [&#34;only&#34;, &#34;these&#34;, &#34;tables&#34;]</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">additional_options</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&#34;--quick&#34;</span><span class="p">,</span> <span class="s2">&#34;--single-transaction&#34;</span><span class="o">]</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># SCP (Secure Copy) [Storage]</span>
+  <span class="c1">#</span>
+  <span class="n">store_with</span> <span class="no">SCP</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="o">|</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">username</span>   <span class="o">=</span> <span class="s2">&#34;my_username&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">password</span>   <span class="o">=</span> <span class="s2">&#34;my_password&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">ip</span>         <span class="o">=</span> <span class="s2">&#34;123.45.678.90&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">port</span>       <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">path</span>       <span class="o">=</span> <span class="s2">&#34;~/edx_backups/mysql&#34;</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">keep</span>       <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="c1"># Additional options for the SSH connection.</span>
+    <span class="c1"># server.ssh_options = {}</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># Gzip [Compressor]</span>
+  <span class="c1">#</span>
+  <span class="n">compress_with</span> <span class="no">Gzip</span> 
+<span class="k">end</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>##开始备份</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+backup perform -t edx_staticfile_backup
+backup perform -t edx_mongodb_backup
+backup perform -t edx_mysql_backup</pre></td></tr></table>
+</div>
+</div>
+<p>##定时任务
+每天凌晨3:00</p>
+
+<p><code>sudo crontab -e</code>写入</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+00 03 * * * /usr/local/bin/backup perform -t edx_staticfile_backup
+00 03 * * * /usr/local/bin/backup perform -t edx_mongodb_backup
+00 03 * * * /usr/local/bin/backup perform -t edx_mysql_backup</pre></td></tr></table>
+</div>
+</div>
+<p>#后续
+之后我们还是采用<a href="http://backup.github.io/backup/v4/storage-rsync/">rsync</a>的做法吧，不然数据大到一定程度，太浪费带宽了</p>
+
+<p>只要更改store_with就行</p>
+
+<p>注意：数据服务器到备份服务器应当配置好ssh免登陆</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ruby" data-lang="ruby">  <span class="n">compress_with</span> <span class="no">Gzip</span> <span class="k">do</span> <span class="o">|</span><span class="n">gzip</span><span class="o">|</span>
+    <span class="n">gzip</span><span class="o">.</span><span class="n">rsyncable</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="k">end</span>
+
+  <span class="n">store_with</span> <span class="no">RSync</span> <span class="k">do</span> <span class="o">|</span><span class="n">storage</span><span class="o">|</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span>
+    <span class="n">storage</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="ss">:ssh</span>
+    <span class="n">storage</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&#34;123.45.67.89&#34;</span>
+    <span class="n">storage</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">storage</span><span class="o">.</span><span class="n">ssh_user</span> <span class="o">=</span> <span class="s2">&#34;wwj&#34;</span>
+    <span class="c1">#免密码ssh</span>
+    <span class="c1">#每周为一轮，使用的是同名覆盖</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span> <span class="s1">&#39;%A&#39;</span>
+    <span class="n">storage</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&#34;~/edx_backups/staticfile/</span><span class="si">#{</span> <span class="n">path</span> <span class="si">}</span><span class="s2">&#34;</span>
+
+  <span class="k">end</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>#注意
+~/Backup/log/backup.log 中的时间是ruby的时间，与本地差（晚）8个小时。时区的问题</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-06-04
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/wechat_edx2/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">edX微信公众号</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/about-incremental-development/">
+            <span class="next-text nav-default">关于增量式开发</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

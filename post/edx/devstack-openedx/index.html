@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用devstack(docker)安装和调试open edx - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="在本文里，我们将根据官方的文档，演示如何使用devstack(docker)安装和调试open edx 环境 阿里云 香港节点 1 2 3 4 5 6 wwj@iZj6camqna1xyh802bdggtZ:~/devstack$ lsb_release -a LSB Version: core-9.20160110ubuntu0.2-amd64:core-9.20160110ubuntu0.2-noarch:security-9.20160110ubuntu0.2-amd64:security-9.20160110ubuntu0.2-noarch Distributor" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/devstack-openedx/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用devstack(docker)安装和调试open edx" />
+<meta property="og:description" content="在本文里，我们将根据官方的文档，演示如何使用devstack(docker)安装和调试open edx 环境 阿里云 香港节点 1 2 3 4 5 6 wwj@iZj6camqna1xyh802bdggtZ:~/devstack$ lsb_release -a LSB Version: core-9.20160110ubuntu0.2-amd64:core-9.20160110ubuntu0.2-noarch:security-9.20160110ubuntu0.2-amd64:security-9.20160110ubuntu0.2-noarch Distributor" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/devstack-openedx/" />
+<meta property="article:published_time" content="2018-08-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-08-30T00:00:00+00:00" />
+<meta itemprop="name" content="使用devstack(docker)安装和调试open edx">
+<meta itemprop="description" content="在本文里，我们将根据官方的文档，演示如何使用devstack(docker)安装和调试open edx 环境 阿里云 香港节点 1 2 3 4 5 6 wwj@iZj6camqna1xyh802bdggtZ:~/devstack$ lsb_release -a LSB Version: core-9.20160110ubuntu0.2-amd64:core-9.20160110ubuntu0.2-noarch:security-9.20160110ubuntu0.2-amd64:security-9.20160110ubuntu0.2-noarch Distributor">
+
+
+<meta itemprop="datePublished" content="2018-08-30T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-08-30T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1737">
+
+
+
+<meta itemprop="keywords" content="edx ," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用devstack(docker)安装和调试open edx"/>
+<meta name="twitter:description" content="在本文里，我们将根据官方的文档，演示如何使用devstack(docker)安装和调试open edx 环境 阿里云 香港节点 1 2 3 4 5 6 wwj@iZj6camqna1xyh802bdggtZ:~/devstack$ lsb_release -a LSB Version: core-9.20160110ubuntu0.2-amd64:core-9.20160110ubuntu0.2-noarch:security-9.20160110ubuntu0.2-amd64:security-9.20160110ubuntu0.2-noarch Distributor"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用devstack(docker)安装和调试open edx</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-08-30 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#环境">环境</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#账号">账号</a></li>
+<li><a href="#开发">开发</a></li>
+<li><a href="#开发与调试">开发与调试</a>
+<ul>
+<li>
+<ul>
+<li><a href="#翻译">翻译</a>
+<ul>
+<li><a href="#进入工作环境">进入工作环境</a></li>
+<li><a href="#编辑-transifexrc">编辑<code>~/.transifexrc</code></a></li>
+<li><a href="#从云中拉翻译文件">从云中拉翻译文件</a></li>
+</ul></li>
+<li><a href="#总结">总结</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>在本文里，我们将根据官方的文档，演示如何使用<a href="https://github.com/edx/devstack">devstack</a>(docker)安装和调试open edx</p>
+
+<h1 id="环境">环境</h1>
+
+<p>阿里云 香港节点</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wwj@iZj6camqna1xyh802bdggtZ:~/devstack$ lsb_release -a
+LSB Version:	core-9.20160110ubuntu0.2-amd64:core-9.20160110ubuntu0.2-noarch:security-9.20160110ubuntu0.2-amd64:security-9.20160110ubuntu0.2-noarch
+Distributor ID:	Ubuntu
+Description:	Ubuntu 16.04.2 LTS
+Release:	16.04
+Codename:	xenial</pre></td></tr></table>
+</div>
+</div>
+<h1 id="getting-started">Getting Started</h1>
+
+<p>按照<a href="https://github.com/edx/devstack#getting-started">官方文档</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">git clone https://github.com/edx/devstack
+<span class="nb">cd</span> devstack
+make requirements 
+<span class="c1"># 确保docker-compose安装好了 可能需要sudo权限</span>
+make dev.clone
+make dev.provision
+make dev.up</code></pre></td></tr></table>
+</div>
+</div>
+<p>正常情况下，应该不会有问题，一切顺利之后，就会看到docker容器都跑起来了:</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/docker-devstack_80a71e49.png" alt="" /></p>
+
+<p>由于开发模式下，默认就接受公网请求(<code>0.0.0.0</code>),所以我们可以直接访问edx了，当然前提是你已经将对应的端口对外打开了，如果你不熟悉阿里云的安全策略，参考<a href="https://help.aliyun.com/document_detail/25471.html">添加安全组规则</a></p>
+
+<p><img width=600 src="http://wwj-fig-bed.just4fun.site/edx-docker_3c54f2c4.png" /></p>
+
+<h1 id="账号">账号</h1>
+
+<p>默认账号与之前无异</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">Email: edx@example.com
+Username: edx
+Password: edx</pre></td></tr></table>
+</div>
+</div>
+<p>其他的测试账号为(密码都是<code>edx</code>)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">Username	Email
+audit	    audit@example.com
+honor	    honor@example.com
+staff	    staff@example.com
+verified	verified@example.com</pre></td></tr></table>
+</div>
+</div>
+<h1 id="开发">开发</h1>
+
+<p>查看一些help:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wwj@iZj6camqna1xyh802bdggtZ:~$ make help
+  analytics-pipeline-devstack-test Run analytics pipeline tests in travis build
+  analytics-pipeline-shell  Run a shell on the analytics pipeline container
+  backup                    Write all data volumes to the host.
+  build-courses             NOTE: marketing course creation is not available for those outside edX
+  check-memory              Check if enough memory has been allocated to Docker
+  clean-marketing-sync      Remove the docker-sync containers for all services (including the marketing site)
+  create-test-course        NOTE: marketing course creation is not available for those outside edX
+  destroy                   Remove all devstack-related containers, networks, and volumes
+  dev.checkout              Check out &#34;openedx-release/$OPENEDX_RELEASE&#34; in each repo if set, &#34;master&#34; otherwise
+  dev.clone                 Clone service repos to the parent directory
+  dev.provision.analytics_pipeline Provision analyticstack dev environment with all services stopped
+  dev.provision.run         Provision all services with local mounted directories
+  dev.provision             Provision dev environment with all services stopped                                                                                                                     [21/104]
+  dev.repo.reset            Attempts to reset the local repo checkouts to the master working state
+  dev.reset                 Attempts to reset the local devstack to a the master working state
+  dev.status                Prints the status of all git repositories
+  dev.sync.daemon.start     Start the docker-sycn daemon
+  dev.sync.provision        Provision with docker-sync enabled
+  dev.sync.requirements     Install requirements
+  dev.sync.up               Bring up all services with docker-sync enabled
+  dev.up.all                Bring up all services with host volumes, including watchers
+  dev.up.analytics_pipeline Bring up analytics pipeline services
+  dev.up.watchers           Bring up asset watcher containers
+  dev.up.xqueue             Bring up xqueue, assumes you already have lms running
+  dev.up                    Bring up all services with host volumes
+  devpi-password            Get the root devpi password for the devpi container
+  discovery-shell           Run a shell on the discovery container
+  down-marketing            Bring down all services (including the marketing site) with host volumes
+  down                      Remove all service containers and networks
+  ecommerce-shell           Run a shell on the ecommerce container
+  healthchecks              Run a curl against all services&#39; healthcheck endpoints to make sure they are up. This will eventually be parameterized
+  help-marketing            Display this help message
+  help                      Display this help message
+  lms-restart               Kill the LMS Django development server. The watcher process will restart it.
+  lms-shell                 Run a shell on the LMS container
+  lms-static                Rebuild static assets for the LMS container
+  lms-update-db             Run migrations LMS container
+  lms-watcher-shell         Run a shell on the LMS watcher container
+  logs                      View logs from containers running in detached mode
+  marketing-shell           Run a shell on the marketing site container
+  mongo-shell               Run a shell on the mongo container
+  mysql-shell-edxapp        Run a mysql shell on the edxapp database
+  mysql-shell               Run a shell on the mysql container
+  provision                 This command will be deprecated in a future release, use dev.provision
+  pull.analytics_pipeline   Update analytics pipeline docker images
+  pull.xqueue               Update XQueue Docker images
+  pull                      Update Docker images
+  requirements              Install requirements
+  restore                   Restore all data volumes from the host. WARNING: THIS WILL OVERWRITE ALL EXISTING DATA!
+  static                    Rebuild static assets for all service containers
+  stats                     Get per-container CPU and memory utilization data
+  stop-marketing            Stop all services (including the marketing site) with host volumes
+  stop.all                  Stop all containers, including asset watchers
+  stop.analytics_pipeline   Stop analytics pipeline services
+  stop.watchers             Stop asset watchers
+  stop                      Stop all services
+  studio-restart            Kill the LMS Django development server. The watcher process will restart it.
+  studio-shell              Run a shell on the Studio container
+  studio-static             Rebuild static assets for the Studio container
+  studio-update-db          Run migrations for the Studio container
+  studio-watcher-shell      Run a shell on the studio watcher container
+  up-marketing-detached     Bring up all services (including the marketing site) with host volumes (in detached mode)
+  up-marketing-sync         Bring up all services (including the marketing site) with docker-sync
+  up-marketing              Bring up all services (including the marketing site) with host volumes
+  update-db                 Run the migrations for all services
+  upgrade                   Upgrade requirements with pip-tools
+  validate-lms-volume       Validate that changes to the local workspace are reflected in the LMS container
+  validate                  Validate the devstack configuration
+  vnc-passwords             Get the VNC passwords for the Chrome and Firefox Selenium containers
+  xqueue-logs               View logs from containers running in detached mode
+  xqueue-restart            Kill the XQueue development server. The watcher process will restart it.
+  xqueue-shell              Run a shell on the XQueue container
+  xqueue_consumer-logs      View logs from containers running in detached mode
+  xqueue_consumer-restart   Kill the XQueue development server. The watcher process will restart it.
+  xqueue_consumer-shell     Run a shell on the XQueue consumer container</pre></td></tr></table>
+</div>
+</div>
+<h1 id="开发与调试">开发与调试</h1>
+
+<p>在docker开发和调试open edx，和在vargant下区别不大。</p>
+
+<p>edx-platform默认被clone在用户home目录下</p>
+
+<p>我们以一个最简单的例子开始</p>
+
+<p>url为<code>/hello</code>的链接目前不存在。</p>
+
+<p><img width=500 src="http://wwj-fig-bed.just4fun.site/edx-docker_412923dc.png" /></p>
+
+<p>我们来试着添加这个链接，编辑<code>vim ~/edx-platform/lms/urls.py</code>，我们让<code>/hello</code>指向默认的root页面</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">url(r&#39;^hello$&#39;, branding_views.index, name=&#39;root&#39;),</pre></td></tr></table>
+</div>
+</div>
+<p>在devstack目录下重启lms:<code>make lms-restart</code></p>
+
+<p><img width=500 src="http://wwj-fig-bed.just4fun.site/edx-docker_6afdb100.png" /></p>
+
+<p>走通了最小例子之后，其他的开发过程类似</p>
+
+<h3 id="翻译">翻译</h3>
+
+<p>前几天群里在讨论，基于docker的open edx，如何翻译。</p>
+
+<p>我目前基于docker跑起来的open-edx使用的是官方的<a href="https://github.com/edx/devstack">devstack</a></p>
+
+<p>如果你采用<a href="https://github.com/regisb/openedx-docker">openedx-docker</a>,想来流程也相似</p>
+
+<p>我觉得这是个很好的例子，演示以前的开发技能如何迁移到docker环境下。其实变化非常小</p>
+
+<p>在以前的开发模式下，翻译的流程见官方文档:<a href="https://github.com/edx/edx-platform/wiki/Internationalization-and-localization">Internationalization and localization</a></p>
+
+<p>在docker下操作为:</p>
+
+<h4 id="进入工作环境">进入工作环境</h4>
+
+<p>在devstack目录里运行<code>make lms-shell</code>进入工作环境（lms容器中）</p>
+
+<h4 id="编辑-transifexrc">编辑<code>~/.transifexrc</code></h4>
+
+<p>之后的步骤几乎和之前完全相同</p>
+
+<p>进入open edx的python环境和工作目录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">source /edx/app/edxapp/edxapp_env
+cd /edx/app/edxapp/edx-platform</pre></td></tr></table>
+</div>
+</div>
+<p>开始编辑:<code>vim ~/.transifexrc</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[https://www.transifex.com]
+api_hostname = https://api.transifex.com
+hostname = https://www.transifex.com
+password = 1/5f2bc554e8a1ae0c4cc9b2ee0541dafbe65330db
+username = api</pre></td></tr></table>
+</div>
+</div>
+<p>我将我的token直接分享过来，大家复制张贴即可，免去大家注册账号、加入open edx小组、获取token之类的操作</p>
+
+<h4 id="从云中拉翻译文件">从云中拉翻译文件</h4>
+
+<p><code>paver i18n_robot_pull</code></p>
+
+<p>更多翻译相关的操作参考<a href="https://github.com/edx/edx-platform/wiki/Internationalization-and-localization">Internationalization and localization</a></p>
+
+<h3 id="总结">总结</h3>
+
+<p>翻译的过程展示了，基于docker的环境和之前几乎没有差异！</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-08-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx </a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/localhost-https-ssl/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">本地https/wss服务与SSL安全证书</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-extension-token-bucket/">
+            <span class="next-text nav-default">Scratch3.0自定义插件注意事项之令牌桶算法</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

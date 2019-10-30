@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>基于树莓派和Tensowflow的物体识别-brain - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="近来这篇文章很火：How to build a robot that “sees” with $100 and TensorFlow （作者是Lukas，CrowdFlower创始人） ，中文译本为《如何用100美金和Te" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/iot/raspberrypi-tensowflow-robot/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="基于树莓派和Tensowflow的物体识别-brain" />
+<meta property="og:description" content="近来这篇文章很火：How to build a robot that “sees” with $100 and TensorFlow （作者是Lukas，CrowdFlower创始人） ，中文译本为《如何用100美金和Te" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/iot/raspberrypi-tensowflow-robot/" />
+<meta property="article:published_time" content="2016-10-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-10-23T00:00:00+00:00" />
+<meta itemprop="name" content="基于树莓派和Tensowflow的物体识别-brain">
+<meta itemprop="description" content="近来这篇文章很火：How to build a robot that “sees” with $100 and TensorFlow （作者是Lukas，CrowdFlower创始人） ，中文译本为《如何用100美金和Te">
+
+
+<meta itemprop="datePublished" content="2016-10-23T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-10-23T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2271">
+
+
+
+<meta itemprop="keywords" content="tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="基于树莓派和Tensowflow的物体识别-brain"/>
+<meta name="twitter:description" content="近来这篇文章很火：How to build a robot that “sees” with $100 and TensorFlow （作者是Lukas，CrowdFlower创始人） ，中文译本为《如何用100美金和Te"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">基于树莓派和Tensowflow的物体识别-brain</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-10-23 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#任务描述">任务描述</a></li>
+<li><a href="#工具介绍">工具介绍</a>
+<ul>
+<li>
+<ul>
+<li><a href="#树莓派">树莓派</a></li>
+<li><a href="#tensorflow">TensorFlow</a>
+<ul>
+<li><a href="#imagenet数据集">ImageNet数据集</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#准备工作">准备工作</a></li>
+<li><a href="#安装tensowflow">安装Tensowflow</a>
+<ul>
+<li>
+<ul>
+<li><a href="#我的安装过程">我的安装过程</a></li>
+<li><a href="#测试">测试</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#优化">优化</a></li>
+<li><a href="#todo">todo</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>近来这篇文章很火：<a href="https://www.oreilly.com/learning/how-to-build-a-robot-that-sees-with-100-and-tensorflow">How to build a robot that “sees” with $100 and TensorFlow</a> （作者是Lukas，CrowdFlower创始人）
+，中文译本为《如何用100美金和Tensowflow来造一个能&rdquo;看&rdquo;东西的机器人》，公众号们纷纷转载</p>
+
+<p>文章读来饶有趣味，里边涉及的技术大多接触过，都不难，遂决定动手实现它</p>
+
+<p>要实现整个项目，我手头还缺小车底盘，我们先来实现这个项目的核心部分：用树莓派和Tensowflow的识别现实世界的物体。日后有空再加上小车</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/orange94aa0771.png" alt="" /></p>
+
+<p>随手把桌子上同事给的橘子拍下来，之后我们试着让树莓派认出它</p>
+
+<h1 id="任务描述">任务描述</h1>
+
+<p><a href="https://www.oreilly.com/learning/how-to-build-a-robot-that-sees-with-100-and-tensorflow">How to build a robot that “sees” with $100 and TensorFlow</a> 已经把要做的是事说清楚了</p>
+
+<p>物体识别是近来机器学习领域的热点之一。对于识别人脸或是区分猫狗这件事上，计算机已经胸有成竹，而在更大的图片集中识别一个指定的物体还是人工智能领域的“圣杯”，不过近年也有很大进展</p>
+
+<p>我们将造一个能自己识别物体的机器人（不需要云服务）</p>
+
+<h1 id="工具介绍">工具介绍</h1>
+
+<h3 id="树莓派">树莓派</h3>
+
+<p>树莓派（Raspberry Pi）是一款基于Linux的单板机电脑，它只有巴掌大小，却有惊人的计算能力，你可以把它当做一台普通电脑。</p>
+
+<p>树莓派的使命是制作一套启发孩子的电脑，降低孩子们试错的成本</p>
+
+<p>树莓派最新的版本是树莓派3,较前一代树莓派2，树莓派3的处理器升级为了64位的博通BCM2837，并首次加入了Wi-Fi无线网络及蓝牙功能。加量不加价</p>
+
+<h3 id="tensorflow">TensorFlow</h3>
+
+<p>TensorFlow是一个由&rdquo;Google大脑&rdquo;团队的研究人员开发的机器学习库，Google遵循Apache License 2.0将其开源。该系统可以被用于语音识别、图片识别等多个领域</p>
+
+<p>在这个项目中我们主要用到一个叫做<a href="https://github.com/tensorflow/models/tree/master/inception">inception</a>的模型（基于ImageNet数据集）。它可以完成物体识别，我们直接使用预训练好的模型。训练模型可是个费时费力的工作</p>
+
+<p>你把智能当黑盒使用的时候，并不需要有那么多偷懒的负罪感啦（哈哈  我还是有一点）</p>
+
+<p>电气时代来临的时候，变革社会的除了那些发电的人，那些懂得使用电力去改造传统行业，创造新的行业的人，也许对社会的变革更为深刻。尽管他们可能连卡诺循环都不知道，甚至不知如何将水蒸汽中的动能转换为功，进而驱动电机发电</p>
+
+<h4 id="imagenet数据集">ImageNet数据集</h4>
+
+<p>这个数据集包含约120万张训练图像、5万张验证图像和10万张测试图像，分为1000个不同的类别，用于机器学习中训练图像识别系统</p>
+
+<h1 id="准备工作">准备工作</h1>
+
+<p>我们先准备好树莓派,我用的是安装了<a href="https://downloads.raspberrypi.org/raspbian/images/raspbian-2016-05-31/">raspbian-2016-05-31</a>版本的树莓派3代（使用其他版本应该也没问题），关于树莓派的相关配置可以参考我之前的文章：<a href="http://blog.just4fun.site/raspberrypi-install-and-config.html">树莓派折腾笔记之系统安装与配置</a></p>
+
+<h1 id="安装tensowflow">安装Tensowflow</h1>
+
+<p><a href="https://www.oreilly.com/learning/how-to-build-a-robot-that-sees-with-100-and-tensorflow">How to build a robot that “sees” with $100 and TensorFlow</a> 这篇文章里，作者采用的是TensorFlow提供的makefile命令，在树莓派中本地编译，这一步骤花费了作者几个小时。不过好处是一步到位。安装完后可以直接运行：<code>tensorflow/contrib/pi_examples/label_image/gen/bin/label_image</code>来识别物体</p>
+
+<p>我不打算编译安装，除了过程费事，还需要在安装的几个小时里提心吊胆，深怕某个依赖问题导致前功尽弃，重新编译。 我在手动编译opencv的时候就曾备受折磨</p>
+
+<h3 id="我的安装过程">我的安装过程</h3>
+
+<p>我们先安装已经适合树莓派的Tensowflow，这种工作，肯定有人做过，github一搜果不其然：<a href="https://github.com/samjabrahams/tensorflow-on-raspberry-pi">tensorflow-on-raspberry-pi</a>。我们开始安装：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wget https://github.com/samjabrahams/tensorflow-on-raspberry-pi/raw/master/bin/tensorflow-0.9.0-cp27-none-linux_armv7l.whl
+sudo pip install tensorflow-0.9.0-cp27-none-linux_armv7l.whl  #这一步会安装其他依赖，如果太慢，可以用-i参数，使用豆瓣源</pre></td></tr></table>
+</div>
+</div>
+<p>安装过程很快，也就喝杯茶时间，过程十分流畅</p>
+
+<p>Tensowflow安装完成，我们开始加载模型,安装过程参考这里:<a href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/pi_examples">pi_examples</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">mkdir  ~/tf
+cd /usr/local/lib/python2.7/dist-packages/tensorflow/models/image/imagenet
+python classify_image.py --model_dir ~/tf/imagenet #--model_dir 指定模型数据存放的目录</pre></td></tr></table>
+</div>
+</div>
+<p>完成后我们来测试下是否正常</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">python /usr/local/lib/python2.7/dist-packages/tensorflow/models/image/imagenet/classify_image.py  --model_dir ~/tf/imagenet</pre></td></tr></table>
+</div>
+</div>
+<p>如果是如下输出则一切就绪：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">giant panda, panda, panda bear, coon bear, Ailuropoda melanoleuca (score = 0.89233)
+indri, indris, Indri indri, Indri brevicaudatus (score = 0.00859)
+lesser panda, red panda, panda, bear cat, cat bear, Ailurus fulgens (score = 0.00264)
+custard apple (score = 0.00141)
+earthstar (score = 0.00107)</pre></td></tr></table>
+</div>
+</div>
+<h3 id="测试">测试</h3>
+
+<p>我们来试一下我的伞（拍于办公室）：<img src="http://wwj-fig-bed.just4fun.site/sandfa6b51c.png" alt="" /></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">python /usr/local/lib/python2.7/dist-packages/tensorflow/models/image/imagenet/classify_image.py  --model_dir ~/tf/imagenet --image_file /tmp/test.jpg  # 图片需是jpg格式</pre></td></tr></table>
+</div>
+</div>
+<p>输出为</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/san47120afa.png" alt="" /></p>
+
+<p>程序会给出5个可能的物体，得分最高的是雨伞，识别的很准确</p>
+
+<p>我们接着给它看一张橘子的图片：</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/orange94aa0771.png" alt="" /></p>
+
+<p>输出为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">lemon (score = 0.72036)
+orange (score = 0.16516)
+spaghetti squash (score = 0.01571)
+butternut squash (score = 0.00304)
+ocarina, sweet potato (score = 0.00298)</pre></td></tr></table>
+</div>
+</div>
+<p>它认为最大的可能是柠檬，橘子和柠檬确实很相似</p>
+
+<p>如果你想自己来训练你的模型，可以参考googleblog上的这篇文章:<a href="https://research.googleblog.com/2016/03/train-your-own-image-classifier-with.html">Train your own image classifier with Inception in TensorFlow</a></p>
+
+<h1 id="优化">优化</h1>
+
+<p>目前物体识别的性能不高，需要等一会儿，Lukas的机器人很有趣，它每次拍下照片，开始计算的时候会说<code>I'm thinking</code>。延时得很自然，机器也确实是在“思考”</p>
+
+<p>关于如何提高运算速度，以下是几个可能</p>
+
+<ul>
+<li>利用GPU来计算。树莓派支持GPU运算，不过<a href="https://github.com/samjabrahams/tensorflow-on-raspberry-pi">tensorflow-on-raspberry-pi</a>目前没有GPU版本的whl，linux/mac都有GPU版本的whl. 此问题详细谈论可以参考:<a href="https://github.com/samjabrahams/tensorflow-on-raspberry-pi/issues/15">Question on GPU</a></li>
+<li>使树莓派超频可以加快运算速度</li>
+<li>把tensorflow部署到小车控制器坐在的电脑上（本地电脑），实际计算在本地进行（这样可以把tensorflow用到任何client里，不过需要联网运行）</li>
+<li>把tensorflow部署到云上，提供网络服务</li>
+</ul>
+
+<p>另一个优化是，缩小图片尺寸，可以使用ImageMagick提供的convert指令：<code>convert -resize 100x100 test.png dest.jpg</code>。 如此一来就把图片转化为小尺寸（100x100），能有效提高运算速度</p>
+
+<h1 id="todo">todo</h1>
+
+<ul>
+<li>中文语音输出
+
+<ul>
+<li>蓝牙音箱</li>
+<li>英-&gt;中翻译</li>
+<li>语音输出</li>
+</ul></li>
+<li>加载到汽车模型上
+
+<ul>
+<li>L298N驱动板</li>
+</ul></li>
+</ul>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%A0%91%E8%8E%93%E6%B4%BE">维基百科 树莓派</a></li>
+<li><a href="https://www.oreilly.com/learning/how-to-build-a-robot-that-sees-with-100-and-tensorflow">How to build a robot that “sees” with $100 and TensorFlow</a></li>
+<li><a href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/pi_examples">pi_examples</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-10-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/iot/raspberrypi-tensowflow-robot-speaker/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">基于树莓派和Tensowflow的物体识别-speaker</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/hs/">
+            <span class="next-text nav-default">历史的教训</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

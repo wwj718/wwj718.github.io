@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Open edX的容器化之路 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="前言 前边(Open edX 服务企业)提到 我们(Open edX中国社区)近期正在梳理今年会议的一些报告内容，对其中感兴趣的部分进行解读，之后会在国内" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/open-edx-docker-2018/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Open edX的容器化之路" />
+<meta property="og:description" content="前言 前边(Open edX 服务企业)提到 我们(Open edX中国社区)近期正在梳理今年会议的一些报告内容，对其中感兴趣的部分进行解读，之后会在国内" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/open-edx-docker-2018/" />
+<meta property="article:published_time" content="2018-07-22T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-07-22T00:00:00+00:00" />
+<meta itemprop="name" content="Open edX的容器化之路">
+<meta itemprop="description" content="前言 前边(Open edX 服务企业)提到 我们(Open edX中国社区)近期正在梳理今年会议的一些报告内容，对其中感兴趣的部分进行解读，之后会在国内">
+
+
+<meta itemprop="datePublished" content="2018-07-22T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-07-22T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2324">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Open edX的容器化之路"/>
+<meta name="twitter:description" content="前言 前边(Open edX 服务企业)提到 我们(Open edX中国社区)近期正在梳理今年会议的一些报告内容，对其中感兴趣的部分进行解读，之后会在国内"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Open edX的容器化之路</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-07-22 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#主题解读">主题解读</a>
+<ul>
+<li>
+<ul>
+<li><a href="#navigating-the-docker-devstack-https-openedx2018-sched-com-event-eubo-navigating-the-docker-devstack"><a href="https://openedx2018.sched.com/event/EUBO/navigating-the-docker-devstack">Navigating the Docker Devstack</a></a></li>
+<li><a href="#running-and-developing-open-edx-in-devstack-docker-edition-https-openedx2018-sched-com-event-euam-running-and-developing-open-edx-in-devstack-docker-edition"><a href="https://openedx2018.sched.com/event/EUAM/running-and-developing-open-edx-in-devstack-docker-edition">Running and Developing Open edX in Devstack - Docker Edition</a></a></li>
+<li><a href="#running-open-edx-in-production-with-docker-https-openedx2018-sched-com-event-euap-running-open-edx-in-production-with-docker"><a href="https://openedx2018.sched.com/event/EUAP/running-open-edx-in-production-with-docker">Running Open edX in production with Docker</a></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#其他进展">其他进展</a></li>
+<li><a href="#回顾">回顾</a></li>
+<li><a href="#未来">未来</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="前言">前言</h1>
+
+<p>前边(<a href="https://blog.just4fun.site/edx-enterprise.html">Open edX 服务企业</a>)提到</p>
+
+<blockquote>
+<p>我们(Open edX中国社区)近期正在梳理今年会议的一些报告内容，对其中感兴趣的部分进行解读，之后会在国内不同城市举办一些meetup,具体安排可以关注<a href="https://www.edustack.org/">edustack</a></p>
+</blockquote>
+
+<p>我认领的<a href="https://openedx.atlassian.net/wiki/spaces/COMM/pages/756384075/Open+edX+2018+Presentations">主题</a>中，有不少和Open edX社区在容器化方面的尝试有关，本文对此做个梳理</p>
+
+<p>我将2018年与容器化相关的主题罗列如下:</p>
+
+<ul>
+<li><a href="https://openedx2018.sched.com/event/EUBO/navigating-the-docker-devstack">Navigating the Docker Devstack</a></li>
+<li><a href="https://openedx2018.sched.com/event/EUAM/running-and-developing-open-edx-in-devstack-docker-edition">Running and Developing Open edX in Devstack - Docker Edition</a></li>
+<li><a href="https://openedx2018.sched.com/event/EUAP/running-open-edx-in-production-with-docker">Running Open edX in production with Docker</a></li>
+</ul>
+
+<p>本文在解读完今年会议的几个主题之后，将梳理近年Open edX社区在容器化方向所做的工作、跟进目前的社区进展，并讨论未来的可能方向</p>
+
+<!--
+https://docs.google.com/document/d/1GnWWXP-cBFuglB-jcazNTwJAM9dnqYztP4_NcF_hMoI/edit?usp=sharing
+-->
+
+<h1 id="主题解读">主题解读</h1>
+
+<h3 id="navigating-the-docker-devstack-https-openedx2018-sched-com-event-eubo-navigating-the-docker-devstack"><a href="https://openedx2018.sched.com/event/EUBO/navigating-the-docker-devstack">Navigating the Docker Devstack</a></h3>
+
+<p>这是<a href="http://opencraft.com/">OpenCraft</a>为我们带来的一个分享</p>
+
+<p>我在<a href="https://blog.just4fun.site/edx-community-members.html">盘点Open edX社区中拥抱开源的公司及值得关注的项目
+</a>中，将<a href="http://opencraft.com/">OpenCraft</a>列为<code>Open edX社区中积极拥抱开源的公司</code>之一</p>
+
+<p>如果你准备采用或迁移到open edx的<a href="https://open.edx.org/blog/hawthorn-rc1-out">最新版本(Hawthorn)</a>，而之前对docker有不甚熟悉，那么这个分享就是为你准备的。从官方放出的信息来看，Hawthorn之后:</p>
+
+<blockquote>
+<p>Devstack is now based on Docker rather than Vagrant. See the <a href="https://github.com/edx/devstack/blob/master/README.rst">Docker Devstack README</a></p>
+</blockquote>
+
+<p>Hawthorn之后，Open edX的开发环境都将基于Docker，而不是Vagrant。OpenCraft为我们带来的这个分享中，涵盖如下部分:</p>
+
+<ol>
+<li>Docker Basics</li>
+<li>Docker vs. Vagrant</li>
+<li>The Docker Devstack under the hood</li>
+<li>Some tips and tricks</li>
+</ol>
+
+<p>OpenCraft给出了非常友好的引导，帮助open edx的开发者从Vagrant过渡到Docker</p>
+
+<p>docker有庞大的生态，如果从0开始自学docker，容易在知识网络里应接不暇、不知所措。我认为这个分享是Open edX开发者最佳的docker入门资料，它告诉你对于当前的开发所需要掌握的知识，以及这些知识与你已有的概念之间的关系</p>
+
+<h3 id="running-and-developing-open-edx-in-devstack-docker-edition-https-openedx2018-sched-com-event-euam-running-and-developing-open-edx-in-devstack-docker-edition"><a href="https://openedx2018.sched.com/event/EUAM/running-and-developing-open-edx-in-devstack-docker-edition">Running and Developing Open edX in Devstack - Docker Edition</a></h3>
+
+<p>这个分享可以视为<a href="https://openedx2018.sched.com/event/EUBO/navigating-the-docker-devstack">Navigating the Docker Devstack</a>的自然延续</p>
+
+<p>当你掌握了docker的基本技能之后，如何在docker里开始open edx的开发呢？这个分享就是为此准备的</p>
+
+<p>分享者是edX核心开发者，内容包含：</p>
+
+<ul>
+<li>Offline devstack installer</li>
+<li>Explain what devstack is (and isn’t)</li>
+<li>Explain the installation process</li>
+<li>Demo!</li>
+<li>Audience choice:
+
+<ul>
+<li>Q&amp;A</li>
+<li>Tackle installation or usage issues in small groups</li>
+<li>Deeper dive into particular topics</li>
+</ul></li>
+</ul>
+
+<p>分享中，有几处我特别摘出,热爱容器化的小伙伴值得关注一下</p>
+
+<blockquote>
+<p>Designed to work like Ansible-configured virtual machines (the current
+recommended production environment)
+  Docker images for production would be built very differently
+  Experimental production images have been created by the community
+  Work to reduce the differences is being scheduled</p>
+</blockquote>
+
+<p>尽管docker在H版之后会作为默认的开发环境，但官方团队认为生产环境和开发环境差异巨大，生产环境目前仍推荐使用Ansible</p>
+
+<p>如果你比较激进，可以试试社区的方案(我们将在下文中谈及)，社区已经有人完成了将docker用于生产环境的工作。此外官方也已将docker用于生产环境提上了日程。</p>
+
+<p>对于关注数据分析的小伙伴来说，有条利好消息是</p>
+
+<blockquote>
+<p>New services: Analytics Data API, Analytics Pipeline, Credentials, XQueue</p>
+</blockquote>
+
+<p>edx的数据分析部分十分复杂，我相信容器化之后，这部分将变得简单易用</p>
+
+<h3 id="running-open-edx-in-production-with-docker-https-openedx2018-sched-com-event-euap-running-open-edx-in-production-with-docker"><a href="https://openedx2018.sched.com/event/EUAP/running-open-edx-in-production-with-docker">Running Open edX in production with Docker</a></h3>
+
+<p>算得上一个振奋人心的分享，社区里已经有人完成了docker用于open edx生产环境的工作</p>
+
+<p>这是由open fun为我们带来的一个分享</p>
+
+<p>我在<a href="https://blog.just4fun.site/edx-community-members.html">盘点Open edX社区中拥抱开源的公司及值得关注的项目
+</a>中，将<a href="https://github.com/openfun">openfun
+</a>列为<code>Open edX社区中积极拥抱开源的公司</code>之一</p>
+
+<p>这篇分享主要围绕<a href="https://github.com/openfun">openfun</a>的<a href="https://github.com/openfun/arnold">arnold</a>项目</p>
+
+<blockquote>
+<p>Arnold is a tool to deploy dockerized applications to OpenShift with Ansible.</p>
+</blockquote>
+
+<p>它已经被openfun用于生产环境了，而openfun构建了法国最大的mooc平台</p>
+
+<p>考虑到OpenShift在国内访问可能不畅，国内用户可以使用<a href="https://github.com/minishift/minishift">minishift</a>做实验</p>
+
+<p>如果你准备使用docker为用户提供SAAS服务，这个项目不容错过</p>
+
+<h1 id="其他进展">其他进展</h1>
+
+<p>社区里还有个值得关注的项目是<a href="https://github.com/regisb">regisb</a>为我们带来的<a href="https://github.com/regisb/openedx-docker">openedx-docker</a></p>
+
+<blockquote>
+<p>1-click universal Open edX install, for production and local development + Android app (based on Docker)</p>
+</blockquote>
+
+<p>open edx的易用性一直为人诟病，docker能够解决这个问题，<a href="https://github.com/regisb/openedx-docker">openedx-docker</a>令人震惊地做到了一键安装</p>
+
+<h1 id="回顾">回顾</h1>
+
+<p>社区里很早就有尝试将docker引入opne edx中，印象中最早的努力来自<a href="https://hub.docker.com/r/appsembler/">appsembler</a></p>
+
+<p>我在<a href="https://blog.just4fun.site/edx-community-members.html">盘点Open edX社区中拥抱开源的公司及值得关注的项目
+</a>中，将<a href="https://github.com/appsembler">appsembler
+</a>列为<code>Open edX社区中积极拥抱开源的公司</code>之一</p>
+
+<p>我在2015年的时候基于<a href="https://hub.docker.com/r/appsembler/">appsembler</a>已有的工作，做了些调整，发布了<a href="https://blog.just4fun.site/docker-edx-birch-1.html">基于docker的edx birch-1国内版本</a>，之后也陆续为这块写了些文章:</p>
+
+<ul>
+<li><a href="https://blog.just4fun.site/edx-popularize-community-docker.html">edx推广，国内社区与docker</a></li>
+<li><a href="https://blog.just4fun.site/edx-birch-on-docker.html">edx(birch) on docker</a></li>
+<li><a href="https://blog.just4fun.site/edx-birch-distributed-on-docker.html">基于docker容器的edx分布式</a></li>
+<li><a href="https://blog.just4fun.site/edx-data-analysis-on-docker.html">基于docker的edx数据分析</a></li>
+<li><a href="https://blog.just4fun.site/docker-edx-birch-1.html">发布基于docker的edx birch-1国内版本</a></li>
+<li><a href="https://blog.just4fun.site/edx-cypress-cn-install-and-use.html">Open edX中国社区Docker版安装使用</a></li>
+<li><a href="https://blog.just4fun.site/edx-cypress-cn-for-deveiopment.html">使用Open edX中国社区Docker版来开发调试edX</a></li>
+<li><a href="https://blog.just4fun.site/build-paas-for-edx-dev.html">基于docker构建Open edX云服务之过家家版</a></li>
+</ul>
+
+<p>2015年的时候与核心团队成员做了一些沟通，建议将docker引入到open edx中，大家觉得要迁移到docker上，时间成本巨大且不可预估，似乎对此热情不大，我将<a href="https://github.com/wwj718/edx_cypress_docker">edx_cypress_docker</a>更新了10个版本之后，发现社区对此没太多热情，项目组件极多，力不从心，便放弃了这条路。到近期的H版本官方终于决定将开发环境迁移到docker</p>
+
+<p>近年来社区在docker的探索其实不少，但成熟度似乎都不高，但多数限于公司内部使用，直到今年官方和社区才同时放出比较成熟的方案。官方的工作集中在<a href="https://github.com/edx/devstack">devstack</a>。</p>
+
+<h1 id="未来">未来</h1>
+
+<p>我相信docker对Open edX是至关重要的，Open edX的复杂性影响了它的流行，而docker能够应对这个问题。docker也让open edx一些潜在商业模式(SAAS服务之类的)变得容易。docker还将服务于open edx的未来架构(微服务化)。</p>
+
+<p>如果社区之后都基于docker来开发、使用open edx，大家各自的开源项目也将变得易于组合，指不定某一天将出现应用市场，一键安装open edx的拓展也许已经不远：）</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-07-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/edx-beijing-2018-meetup/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Beijing Open edX Meetup 2018#1</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-community-analyze/">
+            <span class="next-text nav-default">scratch社区一览</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

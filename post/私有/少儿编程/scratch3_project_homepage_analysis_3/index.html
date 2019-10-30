@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch3技术分析之项目主页API(第3篇) - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="本文将关心项目主页涉及的API。 相关的API包括: 拉取项目数据 项目的内部数据(https://projects.scratch.mit.ed" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_project_homepage_analysis_3/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch3技术分析之项目主页API(第3篇)" />
+<meta property="og:description" content="本文将关心项目主页涉及的API。 相关的API包括: 拉取项目数据 项目的内部数据(https://projects.scratch.mit.ed" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_project_homepage_analysis_3/" />
+<meta property="article:published_time" content="2019-01-15T12:57:00+00:00" />
+<meta property="article:modified_time" content="2019-01-15T12:57:00+00:00" />
+<meta itemprop="name" content="Scratch3技术分析之项目主页API(第3篇)">
+<meta itemprop="description" content="本文将关心项目主页涉及的API。 相关的API包括: 拉取项目数据 项目的内部数据(https://projects.scratch.mit.ed">
+
+
+<meta itemprop="datePublished" content="2019-01-15T12:57:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-01-15T12:57:00&#43;00:00" />
+<meta itemprop="wordCount" content="4916">
+
+
+
+<meta itemprop="keywords" content="scratch," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch3技术分析之项目主页API(第3篇)"/>
+<meta name="twitter:description" content="本文将关心项目主页涉及的API。 相关的API包括: 拉取项目数据 项目的内部数据(https://projects.scratch.mit.ed"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch3技术分析之项目主页API(第3篇)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-01-15 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%A7%81%E6%9C%89/"> 私有 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#拉取项目数据">拉取项目数据</a>
+<ul>
+<li>
+<ul>
+<li><a href="#项目的内部数据">项目的内部数据</a></li>
+<li><a href="#项目的外部数据">项目的外部数据</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#更新项目信息">更新项目信息</a>
+<ul>
+<li>
+<ul>
+<li><a href="#更新项目名">更新项目名</a></li>
+<li><a href="#更新操作说明">更新操作说明</a></li>
+<li><a href="#更新备注与谢志">更新备注与谢志</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#点赞">点赞(❤️/⭐️)</a></li>
+<li><a href="#被改编-浏览的次数">被改编/浏览的次数</a></li>
+<li><a href="#评论">评论</a>
+<ul>
+<li>
+<ul>
+<li><a href="#顶层评论">顶层评论</a></li>
+<li><a href="#子评论">子评论</a>
+<ul>
+<li><a href="#对子评论的回复">对子评论的回复</a></li>
+</ul></li>
+<li><a href="#关闭评论功能">关闭评论功能</a></li>
+<li><a href="#删除评论">删除评论</a></li>
+<li><a href="#举报评论">举报评论</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/scratch-api_6b1407e4.png" alt="" /></p>
+
+<p>本文将关心项目主页涉及的API。</p>
+
+<p>相关的API包括:</p>
+
+<ul>
+<li>拉取项目数据
+
+<ul>
+<li>项目的内部数据(<a href="https://projects.scratch.mit.edu/[project_id]">https://projects.scratch.mit.edu/[project_id]</a>)</li>
+<li>项目的外部数据(<a href="https://api.scratch.mit.edu/projects/[project_id]">https://api.scratch.mit.edu/projects/[project_id]</a>)</li>
+</ul></li>
+<li>更新项目信息
+
+<ul>
+<li>更新项目名</li>
+<li>更新操作说明</li>
+<li>更新备注与谢志</li>
+</ul></li>
+<li>点赞(❤️/⭐️)</li>
+<li>被改编/浏览的次数</li>
+<li>评论</li>
+</ul>
+
+<p>我们以测试项目<code>https://scratch.mit.edu/projects/277117877</code>为例, 打开页面，加载的数据还真不少。</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/scratch-api_88c80b60.png" alt="" /></p>
+
+<p>其中<code>https://scratch.mit.edu/js/projects.bundle.js</code>足有4.7M，下载时间就用了9.3s。</p>
+
+<h1 id="拉取项目数据">拉取项目数据</h1>
+
+<p>我们回到正题，开始关心各个API。既然是项目主页，首先得把整个项目的数据拉进页面，供用户浏览。我们便从这个说起。</p>
+
+<p>项目数据包括<code>项目的内部数据</code>和<code>项目的外部数据</code>（在<a href="https://blog.just4fun.site/Scratch3_api_analysis_1.html#get">Scratch3技术分析之创作平台API(第1篇)</a>定义了这两个概念）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">GET https://projects.scratch.mit.edu/277117877 # 项目的内部数据
+GET https://api.scratch.mit.edu/projects/277117877 # 项目的外部数据</pre></td></tr></table>
+</div>
+</div>
+<h3 id="项目的内部数据">项目的内部数据</h3>
+
+<p><code>GET https://projects.scratch.mit.edu/277117877</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">{&#34;targets&#34;:[{&#34;isStage&#34;:true,&#34;name&#34;:&#34;Stage&#34;,&#34;variables&#34;:{&#34;`jEk@4|i[#Fk?(8x)AV.-my variable&#34;:[&#34;æçåé&#34;,0]},&#34;lists&#34;:{},&#34;broadcasts&#34;:{},&#34;blocks&#34;:{},&#34;comments&#34;:{},&#34;currentCostume&#34;:0,&#34;costumes&#34;:[{&#34;assetId&#34;:&#34;cd21514d0531fdffb22204e0ec5ed84a&#34;,&#34;name&#34;:&#34;èæ¯1&#34;,&#34;md5ext&#34;:&#34;cd21514d0531fdffb22204e0ec5ed84a.svg&#34;,&#34;dataFormat&#34;:&#34;svg&#34;,&#34;rotationCenterX&#34;:240,&#34;rotationCenterY&#34;:180}],&#34;sounds&#34;:[{&#34;assetId&#34;:&#34;83a9787d4cb6f3b7632b4ddfebf74367&#34;,&#34;name&#34;:&#34;åµ&#34;,&#34;dataFormat&#34;:&#34;wav&#34;,&#34;format&#34;:&#34;&#34;,&#34;rate&#34;:44100,&#34;sampleCount&#34;:1032,&#34;md5ext&#34;:&#34;83a9787d4cb6f3b7632b4ddfebf74367.wav&#34;}],&#34;volume&#34;:100,&#34;layerOrder&#34;:0,&#34;tempo&#34;:60,&#34;videoTransparency&#34;:50,&#34;videoState&#34;:&#34;on&#34;,&#34;textToSpeechLanguage&#34;:null},{&#34;isStage&#34;:false,&#34;name&#34;:&#34;è§è²1&#34;,&#34;variables&#34;:{},&#34;lists&#34;:{},&#34;broadcasts&#34;:{},&#34;blocks&#34;:{&#34;#ez$qP+47m]1?FAkK7EQ&#34;:{&#34;opcode&#34;:&#34;event_whenflagclicked&#34;,&#34;next&#34;:&#34;4(Rs_W.WmWf$u^fquvr=&#34;,&#34;parent&#34;:null,&#34;inputs&#34;:{},&#34;fields&#34;:{},&#34;shadow&#34;:false,&#34;topLevel&#34;:true,&#34;x&#34;:249,&#34;y&#34;:-313},&#34;4(Rs_W.WmWf$u^fquvr=&#34;:{&#34;opcode&#34;:&#34;motion_movesteps&#34;,&#34;next&#34;:&#34;l]Zt{~YW17*uEI[V*-ru&#34;,&#34;parent&#34;:&#34;#ez$qP+47m]1?FAkK7EQ&#34;,&#34;inputs&#34;:{&#34;STEPS&#34;:[1,[4,&#34;10&#34;]]},&#34;fields&#34;:{},&#34;shadow&#34;:false,&#34;topLevel&#34;:false},&#34;l]Zt{~YW17*uEI[V*-ru&#34;:{&#34;opcode&#34;:&#34;microbit_displaySymbol&#34;,&#34;next&#34;:null,&#34;parent&#34;:&#34;4(Rs_W.WmWf$u^fquvr=&#34;,&#34;inputs&#34;:{&#34;MATRIX&#34;:[1,&#34;t2p#3HOI[w=AQ2`(S:@O&#34;]},&#34;fields&#34;:{},&#34;shadow&#34;:false,&#34;topLevel&#34;:false},&#34;t2p#3HOI[w=AQ2`(S:@O&#34;:{&#34;opcode&#34;:&#34;matrix&#34;,&#34;next&#34;:null,&#34;parent&#34;:&#34;l]Zt{~YW17*uEI[V*-ru&#34;,&#34;inputs&#34;:{},&#34;fields&#34;:{&#34;MATRIX&#34;:[&#34;0101010101100010101000100&#34;]},&#34;shadow&#34;:true,&#34;topLevel&#34;:false}},&#34;comments&#34;:{},&#34;currentCostume&#34;:0,&#34;costumes&#34;:[{&#34;assetId&#34;:&#34;b7853f557e4426412e64bb3da6531a99&#34;,&#34;name&#34;:&#34;é å1&#34;,&#34;bitmapResolution&#34;:1,&#34;md5ext&#34;:&#34;b7853f557e4426412e64bb3da6531a99.svg&#34;,&#34;dataFormat&#34;:&#34;svg&#34;,&#34;rotationCenterX&#34;:48,&#34;rotationCenterY&#34;:50},{&#34;assetId&#34;:&#34;e6ddc55a6ddd9cc9d84fe0b4c21e016f&#34;,&#34;name&#34;:&#34;é å2&#34;,&#34;bitmapResolution&#34;:1,&#34;md5ext&#34;:&#34;e6ddc55a6ddd9cc9d84fe0b4c21e016f.svg&#34;,&#34;dataFormat&#34;:&#34;svg&#34;,&#34;rotationCenterX&#34;:46,&#34;rotationCenterY&#34;:53}],&#34;sounds&#34;:[{&#34;assetId&#34;:&#34;83c36d806dc92327b9e7049a565c6bff&#34;,&#34;name&#34;:&#34;åµ&#34;,&#34;dataFormat&#34;:&#34;wav&#34;,&#34;format&#34;:&#34;&#34;,&#34;rate&#34;:44100,&#34;sampleCount&#34;:37376,&#34;md5ext&#34;:&#34;83c36d806dc92327b9e7049a565c6bff.wav&#34;}],&#34;volume&#34;:100,&#34;layerOrder&#34;:1,&#34;visible&#34;:true,&#34;x&#34;:0,&#34;y&#34;:0,&#34;size&#34;:100,&#34;direction&#34;:90,&#34;draggable&#34;:false,&#34;rotationStyle&#34;:&#34;all around&#34;}],&#34;monitors&#34;:[],&#34;extensions&#34;:[&#34;microbit&#34;],&#34;meta&#34;:{&#34;semver&#34;:&#34;3.0.0&#34;,&#34;vm&#34;:&#34;0.2.0-prerelease.20190102175344&#34;,&#34;agent&#34;:&#34;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36&#34;}}</pre></td></tr></table>
+</div>
+</div>
+<p>为了获得好的阅读效果，你可以将它们复制到<code>https://jsoneditoronline.org/</code></p>
+
+<h3 id="项目的外部数据">项目的外部数据</h3>
+
+<p><code>GET https://api.scratch.mit.edu/projects/277117877</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
+  <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">277117877</span><span class="p">,</span>
+  <span class="s2">&#34;title&#34;</span><span class="o">:</span> <span class="s2">&#34;test-api&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;description&#34;</span><span class="o">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;instructions&#34;</span><span class="o">:</span> <span class="s2">&#34;操作说明&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;visibility&#34;</span><span class="o">:</span> <span class="s2">&#34;visible&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;public&#34;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="s2">&#34;comments_allowed&#34;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="s2">&#34;is_published&#34;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="s2">&#34;author&#34;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">40103875</span><span class="p">,</span>
+    <span class="s2">&#34;username&#34;</span><span class="o">:</span> <span class="s2">&#34;api_test&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;scratchteam&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&#34;history&#34;</span><span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;joined&#34;</span><span class="o">:</span> <span class="s2">&#34;1900-01-01T00:00:00.000Z&#34;</span> <span class="p">},</span>
+    <span class="s2">&#34;profile&#34;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&#34;images&#34;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&#34;90x90&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/user/40103875_90x90.png?v=&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;60x60&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/user/40103875_60x60.png?v=&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;55x55&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/user/40103875_55x55.png?v=&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;50x50&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/user/40103875_50x50.png?v=&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;32x32&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/user/40103875_32x32.png?v=&#34;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="s2">&#34;image&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/project/277117877_480x360.png&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;images&#34;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&#34;282x218&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/project/277117877_282x218.png?v=1547524633&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;216x163&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/project/277117877_216x163.png?v=1547524633&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;200x200&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/project/277117877_200x200.png?v=1547524633&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;144x108&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/project/277117877_144x108.png?v=1547524633&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;135x102&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/project/277117877_135x102.png?v=1547524633&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;100x80&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/project/277117877_100x80.png?v=1547524633&#34;</span>
+  <span class="p">},</span>
+  <span class="s2">&#34;history&#34;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&#34;created&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-04T11:40:46.000Z&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;modified&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-15T03:57:13.000Z&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;shared&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-04T12:27:22.000Z&#34;</span>
+  <span class="p">},</span>
+  <span class="s2">&#34;stats&#34;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&#34;views&#34;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&#34;loves&#34;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&#34;favorites&#34;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&#34;comments&#34;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="s2">&#34;remixes&#34;</span><span class="o">:</span> <span class="mi">0</span>
+  <span class="p">},</span>
+  <span class="s2">&#34;remix&#34;</span><span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;parent&#34;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span> <span class="s2">&#34;root&#34;</span><span class="o">:</span> <span class="kc">null</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>每个字段的含义参考:<a href="https://github.com/towerofnix/scratch-api-unofficial-docs/blob/master/api/definitions/project_object.md">Project Object</a></p>
+
+<h1 id="更新项目信息">更新项目信息</h1>
+
+<h3 id="更新项目名">更新项目名</h3>
+
+<p><code>PUT https://api.scratch.mit.edu/projects/277117877</code></p>
+
+<p>以json形式提交了: <code>{&quot;title&quot;:&quot;test-api2&quot;}</code></p>
+
+<p>服务器返回和<code>GET https://api.scratch.mit.edu/projects/277117877</code>一样的信息。</p>
+
+<p>可以看出它们的url也是一样的</p>
+
+<h3 id="更新操作说明">更新操作说明</h3>
+
+<p><code>PUT https://api.scratch.mit.edu/projects/277117877</code></p>
+
+<p>以json形式提交了: <code>{&quot;instructions&quot;:&quot;操作说明test&quot;}</code></p>
+
+<p>服务器返回同上。</p>
+
+<h3 id="更新备注与谢志">更新备注与谢志</h3>
+
+<p><code>PUT https://api.scratch.mit.edu/projects/277117877</code></p>
+
+<p>以json形式提交了: <code>{&quot;description&quot;:&quot;test&quot;}</code></p>
+
+<p>服务器返回同上。</p>
+
+<p>一致性非常好。</p>
+
+<h1 id="点赞">点赞(❤️/⭐️)</h1>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/scratch-api_de57849c.png" alt="" /></p>
+
+<p>❤️代表<code>loves</code>, ⭐️代表<code>favorites</code></p>
+
+<p>这两个的接口十分相似:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">POST https://api.scratch.mit.edu/proxy/projects/277117877/loves/user/api_test
+POST https://api.scratch.mit.edu/proxy/projects/277117877/favorites/user/api_test</pre></td></tr></table>
+</div>
+</div>
+<p>后端返回分别为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">{&#34;projectId&#34;:&#34;277117877&#34;,&#34;userLove&#34;:true,&#34;statusChanged&#34;:true} # ❤️
+{&#34;projectId&#34;:&#34;277117877&#34;,&#34;userFavorite&#34;:true,&#34;statusChanged&#34;:true}  # ⭐️</pre></td></tr></table>
+</div>
+</div>
+<p>如果你要取消它们，API分别为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">DELETE https://api.scratch.mit.edu/proxy/projects/277117877/loves/user/api_test # ❤️
+DELETE https://api.scratch.mit.edu/proxy/projects/277117877/favorites/user/api_test # ⭐️</pre></td></tr></table>
+</div>
+</div>
+<h1 id="被改编-浏览的次数">被改编/浏览的次数</h1>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/scratch-api_067c109e.png" alt="" /></p>
+
+<p>被浏览的次数，一个用户最多贡献一次。可以使用redis的set来做(记录用户id)。</p>
+
+<h1 id="评论">评论</h1>
+
+<p>最后我们来关心评论。这部分稍微复杂些。</p>
+
+<h3 id="顶层评论">顶层评论</h3>
+
+<p><code>POST https://api.scratch.mit.edu/proxy/comments/project/277117877</code></p>
+
+<p>提交的json数据为: <code>{&quot;content&quot;:&quot;test&quot;,&quot;parent_id&quot;:&quot;&quot;,&quot;commentee_id&quot;:&quot;&quot;}</code></p>
+
+<p>注意到顶层评论的parent_id为空。</p>
+
+<p>后端返回:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">{
+  &#34;id&#34;: 106196727,
+  &#34;parent_id&#34;: null,
+  &#34;commentee_id&#34;: null,
+  &#34;content&#34;: &#34;test&#34;,
+  &#34;datetime_created&#34;: &#34;2019-01-15T04:38:43.000Z&#34;,
+  &#34;datetime_modified&#34;: &#34;2019-01-15T04:38:43.000Z&#34;,
+  &#34;visibility&#34;: &#34;visible&#34;,
+  &#34;author&#34;: {
+    &#34;id&#34;: 40103875,
+    &#34;username&#34;: &#34;api_test&#34;,
+    &#34;scratchteam&#34;: false,
+    &#34;image&#34;: &#34;https://cdn2.scratch.mit.edu/get_image/user/40103875_60x60.png&#34;
+  },
+  &#34;reply_count&#34;: 0
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="子评论">子评论</h3>
+
+<p><code>POST https://api.scratch.mit.edu/proxy/comments/project/277117877</code></p>
+
+<p>提交的json数据为: <code>{&quot;content&quot;:&quot;子评论&quot;,&quot;parent_id&quot;:106196727,&quot;commentee_id&quot;:40103875}</code></p>
+
+<p>后端返回:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
+  <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">106196741</span><span class="p">,</span>
+  <span class="s2">&#34;parent_id&#34;</span><span class="o">:</span> <span class="mi">106196727</span><span class="p">,</span>
+  <span class="s2">&#34;commentee_id&#34;</span><span class="o">:</span> <span class="mi">40103875</span><span class="p">,</span>
+  <span class="s2">&#34;content&#34;</span><span class="o">:</span> <span class="s2">&#34;子评论&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;datetime_created&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-15T04:40:05.000Z&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;datetime_modified&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-15T04:40:05.000Z&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;visibility&#34;</span><span class="o">:</span> <span class="s2">&#34;visible&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;author&#34;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">40103875</span><span class="p">,</span>
+    <span class="s2">&#34;username&#34;</span><span class="o">:</span> <span class="s2">&#34;api_test&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;scratchteam&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&#34;image&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/user/40103875_60x60.png&#34;</span>
+  <span class="p">},</span>
+  <span class="s2">&#34;reply_count&#34;</span><span class="o">:</span> <span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="对子评论的回复">对子评论的回复</h4>
+
+<p><code>POST https://api.scratch.mit.edu/proxy/comments/project/277117877</code></p>
+
+<p>提交的json数据为: <code>{&quot;content&quot;:&quot;对子评论 的回复&quot;,&quot;parent_id&quot;:106196727,&quot;commentee_id&quot;:40103875}</code></p>
+
+<p>后端返回:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
+  <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">106196774</span><span class="p">,</span>
+  <span class="s2">&#34;parent_id&#34;</span><span class="o">:</span> <span class="mi">106196727</span><span class="p">,</span>
+  <span class="s2">&#34;commentee_id&#34;</span><span class="o">:</span> <span class="mi">40103875</span><span class="p">,</span>
+  <span class="s2">&#34;content&#34;</span><span class="o">:</span> <span class="s2">&#34;对子评论 的回复&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;datetime_created&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-15T04:42:46.000Z&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;datetime_modified&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-15T04:42:46.000Z&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;visibility&#34;</span><span class="o">:</span> <span class="s2">&#34;visible&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;author&#34;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">40103875</span><span class="p">,</span>
+    <span class="s2">&#34;username&#34;</span><span class="o">:</span> <span class="s2">&#34;api_test&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;scratchteam&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&#34;image&#34;</span><span class="o">:</span> <span class="s2">&#34;https://cdn2.scratch.mit.edu/get_image/user/40103875_60x60.png&#34;</span>
+  <span class="p">},</span>
+  <span class="s2">&#34;reply_count&#34;</span><span class="o">:</span> <span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>可以看出<code>parent_id</code>始终指向<code>顶级评论</code>。 <!--`commentee_id`指向的应该是被回复者。--></p>
+
+<h3 id="关闭评论功能">关闭评论功能</h3>
+
+<p><code>PUT https://api.scratch.mit.edu/projects/277117877</code></p>
+
+<p>提交的json数据为: <code>{&quot;comments_allowed&quot;:false}</code></p>
+
+<h3 id="删除评论">删除评论</h3>
+
+<p>删除权利在项目拥有者手中，而不在评论发出者手中。</p>
+
+<p><code>DELETE https://api.scratch.mit.edu/proxy/comments/project/277117877/comment/106196842</code></p>
+
+<p>返回:<code>{}</code></p>
+
+<h3 id="举报评论">举报评论</h3>
+
+<p><code>POST https://api.scratch.mit.edu/proxy/project/277117877/comment/106196741/report</code></p>
+
+<p>返回值: <code>{&quot;reportId&quot;:null}</code></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-01-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_user_api_analysis_4/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Scratch3技术分析之User API(第4篇)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_asset_analysis_2/">
+            <span class="next-text nav-default">Scratch3技术分析之静态资源API(第2篇)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>integrated bigbluebutton(bbb) to edx - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="#bigbluebutton是什么鬼 这是个远程会议系统，支持 多用户在线视频/语音会议 会议录制 远程教学 支持演讲模式（切换主讲人，听众） 支持在线" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/bigbluebutton-integrated-into-edx-with-lti/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="integrated bigbluebutton(bbb) to edx" />
+<meta property="og:description" content="#bigbluebutton是什么鬼 这是个远程会议系统，支持 多用户在线视频/语音会议 会议录制 远程教学 支持演讲模式（切换主讲人，听众） 支持在线" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/bigbluebutton-integrated-into-edx-with-lti/" />
+<meta property="article:published_time" content="2015-08-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-08-10T00:00:00+00:00" />
+<meta itemprop="name" content="integrated bigbluebutton(bbb) to edx">
+<meta itemprop="description" content="#bigbluebutton是什么鬼 这是个远程会议系统，支持 多用户在线视频/语音会议 会议录制 远程教学 支持演讲模式（切换主讲人，听众） 支持在线">
+
+
+<meta itemprop="datePublished" content="2015-08-10T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-08-10T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="787">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="integrated bigbluebutton(bbb) to edx"/>
+<meta name="twitter:description" content="#bigbluebutton是什么鬼 这是个远程会议系统，支持 多用户在线视频/语音会议 会议录制 远程教学 支持演讲模式（切换主讲人，听众） 支持在线"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">integrated bigbluebutton(bbb) to edx</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-08-10 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>#bigbluebutton是什么鬼
+这是个远程会议系统，支持</p>
+
+<ul>
+<li>多用户在线视频/语音会议</li>
+<li>会议录制</li>
+<li>远程教学</li>
+<li>支持演讲模式（切换主讲人，听众）</li>
+<li>支持在线演讲模式，共享文件，批注，讨论</li>
+<li>支持上传图片，文件（word，pdf，excel），共享，批注</li>
+<li>支持以lti方式集成</li>
+<li>&hellip;</li>
+</ul>
+
+<p>#展示下成果先</p>
+
+<p>在lms中</p>
+
+<p><img src="img/edx/meeting/bigblue4.jpeg" alt="4" /></p>
+
+<p><img src="img/edx/meeting/bigblue5.jpeg" alt="5" /></p>
+
+<p><img src="img/edx/meeting/bigblue6.jpeg" alt="6" /></p>
+
+<p>在studio中设置LTI组件参数</p>
+
+<p><img src="img/edx/meeting/bigblue7.jpeg" alt="7" /></p>
+
+<p>#edx是什么鬼
+这是个野心勃勃的项目</p>
+
+<p>话说回来，你都不知道edx是什么鬼的话，你看这个干嘛orz，赶紧关了浏览器，写暑假作业去</p>
+
+<p>#LTI是什么鬼
+LTI的全称是Learning Tools Interoperability</p>
+
+<p>这是一种扩展既有系统的方式</p>
+
+<p>顺便说一下，edx的LTI基于<a href="http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html">IMS Global Learning Tools Interoperability</a> version 1.1.1 ]</p>
+
+<p>而bigbluebutton支持的是1.0 , 不过似乎兼容</p>
+
+<p>更多的组件可参考<a href="http://www.imsglobal.org/cc/statuschart.cfm">www.imsglobal.org/</a>,其中就列出了bigbluebutton</p>
+
+<p>#关键步骤
+*  在studio中，参考：<a href="http://edx-partner-course-staff.readthedocs.org/en/latest/exercises_tools/lti_component.html">lti_component</a>
+*  在bigbluebutton中，参考<a href="http://docs.bigbluebutton.org/install/lti.html#installation-of-lti-module">installation-of-lti-module</a></p>
+
+<p>此外google group中也有这个问题的：<a href="https://groups.google.com/forum/#!topic/edx-code/zjbt-tPiJsA">讨论</a>，参与者中包括bigbluebutton的项目负责人</p>
+
+<p>经过以上工作我们就能在edx中使用bigbluebutton来开设在线课堂或是远程会议了，使用起来很像课程组件，可以嵌入到任意单元中，而且互相独立（这个特性在bigbluebutton demo中是做不到的）</p>
+
+<p>我们在bigbluebutton LTI课件模块中，可以手动设置以下参数：</p>
+
+<ul>
+<li>record</li>
+<li>duration</li>
+<li>welcome</li>
+<li>voicebridge</li>
+<li>mode</li>
+<li>all_moderators</li>
+</ul>
+
+<p>此外edx LTI还提供了诸如是集成到页面内还是启用新页面之类的选项，很是周到。甚至外部系统还可以回传学生得分情况</p>
+
+<p>#下一步计划
+弄清lti的原理，猜测是get传参。</p>
+
+<p>据此打造XBlock，这样更够做到基于用户角色更细度的控制，诸如设置学生为viewer，设置课程团队成员为moderator，带来更高灵活性，以及更好的可编程特性</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-08-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/lti-and-xblock/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">LTI与XBlock</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/edx-analyse-project/">
+            <span class="next-text nav-default">edx数据分析相关的项目</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

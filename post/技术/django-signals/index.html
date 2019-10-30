@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>django笔记之Signals - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="###Signals是什么 为了回答这个问题，我们先来看下django官网对它的描述： Django includes a “signal dispatcher” which helps allow decoupled applications get notified" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E6%8A%80%E6%9C%AF/django-signals/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="django笔记之Signals" />
+<meta property="og:description" content="###Signals是什么 为了回答这个问题，我们先来看下django官网对它的描述： Django includes a “signal dispatcher” which helps allow decoupled applications get notified" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E6%8A%80%E6%9C%AF/django-signals/" />
+<meta property="article:published_time" content="2014-04-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-04-15T00:00:00+00:00" />
+<meta itemprop="name" content="django笔记之Signals">
+<meta itemprop="description" content="###Signals是什么 为了回答这个问题，我们先来看下django官网对它的描述： Django includes a “signal dispatcher” which helps allow decoupled applications get notified">
+
+
+<meta itemprop="datePublished" content="2014-04-15T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-04-15T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="907">
+
+
+
+<meta itemprop="keywords" content=" django," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="django笔记之Signals"/>
+<meta name="twitter:description" content="###Signals是什么 为了回答这个问题，我们先来看下django官网对它的描述： Django includes a “signal dispatcher” which helps allow decoupled applications get notified"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">django笔记之Signals</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-04-15 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>###Signals是什么</p>
+
+<p>为了回答这个问题，我们先来看下django官网对它的描述：</p>
+
+<blockquote>
+<p>Django includes a “signal dispatcher” which helps allow decoupled applications get notified when actions occur elsewhere in the framework. In a nutshell, signals allow certain senders to notify a set of receivers that some action has taken place. They’re especially useful when many pieces of code may be interested in the same events.</p>
+</blockquote>
+
+<p>大概意思是说：Django内部包含了一位“信号调度员”：当某事件在框架内发生时，它可以通知到我们的应用程序（处理函数）。 简而言之，当<code>event</code>（事件）发生时，<code>signals</code>（信号）允许若干 <code>senders</code>（发送者）通知一组 receivers（接收者）。</p>
+
+<p>很像js的事件驱动模型。关于事件驱动，我在上一篇文章中有谈论，这里不多说。</p>
+
+<p>###有什么用的</p>
+
+<p>在web开发中, 你可能会遇到下面这种场景:</p>
+
+<blockquote>
+<p>在用户完成某个操作后, 自动去执行一些后续的操作. 譬如用户完成修改密码后,
+你要发送一份确认邮件.</p>
+</blockquote>
+
+<p>如果一个操作可能会触发多个后续事件, 此时使用signals会非常方便. 我们可以想要一下应用场景：</p>
+
+<ul>
+<li>sns中的事件通知, 如用户发表了一篇博文, 然后通知所有的好友</li>
+<li>用户信息的更改的邮件通知</li>
+<li>用户订制信息的邮件通知等</li>
+</ul>
+
+<p>###如何使用</p>
+
+<p>####常用的信号集：</p>
+
+<ul>
+<li>django.db.models.signals.pre_save   model在save()前发送的信号</li>
+<li>django.db.models.signals.post_save  model在save()后发送的信号</li>
+<li>django.db.models.signals.pre_delete</li>
+<li>django.db.models.signals.post_delete</li>
+</ul>
+
+<p>####来自官网的例子</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#使用装饰器</span>
+<span class="kn">from</span> <span class="nn">django.core.signals</span> <span class="kn">import</span> <span class="n">request_finished</span>
+<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="kn">import</span> <span class="n">receiver</span>
+
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">request_finished</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">my_callback</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Request finished!&#34;</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Connecting to signals sent by specific senders.</p>
+
+<p>就是说我们只处理<code>某个模型</code>发出的信号</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">django.db.models.signals</span> <span class="kn">import</span> <span class="n">pre_save</span>
+<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="kn">import</span> <span class="n">receiver</span>
+<span class="kn">from</span> <span class="nn">myapp.models</span> <span class="kn">import</span> <span class="n">MyModel</span>
+
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">pre_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">MyModel</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">my_handler</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="o">...</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>####自定义事件
+在此使用<a href="http://django-china.cn/topic/151/">一休哥</a>同学给的例子，也是Django中现成的例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#file：django\db\models\signals.py</span>
+
+<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="kn">import</span> <span class="n">Signal</span>
+<span class="n">post_syncdb</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="n">providing_args</span><span class="o">=</span><span class="p">[</span><span class="s2">&#34;class&#34;</span><span class="p">,</span> <span class="s2">&#34;app&#34;</span><span class="p">,</span> <span class="s2">&#34;created_models&#34;</span><span class="p">,</span> 
+<span class="s2">&#34;verbosity&#34;</span><span class="p">,</span> <span class="s2">&#34;interactive&#34;</span><span class="p">])</span>
+
+<span class="c1">#-----------------------------------</span>
+
+<span class="c1">#file：django\contrib\contenttypes\management.py</span>
+
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">signals</span>
+<span class="n">signals</span><span class="o">.</span><span class="n">post_syncdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">update_contenttypes</span><span class="p">)</span>
+
+<span class="c1">#-----------------------------------</span>
+<span class="c1">#file：django\core\management\sql.py</span>
+
+<span class="k">def</span> <span class="nf">emit_post_sync_signal</span><span class="p">(</span><span class="n">created_models</span><span class="p">,</span> <span class="n">verbosity</span><span class="p">,</span> <span class="n">interactive</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+    <span class="c1"># Emit the post_sync signal for every application.</span>
+    <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">get_apps</span><span class="p">():</span>
+        <span class="n">app_name</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">verbosity</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Running post-sync handlers for application </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">app_name</span><span class="p">)</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">signals</span><span class="o">.</span><span class="n">post_syncdb</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">app</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="n">app</span><span class="p">,</span>
+            <span class="n">created_models</span><span class="o">=</span><span class="n">created_models</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span>
+            <span class="n">interactive</span><span class="o">=</span><span class="n">interactive</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="n">db</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>更具体的实例可以参考:<a href="http://www.cnblogs.com/mindsbook/archive/2009/10/27/django_signal.html">django拾遗之signal</a></p>
+
+<p>###参考
+*  <a href="https://docs.djangoproject.com/en/1.6/topics/signals/">django官网</a>
+*  <a href="http://django-china.cn/topic/151/">浅谈django的信号机制 Signals</a>
+*  <a href="http://www.cnblogs.com/mindsbook/archive/2009/10/27/django_signal.html">django拾遗之signal</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-04-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/django/"> django</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/locale-wechat/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">在局域网中部署微信服务器</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/sjqd/">
+            <span class="next-text nav-default">事件驱动</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>利用github来深入源码 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="最近在折腾edx，edx是我截至目前，见过最庞大的django项目。麻省理工和哈佛大学在这个项目中各资助了三千万美元，代码量可想而知。 在错综" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/github-edx/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="利用github来深入源码" />
+<meta property="og:description" content="最近在折腾edx，edx是我截至目前，见过最庞大的django项目。麻省理工和哈佛大学在这个项目中各资助了三千万美元，代码量可想而知。 在错综" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/github-edx/" />
+<meta property="article:published_time" content="2014-07-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-07-18T00:00:00+00:00" />
+<meta itemprop="name" content="利用github来深入源码">
+<meta itemprop="description" content="最近在折腾edx，edx是我截至目前，见过最庞大的django项目。麻省理工和哈佛大学在这个项目中各资助了三千万美元，代码量可想而知。 在错综">
+
+
+<meta itemprop="datePublished" content="2014-07-18T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-07-18T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="899">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="利用github来深入源码"/>
+<meta name="twitter:description" content="最近在折腾edx，edx是我截至目前，见过最庞大的django项目。麻省理工和哈佛大学在这个项目中各资助了三千万美元，代码量可想而知。 在错综"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">利用github来深入源码</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-07-18 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#托管了世界上绝大多的开源代码库">托管了世界上绝大多的开源代码库</a></li>
+<li><a href="#完整的资料-源码-文档-issue">完整的资料，源码，文档，issue&hellip;</a></li>
+<li><a href="#代码高亮">代码高亮</a></li>
+<li><a href="#库内搜索">库内搜索</a></li>
+<li><a href="#gist做代码片段笔记">gist做代码片段笔记</a></li>
+<li><a href="#fork项目-之后使用fork库中的wiki来记录阅读笔记">fork项目,之后使用fork库中的wiki来记录阅读笔记</a></li>
+<li><a href="#使用url精确定位到行数">使用url精确定位到行数</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>最近在折腾edx，edx是我截至目前，见过最庞大的django项目。麻省理工和哈佛大学在这个项目中各资助了三千万美元，代码量可想而知。</p>
+
+<p>在错综复杂的源码森林里，如何行走，不至于迷失，而能有所收获是个很普遍的问题。</p>
+
+<p>读别人代码和自个儿写代码是很不相同的。读人家代码，有时你会有一种想揍作者的感觉。其实许多时候是你习惯以己度人而已。</p>
+
+<p>试着去理解而不是急着去批评。我想这应当作为我们的起点。其实又岂止适用于读代码。</p>
+
+<hr />
+
+<p>那么我们该如何阅读别人的代码。</p>
+
+<p>此类问题，知乎中有几个回答不错，值得一读。<a href="http://www.zhihu.com/question/21186887">here</a></p>
+
+<p>此外也推荐<a href="http://book.douban.com/subject/1151672/">这本书</a></p>
+
+<p>我们今天不谈论源码阅读的艺术，只谈论如何利用github来帮助我们阅读代码。</p>
+
+<p>泡上一杯咖啡，我们开始吧～</p>
+
+<p>##为何使用github来阅读源码</p>
+
+<h3 id="托管了世界上绝大多的开源代码库">托管了世界上绝大多的开源代码库</h3>
+
+<h3 id="完整的资料-源码-文档-issue">完整的资料，源码，文档，issue&hellip;</h3>
+
+<h3 id="代码高亮">代码高亮</h3>
+
+<ul>
+<li><p><img src="http://wwjpic.qiniudn.com/light.png" alt="0" /></p>
+
+<h3 id="库内搜索">库内搜索</h3></li>
+
+<li><p><img src="http://wwjpic.qiniudn.com/search.png" alt="1" /></p>
+
+<h3 id="gist做代码片段笔记">gist做代码片段笔记</h3></li>
+
+<li><p><img src="http://wwjpic.qiniudn.com/gist.png" alt="2" /></p>
+
+<h3 id="fork项目-之后使用fork库中的wiki来记录阅读笔记">fork项目,之后使用fork库中的wiki来记录阅读笔记</h3></li>
+
+<li><p><img src="http://wwjpic.qiniudn.com/wiki.png" alt="3" /></p>
+
+<h3 id="使用url精确定位到行数">使用url精确定位到行数</h3></li>
+
+<li><p><img src="http://wwjpic.qiniudn.com/code-url.png" alt="4" /></p></li>
+</ul>
+
+<p>##如何使用
+大家可以看下我阅读edx项目时做的<a href="https://github.com/wwj718/wwj718.github.com/wiki/edx%E8%AF%BE%E7%A8%8B%E6%90%9C%E7%B4%A2">wiki</a></p>
+
+<p>使用IDE阅读当然也是挺方便在代码中穿梭的。</p>
+
+<p>可我觉得阅读代码重要的不只是定位。而是如何随时记录，让你的阅读过程不会随着时间的中断而中断，这样我们的阅读过程是可积累的。对于大型项目，我们不能太过于依赖记忆力，尤其是我这种记忆力渣渣的渣渣，我更倾向于求助于工具。技术解放大脑～这样大脑内存就可以去存储更多有趣的东西了，诗词歌赋文章歌词泡妞策略 and so on &hellip;</p>
+
+<p>其实这有点像阅读时能随时做批注，github项目自带的wiki是个不错的选择，我们同时打开项目源码和wiki页面，阅读到某处，需要做笔记时，切换到wiki页面记录。</p>
+
+<p>我们使用markdown语法，可以轻易记录源码位置链接。具体实例参考的我的wiki</p>
+
+<p>那么精确到行的url链接是如何取得的呢。  其实很简单。<br />
+鼠标在某行前边的数字上点击，你看浏览器导航栏里的url就发生变化了，完整复制下url就行。</p>
+
+<p>泡上一杯咖啡，读你的源码去吧。</p>
+
+<p>现在你再也不用害怕阅读过程被打断了。</p>
+
+<p>你看妹子给你来微信了是吧，停下手头工作勾搭妹子去吧。随时回来你都可以继续你的源码阅读～</p>
+
+<p>简直像断点续传有木有！！</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-07-18
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/favorites/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">收藏有趣的言论/见解/观点</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/learn-mako/">
+            <span class="next-text nav-default">mako学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

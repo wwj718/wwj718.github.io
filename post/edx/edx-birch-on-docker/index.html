@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>edx(birch) on docker - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="上一篇文章提到我build出了edx（birch）的docker版。 此前appsembler（国外提供edx服务的一家公司）在docker h" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/edx-birch-on-docker/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="edx(birch) on docker" />
+<meta property="og:description" content="上一篇文章提到我build出了edx（birch）的docker版。 此前appsembler（国外提供edx服务的一家公司）在docker h" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/edx-birch-on-docker/" />
+<meta property="article:published_time" content="2015-06-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-06-24T00:00:00+00:00" />
+<meta itemprop="name" content="edx(birch) on docker">
+<meta itemprop="description" content="上一篇文章提到我build出了edx（birch）的docker版。 此前appsembler（国外提供edx服务的一家公司）在docker h">
+
+
+<meta itemprop="datePublished" content="2015-06-24T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-06-24T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="792">
+
+
+
+<meta itemprop="keywords" content=" edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="edx(birch) on docker"/>
+<meta name="twitter:description" content="上一篇文章提到我build出了edx（birch）的docker版。 此前appsembler（国外提供edx服务的一家公司）在docker h"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">edx(birch) on docker</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-06-24 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>上一篇文章提到我build出了edx（birch）的docker版。</p>
+
+<p>此前appsembler（国外提供edx服务的一家公司）在docker hub上发布过edx-lite和edx-full，不过一直停留在aspen版本。而birch版本修复了不少重大bug，并加入了分组之类的实用特性，我几个月前写邮件问他们是否有发布birch版本的打算，他们回复说：</p>
+
+<blockquote>
+<p>We do already have some birch images that we use for our clients, but those are currently only for internal use as they contain our API keys and other private stuff. I think we plan on releasing the birch images publicly at some point, but I can’t tell you when exactly as we have more urgent work to do at the moment.</p>
+</blockquote>
+
+<p>回信的末尾说发布出来后会通知我，我也等不及了，就自己去build了。</p>
+
+<p>在此记录build的过程</p>
+
+<p>#环境
+*  Ubuntu14.04
+*  docker1.7</p>
+
+<p>#安装最新版docker
+<code>wget -qO- https://get.docker.com/ | sh</code></p>
+
+<p>#开始安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+#base image
+sudo docker pull phusion/baseimage
+git clone https://github.com/appsembler/configuration.git -b docker_release ~/configuration
+sudo docker run -i -t -p :80 -p :18010 -p :18020 -d -v ~/configuration:/configuration phusion/baseimage /sbin/my_init --enable-insecure-key
+sudo docker ps #获取&lt;container_id&gt;
+
+#进入到容器里开始安装，此后的过程和在ubuntu12.04上部署相似
+sudo docker exec -it &lt;container_id&gt; bash
+
+#处理elasticsearch相关的两个问题
+1.vim playbooks/roles/elasticsearch/tasks/main.yml
+     force=no
++    validate_certs=no
+   register: elasticsearch_reinstall
+   
+2.vim playbooks/roles/elasticsearch/tasks/main.yml
++- name: Disable dynamic scripting
++  lineinfile: &#34;dest=/etc/elasticsearch/elasticsearch.yml line=&#39;script.disable_dynamic: true&#39;&#34;
++  sudo: True
++  when: not ELASTICSEARCH_CLUSTERED
+ 
+ - name: create directories
+   file: &gt;
+
+#安装依赖
+apt-get update &amp;&amp; apt-get install -y python-dev python-setuptools python-apt gcc &amp;&amp; easy_install pip
+cd /configuration &amp;&amp; pip install -r requirements.txt
+
+#安装edx-lite，里边只跑着cms，lms和forum
+cd playbooks &amp;&amp; ansible-playbook -vv -c local -i &#34;127.0.0.1,&#34; docker_lite.yml  #中途失败后可以用 --start-at-task=&#34;xx&#34;继续
+
+#成功后，记得commit,移除&#34;/sbin/my_init&#34;,
+docker commit -a &#34;wwj718&lt;wuwenjie718@gmail.com&gt;&#34; -run &#39;{&#34;Cmd&#34;:[&#34;--enable-insecure-key&#34;], &#34;PortSpecs&#34;:[&#34;22&#34;,&#34;80&#34;,&#34;5000&#34;, &#34;18010&#34;, &#34;18020&#34;]}&#39; &lt;container_id&gt; wwj718/edx-lite:birch
+
+#push到docker hub
+docker push wwj718/edx-lite:birch
+
+#导出(export)
+sudo docker export &lt;container_id&gt; &gt; edx-lite_birch_export.tar
+
+#也可以这样导出(save)
+sudo docker save wwj718/edx-lite:birch &gt; edx-lite_birch_save.tar</pre></td></tr></table>
+</div>
+</div>
+<p>关于docker中export和save的区别,stackoverflow上的<a href="http://stackoverflow.com/questions/22655867/what-is-the-difference-between-save-and-export-in-docker">这个回答</a>说的很好：</p>
+
+<blockquote>
+<p>The exported image will not have any layer or history information saved, so it will be smaller and you will not be able to rollback</p>
+</blockquote>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-06-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/"> edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/edx-data-analysis-on-docker/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">基于docker的edx数据分析</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/edx-popularize-community-docker/">
+            <span class="next-text nav-default">edx推广，国内社区与docker</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

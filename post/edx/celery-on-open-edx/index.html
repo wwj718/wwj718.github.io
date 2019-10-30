@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Celery在Open edX中的使用 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="折腾Open edX趣味之一是它很杂。 大量的工具和架构设计在这里都有具体的场景，于是从使用中学习，先跑起来，然后修修改改，如果系统没有坏掉，就" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/celery-on-open-edx/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Celery在Open edX中的使用" />
+<meta property="og:description" content="折腾Open edX趣味之一是它很杂。 大量的工具和架构设计在这里都有具体的场景，于是从使用中学习，先跑起来，然后修修改改，如果系统没有坏掉，就" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/celery-on-open-edx/" />
+<meta property="article:published_time" content="2015-11-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-11-23T00:00:00+00:00" />
+<meta itemprop="name" content="Celery在Open edX中的使用">
+<meta itemprop="description" content="折腾Open edX趣味之一是它很杂。 大量的工具和架构设计在这里都有具体的场景，于是从使用中学习，先跑起来，然后修修改改，如果系统没有坏掉，就">
+
+
+<meta itemprop="datePublished" content="2015-11-23T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-11-23T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1548">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Celery在Open edX中的使用"/>
+<meta name="twitter:description" content="折腾Open edX趣味之一是它很杂。 大量的工具和架构设计在这里都有具体的场景，于是从使用中学习，先跑起来，然后修修改改，如果系统没有坏掉，就"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Celery在Open edX中的使用</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-11-23 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#celery的启用代码">celery的启用代码</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#补遗">补遗</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>折腾Open edX趣味之一是它很杂。</p>
+
+<p>大量的工具和架构设计在这里都有具体的场景，于是从使用中学习，先跑起来，然后修修改改，如果系统没有坏掉，就继续探索。</p>
+
+<p>我很喜欢这种增量式学习，在这里以实战的方式学习linux command 、数据库、Python 、require.js、任务队列、缓存、REST、OAuth&hellip;</p>
+
+<p>今天是Celery</p>
+
+<p>#Celery入门
+##What
+我喜欢将Celery视为执行<code>异步任务</code>的工具，这个观念让我容易把握它。</p>
+
+<p>Celery是一个专注于实时处理的任务队列，同时也支持任务调度。</p>
+
+<p>Celery 是用 Python 编写的，但协议可以用任何语言实现</p>
+
+<p>###典型使用场景
+*  我们可能需要执行一段费时的任务, 这一时间远超用户能忍受的范围. 当这一任务不需要立即执行时, 我们就可以使用Celery在后台执行, 而不影响当前用户浏览网页
+*  定期执行某些任务，类似linux中定时任务：crontab. 比如每天半夜2点执行一下数据分析, 然后将数据储存到数据库中. 我们可以编写这一任务, 然后让Celery来定时完成执行任务.</p>
+
+<p>上述的任务即是<code>task</code>,对应为一段python代码</p>
+
+<p>##基础概念
+*  任务队列：是一种在线程或机器间分发任务的机制。
+*  Broker：中文意思是 <code>经纪人</code> ，其实就是<code>消息队列</code> ，用来发送和接受消息。这个Broker有几个方案可供选择：RabbitMQ，Redis（丢数据），数据库（不推荐）
+*  Backend:在Celery的配置中的一个配置项 CELERY_RESULT_BACKEND ，作用是保存结果和状态，如果你需要跟踪任务的状态，那么需要设置这一项</p>
+
+<p>Broker和Backend可以都使用redis</p>
+
+<p>##一个案例
+###安装依赖
+*  pip install celery
+*  sudo apt-get install rabbitmq-server（启动:rabbitmq-server）</p>
+
+<p>###创建tasks.py</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">Celery</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Celery</span><span class="p">(</span><span class="s1">&#39;tasks&#39;</span><span class="p">,</span> <span class="n">broker</span><span class="o">=</span><span class="s1">&#39;amqp://celery:celery@localhost//&#39;</span><span class="p">)</span> <span class="c1">#edx环境中rabbitmq已经默认安装，用户名和密码均为celery:celery</span>
+
+<span class="nd">@app.task</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s2">&#34;before running x+y&#34;</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>###启动一个worker
+在tasks.py同级目录下执行：<code>celery -A tasks worker --loglevel=info</code></p>
+
+<p>在生产环境中一般使用supervisor把它丢到后台运行</p>
+
+<p>###调度任务
+使用ipython进入交互模式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+&gt;&gt;&gt; from tasks import add
+&gt;&gt;&gt; add.delay(1, 2)</pre></td></tr></table>
+</div>
+</div>
+<p>我们可以在worker进程中看到</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+[2015-11-23 16:13:26,341: INFO/MainProcess] Connected to amqp://celery:**@127.0.0.1:5672//
+[2015-11-23 16:13:26,355: INFO/MainProcess] mingle: searching for neighbors
+[2015-11-23 16:13:27,379: INFO/MainProcess] mingle: sync with 7 nodes
+[2015-11-23 16:13:27,379: INFO/MainProcess] mingle: sync complete
+[2015-11-23 16:13:27,387: WARNING/MainProcess] celery@vultr.guest ready.
+[2015-11-23 16:13:30,303: INFO/MainProcess] Received task: tasks.add[af9f8162-5af0-4cd3-846b-4b6d4da3a4fc]
+[2015-11-23 16:13:30,303: WARNING/Worker-1] before running x+y
+[2015-11-23 16:13:30,304: INFO/MainProcess] Task tasks.add[af9f8162-5af0-4cd3-846b-4b6d4da3a4fc] succeeded in 0.000959093216807s: 3</pre></td></tr></table>
+</div>
+</div>
+<p>上边的例子有返回值（执行结果），我们为了知道任务的执行结果和状态。需要设置backend。于是变为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">Celery</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Celery</span><span class="p">(</span><span class="s1">&#39;tasks&#39;</span><span class="p">,</span> <span class="n">broker</span><span class="o">=</span><span class="s1">&#39;amqp://celery:celery@localhost//&#39;</span><span class="p">)</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">CELERY_RESULT_BACKEND</span><span class="o">=</span><span class="s1">&#39;cache+memcached://127.0.0.1:11211/&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+<span class="nd">@app.task</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s2">&#34;before running x+y&#34;</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>进入ipython</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+from tasks import add
+r=add.delay(1, 2)
+r.ready() #False
+r.result #为空,等十秒
+r.ready() #True
+r.result #3</pre></td></tr></table>
+</div>
+</div>
+<p>##分布式
+Celery 系统可包含多个职程和中间人，以此获得高可用性和横向扩展能力。</p>
+
+<p>具体可参考:</p>
+
+<ul>
+<li><a href="http://www.the5fire.com/take-a-glance-at-celery.html">Celery的安装和使用</a></li>
+<li><a href="http://docs.celeryproject.org/en/latest/userguide/workers.html">Workers Guide</a></li>
+</ul>
+
+<p>#Celery在Open edX中的使用
+在Open edX中，使用RabbitMQ作为Broker，默认的用户名和密码都为celery，</p>
+
+<p>用CACHES作为Celery的backend（&rdquo;django.core.cache.backends.memcached.MemcachedCache&rdquo;）</p>
+
+<p>具体的使用场景主要是各类耗时的任务,典型的有成绩单生成，发送大量提醒邮件，任务的源码分布在各个django app的tasks.py文件里，诸如</p>
+
+<ul>
+<li><a href="https://github.com/edx/edx-platform/blob/master/lms/djangoapps/instructor_task/tasks.py">lms/djangoapps/instructor_task/tasks.py</a></li>
+<li><a href="https://github.com/edx/edx-platform/blob/master/cms/djangoapps/contentstore/tasks.py">cms/djangoapps/contentstore/tasks.py</a></li>
+<li><a href="https://github.com/edx/edx-platform/blob/master/lms/djangoapps/ccx/tasks.py">lms/djangoapps/ccx/tasks.py</a></li>
+<li><a href="https://github.com/edx/edx-platform/blob/master/lms/djangoapps/lti_provider/tasks.py">lms/lti_provider/tasks.py</a></li>
+<li><a href="https://github.com/edx/edx-platform/tree/master/lms/djangoapps/instructor_task">lms/djangoapps/instructor_task</a></li>
+<li><a href="https://github.com/edx/edx-platform/blob/master/openedx/core/djangoapps/credit/tasks.py">openedx/core/djangoapps/credit/tasks.py</a></li>
+<li><a href="https://github.com/edx/edx-platform/blob/master/common/djangoapps/third_party_auth/tasks.py">common/djangoapps/third_party_auth/tasks.py</a></li>
+<li>&hellip;</li>
+</ul>
+
+<h3 id="celery的启用代码">celery的启用代码</h3>
+
+<p>参考<code>/edx/app/supervisor/conf.d/workers.conf</code></p>
+
+<p>形如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+command=/edx/app/edxapp/venvs/edxapp/bin/python /edx/app/edxapp/edx-platform/manage.py cms --settings=aws celery worker --loglevel=info --queues=edx.cms.core.low --hostname=edx.cms.core.low.%%h --concurrency=1</pre></td></tr></table>
+</div>
+</div>
+<p>#参考
+*  <a href="https://github.com/celery/celery">celery/celery</a>
+*  <a href="http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html">Using Celery with Django</a>
+*  <a href="http://docs.celeryproject.org/en/latest/index.html">Celery - Distributed Task Queue</a>
+*  <a href="http://docs.jinkan.org/docs/celery/">Celery - 分布式任务队列</a>
+*  <a href="http://docs.jinkan.org/docs/flask/patterns/celery.html">基于 Celery 的后台任务</a>
+*  <a href="http://www.the5fire.com/take-a-glance-at-celery.html">Celery的安装和使用</a>
+*  <a href="http://www.liaoxuefeng.com/article/00137760323922531a8582c08814fb09e9930cede45e3cc000">任务调度利器：Celery</a></p>
+
+<hr />
+
+<h1 id="补遗">补遗</h1>
+
+<p>###相关工具与主题
+*  <a href="http://docs.celeryproject.org/en/latest/userguide/monitoring.html">监控</a>
+*  <a href="http://docs.celeryproject.org/en/latest/faq.html#how-do-i-get-the-result-of-a-task-if-i-have-the-id-that-points-there">get task result</a>
+    *  <a href="https://github.com/edx/edx-platform/blob/76b8e2e89761c30ac7aa2fa5e8aca4dc35d9002b/lms/djangoapps/instructor_task/api_helper.py#L102">_update_instructor_task AsyncResult</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-11-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%AE%97%E6%B3%95/algorithm-foreword/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">算法.前言</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/fake-data-factory/">
+            <span class="next-text nav-default">伪数据工厂faker</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

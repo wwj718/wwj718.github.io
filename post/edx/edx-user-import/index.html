@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>为edX批量导入用户 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="&amp;ndash;更新于：2016-07-13 近期重写这部分，使其成为django management command (在dogwood版本下测试可用) 原因有二，其一是之前所用" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/edx-user-import/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="为edX批量导入用户" />
+<meta property="og:description" content="&ndash;更新于：2016-07-13 近期重写这部分，使其成为django management command (在dogwood版本下测试可用) 原因有二，其一是之前所用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/edx-user-import/" />
+<meta property="article:published_time" content="2016-07-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-07-13T00:00:00+00:00" />
+<meta itemprop="name" content="为edX批量导入用户">
+<meta itemprop="description" content="&ndash;更新于：2016-07-13 近期重写这部分，使其成为django management command (在dogwood版本下测试可用) 原因有二，其一是之前所用">
+
+
+<meta itemprop="datePublished" content="2016-07-13T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-07-13T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1634">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="为edX批量导入用户"/>
+<meta name="twitter:description" content="&ndash;更新于：2016-07-13 近期重写这部分，使其成为django management command (在dogwood版本下测试可用) 原因有二，其一是之前所用"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">为edX批量导入用户</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-07-13 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#大体思路">大体思路</a></li>
+</ul></li>
+<li><a href="#坑">坑</a>
+<ul>
+<li>
+<ul>
+<li><a href="#解决方案">解决方案</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>&ndash;更新于：2016-07-13</p>
+
+<p>近期重写这部分，使其成为<code>django management command</code> (在dogwood版本下测试可用)</p>
+
+<p>原因有二，其一是之前所用的功能函数不完备,随着对edx的了解深入，想用更安全的函数来完成批量注册功能，其二是希望做到更好的内聚性</p>
+
+<p>这部分是从我的<a href="https://github.com/wwj718/edx_siteapi">edx_siteapi</a>抽出的一个功能模块，edx_siteapi项目试图把edx的一些功能变为RESTful api接口(类似canvas做的)，供外部系统调用和整合，有兴趣的小伙伴可以关注这个项目</p>
+
+<hr />
+
+<p>在搭建edX的时候，可能面临一个这样的需求：批量导入学生作为用户。<br />
+即便是采用cas注册这个需求可能依旧存在，校内系统可能存有用户课程关系，需要预先导入,所以用户实体需要预先存在系统中，而cas是一种首次登录才注册的机制</p>
+
+<p>有时我们可能需要批量从既有数据库中导入用户，尤其是将Open edX用于SPOC中时</p>
+
+<p>在此给出一个可行的解决方案。</p>
+
+<h2 id="大体思路">大体思路</h2>
+
+<ul>
+<li>从校方数据库中导出用户文件(csv格式)</li>
+<li>写脚本从csv文件中取得所需的字段（诸如学号，姓名）</li>
+<li>使用<code>django management command</code>将用户导入系统（利用django management command能调用django上下文的机制，这也是此次更新的主要地方）</li>
+</ul>
+
+<p>##实施细节</p>
+
+<p>我们假设从数据库导出的文件student.csv 如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+姓名,学号,email,专业,班级
+张三,201011,zs@qq.com,热能动力工程,动力1007班
+李四,201012,ls@qq.com,热能动力工程,动力1008班
+王五,201013,ww@qq.com,热能动力工程,动力1009班
+...</pre></td></tr></table>
+</div>
+</div>
+<p>注意逗号前后的空格是有影响的！</p>
+
+<p>###编写脚本
+在任意django app目录下创建<code>management/commands/create_user_from_csv.py</code>,先上代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+<span class="kn">from</span> <span class="nn">optparse</span> <span class="kn">import</span> <span class="n">make_option</span>
+<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
+
+<span class="kn">from</span> <span class="nn">student.forms</span> <span class="kn">import</span> <span class="n">AccountCreationForm</span>
+<span class="kn">from</span> <span class="nn">student.models</span> <span class="kn">import</span> <span class="n">create_comments_service_user</span>
+<span class="kn">from</span> <span class="nn">student.views</span> <span class="kn">import</span> <span class="n">_do_create_account</span><span class="p">,</span> <span class="n">AccountValidationError</span>
+<span class="kn">from</span> <span class="nn">track.management.tracked_command</span> <span class="kn">import</span> <span class="n">TrackedCommand</span>
+<span class="c1"># 解析csv</span>
+<span class="kn">import</span> <span class="nn">unicodecsv</span>  <span class="c1"># utf-8 ,也可以用pandas:</span>
+
+
+<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">AccountCreationForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+        <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span>
+        <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+    <span class="p">},</span>
+                               <span class="n">tos_required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">user</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">reg</span> <span class="o">=</span> <span class="n">_do_create_account</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+        <span class="n">reg</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
+        <span class="n">reg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="c1">#create_comments_service_user(user) #这会促发网络请求</span>
+        <span class="k">return</span> <span class="n">user</span>
+    <span class="k">except</span> <span class="n">AccountValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span>
+
+
+<span class="c1"># wget https://raw.githubusercontent.com/edx/edx-platform/named-release/dogwood.rc/common/djangoapps/student/management/commands/create_user.py</span>
+<span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">TrackedCommand</span><span class="p">):</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">    example:
+</span><span class="s2">        # Enroll a user test@example.com into the demo course
+</span><span class="s2">        # The username and name will default to &#34;test&#34;
+</span><span class="s2">        sudo -u www-data /edx/bin/python.edxapp /edx/app/edxapp/edx-platform/manage.py lms create_user_from_csv --help --settings devstack
+</span><span class="s2">        sudo -u www-data /edx/bin/python.edxapp /edx/app/edxapp/edx-platform/manage.py lms create_user_from_csv --csv /edx/app/edxapp/edx-platform/lms/djangoapps/siteapi/student.csv --settings devstack
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&#34;批量导入用户&#34;</span>
+    <span class="n">option_list</span> <span class="o">=</span> <span class="n">BaseCommand</span><span class="o">.</span><span class="n">option_list</span> <span class="o">+</span> <span class="p">(</span>
+        <span class="n">make_option</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--csv&#39;</span><span class="p">,</span> <span class="c1">#采用绝对路径</span>
+                    <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;CSV&#39;</span><span class="p">,</span>
+                    <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;csv&#39;</span><span class="p">,</span>
+                    <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;用户注册表&#39;</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="n">csv</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;csv&#39;</span><span class="p">]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">csv</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f_csv</span> <span class="o">=</span> <span class="n">unicodecsv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">f_csv</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">item</span><span class="p">[</span><span class="sa">u</span><span class="s2">&#34;姓名&#34;</span><span class="p">]</span>
+                <span class="n">username</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="sa">u</span><span class="s2">&#34;学号&#34;</span><span class="p">]</span>
+                <span class="n">email</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="sa">u</span><span class="s2">&#34;email&#34;</span><span class="p">]</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="sa">u</span><span class="s2">&#34;姓名&#34;</span><span class="p">]</span>
+                <span class="n">password</span> <span class="o">=</span> <span class="n">username</span>
+                <span class="n">create_user</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="c1"># 缺乏读写csv的技巧,next和边界，按header读取</span>
+        <span class="c1"># http://python3-cookbook.readthedocs.io/zh_CN/latest/c06/p01_read_write_csv_data.html</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>测试显示，8000名学生的话，大约需要导入十几分钟(旧版本)</p>
+
+<p>###安装依赖</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+sudo /edx/bin/pip.edxapp install unicodecsv #dogwood版不需要</pre></td></tr></table>
+</div>
+</div>
+<p>###开始导入
+<code>sudo -u www-data /edx/bin/python.edxapp /edx/app/edxapp/edx-platform/manage.py lms create_user_from_csv --csv /tmp/student.csv --settings devstack</code></p>
+
+<p>###开始使用
+在/login中使用email和password登录即可。</p>
+
+<p>对于不想使用这种登录方式的，可以自己来写用户认证，诸如使用username和password登录之类的</p>
+
+<p>###后记
+文中我们创建用户使用的是python代码。</p>
+
+<p>如果是单独创建用户，也可以用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo -u www-data /edx/bin/python.edxapp /edx/app/edxapp/edx-platform/manage.py lms  create_user --username test123 --name test123  --password test123 --email test123@qq.com </code></pre></td></tr></table>
+</div>
+</div>
+<p>如果你愿意也可以采用http请求创建，详情可以跟踪sysadmin里的创建用户功能（封装成restful接口可用作异构系统接口）</p>
+
+<h1 id="坑">坑</h1>
+
+<p>删除用户之后创建同名用户，会造成:CommentClientRequestError: u&rsquo;[&ldquo;Username is already taken&rdquo;]&lsquo;,猜测是评论系统内依然留存有用户造成的,而评论系统是个异构系统(mongodb)</p>
+
+<p>线索：</p>
+
+<ul>
+<li>import lms.lib.comment_client as cc</li>
+<li>cc_user = cc.User.from_django_user(user)</li>
+</ul>
+
+<h3 id="解决方案">解决方案</h3>
+
+<p>如果我们的猜测是对的，应该只要删除点mongodb中的user应该就好了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+mongo
+use cs_comments_service_development
+db.users.find()
+db.users.remove({}) #移除所有,也可以写到python脚本里,使用pymongo</pre></td></tr></table>
+</div>
+</div>
+<p>一切正常，猜测正确!</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-07-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/try-open-edx-note-system-in-cloud/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Open-edx笔记系统尝鲜</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/use-python-and-github-create-trojan-horse/">
+            <span class="next-text nav-default">用python和github构建一只玩具木马</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

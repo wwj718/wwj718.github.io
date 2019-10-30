@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>一辆树莓派可编程小车的问题 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="在上一篇文章里，我们提到 本周，我会给出一个具体例子: 在树莓派中使用extension_iot.py，定制出extension_iot_rpi" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/rpi-car-difficult/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="一辆树莓派可编程小车的问题" />
+<meta property="og:description" content="在上一篇文章里，我们提到 本周，我会给出一个具体例子: 在树莓派中使用extension_iot.py，定制出extension_iot_rpi" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/rpi-car-difficult/" />
+<meta property="article:published_time" content="2019-02-25T17:00:00+00:00" />
+<meta property="article:modified_time" content="2019-02-25T17:00:00+00:00" />
+<meta itemprop="name" content="一辆树莓派可编程小车的问题">
+<meta itemprop="description" content="在上一篇文章里，我们提到 本周，我会给出一个具体例子: 在树莓派中使用extension_iot.py，定制出extension_iot_rpi">
+
+
+<meta itemprop="datePublished" content="2019-02-25T17:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-02-25T17:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2555">
+
+
+
+<meta itemprop="keywords" content="scratch ," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="一辆树莓派可编程小车的问题"/>
+<meta name="twitter:description" content="在上一篇文章里，我们提到 本周，我会给出一个具体例子: 在树莓派中使用extension_iot.py，定制出extension_iot_rpi"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">一辆树莓派可编程小车的问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-25 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%A7%81%E6%9C%89/"> 私有 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#问题是什么">问题是什么</a>
+<ul>
+<li>
+<ul>
+<li><a href="#树莓派作为编程教育平台">树莓派作为编程教育平台</a></li>
+<li><a href="#一辆可编程小车">一辆可编程小车</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#怎么建立连接">怎么建立连接</a>
+<ul>
+<li>
+<ul>
+<li><a href="#蓝牙">蓝牙</a></li>
+<li><a href="#wifi">wifi</a></li>
+<li><a href="#小车">小车</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#一起来解决问题">一起来解决问题</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>在<a href="https://blog.just4fun.site/codelab-love-iot.html">上一篇文章</a>里，我们提到</p>
+
+<blockquote>
+<p>本周，我会给出一个具体例子: 在树莓派中使用extension_iot.py，定制出extension_iot_rpi.py， 而后者是可以实际服务于硬件教学的插件。 在这个例子中我们将展示，如何在几天内快速构建一个教学产品，可以直接推向最终用户，它甚至包括了管理功能(如远程故障处理和升级)!</p>
+</blockquote>
+
+<h1 id="问题是什么">问题是什么</h1>
+
+<p>在给出解决方案是什么之前，我们先来问一下: 问题是什么呢?</p>
+
+<h3 id="树莓派作为编程教育平台">树莓派作为编程教育平台</h3>
+
+<p>我们在 <a href="https://blog.just4fun.site/codelab-adapter-love-Raspberry%20Pi.html">codelab-adapter ❤️ Raspberry Pi</a>，写到:</p>
+
+<blockquote>
+<p>就编程教育而言，树莓派是非常理想的开源硬件。</p>
+</blockquote>
+
+<p>这句话是含混的。树莓派是一台电脑，这意味这它可以胜任无数工作，即便就编程教育而言，它的生态里也有数不清的工具，其中有好有坏。当我们说<code>就编程教育而言，树莓派是非常理想的开源硬件。</code> 我们实际是想说，树莓派是个开放的平台，充满了无限可能，无论你想做怎样的编程教育，它可能都是不错的选择。</p>
+
+<p>树莓派生态里，有数不清的优秀项目用以支持编程。在<a href="https://blog.just4fun.site/codelab-love-iot.html">CodeLab ❤️ IoT</a>列出了我们尤其喜欢的两个项目:</p>
+
+<ul>
+<li><a href="https://github.com/RPi-Distro/python-gpiozero">python-gpiozero</a></li>
+<li><a href="https://www.adafruit.com/product/3957">Adafruit CRICKIT HAT</a></li>
+</ul>
+
+<blockquote>
+<p>自由有时候是一种负担</p>
+</blockquote>
+
+<p>问题来了，现在有一群学生，一堆树莓派，有这么多的编程工具可供选择，你来说说要怎么开始编程吧？</p>
+
+<p>这取决于你是谁，你的用户是谁，你构想的编程场景是怎样的。这些是很个性化的问题，并不存在通用的最佳实践。</p>
+
+<p>让我们讨论一个具体的案例。在这个典型案例中，我们会看到一些常见的问题模式。</p>
+
+<p>这个案例是这样的: 你将树莓派作为驱动小车的硬件平台，它是小车的大脑，你构建的产品是一辆编程小车，树莓派是你的项目的一部分。</p>
+
+<p>它大约长这样:</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/gopiogo_0e097325.png" width=500></p>
+
+<p>你当然不会只是想卖出一辆可由树莓派驱动的小车，那样是没什么人想买的。它向左走两步，接着向右走两步就完事了，程序固化其中，这不是你想要的。你希望它是可编程的。</p>
+
+<h3 id="一辆可编程小车">一辆可编程小车</h3>
+
+<p>一辆可编程小车，这么简单的问题用得着专门讨论吗？</p>
+
+<p>Google/Github搜一下树莓派小车，不是有一堆教程和开源项目吗？淘宝上随便买个小车底盘，买几个电机，加上一些开源的驱动，不就好了吗？</p>
+
+<p>外形不好看？3D打印一个。3D打印不够细腻？激光树脂了解一下。要批量生产？为外形开个模吧。</p>
+
+<p>好的，你很快做出了一个可编程的小车，只需要<code>ssh pi@raspberrypi.local</code>，写几行Python，小车就按你的代码逻辑移动啦！</p>
+
+<p>等等，命令行？对编程入门者不够友好吧。如果不用ssh，用户怎么为小车编程呢？</p>
+
+<p>更简单的问题是: 用户怎么与小车上的树莓派建立连接呢? 只要连接能顺利建立，编程过程可以看作在信道上来回传递信息。</p>
+
+<p>好的，我们似乎得关注&rdquo;怎么建立连接&rdquo;这个问题。</p>
+
+<h1 id="怎么建立连接">怎么建立连接</h1>
+
+<p>有许多方式建立用户与树莓派的连接。最新的树莓派自带了蓝牙(4.2)和wifi芯片。</p>
+
+<p>所以在不添加任何模块的情况下，我们可以利用蓝牙或wifi与树莓派建立连接。</p>
+
+<h3 id="蓝牙">蓝牙</h3>
+
+<p>树莓派里的蓝牙是可编程的，当你希望利用树莓派自带的蓝牙与用户建立连接时，社区里有很多种实现方案，常规的思路是你可以在树莓派里运行蓝牙服务。用户的客户端主动连接树莓派的蓝牙。需要注意的事，目前操作系统对ble的兼容还不够好，所以你将蓝牙运行为什么模式是需要考虑的，视你的用户和场景而定。</p>
+
+<p>但你依然需要考虑一些问题，小车树莓派的镜像是用同一个吗？小车的蓝牙服务名字是随机生成的吗？一个教室中有十个小车的话，学生怎么找到那个蓝牙服务对应自己的小车？</p>
+
+<p>这个问题追问的是如何添加clientid，让用户容易发现它。</p>
+
+<h3 id="wifi">wifi</h3>
+
+<p>树莓派内置了wifi芯片。所以我们可以将树莓派接入无线热点。当然也可以将树莓派用作无线热点。</p>
+
+<p>需要提醒的是，将树莓派用作热点，会强迫客户端接入它，如果没有双网卡，用户就失去了接入互联网的能力，而你的编程平台很可能在公网上。</p>
+
+<p>于是我们只讨论<code>将树莓派接入无线热点</code>的方案。首先我们就会遭遇一个棘手的问题，如何将树莓派接入wifi？树莓派出产时并不知道用户的wifi信息。这意味着配置wifi的工作只能交给用户。</p>
+
+<p>社区里有很多做法，诸如</p>
+
+<ul>
+<li>在<code>/boot</code>目录下常见wpa_supplicant.conf，写入wifi配置信息。</li>
+<li>初始化时，接入显示屏，在图形桌面里配置wifi。</li>
+<li><a href="https://github.com/balena-io/wifi-connect">wifi-connect</a>: Easy WiFi setup for Linux devices from your mobile phone or laptop</li>
+</ul>
+
+<p><a href="https://github.com/balena-io/wifi-connect">wifi-connect</a>做了非常出色工作，允许你用手机来配置树莓派。就像主流的智能家居网关和智能音箱那样。它可能是个不错的起步！</p>
+
+<p>接入wifi还只是第一步，它只意味着你有网络了，那么你要如何与用户的客户端通信呢？</p>
+
+<p>有很多种做法，无论那种做法，都会遇到前头提到的clientid问题。设备需要有标识。尤其是当多个设备在一个网络下使用时（课堂/活动场景）。</p>
+
+<p>在局域网内，hostname(默认是<code>raspberrypi.local</code>)是个不错的标识，和大多数情况一样，windows系统负责拖后腿，默认并不支持它(需要mDNS的支持)，如果你采用hostname来发现设备，那么windows需要安装<a href="https://support.apple.com/kb/DL999?viewlocale=zh_CN&amp;locale=zh_CN">Bonjour Print Services (Windows)</a>。</p>
+
+<p>我们也可以把树莓派视为一个物联网设备，使用mqtt来连接它。这是我目前比较喜欢的方案，至于mqtt server在云端还是在局域网内(诸如跑在某个树莓派上)，都没问题。</p>
+
+<p>无论是基于局域网内hostname的连接策略还是基于mqtt的连接策略。<a href="https://codelab-adapter-docs.codelab.club">codelab-adapter</a>都将提供支持。</p>
+
+<h3 id="小车">小车</h3>
+
+<p>我们想干嘛来着？我们希望提供的是一个可编程小车！好的，终于想起我们最初要做的事情了。</p>
+
+<p>莫忘初心啊同学们！</p>
+
+<p>想想一个典型的使用场景。一群学生在教室里使用Scratch3.0对小车编程。</p>
+
+<p>他们使用无线网将小车接入了wifi中。我们也做到了每辆小车有个clientid，我们还构建了一个mqtt server，用以把信息从用户编程界面推到小车上。学生在积木里输入clientid，点击连接，之后就可以使用积木给小车发送信息了。</p>
+
+<p>好的，截至倒目前，我们好像没有构建任何教学相关的内容！我们只是让消息可以从客户端抵达小车。甚至都还不包括如何升级和维护它！</p>
+
+<h1 id="一起来解决问题">一起来解决问题</h1>
+
+<p>这里边有大量工作是不必要的重复劳动，这正式CodeLab在做的事:<a href="https://blog.just4fun.site/codelab-love-iot.html">CodeLab ❤️ IoT</a>，我们希望开发者们一起来完善树莓派平台。将其打造为一个易用的环境。我们开放了围绕树莓派在做的所有工作。</p>
+
+<p>下一篇文章里，我们会展示一个服务于编程教育的整体解决方案。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://blog.just4fun.site/codelab-adapter-love-Raspberry%20Pi.html">codelab-adapter ❤️ Raspberry Pi</a></li>
+<li><a href="https://blog.just4fun.site/codelab-love-iot.html">CodeLab ❤️ IoT</a></li>
+<li><a href="https://www.dexterindustries.com/gopigo3/">gopigo3</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-02-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch </a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-rpi-mqtt-solution/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">基于树莓派的积木化编程解决方案</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-love-iot/">
+            <span class="next-text nav-default">CodeLab ❤️ IoT</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

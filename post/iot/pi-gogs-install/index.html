@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在树莓派上搭建代码托管服务器 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="最近公司有个好玩的项目，准备采用树莓派/arduino作为原型机，恰好我的玩具箱里两者都有 擦擦尘土，把树莓派带到公司 上周把arduino借给" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/iot/pi-gogs-install/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="在树莓派上搭建代码托管服务器" />
+<meta property="og:description" content="最近公司有个好玩的项目，准备采用树莓派/arduino作为原型机，恰好我的玩具箱里两者都有 擦擦尘土，把树莓派带到公司 上周把arduino借给" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/iot/pi-gogs-install/" />
+<meta property="article:published_time" content="2016-08-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-08-29T00:00:00+00:00" />
+<meta itemprop="name" content="在树莓派上搭建代码托管服务器">
+<meta itemprop="description" content="最近公司有个好玩的项目，准备采用树莓派/arduino作为原型机，恰好我的玩具箱里两者都有 擦擦尘土，把树莓派带到公司 上周把arduino借给">
+
+
+<meta itemprop="datePublished" content="2016-08-29T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-08-29T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1052">
+
+
+
+<meta itemprop="keywords" content="技术," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在树莓派上搭建代码托管服务器"/>
+<meta name="twitter:description" content="最近公司有个好玩的项目，准备采用树莓派/arduino作为原型机，恰好我的玩具箱里两者都有 擦擦尘土，把树莓派带到公司 上周把arduino借给"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">在树莓派上搭建代码托管服务器</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-08-29 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#目的">目的</a></li>
+<li><a href="#树莓派的入门">树莓派的入门</a></li>
+<li><a href="#安装gogs">安装gogs</a>
+<ul>
+<li>
+<ul>
+<li><a href="#目录结构">目录结构</a></li>
+<li><a href="#初始化">初始化</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#使用supervisor来管理gogs进程">使用Supervisor来管理gogs进程</a>
+<ul>
+<li>
+<ul>
+<li><a href="#安装">安装</a></li>
+<li><a href="#配置">配置</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#开机自启">开机自启</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/pi3e0c84b0.png" alt="" /></p>
+
+<p>最近公司有个好玩的项目，准备采用树莓派/arduino作为原型机，恰好我的玩具箱里两者都有</p>
+
+<p>擦擦尘土，把树莓派带到公司</p>
+
+<p>上周把arduino借给老板了，各种传感器也在其中，他出差没回，我的树莓派没有传感器可用，只要先折腾些软件应用</p>
+
+<p>公司的代码托管服务器是我之前搭建的（用了<a href="https://github.com/gogits/gogs">gogs</a>），我们部门搬到楼下，连接代码托管服务器需要vpn（网络的坑），速度不快，索性决定，在下边也搭建一个代码托管服务器。</p>
+
+<p>（考虑到安全，我还是决定自己折腾着玩好了，不过这个场景确实是挺实际的场景）</p>
+
+<h1 id="目的">目的</h1>
+
+<p>这篇文章主要是想在树莓派上练习一下进程管理和开机自启</p>
+
+<h1 id="树莓派的入门">树莓派的入门</h1>
+
+<p>这类文章网上好多，我自己也有笔记，等有空再整理好了。</p>
+
+<p>对于装好系统的树莓派（我用的是Raspbian），你就把它当做一个普通的linux便可，没有太多特别的地方（习惯使用Debian/Ubuntu的话，用起来很轻松）</p>
+
+<h1 id="安装gogs">安装gogs</h1>
+
+<h3 id="目录结构">目录结构</h3>
+
+<p>我在HOME目录下建了个文件夹<code>mylab</code>，用以做实验，gogs也放在这里</p>
+
+<p>下载二进制安装包：<code>https://dl.gogs.io/gogs_v0.9.60_raspi2.zip</code></p>
+
+<p>解压：<code>unzip gogs_v0.9.60_raspi2.zip</code>,于是获得gogs的解压目录：<code>/home/pi/mylab/gogs</code> （我的操作用户是默认的pi）</p>
+
+<h3 id="初始化">初始化</h3>
+
+<p>进入<code>/home/pi/mylab/gogs</code>目录，将gogs跑起来:<code>./gogs web</code>,默认跑在3000端口，打开你的<code>ip:3000</code>,填好内容，就可以初始化了，如果使用sqlite就不需要安装数据库</p>
+
+<p>初始化完毕我们把<code>./gogs web</code>断掉（ctrl-c），下边演示使用使用Supervisor来管理进程</p>
+
+<p>关于gogs的更多细节可以参考我之前的笔记<a href="http://blog.just4fun.site/gogs-install.html">搭建 gogs 代码托管服务器</a></p>
+
+<h1 id="使用supervisor来管理gogs进程">使用Supervisor来管理gogs进程</h1>
+
+<p>关于supervisor的介绍和细节何以参考我此前的笔记：<a href="http://blog.just4fun.site/process-control-system-supervisor.html">使用Supervisor来管理进程</a></p>
+
+<h3 id="安装">安装</h3>
+
+<p>sudo pip install supervisor #安装supervisor</p>
+
+<h3 id="配置">配置</h3>
+
+<p>切换到root：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">echo_supervisord_conf &gt; /etc/supervisord.conf
+mkdir /etc/supervisord.conf.d</code></pre></td></tr></table>
+</div>
+</div>
+<p>将<code>/etc/supervisord.conf</code>中的include部分修改为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="k">[include]</span>
+<span class="na">files</span> <span class="o">=</span> <span class="s">/etc/supervisord.conf.d/*.conf</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>创建<code>/etc/supervisord.conf.d/gogs.conf</code>,内容如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-ini" data-lang="ini"><span class="k">[program:gogs]</span>
+
+<span class="na">user</span><span class="o">=</span><span class="s">pi</span>
+<span class="na">directory</span><span class="o">=</span><span class="s">/home/pi/mylab/gogs</span>
+<span class="na">command</span><span class="o">=</span><span class="s">/home/pi/mylab/gogs/gogs web</span>
+<span class="na">environment</span> <span class="o">=</span> <span class="s">HOME=&#34;/home/pi&#34;, USER=&#34;pi&#34;</span>
+<span class="na">autostart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">autorestart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">startsecs</span><span class="o">=</span><span class="s">10</span>
+<span class="na">stdout_logfile</span><span class="o">=</span><span class="s">/var/log/gogs/stdout.log</span>
+<span class="na">stdout_logfile_maxbytes</span><span class="o">=</span><span class="s">1MB</span>
+<span class="na">stdout_logfile_backups</span><span class="o">=</span><span class="s">10</span>
+<span class="na">stdout_capture_maxbytes</span><span class="o">=</span><span class="s">1MB</span>
+<span class="na">stderr_logfile</span><span class="o">=</span><span class="s">/var/log/gogs/stderr.log</span>
+<span class="na">stderr_logfile_maxbytes</span><span class="o">=</span><span class="s">1MB</span>
+<span class="na">stderr_logfile_backups</span><span class="o">=</span><span class="s">10</span>
+<span class="na">stderr_capture_maxbytes</span><span class="o">=</span><span class="s">1MB</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>之后就可以使用supervisor来管理gogs了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">/usr/local/bin/supervisord 
+supervisorctl restart gogs
+supervisorctl status</code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="开机自启">开机自启</h1>
+
+<p>简单的方法是往/etc/rc.local加入/usr/local/bin/supervisord</p>
+
+<p>重启机器，一切完备！</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/pi79409598.png" alt="" /></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-08-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%95%B0%E6%8D%AE/keras-mnist-tutorial/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译]使用Keras构建神经网络来识别手写数字</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/pi-wechat/">
+            <span class="next-text nav-default">用微信控制树莓派</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

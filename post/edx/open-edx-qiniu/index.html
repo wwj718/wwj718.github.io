@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>为Open edX集成七牛云存储 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="Open edX与视频流 在Open edX的众多组件和服务中，并不包含视频流服务。不可否认的是，在线教育中，视频是要素之一，也许是最重要的要素之一，对" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/open-edx-qiniu/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="为Open edX集成七牛云存储" />
+<meta property="og:description" content="Open edX与视频流 在Open edX的众多组件和服务中，并不包含视频流服务。不可否认的是，在线教育中，视频是要素之一，也许是最重要的要素之一，对" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/open-edx-qiniu/" />
+<meta property="article:published_time" content="2016-09-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-09-13T00:00:00+00:00" />
+<meta itemprop="name" content="为Open edX集成七牛云存储">
+<meta itemprop="description" content="Open edX与视频流 在Open edX的众多组件和服务中，并不包含视频流服务。不可否认的是，在线教育中，视频是要素之一，也许是最重要的要素之一，对">
+
+
+<meta itemprop="datePublished" content="2016-09-13T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-09-13T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2586">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="为Open edX集成七牛云存储"/>
+<meta name="twitter:description" content="Open edX与视频流 在Open edX的众多组件和服务中，并不包含视频流服务。不可否认的是，在线教育中，视频是要素之一，也许是最重要的要素之一，对"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">为Open edX集成七牛云存储</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-09-13 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#open-edx与视频流">Open edX与视频流</a>
+<ul>
+<li>
+<ul>
+<li><a href="#自建视频流">自建视频流</a></li>
+<li><a href="#使用云存储">使用云存储</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#成果展示">成果展示</a></li>
+<li><a href="#思路与设计">思路与设计</a>
+<ul>
+<li>
+<ul>
+<li><a href="#如何集成">如何集成</a></li>
+<li><a href="#为何不是xblock">为何不是xblock</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#技术背景">技术背景</a></li>
+<li><a href="#just-do-it">just do it</a>
+<ul>
+<li><a href="#后端部分">后端部分</a>
+<ul>
+<li>
+<ul>
+<li><a href="#models-py">models.py</a></li>
+<li><a href="#views-py">views.py</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#前端部分">前端部分</a>
+<ul>
+<li><a href="#上传流程涉及的代码">上传流程涉及的代码</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#todo">todo</a></li>
+<li><a href="#后记">后记</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/qiniuf2e44878.png" alt="" /></p>
+
+<h1 id="open-edx与视频流">Open edX与视频流</h1>
+
+<p>在Open edX的众多组件和服务中，并不包含视频流服务。不可否认的是，在线教育中，视频是要素之一，也许是最重要的要素之一，对一些人而言，甚至没有之一。</p>
+
+<p>视频流一般被视为一个common server，市面上有数不清的商业或是开源解决方案，Open edX没有去重造车轮，而是和youtube做了很多整合。我们与youtube无缘。当然作为通用的组件，Open edX中的视频模块支持一般的视频资源（url），无论是云存储还是自建服务</p>
+
+<h3 id="自建视频流">自建视频流</h3>
+
+<p>如果准备自建视频流服务，可以参考@MT的<a href="http://edustack.org/2015/10/17/%E5%9C%A8%E5%86%85%E9%83%A8%E7%BD%91%E7%BB%9C%E4%B8%BAedx%E9%85%8D%E7%BD%AE%E8%A7%86%E9%A2%91%E6%9C%8D%E5%8A%A1/">在内部网络为edX配置视频服务</a>。对于局域网内的用户（学校/企业），自建服务是个有诱惑力的方案。</p>
+
+<p>不过这里边存在的坑是，视频流服务搭建不难，搭建一个友好的客户端，上传管理视频却颇为不易。在此推荐使用<a href="https://github.com/minio/minio">minio</a>作为管理视频资源的工具，细节可以参考我的这篇文章:<a href="http://blog.just4fun.site/install-Minio-Cloud-Storage.html">构建类s3存储系统（Minio）</a></p>
+
+<h3 id="使用云存储">使用云存储</h3>
+
+<p>视频解决方案有很多，大家可以自行google，看大家的对比评测，再结合自己的需求选型，在此就不多推荐了</p>
+
+<p>我比较偏好<a href="http://www.qiniu.com/">七牛云</a>。对开发者友好，api写得很漂亮</p>
+
+<p>在此演示如何使用七牛云为open edX提供视频服务，并将客户端（js）集成其中</p>
+
+<h1 id="成果展示">成果展示</h1>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/qiniuf2e44878.png" alt="" /></p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/qiniu_upload2f7fea6e.png" alt="" /></p>
+
+<h1 id="思路与设计">思路与设计</h1>
+
+<h3 id="如何集成">如何集成</h3>
+
+<p>首先我们需要考虑一个问题，视频管理入口以什么形态集成到Open edX中合适（如何集成七牛云存储）。换个角度，Open edX有哪些拓展方式呢。毕竟我们可以把集成外部存储系统，看做一次对系统的拓展</p>
+
+<p>在<a href="https://open.edx.org/extending-edx">Extending edX</a>中，官方给出了集中常见的拓展方式。此外还有两种很典型的拓展：</p>
+
+<ul>
+<li>对django开发者而言还可以直接侵入式拓展open edx，通过添加django app或者修改增强mvt中的任何一个环节</li>
+<li>模仿insights的做法，完全构建一个新的服务（网站），之后使用oauth2来打通用户系统</li>
+</ul>
+
+<p>因为我们希望将系统集成到open edx内部，所以决定采用添加django app的做法。
+用户上传和管理视频资源需要UI界面，参考<a href="http://edx.readthedocs.io/projects/edx-developer-guide/en/latest/user_interface_development.html#adding-a-ui-page">Adding a UI Page</a>，发现侵入式地定制open edx很是繁琐，我们决定为此功能写一个独立的页面，绕开繁重的前端架构</p>
+
+<h3 id="为何不是xblock">为何不是xblock</h3>
+
+<p>也许许多Open edX用户会觉得为何放着xlock不用，而采用侵入性更大的django app来拓展呢。原因有二：</p>
+
+<ul>
+<li>视频管理是一个用户视角下，全局性的操作，应该有一个同意的资源管理入口，而不是每次需要先添加一个组件，再在组件里边管理视频，逻辑上，这样也能做出来。我们可以把xblock视为必须实例化（instance）为组件的东西</li>
+<li>我们不想放弃既有的视频组件（数据采集等强大功能）</li>
+</ul>
+
+<h1 id="技术背景">技术背景</h1>
+
+<p>关于七牛云你需要了解的知识和上传管理的逻辑，可以参考我此前的文章：<a href="http://blog.just4fun.site/built-data-storage-system.html">为Open edX构建存储服务</a></p>
+
+<p>如果你想读懂接下来的源码，你需要了解django和django-restful-framework，如果只是用的话，就无所谓</p>
+
+<h1 id="just-do-it">just do it</h1>
+
+<h2 id="后端部分">后端部分</h2>
+
+<p>我们直接在<code>/edx/app/edxapp/edx-platform/cms/djangoapps</code>添加一个django app<code>qiniu_storage</code>,形如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">├── add_the_app.sh
+├── ajax.js
+├── __init__.py
+├── models.py
+├── permissions.py
+├── readme.md
+├── serializers.py
+├── urls.py
+├── views.py</pre></td></tr></table>
+</div>
+</div>
+<p>我们重点介绍model和view部分，其他不赘述</p>
+
+<h4 id="models-py">models.py</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="c1">#from django.contrib.auth.models import User</span>
+
+<span class="k">class</span> <span class="nc">QiniuFiles</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">course_id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1"># 上传用户，资源所有者</span>
+    <span class="n">file_key</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">file_url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">file_size</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="s2">&#34;0&#34;</span><span class="p">)</span>
+    <span class="c1">#endUser = Column(String(100),nullable=True)</span>
+    <span class="n">create_time</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;创建时间&#39;</span><span class="p">,</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;create_time&#39;</span><span class="p">,)</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="views-py">views.py</h4>
+
+<p>只列出关键部分</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">qiniu_access_key</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span>  <span class="s2">&#34;QINIU_ACCESS_KEY&#34;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">QiniuFilesViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
+    <span class="n">authentication_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">TokenAuthentication</span><span class="p">,</span> <span class="n">SessionAuthentication</span><span class="p">,)</span> 
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">QiniuFilesSerializer</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">IsAuthenticatedOrReadOnly</span><span class="p">,</span><span class="n">IsOwnerOrReadOnly</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">        This view should return a list of all the purchases
+</span><span class="s2">        for the currently authenticated user.
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="k">return</span> <span class="n">QiniuFiles</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span> <span class="c1">#用户级别的管理权限，每个用户只能管理自己上传的文件</span>
+    <span class="c1"># 删除功能暂不演示</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>其中的<code>IsOwnerOrReadOnly</code>值得关注，校验用户与资源的关系</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">permissions</span>
+
+<span class="k">class</span> <span class="nc">IsOwnerOrReadOnly</span><span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">    Object-level permission to only allow owners of an object to edit it.
+</span><span class="s2">    Assumes the model instance has an `owner` attribute.
+</span><span class="s2">    &#34;&#34;&#34;</span>
+
+    <span class="k">def</span> <span class="nf">has_object_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="n">permissions</span><span class="o">.</span><span class="n">SAFE_METHODS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">username</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="前端部分">前端部分</h2>
+
+<p>前端部分主要参考七牛的<a href="https://github.com/qiniu/js-sdk">js-sdk</a>，使用了<a href="https://github.com/zenorocha/clipboard.js">clipboard.js</a>用于点击事件，使用了<a href="https://github.com/needim/noty">noty</a>用于消息提醒</p>
+
+<p>代码形如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">uploader</span> <span class="o">=</span> <span class="nx">Qiniu</span><span class="p">.</span><span class="nx">uploader</span><span class="p">({</span>
+        <span class="nx">runtimes</span><span class="o">:</span> <span class="s1">&#39;html5,flash,html4&#39;</span><span class="p">,</span>
+        <span class="nx">browse_button</span><span class="o">:</span> <span class="s1">&#39;pickfiles&#39;</span><span class="p">,</span><span class="c1">//是哪个可上传的元素
+</span><span class="c1"></span>        <span class="nx">container</span><span class="o">:</span> <span class="s1">&#39;container&#39;</span><span class="p">,</span>
+        <span class="nx">drop_element</span><span class="o">:</span> <span class="s1">&#39;container&#39;</span><span class="p">,</span><span class="c1">//是否可拖动，且是哪个元素
+</span><span class="c1"></span>        <span class="nx">max_file_size</span><span class="o">:</span> <span class="s1">&#39;1000mb&#39;</span><span class="p">,</span>
+       <span class="c1">// flash_swf_url: &#39;bower_components/plupload/js/Moxie.swf&#39;,
+</span><span class="c1"></span>        <span class="nx">dragdrop</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">chunk_size</span><span class="o">:</span> <span class="s1">&#39;4mb&#39;</span><span class="p">,</span>
+        <span class="c1">//uptoken: &#39;xxx&#39; //测试用
+</span><span class="c1"></span>        <span class="nx">uptoken_url</span><span class="o">:</span> <span class="s1">&#39;/qiniu/uptoken&#39;</span><span class="p">,</span>  <span class="c1">//key由后端生成，定制化的规则包含在载荷中
+</span><span class="c1"></span>        <span class="nx">domain</span><span class="o">:</span> <span class="s1">&#39;xxx&#39;</span><span class="p">,</span><span class="c1">//这是域名的绑定地址
+</span><span class="c1"></span>        <span class="nx">get_new_uptoken</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="nx">unique_names</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">auto_start</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">log_level</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="p">...</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="上传流程涉及的代码">上传流程涉及的代码</h3>
+
+<p>在七牛的上传原理中，上传需要凭证，我们来看看凭证的生成规则</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">make_uptoken</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+            <span class="n">test_uptoken</span> <span class="o">=</span> <span class="n">QiniuTool</span><span class="p">()</span><span class="o">.</span><span class="n">get_test_uptoken</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="c1">#跨域的问题 Access-Control-Allow-Origin</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">Response</span><span class="p">({</span><span class="s2">&#34;uptoken&#34;</span><span class="p">:</span> <span class="n">test_uptoken</span><span class="p">})</span>
+            <span class="k">return</span> <span class="n">response</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>其中Qiniu类为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">QiniuTool</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="s1">&#39;&#39;&#39;
+</span><span class="s1">        #处理七牛凭证相关的工具，生成uptoken
+</span><span class="s1">        存储相关的部分被抽象为rest服务
+</span><span class="s1">        函数只接受get和post
+</span><span class="s1">        &#39;&#39;&#39;</span>
+        <span class="n">callback_url</span> <span class="o">=</span> <span class="s1">&#39;http://studio.xxx.com/qiniu/post_from_qiniu&#39;</span>
+        <span class="c1">#http://developer.qiniu.com/article/kodo/kodo-developer/up/vars.html 所有的魔法变量</span>
+        <span class="c1">#callback_body = &#39;filename=$(fname)&amp;filesize=$(fsize)&amp;key=$(key)&amp;mimeType=$(mimeType)&amp;endUser=$(endUser)&amp;etag=$(etag)&#39;</span>
+        <span class="n">access_key</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span>  <span class="s2">&#34;QINIU_ACCESS_KEY&#34;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">secret_key</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span>  <span class="s2">&#34;QINIU_SECRET_KEY&#34;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Auth</span><span class="p">(</span><span class="n">access_key</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">)</span> <span class="c1"># access_key和secret_key来自settings里</span>
+        <span class="n">bucket_name</span> <span class="o">=</span> <span class="s2">&#34;easy-edx&#34;</span>
+        <span class="k">def</span> <span class="nf">get_test_uptoken</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">request</span><span class="p">):</span>
+            <span class="n">callback_body</span> <span class="o">=</span> <span class="s1">&#39;file_name=$(fname)&amp;file_size=$(fsize)&amp;file_key=$(key)&amp;mimeType=$(mimeType)&amp;endUser=$(endUser)&amp;etag=$(etag)&amp;username={}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+            <span class="c1"># 上传策略有许多可选的参数，方便服务于业务逻辑：参考[python-sdk](http://developer.qiniu.com/docs/v6/sdk/python-sdk.html)</span>
+            <span class="c1">#上传文件到七牛后， 七牛将文件名和文件大小回调给业务服务器。</span>
+            <span class="n">policy</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s1">&#39;scope&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span><span class="p">,</span>
+                    <span class="s1">&#39;callbackUrl&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">callback_url</span><span class="p">,</span> <span class="c1">#回调 请求方式为POST</span>
+                    <span class="s1">&#39;callbackBody&#39;</span><span class="p">:</span><span class="n">callback_body</span>
+            <span class="p">}</span>
+            <span class="c1">#token = q.upload_token(bucket_name,3600,policy)</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">upload_token</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span><span class="p">,</span><span class="n">policy</span><span class="o">=</span><span class="n">policy</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">token</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>视频上传好之后，七牛会可以发送一个消息给服务器，我们在此存下文件信息即可</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">qiniu_files.serializers</span> <span class="kn">import</span> <span class="n">QiniuFilesSerializer</span>
+
+<span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">post_from_qiniu</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+            <span class="n">origin_authorization</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HTTP_AUTHORIZATION&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">access_key</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\W&#39;</span><span class="p">,</span><span class="n">origin_authorization</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&#34;file_url&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;http://media.xxx.com/&#34;</span><span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&#34;file_key&#34;</span><span class="p">]</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&#34;file_size&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&#34;file_size&#34;</span><span class="p">]</span>
+            <span class="n">serializer</span> <span class="o">=</span>  <span class="n">QiniuFilesSerializer</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">access_key</span> <span class="o">==</span> <span class="n">Qiniu</span><span class="p">()</span><span class="o">.</span><span class="n">access_key</span> <span class="ow">and</span> <span class="n">serializer</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+                <span class="n">serializer</span><span class="o">.</span><span class="n">save</span><span class="p">()</span> <span class="c1">#把信息存储到qiniu_storage模型里</span>
+                <span class="n">instance</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">file_info_format</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                <span class="c1">#使用序列化就能存入本地</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&#34;id&#34;</span><span class="p">]</span><span class="o">=</span><span class="n">instance</span><span class="o">.</span><span class="n">pk</span>
+                <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s2">&#34;success&#34;</span><span class="p">:</span><span class="bp">False</span><span class="p">,</span><span class="s2">&#34;message&#34;</span><span class="p">:</span><span class="sa">u</span><span class="s2">&#34;请求不合格&#34;</span><span class="p">})</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="todo">todo</h1>
+
+<p>还有许多细节可以改进，诸如校验用户是否有教师权限</p>
+
+<h1 id="后记">后记</h1>
+
+<p>上边实际给出了open edx集成外部存储的方式，思路是通用的，不限于七牛。诸如你也可以将你自建的视频存储集成到open edx中，区别仅在抽象的存储接口（我们可以用minio构建）</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-09-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/hackers-heroes-of-the-computer-revolution/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">黑客: 计算机革命的英雄</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/django_cas_server_lite/">
+            <span class="next-text nav-default">基于django的cas服务器</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

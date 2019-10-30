@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> 易上手的数据挖掘、可视化与机器学习工具:Orange介绍 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="之前陆续写过几篇介绍数据挖掘/可视化项目Caravel的文章： caravel系列之安装与入门 caravel系列之简易配置/定制 caravel" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E6%95%B0%E6%8D%AE/orange-startup/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content=" 易上手的数据挖掘、可视化与机器学习工具:Orange介绍" />
+<meta property="og:description" content="之前陆续写过几篇介绍数据挖掘/可视化项目Caravel的文章： caravel系列之安装与入门 caravel系列之简易配置/定制 caravel" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E6%95%B0%E6%8D%AE/orange-startup/" />
+<meta property="article:published_time" content="2016-12-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-12-19T00:00:00+00:00" />
+<meta itemprop="name" content=" 易上手的数据挖掘、可视化与机器学习工具:Orange介绍">
+<meta itemprop="description" content="之前陆续写过几篇介绍数据挖掘/可视化项目Caravel的文章： caravel系列之安装与入门 caravel系列之简易配置/定制 caravel">
+
+
+<meta itemprop="datePublished" content="2016-12-19T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-12-19T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1565">
+
+
+
+<meta itemprop="keywords" content="data," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=" 易上手的数据挖掘、可视化与机器学习工具:Orange介绍"/>
+<meta name="twitter:description" content="之前陆续写过几篇介绍数据挖掘/可视化项目Caravel的文章： caravel系列之安装与入门 caravel系列之简易配置/定制 caravel"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title"> 易上手的数据挖掘、可视化与机器学习工具:Orange介绍</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-12-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE/"> 数据 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#orange初体验">Orange初体验</a></li>
+<li><a href="#简介">简介</a></li>
+<li><a href="#标签">标签</a></li>
+<li><a href="#特点">特点</a></li>
+<li><a href="#优势">优势</a></li>
+<li><a href="#不足">不足</a></li>
+<li><a href="#后续">后续</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/orange1577a767.png" alt="" /></p>
+
+<p>之前陆续写过几篇介绍数据挖掘/可视化项目<a href="https://github.com/airbnb/superset">Caravel</a>的文章：</p>
+
+<ul>
+<li><a href="http://blog.just4fun.site/caravel-startup-and-install.html">caravel系列之安装与入门</a></li>
+<li><a href="http://blog.just4fun.site/caravel-config.html">caravel系列之简易配置/定制</a></li>
+<li><a href="http://blog.just4fun.site/caravel-demo-analysis.html">caravel系列之案例讲解与分析</a></li>
+<li><a href="http://blog.just4fun.site/caravel-code.html">caravel系列之架构与源码浅析</a></li>
+</ul>
+
+<p>如今直接去github搜索caravel已经搜不到它了。它最近换了新马甲，改叫<a href="https://github.com/airbnb/superset">superset</a>，至于为何频繁改名（分别叫过Panoramix，Caravel，Superset），我猜核心作者早年混迹论坛，与人吵架，常换马甲：）</p>
+
+<p>对数据可视化的兴趣一直未减，近期发现两个有趣的项目，其一就是这篇文章的主角:<a href="https://github.com/biolab/orange3">Orange</a>,另一个是google发布的Embedding Projector（基于Tensorflow）</p>
+
+<h1 id="orange初体验">Orange初体验</h1>
+
+<p>现在，你可以直接在<a href="http://orange.biolab.si/download/">这里</a>下载到最新的Orange软件，Orange发布了各个平台的安装包，选择你当前平台的安装包，双击安装即可，安装过程十分友好。</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/orange0676212b.png" alt="" /></p>
+
+<p>和许多数据分析的项目不同，其他项目多数面向数据分析从业人员、软件开发者。而Orange让各行各业对数据挖掘和可视化感兴趣的人都能参与其中，而不必有编程基础</p>
+
+<p>安装完毕打开软件，跟着以下教程即可对它做大致了解</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/orangeaf0f7d8a.png" alt="" /></p>
+
+<h1 id="简介">简介</h1>
+
+<p>官方首页对这个项目的介绍是：</p>
+
+<blockquote>
+<p>Open source machine learning and data visualization for novice and expert. Interactive data analysis workflows with a large toolbox.</p>
+</blockquote>
+
+<p>该项目源码开放，对新手友好，同时也胜任专业的数据分析工作。</p>
+
+<p>Orange是一个基于组件的数据挖掘软件，它包含了一组数据可视化、探索、预处理和建模的技术。</p>
+
+<p>它不但带有一个新手友好的用户界面，老司机们也可以把它用作Python的一个模块。</p>
+
+<h1 id="标签">标签</h1>
+
+<p>如果要用一些简单的词描述它，我想到以下标签:</p>
+
+<ul>
+<li>开源</li>
+<li>python</li>
+<li>数据可视化</li>
+<li>数据模式探索</li>
+<li>机器学习</li>
+<li>拖曳式</li>
+<li>积木化</li>
+</ul>
+
+<h1 id="特点">特点</h1>
+
+<ul>
+<li>交互式的数据可视化探索：你可以用它做简单的分析，诸如统计分布、箱形图（Box plot）、散点图。也可以做深入挖掘，诸如使用决策树、聚类、热图等。通过智能的属性选择，你可以在2维平面上探索多维数据</li>
+<li>可视化编程：图形化界面允许你专注于探索数据，而不是编码。你要做的事只是在画布上拖曳小部件、连接它们、加载数据集，如此便可获得数据洞察力！</li>
+<li>适合用于教学（jupyter出自生物学家之手，Orange似乎也和生物学领域有关，他们都让数据分析工作的协作交流变得简单有趣）</li>
+
+<li><p>附加扩展功能：通过使用各种插件，我们可以做各种各样的事：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">*  对外部数据源进行数据挖掘（数据库/网络）
+*  自然语言处理以及文本挖掘
+*  网络分析
+*  关联规则分析</pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/orangeacf72e02.png" alt="" /></p>
+
+<h1 id="优势">优势</h1>
+
+<p>我折腾过的数据可视化工具多而杂， 以下是我偏好Orange的几个原因</p>
+
+<ul>
+<li>安装极其建议（二进制安装包）</li>
+<li>对新手友好，易于上手，许多操作凭直觉即可甚至不需要文档</li>
+<li>让普通用户能使用机器学习去发现数据模式，这项工作之前往往需要技术背景</li>
+<li>支持excel文件直接导入</li>
+<li>对中文支持良好（目前尚未遇到乱码）</li>
+<li>可视化的编程方式，用户无需编码，数据在各个组件里流动，通过拖曳组件即可开始探索数据</li>
+<li>交互式的探索过程，每一个组件叠加都能及时得到反馈。如同REPL(读取﹣求值﹣输出循环)般敏捷顺滑</li>
+</ul>
+
+<h1 id="不足">不足</h1>
+
+<p>同时也简单列出我认为不足的地方</p>
+
+<ul>
+<li>对数据源的支持不够丰富，目前Orange3只支持PostgreSQL数据库，当然这是站在开发者的角度的挑刺，普通用户对此没有需求</li>
+<li>无法像tableau一样把探索结果作为网页发布。不过浏览了一遍官方源码库，他们似乎有这个计划。把它和superset整合在一起，指不定能折腾出一个商业应用</li>
+</ul>
+
+<p>关于对数据库的支持，估计随着项目的推进，会慢慢完备起来，这块基本只是时间的问题</p>
+
+<h1 id="后续">后续</h1>
+
+<p>接下来有空我们分析下，这个项目在技术层面有哪些有趣的东西</p>
+
+<p>此外我还有兴趣对它做些本地化改进，包括但不限于汉化，有兴趣的小伙伴可以一起来折腾，我已经fork了一份源码：<a href="https://github.com/openEduClub/orange3">orange3</a></p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://github.com/biolab/orange3">orange3</a></li>
+<li><a href="http://orange.biolab.si/">orange.biolab.si</a></li>
+<li><a href="https://my.oschina.net/u/2306127/blog/548833">Orange-数据挖掘和机器学习软件</a></li>
+<li><a href="http://hao.jobbole.com/orange/">Orange：通过可视化编程或 Python 脚本进行数据挖掘、数据可视化、分析和机器学习</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-12-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/data/">data</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/rpi-siri-close-light/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">嘿 Siri 关灯</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/from-finder-to-ranger/">
+            <span class="next-text nav-default">从Finder迁往ranger</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

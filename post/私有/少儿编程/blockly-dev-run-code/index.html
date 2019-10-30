@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>blockly开发之生成并运行js代码(1) - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="如blockly文档的Code Generators章节里所说，用户在blockly编辑器中写好了程序之后(积木组合)，程序往往需要被转化为某" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-dev-run-code/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="blockly开发之生成并运行js代码(1)" />
+<meta property="og:description" content="如blockly文档的Code Generators章节里所说，用户在blockly编辑器中写好了程序之后(积木组合)，程序往往需要被转化为某" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-dev-run-code/" />
+<meta property="article:published_time" content="2018-01-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-01-21T00:00:00+00:00" />
+<meta itemprop="name" content="blockly开发之生成并运行js代码(1)">
+<meta itemprop="description" content="如blockly文档的Code Generators章节里所说，用户在blockly编辑器中写好了程序之后(积木组合)，程序往往需要被转化为某">
+
+
+<meta itemprop="datePublished" content="2018-01-21T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-01-21T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1098">
+
+
+
+<meta itemprop="keywords" content="blockly," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="blockly开发之生成并运行js代码(1)"/>
+<meta name="twitter:description" content="如blockly文档的Code Generators章节里所说，用户在blockly编辑器中写好了程序之后(积木组合)，程序往往需要被转化为某"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">blockly开发之生成并运行js代码(1)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-01-21 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%A7%81%E6%9C%89/"> 私有 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#运行代码">运行代码</a>
+<ul>
+<li><a href="#generate-从积木中生成代码">generate (从积木中生成代码)</a>
+<ul>
+<li><a href="#原始版本">原始版本</a></li>
+<li><a href="#增加的部分">增加的部分</a>
+<ul>
+<li><a href="#引入依赖">引入依赖</a></li>
+<li><a href="#生成代码">生成代码</a></li>
+<li><a href="#运行代码-1">运行代码</a></li>
+<li><a href="#添加按钮">添加按钮</a></li>
+</ul></li>
+<li><a href="#完整版本">完整版本</a></li>
+</ul></li>
+<li><a href="#run">run</a></li>
+</ul></li>
+<li><a href="#延伸">延伸</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>如blockly文档的<a href="https://developers.google.com/blockly/guides/configure/web/code-generators">Code Generators</a>章节里所说，用户在blockly编辑器中写好了程序之后(积木组合)，程序往往需要被转化为某一门编程语言（JavaScript, Python, PHP, Lua, Dart等），以便于执行它</p>
+
+<p>比如我们在<a href="http://blog.just4fun.site/blockly-dev-hello-world.html">blockly开发之hello world(0)</a>中写的这个程序</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/blockly4b406de9.png" alt="" /></p>
+
+<p>我们想运行它，以便检验你的数学能力</p>
+
+<h1 id="运行代码">运行代码</h1>
+
+<p>分几个步骤</p>
+
+<h2 id="generate-从积木中生成代码">generate (从积木中生成代码)</h2>
+
+<h3 id="原始版本">原始版本</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;utf-8&#34;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Blockly Demo: Fixed Blockly<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../blockly_compressed.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../blocks_compressed.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../msg/js/en.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+    <span class="nt">body</span> <span class="p">{</span>
+      <span class="k">background-color</span><span class="p">:</span> <span class="mh">#fff</span><span class="p">;</span>
+      <span class="k">font-family</span><span class="p">:</span> <span class="kc">sans-serif</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nt">h1</span> <span class="p">{</span>
+      <span class="k">font-weight</span><span class="p">:</span> <span class="kc">normal</span><span class="p">;</span>
+      <span class="k">font-size</span><span class="p">:</span> <span class="mi">140</span><span class="kt">%</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://developers.google.com/blockly/&#34;</span><span class="p">&gt;</span>Blockly<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span> <span class="ni">&amp;gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;../index.html&#34;</span><span class="p">&gt;</span>Demos<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span> <span class="ni">&amp;gt;</span> Fixed Blockly<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>This is a simple demo of injecting Blockly into a fixed-sized &#39;div&#39; element.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="ni">&amp;rarr;</span> More info on <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://developers.google.com/blockly/guides/configure-blockly/web/fixed-size&#34;</span><span class="p">&gt;</span>injecting fixed-sized Blockly<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span><span class="ni">&amp;hellip;</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;blocklyDiv&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;height: 480px; width: 600px;&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">xml</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;toolbox&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;display: none&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;controls_if&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;logic_compare&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;controls_repeat_ext&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;math_number&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;math_arithmetic&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text_print&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">xml</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="kd">var</span> <span class="nx">demoWorkspace</span> <span class="o">=</span> <span class="nx">Blockly</span><span class="p">.</span><span class="nx">inject</span><span class="p">(</span><span class="s1">&#39;blocklyDiv&#39;</span><span class="p">,</span>
+        <span class="p">{</span> <span class="nx">media</span><span class="o">:</span> <span class="s1">&#39;../../media/&#39;</span><span class="p">,</span>
+          <span class="nx">toolbox</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;toolbox&#39;</span><span class="p">)}</span>
+        <span class="p">);</span>
+  <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="增加的部分">增加的部分</h3>
+
+<p>参考: <code>blockly/demos/generator/index.html</code></p>
+
+<h4 id="引入依赖">引入依赖</h4>
+
+<p><code>&lt;script src=&quot;../../javascript_compressed.js&quot;&gt;&lt;/script&gt;</code></p>
+
+<p>这个js文件的功能是用于生成<code>&lt;script src=&quot;../../blocks_compressed.js&quot;&gt;&lt;/script&gt;</code>预定义的积木对应的js代码</p>
+
+<p>此外通过引入其他语言模块，我们还可以将<code>blocks_compressed.js</code>预知的积木块生成python、Python, PHP, Lua, Dart等待</p>
+
+<p><code>javascript_compressed.js</code>需要在<code>blockly_compressed.js</code>之后被引用</p>
+
+<h4 id="生成代码">生成代码</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="kd">function</span> <span class="nx">showCode</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Generate JavaScript code and display it.
+</span><span class="c1"></span>      <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">INFINITE_LOOP_TRAP</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">workspaceToCode</span><span class="p">(</span><span class="nx">demoWorkspace</span><span class="p">);</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="http://wwj-fig-bed.just4fun.site/blockly44c459cd.png" alt="" /></p>
+
+<h4 id="运行代码-1">运行代码</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="kd">function</span> <span class="nx">runCode</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Generate JavaScript code and run it.
+</span><span class="c1"></span>      <span class="nb">window</span><span class="p">.</span><span class="nx">LoopTrap</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+      <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">INFINITE_LOOP_TRAP</span> <span class="o">=</span>
+          <span class="s1">&#39;if (--window.LoopTrap == 0) throw &#34;Infinite loop.&#34;;\n&#39;</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">workspaceToCode</span><span class="p">(</span><span class="nx">demoWorkspace</span><span class="p">);</span>
+      <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">INFINITE_LOOP_TRAP</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="nb">eval</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="添加按钮">添加按钮</h4>
+
+<p>添加两个按钮把事件关联起来</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html">  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&#34;showCode()&#34;</span><span class="p">&gt;</span>Show JavaScript<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&#34;runCode()&#34;</span><span class="p">&gt;</span>Run JavaScript<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="完整版本">完整版本</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;utf-8&#34;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Blockly Demo: Fixed Blockly<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../blockly_compressed.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../blocks_compressed.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../javascript_compressed.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../msg/js/en.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+    <span class="nt">body</span> <span class="p">{</span>
+      <span class="k">background-color</span><span class="p">:</span> <span class="mh">#fff</span><span class="p">;</span>
+      <span class="k">font-family</span><span class="p">:</span> <span class="kc">sans-serif</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nt">h1</span> <span class="p">{</span>
+      <span class="k">font-weight</span><span class="p">:</span> <span class="kc">normal</span><span class="p">;</span>
+      <span class="k">font-size</span><span class="p">:</span> <span class="mi">140</span><span class="kt">%</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://developers.google.com/blockly/&#34;</span><span class="p">&gt;</span>Blockly<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span> <span class="ni">&amp;gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;../index.html&#34;</span><span class="p">&gt;</span>Demos<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span> <span class="ni">&amp;gt;</span> Fixed Blockly<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>This is a simple demo of injecting Blockly into a fixed-sized &#39;div&#39; element.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="ni">&amp;rarr;</span> More info on <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://developers.google.com/blockly/guides/configure-blockly/web/fixed-size&#34;</span><span class="p">&gt;</span>injecting fixed-sized Blockly<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span><span class="ni">&amp;hellip;</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&#34;showCode()&#34;</span><span class="p">&gt;</span>Show JavaScript<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&#34;runCode()&#34;</span><span class="p">&gt;</span>Run JavaScript<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;blocklyDiv&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;height: 480px; width: 600px;&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">xml</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;toolbox&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;display: none&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;controls_if&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;logic_compare&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;controls_repeat_ext&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;math_number&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;math_arithmetic&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text_print&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">xml</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="kd">var</span> <span class="nx">demoWorkspace</span> <span class="o">=</span> <span class="nx">Blockly</span><span class="p">.</span><span class="nx">inject</span><span class="p">(</span><span class="s1">&#39;blocklyDiv&#39;</span><span class="p">,</span>
+        <span class="p">{</span> <span class="nx">media</span><span class="o">:</span> <span class="s1">&#39;../../media/&#39;</span><span class="p">,</span>
+          <span class="nx">toolbox</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;toolbox&#39;</span><span class="p">)}</span>
+        <span class="p">);</span>
+
+
+
+    <span class="kd">function</span> <span class="nx">showCode</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Generate JavaScript code and display it.
+</span><span class="c1"></span>      <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">INFINITE_LOOP_TRAP</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">workspaceToCode</span><span class="p">(</span><span class="nx">demoWorkspace</span><span class="p">);</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">runCode</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Generate JavaScript code and run it.
+</span><span class="c1"></span>      <span class="nb">window</span><span class="p">.</span><span class="nx">LoopTrap</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+      <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">INFINITE_LOOP_TRAP</span> <span class="o">=</span>
+          <span class="s1">&#39;if (--window.LoopTrap == 0) throw &#34;Infinite loop.&#34;;\n&#39;</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">workspaceToCode</span><span class="p">(</span><span class="nx">demoWorkspace</span><span class="p">);</span>
+      <span class="nx">Blockly</span><span class="p">.</span><span class="nx">JavaScript</span><span class="p">.</span><span class="nx">INFINITE_LOOP_TRAP</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="nb">eval</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="run">run</h2>
+
+<p>以js运行</p>
+
+<p>如果你回答对了:</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/blockly2d377f4e.png" alt="" /></p>
+
+<p>如果你答错了:</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/blockly3e120875.png" alt="" /></p>
+
+<h1 id="延伸">延伸</h1>
+
+<p>我最近在写一份blockly的入门和进阶教程，这个官方教程也被我纳入其中，在教程的第二节<a href="https://github.com/wwj718/blockly_dev/tree/master/src/blockly_2_generate_and_run_js">blockly_2_generate_and_run_js</a>，目前教程以源码的形式出现:<a href="https://github.com/wwj718/blockly_dev">wwj718/blockly_dev</a>，还没写成博客。大家能阅读js的话，可以自行阅读。或者等我有空补上文章。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://developers.google.com/blockly/guides/configure/web/code-generators">Code Generators</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-01-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/blockly/">blockly</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/the-meaning-of-life/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">人生的意义</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-dev-hello-world/">
+            <span class="next-text nav-default">blockly开发之hello world(0)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

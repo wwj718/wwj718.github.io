@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> caravel系列之案例讲解与分析 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="我们以官方的示例数据为例(sqlite数据库中的birch_names数据表) 想体验真实数据的小伙伴可以登录我的demo中一看究竟demo b" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E6%95%B0%E6%8D%AE/caravel-demo-analysis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content=" caravel系列之案例讲解与分析" />
+<meta property="og:description" content="我们以官方的示例数据为例(sqlite数据库中的birch_names数据表) 想体验真实数据的小伙伴可以登录我的demo中一看究竟demo b" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E6%95%B0%E6%8D%AE/caravel-demo-analysis/" />
+<meta property="article:published_time" content="2016-07-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-07-26T00:00:00+00:00" />
+<meta itemprop="name" content=" caravel系列之案例讲解与分析">
+<meta itemprop="description" content="我们以官方的示例数据为例(sqlite数据库中的birch_names数据表) 想体验真实数据的小伙伴可以登录我的demo中一看究竟demo b">
+
+
+<meta itemprop="datePublished" content="2016-07-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-07-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1049">
+
+
+
+<meta itemprop="keywords" content="data," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=" caravel系列之案例讲解与分析"/>
+<meta name="twitter:description" content="我们以官方的示例数据为例(sqlite数据库中的birch_names数据表) 想体验真实数据的小伙伴可以登录我的demo中一看究竟demo b"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title"> caravel系列之案例讲解与分析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-07-26 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE/"> 数据 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#birch-names">birch_names</a></li>
+<li><a href="#workflow">workflow</a>
+<ul>
+<li>
+<ul>
+<li><a href="#添加数据源">添加数据源</a></li>
+<li><a href="#添加表">添加表</a></li>
+<li><a href="#可视化探索">可视化探索</a></li>
+<li><a href="#收获探索成果">收获探索成果</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#坑">坑</a>
+<ul>
+<li>
+<ul>
+<li><a href="#生成iframe">生成iframe</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://airbnb.io/caravel/_static/img/dash.png" alt="" /></p>
+
+<p>我们以官方的示例数据为例(sqlite数据库中的birch_names数据表)</p>
+
+<p>想体验真实数据的小伙伴可以登录我的demo中一看究竟<a href="http://caravel.just4fun.site/caravel/dashboard/births/">demo births</a>,用户名和密码都是test</p>
+
+<h1 id="birch-names">birch_names</h1>
+
+<p>birch_names是一张数据表（table），来自于数据库：<code>sqlite:////tmp/caravel.db</code></p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_demo_mainac79ec66.png" alt="表结构" /></p>
+
+<p>数据一览
+<img src="http://wwj-fig-bed.just4fun.site/caravel_demo_main84bfa3fb.png" alt="表内容" /></p>
+
+<p>以上便是我们的原始数据，那么原始数据是如何一步步变为开篇那幅图表的呢，下边为你揭晓</p>
+
+<h1 id="workflow">workflow</h1>
+
+<h3 id="添加数据源">添加数据源</h3>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_demo_mainccb9413c.png" alt="" /></p>
+
+<p>填写数据信息</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_demo_main65e7c6e5.png" alt="" /></p>
+
+<p>完成后点击<code>Test Connection</code>,底部将列出数据库中所有的数据表</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_demo_main45b437b8.png" alt="" /></p>
+
+<h3 id="添加表">添加表</h3>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_demo_table79220d59.png" alt="" /></p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_demo_table0734672c.png" alt="" /></p>
+
+<p>注意到图片上方有3个tab页，分别为：Detail、List Table Column和List Sql Metric,默认打开Detail（如上）</p>
+
+<p>List Table Column:
+<img src="http://wwj-fig-bed.just4fun.site/caravel_table606ba397.png" alt="" /></p>
+
+<p>List Table Column中的操作决定，各个字段可以做哪些操作(操作类型有,Groupable(分组),Filterable（过滤）,Count Distinct(统计有多少种不同值),Sum（求和），Min（最小值），Max（最大值）  Is tempora（是否是时间序列字段）)，如果你熟悉SQL，你应该一眼就能看懂什么意思</p>
+
+<p>值得注意的是表中必须有一个日期或时间类型的字段</p>
+
+<p>List Sql Metric:</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_tablefe9a074f.png" alt="" /></p>
+
+<p>Metrics意为度量，做统计时，时常会遇到这个词，折腾elk是就遇到</p>
+
+<p>Druid.io文档中有：</p>
+
+<blockquote>
+<p>Metric columns: Metrics are columns used in aggregations and computations. In our example, the metrics are clicks and price. Metrics are usually numeric values, and computations include operations such as count, sum, and mean. Also known as measures in standard OLAP terminology.</p>
+</blockquote>
+
+<p>在List Sql Metric页面，可以编辑和定义指标，如果上面对一些字段勾选了Sum、Min、Max、Count Distinct选项，则这里会自动生成相应的指标字段。</p>
+
+<h3 id="可视化探索">可视化探索</h3>
+
+<p>我们以table为中心，这里我们已经定义好了birch_names表的维度字段和指标,下边我们可以开始对它进行探索</p>
+
+<p>开始探索</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_table3d6d5109.png" alt="" /></p>
+
+<p>在页面中，可以针对birch_names事先定义的字段和指标字段进行可视化探索。</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_table985b1aa2.png" alt="" /></p>
+
+<p>下边是我们探索的一个成果，是不同名字的变化时序图</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_table3cf9cdfa.png" alt="" /></p>
+
+<p>实际上它是以下SQL的可视化</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_table_sqlddb06dfe.png" alt="" /></p>
+
+<p>而我们在左边面板选择参数的过程就是动态生成SQL语句的过程</p>
+
+<h3 id="收获探索成果">收获探索成果</h3>
+
+<ul>
+<li>将探索结果导出为JSON或是CSV</li>
+<li>将探索的成果保存为slide，之后可以分享给同伴
+
+<ul>
+<li>将slide拼接为dashboard（就是这篇文章最初的那幅图）</li>
+</ul></li>
+<li>将探索成果生成iframe嵌入到其他页面里（当报表用）</li>
+</ul>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/caravel_sharee4e2dcc7.png" alt="" /></p>
+
+<p>我们带现连自适应也做的很好</p>
+
+<h1 id="坑">坑</h1>
+
+<h3 id="生成iframe">生成iframe</h3>
+
+<p>直接分享url没有问题，而iframe的尺寸有问题（caravel版本为0.10.0）</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="http://airbnb.io/caravel/tutorial.html">tutorial</a></li>
+<li><a href="http://lxw1234.com/archives/2016/06/681.htm">Caravel–一款开源OLAP+数据可视化分析前端工具，支持Druid和Kylin</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-07-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/data/">data</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%95%B0%E6%8D%AE/caravel-startup-and-install/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default"> caravel系列之安装与入门</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%95%B0%E6%8D%AE/caravel-config/">
+            <span class="next-text nav-default"> caravel系列之简易配置/定制</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>mongo学习笔记 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="edx生产环境使用了mongo数据库。 对mongo数据库垂涎已久，其高性能/开源/无模式/文档型数据库/&amp;hellip;多么诱人的特性，之前" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/learn-mongo/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="mongo学习笔记" />
+<meta property="og:description" content="edx生产环境使用了mongo数据库。 对mongo数据库垂涎已久，其高性能/开源/无模式/文档型数据库/&hellip;多么诱人的特性，之前" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/learn-mongo/" />
+<meta property="article:published_time" content="2014-07-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-07-19T00:00:00+00:00" />
+<meta itemprop="name" content="mongo学习笔记">
+<meta itemprop="description" content="edx生产环境使用了mongo数据库。 对mongo数据库垂涎已久，其高性能/开源/无模式/文档型数据库/&hellip;多么诱人的特性，之前">
+
+
+<meta itemprop="datePublished" content="2014-07-19T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-07-19T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2888">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="mongo学习笔记"/>
+<meta name="twitter:description" content="edx生产环境使用了mongo数据库。 对mongo数据库垂涎已久，其高性能/开源/无模式/文档型数据库/&hellip;多么诱人的特性，之前"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">mongo学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-07-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>edx生产环境使用了mongo数据库。</p>
+
+<p>对mongo数据库垂涎已久，其高性能/开源/无模式/文档型数据库/&hellip;多么诱人的特性，之前也偶尔折腾着玩过，不过都没做笔记，趁此机会重新捡起来。</p>
+
+<p>##关于mongo
+&gt;  MongoDB is an open-source document database that provides high performance, high availability, and automatic scaling.</p>
+
+<p>mongo支持的查询语言非常强大，其语法有点类似于面向对象的查询语言，几乎可以实现类似关系数据库单表查询的绝大部分功能</p>
+
+<p><img src="http://wwjpic.qiniudn.com/mongo-document.png" alt="a-mongo-document" /></p>
+
+<p>##mongo是一种NoSql数据库
+NoSql，全称是 Not Only Sql,指的是非关系型的数据库。主要解决几个要点：非关系型的、分布式的、开源的、水平可扩展的。原始的目的是为了大规模web应用。通常特性应用如：模式自由、支持简易复制、简单的API、最终的一致性（非ACID）、大容量数据等。NoSQL被我们用得最多的当数key-value存储。</p>
+
+<p>###mongo特性
+*  模式自由。
+*  支持动态查询。
+*  支持完全索引，包含内部对象。
+*  支持查询。
+*  支持复制和故障恢复。
+*  文件存储格式为BSON（一种JSON的扩展）。
+*  可通过网络访问。
+*  支持Python，PHP，Ruby，Java，C，C#，Javascript，Perl及C++语言的驱动程序
+*  使用高效的二进制数据存储，包括大型对象（如视频等）。</p>
+
+<p>##软件即服务
+将mongo当做一个服务，通过接口CRUD我们的数据。</p>
+
+<p>对于不同用户角色，对mongo所需的了解方面是不同的，我们的角色是Developers，我们主要将它作为服务来使用。</p>
+
+<p>细节可以参考<a href="http://docs.mongodb.org/manual/reference/">reference</a></p>
+
+<p>而作为python开发者，我们使用mongo的<a href="http://docs.mongodb.org/ecosystem/drivers/python/">python驱动</a>来CRUD数据</p>
+
+<p><img src="http://wwjpic.qiniudn.com/mongo-use.png" alt="mongo-use" /></p>
+
+<p>##安装
+ubuntu下安装mongo比较简单，直接<code>sudo apt-get install mongodb</code>就行。</p>
+
+<p>当然也可以去<a href="http://www.mongodb.org/downloads">官网下载安装</a></p>
+
+<p>端口号是<code>27017</code></p>
+
+<p>进入mongo shell:<code>mongo</code></p>
+
+<p>##基础
+###6个简单的概念
+*  MongoDB有着与您熟知的‘数据库’一样的概念。每一个数据库都是高层次的容器，用来储存其他的所有数据。</p>
+
+<ul>
+<li><p>一个数据库可以有若干‘集合’（collection）。集合和传统概念中的‘表’有着足够多的共同点。</p></li>
+
+<li><p>集合由若干‘文档’（document）组成,可以认为这里的文档就是‘行’。</p></li>
+
+<li><p>文档又由若干‘域’（field）组成，域就像是‘列’。</p></li>
+
+<li><p><code>索引</code>（index）在MongoDB中的意义就如同索引在RDBMS中一样。</p></li>
+
+<li><p><code>游标</code>（cursor）和以上5个概念不同.每当向MongoDB索要数据时，它总是返回一个游标。基于游标我们可以作诸如计数或是直接跳过之类的操作，而不需要真正去读数据。</p></li>
+</ul>
+
+<p>小结一下，MongoDB由<code>数据库</code>组成，数据库由<code>集合</code>组成，集合由<code>文档</code>组成。<code>域</code>组成了文档，集合可以被<code>索引</code>，从而提高了查找和排序的性能。最后，我们从MongoDB读取数据的时候是通过<code>游标</code>进行的，除非需要，游标不会真正去作读的操作。</p>
+
+<p>关系数据库是在<code>表</code>这一层次定义<code>列</code>的，而一个面向文档的数据库则是在<code>文档</code>这一层次定义<code>域</code>的。也就是说，集合中的每个文档都可以有独立的域。因此，虽说集合相对于表来说是一个简化了的容器，而文档则包含了比行要多得多的信息。</p>
+
+<p>##mongo shell
+###入口
+<code>help</code>。shell会返回全局可用的操作。比如<code>show dbs</code></p>
+
+<p>Mongo的shell运行在JavaScript之上.<br />
+您可以执行一些全局的指令，如help或者exit.<br />
+操作对象db来执行针对当前数据库的操作，例如db.help()或是db.stats()。</p>
+
+<ul>
+<li>首先我们用全局命令use来切换数据库。输入<code>use learn</code>。这个数据库是否存在并没有关系，若不存在则新建.z执行完后您就已经在一个数据库里面了</li>
+<li><code>db.unicorns.insert({name: 'Aurora', gender: 'f', weight: 450})</code><br />
+以上命令对unicorns对象执行insert操作，并传入一个参数。在MongoDB内部，数据是以二进制的串行JSON格式存储的。<br />
+
+<ul>
+<li>如果我们现在执行db.getCollectionNames()，将看到两个集合：unicorns以及system.indexes。system.indexes在每个数据库中都会创建，它包含了数据库中的索引信息。</li>
+<li>现在您可以对unicorns对象执行find命令，  列出所有文档:<code>db.unicorns.find()</code><br />
+请注意，除了您在文档中输入的各个域，还有一个一个叫做_id的域。</li>
+</ul></li>
+<li>往unicorns插入一个完全不同的文档。<code>db.unicorns.insert({name: 'Leto', gender: 'm', home: 'Arrakeen', worm: false})</code>再次用find可以列出所有的文档</li>
+</ul>
+
+<p>###掌握选择器（selector）
+MongoDB还有一个很实用的概念：查询选择器（query selector）。<br />
+MongoDB的查询选择器就像SQL代码中的where语句。<br />
+因此您可以用它在集合中查找，统计，更新或是删除文档。<br />
+选择器就是一个JSON对象，最简单的形式就是{}，用来匹配所有的文档。<br />
+如果我们需要找到所有雌性的独角兽(unicorn)，我们可以用选择器{gender:&lsquo;f&rsquo;}来匹配。</p>
+
+<ul>
+<li>用<code>db.unicorns.remove</code>删除之前我们在unicorns集合中输入的所有数据</li>
+
+<li><p>插入以下数据:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+db.unicorns.insert({name: &#39;Horny&#39;, dob: new Date(1992,2,13,7,47), loves: [&#39;carrot&#39;,&#39;papaya&#39;], weight: 600, gender: &#39;m&#39;, vampires: 63});
+db.unicorns.insert({name: &#39;Aurora&#39;, dob: new Date(1991, 0, 24, 13, 0), loves: [&#39;carrot&#39;, &#39;grape&#39;], weight: 450, gender: &#39;f&#39;, vampires: 43});
+db.unicorns.insert({name: &#39;Unicrom&#39;, dob: new Date(1973, 1, 9, 22, 10), loves: [&#39;energon&#39;, &#39;redbull&#39;], weight: 984, gender: &#39;m&#39;, vampires: 182});
+db.unicorns.insert({name: &#39;Roooooodles&#39;, dob: new Date(1979, 7, 18, 18, 44), loves: [&#39;apple&#39;], weight: 575, gender: &#39;m&#39;, vampires: 99});
+db.unicorns.insert({name: &#39;Solnara&#39;, dob: new Date(1985, 6, 4, 2, 1), loves:[&#39;apple&#39;, &#39;carrot&#39;, &#39;chocolate&#39;], weight:550, gender:&#39;f&#39;, vampires:80});
+db.unicorns.insert({name:&#39;Ayna&#39;, dob: new Date(1998, 2, 7, 8, 30), loves: [&#39;strawberry&#39;, &#39;lemon&#39;], weight: 733, gender: &#39;f&#39;, vampires: 40});
+db.unicorns.insert({name:&#39;Kenny&#39;, dob: new Date(1997, 6, 1, 10, 42), loves: [&#39;grape&#39;, &#39;lemon&#39;], weight: 690,  gender: &#39;m&#39;, vampires: 39});
+db.unicorns.insert({name: &#39;Raleigh&#39;, dob: new Date(2005, 4, 3, 0, 57), loves: [&#39;apple&#39;, &#39;sugar&#39;], weight: 421, gender: &#39;m&#39;, vampires: 2});
+db.unicorns.insert({name: &#39;Leia&#39;, dob: new Date(2001, 9, 8, 14, 53), loves: [&#39;apple&#39;, &#39;watermelon&#39;], weight: 601, gender: &#39;f&#39;, vampires: 33});
+db.unicorns.insert({name: &#39;Pilot&#39;, dob: new Date(1997, 2, 1, 5, 3), loves: [&#39;apple&#39;, &#39;watermelon&#39;], weight: 650, gender: &#39;m&#39;, vampires: 54});
+db.unicorns.insert({name: &#39;Nimue&#39;, dob: new Date(1999, 11, 20, 16, 15), loves: [&#39;grape&#39;, &#39;carrot&#39;], weight: 540, gender: &#39;f&#39;});
+db.unicorns.insert({name: &#39;Dunx&#39;, dob: new Date(1976, 6, 18, 18, 18), loves: [&#39;grape&#39;, &#39;watermelon&#39;], weight: 704, gender: &#39;m&#39;, vampires: 165});</pre></td></tr></table>
+</div>
+</div>
+<p>{field: value}用来查找所有field等于value的文档。通过{field1: value1, field2: value2}的形式可以实现与操作。<code>$lt</code>、<code>$lte</code>、<code>$gt</code>、<code>$gte</code>以及<code>$ne</code>分别表示<code>小于、小于或等于、大于、大于或等于以及不等于</code>。举个例子，查找所有体重超过700磅的雄性独角兽的命令是：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+db.unicorns.find({gender: &#39;m&#39;, weight: {$gt: 700}})
+//或者 (效果并不完全一样，仅用来为了演示不同的方法)
+db.unicorns.find({gender: {$ne: &#39;f&#39;}, weight: {$gte: 701}})</pre></td></tr></table>
+</div>
+</div>
+<p>如果需要或而不是与，可以用$or操作符并作用于需要进行或操作的数组：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+db.unicorns.find({gender: &#39;f&#39;, $or: [{loves: &#39;apple&#39;}, {loves: &#39;orange&#39;}, {weight: {$lt: 500}}]})</pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+
+<p><a href="https://github.com/justinyhuang/the-little-mongodb-book-cn/blob/master/mongodb.md#%E6%9C%AC%E7%AB%A0%E5%B0%8F%E7%BB%93">go on &hellip;</a></p>
+
+<p>##pymongo
+###参考子资料
+*  <a href="http://blog.chinaunix.net/uid-670606-id-3574914.html">pymongo 使用小结</a>
+*  <a href="http://www.cnblogs.com/libingql/archive/2011/06/15/2081545.html">PyMongo基本使用</a>
+*  <a href="https://gist.github.com/wwj718/534c6d343b25c210faf8">pymongo_operate.py</a></p>
+
+<p>代码片段：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#首先pip install pymongo</span>
+<span class="c1">#连接mongodb</span>
+<span class="kn">import</span> <span class="nn">pymongo</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">27017</span><span class="p">)</span> <span class="c1"># mongo 3.2, pymongo 3.5.1: client = pymongo.MongoClient(&#39;localhost&#39;, 27017)</span>
+<span class="c1">#获取数据库列表</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">database_names</span><span class="p">()</span>
+<span class="p">[</span><span class="sa">u</span><span class="s1">&#39;test1&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;test2&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;local&#39;</span><span class="p">]</span>
+<span class="c1">#连接数据库</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">test1</span>  <span class="c1">#或者db = conn[&#39;test1&#39;] 偏好后者，类似python dict</span>
+<span class="c1">#权限验证</span>
+<span class="n">db</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="c1">#获取聚集列表 (聚集的概念类似于关系型数据库中的表)</span>
+<span class="n">db</span><span class="o">.</span><span class="n">collection_names</span><span class="p">()</span>
+<span class="p">[</span><span class="sa">u</span><span class="s1">&#39;account&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;role&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;online&#39;</span><span class="p">]</span>
+<span class="c1">#连接聚集</span>
+<span class="n">account</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">account</span> <span class="c1">#或account = db[&#39;account&#39;]</span>
+<span class="c1">#查看聚集的一条记录</span>
+<span class="n">account</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span>
+<span class="c1">#查看聚集的所有key (类似于关系型数据库中的字段)</span>
+<span class="n">account</span><span class="o">.</span><span class="n">find_one</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="c1">#查看聚集的所有记录</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">account</span><span class="o">.</span><span class="n">find</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="c1">#查看记录总数</span>
+<span class="n">account</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="c1">#根据条件查询多条记录</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">account</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span><span class="p">}):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="c1">#对查询结果进行排序 (默认升序ASCENDING)</span>
+<span class="n">account</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&#34;name&#34;</span><span class="p">,</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">ASCENDING</span><span class="p">)</span>
+<span class="n">account</span><span class="o">.</span><span class="n">find</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">([(</span><span class="s2">&#34;name&#34;</span><span class="p">,</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">ASCENDING</span><span class="p">),</span> <span class="p">(</span><span class="s2">&#34;active_time&#34;</span><span class="p">,</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">DESCENDING</span><span class="p">)])</span>
+
+<span class="c1">#新增记录</span>
+<span class="n">account</span><span class="o">.</span><span class="n">insert</span><span class="p">({</span><span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;mike&#34;</span><span class="p">,</span> <span class="s2">&#34;active_time&#34;</span><span class="p">:</span> <span class="s2">&#34;20130408&#34;</span><span class="p">})</span>
+
+<span class="c1">#更新记录</span>
+<span class="n">account</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;mike&#34;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&#34;$set&#34;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&#34;active_time&#34;</span><span class="p">:</span> <span class="s2">&#34;20130408120000&#34;</span><span class="p">}})</span>
+<span class="c1">#删除记录 (不带条件表示全部删除)</span>
+<span class="n">account</span><span class="o">.</span><span class="n">remove</span><span class="p">({</span><span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;mike&#34;</span><span class="p">})</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>#数据备份</p>
+
+<p>##参开资料
+*  <a href="https://github.com/justinyhuang/the-little-mongodb-book-cn/blob/master/mongodb.md">the-little-mongodb-book</a>
+*  <a href="http://docs.mongodb.org/manual/">官方文档</a>
+*  <a href="http://www.cnblogs.com/xumingxiang/archive/2012/04/08/2437468.html">MongoDB开发学习（1）开天辟地，经典入门</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-07-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/learn-backbone/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">backbone.js学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/learn-mysql/">
+            <span class="next-text nav-default">mysql学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

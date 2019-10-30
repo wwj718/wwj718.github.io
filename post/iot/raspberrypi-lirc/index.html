@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>用树莓派给家用电器加上智能（红外篇） - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="ideas 许多家电是红外控制的，与外界的交互通过一个红外遥控器,我们能否通过编程使其变成智能家居呢，好比我们想做这样一件事：夏天傍晚下班前，检查室内" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/iot/raspberrypi-lirc/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="用树莓派给家用电器加上智能（红外篇）" />
+<meta property="og:description" content="ideas 许多家电是红外控制的，与外界的交互通过一个红外遥控器,我们能否通过编程使其变成智能家居呢，好比我们想做这样一件事：夏天傍晚下班前，检查室内" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/iot/raspberrypi-lirc/" />
+<meta property="article:published_time" content="2016-10-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-10-17T00:00:00+00:00" />
+<meta itemprop="name" content="用树莓派给家用电器加上智能（红外篇）">
+<meta itemprop="description" content="ideas 许多家电是红外控制的，与外界的交互通过一个红外遥控器,我们能否通过编程使其变成智能家居呢，好比我们想做这样一件事：夏天傍晚下班前，检查室内">
+
+
+<meta itemprop="datePublished" content="2016-10-17T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-10-17T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1418">
+
+
+
+<meta itemprop="keywords" content="tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="用树莓派给家用电器加上智能（红外篇）"/>
+<meta name="twitter:description" content="ideas 许多家电是红外控制的，与外界的交互通过一个红外遥控器,我们能否通过编程使其变成智能家居呢，好比我们想做这样一件事：夏天傍晚下班前，检查室内"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">用树莓派给家用电器加上智能（红外篇）</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-10-17 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#ideas">ideas</a></li>
+<li><a href="#目标">目标</a></li>
+<li><a href="#硬件环境">硬件环境</a></li>
+<li><a href="#lirc-https-zh-wikipedia-org-zh-hans-lirc"><a href="https://zh.wikipedia.org/zh-hans/LIRC">LIRC</a></a>
+<ul>
+<li>
+<ul>
+<li><a href="#安装">安装</a></li>
+<li><a href="#配置">配置</a></li>
+<li><a href="#录制电风扇">录制电风扇</a></li>
+<li><a href="#录制空调红外">录制空调红外</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#坑">坑</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="ideas">ideas</h1>
+
+<p>许多家电是红外控制的，与外界的交互通过一个红外遥控器,我们能否通过编程使其变成智能家居呢，好比我们想做这样一件事：<code>夏天傍晚下班前，检查室内温度，如果室温高于30摄氏度，则打开空调</code></p>
+
+<p>要做到上边这件事，我们未必需要购买最新的带app控制的智能空调，利用旧式空调也可以。空调由红外遥控器控制，如果我们能控制红外的收发,模拟发射这些控制信号，我们就可以hack这些旧家电，使其可编程，变成<code>智能家电</code></p>
+
+<h1 id="目标">目标</h1>
+
+<ul>
+<li>红外线控制</li>
+<li>微信控制</li>
+<li>自然语言控制（chatbot）</li>
+<li>blockly编程控制</li>
+<li>与其他传感器组合（温湿度）</li>
+</ul>
+
+<h1 id="硬件环境">硬件环境</h1>
+
+<ul>
+<li>树莓派(我的当前环境是树莓派3,其他版本也可以)</li>
+<li>红外接收器/红外发射器（我用的是这款<a href="http://ukonline2000.com/?p=296">红外线扩展板</a>,能同时支持红外收发）</li>
+</ul>
+
+<h1 id="lirc-https-zh-wikipedia-org-zh-hans-lirc"><a href="https://zh.wikipedia.org/zh-hans/LIRC">LIRC</a></h1>
+
+<p>LIRC是我们需要的软件.</p>
+
+<p>LIRC 是 Linux Infrared remote control的缩写，是linux系统下开源的软件包。从名字中可知，这个软件让你的Linux系统能够控制红外线信号。</p>
+
+<p>LIRC有个具有图形用户界面的前端，叫做KDELirc</p>
+
+<p>在使用LIRC之前建议了解一下<a href="http://www.cnblogs.com/yulongchen/archive/2013/04/12/3017409.html">红外协议</a>，这样有助于你理解交互过程和debug</p>
+
+<h3 id="安装">安装</h3>
+
+<p>sudo apt-get install lirc</p>
+
+<h3 id="配置">配置</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#sudo vim /boot/config.txt #在文件结尾添加
+dtoverlay=lirc-rpi
+gpio_in_pin=18
+gpio_out_pin=17
+
+#sudo vim /etc/lirc/hardware.conf  #编辑LRIC的配置文件
+LIRCD_ARGS=&#34;--uinput --listen&#34;
+DRIVER=&#34;default&#34;
+DEVICE=&#34;/dev/lirc0&#34;
+MODULES=&#34;lirc_rpi&#34;
+
+# 重启生效
+sudo /etc/init.d/lirc restart
+
+# irrecord --list-namespace</pre></td></tr></table>
+</div>
+</div>
+<h3 id="录制电风扇">录制电风扇</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"># 开始录制
+irrecord -d /dev/lirc0 ~/lircd.conf #按照提示操作即可,录制完后会让你输入按键名
+
+sudo cp ~/lircd.conf /etc/lirc/lircd.conf
+
+#查看录制好可以使用的按键名
+irsend LIST /home/pi/lircd.conf &#34;&#34;
+irsend SEND_ONCE /home/pi/lircd.conf KEY_POWER</pre></td></tr></table>
+</div>
+</div>
+<h3 id="录制空调红外">录制空调红外</h3>
+
+<p>空调遥控器这种带逻辑控制的比较麻烦.每次发射的都是含有温度、模式、制冷制热等一连串的指令，按照之前irrecord指令生成conf文件，行不通</p>
+
+<p>只能使用raw的原始码，记录也是通过mode2 命令实现</p>
+
+<p>先制作模板：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">sudo /etc/init.d/lirc restart
+irrecord  -f -d /dev/lirc0 ~/lircd.conf #制作模板</pre></td></tr></table>
+</div>
+</div>
+<p>得到</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">begin remote
+
+  name  /home/pi/lircd.conf
+  flags RAW_CODES
+  eps            30
+  aeps          100
+
+  gap          19886
+
+      begin raw_codes
+
+          name KEY_OPEN
+               90     102     331
+
+      end raw_codes
+
+end remote</pre></td></tr></table>
+</div>
+</div>
+<p>接下来开始录制</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">mode2  -d /dev/lirc0 &gt; /tmp/temp.code  <span class="c1"># space 10969878</span> 
+cat /tmp/temp.code <span class="p">|</span> sed -n <span class="s1">&#39;2,$p&#39;</span> <span class="p">|</span> grep -o  -E <span class="s2">&#34;[0-9]+&#34;</span> <span class="p">|</span> xargs <span class="nb">echo</span>  <span class="c1"># 移除第一行,之后把所有数字取出</span>
+<span class="c1"># 把上述指令写入 ~/lircd.conf 的 KEY_OPEN里</span>
+<span class="c1"># 值得注意的是 ~/lircd.conf文件里的空格十分重要</span>
+
+sudo cp ~/lircd.conf /etc/lirc/lircd.conf
+sudo /etc/init.d/lirc restart
+<span class="c1"># irsend LIST /home/pi/lircd.conf &#34;&#34; #列出指令</span>
+irsend SEND_ONCE /home/pi/lircd.conf KEY_OPEN</code></pre></td></tr></table>
+</div>
+</div>
+<p>这是我最后的~/lircd.conf内容:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">begin remote
+
+  name  /home/pi/lircd.conf
+  flags RAW_CODES
+  eps            30
+  aeps          100
+
+  gap          19886
+
+      begin raw_codes
+
+          name KEY_CLOSE
+               9075 4411 731 453 751 1580 730 476 729 477 731 1576 729 478 729 1579 729 460 747 477 729 477 729 476 730 1578 729 477 730 476 731 477 733 472 730 476 731 475 730 477 728 480 728 477 729 1578 731 477 727 477 731 475 730 478 728 477 730 476 730 1578 754 430 753 1577 735 471 730 477 752 1553 756 453 753 19884 756 1551 758 451 754 450 756 451 756 451 754 449 756 451 757 429 777 449 758 449 758 449 756 451 755 450 756 1550 757 428 779 451 755 451 755 450 757 450 755 450 757 428 779 449 757 448 760 447 758 449 757 449 756 451 756 450 756 449 756 1551 757 1550 757 451 756
+          name KEY_OPEN
+               9112 4390 724 459 747 1584 725 459 746 1582 727 1582 726 481 724 1583 726 482 729 478 745 459 726 481 745 1564 724 480 725 481 746 459 725 488 741 438 770 457 748 457 749 459 747 459 748 1559 748 436 773 455 750 457 748 459 748 457 750 458 747 1559 749 459 746 1558 750 457 749 458 748 1558 751 455 749 19889 748 1559 750 457 748 458 749 458 750 457 747 458 748 458 749 435 771 458 749 457 748 459 745 461 745 460 747 1561 726 481 729 455 769 458 725 482 725 481 724 483 724 481 726 482 745 460 725 482 725 482 722 482 726 482 725 481 724 480 724 1583 725 1582 727 1583 726
+
+
+      end raw_codes
+
+end remote</pre></td></tr></table>
+</div>
+</div>
+<p>我把开关机命名为KEY_OPEN/KEY_CLOSE(可以完全自定义)</p>
+
+<p>之后开关机的指令分别为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#开机
+irsend SEND_ONCE /home/pi/lircd.conf KEY_OPEN
+#关机
+irsend SEND_ONCE /home/pi/lircd.conf KEY_CLOSE</pre></td></tr></table>
+</div>
+</div>
+<p>测试有效！搞定</p>
+
+<p>之后结合温度传感器或者微信之类的其他功能模块就可以完成丰富的智能控制了</p>
+
+<h1 id="坑">坑</h1>
+
+<p>配置文件中，KEY的名字有限制，BLOCKLY_KEY会报错 KEY_BLOCKLY就行</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/LIRC">LIRC</a></li>
+<li><a href="http://mageelen.blog.163.com/blog/static/1769430102014382346166/">使用树莓派遥控空调</a></li>
+<li><a href="http://www.cnblogs.com/yulongchen/archive/2013/04/12/3017409.html">红外协议之NEC协议</a></li>
+<li><a href="https://linux.cn/article-3782-1.html">使用树莓派红外控制空调和风扇</a></li>
+<li><a href="http://ukonline2000.com/?p=296">发布树莓派专用红外线扩展板</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-10-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/hs/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">历史的教训</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/raspberrypi-install-and-config/">
+            <span class="next-text nav-default">树莓派折腾笔记之系统安装与配置</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

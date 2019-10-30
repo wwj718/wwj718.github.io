@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>编码相关的笔记  - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="编码/解码问题是个大坑，其中的复杂性，大多来自历史包袱 由于计算机领域的分层架构和多平台问题，这个问题被进一步加剧，unicode的出现，给这" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/decode-and-encode-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="编码相关的笔记 " />
+<meta property="og:description" content="编码/解码问题是个大坑，其中的复杂性，大多来自历史包袱 由于计算机领域的分层架构和多平台问题，这个问题被进一步加剧，unicode的出现，给这" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/decode-and-encode-note/" />
+<meta property="article:published_time" content="2016-06-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-06-28T00:00:00+00:00" />
+<meta itemprop="name" content="编码相关的笔记 ">
+<meta itemprop="description" content="编码/解码问题是个大坑，其中的复杂性，大多来自历史包袱 由于计算机领域的分层架构和多平台问题，这个问题被进一步加剧，unicode的出现，给这">
+
+
+<meta itemprop="datePublished" content="2016-06-28T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-06-28T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3335">
+
+
+
+<meta itemprop="keywords" content="tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="编码相关的笔记 "/>
+<meta name="twitter:description" content="编码/解码问题是个大坑，其中的复杂性，大多来自历史包袱 由于计算机领域的分层架构和多平台问题，这个问题被进一步加剧，unicode的出现，给这"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">编码相关的笔记 </h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-06-28 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#编码问题">编码问题</a></li>
+<li><a href="#核心概念">核心概念</a>
+<ul>
+<li>
+<ul>
+<li><a href="#字符集">字符集</a></li>
+<li><a href="#字符编码">字符编码</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#unicode和utf-8">Unicode和UTF-8</a></li>
+<li><a href="#python中的编码问题">Python中的编码问题</a>
+<ul>
+<li>
+<ul>
+<li><a href="#解码字节流">解码字节流</a></li>
+<li><a href="#str-unicode">str/unicode</a></li>
+<li><a href="#codecs模块">codecs模块</a></li>
+<li><a href="#策略">策略</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#linux下的一些工具">linux下的一些工具</a>
+<ul>
+<li>
+<ul>
+<li><a href="#file">file</a></li>
+<li><a href="#iconv">iconv</a></li>
+<li><a href="#chardet">chardet</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#附">附</a>
+<ul>
+<li>
+<ul>
+<li><a href="#url中的编码问题">url中的编码问题</a></li>
+<li><a href="#在线工具">在线工具</a></li>
+<li><a href="#一些细碎知识">一些细碎知识</a></li>
+<li><a href="#python中字节流和unicode的代码视角比较">python中字节流和unicode的代码视角比较</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>编码/解码问题是个大坑，其中的复杂性，大多来自历史包袱</p>
+
+<p>由于计算机领域的分层架构和多平台问题，这个问题被进一步加剧，unicode的出现，给这个问题带来了曙光.</p>
+
+<p>可是生活不总是那么美好的，有些时候，一不小心，我们还是会掉到满是泥沼的坑里</p>
+
+<p>周末在凤凰书城看一本数据清洗相关的书，其中说道噪声数据的问题，有问题的编码是噪声的来源之一，书中分享了不少好用的方法，在便签里记了一些，加上之前笔记里的，正好整理成一篇文章</p>
+
+<h1 id="编码问题">编码问题</h1>
+
+<p>这里引《中文编码杂谈》中关于乱码的讨论</p>
+
+<blockquote>
+<p>在Linux平台上如果使用cat等命令查看文件中的中文内容时，可能出现乱码。这也是编码的问题。简单的说是文件时按照A编码保存，但是cat命令按照当前Locale设定的B编码去查看，在B和A不兼容的时候就出现了乱码。</p>
+</blockquote>
+
+<h1 id="核心概念">核心概念</h1>
+
+<p>引<a href="http://cenalulu.github.io/linux/character-encoding/">十分钟搞清字符集和字符编码</a></p>
+
+<h3 id="字符集">字符集</h3>
+
+<blockquote>
+<p>简单的说字符集就规定了某个文字对应的二进制数字存放方式（编码）和某串二进制数值代表了哪个文字（解码）的<code>转换关系</code></p>
+</blockquote>
+
+<h3 id="字符编码">字符编码</h3>
+
+<blockquote>
+<p>字符编码（英语：Character encoding）、字集码是把字符集中的字符编码为指定集合中某一对象（例如：比特模式、自然数序列、8位组或者电脉冲），以便文本在计算机中存储和通过通信网络的传递。常见的例子包括将拉丁字母表编码成摩斯电码和ASCII。其中，ASCII将字母、数字和其它符号编号，并用7比特的二进制来表示这个整数  &ndash;wikipedia</p>
+</blockquote>
+
+<h1 id="unicode和utf-8">Unicode和UTF-8</h1>
+
+<p>Unicode对世界上大部分的文字系统进行了整理、编码，使得电脑可以用更为简单的方式来呈现和处理文字。</p>
+
+<p>Unicode只是一个符号集，它只规定了符号的二进制代码，却没有规定这个二进制代码应该如何存储</p>
+
+<p>而UTF-8就是字符编码，是Unicode规则字库的一种实现形式</p>
+
+<h1 id="python中的编码问题">Python中的编码问题</h1>
+
+<p><a href="http://blog.jobbole.com/50345/">Python编码和Unicode</a>一文中描述了python中可能出现的一些编解码难题</p>
+
+<p>原因之一是Python 2.x默认将所有的字符串当做ASCII来对待（python3中会好很多）</p>
+
+<p>当你使用string类型时，实际上会储存一个字节串</p>
+
+<h3 id="解码字节流">解码字节流</h3>
+
+<p>你可以把字节流<code>解码</code>(decode)成一个Unicode对象，把一个Unicode 对象编码(encode)为字节流</p>
+
+<ul>
+<li>你最好是尽早的将字节流解码为Unicode(字节流进入程序的时候)</li>
+<li>你不能简单地输出一个Unicode对象。它必须在输出前被变成一个字节串</li>
+</ul>
+
+<h3 id="str-unicode">str/unicode</h3>
+
+<p>在mac下python2.7.5</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># unicode</span>
+<span class="n">unicode_a</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&#34;你好&#34;</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">unicode_a</span><span class="p">)</span> <span class="c1"># &lt;type &#39;unicode&#39;&gt;</span>
+<span class="n">unicode_a</span> <span class="c1"># u&#39;\u4f60\u597d&#39;</span>
+<span class="n">unicode_b</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u4f60\u597d</span><span class="s1">&#39;</span> 
+<span class="n">unicode_b</span> <span class="c1"># u&#39;\u4f60\u597d&#39;</span>
+<span class="n">unicode_a</span> <span class="o">==</span> <span class="n">unicode_b</span> <span class="c1"># True</span>
+
+<span class="c1"># unicode_c = unicode(&#34;你好&#34;) python2会报错，python会把所有东西作为字节流理解</span>
+<span class="sa">u</span><span class="s1">&#39;hello&#39;</span> <span class="o">==</span> <span class="nb">unicode</span><span class="p">(</span><span class="s2">&#34;hello&#34;</span><span class="p">)</span> <span class="c1">#  True，如果</span>
+
+<span class="n">unicode_a</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span> <span class="c1"># &#39;\xe4\xbd\xa0\xe5\xa5\xbd&#39;</span>
+<span class="c1">################</span>
+<span class="c1"># str</span>
+<span class="n">str_a</span> <span class="o">=</span> <span class="s2">&#34;你好&#34;</span>
+<span class="n">str_a</span> <span class="c1"># &#39;\xe4\xbd\xa0\xe5\xa5\xbd&#39;</span>
+<span class="n">str_a</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span> <span class="c1"># u&#39;\u4f60\u597d&#39;</span>
+<span class="n">str_a</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>  <span class="o">==</span>  <span class="sa">u</span><span class="s2">&#34;你好&#34;</span> <span class="c1"># True</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><strong>repr</strong>的目标是准确性，<strong>str</strong>的目标是可读性</p>
+
+<h3 id="codecs模块">codecs模块</h3>
+
+<p>codecs模块能在处理字节流的时候提供很大帮助。你可以用定义的编码来打开文件并且你从文件里读取的内容会被自动转化为Unicode对象。</p>
+
+<p>读写文件</p>
+
+<p>当从一个文件读取数据的时候，codecs.open 会创建一个文件对象能够自动将utf-8编码文件转化为一个Unicode对象,而写入文件这样写：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">codecs</span>
+<span class="n">fh</span> <span class="o">=</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&#34;/tmp/utf-8.txt&#34;</span><span class="p">,</span> <span class="s2">&#34;w&#34;</span><span class="p">,</span> <span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>
+<span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">u</span><span class="s2">&#34;</span><span class="se">\u2013</span><span class="s2">&#34;</span><span class="p">)</span> 
+<span class="n">fh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>使用urllib流</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">stream</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s2">&#34;http://www.google.com&#34;</span><span class="p">)</span>
+<span class="n">Reader</span> <span class="o">=</span> <span class="n">codecs</span><span class="o">.</span><span class="n">getreader</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>
+<span class="n">fh</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># &lt;type &#39;unicode&#39;&gt; ,应该尽可能让程序内部的数据都是 &lt;type &#39;unicode&#39;&gt; </span></code></pre></td></tr></table>
+</div>
+</div>
+<p>你必须对codecs模块十分小心。你传进去的东西必须是一个Unicode对象,否则它会自动将字节流作为ASCII进行解码。</p>
+
+<h3 id="策略">策略</h3>
+
+<p>python编解码涉及的问题可能很多，上至大神下至小白，都可能受扰，为了保持简单，我们可以保持这样一种习惯:关注输入输出，内部保持unicode。</p>
+
+<p>每当有数据进入程序，将其解码（decode）为unicode(utf-8）</p>
+
+<p>当有数据从程序中输出时，将其编码（encode）为utf-8</p>
+
+<p>最佳实践：</p>
+
+<ul>
+<li>最先解码(解码为unicode对象)，最后编码（输出为字节码）
+
+<ul>
+<li>最先解码意味着无论何时有字节流输入，需要尽早将输入解码为Unicode</li>
+<li>最后编码意味着只有你打算将文本输出到某个地方时，才把它编码为字节流。这个输出可能是一个文件，一个数据库，一个socket等等</li>
+</ul></li>
+<li>默认使用utf-8编码</li>
+<li>使用codecs和Unicode对象来简化处理
+
+<ul>
+<li>codecs模块能够让我们在处理诸如文件或socket这样的流的时候能少踩一些坑。如果没有codecs提供的这个工具，你就必须将文件内容读取为字节流，然后将这个字节流解码为Unicode对象。</li>
+<li>codecs模块能够让你快速的将<code>字节流</code>转化为<code>Unicode对象</code>，省去很多麻烦。</li>
+</ul></li>
+</ul>
+
+<h1 id="linux下的一些工具">linux下的一些工具</h1>
+
+<h3 id="file">file</h3>
+
+<p>file命令用来探测给定文件的类型,</p>
+
+<p>参数：</p>
+
+<ul>
+<li>-i：显示MIME类别。</li>
+<li>-c：详细显示指令执行过程，便于排错或分析程序执行的情形；</li>
+</ul>
+
+<p>file *</p>
+
+<h3 id="iconv">iconv</h3>
+
+<p>conv命令是用来转换文件的编码方式的，比如它可以将UTF8编码的转换成GB18030的编码</p>
+
+<p>iconv -f encoding -t encoding inputfile</p>
+
+<p>iconv -f UTF-8 -t GBK file1 -o file2  //将一个UTF-8 编码的文件转换成GBK编码</p>
+
+<h3 id="chardet">chardet</h3>
+
+<p>有时候我们不知道文件/字节流采用了什么编码，可以让chardet来猜测编码，chardet是python的一个库</p>
+
+<h1 id="附">附</h1>
+
+<p>###传输编码语法（transfer encoding syntax）
+用于处理上一层次的字符编码方案提供的字节序列。一般其功能包括两种：一是把字节序列的值映射到一套更受限制的值域内，以满足传输环境的限制，例如Email传输时Base64或者quoted-printable，都是把8位的字节编码为7位长的数据；另一是压缩字节序列的值，如LZW或者进程长度编码等无损压缩技术。</p>
+
+<p>######Base64编码
+base64编码相关的部分，可以翻阅我的<a href="http://blog.just4fun.site/jwt-note.html">JWT学习笔记</a>中的附录部分</p>
+
+<ul>
+<li>&gt;  Base64常用于在通常处理文本数据的场合，表示、传输、存储一些<code>二进制数据</code></li>
+<li>常用于在URL、Cookie、网页中传输少量二进制数据。</li>
+</ul>
+
+<blockquote>
+<p>所谓Base64，就是说选出64个字符&mdash;-小写字母a-z、大写字母A-Z、数字0-9、符号&rdquo;+&ldquo;、&rdquo;/&ldquo;（再加上作为垫字的&rdquo;=&ldquo;，实际上是65个字符）&mdash;-作为一个基本字符集。然后，其他所有符号都转换成这个字符集中的字符。</p>
+</blockquote>
+
+<p>关于base64更多的细节可以参考维基百科和<a href="http://www.ruanyifeng.com/blog/2008/06/base64.html">Base64笔记</a></p>
+
+<p>在python中实现</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">base64</span>
+<span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span> <span class="c1">#aGVsbG8=  ， 被编码的不是应该是二进制数据吧，python的二进制默认被解析为ascii？，在这里hello无论是b&#39;hello&#39;还是&#39;hello&#39;/u&#39;hello&#39;，结果都一样</span>
+<span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="s2">&#34;aGVsbG8=&#34;</span><span class="p">)</span> <span class="c1"># hello</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;你好&#39;</span> <span class="c1"># \u4f60\u597d</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">))</span>  <span class="c1">#5L2g5aW9</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="c1"># \xe4\xbd\xa0\xe5\xa5\xbd</span>
+<span class="n">c</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span> <span class="c1"># u&#39;\u4f60\u597d&#39;</span>
+
+<span class="c1"># 由于标准的Base64编码后可能出现字符+和/，在URL中就不能直接作为参数，所以又有一种&#34;url safe&#34;的base64编码，其实就是把字符+和/分别变成-和_</span>
+<span class="n">d</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&#34;哈里谢顿&#34;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span> <span class="c1"># \xe5\x93\x88\xe9\x87\x8c\xe8\xb0\xa2\xe9\xa1\xbf</span>
+<span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="c1"># 5ZOI6YeM6LCi6aG/ , 有反斜杠</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="c1"># 5ZOI6YeM6LCi6aG_</span>
+<span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64decode</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="c1"># \xe5\x93\x88\xe9\x87\x8c\xe8\xb0\xa2\xe9\xa1\xbf</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="url中的编码问题">url中的编码问题</h3>
+
+<p>一般而言使用urllib库中的urlencode函数就好了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlencode</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;小明&#39;</span><span class="p">,</span> <span class="c1">#u&#39;小明&#39;则需要encode为字节码</span>
+     <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="s1">&#39;10岁&#39;</span>
+     <span class="p">}</span>
+<span class="k">print</span> <span class="n">urlencode</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1"># age=10%E5%B2%81&amp;name=%E5%B0%8F%E6%98%8E</span>
+
+<span class="c1">#仅对字符串进行转码可以使用quote</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">quote</span>
+<span class="n">quote</span><span class="p">(</span><span class="s1">&#39;小明&#39;</span><span class="p">)</span>  <span class="c1">#%E5%B0%8F%E6%98%8E&#39;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>如果有大量此类工作可以考虑使用<a href="https://github.com/gruns/furl">furl</a></p>
+
+<h3 id="在线工具">在线工具</h3>
+
+<ul>
+<li><a href="http://tool.oschina.net/encode?type=4">在线编码转换</a></li>
+<li><a href="http://tool.chinaz.com/Tools/urlencode.aspx">UrlEncode编码/UrlDecode解码</a></li>
+<li><a href="http://tool.chinaz.com/Tools/unicode.aspx">Unicode编码转换</a>:还包括unix时间戳</li>
+</ul>
+
+<h3 id="一些细碎知识">一些细碎知识</h3>
+
+<p>Windows简体中文版中，ANSI是默认的编码方式。对于英文文件是ASCII编码，对于简体中文文件是GB2312编码（繁体中文版会采用Big5码）</p>
+
+<h3 id="python中字节流和unicode的代码视角比较">python中字节流和unicode的代码视角比较</h3>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/18193305/python-unicode-equal-comparison-failed">stackoverflow Python unicode equal comparison failed</a></li>
+</ul>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81">字符编码</a></li>
+<li><a href="http://cenalulu.github.io/linux/character-encoding/">十分钟搞清字符集和字符编码</a>
+
+<ul>
+<li><a href="http://cenalulu.github.io/mysql/mysql-mojibake/">10分钟学会理解和解决MySQL乱码问题</a></li>
+</ul></li>
+<li><a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html">字符编码笔记：ASCII，Unicode和UTF-8</a></li>
+<li><a href="http://blog.jobbole.com/50345/">Python编码和Unicode</a></li>
+<li><a href="https://funhacks.net/2016/11/25/character_encoding/">Python: 熟悉又陌生的字符编码</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-06-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/olx-guide/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">如何从外部创建edx课程及其可编程性</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/vim-setting/">
+            <span class="next-text nav-default">我的vim/mavim/neovim配置</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

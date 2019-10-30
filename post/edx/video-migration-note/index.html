@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>视频迁移笔记 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="背景 近期将mooc上的视频(1000&#43;)从一个云服务商(Azure)转移到另一个云服务商(七牛云)。做个记录。 视频迁移的思路是通用的，如果你" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/video-migration-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="视频迁移笔记" />
+<meta property="og:description" content="背景 近期将mooc上的视频(1000&#43;)从一个云服务商(Azure)转移到另一个云服务商(七牛云)。做个记录。 视频迁移的思路是通用的，如果你" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/video-migration-note/" />
+<meta property="article:published_time" content="2018-09-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-09-17T00:00:00+00:00" />
+<meta itemprop="name" content="视频迁移笔记">
+<meta itemprop="description" content="背景 近期将mooc上的视频(1000&#43;)从一个云服务商(Azure)转移到另一个云服务商(七牛云)。做个记录。 视频迁移的思路是通用的，如果你">
+
+
+<meta itemprop="datePublished" content="2018-09-17T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-09-17T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1323">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="视频迁移笔记"/>
+<meta name="twitter:description" content="背景 近期将mooc上的视频(1000&#43;)从一个云服务商(Azure)转移到另一个云服务商(七牛云)。做个记录。 视频迁移的思路是通用的，如果你"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">视频迁移笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-17 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#背景">背景</a></li>
+<li><a href="#思路">思路</a></li>
+<li><a href="#操作流程">操作流程</a></li>
+<li><a href="#触发程序">触发程序</a></li>
+<li><a href="#mooc课程内链接替换">mooc课程内链接替换</a></li>
+<li><a href="#一些tips">一些tips</a>
+<ul>
+<li>
+<ul>
+<li><a href="#url处理">url处理</a></li>
+<li><a href="#csv新增一栏替换后的url">csv新增一栏替换后的url</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="背景">背景</h1>
+
+<p>近期将mooc上的视频(1000+)从一个云服务商(Azure)转移到另一个云服务商(七牛云)。做个记录。</p>
+
+<p>视频迁移的思路是通用的，如果你使用的云服务商有镜像存储功能，这篇文章可能就有用。</p>
+
+<h1 id="思路">思路</h1>
+
+<p>思路很简单，使用七牛云的<a href="https://developer.qiniu.com/kodo/kb/1376/seven-cattle-image-storage-instruction-manuals">镜像存储</a>功能，将Azure的视频镜像到七牛云上。</p>
+
+<p>镜像前后的视频url只有host不同。</p>
+
+<h1 id="操作流程">操作流程</h1>
+
+<ol>
+<li>允许Azure视频存储容器的访问策略调整为:<code>匿名读取访问容器和blob</code></li>
+<li>将Azure上的视频url导出为url列表(csv)</li>
+<li>配置好七牛云的镜像</li>
+<li>写一个触发程序(类似url点击)，触发url列表的镜像缓存</li>
+</ol>
+
+<p>前三点在对应云平台都有教程，在此不赘述。下边分享一下触发程序</p>
+
+<h1 id="触发程序">触发程序</h1>
+
+<p>talk is cheap show you the <a href="https://gist.github.com/wwj718/0b58173f20f002a0d4d70f2fa839781e">code</a>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># python &gt;= 3.5</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">aiohttp</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;qiniu_url.csv&#39;</span><span class="p">)</span>
+
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">job</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">await</span> <span class="n">session</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&#34;bad_url:{url}&#34;</span><span class="p">)</span>
+
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">loop</span><span class="p">):</span>
+    <span class="n">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">job</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;qiniu_url&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&#34;mp4&#34;</span> <span class="ow">in</span> <span class="n">url</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="c1"># 推荐每次跑100个 df[&#39;qiniu_url&#39;][0:100]</span>
+        <span class="n">finished</span><span class="p">,</span> <span class="n">unfinished</span> <span class="o">=</span> <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">tasks</span><span class="p">)</span>
+        <span class="n">all_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">finished</span><span class="p">]</span>
+        <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_results</span><span class="p">))</span>
+
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">main</span><span class="p">(</span><span class="n">loop</span><span class="p">))</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&#34;Async total time:&#34;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>至此完成视频迁移，需要注意的是七牛云的镜像存储缓存时间默认是30天，最长是一年。所以需要留意到期的问题。如果要继续使用，再此镜像也很轻松。</p>
+
+<h1 id="mooc课程内链接替换">mooc课程内链接替换</h1>
+
+<p>视频迁移完之后，我们还需要在mooc课程内，替换相应url。如果url很少，可以手动替换，如果数量很大的话，推荐使用批量替换。下边记录批量替换的过程。</p>
+
+<p>open edx的课程包内容是纯文本(xml)，所以我们可以导出课程包，解压后，替换完链接再导入回去。</p>
+
+<p>我们前头提到，迁移前后，视频链接的唯一变化就是host，假设迁移前的host为:<code>video.example1.com</code>, 迁移后的host为:<code>video.example2.com</code>。我们只要全局替换课程包里的视频host就行。</p>
+
+<p>首先在studio中导出课程包，形如:<code>course.D3ztEC.tar.gz</code>,这是个tar包，接下来我们需要解压它，但我每次都记不住解压的命令，所以我们可以使用<code>cheat/tldr</code>（pip install cheat）来看看tar的常见用法:<code>cheat tar</code>,cheat会列出目录指令的典型用法，而不是像man一样事无巨细，看着头疼。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">tar -xzvf course.D3ztEC.tar.gz  <span class="c1"># 解压到目录 course</span>
+<span class="nb">cd</span> course
+git init <span class="c1"># 使用git记录目录变化，以便于没有弄坏东西 ,记得最后清理掉.git:  rm -rf .git</span>
+git add .
+git commit -m <span class="s1">&#39;1st&#39;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>接下来开始将<code>video.example1.com</code>替为<code>video.example2.com</code></p>
+
+<p>在一个目录里递归替换文件里的字符串，linux社区习惯用sed，mac下sed有问题，与linux不一致，再者sed的正则和转义神烦。推荐直接使用vscode，简单清晰。</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/url_replace_6231e098.png" width=700/></p>
+
+<p>替换完成后，<code>git diff</code>看一下是否符合预期，如果符合，就把<code>.git</code>目录删掉</p>
+
+<p>最后把course目录压缩回tar包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"># To create a .gz archive:
+tar -czvf replaceurlcourse.D3ztEC.tar.gz  course</pre></td></tr></table>
+</div>
+</div>
+<p>上传替换好的课程包到课程里(studio中)</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/course_replace_98a25060.png" width=700/></p>
+
+<p>完毕！</p>
+
+<h1 id="一些tips">一些tips</h1>
+
+<h3 id="url处理">url处理</h3>
+
+<p>我们将视频从Azure迁往七牛云，前后的连接变化有两处:</p>
+
+<ul>
+<li>https变为http</li>
+<li>host调整</li>
+<li>不需要url参数</li>
+</ul>
+
+<p>尽管我们可以用正则来做这些事，但会很丑，推荐使用<a href="https://github.com/gruns/furl">furl</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">from furl import furl
+u1 = &#34;https://video.example1.com/a/b.mp4?q=1&#34;
+u2 = furl(u).set(host=&#39;video.example2.com&#39;,scheme=&#34;http&#34;).remove(query=True)
+print(str(u2))
+# http://video.example2.com/a/b.mp4</pre></td></tr></table>
+</div>
+</div>
+<h3 id="csv新增一栏替换后的url">csv新增一栏替换后的url</h3>
+
+<p>使用pandas批量替换host，新增一栏:</p>
+
+<p><code>df['qiniu_url'] = df.apply(lambda row: str(furl(row[&quot;SAS URL&quot;]).set(host=&quot;video.example2.com&quot;,scheme=&quot;http&quot;).remove(query=True)), axis=1)</code></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-09-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-ubtrobot/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">scratch3-adapter接入优必选Alpha系列机器人</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-refactoring-note/">
+            <span class="next-text nav-default">scratch3-adapter重构笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

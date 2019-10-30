@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>为mpv写一个简单的图形界面 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="缘起 几个月前给朋友推荐过mpv，朋友非技术人员，而mpv只提供命令行工具，没有图形界面，周末下午逛github看到Gooey，觉得简单有趣，" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/mpv_gui/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="为mpv写一个简单的图形界面" />
+<meta property="og:description" content="缘起 几个月前给朋友推荐过mpv，朋友非技术人员，而mpv只提供命令行工具，没有图形界面，周末下午逛github看到Gooey，觉得简单有趣，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/mpv_gui/" />
+<meta property="article:published_time" content="2016-07-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-07-31T00:00:00+00:00" />
+<meta itemprop="name" content="为mpv写一个简单的图形界面">
+<meta itemprop="description" content="缘起 几个月前给朋友推荐过mpv，朋友非技术人员，而mpv只提供命令行工具，没有图形界面，周末下午逛github看到Gooey，觉得简单有趣，">
+
+
+<meta itemprop="datePublished" content="2016-07-31T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-07-31T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="804">
+
+
+
+<meta itemprop="keywords" content="tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="为mpv写一个简单的图形界面"/>
+<meta name="twitter:description" content="缘起 几个月前给朋友推荐过mpv，朋友非技术人员，而mpv只提供命令行工具，没有图形界面，周末下午逛github看到Gooey，觉得简单有趣，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">为mpv写一个简单的图形界面</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-07-31 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#缘起">缘起</a></li>
+<li><a href="#需求">需求</a></li>
+<li><a href="#一些介绍">一些介绍</a>
+<ul>
+<li>
+<ul>
+<li><a href="#mpv-https-github-com-mpv-player-mpv"><a href="https://github.com/mpv-player/mpv">mpv</a></a></li>
+<li><a href="#gooey-https-github-com-chriskiehl-gooey"><a href="https://github.com/chriskiehl/Gooey">Gooey</a></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#安装">安装</a>
+<ul>
+<li>
+<ul>
+<li><a href="#mpv">mpv</a></li>
+<li><a href="#gooey">Gooey</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#上源码">上源码</a>
+<ul>
+<li>
+<ul>
+<li><a href="#点击执行">点击执行</a></li>
+<li><a href="#todo">todo</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#后记">后记</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="缘起">缘起</h1>
+
+<p>几个月前给朋友推荐过mpv，朋友非技术人员，而mpv只提供命令行工具，没有图形界面，周末下午逛github看到<a href="https://github.com/chriskiehl/Gooey">Gooey</a>，觉得简单有趣，决定用它给mpv写一个简单的图形界面</p>
+
+<h1 id="需求">需求</h1>
+
+<p>需求很简单，通过点击桌面图标，之后选择电影文件，就能播放，而不需要使用图形界面，这应该是大多非技术用户习惯的操作。</p>
+
+<h1 id="一些介绍">一些介绍</h1>
+
+<h3 id="mpv-https-github-com-mpv-player-mpv"><a href="https://github.com/mpv-player/mpv">mpv</a></h3>
+
+<p>mac下常见播放器有QuickTime，MplayerX，VLC。我之前用MplayerX居多，mpv 是 Mplayer 和 Mplayer2 项目的分支，目前活跃的开发者都转向开发 mpv。mpv基本可以满足一般用户的需要</p>
+
+<p>mac下不同播放器的比较参考<a href="https://www.zhihu.com/question/19552878">这里</a></p>
+
+<h3 id="gooey-https-github-com-chriskiehl-gooey"><a href="https://github.com/chriskiehl/Gooey">Gooey</a></h3>
+
+<blockquote>
+<p>Turn (almost) any Python command line program into a full GUI application with one line</p>
+</blockquote>
+
+<p>Gooey能轻易地把python命令行工具变为GUI应用，通过极少的代码</p>
+
+<h1 id="安装">安装</h1>
+
+<h3 id="mpv">mpv</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">brew tap mpv-player/mpv
+brew install mpv
+which mpv <span class="c1"># /usr/local/bin/mpv</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>使用:<code>mpv /your/folder/yourfile.mp4</code></p>
+
+<p>mpv在mac目前没有图形界面</p>
+
+<h3 id="gooey">Gooey</h3>
+
+<p>pip install Gooey  //需要在sudo pip下安装，wxpython要求比较多,virtuanenv下比较麻烦，具体可以参考<a href="https://wiki.wxpython.org/wxPythonVirtualenvOnMac">wxPythonVirtualenvOnMac</a></p>
+
+<p>依赖<code>wxpython</code>，安装<code>wxpython</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">brew install wxpython
+<span class="nb">cd</span> /Library/Python/2.7/site-packages    
+ln -s /usr/local/Cellar/wxpython/3.0.2.0/lib/python2.7/site-packages/wx-3.0-osx_cocoa/wx/ wx</code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="上源码">上源码</h1>
+
+<p>cat mpv_gui.py</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#!/usr/bin/env python
+# encoding: utf-8
+#import argparse
+from gooey import Gooey, GooeyParser
+import subprocess
+import sys
+
+def handle(args):
+    filename = args.filename
+    # 播放，调用系统服务（mpv）
+    mpv = &#34;/usr/local/bin/mpv&#34;
+    # todo:变为独立进程
+    subprocess.Popen([mpv,filename])
+
+@Gooey(language=&#34;chinese&#34;)
+def main():
+  parser = GooeyParser(description=u&#39;mpv_gui&#39;)
+  parser.add_argument(&#39;filename&#39;, help=u&#34;请选择电影文件&#34;, widget=&#39;FileChooser&#39;)
+  args = parser.parse_args()
+  handle(args)
+
+if __name__ == &#39;__main__&#39;:
+  main()</pre></td></tr></table>
+</div>
+</div>
+<h3 id="点击执行">点击执行</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">mv mpv_gui.py mpv_gui
+chmod +x mpv_gui</code></pre></td></tr></table>
+</div>
+</div>
+<p>之后点击mpv_gui文件即可选择播放电影</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/mpv_guif12d19d5.png" alt="" /></p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/mpv_gui28719e66a.png" alt="" /></p>
+
+<p>如果你想把这个工具打包成无依赖的系统软件，可以试试pyinstaller</p>
+
+<h3 id="todo">todo</h3>
+
+<p>Gooey安装不方便，文件选择用tkinter的tkFileDialog就好了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">Tkinter</span> <span class="kn">import</span> <span class="n">Tk</span>
+<span class="kn">from</span> <span class="nn">tkFileDialog</span> <span class="kn">import</span> <span class="n">askopenfilename</span>
+
+<span class="n">Tk</span><span class="p">()</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span> <span class="c1"># we don&#39;t want a full GUI, so keep the root window from appearing</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">askopenfilename</span><span class="p">()</span> <span class="c1"># show an &#34;Open&#34; dialog box and return the path to the selected file , 在命令行下层？</span>
+<span class="k">print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="后记">后记</h1>
+
+<p>后来发现可以直接安装mpv.app，之后绑定格式和播放工具 （参考 <a href="http://songchenwen.com/tech/2015/05/09/mpv-player/">全能高效的播放器 mpv</a>）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">brew install mpv --with-bundle
+brew linkapps mpv</pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-07-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/awesome-tools/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">一些好用的工具</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%95%B0%E6%8D%AE/caravel-code/">
+            <span class="next-text nav-default"> caravel系列之架构与源码浅析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

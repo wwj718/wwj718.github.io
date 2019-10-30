@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>将Open edX部署到Kubernetes上的踩坑笔记 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="继续Open edX docker生产环境的探索 这篇文章记录将Open edX部署到Kubernetes上的踩坑笔记 我对docker比较熟悉，但对Ku" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/openedx-docker-k8s/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="将Open edX部署到Kubernetes上的踩坑笔记" />
+<meta property="og:description" content="继续Open edX docker生产环境的探索 这篇文章记录将Open edX部署到Kubernetes上的踩坑笔记 我对docker比较熟悉，但对Ku" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/openedx-docker-k8s/" />
+<meta property="article:published_time" content="2018-08-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-08-12T00:00:00+00:00" />
+<meta itemprop="name" content="将Open edX部署到Kubernetes上的踩坑笔记">
+<meta itemprop="description" content="继续Open edX docker生产环境的探索 这篇文章记录将Open edX部署到Kubernetes上的踩坑笔记 我对docker比较熟悉，但对Ku">
+
+
+<meta itemprop="datePublished" content="2018-08-12T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-08-12T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2514">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="将Open edX部署到Kubernetes上的踩坑笔记"/>
+<meta name="twitter:description" content="继续Open edX docker生产环境的探索 这篇文章记录将Open edX部署到Kubernetes上的踩坑笔记 我对docker比较熟悉，但对Ku"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">将Open edX部署到Kubernetes上的踩坑笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-08-12 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#kompose-getting-started">kompose getting-started</a></li>
+<li><a href="#阿里云的-k8s服务-https-cn-aliyun-com-solution-k8s-index">阿里云的<a href="https://cn.aliyun.com/solution/k8s/index">K8S服务</a></a>
+<ul>
+<li>
+<ul>
+<li><a href="#hello-world-https-github-com-kubernetes-kompose-blob-master-docs-getting-started-md"><a href="https://github.com/kubernetes/kompose/blob/master/docs/getting-started.md">hello world</a></a></li>
+<li><a href="#openedx-docker-https-github-com-regisb-openedx-docker"><a href="https://github.com/regisb/openedx-docker">openedx-docker</a></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#补遗">补遗</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>继续<a href="https://blog.just4fun.site/openedx-docker-production.html">Open edX docker生产环境</a>的探索</p>
+
+<p>这篇文章记录将Open edX部署到Kubernetes上的踩坑笔记</p>
+
+<p>我对docker比较熟悉，但对Kubernetes不熟。开始之前，我简单翻阅了<a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook——Kubernetes中文指南/云原生应用架构实践手册</a>，对Kubernetes有了基本的了解</p>
+
+<p><a href="https://github.com/regisb/openedx-docker">openedx-docker</a>已经制作了Open edX的Compose模板文件，也预编译了所需的镜像。那么如何将<a href="https://docs.docker.com/compose/">docker-compose</a>管理的应用迁移到Kubernetes呢？<a href="https://github.com/kubernetes/kompose">kompose</a>是我们需要的工具</p>
+
+<blockquote>
+<p>kompose takes a Docker Compose file and translates it into Kubernetes resources.</p>
+</blockquote>
+
+<h1 id="kompose-getting-started">kompose getting-started</h1>
+
+<p>于是，我们便从<a href="https://github.com/kubernetes/kompose/blob/master/docs/getting-started.md">getting-started</a>开始</p>
+
+<p>首先跟着<a href="https://github.com/kubernetes/kompose/blob/master/docs/getting-started.md#minikube-and-kompose">Minikube and Kompose</a>的引导，安装Kompose很顺利，<code>brew install kompose</code>就行，但Minikube没有成功启动，原因要从google服务器下载东西，翻墙时常中断。折腾得很烦，放弃。</p>
+
+<p>安装Minikube的目的是让我们在本地运行Kubernetes</p>
+
+<p>第二条路是使用<a href="https://github.com/kubernetes/kompose/blob/master/docs/getting-started.md#minishift-and-kompose">Minishift</a>，同样是网络问题。如果你的minishift运行正常，也可以试试部署<a href="https://github.com/openfun/arnold">arnold</a></p>
+
+<p>安装minikube和minishift，很简单:</p>
+
+<ul>
+<li><code>brew cask install minikube</code></li>
+<li><code>brew cask install minishift</code></li>
+</ul>
+
+<p>但启动他们都需要拉取镜像，镜像在国外，网络不稳定。</p>
+
+<p>后来发现<a href="https://docs.docker.com/docker-for-mac/">docker-for-mac</a>已经支持Kubernetes，如果准备在本地做实验，可以试试这个,参考<a href="https://segmentfault.com/a/1190000012850396">基于 Docker for MAC 的 Kubernetes 本地环境搭建与应用部署</a></p>
+
+<h1 id="阿里云的-k8s服务-https-cn-aliyun-com-solution-k8s-index">阿里云的<a href="https://cn.aliyun.com/solution/k8s/index">K8S服务</a></h1>
+
+<p>我最终使用阿里云的<a href="https://cn.aliyun.com/solution/k8s/index">K8S服务</a>。考虑到网络流行性，选择了香港节点，开通,在阿里云创建K8S集群很简单，按照官方引导就行，基本不会有问题。我使用默认的参数配置。按需付费。用完就删</p>
+
+<p>我的集群信息如下:</p>
+
+<p><a href="http://wwj-fig-bed.just4fun.site/aliyun-k8s_caa1a58c.png">aliyun-k8s</a></p>
+
+<!-- 
+[macOS 10.13 安装Virtualbox失败](https://blog.csdn.net/u013247765/article/details/78176079)
+
+ brew cask install minishift  \   minishift start-->
+
+<p>创建好集群后，通过 kubectl 连接 Kubernetes 集群。在mac下安装kubectl很简单:</p>
+
+<p><code>brew install kubernetes-cli</code></p>
+
+<p>之后按照阿里云引导，将配置文件内容复制到本机 <code>~/.kube/config</code></p>
+
+<p>配置完成后，即可以使用 kubectl 从本地计算机访问 Kubernetes 集群。</p>
+
+<p>集群信息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">➜  /tmp kubectl cluster-info
+Kubernetes master is running at https://47.91.175.41:6443
+Heapster is running at https://47.91.175.41:6443/api/v1/namespaces/kube-system/services/heapster/proxy
+KubeDNS is running at https://47.91.175.41:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+monitoring-influxdb is running at https://47.91.175.41:6443/api/v1/namespaces/kube-system/services/monitoring-influxdb/proxy
+
+To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.</pre></td></tr></table>
+</div>
+</div>
+<h3 id="hello-world-https-github-com-kubernetes-kompose-blob-master-docs-getting-started-md"><a href="https://github.com/kubernetes/kompose/blob/master/docs/getting-started.md">hello world</a></h3>
+
+<p>从本地访问阿里云的Kubernetes集群既已正常，我们就开始往上边部署容器应用。</p>
+
+<p>继续回到<a href="https://github.com/kubernetes/kompose/blob/master/docs/getting-started.md">getting-started</a>的引导，开始第一个hello world案例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wget https://raw.githubusercontent.com/kubernetes/kompose/master/examples/docker-compose.yaml
+kompose convert
+kompose up</pre></td></tr></table>
+</div>
+</div>
+<p>应用已经成功部署到k8s上:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">➜  /tmp kubectl describe svc frontend
+Name:                     frontend
+Namespace:                default
+Labels:                   io.kompose.service=frontend
+Annotations:              kompose.cmd=kompose up
+                          kompose.service.type=LoadBalancer
+                          kompose.version=1.13.0 ()
+Selector:                 io.kompose.service=frontend
+Type:                     LoadBalancer
+IP:                       172.19.2.193
+LoadBalancer Ingress:     47.91.175.137
+Port:                     80  80/TCP
+TargetPort:               80/TCP
+NodePort:                 80  32678/TCP
+Endpoints:                172.16.1.136:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:
+  Type    Reason                Age   From                Message
+  ----    ------                ----  ----                -------
+  Normal  EnsuringLoadBalancer  6m    service-controller  Ensuring load balancer
+  Normal  EnsuredLoadBalancer   6m    service-controller  Ensured load balancer</pre></td></tr></table>
+</div>
+</div>
+<p>试试获取其他信息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">➜  /tmp kubectl get deployment
+
+NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+frontend       1         1         1            1           5m
+redis-master   1         1         1            1           5m
+redis-slave    1         1         1            1           5m
+
+➜  /tmp kubectl get services
+
+NAME           TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
+frontend       LoadBalancer   172.19.2.193   47.91.175.137   80:32678/TCP   6m
+kubernetes     ClusterIP      172.19.0.1     &lt;none&gt;          443/TCP        1h
+redis-master   ClusterIP      172.19.1.162   &lt;none&gt;          6379/TCP       6m
+redis-slave    ClusterIP      172.19.2.20    &lt;none&gt;          6379/TCP       6m</pre></td></tr></table>
+</div>
+</div>
+<p>访问 <a href="http://47.91.175.137/">http://47.91.175.137/</a> ，成功！</p>
+
+<p><img width=800 src="http://wwj-fig-bed.just4fun.site/k8s_e6f25c2d.png" /></p>
+
+<p>你可以终止它:<code>kompose down</code>，和使用docker-compose很相似</p>
+
+<h3 id="openedx-docker-https-github-com-regisb-openedx-docker"><a href="https://github.com/regisb/openedx-docker">openedx-docker</a></h3>
+
+<p>接着我们试着将<a href="https://github.com/regisb/openedx-docker">openedx-docker</a>部署到k8s</p>
+
+<p>kompose convert之后:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">➜  openedx-docker git:(master) ✗ ls
+LICENSE.txt                                       data                                              lms-worker-deployment.yaml                        rabbitmq-claim0-persistentvolumeclaim.yaml
+Makefile                                          docker-compose-android.yml                        memcached-deployment.yaml                         rabbitmq-deployment.yaml
+README.md                                         docker-compose.yml                                mongodb-claim0-persistentvolumeclaim.yaml         smtp-deployment.yaml
+android                                           elasticsearch-claim0-persistentvolumeclaim.yaml   mongodb-deployment.yaml                           xqueue
+cms-claim0-persistentvolumeclaim.yaml             elasticsearch-deployment.yaml                     mysql-claim0-persistentvolumeclaim.yaml           xqueue-claim0-persistentvolumeclaim.yaml
+cms-claim1-persistentvolumeclaim.yaml             forum                                             mysql-deployment.yaml                             xqueue-claim1-persistentvolumeclaim.yaml
+cms-deployment.yaml                               forum-deployment.yaml                             nginx-claim0-persistentvolumeclaim.yaml           xqueue-consumer-claim0-persistentvolumeclaim.yaml
+cms-worker-claim0-persistentvolumeclaim.yaml      lms-claim0-persistentvolumeclaim.yaml             nginx-claim1-persistentvolumeclaim.yaml           xqueue-consumer-claim1-persistentvolumeclaim.yaml
+cms-worker-claim1-persistentvolumeclaim.yaml      lms-claim1-persistentvolumeclaim.yaml             nginx-claim2-persistentvolumeclaim.yaml           xqueue-consumer-deployment.yaml
+cms-worker-deployment.yaml                        lms-deployment.yaml                               nginx-deployment.yaml                             xqueue-deployment.yaml
+config                                            lms-worker-claim0-persistentvolumeclaim.yaml      nginx-service.yaml
+configure                                         lms-worker-claim1-persistentvolumeclaim.yaml      openedx</pre></td></tr></table>
+</div>
+</div>
+<p>接着开始部署:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">➜  openedx-docker git:(master) ✗ kompose up
+WARN Restart policy &#39;unless-stopped&#39; in service nginx is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service forum is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service lms is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service elasticsearch is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service xqueue_consumer is not supported, convert it to &#39;always&#39;
+INFO Service name in docker-compose has been changed from &#34;xqueue_consumer&#34; to &#34;xqueue-consumer&#34;
+WARN Restart policy &#39;unless-stopped&#39; in service smtp is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service memcached is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service mysql is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service mongodb is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service cms_worker is not supported, convert it to &#39;always&#39;
+INFO Service name in docker-compose has been changed from &#34;cms_worker&#34; to &#34;cms-worker&#34;
+WARN Restart policy &#39;unless-stopped&#39; in service xqueue is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service cms is not supported, convert it to &#39;always&#39;
+WARN Restart policy &#39;unless-stopped&#39; in service lms_worker is not supported, convert it to &#39;always&#39;
+INFO Service name in docker-compose has been changed from &#34;lms_worker&#34; to &#34;lms-worker&#34;
+INFO Build key detected. Attempting to build and push image &#39;regis/openedx:hawthorn&#39;
+INFO Building image &#39;regis/openedx:hawthorn&#39; from directory &#39;openedx&#39;</pre></td></tr></table>
+</div>
+</div>
+<p>有几个容器需要在本地build，原因是，允许使用者定制instance</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">➜  ~ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+4fc8145fbb1f        7aa3602ab41e        &#34;/bin/sh -c &#39;apt upd…&#34;   44 seconds ago      Up 35 seconds                           hardcore_banach</pre></td></tr></table>
+</div>
+</div>
+<p>国内网络慢成狗，我暂时不做定制化build，就用原始的镜像。这样一来镜像的确都部署上去了，速度很快</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">➜  openedx-docker git:(master) ✗ kubectl get po
+NAME                               READY     STATUS    RESTARTS   AGE
+elasticsearch-6c95f49cd5-6hzg4     0/1       Pending   0          16m
+frontend-68c74b6cff-mj5lh          1/1       Running   0          34m
+lms-b894746f8-fntfp                0/1       Pending   0          16m
+memcached-6558fbf75b-bnmrq         1/1       Running   0          16m
+mongodb-79bc846f-f7ppv             0/1       Pending   0          16m
+mysql-7968589598-52ll4             0/1       Pending   0          16m
+nginx-7c47bb9849-tl6mj             0/1       Pending   0          16m
+rabbitmq-686d48c4bb-lvqcx          0/1       Pending   0          16m
+redis-master-74b5b4995f-mjzqq      1/1       Running   0          34m
+redis-slave-75f5b85bd7-hsjx5       1/1       Running   0          34m
+smtp-77849cc9c6-n5vpk              1/1       Running   0          16m
+xqueue-5d6c9cccff-fcpvs            0/1       Pending   0          16m
+xqueue-consumer-5976ffc456-7lnwm   0/1       Pending   0          16m</pre></td></tr></table>
+</div>
+</div>
+<p>从READY一列看得出来，很多容器都出了问题，具体原因可以使用<code>kubectl describe pods lms-b894746f8-fntfp</code>查看，基本是数据卷相关的部分出了问题。</p>
+
+<p>如果你想fix可以阅读<a href="https://jimmysong.io/kubernetes-handbook/concepts/persistent-volume.html">Persistent Volume（持久化卷）</a></p>
+
+<p>暂时弃用数据卷之后，几个容器都正常run起来了</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">➜  openedx-docker git:(master) ✗ kubectl get po
+NAME                               READY     STATUS             RESTARTS   AGE
+elasticsearch-5b4d6dffb8-8nwr6     1/1       Running            0          2m
+frontend-68c74b6cff-mj5lh          1/1       Running            0          58m
+lms-7cfbc89fc-jbmfd                0/1       CrashLoopBackOff   4          2m
+memcached-6558fbf75b-8j5zq         1/1       Running            0          2m
+mongodb-684976884c-pclk5           1/1       Running            0          2m
+mysql-85476d6b47-wcqqx             0/1       CrashLoopBackOff   4          2m
+nginx-7cff5659c9-rk4n6             1/1       Running            0          2m
+rabbitmq-666b58d6df-qrk4l          1/1       Running            0          2m
+redis-master-74b5b4995f-mjzqq      1/1       Running            0          58m
+redis-slave-75f5b85bd7-hsjx5       1/1       Running            0          58m
+smtp-77849cc9c6-rnm68              1/1       Running            0          2m
+xqueue-5d6c9cccff-fcpvs            0/1       Pending            0          39m
+xqueue-consumer-5976ffc456-7lnwm   0/1       Pending            0          39m</pre></td></tr></table>
+</div>
+</div>
+<p><a href="https://github.com/regisb/openedx-docker">openedx-docker</a>管理open edx使用<a href="https://github.com/regisb/openedx-docker/blob/master/Makefile">Makefile</a>，本质上是操控容器。这部分要迁移到kubectl命令不难,参考
+<a href="https://jimmysong.io/kubernetes-handbook/guide/docker-cli-to-kubectl.html">docker用户过度到kubectl命令行指南</a></p>
+
+<p>诸如我们要进入容器，可以使用</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">➜  openedx-docker git:(master) ✗ kubectl exec -ti smtp-77849cc9c6-n5vpk -- /bin/sh
+
+# ls
+bin  boot  dev	etc  home  lib	lib64  media  mnt  opt	proc  root  run  sbin  srv  sys  tmp  usr  var
+#</pre></td></tr></table>
+</div>
+</div>
+<!--
+
+# yi mj
+应用部署K8s一般流程
+1. 容器化
+2. 编写K8s架构文件（常用yaml格式）
+3. 部署架构文件到K8s集群（可用阿里云等现成的方案）
+
+http://wwj-fig-bed.just4fun.site/k8s_604a55ad.png
+
+相当于用docker和nginx动态域名绑定
+k8s有一个ingress的抽象层，功能类似于nginx，可以动态生成配置
+
+部署好后的运维、更新都使用K8s的功能就好
+
+本地搭建K8s集群，有人做好一键部署脚本了，发你
+https://github.com/gjmzj/kubeasz
+
+
+应用部署K8S
+    应用场景
+        Kubernetes django
+            每个用户可以发布自己的网站，默认分配二级域名
+                初始化数据库，使用默认的，类似wordpress
+            服务
+    [使用Kubernetes打开edX](https://www.appsembler.com/blog/open-edx-at-scale-using-kubernetes/)
+        我们决定将Kubernetes作为我们下一代Open edX托管平台的支柱
+        Pantheon是领先的WordPress和Drupal托管公司之一，它使用容器为其所有客户的网站供电
+    [阿里云 容器服务-Kubernetes 解决方案](https://cn.aliyun.com/solution/k8s/index)
+        [路由配置说明](https://help.aliyun.com/document_detail/71405.html?spm=a2c4g.11186623.6.612.LmJen1):  阿里云容器服务提供高可靠的 ingress controller 组件，集成了阿里云 SLB 服务，为您的 Kubernetes 集群提供灵活可靠的路由服务（Ingress）
+    
+    [云原生应用之路——从Kubernetes到Cloud Native](https://jimmysong.io/kubernetes-handbook/cloud-native/from-kubernetes-to-cloud-native.html)Kubernetes的主要使用场景也主要作为应用开发测试环境、CI/CD和运行Web应用这几个领域
+            1种创建 Deployment 的方式，类似上面使用 .yaml 文件，是使用 kubectl 命令行接口（CLI）
+            Pod是kubernetes中你可以创建和部署的最小也是最简的单位。
+            Pod中封装着应用的容器
+            kubernetes中应用的一个实例，可能由一个或者多个容器组合在一起共享资源。同一个Pod中的容器共享资源、网络环境和依赖，它们总是被同时调度
+                你有一个容器作为web服务器运行，需要用到共享的volume
+                Pod中可以共享两种资源：网络和存储。
+                每个Pod都会被分配一个唯一的IP地址。Pod中的所有容器共享网络空间，包括IP地址和端口。Pod内部的容器可以使用localhost互相通信
+                Volume也可以用来持久化Pod中的存储资源，以防容器重启后文件丢失。
+                你可以把单个Pod想象成是运行独立应用的“逻辑主机”
+                就像每个应用容器，pod被认为是临时（非持久的）实体
+                Pod中的应用容器可以共享volume。Volume能够保证pod重启时使用的数据不丢失。
+                Pod也可以用于垂直应用栈（例如LAMP）
+                使用kompose这个工具，可以将docker-compose的YAML文件转换成kubernetes规格的YAML文件
+                    迁移docker compose 到k8s
+                [迁移传统应用到Kubernetes步骤详解——以Hadoop YARN为例](https://jimmysong.io/kubernetes-handbook/guide/migrating-hadoop-yarn-to-kubernetes.html):
+                **edx应该是个pod**
+                
+            Docker是kubernetes中最常用的容器运行时
+            每个Pod都是应用的一个实例。如果你想平行扩展应用的话（运行多个实例），你应该运行多个Pod，每个Pod都是一个应用实例
+    [配置Kubernetes DNS服务kube-dns](https://jimmysong.io/posts/configuring-kubernetes-kube-dns/)
+        Kubernetes 给具体应用绑定域名
+
+需求
+  edx的特殊性
+    有初始数据
+    域名绑定
+
+
+https://github.com/lpm0073/edx.scripts 安装脚本
+
+如何使用接口动态
+    选择服务
+        使用传递参数
+        看看别人怎么做
+
+# 迁移数据
+
+除了数据库 还有其他状态怎么办  一并放到数据卷里
+
+如何启动时 带有数据卷 从一个模版中来
+
+用一套已经好了的网站 作为saas 为何做不到？ 有数据和存储
+-->
+
+<h1 id="补遗">补遗</h1>
+
+<p>在阿里云删除k8s集群之后，留意一下消费记录，有些启动的服务没被终止还会继续被扣费。比如<code>NAT网关</code></p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://github.com/regisb/openedx-docker">openedx-docker</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Kubernetes">wikipedia Kubernetes</a></li>
+<li><a href="http://docs.kubernetes.org.cn/">Kubernetes中文社区</a></li>
+<li><a href="https://www.appsembler.com/blog/scaling-open-edx-kubernetes/">scaling-open-edx-kubernetes</a></li>
+<li><a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook——Kubernetes中文指南/云原生应用架构实践手册</a>
+
+<ul>
+<li><a href="https://jimmysong.io/kubernetes-handbook/concepts/objects.html">资源对象与基本概念解析</a></li>
+<li><a href="https://jimmysong.io/kubernetes-handbook/concepts/persistent-volume.html">Persistent Volume（持久化卷）</a></li>
+<li><a href="https://jimmysong.io/kubernetes-handbook/guide/deploy-applications-in-kubernetes.html">适用于kubernetes的应用开发部署流程</a></li>
+<li><a href="https://jimmysong.io/kubernetes-handbook/guide/docker-cli-to-kubectl.html">docker用户过度到kubectl命令行指南</a></li>
+<li><a href="https://jimmysong.io/kubernetes-handbook/guide/migrating-hadoop-yarn-to-kubernetes.html">迁移传统应用到Kubernetes步骤详解——以Hadoop YARN为例</a></li>
+<li><a href="https://jimmysong.io/kubernetes-handbook/guide/accessing-kubernetes-pods-from-outside-of-the-cluster.html">从外部访问Kubernetes中的Pod</a></li>
+<li><a href="https://jimmysong.io/kubernetes-handbook/guide/kubernetes-desktop-client.html">Kubernetic - Kubernetes桌面客户端</a></li>
+</ul></li>
+<li><a href="https://blog.csdn.net/horsefoot/article/details/71104957">如何基于K8S打造轻量级PaaS平台</a></li>
+<li><a href="https://www.kubernetes.org.cn/1885.html">Kubernetes Ingress解析</a></li>
+<li><a href="https://blog.frognew.com/2017/04/kubernetes-ingress.html">Kubernetes Ingress实战</a></li>
+<li><a href="https://www.kancloud.cn/maozhenggang/docker-api/94228">利用数据卷容器来备份、恢复、迁移数据卷</a></li>
+<li><a href="https://www.kubernetes.org.cn/1134.html">Kompose: Docker-compose 到 Kubernetes 的迁移工具</a></li>
+<li><a href="https://blog.csdn.net/dt763C/article/details/79479498">使用 Docker Compose 将 APP 快速部署到 Kubernetes</a></li>
+<li><a href="https://jimmysong.io/posts/creating-cloud-native-app-with-kubernetes/">适用于kubernetes的应用开发部署流程同时集成Istio service mesh</a></li>
+<li><a href="https://github.com/rootsongjc/kubernetes-handbook/blob/master/guide/deploy-applications-in-kubernetes.md">适用于kubernetes的应用开发部署流程</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-08-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/interest-based-learning/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">基于兴趣的学习面临的诘难</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/zhanan/">
+            <span class="next-text nav-default">渣男元稹与渣男卢梭(未完)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

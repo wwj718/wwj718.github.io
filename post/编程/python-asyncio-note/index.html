@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Python异步编程笔记 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="前言 前些日子花了不少时间重构codelab-adapter和增加新特性。 codelab-adapter核心部分是异步的。 陆续写了一些异步代码" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/python-asyncio-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Python异步编程笔记" />
+<meta property="og:description" content="前言 前些日子花了不少时间重构codelab-adapter和增加新特性。 codelab-adapter核心部分是异步的。 陆续写了一些异步代码" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/python-asyncio-note/" />
+<meta property="article:published_time" content="2019-03-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-03-13T00:00:00+00:00" />
+<meta itemprop="name" content="Python异步编程笔记">
+<meta itemprop="description" content="前言 前些日子花了不少时间重构codelab-adapter和增加新特性。 codelab-adapter核心部分是异步的。 陆续写了一些异步代码">
+
+
+<meta itemprop="datePublished" content="2019-03-13T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-03-13T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3174">
+
+
+
+<meta itemprop="keywords" content="python," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python异步编程笔记"/>
+<meta name="twitter:description" content="前言 前些日子花了不少时间重构codelab-adapter和增加新特性。 codelab-adapter核心部分是异步的。 陆续写了一些异步代码"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Python异步编程笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-13 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#python与异步编程">Python与异步编程</a>
+<ul>
+<li>
+<ul>
+<li><a href="#并行与并发">并行与并发</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#hello-world">hello world</a></li>
+<li><a href="#可等待对象-awaitables-https-docs-python-org-3-8-library-asyncio-task-html-awaitables"><a href="https://docs.python.org/3.8/library/asyncio-task.html#awaitables">可等待对象(Awaitables)</a></a>
+<ul>
+<li>
+<ul>
+<li><a href="#协程">协程</a></li>
+<li><a href="#任务-tasks">任务(Tasks)</a>
+<ul>
+<li><a href="#请求取消-task-对象">请求取消 Task 对象。</a></li>
+</ul></li>
+<li><a href="#future">Future</a></li>
+<li><a href="#task对象与future对象">Task对象与Future对象</a></li>
+<li><a href="#queue">Queue</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#坑与技巧">坑与技巧</a>
+<ul>
+<li>
+<ul>
+<li><a href="#等待异步代码块">等待异步代码块</a></li>
+<li><a href="#使用线程">使用线程</a></li>
+<li><a href="#同时支持异步和同步调用的函数">同时支持异步和同步调用的函数</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#调试工具">调试工具</a>
+<ul>
+<li>
+<ul>
+<li><a href="#ipython">IPython</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="前言">前言</h1>
+
+<p>前些日子花了不少时间重构<a href="http://codelab-adapter-docs.codelab.club">codelab-adapter</a>和增加新特性。</p>
+
+<p><a href="http://codelab-adapter-docs.codelab.club">codelab-adapter</a>核心部分是异步的。</p>
+
+<p>陆续写了一些异步代码，读了不少异步编程相关的技术文章，踩了一些坑，也学了一些技巧，在此做个梳理。</p>
+
+<h1 id="python与异步编程">Python与异步编程</h1>
+
+<p>正如<a href="https://realpython.com/async-io-python/">Python中的异步IO：完整的演练</a>一文所言，Async IO是一种并发编程设计，在Python中得到了专门的支持，从Python 3.4到3.7在迅速发展着，目前还在不断变化中。所以抛掉那些老旧的教程，扔掉那些谈论<code>yeild from</code>的教程就对了。</p>
+
+<p>如果你是初学者，专注在新的异步原语(async/await)上， 别去管它的底层是不是<code>yeild</code>实现的，对于实现原理你应该完全抛开。正如你在Python中写下<code>print(&quot;hello world&quot;)</code>时，不必理解Python(CPython)中的<code>print</code>函数在C语言层面是怎么实现的，专注在你当下正在学习的概念上，别让无关紧要的复杂度压垮你。</p>
+
+<h3 id="并行与并发">并行与并发</h3>
+
+<p>前头提到Async IO是一种<code>并发</code>编程设计，我们先来解释下<a href="https://zh.wikipedia.org/zh-cn/%E5%B9%B6%E5%8F%91%E6%80%A7">并发</a>。</p>
+
+<p><a href="https://zh.wikipedia.org/zh-cn/%E5%B9%B6%E5%8F%91%E6%80%A7">并发</a>与<a href="https://zh.wikipedia.org/zh-cn/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97">并行</a>是常常被同时提及的概念。</p>
+
+<p>按维基百科说法:</p>
+
+<blockquote>
+<p>并行计算（英语：parallel computing）一般是指许多指令得以同时进行的计算模式。
+ 并发性（英语：Concurrency）是指在一个系统中，拥有多个计算，这些计算有同时执行的特性，而且他们之间有着潜在的交互。</p>
+</blockquote>
+
+<p>并行性指<code>同时</code>执行多个操作。并发性是一个比并行性更广泛的术语。它表明多个任务<code>能够</code>以重叠的方式运行。</p>
+
+<p>async IO是一种并发编程风格(单线程)，它不具有并行性，与js默认采用的编程模型相似。</p>
+
+<p>以下内容假设在你本地 <code>Python&gt;=3.7</code></p>
+
+<h1 id="hello-world">hello world</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># python3.7</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
+    <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="c1"># hello</span>
+<span class="c1"># world</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="可等待对象-awaitables-https-docs-python-org-3-8-library-asyncio-task-html-awaitables"><a href="https://docs.python.org/3.8/library/asyncio-task.html#awaitables">可等待对象(Awaitables)</a></h1>
+
+<p>如果一个对象可以在 await 语句中使用，那么它就是 <a href="https://docs.python.org/3.8/library/asyncio-task.html#awaitables">可等待</a> 对象。许多 asyncio API 都被设计为接受可等待对象。</p>
+
+<p>可等待 对象有三种主要类型: 协程(coroutines), 任务(Tasks) 和 Future.</p>
+
+<h3 id="协程">协程</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">nested</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">42</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Nothing happens if we just call &#34;nested()&#34;.</span>
+    <span class="c1"># A coroutine object is created but not awaited,</span>
+    <span class="c1"># so it *won&#39;t run at all*.</span>
+    <span class="n">nested</span><span class="p">()</span>
+
+    <span class="c1"># Let&#39;s do it differently now and await it:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">await</span> <span class="n">nested</span><span class="p">())</span>  <span class="c1"># will print &#34;42&#34;.</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>在官方文档中, &ldquo;协程&rdquo; 可用来表示两个紧密关联的概念:</p>
+
+<ul>
+<li>协程函数: 定义形式为 <code>async def</code> 的函数; (<code>async def nested()</code>)</li>
+<li>协程对象: 调用 协程函数 所返回的对象。(<code>nested()</code>)</li>
+</ul>
+
+<h3 id="任务-tasks">任务(Tasks)</h3>
+
+<p>Tasks用于<code>并发</code>执行协程。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">nested</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">42</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Schedule nested() to run soon concurrently</span>
+    <span class="c1"># with &#34;main()&#34;.</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">nested</span><span class="p">())</span> 
+    <span class="c1"># 在 Python 3.7 之前，可以改用低层级的 asyncio.ensure_future() 函数。</span>
+    <span class="c1"># task = asyncio.ensure_future(coro())</span>
+    
+
+    <span class="c1"># &#34;task&#34; can now be used to cancel &#34;nested()&#34;, or</span>
+    <span class="c1"># can simply be awaited to wait until it is complete:</span>
+    <span class="c1"># 可以类比为thread start，携程api与线程api有很多相似之处</span>
+    <span class="n">await</span> <span class="n">task</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>任务会在 <code>get_running_loop()</code> 返回的循环中执行，如果当前线程没有在运行的循环则会引发 <code>RuntimeError</code></p>
+
+<p>官方例子很糟糕，没有演示<strong>并发</strong>， 给出一个并发演示。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">coro</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="s2">&#34;&#34;&#34;&#39;IO&#39; wait time is proportional to the max element.&#34;&#34;&#34;</span>
+    <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">coro</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">coro</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>  <span class="c1"># Python 3.7+</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Start:&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%X</span><span class="s1">&#39;</span><span class="p">))</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;End:&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%X</span><span class="s1">&#39;</span><span class="p">))</span>  <span class="c1"># Should be 10 seconds</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Both tasks done: {all((t.done(), t2.done()))}&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>运行结果</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&gt;&gt;&gt; a = asyncio.run(main())
+Start: 16:20:11
+End: 16:20:21
+Both tasks done: True
+&gt;&gt;&gt; a
+[[1, 2, 3], [0, 5, 10]]</pre></td></tr></table>
+</div>
+</div>
+<p><code>并发</code>执行协程还可用<a href="https://docs.python.org/zh-cn/3.8/library/asyncio-task.html#running-tasks-concurrently">asyncio.gather</a>。 如果所有可等待对象都成功完成，结果将是一个由所有返回值聚合而成的列表。结果值的顺序与 aws 中可等待对象的顺序一致。</p>
+
+<h4 id="请求取消-task-对象">请求取消 Task 对象。</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">async</span> <span class="k">def</span> <span class="nf">cancel_me</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;cancel_me(): before sleep&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Wait for 1 hour</span>
+        <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3600</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;cancel_me(): cancel sleep&#39;</span><span class="p">)</span>
+        <span class="k">raise</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;cancel_me(): after sleep&#39;</span><span class="p">)</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Create a &#34;cancel_me&#34; Task</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">cancel_me</span><span class="p">())</span>
+
+    <span class="c1"># Wait for 1 second</span>
+    <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">await</span> <span class="n">task</span>
+    <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">CancelledError</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&#34;main(): cancel_me is cancelled now&#34;</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+
+<span class="c1"># Expected output:</span>
+<span class="c1">#</span>
+<span class="c1">#     cancel_me(): before sleep</span>
+<span class="c1">#     cancel_me(): cancel sleep</span>
+<span class="c1">#     cancel_me(): after sleep</span>
+<span class="c1">#     main(): cancel_me is cancelled now</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="future">Future</h3>
+
+<p>Future 表示一个异步操作的 最终结果。</p>
+
+<p>在 asyncio 中需要 Future 对象以便允许通过 async/await 使用基于<code>回调</code>风格的代码。需要注意大多数asyncio调度函数不允许传递关键字参数。为此，请使用<code>functools.partial()</code></p>
+
+<p>通常情况下 没有必要 在应用层级的代码中创建 Future 对象。Future 对象有时会由库和某些 asyncio API 暴露给用户。用作可等待对象。</p>
+
+<p>Future 和 Promise 很像.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 这个例子并不好，引入了不必要的复杂性(线程)</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">await</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">start_background_loop</span><span class="p">(</span><span class="n">loop</span><span class="p">):</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">set_event_loop</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
+<span class="c1"># Create a new loop</span>
+<span class="n">new_loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+<span class="c1"># Assign the loop to another thread</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">start_background_loop</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">new_loop</span><span class="p">,))</span>
+<span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="c1"># Give it some async work</span>
+<span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;http://www.google.com&#34;</span><span class="p">),</span> 
+    <span class="n">new_loop</span>
+<span class="p">)</span>
+<span class="c1"># Wait for the result</span>
+<span class="k">print</span><span class="p">(</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>
+<span class="c1"># Do it again but with a callback</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;http://www.github.com&#34;</span><span class="p">),</span>
+    <span class="n">new_loop</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">future</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()))</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>超时问题:  <a href="https://docs.python.org/zh-cn/3.8/library/asyncio-task.html#scheduling-from-other-threads">来自其他线程的日程安排</a></p>
+
+<h3 id="task对象与future对象">Task对象与Future对象</h3>
+
+<p>asyncio.Task 从 Future 继承了其除 Future.set_result() 和 Future.set_exception() 以外的所有 API。</p>
+
+<h3 id="queue">Queue</h3>
+
+<p>为协程设计的queue，与用于线程的queue，两个类在设计上相似。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">worker</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="c1"># Get a &#34;work item&#34; out of the queue.</span>
+        <span class="n">sleep_for</span> <span class="o">=</span> <span class="n">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="c1"># Sleep for the &#34;sleep_for&#34; seconds.</span>
+        <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">sleep_for</span><span class="p">)</span>
+
+        <span class="c1"># Notify the queue that the &#34;work item&#34; has been processed.</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;{name} has slept for {sleep_for:.2f} seconds&#39;</span><span class="p">)</span>
+
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Create a queue that we will use to store our &#34;workload&#34;.</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+
+    <span class="c1"># Generate random timings and put them into the queue.</span>
+    <span class="n">total_sleep_time</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+        <span class="n">sleep_for</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">total_sleep_time</span> <span class="o">+=</span> <span class="n">sleep_for</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="n">sleep_for</span><span class="p">)</span>
+
+    <span class="c1"># Create three worker tasks to process the queue concurrently.</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">worker</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;worker-{i}&#39;</span><span class="p">,</span> <span class="n">queue</span><span class="p">))</span>
+        <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+
+    <span class="c1"># Wait until the queue is fully processed.</span>
+    <span class="n">started_at</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+    <span class="n">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">total_slept_for</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">-</span> <span class="n">started_at</span>
+
+    <span class="c1"># Cancel our worker tasks.</span>
+    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+    <span class="c1"># Wait until all worker tasks are cancelled.</span>
+    <span class="n">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;====&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;3 workers slept in parallel for {total_slept_for:.2f} seconds&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;total expected sleep time: {total_sleep_time:.2f} seconds&#39;</span><span class="p">)</span>
+
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="坑与技巧">坑与技巧</h1>
+
+<p><a href="https://hackernoon.com/controlling-python-async-creep-ec0a0f4b79ba">Controlling Python Async Creep</a>一文给出了很多精彩的总结。</p>
+
+<p>如文中所言，许多情况下，我们可能被迫与同步代码交互。尽管异步编程在Python存在多时，但正式被纳入语言中的时间还不长，所以大量第三方库都是同步风格的代码。于是我们会面临文中所说的<code>异步蠕变</code>(Async Creep)的问题: 异步代码会要求调用它的代码也是异步的。</p>
+
+<p>这个过渡阶段可能会长期存在，让同步代码与异步代码一同工作的技巧，就显得有实际价值了。以下是<a href="https://hackernoon.com/@tryexceptpass">Cristian Medina</a>总结的一些技巧</p>
+
+<h3 id="等待异步代码块">等待异步代码块</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">aiohttp</span>
+<span class="n">async</span> <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">await</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;http://www.google.com&#34;</span><span class="p">)),</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;http://www.github.com&#34;</span><span class="p">)),</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;http://www.reddit.com&#34;</span><span class="p">))</span>
+<span class="p">))</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><code>asyncio.ensure_future()</code>将异步函数转换为协程，<code>asyncio.gather()</code>将它们打包在一起，并发执行。同时<code>loop.run_until_complete()</code>阻塞直到所有调用完成。</p>
+
+<h3 id="使用线程">使用线程</h3>
+
+<p>创建一个作为worker的独立线程。它运行自己的事件循环，并使用线程安全的asyncio方法来使其工作。</p>
+
+<p>我们在前头举过这个例子，当时用于解释Future的回调。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 这个例子并不好，引入了不必要的复杂性(线程)</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">await</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">start_background_loop</span><span class="p">(</span><span class="n">loop</span><span class="p">):</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">set_event_loop</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
+<span class="c1"># Create a new loop</span>
+<span class="n">new_loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+<span class="c1"># Assign the loop to another thread</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">start_background_loop</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">new_loop</span><span class="p">,))</span>
+<span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="c1"># Give it some async work</span>
+<span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;http://www.google.com&#34;</span><span class="p">),</span> 
+    <span class="n">new_loop</span>
+<span class="p">)</span>
+<span class="c1"># Wait for the result</span>
+<span class="k">print</span><span class="p">(</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>
+<span class="c1"># Do it again but with a callback</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;http://www.github.com&#34;</span><span class="p">),</span>
+    <span class="n">new_loop</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">future</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()))</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><code>run_coroutine_threadsafe</code>返回Future对象。我们可以使用<code>result(timeout)</code>方法<code>wait</code>它。</p>
+
+<p>使用回调风格时，<code>add_done_callback(function)</code>中的回调函数(<code>function</code>)收到future作为参数。</p>
+
+<h3 id="同时支持异步和同步调用的函数">同时支持异步和同步调用的函数</h3>
+
+<p>这个技巧最早我在<a href="https://github.com/anki/cozmo-python-sdk/">cozmo-python-sdk</a>读到。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="k">def</span> <span class="nf">is_async_caller</span><span class="p">():</span>
+    <span class="s2">&#34;&#34;&#34;Figure out who&#39;s calling.&#34;&#34;&#34;</span>
+    <span class="c1"># Get the calling frame</span>
+    <span class="n">caller</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_back</span>
+    <span class="c1"># Pull the function name from FrameInfo</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getframeinfo</span><span class="p">(</span><span class="n">caller</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># Get the function object</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">f_locals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">func_name</span><span class="p">,</span> 
+        <span class="n">caller</span><span class="o">.</span><span class="n">f_globals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># If there&#39;s any indication that the function object is a </span>
+    <span class="c1"># coroutine, return True. inspect.iscoroutinefunction() should</span>
+    <span class="c1"># be all we need, the rest are here to illustrate.</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">inspect</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">f</span><span class="p">),</span>
+            <span class="n">inspect</span><span class="o">.</span><span class="n">isgeneratorfunction</span><span class="p">(</span><span class="n">f</span><span class="p">),</span>
+            <span class="n">inspect</span><span class="o">.</span><span class="n">iscoroutine</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isawaitable</span><span class="p">(</span><span class="n">f</span><span class="p">),</span>
+            <span class="n">inspect</span><span class="o">.</span><span class="n">isasyncgenfunction</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isasyncgen</span><span class="p">(</span><span class="n">f</span><span class="p">)]):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+<span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;GET the URL, do it asynchronously if the caller is async&#34;&#34;&#34;</span>
+
+    <span class="c1"># Figure out which function is calling us</span>
+    <span class="k">if</span> <span class="n">is_async_caller</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Calling ASYNC method&#34;</span><span class="p">)</span>
+        <span class="c1"># Run the async version of this method and</span>
+        <span class="c1"># print the result with a callback</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span>
+            <span class="n">_async_fetch</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> 
+            <span class="n">new_loop</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">result</span><span class="p">()))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Calling BLOCKING method&#34;</span><span class="p">)</span>
+        <span class="c1"># Run the synchronous version and print the result</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">_sync_fetch</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">_sync_fetch</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;Blocking GET&#34;&#34;&#34;</span>
+    <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">_async_fetch</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;Async GET&#34;&#34;&#34;</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">await</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">call_sync_fetch</span><span class="p">():</span>
+    <span class="s2">&#34;&#34;&#34;Blocking fetch call&#34;&#34;&#34;</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;http://www.github.com&#34;</span><span class="p">)</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">call_async_fetch</span><span class="p">():</span>
+    <span class="s2">&#34;&#34;&#34;Asynchronous fetch call (no different from sync call 
+</span><span class="s2">       except this function is defined async)&#34;&#34;&#34;</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="s2">&#34;http://www.github.com&#34;</span><span class="p">)</span>
+
+<span class="c1"># Perform a blocking GET</span>
+<span class="n">call_sync_fetch</span><span class="p">()</span>
+<span class="c1"># Perform an async GET</span>
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">call_async_fetch</span><span class="p">())</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>这里的技巧是在<code>is_async_caller()</code>中使用<code>inspect</code>判断函数的调用者是不是协程。这是<code>自省</code>的应用</p>
+
+<h1 id="调试工具">调试工具</h1>
+
+<h3 id="ipython">IPython</h3>
+
+<p><a href="https://blog.jupyter.org/ipython-7-0-async-repl-a35ce050f7f7?gi=99b12b0602ec">IPython 7.0, Async REPL</a></p>
+
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*I3tXhrFw1SJYMmm3nghj0Q.png" alt="" /></p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://realpython.com/async-io-python/">Async IO in Python: A Complete Walkthrough</a></li>
+<li><a href="https://docs.python.org/zh-cn/3.8/library/asyncio-task.html">python docs 协程与任务</a>
+
+<ul>
+<li><a href="https://docs.python.org/3/library/asyncio-task.html#scheduling-from-other-threads">Scheduling From Other Threads</a></li>
+</ul></li>
+<li><a href="https://hackernoon.com/controlling-python-async-creep-ec0a0f4b79ba">Controlling Python Async Creep</a></li>
+<li><a href="https://blog.jupyter.org/ipython-7-0-async-repl-a35ce050f7f7?gi=99b12b0602ec">IPython 7.0, Async REPL</a></li>
+<li><a href="https://github.com/home-assistant/home-assistant">home-assistant</a></li>
+<li><a href="https://github.com/anki/cozmo-python-sdk/">cozmo-python-sdk</a></li>
+<li><a href="https://github.com/anki/vector-python-sdk">vector-python-sdk</a></li>
+<li><a href="https://aiohttp.readthedocs.io/en/stable/">aiohttp</a></li>
+<li><a href="https://github.com/Scratch3Lab/codelab_adapter_extensions">codelab_adapter_extensions</a></li>
+<li><a href="https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html">zmq.asyncio</a></li>
+<li><a href="https://zh.wikipedia.org/zh-cn/%E5%B9%B6%E5%8F%91%E6%80%A7">并发</a></li>
+<li><a href="https://zh.wikipedia.org/zh-cn/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97">并行</a></li>
+<li><a href="https://github.com/dabeaz/curio">curio</a></li>
+<li><a href="https://github.com/python-trio/trio">trio</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-03-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/">python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/iot/iot-open-source-projects/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">物联网相关开源项目整理</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/iot-open-source-hardware-community/">
+            <span class="next-text nav-default">物联网、开源硬件与开源社区</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

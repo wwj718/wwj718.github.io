@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用wdb来调试python程序 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="wdb介绍 如果你用过pdb、ipdb或是pudb,那么你对调试python程序可能已经十分熟悉了 下边推荐的wdb，和上述三个工具一样，都是为" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/debug-with-wdb/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用wdb来调试python程序" />
+<meta property="og:description" content="wdb介绍 如果你用过pdb、ipdb或是pudb,那么你对调试python程序可能已经十分熟悉了 下边推荐的wdb，和上述三个工具一样，都是为" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/debug-with-wdb/" />
+<meta property="article:published_time" content="2017-05-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-05-01T00:00:00+00:00" />
+<meta itemprop="name" content="使用wdb来调试python程序">
+<meta itemprop="description" content="wdb介绍 如果你用过pdb、ipdb或是pudb,那么你对调试python程序可能已经十分熟悉了 下边推荐的wdb，和上述三个工具一样，都是为">
+
+
+<meta itemprop="datePublished" content="2017-05-01T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-05-01T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1126">
+
+
+
+<meta itemprop="keywords" content="dev-tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用wdb来调试python程序"/>
+<meta name="twitter:description" content="wdb介绍 如果你用过pdb、ipdb或是pudb,那么你对调试python程序可能已经十分熟悉了 下边推荐的wdb，和上述三个工具一样，都是为"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用wdb来调试python程序</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-05-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#wdb-https-github-com-kozea-wdb-介绍"><a href="https://github.com/Kozea/wdb">wdb</a>介绍</a></li>
+<li><a href="#安装">安装</a>
+<ul>
+<li>
+<ul>
+<li><a href="#ubuntu">ubuntu</a></li>
+<li><a href="#mac">mac</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#使用">使用</a>
+<ul>
+<li>
+<ul>
+<li><a href="#一个案例">一个案例</a></li>
+<li><a href="#远程调试">远程调试</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/wdb8b9dbcda.png" alt="" /></p>
+
+<h1 id="wdb-https-github-com-kozea-wdb-介绍"><a href="https://github.com/Kozea/wdb">wdb</a>介绍</h1>
+
+<p>如果你用过pdb、ipdb或是pudb,那么你对调试python程序可能已经十分熟悉了</p>
+
+<p>下边推荐的wdb，和上述三个工具一样，都是为了帮助调试python程序而生。wdb的出众之处在于，它利用web技术，提供直观而友好的UI，让你不需要记住一堆的命令，就能在错误的上下文中轻松穿行，直至找出问题所在</p>
+
+<p>这种友好的体验和漂亮的UI，让人联想到jupyter&ndash;另一个借助web技术来帮助python开发的神器</p>
+
+<p>在技术层面，wdb采用client-server架构，使用websocekt来进行实时通信，这个思路和jupyter也相似(如果你对jupyter的架构有兴趣，可以参考我之前的文章)</p>
+
+<p>在使用体验式，wdb做的非常棒，我喜欢的一些点包括:</p>
+
+<ul>
+<li>左边栏的堆栈，可以随时点击进入。之后可自由探索其中的上下文(当然，web调试方面,Werkzeug在这块也做的很好)</li>
+<li>常用操作变为菜单按钮(免去记忆的负担)</li>
+<li>强大的tab补全</li>
+</ul>
+
+<h1 id="安装">安装</h1>
+
+<h3 id="ubuntu">ubuntu</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">pip install wdb 
+pip install wdb.server </code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="mac">mac</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">pip install wdb  --no-use-wheel
+pip install wdb.server --no-use-wheel</code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="使用">使用</h1>
+
+<p>首先运行:<code>wdb.server.py</code> (建议跑在一个tmux窗口中)，服务起来后，默认跑在端口:1984</p>
+
+<p>在需要调试的程序中加上 <code>import wdb;wdb.set_trace()</code>，你一定似曾相识，没错，用法和pdb、ipdb完全相同</p>
+
+<p>![]()</p>
+
+<h3 id="一个案例">一个案例</h3>
+
+<p>我们以调试一个flask app为例(当然你可能更偏好flask原生的调试工具)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">wdb</span><span class="p">;</span><span class="n">wdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s1">&#39;Hello </span><span class="si">%s</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="n">name</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>我们来运行它:<code>python flask_app.py</code></p>
+
+<p>接着我们访问:<code>127.0.0.1:5000?name=斐德洛</code></p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/wdb8b9dbcda.png" alt="" /></p>
+
+<p>tab补全功能非常强大,惬意如jupyter</p>
+
+<h3 id="远程调试">远程调试</h3>
+
+<p>如果你想用wdb调试服务器上的程序，要麻烦一些，wdb的客户端基于web技术，所以你需要远程访问到客户端的端口</p>
+
+<p>因为是远程调试，所以弃用默认打开本地浏览器的选项,通过<code>WDB_NO_BROWSER_AUTO_OPEN=True</code>变量来控制，具体而言就是在你运行带测试程序(网站)时，加上<code>WDB_NO_BROWSER_AUTO_OPEN=True</code>，诸如<code>WDB_NO_BROWSER_AUTO_OPEN=True python flask_app.py</code></p>
+
+<p>运行之后你在命令行将看到类似下边的输出:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">You can now launch your browser at http://[wdb.server]/debug/session/28dca05c-0eac-abcd-8fb0-5546a22e774f</pre></td></tr></table>
+</div>
+</div>
+<p>接着新起一个tmux窗口，用ngrok把1984端口映射出来,类似这样:<code>./ngrok --config ngrok.cfg --subdomain test_wdb  1984</code></p>
+
+<p>之后直接访问ngrok映射出来的网址加上<code>/debug/session/28dca05c-0eac-abcd-8fb0-5546a22e774f</code>即可,形如:<code>test_wdb.ngrok.io/debug/session/28dca05c-0eac-abcd-8fb0-5546a22e774f</code></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-05-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/iot/blockly4pi_codetest_u_disk/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">u盘程序自启</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/zen-and-the-art-of-motorcycle-maintenance/">
+            <span class="next-text nav-default">禅与摩托车维修艺术</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

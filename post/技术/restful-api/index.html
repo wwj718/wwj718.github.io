@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>RESTful Api设计 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="#拆分资源 * ”资源“应该是个名词 * 内部数据模型和资源对应起来 * 不需要把它们一对一的都暴露出来。隐藏内部资源，暴露必需的外部资源。 * 一旦定义好" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E6%8A%80%E6%9C%AF/restful-api/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="RESTful Api设计" />
+<meta property="og:description" content="#拆分资源 * ”资源“应该是个名词 * 内部数据模型和资源对应起来 * 不需要把它们一对一的都暴露出来。隐藏内部资源，暴露必需的外部资源。 * 一旦定义好" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E6%8A%80%E6%9C%AF/restful-api/" />
+<meta property="article:published_time" content="2014-08-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-08-28T00:00:00+00:00" />
+<meta itemprop="name" content="RESTful Api设计">
+<meta itemprop="description" content="#拆分资源 * ”资源“应该是个名词 * 内部数据模型和资源对应起来 * 不需要把它们一对一的都暴露出来。隐藏内部资源，暴露必需的外部资源。 * 一旦定义好">
+
+
+<meta itemprop="datePublished" content="2014-08-28T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-08-28T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1649">
+
+
+
+<meta itemprop="keywords" content=" RESTful," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="RESTful Api设计"/>
+<meta name="twitter:description" content="#拆分资源 * ”资源“应该是个名词 * 内部数据模型和资源对应起来 * 不需要把它们一对一的都暴露出来。隐藏内部资源，暴露必需的外部资源。 * 一旦定义好"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">RESTful Api设计</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-08-28 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>#拆分资源
+*  ”资源“应该是个名词
+*  内部数据模型和资源对应起来
+*  不需要把它们一对一的都暴露出来。隐藏内部资源，暴露必需的外部资源。
+*  一旦定义好了要暴露的资源，你可以定义资源上允许的操作</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+GET /blog # 获取blog列表
+GET /blog/12 # 查看某个具体的blog
+POST /blog # 新建一个blog
+PUT /blog/12 # 更新blog 12.
+DELETE /blog/12 #删除blog 12</pre></td></tr></table>
+</div>
+</div>
+<ul>
+<li>REST的好处在于可以充分利用http的强大实现对资源的CURD功能。而这里你只需要一个endpoint：/blog,再没有其他什么命名规则和url规则了</li>
+</ul>
+
+<p>#处理关联</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+GET /tickets/12/messages- Retrieves list of messages for ticket #12
+GET /tickets/12/messages/5- Retrieves message #5 for ticket #12
+POST /tickets/12/messages- Creates a new message in ticket #12
+PUT /tickets/12/messages/5- Updates message #5 for ticket #12
+PATCH /tickets/12/messages/5- Partially updates message #5 for ticket #12
+DELETE /tickets/12/messages/5- Deletes message #5 for ticket #12</pre></td></tr></table>
+</div>
+</div>
+<p>如果这种关联和资源独立，那么我们可以在资源的输出表示中保存相应资源的endpoint。然后API的使用者就可以通过点击链接找到相关的资源。如果关联和资源联系紧密。资源的输出表示就应该直接保存相应资源信息</p>
+
+<p>#使用SSL
+使用SSL可以减少鉴权的成本：你只需要一个简单的令牌（token）就可以鉴权了，而不是每次让用户对每次请求签名。</p>
+
+<p>#文档
+文档应该有展示请求和输出的例子：或者以点击链接的方式或者通过curl的方式<br />
+文档中应该有关于何时弃用某个API的时间表以及详情</p>
+
+<p>#结果过滤，排序，搜索
+url最好越简短越好，和结果过滤，排序，搜索相关的功能都应该通过参数实现</p>
+
+<p>get /tickekts state=open</p>
+
+<p>#限制API返回值的域
+使用fields查询参数来限制返回的域例如：</p>
+
+<p>GET /tickets fields=id,subject,customer_name,updated_at&amp;state=open&amp;sort=-updated_at</p>
+
+<p>#只提供json作为返回格式
+好读好用，逆袭xml成功</p>
+
+<p>#API的输入数据格式
+使用json<br />
+很多的API使用url编码格式：就像是url查询参数的格式一样：单纯的键值对。这种方法简单有效，但是也有自己的问题：它没有数据类型的概念。这使得程序不得不根据字符串解析出布尔和整数,而且还没有层次结构。<br />
+如果API本身就很简单，那么使用url格式的输入没什么问题。但对于复杂的API你应该使用json。或者干脆统一使用json。<br />
+注意使用json传输的时候，要求请求头里面加入：Content-Type：application/json</p>
+
+<p>#分页
+推荐将分页信息放到link header里面：<br />
+<a href="http://tools.ietf.org/html/rfc5988#page-6。">http://tools.ietf.org/html/rfc5988#page-6。</a></p>
+
+<p>#鉴权 Authentication
+restful API是无状态的也就是说用户请求的鉴权和cookie以及session无关，每一次请求都应该包含鉴权证明。<br />
+通过使用ssl，可以不用每次都提供用户名和密码：我们可以给用户返回一个随机产生的token。这样可以极大的方便使用浏览器访问API的用户。这种方法适用于用户可以首先通过一次用户名-密码的验证并得到token，并且可以拷贝返回的token到以后的请求中。如果不方便，可以使用OAuth 2来进行token的安全传输。</p>
+
+<p>#缓存
+HTTP提供了自带的缓存框架。你需要做的是在返回的时候加入一些返回头信息</p>
+
+<p>#出错处理
+就像html错误页面能够显示错误信息一样，API 也应该能返回可读的错误信息–它应该和一般的资源格式一致。<br />
+API应该始终返回相应的状态码，以反映服务器或者请求的状态。<br />
+API的错误码可以分为两部分，400系列和500系列，400系列表明客户端错误：如错误的请求格式等。500系列表示服务器错误。以json形式返回。错误应该包含以下信息：一个有用的错误信息，一个唯一的错误码，以及任何可能的详细错误描述。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+{
+  &#34;code&#34; : 1234,
+  &#34;message&#34; : &#34;Something bad happened :-(&#34;,
+  &#34;description&#34; : &#34;More details about the error here&#34;
+}</pre></td></tr></table>
+</div>
+</div>
+<p>#附录：HTTP 状态码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+ 200 ok  - 成功返回状态，对应，GET,PUT,PATCH,DELETE.
+ 201 created  - 成功创建。
+ 304 not modified   - HTTP缓存有效。
+ 400 bad request   - 请求格式错误。
+ 401 unauthorized   - 未授权。
+ 403 forbidden   - 鉴权成功，但是该用户没有权限。
+ 404 not found - 请求的资源不存在
+ 405 method not allowed - 该http方法不被允许。
+ 410 gone - 这个url对应的资源现在不可用。
+ 415 unsupported media type - 请求类型错误。
+ 422 unprocessable entity - 校验错误时用。
+ 429 too many request - 请求过多。</pre></td></tr></table>
+</div>
+</div>
+<p>#示例
+github的api设计得非常好</p>
+
+<p>##参考资料
+*  <a href="http://blog.jobbole.com/41233/">RESTful API 设计最佳实践</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-08-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/restful/"> RESTful</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/about-http/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">HTTP相关</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/about-restful/">
+            <span class="next-text nav-default">理解RESTful架构</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

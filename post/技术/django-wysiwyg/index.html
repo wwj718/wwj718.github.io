@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>django笔记之富文本编辑器 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="个人而言我更喜欢markdown，django中配置使用markdown很简单。一两分钟的功夫而已。就不在这里说了。 对于普通用户，还是更喜欢" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E6%8A%80%E6%9C%AF/django-wysiwyg/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="django笔记之富文本编辑器" />
+<meta property="og:description" content="个人而言我更喜欢markdown，django中配置使用markdown很简单。一两分钟的功夫而已。就不在这里说了。 对于普通用户，还是更喜欢" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E6%8A%80%E6%9C%AF/django-wysiwyg/" />
+<meta property="article:published_time" content="2014-03-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-03-11T00:00:00+00:00" />
+<meta itemprop="name" content="django笔记之富文本编辑器">
+<meta itemprop="description" content="个人而言我更喜欢markdown，django中配置使用markdown很简单。一两分钟的功夫而已。就不在这里说了。 对于普通用户，还是更喜欢">
+
+
+<meta itemprop="datePublished" content="2014-03-11T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-03-11T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2043">
+
+
+
+<meta itemprop="keywords" content=" django," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="django笔记之富文本编辑器"/>
+<meta name="twitter:description" content="个人而言我更喜欢markdown，django中配置使用markdown很简单。一两分钟的功夫而已。就不在这里说了。 对于普通用户，还是更喜欢"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">django笔记之富文本编辑器</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-03-11 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>个人而言我更喜欢markdown，django中配置使用markdown很简单。一两分钟的功夫而已。就不在这里说了。<br />
+对于普通用户，还是更喜欢富文本编辑器的。</p>
+
+<p>###Ueditor
+我们重点说说这个编辑器。之后会给出一些常见需求的定制化的方案，可能手法有些暴力。
+国内的话，百度开源出来的Ueditor很赞，资料也挺全，反正我最近的项目都在用它。<br />
+别急着各种埋头配置啦，干活之前不妨先逛逛github，常常有惊喜哦～<br />
+搜索django ueditor，果然出来一个<a href="https://github.com/zhangfisher/DjangoUeditor">DjangoUeditor</a>，貌似人家都帮我们集成好了！！<br />
+按照说明，分分钟配置好，python manage.py runserver &hellip;能用！！就这么简单！！
+省下的时间陪你的妹子，看你书去吧。
+github，你，值得拥有～</p>
+
+<p>好的，下面我们来说几个定制化问题：（挺常见的需求）</p>
+
+<ul>
+<li>前两天在django技术群里帮一妹子（她非坚持说比我早毕业两年，应当喊姐姐。。）解决了些小问题，她之前使用TinyMCE，无法本地上传图片，我对TinyMCE不太熟，于是推荐DjangoUeditor给她，她觉得默认的功能按钮太少，想使用全功能的。</li>
+</ul>
+
+<p>这个好办：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#settings.py</span>
+<span class="n">UEDITOR_SETTINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;toolbars&#39;</span><span class="p">:{</span><span class="s2">&#34;testa&#34;</span><span class="p">:[[</span><span class="s1">&#39;fullscreen&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;undo&#39;</span><span class="p">,</span> <span class="s1">&#39;redo&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;italic&#39;</span><span class="p">,</span> <span class="s1">&#39;underline&#39;</span><span class="p">]],</span>
+                <span class="s2">&#34;testb&#34;</span><span class="p">:[[</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;italic&#39;</span><span class="p">,</span> <span class="s1">&#39;underline&#39;</span><span class="p">]]</span>
+                <span class="p">},</span>
+    <span class="s1">&#39;images_upload&#39;</span><span class="p">:{</span>
+        <span class="s1">&#39;max_size&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+        <span class="s1">&#39;path&#39;</span><span class="p">:</span><span class="s2">&#34;asd&#34;</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;scrawl_upload&#39;</span><span class="p">:{</span>
+        <span class="s1">&#39;path&#39;</span><span class="p">:</span><span class="s1">&#39;scrawlabc&#39;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>容易看出我们应当在toolbars这里配置功能按钮，testa，testb是功能面板名称,可选的参数看这里<a href="https://github.com/campaign/ueditor/blob/master/ueditor.config.js">ueditor.config.js</a>，有这些：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="p">[</span><span class="s1">&#39;fullscreen&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;undo&#39;</span><span class="p">,</span> <span class="s1">&#39;redo&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;italic&#39;</span><span class="p">,</span> <span class="s1">&#39;underline&#39;</span><span class="p">,</span> <span class="s1">&#39;fontborder&#39;</span><span class="p">,</span> <span class="s1">&#39;strikethrough&#39;</span><span class="p">,</span> <span class="s1">&#39;superscript&#39;</span><span class="p">,</span> <span class="s1">&#39;subscript&#39;</span><span class="p">,</span> <span class="s1">&#39;removeformat&#39;</span><span class="p">,</span> <span class="s1">&#39;formatmatch&#39;</span><span class="p">,</span> <span class="s1">&#39;autotypeset&#39;</span><span class="p">,</span> <span class="s1">&#39;blockquote&#39;</span><span class="p">,</span> <span class="s1">&#39;pasteplain&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;forecolor&#39;</span><span class="p">,</span> <span class="s1">&#39;backcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;insertorderedlist&#39;</span><span class="p">,</span> <span class="s1">&#39;insertunorderedlist&#39;</span><span class="p">,</span> <span class="s1">&#39;selectall&#39;</span><span class="p">,</span> <span class="s1">&#39;cleardoc&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;rowspacingtop&#39;</span><span class="p">,</span> <span class="s1">&#39;rowspacingbottom&#39;</span><span class="p">,</span> <span class="s1">&#39;lineheight&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;customstyle&#39;</span><span class="p">,</span> <span class="s1">&#39;paragraph&#39;</span><span class="p">,</span> <span class="s1">&#39;fontfamily&#39;</span><span class="p">,</span> <span class="s1">&#39;fontsize&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;directionalityltr&#39;</span><span class="p">,</span> <span class="s1">&#39;directionalityrtl&#39;</span><span class="p">,</span> <span class="s1">&#39;indent&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;justifyleft&#39;</span><span class="p">,</span> <span class="s1">&#39;justifycenter&#39;</span><span class="p">,</span> <span class="s1">&#39;justifyright&#39;</span><span class="p">,</span> <span class="s1">&#39;justifyjustify&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;touppercase&#39;</span><span class="p">,</span> <span class="s1">&#39;tolowercase&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;link&#39;</span><span class="p">,</span> <span class="s1">&#39;unlink&#39;</span><span class="p">,</span> <span class="s1">&#39;anchor&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;imagenone&#39;</span><span class="p">,</span> <span class="s1">&#39;imageleft&#39;</span><span class="p">,</span> <span class="s1">&#39;imageright&#39;</span><span class="p">,</span> <span class="s1">&#39;imagecenter&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;insertimage&#39;</span><span class="p">,</span> <span class="s1">&#39;emotion&#39;</span><span class="p">,</span> <span class="s1">&#39;scrawl&#39;</span><span class="p">,</span> <span class="s1">&#39;insertvideo&#39;</span><span class="p">,</span> <span class="s1">&#39;music&#39;</span><span class="p">,</span> <span class="s1">&#39;attachment&#39;</span><span class="p">,</span> <span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="s1">&#39;gmap&#39;</span><span class="p">,</span> <span class="s1">&#39;insertframe&#39;</span><span class="p">,</span><span class="s1">&#39;insertcode&#39;</span><span class="p">,</span> <span class="s1">&#39;webapp&#39;</span><span class="p">,</span> <span class="s1">&#39;pagebreak&#39;</span><span class="p">,</span> <span class="s1">&#39;template&#39;</span><span class="p">,</span> <span class="s1">&#39;background&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;spechars&#39;</span><span class="p">,</span> <span class="s1">&#39;snapscreen&#39;</span><span class="p">,</span> <span class="s1">&#39;wordimage&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;inserttable&#39;</span><span class="p">,</span> <span class="s1">&#39;deletetable&#39;</span><span class="p">,</span> <span class="s1">&#39;insertparagraphbeforetable&#39;</span><span class="p">,</span> <span class="s1">&#39;insertrow&#39;</span><span class="p">,</span> <span class="s1">&#39;deleterow&#39;</span><span class="p">,</span> <span class="s1">&#39;insertcol&#39;</span><span class="p">,</span> <span class="s1">&#39;deletecol&#39;</span><span class="p">,</span> <span class="s1">&#39;mergecells&#39;</span><span class="p">,</span> <span class="s1">&#39;mergeright&#39;</span><span class="p">,</span> <span class="s1">&#39;mergedown&#39;</span><span class="p">,</span> <span class="s1">&#39;splittocells&#39;</span><span class="p">,</span> <span class="s1">&#39;splittorows&#39;</span><span class="p">,</span> <span class="s1">&#39;splittocols&#39;</span><span class="p">,</span> <span class="s1">&#39;charts&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;print&#39;</span><span class="p">,</span> <span class="s1">&#39;preview&#39;</span><span class="p">,</span> <span class="s1">&#39;searchreplace&#39;</span><span class="p">,</span> <span class="s1">&#39;help&#39;</span><span class="p">,</span> <span class="s1">&#39;drafts&#39;</span><span class="p">]</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>我们把为toolbars添加一个mytoolbars,像这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="s1">&#39;toolbars&#39;</span><span class="p">:{</span><span class="s2">&#34;testa&#34;</span><span class="p">:[[</span><span class="s1">&#39;fullscreen&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;undo&#39;</span><span class="p">,</span> <span class="s1">&#39;redo&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;italic&#39;</span><span class="p">,</span> <span class="s1">&#39;underline&#39;</span><span class="p">]],</span>
+            <span class="s2">&#34;testb&#34;</span><span class="p">:[[</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;italic&#39;</span><span class="p">,</span> <span class="s1">&#39;underline&#39;</span><span class="p">]],</span>
+            <span class="s2">&#34;mytoolbars&#34;</span><span class="p">:[[</span><span class="s1">&#39;fullscreen&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;undo&#39;</span><span class="p">,</span> <span class="s1">&#39;redo&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;italic&#39;</span><span class="p">,</span> <span class="s1">&#39;underline&#39;</span><span class="p">,</span> <span class="s1">&#39;fontborder&#39;</span><span class="p">,</span> <span class="s1">&#39;strikethrough&#39;</span><span class="p">,</span> <span class="s1">&#39;superscript&#39;</span><span class="p">,</span> <span class="s1">&#39;subscript&#39;</span><span class="p">,</span> <span class="s1">&#39;removeformat&#39;</span><span class="p">,</span> <span class="s1">&#39;formatmatch&#39;</span><span class="p">,</span> <span class="s1">&#39;autotypeset&#39;</span><span class="p">,</span> <span class="s1">&#39;blockquote&#39;</span><span class="p">,</span> <span class="s1">&#39;pasteplain&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;forecolor&#39;</span><span class="p">,</span> <span class="s1">&#39;backcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;insertorderedlist&#39;</span><span class="p">,</span> <span class="s1">&#39;insertunorderedlist&#39;</span><span class="p">,</span> <span class="s1">&#39;selectall&#39;</span><span class="p">,</span> <span class="s1">&#39;cleardoc&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;rowspacingtop&#39;</span><span class="p">,</span> <span class="s1">&#39;rowspacingbottom&#39;</span><span class="p">,</span> <span class="s1">&#39;lineheight&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;customstyle&#39;</span><span class="p">,</span> <span class="s1">&#39;paragraph&#39;</span><span class="p">,</span> <span class="s1">&#39;fontfamily&#39;</span><span class="p">,</span> <span class="s1">&#39;fontsize&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;directionalityltr&#39;</span><span class="p">,</span> <span class="s1">&#39;directionalityrtl&#39;</span><span class="p">,</span> <span class="s1">&#39;indent&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;justifyleft&#39;</span><span class="p">,</span> <span class="s1">&#39;justifycenter&#39;</span><span class="p">,</span> <span class="s1">&#39;justifyright&#39;</span><span class="p">,</span> <span class="s1">&#39;justifyjustify&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;touppercase&#39;</span><span class="p">,</span> <span class="s1">&#39;tolowercase&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;link&#39;</span><span class="p">,</span> <span class="s1">&#39;unlink&#39;</span><span class="p">,</span> <span class="s1">&#39;anchor&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="s1">&#39;imagenone&#39;</span><span class="p">,</span> <span class="s1">&#39;imageleft&#39;</span><span class="p">,</span> <span class="s1">&#39;imageright&#39;</span><span class="p">,</span> <span class="s1">&#39;imagecenter&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;insertimage&#39;</span><span class="p">,</span> <span class="s1">&#39;emotion&#39;</span><span class="p">,</span> <span class="s1">&#39;scrawl&#39;</span><span class="p">,</span> <span class="s1">&#39;insertvideo&#39;</span><span class="p">,</span> <span class="s1">&#39;music&#39;</span><span class="p">,</span> <span class="s1">&#39;attachment&#39;</span><span class="p">,</span> <span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="s1">&#39;gmap&#39;</span><span class="p">,</span> <span class="s1">&#39;insertframe&#39;</span><span class="p">,</span><span class="s1">&#39;insertcode&#39;</span><span class="p">,</span> <span class="s1">&#39;webapp&#39;</span><span class="p">,</span> <span class="s1">&#39;pagebreak&#39;</span><span class="p">,</span> <span class="s1">&#39;template&#39;</span><span class="p">,</span> <span class="s1">&#39;background&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;horizontal&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;spechars&#39;</span><span class="p">,</span> <span class="s1">&#39;snapscreen&#39;</span><span class="p">,</span> <span class="s1">&#39;wordimage&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;inserttable&#39;</span><span class="p">,</span> <span class="s1">&#39;deletetable&#39;</span><span class="p">,</span> <span class="s1">&#39;insertparagraphbeforetable&#39;</span><span class="p">,</span> <span class="s1">&#39;insertrow&#39;</span><span class="p">,</span> <span class="s1">&#39;deleterow&#39;</span><span class="p">,</span> <span class="s1">&#39;insertcol&#39;</span><span class="p">,</span> <span class="s1">&#39;deletecol&#39;</span><span class="p">,</span> <span class="s1">&#39;mergecells&#39;</span><span class="p">,</span> <span class="s1">&#39;mergeright&#39;</span><span class="p">,</span> <span class="s1">&#39;mergedown&#39;</span><span class="p">,</span> <span class="s1">&#39;splittocells&#39;</span><span class="p">,</span> <span class="s1">&#39;splittorows&#39;</span><span class="p">,</span> <span class="s1">&#39;splittocols&#39;</span><span class="p">,</span> <span class="s1">&#39;charts&#39;</span><span class="p">,</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;print&#39;</span><span class="p">,</span> <span class="s1">&#39;preview&#39;</span><span class="p">,</span> <span class="s1">&#39;searchreplace&#39;</span><span class="p">,</span> <span class="s1">&#39;help&#39;</span><span class="p">,</span> <span class="s1">&#39;drafts&#39;</span><span class="p">]],</span>
+	<span class="p">},</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>在models.py里选用mytoolbars这个风格，像这样：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">Content</span><span class="o">=</span><span class="n">UEditorField</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;内容	&#39;</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span><span class="n">imagePath</span><span class="o">=</span><span class="s2">&#34;uploadimg/&#34;</span><span class="p">,</span><span class="n">imageManagerPath</span><span class="o">=</span><span class="s2">&#34;imglib&#34;</span><span class="p">,</span><span class="n">toolbars</span><span class="o">=</span><span class="s1">&#39;mytoolbars&#39;</span><span class="p">,</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;elementPathEnabled&#34;</span><span class="p">:</span><span class="bp">True</span><span class="p">},</span><span class="n">filePath</span><span class="o">=</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>打开后台，可以看到全功按钮板块。</p>
+
+<p>她说项目要求上传的本地图片必须把图片名字哈希<code>加密</code>，由于近来略忙，我只想当然地给她讲了下思路：在自己重载form，在表单里拦截一下数据，在那里修改图片名字。或者在图片保存前修改。<br />
+她按照这个思路并没有成功，于是我看了下DjangoUeditor源码，似乎上传图片那块不是很常规，于是直接修改源码（这个习惯不好。。），我们先找到文件名的生成函数，就是这个<a href="https://github.com/zhangfisher/DjangoUeditor/blob/master/DjangoUeditor/utils.py">GenerateRndFilename</a>，<code>return &quot;%s_%s%s%s&quot;</code>,改之～搞定。这种方法略暴力，DjangoUeditor的源码不复杂，似乎页不需要升级，这样不会带来什么兼容问题。暂时取个捷径。  大家估计开始鄙视我了。。</p>
+
+<p>此外，需要注意的是：<code>xadmin</code>中并不支持DjangoUeditor，
+之前在django技术群中同xadmin的作者聊过 ，xadmin中并不支持DjangoUeditor，我们可以使用其他的富文本编辑器。这个东西已经帮我们做好配置的脏活了。好东西自然是在github里的，<a href="https://github.com/sshwsfc/xadmin-cms">xadmin-cms</a>,介绍中说：<br />
+Xcms 是 django-xadmin 的一套插件集, 包含制作 cms 系统需要的常用插件:</p>
+
+<ul>
+<li>可见即可得编辑器</li>
+<li>树形组件</li>
+</ul>
+
+<p>至于怎么用，自己跑一遍demo_app，看看里面的参数，参考注释修修改改就好了。蛋疼的是我的后台一直不显示富文本编辑器，django群里的一哥们说他的没问题，难道是我打开方式不对 囧，一直怀疑是xadmin版本的问题。xadmin-cms最新一次提交是11个月前。</p>
+
+<p>如果你非要在xadmin中使用Ueditor，参考下这篇文章<a href="http://blog.csdn.net/u012762088/article/details/14497105">在django xadmin中使用 Ueditor</a></p>
+
+<p>===========分界线 14-3-20===============
+在新闻发布系统中有一个需求其实挺常见的：在news_list(新闻列表)页显示摘要，一般而言需要将新闻中的第一张图片也放到这里。
+这里解决方案很多，粗暴的方法比如在前台里<code>{{new.content}}</code>(content用于保存新闻内容)，之后用js来做，取出图片置顶,多余的文本隐藏（我们并不知道图片在文本中的什么位置,所以有必要把文本全部显示出）。
+很不优雅对吧，我们也可以这样解决，前台仅显示{{new.content_first_img|safe }} ,<code>{{new.content|slice:&quot;:200&quot;|safe }}</code>,这样语意很清晰有木有。
+“代码是写给人看的，只是顺带能在机器上运行”
+那么content_first_img是怎么实现的。
+直接上代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">#models.py</span>
+<span class="kn">from</span> <span class="nn">BeautifulSoup</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#取出第一张图片的html，使用正则</span>
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content_html</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">content_first_img</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="s2">&#34;img&#34;</span><span class="p">))</span> <span class="c1">#soup.first(&#34;img&#34;) #只返回第一个pic,需要转化为str，否则是对象</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_pic</span> <span class="p">:</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">content_pic</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">News</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">()</span> </code></pre></td></tr></table>
+</div>
+</div>
+<p>实质上我们就是重载了save()方法在，当然你需要为你的模型新建一个content_first_img字段，用于存储第一张图片
+好了～。</p>
+
+<p>###TinyMCE
+waiting
+###ckeditor
+waiting</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-03-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/django/"> django</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/django-generic-views/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">django笔记之Generic views</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/django-permalink/">
+            <span class="next-text nav-default">django笔记之permalink函数</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>用微信控制树莓派 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="源码 老习惯，先抛源码，老司机可以直接读源码 动机 近期公司有一个有趣的项目，希望用乐高玩具式的可视化编程工具来操控硬件(在网页中) 所以想把硬件的" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/iot/pi-wechat/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="用微信控制树莓派" />
+<meta property="og:description" content="源码 老习惯，先抛源码，老司机可以直接读源码 动机 近期公司有一个有趣的项目，希望用乐高玩具式的可视化编程工具来操控硬件(在网页中) 所以想把硬件的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/iot/pi-wechat/" />
+<meta property="article:published_time" content="2016-08-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-08-29T00:00:00+00:00" />
+<meta itemprop="name" content="用微信控制树莓派">
+<meta itemprop="description" content="源码 老习惯，先抛源码，老司机可以直接读源码 动机 近期公司有一个有趣的项目，希望用乐高玩具式的可视化编程工具来操控硬件(在网页中) 所以想把硬件的">
+
+
+<meta itemprop="datePublished" content="2016-08-29T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-08-29T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1388">
+
+
+
+<meta itemprop="keywords" content="技术," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="用微信控制树莓派"/>
+<meta name="twitter:description" content="源码 老习惯，先抛源码，老司机可以直接读源码 动机 近期公司有一个有趣的项目，希望用乐高玩具式的可视化编程工具来操控硬件(在网页中) 所以想把硬件的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">用微信控制树莓派</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-08-29 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#源码">源码</a></li>
+<li><a href="#动机">动机</a></li>
+<li><a href="#想法">想法</a></li>
+<li><a href="#架构设计">架构设计</a></li>
+<li><a href="#树莓派与gpio">树莓派与GPIO</a></li>
+<li><a href="#接口定义">接口定义</a></li>
+<li><a href="#测试接口">测试接口</a></li>
+<li><a href="#对接微信">对接微信</a></li>
+<li><a href="#脑洞">脑洞</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/wechat_pid9f17e53.png" alt="" /></p>
+
+<h1 id="源码">源码</h1>
+
+<p>老习惯，先抛源码，老司机可以直接读<a href="https://github.com/wwj718/raspberrypi_api">源码</a></p>
+
+<h1 id="动机">动机</h1>
+
+<ul>
+<li>近期公司有一个有趣的项目，希望用乐高玩具式的可视化编程工具来操控硬件(在网页中)
+
+<ul>
+<li>所以想把硬件的响应包装为服务
+
+<ul>
+<li>于是得到可以用微信操作树莓派这个副产品</li>
+</ul></li>
+</ul></li>
+<li>树莓派操控硬件需要有root权限，作为服务之后则没有限制</li>
+<li>解耦</li>
+</ul>
+
+<h1 id="想法">想法</h1>
+
+<ul>
+<li>将微信视为控制界面（interface）, 获得联网能力（远程操作）</li>
+<li>将树莓派视为连接代码和物理世界的介质</li>
+</ul>
+
+<h1 id="架构设计">架构设计</h1>
+
+<ul>
+<li>初期效用flask作为web框架
+
+<ul>
+<li>使用flask-sockets提供websocket服务:<a href="https://github.com/wwj718/raspberrypi_api/blob/master/led_websocket.py">led_websocket.py</a></li>
+</ul></li>
+<li>把led_server视为下位机，api视为指令集</li>
+</ul>
+
+<h1 id="树莓派与gpio">树莓派与GPIO</h1>
+
+<p>关于如何使用树莓派的引脚操作外部设备，推荐阅读mango同学的<a href="http://blog.mangolovecarrot.net/2015/04/20/raspi-study01/">树莓派GPIO入门01-使用GPIO接口控制发光二极管闪烁</a>，写得十分清楚</p>
+
+<p>通过<code>RPi.GPIO</code>库，我们几乎不需要硬件的知识，就能轻易地用python代码操控硬件</p>
+
+<h1 id="接口定义">接口定义</h1>
+
+<p>我们接下来led为例,演示如何将硬件功能暴露为api,可通过http请求，操控硬件（暂不考虑操作权限/安全问题，如果你愿意可以简单定义一个秘钥：<code>?key=xx</code>），对细节感情兴趣的小伙伴可以跟进我的<a href="https://github.com/wwj718/raspberrypi_api/">源码库</a>，我有计划把它做得完备。</p>
+
+<p>目前我们定义三个功能：</p>
+
+<ul>
+<li>点亮led灯</li>
+<li>熄灭led灯</li>
+<li>使led灯闪烁几次</li>
+</ul>
+
+<p>接下来使用flask将其暴露出去，成为web api</p>
+
+<p>代码读起来很容易:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 点亮led灯</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/led_up&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">led_up</span><span class="p">():</span>
+    <span class="c1"># 让GPIO14输出高电平（LED灯亮）</span>
+    <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;ok&#39;</span>
+
+<span class="c1"># 熄灭led灯</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/led_down&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">led_down</span><span class="p">():</span>
+    <span class="c1"># 让GPIO14输出低电平（LED灯灭）</span>
+    <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;ok&#39;</span>
+
+<span class="c1"># 使led灯闪烁几次</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s1">&#39;/led_up_down&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">led_up_down</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+        <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="c1"># 持续一段时间</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">RPi</span><span class="o">.</span><span class="n">GPIO</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;ok&#39;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>完整的源码参考<a href="https://github.com/wwj718/raspberrypi_api/edit/master/led_server.py">led_server.py</a></p>
+
+<p>现在我们可以把服务跑起来了：<code>sudo python led_server.py</code></p>
+
+<p>ps： websocket版本参考这里：<a href="https://github.com/wwj718/raspberrypi_api/blob/master/led_websocket.py">led_websocket.py</a></p>
+
+<h1 id="测试接口">测试接口</h1>
+
+<p>我的树莓派当前ip为：192.168.0.106</p>
+
+<p>我们对这些api进行测试：</p>
+
+<ul>
+<li>点亮红灯： curl 192.168.0.106/led_up</li>
+<li>熄灭红灯： curl 192.168.0.106/led_down</li>
+<li>闪啊闪 ： curl 192.168.0.106/led_up_down</li>
+</ul>
+
+<p>你也可以在浏览器里控制这些灯（使用js）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="nx">xmlhttp</span><span class="o">=</span><span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xmlhttp</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">&#34;GET&#34;</span><span class="p">,</span><span class="s2">&#34;http://192.168.0.106/led_up_down&#34;</span><span class="p">,</span><span class="kc">true</span><span class="p">);</span> <span class="c1">//闪烁
+</span><span class="c1"></span><span class="nx">xmlhttp</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>如此一来我们可以在浏览器里操控硬件了</p>
+
+<h1 id="对接微信">对接微信</h1>
+
+<p>对接微信这步很简单,如果你读过我之前的文章：<a href="http://blog.just4fun.site/create-wechat-bot.html">把聊天机器人接入微信</a>，直接看源码就好了。没读过前文也没关系，代码很好理解，我把核心部分列下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">wxbot</span> <span class="kn">import</span> <span class="n">WXBot</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">led_server</span> <span class="o">=</span> <span class="s1">&#39;http://127.0.0.1:5000/&#39;</span>
+
+<span class="k">class</span> <span class="nc">MyWXBot</span><span class="p">(</span><span class="n">WXBot</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">user_input</span><span class="p">,</span><span class="n">action</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="s1">&#39;正在{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_msg_by_uid</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">led_server</span><span class="o">+</span><span class="n">action</span>
+        <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="s1">&#39;完成{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_msg_by_uid</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+
+
+    <span class="k">def</span> <span class="nf">handle_msg_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;msg_type_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">user_input</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&#34;content&#34;</span><span class="p">][</span><span class="s2">&#34;data&#34;</span><span class="p">]</span>
+            <span class="c1">#payload={&#34;user_input&#34;:user_input}</span>
+            <span class="k">if</span> <span class="s1">&#39;关&#39;</span> <span class="ow">in</span> <span class="n">user_input</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_led</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="n">user_input</span><span class="p">,</span><span class="s1">&#39;led_down&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;开&#39;</span> <span class="ow">in</span> <span class="n">user_input</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_led</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="n">user_input</span><span class="p">,</span><span class="s1">&#39;led_up&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;闪&#39;</span> <span class="ow">in</span> <span class="n">user_input</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_led</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="n">user_input</span><span class="p">,</span><span class="s1">&#39;led_up_down&#39;</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>源码在这里：<a href="https://github.com/wwj718/raspberrypi_api/blob/master/wechat_pi.py">wechat_pi.py</a></p>
+
+<p>跑起来就好：<code>python wechat_pi.py</code>,由于需要微信扫码，所以先把你的树莓派连到屏幕上（使用图形界面），我使用VNC，之后有空把二维码弄到命令行里</p>
+
+<p><img src="https://raw.githubusercontent.com/wwj718/gif_bed/master/ledf96a0f7d.png" alt="" /></p>
+
+<h1 id="脑洞">脑洞</h1>
+
+<p>因为微信能在广域网中使用，所以你可以在任何能联网的地方控制树莓派了，进行远程控制，我最近的一个脑洞是在下班路上用微信给树莓派发一个<code>打开空调</code>的消息，就可以提前打开空调啦</p>
+
+<p>原理也很简单使用红外接收器学习空调遥控器的指令集（目前只要开关机的指令），然后使用红外发射器伪造成遥控器控制空调。最后对接到微信即可</p>
+
+<p>目前采集红外信号部分已经完成了</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-08-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/iot/pi-gogs-install/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">在树莓派上搭建代码托管服务器</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/edx-check-publish/">
+            <span class="next-text nav-default">为open-edx构建审核系统</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

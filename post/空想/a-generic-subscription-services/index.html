@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>一种通用的可视化订阅服务 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="这篇也是脑洞系列，属于我觉得好玩、分析后认为技术上可行、但限于时间或精力没去做的事，分享出来，有兴趣的小伙伴可以去折腾 我有很多想法，只差一个" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%A9%BA%E6%83%B3/a-generic-subscription-services/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="一种通用的可视化订阅服务" />
+<meta property="og:description" content="这篇也是脑洞系列，属于我觉得好玩、分析后认为技术上可行、但限于时间或精力没去做的事，分享出来，有兴趣的小伙伴可以去折腾 我有很多想法，只差一个" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%A9%BA%E6%83%B3/a-generic-subscription-services/" />
+<meta property="article:published_time" content="2016-08-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-08-10T00:00:00+00:00" />
+<meta itemprop="name" content="一种通用的可视化订阅服务">
+<meta itemprop="description" content="这篇也是脑洞系列，属于我觉得好玩、分析后认为技术上可行、但限于时间或精力没去做的事，分享出来，有兴趣的小伙伴可以去折腾 我有很多想法，只差一个">
+
+
+<meta itemprop="datePublished" content="2016-08-10T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-08-10T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1264">
+
+
+
+<meta itemprop="keywords" content=" thought," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="一种通用的可视化订阅服务"/>
+<meta name="twitter:description" content="这篇也是脑洞系列，属于我觉得好玩、分析后认为技术上可行、但限于时间或精力没去做的事，分享出来，有兴趣的小伙伴可以去折腾 我有很多想法，只差一个"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">一种通用的可视化订阅服务</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-08-10 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%A9%BA%E6%83%B3/"> 空想 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#先前的工作">先前的工作</a></li>
+<li><a href="#泛化能力">泛化能力</a></li>
+<li><a href="#只完成一半">只完成一半</a></li>
+<li><a href="#算法问题">算法问题</a>
+<ul>
+<li>
+<ul>
+<li><a href="#另一个小问题">另一个小问题</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#结语">结语</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>这篇也是脑洞系列，属于我觉得好玩、分析后认为技术上可行、但限于时间或精力没去做的事，分享出来，有兴趣的小伙伴可以去折腾</p>
+
+<p>我有很多想法，只差一个程序员啦</p>
+
+<hr />
+
+<h1 id="先前的工作">先前的工作</h1>
+
+<p><a href="https://github.com/wwj718/jobsVisualization">jobsVisualization</a>是一个可视化工具，用来帮你可视化地筛选工作</p>
+
+<p>一图胜千言</p>
+
+<p><img src="https://raw.githubusercontent.com/wwj718/jobsVisualization/master/jobs.gif" alt="jobsVisualization" /></p>
+
+<p>关于为何想做这个项目，我在<a href="http://blog.just4fun.site/jobsVisualization.html">可视化筛选你中意的工作</a>一文中有说明</p>
+
+<p>大体原因是因为目前职位相关的特征数据很多，要选出最合适的职位（综合多种特征，相互对比）十分不易，人脑很难对数据有直观认知，而这正是可视化帮得上忙的</p>
+
+<p>受<a href="https://github.com/bokeh/bokeh/tree/0.11.1/examples/app/movies">bokeh example app movies</a>项目的启发，我做了这个东西</p>
+
+<h1 id="泛化能力">泛化能力</h1>
+
+<p>我最初在折腾<a href="https://github.com/bokeh/bokeh/tree/0.11.1/examples/app/movies">bokeh example app movies</a>的时候就觉得，卧槽这是个泛化能力极好的模型呀，可以应用的领域太广了，这个模型里，只要求我们关注的对象（比如电影）有多维标签数据（比如评论数、票房）即可！用户就可以根据这些数据来可视化筛选数据，从而得出自己喜欢的电影，用户也可以随时调整筛选指标（通过变化坐标轴关联的数据标签）</p>
+
+<p>我的<a href="https://github.com/wwj718/jobsVisualization">jobsVisualization</a>就是一个典型的例子，你还用以用来做的其他事包括如何选股票，如何选桃子，如何选女朋友（如果有的选的话，邪恶一笑）之类的</p>
+
+<h1 id="只完成一半">只完成一半</h1>
+
+<p>在我的最初计划里，当前的工作其实只完成了一半，尽管它看去已经完整了（语出@ryseven）</p>
+
+<p>我的另一半计划是，用户能够订阅自己关注的区间，好比订阅<code>月薪在10K-20K之间，工作地点在上海的职位</code>，每当采集到新的数据，便向订阅用户推送这些信息</p>
+
+<p>那么用户怎么订阅呢，他只需要在图中圈一下</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/jobs55012802.png" alt="jons" /></p>
+
+<p>这样便订阅了<code>薪资在10k-20k,简历提交次数在30次以下的职位</code></p>
+
+<p>这是一种信息筛选和推送的服务</p>
+
+<h1 id="算法问题">算法问题</h1>
+
+<p>最后剩下的就是一个算法问题，假设有有A个用户订阅了该服务，他们关注的薪资区间各不相同（先假设只有薪资一个变量）。我们的爬虫每天早上爬取一组职位数据，我们要如何将合适的职位推送给合适的用户。怎样的机制较优（可以从时间复杂度和空间复杂度两方面考虑），简单的办法包括</p>
+
+<ul>
+<li>为每个用户执行一次筛选</li>
+<li>为每个职位找合适的用户</li>
+</ul>
+
+<p>我们看到这两种做法都不好，许多信息被反复查看，并没有充分利用</p>
+
+<h3 id="另一个小问题">另一个小问题</h3>
+
+<p>我们可以先绕开算法问题，处理消息推送中的优化策略</p>
+
+<p>如果你折腾过消息系统（notification system），你会发现这个问题在构建消息系统是可能也会遇到类似的，一群人订阅了一个话题，当话题有更新时，如何通知这些人。消息到达用户的方式通常有pull和push两种。</p>
+
+<p>针对push/pull模型采取的策略可能不尽相同，在pull模型中（用户拉取），我们可以根据用户的活跃情况决定为其生成消息的策略，诸如活跃用户优先，而非活跃用户可以访问时生成也无妨（celery）。</p>
+
+<p>这样可以节省空间</p>
+
+<p>优化问题还蛮好玩的，不过我最近掉到NLP（自然语言处理）的蜜罐里，暂时出不来，就不继续折腾这个项目了，有兴趣的小伙伴可以继续玩耍</p>
+
+<h1 id="结语">结语</h1>
+
+<p>这个可视化订阅服务是泛化性很好的项目，小伙伴们可以自己去折腾出好玩的东西，如果这个服务能帮到大家找到喜欢的东西（电影或是工作），节省信息筛选的时间，那么说不定有许多人请你喝咖啡呢</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-08-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/thought/"> thought</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%95%B0%E6%8D%AE/nlp-corpus/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">自然语言处理之语料库资源</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%95%B0%E6%8D%AE/jobsvisualization/">
+            <span class="next-text nav-default"> 可视化筛选你中意的工作</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

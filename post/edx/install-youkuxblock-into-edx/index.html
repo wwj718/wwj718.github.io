@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在社区版中集成youku插件(作为社区协作的一个演示案例) - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="#目的 这篇文章将以一个真实的案例，演示如何基于github，展开社区协作。 案例为:在社区版中集成youkuXblock #开发环境（社区版ed" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/install-youkuxblock-into-edx/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="在社区版中集成youku插件(作为社区协作的一个演示案例)" />
+<meta property="og:description" content="#目的 这篇文章将以一个真实的案例，演示如何基于github，展开社区协作。 案例为:在社区版中集成youkuXblock #开发环境（社区版ed" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/install-youkuxblock-into-edx/" />
+<meta property="article:published_time" content="2015-10-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-10-28T00:00:00+00:00" />
+<meta itemprop="name" content="在社区版中集成youku插件(作为社区协作的一个演示案例)">
+<meta itemprop="description" content="#目的 这篇文章将以一个真实的案例，演示如何基于github，展开社区协作。 案例为:在社区版中集成youkuXblock #开发环境（社区版ed">
+
+
+<meta itemprop="datePublished" content="2015-10-28T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-10-28T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="968">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在社区版中集成youku插件(作为社区协作的一个演示案例)"/>
+<meta name="twitter:description" content="#目的 这篇文章将以一个真实的案例，演示如何基于github，展开社区协作。 案例为:在社区版中集成youkuXblock #开发环境（社区版ed"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">在社区版中集成youku插件(作为社区协作的一个演示案例)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-10-28 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>#目的
+这篇文章将以一个真实的案例，演示如何基于github，展开社区协作。</p>
+
+<p>案例为:在社区版中集成<a href="https://github.com/wwj718/youkuXBlock">youkuXblock</a></p>
+
+<p>#开发环境（社区版edx_cypress_docker）
+开发环境的安装和使用,可以参考我此前的文章：</p>
+
+<ul>
+<li><a href="http://wwj718.github.io/edx-cypress-cn-install-and-use.html">Open edX中国社区Docker版安装使用</a></li>
+<li><a href="http://wwj718.github.io/edx-cypress-cn-for-deveiopment.html">使用Open edX中国社区Docker版来开发调试edX</a></li>
+</ul>
+
+<p>ps:使用devstack开发的同学，大体协作流程是相同的，仅是最初进入到开发环境的入口不同</p>
+
+<p>#fork社区版的源码
+登录你的github账户，fork社区版的源码:<a href="https://github.com/easy-edx/edx-platform">easy-edx/edx-platform</a></p>
+
+<p>fork完之后，你得到一个自己的镜像。好比我的演示用户为edxDev（用户名），那么我将得到：
+<img src="img/edx/edxcn/fork.png" alt="fork" /></p>
+
+<p>#workflow
+下边我们就进入了正式开发流程</p>
+
+<p>##克隆自己的源码镜像
+git clone -b edx_cn/cypress_cn <a href="https://github.com/edxDev/edx-platform.git">https://github.com/edxDev/edx-platform.git</a></p>
+
+<p>##建立自己的功能分支
+分支命名：规则为<yourname>/<feature>，feature应当能代表分支的功能/特性,在这里，我的用户名为edxDev，feature是为了添加youku支持，于是命名为edxDev/youkuXblock</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> edx-platform
+git checkout -b edxDev/youkuXblock edx_cn/cypress_cn</code></pre></td></tr></table>
+</div>
+</div>
+<p>这样你就建立了基于edx_cn/cypress_cn（社区版）的分支了</p>
+
+<p>##开始开发</p>
+
+<p>###将开发环境跑起来
+<code>sudo docker run -itd -p 5000:5000 -p 5010:5010 -p 2022:22 -v ~/edx-platform:/edx/app/edxapp/edx-platform-dev wwj718/edx_cypress_docker:1.21</code></p>
+
+<p>注：当前edx_cypress_docker最新的社区版为1.21（感谢edustack贡献的完整语言包！）</p>
+
+<p>###进入开发环境，做开发
+使用ssh或是docker exec进入开发环境</p>
+
+<p>在<code>/edx/app/edxapp/edx-platform-dev/edx_cn_feature</code>中添加新特性（采用脚本式的安装）。至于如何修改比较自由，原则是尽量不要侵入源码，而采取增量式的改变</p>
+
+<p>在<code>/edx/app/edxapp/edx-platform-dev/edx_cn_feature</code>目录下增加<code>youkuXblock_install.sh</code>,内容为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">/edx/app/edxapp/venvs/edxapp/bin/pip install git+https://github.com/wwj718/youkuXBlock.git
+sed <span class="s1">&#39;/&#34;FEATURES&#34;: {/a\        &#34;ALLOW_ALL_ADVANCED_COMPONENTS&#34;: true,&#39;</span>  -i /edx/app/edxapp/cms.env.json
+<span class="c1">#sudo /edx/bin/supervisorctl restart edxapp:</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><code>chmod +x /edx/app/edxapp/edx-platform-dev/edx_cn_feature/youkuXblock_install.sh</code></p>
+
+<p>之后执行<code>./youkuXblock_install.sh</code>，特性添加完毕</p>
+
+<p>调试后发现一切正常，就可以提交代码到社区啦</p>
+
+<p><img src="img/edx/edxcn/youku.png" alt="youku.png" /></p>
+
+<p>###提交修改
+在docker里的话，先做好git user配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">  git config --global user.email <span class="s2">&#34;xxx@qq.com&#34;</span>
+  git config --global user.name <span class="s2">&#34;edxDev&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>用git提交代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /edx/app/edxapp/edx-platform-dev
+git add /edx/app/edxapp/edx-platform-dev/edx_cn_feature/youkuXblock_install.sh
+git commit -m <span class="s1">&#39;add youkuXblock_install.sh to use youku in edx&#39;</span>
+git push origin edxDev/youkuXblock:edxDev/youkuXblock</code></pre></td></tr></table>
+</div>
+</div>
+<p>###在github上发起pull requests（请求合并到社区）
+<img src="img/edx/edxcn/pull_request1.png" alt="pull_request1.png" />
+<img src="img/edx/edxcn/pull_request2.png" alt="pull_request2.png" />
+<img src="img/edx/edxcn/pull_request3.png" alt="pull_request3.png" /></p>
+
+<p>最后提交就行啦</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-10-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/git-resource-summary/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">git资源汇集</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/about-open-edx-distributed/">
+            <span class="next-text nav-default">about Open edx distributed</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

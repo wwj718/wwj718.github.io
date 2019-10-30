@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>构建类s3存储系统（Minio） - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="缘起 Open edX跟S3有许多整合，包括日志的存储，成绩单的存储，静态文件的存储和加速等，当然需要开启才被采用.亚马逊的服务真是业界标杆式的存在，" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/install-minio-cloud-storage/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="构建类s3存储系统（Minio）" />
+<meta property="og:description" content="缘起 Open edX跟S3有许多整合，包括日志的存储，成绩单的存储，静态文件的存储和加速等，当然需要开启才被采用.亚马逊的服务真是业界标杆式的存在，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/install-minio-cloud-storage/" />
+<meta property="article:published_time" content="2016-06-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-06-19T00:00:00+00:00" />
+<meta itemprop="name" content="构建类s3存储系统（Minio）">
+<meta itemprop="description" content="缘起 Open edX跟S3有许多整合，包括日志的存储，成绩单的存储，静态文件的存储和加速等，当然需要开启才被采用.亚马逊的服务真是业界标杆式的存在，">
+
+
+<meta itemprop="datePublished" content="2016-06-19T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-06-19T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1656">
+
+
+
+<meta itemprop="keywords" content="技术," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="构建类s3存储系统（Minio）"/>
+<meta name="twitter:description" content="缘起 Open edX跟S3有许多整合，包括日志的存储，成绩单的存储，静态文件的存储和加速等，当然需要开启才被采用.亚马逊的服务真是业界标杆式的存在，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">构建类s3存储系统（Minio）</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-06-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#缘起">缘起</a></li>
+<li><a href="#s3的开源实现">S3的开源实现</a>
+<ul>
+<li>
+<ul>
+<li><a href="#fake-s3-https-github-com-jubos-fake-s3"><a href="https://github.com/jubos/fake-s3">fake-s3</a>：</a></li>
+<li><a href="#minio-https-github-com-minio-minio"><a href="https://github.com/minio/minio">minio</a></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#minio">minio</a>
+<ul>
+<li>
+<ul>
+<li><a href="#minio是什么">minio是什么</a></li>
+<li><a href="#不足">不足</a></li>
+<li><a href="#构建外部存储系统的实践">构建外部存储系统的实践</a></li>
+<li><a href="#安装与启动">安装与启动</a></li>
+<li><a href="#配置">配置</a></li>
+<li><a href="#存储结构">存储结构</a></li>
+<li><a href="#可能的场景">可能的场景</a></li>
+<li><a href="#client-sdk">client/sdk</a></li>
+<li><a href="#采用s3客户端">采用s3客户端</a>
+<ul>
+<li><a href="#s3cmd">s3cmd</a></li>
+</ul></li>
+<li><a href="#awscli">awscli</a></li>
+<li><a href="#前端上传-fine-uploader-https-github-com-fineuploader-fine-uploader">前端上传：<a href="https://github.com/FineUploader/fine-uploader">fine-uploader</a></a>
+<ul>
+<li><a href="#boto">boto</a></li>
+</ul></li>
+<li><a href="#构建带有身份的存储系统">构建带有身份的存储系统</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#问题">问题</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="缘起">缘起</h1>
+
+<p>Open edX跟S3有许多整合，包括日志的存储，成绩单的存储，静态文件的存储和加速等，当然需要开启才被采用.亚马逊的服务真是业界标杆式的存在，一旦用过，便曾经沧海。</p>
+
+<p>可惜我们与S3无缘。</p>
+
+<p>后来想做edxapp负载均衡的时候，又想到这个问题，edxapp是有状态的，主要是涉及静态文件的时候，所以想用s3的开源实现，来替代S3，如此一来可以让代码的修改降到最低。把静态文件挪到云中，edxapp就无状态了</p>
+
+<p>github一番，也没找到特别合适的，所以用了七牛来替代，七牛的直传功能很不错，而且有各个平台的sdk！</p>
+
+<h1 id="s3的开源实现">S3的开源实现</h1>
+
+<h3 id="fake-s3-https-github-com-jubos-fake-s3"><a href="https://github.com/jubos/fake-s3">fake-s3</a>：</h3>
+
+<blockquote>
+<p>The goal of Fake S3 is to minimize runtime dependencies and be more of a development tool to test S3 calls in your code rather than a production server looking to duplicate S3 functionality. Trying RiakCS, ParkPlace/Boardwalk, or Ceph might be a place to start if that is your goal.</p>
+</blockquote>
+
+<p>由此可知，fake-s3适合看做一个开发测试环境，而不是生产可用的环境，类s3的生产系统，可以试试：RiakCS, ParkPlace/Boardwalk, or Ceph</p>
+
+<h3 id="minio-https-github-com-minio-minio"><a href="https://github.com/minio/minio">minio</a></h3>
+
+<blockquote>
+<p>Minio is an object storage server compatible with Amazon S3</p>
+</blockquote>
+
+<h1 id="minio">minio</h1>
+
+<h3 id="minio是什么">minio是什么</h3>
+
+<blockquote>
+<p>Unlike databases, Minio stores objects such as photos, videos, log files, backups, container / VM images and so on. Minio is best suited for storing blobs of information ranging from KBs to 5 TBs each. In a simplistic sense, it is like a FTP server with a simple get / put API over HTTP.</p>
+</blockquote>
+
+<p>minio是Go实现的一个类s3服务，和大多go项目一样，干净小巧，没有依赖，整个就一可运行。便利之极</p>
+
+<h3 id="不足">不足</h3>
+
+<p>目前minio还很年轻，使用过程我遇到过一些bug</p>
+
+<ul>
+<li>web端没有用户概念，当然可以采用sdk来自行构建，稍后我会演示python的例子</li>
+<li>上传的文件不完整（损坏）</li>
+<li>提示上传成功后，却不予显示</li>
+</ul>
+
+<h3 id="构建外部存储系统的实践">构建外部存储系统的实践</h3>
+
+<p><a href="https://blog.minio.io/object-storage-in-practice-creating-a-reliable-data-store-9b424a22e8e">Object storage in practice: Creating a reliable data store</a></p>
+
+<p>这篇文章讨论了这样一种思路， 把存储任务分离出去，只留下 putObject()和 getObject()接口</p>
+
+<blockquote>
+<p>files sit in the object store, metadata goes to the database</p>
+</blockquote>
+
+<p>不过这里没有用到直传</p>
+
+<h3 id="安装与启动">安装与启动</h3>
+
+<p>过程简单至极</p>
+
+<ul>
+<li>curl -O <a href="https://dl.minio.io/server/minio/release/linux-amd64/minio">https://dl.minio.io/server/minio/release/linux-amd64/minio</a></li>
+<li>chmod +x minio</li>
+<li>./minio &ndash;help</li>
+<li>./minio server /tmp/test</li>
+</ul>
+
+<p><img src="http://wwj-test2-image-tmp.just4fun.site/MINIO.png?imageView2/2/w/1000" alt="minio" /></p>
+
+<h3 id="配置">配置</h3>
+
+<p><a href="https://docs.minio.io/docs/minio-server-configuration-files-guide">Minio Server Configuration Files Guide</a></p>
+
+<h3 id="存储结构">存储结构</h3>
+
+<p>就是原始目录，很好地与其他整合（诸如nginx）</p>
+
+<h3 id="可能的场景">可能的场景</h3>
+
+<ul>
+<li>作为内容管理平台是完备的</li>
+<li>作为用户级别的资源管理平台（诸如视频的管理平台，播放使用nginx），还有些问题
+
+<ul>
+<li>没有用户级别的权限</li>
+<li>没有用户系统</li>
+<li>可能的出路</li>
+<li>期待之后有用户系统，可以对接到cas/oauth2</li>
+<li>在nginx这里加一层？</li>
+<li>也许你期待的云盘，可以试试seafile和owncloud</li>
+</ul></li>
+<li>作为抽象存储服务，采用sdk才做这个服务，可以想象为局域网中的七牛，不足是没有webhook（callback）</li>
+</ul>
+
+<h3 id="client-sdk">client/sdk</h3>
+
+<ul>
+<li><a href="https://minio.io/download/#minio-client">minio-client</a>
+
+<ul>
+<li><a href="https://github.com/minio/mc">mc</a></li>
+</ul></li>
+<li><a href="https://github.com/minio/minio-py">minio-py</a>
+
+<ul>
+<li><a href="https://github.com/minio/minio-py/blob/master/API.md#presigned_post_policy">presigned_post_policy</a> 控制权限</li>
+</ul></li>
+</ul>
+
+<h3 id="采用s3客户端">采用s3客户端</h3>
+
+<p>有没有可能采用s3的生态链，诸如上传前端</p>
+
+<h4 id="s3cmd">s3cmd</h4>
+
+<p>sudo pip install s3cmd</p>
+
+<p>创建~/.s3cfg</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nv">host_base</span> <span class="o">=</span> http://s3.just4fun.site/
+<span class="nv">host_bucket</span> <span class="o">=</span> http://s3.just4fun.site/
+<span class="nv">access_key</span> <span class="o">=</span> xxx
+<span class="nv">secret_key</span> <span class="o">=</span> xxx
+<span class="nv">signature_v2</span> <span class="o">=</span> False
+<span class="nv">bucket_location</span> <span class="o">=</span> us-east-1</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">s3cmd mb s3://www.just4fun.com  <span class="c1">#create</span>
+s3cmd ls
+s3cmd ls s3://www.just4fun.com 
+s3cmd put some-file.xml s3://www.just4fun.com /somefile.xml</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="awscli">awscli</h3>
+
+<p>pip install awscli</p>
+
+<p>文档：</p>
+
+<ul>
+<li><p><a href="http://docs.aws.amazon.com/cli/latest/reference/s3/index.html">http://docs.aws.amazon.com/cli/latest/reference/s3/index.html</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">aws configure //配置文件位置在哪里 ~/.aws/
+aws configure <span class="nb">set</span> default.s3.signature_version s3v4
+aws --endpoint-url http://s3.just4fun.site s3 ls
+aws --endpoint-url http://s3.just4fun.site s3 ls  //list your buckets
+aws --endpoint-url http://s3.just4fun.site s3 ls  s3://edx  // list contents inside bucket
+aws --endpoint-url http://s3.just4fun.site  s3 mb s3://mybucket   // make a bucket
+aws --endpoint-url http://s3.just4fun.site s3 cp /tmp/aa.html s3://mybucket //add an object to a bucket
+aws  s3api list-objects --bucket edx --query Contents<span class="o">[]</span>.<span class="o">[</span>Key,Size<span class="o">]</span> --endpoint-url http://s3.just4fun.site  //列出文件大小</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+
+<h3 id="前端上传-fine-uploader-https-github-com-fineuploader-fine-uploader">前端上传：<a href="https://github.com/FineUploader/fine-uploader">fine-uploader</a></h3>
+
+<ul>
+<li><a href="http://fineuploader.com/demos.html#amazon-demo">demo</a>:是否支持回调 类似七牛 s3支持，minio不确定</li>
+</ul>
+
+<p>前端通过凭证操作，这是后端sdk构建的，和存储层无关</p>
+
+<h4 id="boto">boto</h4>
+
+<p>edx是用boto，不过boto和s3耦合，不容易替换为s3开源实现</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">boto.s3.connection</span> <span class="kn">import</span> <span class="n">S3Connection</span>  <span class="c1">#可查看细节，可以不连默认host</span>
+<span class="n">key</span> <span class="o">=</span> <span class="s2">&#34;xxx&#34;</span> 
+<span class="n">secret</span> <span class="o">=</span> <span class="s2">&#34;xxx&#34;</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">S3Connection</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;s3.just4fun.site&#39;</span><span class="p">,</span> <span class="n">is_secure</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>可以试试<a href="https://github.com/boto/botocore/issues/424">这里</a></p>
+
+<hr />
+
+<p>2016.09.18更新</p>
+
+<p><a href="https://docs.minio.io/docs/how-to-use-aws-sdk-for-python-with-minio-server">How to use AWS SDK for Python with Minio Server</a>给出了boto3中可以如何十一minio替代s3</p>
+
+<hr />
+
+<h3 id="构建带有身份的存储系统">构建带有身份的存储系统</h3>
+
+<ul>
+<li>minio仅仅视为存储层</li>
+<li>采用<a href="https://github.com/minio/minio-py#presigned-operations">Presigned Operations</a>,控制细粒度的存储，上传凭证是核心所在
+
+<ul>
+<li>之后采用通用的上传前端</li>
+</ul></li>
+</ul>
+
+<p>凭证相关：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="kn">from</span> <span class="nn">minio</span> <span class="kn">import</span> <span class="n">Minio</span>
+<span class="kn">from</span> <span class="nn">minio</span> <span class="kn">import</span> <span class="n">PostPolicy</span>
+<span class="kn">from</span> <span class="nn">minio.error</span> <span class="kn">import</span> <span class="n">ResponseError</span>
+
+<span class="n">post_policy</span> <span class="o">=</span> <span class="n">PostPolicy</span><span class="p">()</span>
+<span class="c1"># set bucket name location for uploads.</span>
+<span class="n">post_policy</span><span class="o">.</span><span class="n">set_bucket_name</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+<span class="c1"># set key prefix for all incoming uploads.</span>
+<span class="n">post_policy</span><span class="o">.</span><span class="n">set_key_startswith</span><span class="p">(</span><span class="s1">&#39;test.html&#39;</span><span class="p">)</span>
+<span class="c1"># set content length for incoming uploads.</span>
+<span class="n">post_policy</span><span class="o">.</span><span class="n">set_content_length_range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+
+<span class="c1"># set expiry 10 days into future.</span>
+<span class="n">expires_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">post_policy</span><span class="o">.</span><span class="n">set_expires</span><span class="p">(</span><span class="n">expires_date</span><span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Minio</span><span class="p">(</span><span class="s1">&#39;s3.just4fun.site&#39;</span><span class="p">,</span> <span class="c1"># 默认采用的是https，否则报错</span>
+               <span class="n">access_key</span><span class="o">=</span><span class="s1">&#39;AN0GSB29FGW7UXQ6WIEM&#39;</span><span class="p">,</span>
+               <span class="n">secret_key</span><span class="o">=</span><span class="s1">&#39;Wyyzr8/D5lEOoCfZymID4ZG/PNhb6th7YAdVT/Zs&#39;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">url_str</span><span class="p">,</span> <span class="n">signed_form_data</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">presigned_post_policy</span><span class="p">(</span><span class="n">post_policy</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">url_str</span><span class="p">,</span> <span class="n">signed_form_data</span><span class="p">)</span>
+    <span class="n">curl_str</span> <span class="o">=</span> <span class="s1">&#39;curl -X POST {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url_str</span><span class="p">)</span>
+    <span class="n">curl_cmd</span> <span class="o">=</span> <span class="p">[</span><span class="n">curl_str</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">signed_form_data</span><span class="p">:</span>
+        <span class="n">curl_cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-F {0}={1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">signed_form_data</span><span class="p">[</span><span class="n">field</span><span class="p">]))</span>
+
+        <span class="c1"># print curl command to upload files.</span>
+        <span class="n">curl_cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-F file=@/tmp/aa.html&#39;</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">curl_cmd</span><span class="p">))</span>
+<span class="k">except</span> <span class="n">ResponseError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="问题">问题</h1>
+
+<p>支持多用户吗？</p>
+
+<p>ACCESSKEYID是全局只有一个？无法天然支持多client？需要在应用逻辑里做？</p>
+
+<p>可以使用这个机制:<a href="https://docs.minio.io/docs/upload-files-from-browser-using-pre-signed-urls">Upload files from browser using pre-signed URLs</a>，类似七牛</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://github.com/minio/minio/tree/master/docs/zh_CN">中文 docs</a>
+&amp;  <a href="https://en.wikipedia.org/wiki/Minio">wikipedia minio</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-06-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/https-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用Let’s Encrypt(certbot)为你的网站生成免费的 SSL 证书</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/about-interview/">
+            <span class="next-text nav-default">如何面试程序员</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

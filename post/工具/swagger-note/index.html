@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Swagger使用笔记 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="He who has a &amp;ldquo;why&amp;rdquo; to live for can bear almost any &amp;ldquo;how&amp;rdquo; &amp;ndash;尼采 前言 此前一直在关注swagger,不过也一直处于看看案例，读读文档的状态。关于写api接口文档和" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/swagger-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Swagger使用笔记" />
+<meta property="og:description" content="He who has a &ldquo;why&rdquo; to live for can bear almost any &ldquo;how&rdquo; &ndash;尼采 前言 此前一直在关注swagger,不过也一直处于看看案例，读读文档的状态。关于写api接口文档和" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/swagger-note/" />
+<meta property="article:published_time" content="2017-05-22T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-05-22T00:00:00+00:00" />
+<meta itemprop="name" content="Swagger使用笔记">
+<meta itemprop="description" content="He who has a &ldquo;why&rdquo; to live for can bear almost any &ldquo;how&rdquo; &ndash;尼采 前言 此前一直在关注swagger,不过也一直处于看看案例，读读文档的状态。关于写api接口文档和">
+
+
+<meta itemprop="datePublished" content="2017-05-22T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-05-22T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="6708">
+
+
+
+<meta itemprop="keywords" content="dev-tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Swagger使用笔记"/>
+<meta name="twitter:description" content="He who has a &ldquo;why&rdquo; to live for can bear almost any &ldquo;how&rdquo; &ndash;尼采 前言 此前一直在关注swagger,不过也一直处于看看案例，读读文档的状态。关于写api接口文档和"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Swagger使用笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-05-22 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#swagger是什么">Swagger是什么</a>
+<ul>
+<li>
+<ul>
+<li><a href="#openapi-specification">OpenAPI Specification</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#为何需要用它">为何需要用它</a></li>
+<li><a href="#how-to-do">how to do&hellip;</a>
+<ul>
+<li>
+<ul>
+<li><a href="#起步">起步</a></li>
+<li><a href="#如何把握swagger">如何把握Swagger</a></li>
+<li><a href="#一个小案例">一个小案例</a></li>
+<li><a href="#围绕swagger的生态">围绕Swagger的生态</a>
+<ul>
+<li><a href="#django-rest-swagger-https-github-com-marcgibbons-django-rest-swagger"><a href="https://github.com/marcgibbons/django-rest-swagger">django-rest-swagger</a></a></li>
+<li><a href="#connexion-https-github-com-zalando-connexion"><a href="https://github.com/zalando/connexion">connexion</a></a></li>
+<li><a href="#redoc-https-github-com-rebilly-redoc"><a href="https://github.com/Rebilly/ReDoc">ReDoc</a></a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<blockquote>
+<p>He who has a &ldquo;why&rdquo; to live for can bear almost any &ldquo;how&rdquo;  &ndash;尼采</p>
+</blockquote>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/swaggerffbceb7f.png" alt="" /></p>
+
+<h1 id="前言">前言</h1>
+
+<p>此前一直在关注swagger,不过也一直处于看看案例，读读文档的状态。关于写api接口文档和mock的事，多次头疼，看了许多工具都不甚满意,最近在使用<a href="https://github.com/nuysoft/Mock">Mock</a>(<a href="https://www.easy-mock.com">在线体验</a>)的时候</p>
+
+<p>发现它在文档里写道:</p>
+
+<blockquote>
+<p>支持同步 Swagger 文档，1秒便能生成 Mock 数据。之后接口文档更新也能通过更新操作重新生成 Mock 数据</p>
+</blockquote>
+
+<p>这太强大了，心动不已。</p>
+
+<p>我自己很喜欢<a href="https://www.easy-mock.com">easy-mock</a>这个工具，但写REST api的时候，感觉重复数据声明太多,很不爽，我们知道post/put的大部分属性是相同的，而get/post也有大量重复的属性。如何能以一种更加方便的方式在easy-mock(其他的mock工具也一样)定义接口，以便于更好地做到<code>DRY</code>, Swagger是绝佳的解决方案，而且它能带给你的远不止于此</p>
+
+<p>why的问题一解决，how to do 只是细节问题了</p>
+
+<p>于是重新花了2个晚上的时间，集中地读了文档，也动手写了几个demo，很符合预期</p>
+
+<p>接下来以经典的3w问题为线索来记录下我的学习过程</p>
+
+<h1 id="swagger是什么">Swagger是什么</h1>
+
+<p>关于swagger是什么的问题，swagger的首页说的再清楚不过:</p>
+
+<blockquote>
+<p>Swagger is the world’s largest framework of API developer tools for the OpenAPI Specification(OAS), enabling development across the entire API lifecycle, from design and documentation, to test and deployment.</p>
+</blockquote>
+
+<p>因为swagger庞大的生态系统，我们在api的整个生命周期中都能从中受益: <code>from design and  documentation, to test and deployment</code></p>
+
+<p>前头我的easy-mock属于test部分，同时它也有效地帮助前后端分离</p>
+
+<p>如果你想对Swagger有更深的了解，可以看下对Tony Tam的这段采访(Tony Tam影响了Swagger的诞生):<a href="http://www.infoq.com/cn/articles/swagger-interview-tony-tam">通过Swagger进行API设计，与Tony Tam的一次对话</a></p>
+
+<h3 id="openapi-specification">OpenAPI Specification</h3>
+
+<p>上述这段引用中有一个名词值得一提:<code>OpenAPI Specification(OAS)</code>，它本身开放在<a href="https://github.com/OAI/OpenAPI-Specification">OpenAPI-Specification</a>,它的目的是:</p>
+
+<blockquote>
+<p>The goal of The OpenAPI Specification is to define a standard, language-agnostic interface to REST APIs</p>
+</blockquote>
+
+<h1 id="为何需要用它">为何需要用它</h1>
+
+<p>如果你在为一个系统设计API，你希望更好的管理你的API，你希望有一个工具能一站式地解决API相关的所有事情，从设计到文档再到mock，甚至能直接从设计文档中生成代码(声明式编程)，这确实是可能的，如果你的描述信息是完备的，自动化生成mock接口,同时也可生成各种语言与api交互的SDK</p>
+
+<p>这些便是你选择Swagger的理由</p>
+
+<h1 id="how-to-do">how to do&hellip;</h1>
+
+<p>最后便是怎么做的问题，这反而不太难，在互联网高度发达的今天，海量的资料遍布网络</p>
+
+<p>我接下来把我的学习过程和资料做个笔记，希望对你有用</p>
+
+<h3 id="起步">起步</h3>
+
+<p>尽管Swagger本身是开源的，你可以自行搭建整个工具链，但从在线工具开始尝试，会让你更快接触核心的东西，而不是在搭建工具上忙活半天</p>
+
+<p>我们从<a href="https://app.swaggerhub.com/">swaggerhub</a>开始</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/swaggerffbceb7f.png" alt="" /></p>
+
+<p>swaggerhub是个非常棒的项目，你在这里可以:</p>
+
+<ul>
+<li>在线编辑你的API文档(用的是<a href="https://github.com/swagger-api/swagger-editor">swagger-editor</a>)
+
+<ul>
+<li>可使用使用json或yaml来书写(设计)你的API,推荐yaml，对人类更友好（无论是书写、阅读还是添加注释)</li>
+<li>可导出为json或是yaml，easy-mock中要求json文档的url，所以你可以把导出的json放到<a href="https://gist.github.com/">github gist</a>,然后贴到easy-mock里，之后就自动生成mock接口了</li>
+<li>可直接生成可运行20几种server代码（诸如flask）,当然也能自动生成client可执行代码</li>
+</ul></li>
+<li>swaggerhub自带了mock插件，可以直接在线测试，UI页里有curl的请求例子</li>
+<li>和github相似，你可以分享以及fork别人的API项目:<a href="https://app.swaggerhub.com/search">search</a>，这样对学习很有帮助</li>
+<li>你可以邀请你的团队成员一起来编辑</li>
+</ul>
+
+<p>上边的截图是官方的demo：<code>Swagger Petstore</code>，这是一个很完整的API项目(同时也比较复杂)，我们可以一边试运行，一边做些修改看看每个参数的作用，如果你想对swagger的语法有个整体的认识，推荐这篇文档<a href="https://www.gitbook.com/book/huangwenchao/swagger/details">Swagger从入门到精通</a></p>
+
+<p>我的做法是先通读一遍(粗读)上边的文档，之后对着别人的API项目学习，遇到不懂的去查阅这个文档</p>
+
+<p>另外文档结尾处有个彩蛋:<a href="http://openapi-specification-visual-documentation.apihandyman.io/">OpenAPI Specification Visual Documentation</a>,这是查阅swagger写作语法的神器</p>
+
+<h3 id="如何把握swagger">如何把握Swagger</h3>
+
+<p>Swagger生态极其庞大，各种工具层出不穷，如何确定一个清晰工作流。而不会在庞大的生态链里迷失</p>
+
+<p>我觉得核心是理解：Swagger的生态系统是围绕Swagger文档(json/yaml)构建的,就是说我们书写的纯文本(json/yaml)便是我们输出的所有东西，它是全息的，我们手里只需有这个纯文本，就能做所有事情，此外的工具都是围绕它构建的，把这个纯文本导入到响应的工具里，就可获得其他功能，诸如漂亮的UI，自动化的mock等等</p>
+
+<p>你熟悉markdown的话，你会发现他们在设计思路上有不少相似点</p>
+
+<p>编写API文档，其实我们只是在写一个简单的纯文本文件。你可以用任何你喜欢的文本编辑器来写(vim/emacs/atom/vscode/sublime)。但是为了提高效率，建议选择Swagger Editor(swaggerhub默认是它)，诸如语法检查之类的功能能帮你省下大量排错的时间</p>
+
+<h3 id="一个小案例">一个小案例</h3>
+
+<p>学习一个新技术，我喜欢用它写一个简单的blog，我们接下来试试用swagger来写博客文章的API，我们假设Article有四个属性:</p>
+
+<ul>
+<li>userid</li>
+<li>title</li>
+<li>content</li>
+<li>tag</li>
+</ul>
+
+<p>API是RESTful风格(可以参考我此前的文章<a href="http://blog.just4fun.site/RESTful-Api.html">RESTful-Api</a>)，支持:</p>
+
+<ul>
+<li><code>get /articles</code> : 获取文章列表</li>
+<li><code>post /articles</code> : 新建一篇文章(登录用户)</li>
+<li><code>get /articles/&lt;id&gt;</code> : 获取文章详情（指定文章id）</li>
+<li><code>put /articles/&lt;id&gt;</code> : 更新某篇的文章</li>
+<li><code>delete /articles/&lt;id&gt;</code> : 删除某篇的文章</li>
+<li><code>get /articles/search?title=python</code> : 搜索文章</li>
+</ul>
+
+<p>下边是它的api描述</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span><span class="lnt">244
+</span><span class="lnt">245
+</span><span class="lnt">246
+</span><span class="lnt">247
+</span><span class="lnt">248
+</span><span class="lnt">249
+</span><span class="lnt">250
+</span><span class="lnt">251
+</span><span class="lnt">252
+</span><span class="lnt">253
+</span><span class="lnt">254
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml">swagger<span class="p">:</span><span class="w"> </span><span class="s2">&#34;2.0&#34;</span><span class="w">
+</span><span class="w"></span>info<span class="p">:</span><span class="w">
+</span><span class="w">  </span>version<span class="p">:</span><span class="w"> </span><span class="m">1.0.0</span><span class="w">
+</span><span class="w">  </span>title<span class="p">:</span><span class="w"> </span><span class="s2">&#34;blog&#34;</span><span class="w">
+</span><span class="w">  </span><span class="c"># description支持markdown</span><span class="w">
+</span><span class="w">  </span>description<span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">    # blog API documentation</span><span class="w">
+</span><span class="w">
+</span><span class="w">    </span>这篇文档描述了的blog(article)的api接口<span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="c"># host: localhost:8000 #localhost blog </span><span class="w">
+</span><span class="w"></span><span class="c"># basePath: /api</span><span class="w">
+</span><span class="w"></span>schemes<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>https<span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>http<span class="w">
+</span><span class="w"></span>consumes<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>application/json<span class="w">
+</span><span class="w"></span>produces<span class="p">:</span><span class="w">
+</span><span class="w">  </span>-<span class="w"> </span>application/json<span class="w">
+</span><span class="w">
+</span><span class="w"></span>paths<span class="p">:</span><span class="w">
+</span><span class="w">  </span>/<span class="p">:</span><span class="w">
+</span><span class="w">    </span>get<span class="p">:</span><span class="w">
+</span><span class="w">      </span>summary<span class="p">:</span><span class="w"> </span>Service<span class="w"> </span>root<span class="w">
+</span><span class="w">      </span>description<span class="p">:</span><span class="w"> </span>列出所有api的描述信息.<span class="w">
+</span><span class="w">      </span>operationId<span class="p">:</span><span class="w"> </span>root<span class="w">
+</span><span class="w">      </span>responses<span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;200&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Success<span class="w">
+</span><span class="w">      </span>security<span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="w">  </span>/articles<span class="p">:</span><span class="w">
+</span><span class="w">    </span>get<span class="p">:</span><span class="w"> 
+</span><span class="w">      </span>summary<span class="p">:</span><span class="w"> </span>list<span class="w"> </span>all<span class="w"> </span>articles<span class="w">
+</span><span class="w">      </span>operationId<span class="p">:</span><span class="w"> </span>list_all_articles<span class="w"> </span><span class="c">#后端函数</span><span class="w">
+</span><span class="w">      </span>responses<span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;200&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span><span class="c">#todo</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Annotation<span class="w"> </span>successfully<span class="w"> </span>created<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/ArticleList&#39;</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;400&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Could<span class="w"> </span>not<span class="w"> </span>create<span class="w"> </span>article<span class="w"> </span>from<span class="w"> </span>your<span class="w"> </span>request<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Error&#39;</span><span class="w">
+</span><span class="w">
+</span><span class="w">    </span>post<span class="p">:</span><span class="w">
+</span><span class="w">      </span>summary<span class="p">:</span><span class="w"> </span>Create<span class="w"> </span>a<span class="w"> </span>new<span class="w"> </span>Article<span class="w">
+</span><span class="w">      </span>operationId<span class="p">:</span><span class="w"> </span>createArticle<span class="w">
+</span><span class="w">      </span>parameters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>Article<span class="w">
+</span><span class="w">          </span>in<span class="p">:</span><span class="w"> </span>body<span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>article<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>created<span class="w">
+</span><span class="w">          </span>required<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/NewArticle&#39;</span><span class="w">
+</span><span class="w">      </span>responses<span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;200&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>article<span class="w"> </span>successfully<span class="w"> </span>created<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Article&#39;</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;400&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Could<span class="w"> </span>not<span class="w"> </span>create<span class="w"> </span>article<span class="w"> </span>from<span class="w"> </span>your<span class="w"> </span>request<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Error&#39;</span><span class="w">
+</span><span class="w">  </span>/articles/{id}<span class="p">:</span><span class="w">
+</span><span class="w">    </span>get<span class="p">:</span><span class="w">
+</span><span class="w">      </span>summary<span class="p">:</span><span class="w"> </span>Fetch<span class="w"> </span>an<span class="w"> </span>Article<span class="w">
+</span><span class="w">      </span>operationId<span class="p">:</span><span class="w"> </span>fetchArticle<span class="w">
+</span><span class="w">      </span>parameters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>id<span class="w">
+</span><span class="w">          </span>in<span class="p">:</span><span class="w"> </span>path<span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>ID<span class="w"> </span>of<span class="w"> </span>article<span class="w"> </span>to<span class="w"> </span>return<span class="w">
+</span><span class="w">          </span>required<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">          </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">      </span>responses<span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;200&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Success<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Article&#39;</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;404&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>article<span class="w"> </span>not<span class="w"> </span>found<span class="w"> </span>or<span class="w"> </span>no<span class="w"> </span>permission<span class="w"> </span>to<span class="w"> </span>view<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Error&#39;</span><span class="w">
+</span><span class="w">    </span>patch<span class="p">:</span><span class="w">
+</span><span class="w">      </span>summary<span class="p">:</span><span class="w"> </span>Update<span class="w"> </span>an<span class="w"> </span>Article<span class="w">
+</span><span class="w">      </span>description<span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">        This endpoint is available under both the `PATCH` and `PUT`</span><span class="w">
+</span><span class="w">        </span>request<span class="w"> </span>methods.<span class="w"> </span>Both<span class="w"> </span>endpoints<span class="w"> </span>have<span class="w"> </span>PATCH-characteristics<span class="w">
+</span><span class="w">        </span>as<span class="w"> </span>defined<span class="w"> </span>in<span class="w"> </span><span class="p">[</span>RFC5789<span class="p">]</span>(https<span class="p">:</span>//tools.ietf.org/html/rfc5789<span class="c">#section-1),</span><span class="w">
+</span><span class="w">        </span>meaning<span class="w"> </span>the<span class="w"> </span>request<span class="w"> </span>body<span class="w"> </span>does<span class="w"> </span>not<span class="w"> </span>have<span class="w"> </span>to<span class="w"> </span>include<span class="w"> </span>the<span class="w"> </span>whole<span class="w"> </span>Article<span class="w">
+</span><span class="w">        </span>object.<span class="w">
+</span><span class="w">
+</span><span class="w">        </span>New<span class="w"> </span>implementations<span class="w"> </span>should<span class="w"> </span>use<span class="w"> </span>the<span class="w"> </span>`PATCH`<span class="w"> </span>request<span class="w"> </span>method<span class="p">,</span><span class="w"> </span>and<span class="w"> </span>existing<span class="w">
+</span><span class="w">        </span>implementations<span class="w"> </span>continue<span class="w"> </span>to<span class="w"> </span>work<span class="w"> </span>under<span class="w"> </span>`PUT`<span class="w"> </span>but<span class="w"> </span>should<span class="w"> </span>switch<span class="w"> </span>to<span class="w"> </span>`PATCH`.<span class="w">
+</span><span class="w">
+</span><span class="w">      </span>operationId<span class="p">:</span><span class="w"> </span>updateArticle<span class="w">
+</span><span class="w">      </span>parameters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>id<span class="w">
+</span><span class="w">          </span>in<span class="p">:</span><span class="w"> </span>path<span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>ID<span class="w"> </span>of<span class="w"> </span>article<span class="w"> </span>to<span class="w"> </span>return<span class="w">
+</span><span class="w">          </span>required<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">          </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>Article<span class="w">
+</span><span class="w">          </span>in<span class="p">:</span><span class="w"> </span>body<span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Updated<span class="w"> </span>article<span class="w"> </span>body<span class="w">
+</span><span class="w">          </span>required<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/NewArticle&#39;</span><span class="w">
+</span><span class="w">      </span>responses<span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;200&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Success<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Article&#39;</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;400&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Could<span class="w"> </span>not<span class="w"> </span>create<span class="w"> </span>article<span class="w"> </span>from<span class="w"> </span>your<span class="w"> </span>request<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Error&#39;</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;404&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>article<span class="w"> </span>not<span class="w"> </span>found<span class="w"> </span>or<span class="w"> </span>no<span class="w"> </span>permission<span class="w"> </span>to<span class="w"> </span>update<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Error&#39;</span><span class="w">
+</span><span class="w">    </span>delete<span class="p">:</span><span class="w">
+</span><span class="w">      </span>summary<span class="p">:</span><span class="w"> </span>Delete<span class="w"> </span>an<span class="w"> </span>Article<span class="w">
+</span><span class="w">      </span>operationId<span class="p">:</span><span class="w"> </span>deleteArticle<span class="w">
+</span><span class="w">      </span>parameters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>id<span class="w">
+</span><span class="w">          </span>in<span class="p">:</span><span class="w"> </span>path<span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>ID<span class="w"> </span>of<span class="w"> </span>article<span class="w"> </span>to<span class="w"> </span>return<span class="w">
+</span><span class="w">          </span>required<span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">          </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">      </span>responses<span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;200&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Success<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>type<span class="p">:</span><span class="w"> </span>object<span class="w">
+</span><span class="w">            </span>required<span class="p">:</span><span class="w">
+</span><span class="w">              </span>-<span class="w"> </span>deleted<span class="w">
+</span><span class="w">              </span>-<span class="w"> </span>id<span class="w">
+</span><span class="w">            </span>properties<span class="p">:</span><span class="w">
+</span><span class="w">              </span>deleted<span class="p">:</span><span class="w">
+</span><span class="w">                </span>type<span class="p">:</span><span class="w"> </span>boolean<span class="w">
+</span><span class="w">                </span>enum<span class="p">:</span><span class="w">
+</span><span class="w">                  </span>-<span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">              </span>id<span class="p">:</span><span class="w">
+</span><span class="w">                </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">        </span><span class="s1">&#39;404&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>article<span class="w"> </span>not<span class="w"> </span>found<span class="w"> </span>or<span class="w"> </span>no<span class="w"> </span>permission<span class="w"> </span>to<span class="w"> </span>delete<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Error&#39;</span><span class="w">
+</span><span class="w">
+</span><span class="w">  </span>/search<span class="p">:</span><span class="w">
+</span><span class="w">    </span>get<span class="p">:</span><span class="w">
+</span><span class="w">      </span>summary<span class="p">:</span><span class="w"> </span>Search<span class="w"> </span>for<span class="w"> </span>annotations<span class="w">
+</span><span class="w">      </span>operationId<span class="p">:</span><span class="w"> </span>search<span class="w"> </span><span class="c">#后台对应的函数名</span><span class="w">
+</span><span class="w">      </span>parameters<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>limit<span class="w">
+</span><span class="w">          </span>in<span class="p">:</span><span class="w"> </span>query<span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>The<span class="w"> </span>maximum<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>annotations<span class="w"> </span>to<span class="w"> </span>return.<span class="w">
+</span><span class="w">          </span>required<span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">          </span>type<span class="p">:</span><span class="w"> </span>integer<span class="w">
+</span><span class="w">          </span>minimum<span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="w">          </span>maximum<span class="p">:</span><span class="w"> </span><span class="m">200</span><span class="w">
+</span><span class="w">          </span>default<span class="p">:</span><span class="w"> </span><span class="m">20</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>offset<span class="w">
+</span><span class="w">          </span>in<span class="p">:</span><span class="w"> </span>query<span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span><span class="sd">&gt;
+</span><span class="sd">            The minimum number of initial annotations to skip. This is</span><span class="w">
+</span><span class="w">            </span>used<span class="w"> </span>for<span class="w"> </span>pagination.<span class="w">
+</span><span class="w">          </span>required<span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">          </span>type<span class="p">:</span><span class="w"> </span>integer<span class="w">
+</span><span class="w">          </span>default<span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="w">          </span>minimum<span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>sort<span class="w">
+</span><span class="w">          </span>in<span class="p">:</span><span class="w"> </span>query<span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>The<span class="w"> </span>field<span class="w"> </span>by<span class="w"> </span>which<span class="w"> </span>annotations<span class="w"> </span>should<span class="w"> </span>be<span class="w"> </span>sorted.<span class="w">
+</span><span class="w">          </span>required<span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w">          </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">          </span>default<span class="p">:</span><span class="w"> </span>updated<span class="w">
+</span><span class="w">      </span>responses<span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="s1">&#39;200&#39;</span><span class="p">:</span><span class="w">
+</span><span class="w">          </span>description<span class="p">:</span><span class="w"> </span>Search<span class="w"> </span>results<span class="w">
+</span><span class="w">          </span>schema<span class="p">:</span><span class="w">
+</span><span class="w">            </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/SearchResults&#39;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>definitions<span class="p">:</span><span class="w">
+</span><span class="w">  </span>NewArticle<span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="c"># todo json 2 yaml: https://www.json2yaml.com/</span><span class="w">
+</span><span class="w">    </span><span class="c"># 也可以是在线的</span><span class="w">
+</span><span class="w">    </span><span class="c">#$ref: &#39;./schemas/annotation-schema.json&#39; #https://h.readthedocs.io/en/latest/api/schemas/annotation-schema.json </span><span class="w">
+</span><span class="w">    </span>type<span class="p">:</span><span class="w"> </span>object<span class="w">
+</span><span class="w">    </span>properties<span class="p">:</span><span class="w">
+</span><span class="w">      </span>userid<span class="p">:</span><span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">        </span><span class="c">#&#34;pattern&#34;: &#34;^acct:.+$&#34;</span><span class="w">
+</span><span class="w">      </span>title<span class="p">:</span><span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">      </span>content<span class="p">:</span><span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">      </span>tags<span class="p">:</span><span class="w">
+</span><span class="w"></span>categories<span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;工具&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>array<span class="w">
+</span><span class="w">        </span>items<span class="p">:</span><span class="w">
+</span><span class="w">          </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">  </span>Article<span class="p">:</span><span class="w">
+</span><span class="w">    </span>allOf<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/NewArticle&#39;</span><span class="w"> </span><span class="c"># NewArticle属性展开在这里</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>required<span class="p">:</span><span class="w">
+</span><span class="w">        </span>-<span class="w"> </span>id<span class="w">
+</span><span class="w">        </span>properties<span class="p">:</span><span class="w">
+</span><span class="w">          </span>id<span class="p">:</span><span class="w">
+</span><span class="w">            </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">  </span>Error<span class="p">:</span><span class="w">
+</span><span class="w">    </span>type<span class="p">:</span><span class="w"> </span>object<span class="w">
+</span><span class="w">    </span>required<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>status<span class="w">
+</span><span class="w">    </span>properties<span class="p">:</span><span class="w">
+</span><span class="w">      </span>status<span class="p">:</span><span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">        </span>enum<span class="p">:</span><span class="w">
+</span><span class="w">          </span>-<span class="w"> </span>failure<span class="w">
+</span><span class="w">      </span>reason<span class="p">:</span><span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>string<span class="w">
+</span><span class="w">        </span>description<span class="p">:</span><span class="w"> </span>A<span class="w"> </span>human-readable<span class="w"> </span>description<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>reason(s)<span class="w"> </span>for<span class="w"> </span>failure.<span class="w">
+</span><span class="w">  </span>SearchResults<span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="c">#用作list</span><span class="w">
+</span><span class="w">    </span>type<span class="p">:</span><span class="w"> </span>object<span class="w">
+</span><span class="w">    </span>required<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>rows<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>total<span class="w">
+</span><span class="w">    </span>properties<span class="p">:</span><span class="w">
+</span><span class="w">      </span>rows<span class="p">:</span><span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>array<span class="w">
+</span><span class="w">        </span>items<span class="p">:</span><span class="w">
+</span><span class="w">          </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Article&#39;</span><span class="w">
+</span><span class="w">      </span>total<span class="p">:</span><span class="w">
+</span><span class="w">        </span>description<span class="p">:</span><span class="w"> </span>Total<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>results<span class="w"> </span>matching<span class="w"> </span>query.<span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>integer<span class="w">
+</span><span class="w">  </span>ArticleList<span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="c">#用作list</span><span class="w">
+</span><span class="w">    </span>type<span class="p">:</span><span class="w"> </span>object<span class="w">
+</span><span class="w">    </span>required<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>rows<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>total<span class="w">
+</span><span class="w">    </span>properties<span class="p">:</span><span class="w">
+</span><span class="w">      </span>rows<span class="p">:</span><span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>array<span class="w">
+</span><span class="w">        </span>items<span class="p">:</span><span class="w">
+</span><span class="w">          </span>$ref<span class="p">:</span><span class="w"> </span><span class="s1">&#39;#/definitions/Article&#39;</span><span class="w">
+</span><span class="w">      </span>total<span class="p">:</span><span class="w">
+</span><span class="w">        </span>description<span class="p">:</span><span class="w"> </span>Total<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>results<span class="w"> </span>matching<span class="w"> </span>query.<span class="w">
+</span><span class="w">        </span>type<span class="p">:</span><span class="w"> </span>integer<span class="w">
+</span><span class="w"></span><span class="c"># Added by API Auto Mocking Plugin</span><span class="w">
+</span><span class="w"></span>host<span class="p">:</span><span class="w"> </span>virtserver.swaggerhub.com<span class="w">
+</span><span class="w"></span>basePath<span class="p">:</span><span class="w"> </span>/pwnote/blog/<span class="m">1.0.0</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>如果你对其中的语法有所不解可以查阅: <a href="https://www.gitbook.com/book/huangwenchao/swagger/details">Swagger从入门到精通</a></p>
+
+<p>我同时做了以下工作:</p>
+
+<ul>
+<li>你可以在我的gist上看到
+
+<ul>
+<li><a href="https://gist.github.com/wwj718/b5d1c1a2b6129c11051e22b6b42f12cf">swagger_blog.yaml</a>,<a href="https://gist.githubusercontent.com/wwj718/b5d1c1a2b6129c11051e22b6b42f12cf/raw/431e42efbca287226ab23d3556a5203f83b447d3/swagger_blog.yaml">下载链接</a></li>
+<li>json版本是:<a href="https://gist.github.com/wwj718/d2d017b9f27b1e241b1c7a2b7b6f2f7f">swagger_blog.json</a>), <a href="https://gist.githubusercontent.com/wwj718/d2d017b9f27b1e241b1c7a2b7b6f2f7f/raw/0290a8635acea38ebfb4e029757142a4ecafa2a2/swagger_blog.json">下载链接</a></li>
+<li>同时将它发布在swaggerhub上了:<a href="https://app.swaggerhub.com/apis/pwnote/blog/1.0.0">swaggerhub blog</a></li>
+<li>在esay-mock上生成了mock接口:<a href="https://www.easy-mock.com/mock/5923b15291470c0ac1f85bfe/blog/pwnote/blog/1.0.0/articles">mock list articles</a> (用的是<a href="https://gist.githubusercontent.com/wwj718/d2d017b9f27b1e241b1c7a2b7b6f2f7f/raw/b919b891ee08cc9f229cd58fc2c3a5c9500c26da/swagger_blog.json">swagger_blog.json</a>作为swagger url</li>
+<li>在ReDoc上浏览:<a href="https://rebilly.github.io/ReDoc/?url=https://gist.githubusercontent.com/wwj718/b5d1c1a2b6129c11051e22b6b42f12cf/raw/431e42efbca287226ab23d3556a5203f83b447d3/swagger_blog.yaml">ReDoc blog</a></li>
+</ul></li>
+</ul>
+
+<h3 id="围绕swagger的生态">围绕Swagger的生态</h3>
+
+<p>可以在github上搜swagger,会发现有许多相关项目，我列出几个我恰好看到或关注的</p>
+
+<h4 id="django-rest-swagger-https-github-com-marcgibbons-django-rest-swagger"><a href="https://github.com/marcgibbons/django-rest-swagger">django-rest-swagger</a></h4>
+
+<p><a href="https://github.com/encode/django-rest-framework">Django REST Framework</a>是写api的神器</p>
+
+<p>配合<a href="https://github.com/marcgibbons/django-rest-swagger">django-rest-swagger</a>更是如虎添翼</p>
+
+<h4 id="connexion-https-github-com-zalando-connexion"><a href="https://github.com/zalando/connexion">connexion</a></h4>
+
+<p>swagger可自动生成的20多种server代码，其中包括flask版本的，在flask的版本代码里，主要用到的就是connexion</p>
+
+<p>connexion是一个漂亮的框架，用于在Python中实现API First方法,如果你对此有兴趣可以参考<a href="https://caricio.com/2016/09/16/crafting-effective-microservices-in-python/">Crafting effective Microservices in Python</a></p>
+
+<p>如果你想看一个带有数据库和真实后端的例子，可以参考:<a href="https://github.com/zalando/connexion/tree/master/examples/sqlalchemy">connexion/examples/sqlalchemy</a>,这个例子让我们看到一个完整的项目:api的文档以及后端实现</p>
+
+<h4 id="redoc-https-github-com-rebilly-redoc"><a href="https://github.com/Rebilly/ReDoc">ReDoc</a></h4>
+
+<p>我最近在使用的一个是<a href="https://github.com/Rebilly/ReDoc">ReDoc</a>，有不少有名的项目在用它作为api文档的展示工具:</p>
+
+<ul>
+<li><a href="https://docs.docker.com/engine/api/v1.25/">Docker Engine</a></li>
+<li><a href="https://docs.discourse.org/">discourse</a></li>
+</ul>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://github.com/nuysoft/Mock">Mock</a>
+
+<ul>
+<li><a href="https://www.easy-mock.com">easy-mock</a></li>
+</ul></li>
+<li><a href="https://www.gitbook.com/book/huangwenchao/swagger/details">Swagger从入门到精通</a></li>
+<li><a href="http://openapi-specification-visual-documentation.apihandyman.io/">OpenAPI Specification Visual Documentation</a></li>
+<li><a href="https://github.com/marcgibbons/django-rest-swagger">django-rest-swagger</a></li>
+<li><a href="https://github.com/swagger-api/swagger-editor">swagger-editor</a></li>
+<li><a href="https://github.com/swagger-api/swagger-ui">swagger-ui</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/21353795">Swagger：Rest API的描述语言</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-05-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/the-effective-executive/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">卓有成效的管理者</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/webduino-analysis/">
+            <span class="next-text nav-default">对webduino运行流程的分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

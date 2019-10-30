@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>从zsh切换到fish - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="大半年来在服务器上，一直用fish 最近下定决心把mac上的zsh也替换为fish 两者的差异并没太大，当然都比bash好用得多 :），fish给" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/from-zsh-to-fish/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="从zsh切换到fish" />
+<meta property="og:description" content="大半年来在服务器上，一直用fish 最近下定决心把mac上的zsh也替换为fish 两者的差异并没太大，当然都比bash好用得多 :），fish给" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E5%B7%A5%E5%85%B7/from-zsh-to-fish/" />
+<meta property="article:published_time" content="2015-12-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-12-03T00:00:00+00:00" />
+<meta itemprop="name" content="从zsh切换到fish">
+<meta itemprop="description" content="大半年来在服务器上，一直用fish 最近下定决心把mac上的zsh也替换为fish 两者的差异并没太大，当然都比bash好用得多 :），fish给">
+
+
+<meta itemprop="datePublished" content="2015-12-03T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-12-03T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="799">
+
+
+
+<meta itemprop="keywords" content="dev-tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="从zsh切换到fish"/>
+<meta name="twitter:description" content="大半年来在服务器上，一直用fish 最近下定决心把mac上的zsh也替换为fish 两者的差异并没太大，当然都比bash好用得多 :），fish给"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">从zsh切换到fish</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-12-03 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#与bash不一致处">与bash不一致处</a>
+<ul>
+<li>
+<ul>
+<li><a href="#环境变量">环境变量</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>大半年来在服务器上，一直用fish</p>
+
+<p>最近下定决心把mac上的<a href="https://github.com/zsh-users/zsh">zsh</a>也替换为<a href="https://github.com/fish-shell/fish-shell">fish</a></p>
+
+<p>两者的差异并没太大，当然都比bash好用得多 :），fish给我感觉更轻巧和fashion些</p>
+
+<p>#zsh
+zsh用了1年多了，最初对扩展语法不熟，写了些乱七八糟的东西，导致现在运行起来很慢，也不想去修复了（这主要怪我）。再者每次cd进入中文文件夹，都报编码错误，好几次因此在同事面前装逼失败，很是忧伤（这也是我决定放弃zsh的主要原因之一）</p>
+
+<p>给它截个图留念好了</p>
+
+<p><img src="img/tools/zsh.jpeg" alt="zsh" /></p>
+
+<p>#fish
+fish正如它的全称<code>Friendly Interactive Shell</code></p>
+
+<p>fish的好处之一是安装配置都极其简易，而且装上就能用中文，不需要对系统做配置之类的，所以每当ssh到新的服务器，第一件事就是装上fish</p>
+
+<p>其次fish现代感十足，开箱可用可用的大多数功能都贴心之极</p>
+
+<p>当当当当：</p>
+
+<p><img src="img/tools/fish.jpeg" alt="fish" /></p>
+
+<p>##安装fish和oh-my-fish</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">brew install fish
+curl -L https://github.com/oh-my-fish/oh-my-fish/raw/master/bin/install <span class="p">|</span> fish
+omf help</code></pre></td></tr></table>
+</div>
+</div>
+<p>##设置fish为默认shell
+chsh -s /usr/local/bin/fish</p>
+
+<p>在mac下的iTerm2里，你需要打开： <code>iTerm2 &gt; Preferences &gt; Profiles</code></p>
+
+<p>在Command里写入<code>/usr/local/bin/fish</code></p>
+
+<p>##与tmux整合
+在<code>~/.tmux.conf</code>里加上：</p>
+
+<p><code>set -g default-command /usr/local/bin/fish</code></p>
+
+<p>##vim模式
+fish_vi_mode</p>
+
+<p>##在线设置
+fish_config</p>
+
+<p>##可选主题
+<a href="https://github.com/oh-my-fish/oh-my-fish/blob/master/docs/Themes.md">fish themes</a></p>
+
+<p>###安装主题
+omf install  agnoster</p>
+
+<p>##配置
+<code>~/.config/fish/config.fish</code></p>
+
+<p>##python 环境
+需要注意的是使用virtualenv创建的python env，需要使用以下指令进入：<code>source env/bin/activate.fish</code>,而不是bash和zsh下的<code>source env/bin/activate</code></p>
+
+<p>#资料
+<a href="https://hackercodex.com/guide/install-fish-shell-mac-ubuntu/">Install Fish Shell on Mac OS X and Ubuntu</a></p>
+
+<p>#插件
+##<a href="https://github.com/sjl/z-fish">z-fish</a>
+目录快速移动</p>
+
+<p>###安装
+*  git clone <a href="https://github.com/sjl/z-fish.git">https://github.com/sjl/z-fish.git</a>
+*  . /path/to/z.fish添加到 ~/.config/fish/config.fish
+*  z &ndash;add &ldquo;$PWD&rdquo;
+*  z [-h/-l]</p>
+
+<p>#问题
+###history
+ubuntu上默认的fish版本太久，需要用新版的fish，这样在tmux中的历史也可用</p>
+
+<h1 id="与bash不一致处">与bash不一致处</h1>
+
+<p>主要列出影响我日常使用的</p>
+
+<h3 id="环境变量">环境变量</h3>
+
+<p><code>env name=&quot;wwj&quot; python test.py</code> 这样在test.py里可以通过<code>os.environ.get(&quot;name&quot;)</code>得到<code>wwj</code></p>
+
+<p>或者<code>set -x yige_key my_key</code></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-12-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/youtube-dl-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">youtube-dl使用记录</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/arrow-better-dates-and-times-for-python/">
+            <span class="next-text nav-default">更好的Python时间日期库 Arrow</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

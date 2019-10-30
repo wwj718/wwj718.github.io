@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>理解权限系统 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="现实世界只不过是反射出了更高层次的世界的阴影 &amp;mdash; 柏拉图 计算机世界中的许多事物是现实世界的一个投影，现实中所见的许多模式/概念在计算机世界里都能" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/understand-permission/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="理解权限系统" />
+<meta property="og:description" content="现实世界只不过是反射出了更高层次的世界的阴影 &mdash; 柏拉图 计算机世界中的许多事物是现实世界的一个投影，现实中所见的许多模式/概念在计算机世界里都能" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/understand-permission/" />
+<meta property="article:published_time" content="2016-09-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-09-06T00:00:00+00:00" />
+<meta itemprop="name" content="理解权限系统">
+<meta itemprop="description" content="现实世界只不过是反射出了更高层次的世界的阴影 &mdash; 柏拉图 计算机世界中的许多事物是现实世界的一个投影，现实中所见的许多模式/概念在计算机世界里都能">
+
+
+<meta itemprop="datePublished" content="2016-09-06T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-09-06T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2904">
+
+
+
+<meta itemprop="keywords" content="code," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="理解权限系统"/>
+<meta name="twitter:description" content="现实世界只不过是反射出了更高层次的世界的阴影 &mdash; 柏拉图 计算机世界中的许多事物是现实世界的一个投影，现实中所见的许多模式/概念在计算机世界里都能"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">理解权限系统</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-09-06 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#linux中的权限系统">linux中的权限系统</a></li>
+<li><a href="#朋友圈中的分组与权限">朋友圈中的分组与权限</a></li>
+<li><a href="#rbac">RBAC</a>
+<ul>
+<li>
+<ul>
+<li><a href="#特点">特点</a></li>
+<li><a href="#分治的思路">分治的思路</a></li>
+<li><a href="#概念解释">概念解释</a></li>
+<li><a href="#其他笔记">其他笔记</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#django中的权限机制">Django中的权限机制</a>
+<ul>
+<li>
+<ul>
+<li><a href="#django的权限项">Django的权限项</a></li>
+<li><a href="#使用权限">使用权限</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#todo">todo</a></li>
+<li><a href="#参考">参考</a>
+<ul>
+<li>
+<ul>
+<li><a href="#相关概念">相关概念</a></li>
+<li><a href="#django">django</a></li>
+<li><a href="#linux">linux</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<blockquote>
+<p>现实世界只不过是反射出了更高层次的世界的阴影   &mdash; 柏拉图</p>
+</blockquote>
+
+<p>计算机世界中的许多事物是现实世界的一个投影，现实中所见的许多模式/概念在计算机世界里都能找到</p>
+
+<p><code>权限</code>作为现实世界随处可见的概念，在我们谈论<code>私有制</code>、<code>所有权</code>时，时常会谈及权限，在计算机世界中，权限在许多系统中举足轻重</p>
+
+<p>曾记否，qq里隐身对她可见，怕她看不见，下线又上线，却依旧被视而不见<br />
+曾记否，好好的一个熟人，说做微商就做微商，痛心疾首，火速拉黑</p>
+
+<p>上述的这些，都是利用权限系统的典型案例，在qq隐身案例中，你对女神隐身可见，实际上是赋予了她可以看到你的隐身状态（真实状态）的权限；当然你也赋予了人家伤害你的权限</p>
+
+<p>在朋友圈中的案例中，你把微商拉到了<code>黑名单</code>用户组，这样一来，他们就没有看到你的状态的权限，你也看不到他的刷屏</p>
+
+<p>下边我们将以几个案例来帮助理解权限系统的概念和设计，这些案例包括：</p>
+
+<ul>
+<li>linux操作系统中的权限系统</li>
+<li>微信朋友圈中的权限</li>
+<li>django中的权限机制</li>
+</ul>
+
+<p>近期工作中遇到一个系统设计中关于权限的复杂问题（层级组织），本文是我学习权限系统及对此思考的一个小结</p>
+
+<h1 id="linux中的权限系统">linux中的权限系统</h1>
+
+<p>关于权限系统，我们以linux为切入点，它为大多技术人员所熟悉。我们重点关注其中的概念，而对实现细节不做深究</p>
+
+<p>linux是个多用户操作系统，这每个用户有自己的工作空间(home目录)。就好比多人住在一套公寓里，各自有自己的房间。</p>
+
+<p>在linux中<code>一切皆文件</code>，linux鼓励使用文本文件，人和机器能理解文本文件，成为人与机器交流的最好途径。在linux中权限问题往往最终会落到文件的权限上。</p>
+
+<p>如果我们把文件视为一种资源。那么我们会发现 权限往往围绕这些概念：</p>
+
+<ul>
+<li>用户</li>
+<li>用户组（群组）</li>
+<li>资源</li>
+<li>权限类型</li>
+</ul>
+
+<p>如果你对上述概念不大熟悉，推荐阅读鸟哥的<a href="http://cn.linux.vbird.org/linux_basic/0210filepermission.php#UserandGroup">Linux 的文件权限与目录配置</a></p>
+
+<p>上边几个概念中，鸟哥对用户组的解释很棒（意义和功能），推荐一读</p>
+
+<p>总结来说，Linux一般将文件关联的身份分为三个类别，分别是 owner/group/others，且三种身份各有 read/write/execute 权限</p>
+
+<p>我们举个本地文件的例子</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ls -l /tmp/test.txt
+<span class="c1"># -rw-r--r--  1 wwj  wheel  235103  9  7 10:26 /tmp/test.txt</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>我们在此引用鸟哥文章里的这张图</p>
+
+<p><img src="http://cn.linux.vbird.org/linux_basic/0210filepermission_files/0210filepermission_3.gif" alt="" /></p>
+
+<p>上述信息表示：文件<code>/tmp/test.txt</code>是文件(<code>-</code>)，文件拥有者(wwj)的权限为<code>rw-</code>(读写)，文件拥有群组(wheel)的权限为<code>r--</code>(读)，其他人的权限为<code>r--</code>(读)</p>
+
+<p>如果你想改变文件属性与权限，可以使用：</p>
+
+<ul>
+<li>chgrp ：改变文件所属群组</li>
+<li>chown ：改变文件拥有者</li>
+<li>chmod ：改变文件的权限</li>
+</ul>
+
+<p>有了群组/资源/用户这些概念，之后我们就可以这样表达权限了:</p>
+
+<ul>
+<li>A用户有资源B的可读权限&reg;</li>
+<li>群组X有资源Y的可读权限&reg;</li>
+</ul>
+
+<h1 id="朋友圈中的分组与权限">朋友圈中的分组与权限</h1>
+
+<p>在用户/群组/资源/权限类型的视角下，我们可以这样理解微信朋友圈的分组功能：</p>
+
+<p>你半夜回家发了一条: <code>今天大学聚会很开心</code>，为了让没到现场的同学也看到聚会情况，于是附上了聚会照片，你怕被小伙伴诟病为<code>天天晒吃的</code>，于是决定这条消息只对<code>大学同学组</code>可见,这样只有在<code>大学同学组(群组)里的同学(用户)才能看到(可读权限)聚会消息(资源)</code></p>
+
+<h1 id="rbac">RBAC</h1>
+
+<p>如果我们进一步抽象，我们便总结出了<code>基于角色的访问控制</code>(Role-Based Access Control，RBAC)</p>
+
+<p><code>Who对What进行How操作</code></p>
+
+<p>我们可以看到这种模式：</p>
+
+<p><code>大学同学组里的同学(who)才能看到(how)聚会消息(what)</code></p>
+
+<p>RBAC认为权限授权实际上是Who、What、How的问题</p>
+
+<p>在RBAC模型中，who、what、how构成了访问权限三元组,也就是<code>Who对What进行How的操作</code>，各个要素的含义如下：</p>
+
+<ul>
+<li>Who：权限的拥用者或主体（如User、Group、Role）</li>
+<li>What：权限针对的对象或资源（Resource）。</li>
+<li>How：具体的权限</li>
+</ul>
+
+<h3 id="特点">特点</h3>
+
+<p>模型中概念与实际系统紧密对应。RBAC模型中的角色、用户和许可权等概念都是实际系统实际存在的实体，便于设计者建立现存的或待建系统的RBAC模型</p>
+
+<h3 id="分治的思路">分治的思路</h3>
+
+<ul>
+<li>我们要分割这些问题来讨论（分析的思路/分治）
+
+<ul>
+<li>用户与角色的指派</li>
+<li>角色与权限的指派</li>
+<li>为定义角色的继承 进行的角色与角色的指派。
+<br /></li>
+</ul></li>
+</ul>
+
+<p>上述这些活动都要求把用户和权限联系起来。多数情况下它们最好由不同的管理员或管理角色来做。对角色指派权限是典型的应用管理者的职责（类似元角色）</p>
+
+<h3 id="概念解释">概念解释</h3>
+
+<ul>
+<li>Group：用户组，权限分配的单位与载体。组可以包括组(以实现<code>权限的继承</code>)（适合用来处理层级问题），也可以包含用户，组内用户继承组的权限。User与Group是多对多的关系。Group可以层次化，以满足不同层级权限控制的要求。 （漂亮解决了我的问题）
+
+<ul>
+<li>部门Department或组织Organization，都可以对应到Group</li>
+</ul></li>
+<li>Role：Role和User关系的左右两边都是Many-to-Many关系，角色是为了完成各种工作而创造，用户则依据它的责任和资格来被指派相应的角色，角色配置成其完成任务所需要的最小的权限集</li>
+<li>许可表（PERMISSIONS）包括许可标识、许可名称、受控对象、操作标识。许可表给出了受控对象与操作算子的对应关系。*<br /></li>
+</ul>
+
+<h3 id="其他笔记">其他笔记</h3>
+
+<ul>
+<li>RBAC都是基于关系模型</li>
+<li>资源是受控对象</li>
+<li>RBAC模型支持数据抽象原则和继承概念</li>
+<li>RBAC模型没有提供操作顺序控制机制</li>
+</ul>
+
+<h1 id="django中的权限机制">Django中的权限机制</h1>
+
+<p>这部分主要参考<a href="http://www.jianshu.com/p/01126437e8a4">Django权限机制的实现</a></p>
+
+<p>如果你对Django熟悉（不熟悉的话参考你所用web框架的权限机制），可以把这部分理解为以Django为例，解释如何把权限概念用于web项目</p>
+
+<p>在web应用中，权限机制能够约束用户行为，控制页面的显示内容（想想你的朋友圈和各种论坛的会员机制），也能使API更加安全和灵活（django-rest-framework中）</p>
+
+<p>Django中用<code>user</code>, <code>group</code>和<code>permission</code>完成了权限机制(和linux很像)，这些概念，我们在前文中阐述清楚了，这个权限机制是将属于model的某个permission赋予user或group，可以理解为全局的权限（ps：如果你需要更细分的权限机制，可以试试：<a href="https://github.com/lukaszb/django-guardian">django-guardian</a>）</p>
+
+<h3 id="django的权限项">Django的权限项</h3>
+
+<p>Django用permission（如前文说的许可表）对象存储权限项（How），每个model默认都有三个permission，即add model, change model和delete model，在admin中你可以看到，当然我们也可以手动添加其他权限项，不过值得注意的是权限是针对model的，而不是instance的！</p>
+
+<p>为一个用户添加权限，既可以在view里做（编码），也可以由管理员（Role）在admin里做（不需要编码）</p>
+
+<h3 id="使用权限">使用权限</h3>
+
+<ul>
+<li>在view中，使用装饰器来验证权限:<code>@permission_required('car.can_drive')</code></li>
+<li>在模板中，当前登录用户的权限存储在模板变量 <code>{{ perms }}</code> 中</li>
+</ul>
+
+<h1 id="todo">todo</h1>
+
+<ul>
+<li>LDAP  认证和权限</li>
+</ul>
+
+<h1 id="参考">参考</h1>
+
+<h3 id="相关概念">相关概念</h3>
+
+<ul>
+<li><a href="http://baike.baidu.com/item/RBAC">RBAC</a></li>
+<li><a href="https://www.quora.com/What-are-some-good-ways-to-design-permission-systems-in-software">What are some good ways to design permission systems in software</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Role-based_access_control">Role-based access control</a></li>
+<li><a href="http://blog.csdn.net/xuhaipeng/article/details/4430446">角色权限系统的 一些概念</a></li>
+<li><a href="http://blog.csdn.net/painsonline/article/details/7183613/">RBAC权限管理</a></li>
+<li><a href="http://www.cncoders.net/article/10564/">权限系统&mdash;简介</a></li>
+<li><a href="https://www.zhihu.com/question/20313385">如何设计网站权限系统</a></li>
+<li><a href="http://www.ibm.com/support/knowledgecenter/zh/ssw_aix_61/com.ibm.aix.security/rbac_use_auths.htm">RBAC 权限</a></li>
+<li><a href="http://stackoverflow.com/questions/333620/best-practice-for-designing-user-roles-and-permission-system/25643919#25643919">Best Practice for Designing User Roles and Permission System</a></li>
+<li><a href="https://zh.wikipedia.org/zh/%E7%A7%81%E6%9C%89%E5%88%B6">私有制</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%89%80%E6%9C%89%E6%9D%83">所有权</a></li>
+</ul>
+
+<h3 id="django">django</h3>
+
+<ul>
+<li><a href="http://www.jianshu.com/p/01126437e8a4">Django权限机制的实现</a></li>
+<li><a href="http://python.usyiyi.cn/django/topics/auth/default.html">使用Django认证系统</a></li>
+<li><a href="https://zh.wikibooks.org/zh/Django/%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81">维基教科书 Django/用户认证</a></li>
+</ul>
+
+<h3 id="linux">linux</h3>
+
+<ul>
+<li><a href="http://cn.linux.vbird.org/linux_basic/0210filepermission.php">Linux 的文件权限与目录配置</a></li>
+<li><a href="http://justcode.ikeepstudying.com/2016/08/linux-%E7%B3%BB%E7%BB%9F%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E6%80%BB%E7%BB%93/">Linux: 系统文件权限总结</a></li>
+<li><a href="http://www.cnblogs.com/frand/archive/2011/01/03/1924987.html">掌握Linux的用户(组)，权限，文件精妙的三角关系</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-09-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/code/">code</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/edx-studio-spider/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">爬虫视角下的open edx studio</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/blockly-overview/">
+            <span class="next-text nav-default">blockly入门与介绍</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

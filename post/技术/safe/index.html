@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在mac虚拟机中安装Kali Linux - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="一直对信息安全感兴趣，奈何兴趣庞杂，静不下心在一个领域，安全方面折腾得不多，近期折腾了一段时间硬件，对无线安全和通信过程的兴趣又被吊起，准备" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E6%8A%80%E6%9C%AF/safe/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="在mac虚拟机中安装Kali Linux" />
+<meta property="og:description" content="一直对信息安全感兴趣，奈何兴趣庞杂，静不下心在一个领域，安全方面折腾得不多，近期折腾了一段时间硬件，对无线安全和通信过程的兴趣又被吊起，准备" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E6%8A%80%E6%9C%AF/safe/" />
+<meta property="article:published_time" content="2016-10-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-10-07T00:00:00+00:00" />
+<meta itemprop="name" content="在mac虚拟机中安装Kali Linux">
+<meta itemprop="description" content="一直对信息安全感兴趣，奈何兴趣庞杂，静不下心在一个领域，安全方面折腾得不多，近期折腾了一段时间硬件，对无线安全和通信过程的兴趣又被吊起，准备">
+
+
+<meta itemprop="datePublished" content="2016-10-07T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-10-07T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1671">
+
+
+
+<meta itemprop="keywords" content="技术," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在mac虚拟机中安装Kali Linux"/>
+<meta name="twitter:description" content="一直对信息安全感兴趣，奈何兴趣庞杂，静不下心在一个领域，安全方面折腾得不多，近期折腾了一段时间硬件，对无线安全和通信过程的兴趣又被吊起，准备"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">在mac虚拟机中安装Kali Linux</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-10-07 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#kali-linux">Kali Linux</a></li>
+<li><a href="#此前经验">此前经验</a></li>
+<li><a href="#安装">安装</a>
+<ul>
+<li>
+<ul>
+<li><a href="#环境准备">环境准备</a></li>
+<li><a href="#导入虚拟机">导入虚拟机</a></li>
+<li><a href="#配置usb无线网卡">配置usb无线网卡</a></li>
+<li><a href="#启动">启动</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#配置">配置</a>
+<ul>
+<li>
+<ul>
+<li><a href="#ssh">ssh</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#测试">测试</a>
+<ul>
+<li>
+<ul>
+<li><a href="#ettercap">ettercap</a></li>
+<li><a href="#抓包">抓包</a>
+<ul>
+<li><a href="#wireshark">Wireshark</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/kali54f8fd85.png" alt="" /></p>
+
+<p>一直对信息安全感兴趣，奈何兴趣庞杂，静不下心在一个领域，安全方面折腾得不多，近期折腾了一段时间硬件，对无线安全和通信过程的兴趣又被吊起，准备重新搭建一下渗透测试环境</p>
+
+<p>前几天在看《黑客军团》，看完更是觉得安全是个有趣的话题</p>
+
+<p>此前的环境搭建在U盘里，在mac下使用并不方便，一方面是kali中，触摸板用得很累，另一方面，无线网的配置也很烦。索性决定把Kali安装到虚拟机里，如此一来，我在mac下ssh进去即可。同时环境在虚拟机中，也更安全</p>
+
+<h1 id="kali-linux">Kali Linux</h1>
+
+<p>Kali Linux是基于Debian的Linux发行版，设计用于数字鉴识和渗透测试。Kali Linux的前身是BackTrack Linux。</p>
+
+<p>Kali Linux预装了许多渗透测试软件，包括nmap（端口扫描工具）、Wireshark（数据包分析器）、John the Ripper（密码破解器）以及Aircrack-NG（一套用于对无线局域网进行渗透测试的软件）。用户可通过硬盘、live CD或live USB运行Kali Linux</p>
+
+<p>它还有基于ARM架构的镜像，可用于树莓派</p>
+
+<h1 id="此前经验">此前经验</h1>
+
+<p>此前零零散散读过密码学，主流的安全/渗透工具大多做过基本了解，不过仅限于书本知识，对原理了解一下，没啥实际使用经验。</p>
+
+<p>就实战经验来说，可能对aircrack-ng/nmap/netcat 相对熟悉。有实际使用经验</p>
+
+<p>此外，熟悉Python/linux/http。日常重度依赖于这些工具/协议，这块的知识算得扎实</p>
+
+<p>对于编程相关的工作，我一直喜欢《黑客》一书中提倡的：<code>在使用中学习</code></p>
+
+<h1 id="安装">安装</h1>
+
+<h3 id="环境准备">环境准备</h3>
+
+<ul>
+<li>Virtualbox。我的虚拟机为Virtualbox 5.0.26。版本建议选择5.0.26或5.1.16。以便安装<a href="https://www.virtualbox.org/wiki/Downloads">Oracle VM VirtualBox Extension Pack  usb2.0</a></li>
+<li>直接下载安装好的虚拟机镜像（ova），导入即用。<a href="https://www.offensive-security.com/kali-linux-vmware-virtualbox-image-download/">虚拟机镜像下载地址</a>。我同时下了完整版和精简版：<a href="https://images.offensive-security.com/virtual-images/Kali-Linux-Light-2016.2-vbox-amd64.ova">Kali Linux Light 64 bit VBox</a></li>
+</ul>
+
+<p>ps：建议镜像都从官方网站下载，之后比对下md5. 如果你的目的是渗透测试，一开始使用的镜像就是被动过手脚的，就太讽刺了。kali的镜像下载有点慢，我是在国外服务器上下好再拉回本地：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 在国外服务器下载</span>
+wget https://images.offensive-security.com/virtual-images/Kali-Linux-2016.2-vbox-amd64.torrent <span class="c1">#完整版，3.6G不到6分钟下完,速度接近10+M/s</span>
+aria2c    Kali-Linux-2016.2-vbox-amd64.torrent
+<span class="c1">#scp 拉回本地</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="导入虚拟机">导入虚拟机</h3>
+
+<p>ps：我的mac固态硬盘空间比较小，我把虚拟机镜像和<code>默认虚拟机电脑位置</code>都放到移动硬盘里。如果你也想这样，可以通过Virtualbox的偏好设置来做</p>
+
+<p>在Virtualbox中,选择<code>管理-&gt;导入虚拟电脑</code></p>
+
+<h3 id="配置usb无线网卡">配置usb无线网卡</h3>
+
+<p>如果我们想做无线测试，就需要给kali配置无线网卡。虚拟机里的kali无法使用宿主机（mac）的无线网卡，我们需要连接usb无线网卡。</p>
+
+<p>我的usb无线网卡是Realtek，随树莓派一起买的。把usb无线网卡连上电脑后，在Virtualbox做如下配置即可：</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/usb_kalic9f80e58.png" alt="" /></p>
+
+<p>启动kali后，输入ifconfig（iwconfig），就能看到wlan0了</p>
+
+<h3 id="启动">启动</h3>
+
+<p>双击启动即可，默认用户名密码为：<code>root:toor</code>, 登录后，我们即可看到本文开始的截图</p>
+
+<h1 id="配置">配置</h1>
+
+<h3 id="ssh">ssh</h3>
+
+<p>我喜欢iterm2，想在mac下写代码，所以需要让kali支持外部ssh登录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 添加sudo用户，默认是root用户，无法从ssh登陆</span>
+adduser kalitest
+gpasswd -a kalitest sudo
+vim /etc/ssh/sshd_config <span class="c1"># 使用 PasswordAuthentication yes</span>
+/etc/init.d/ssh restart <span class="c1"># 重启ssh</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="测试">测试</h1>
+
+<h3 id="ettercap">ettercap</h3>
+
+<p>先用fing看下设备,我的手机设备，ip为<code>192.168.1.101</code></p>
+
+<p><code>ettercap -i eth0 -Tq -M arp:remote /192.168.0.101/ /192.168.0.1/</code></p>
+
+<p>在mac下<code>brew install ettercap</code>即可.</p>
+
+<p>之后可以进行抓包</p>
+
+<h3 id="抓包">抓包</h3>
+
+<p>kali自带driftnet，在mac下需要使用port安装</p>
+
+<p>我们来测试下抓包，设置网卡为监控模式：<code>airmon-ng start wlan0</code></p>
+
+<p>然后使用Wireshark抓包，或者使用driftnet来查看图像数据：<code>driftnet -i wlan0</code></p>
+
+<h4 id="wireshark">Wireshark</h4>
+
+<p>Wireshark是个大话题，有空单独写篇文章，我们在此只抓取192.168.0.101发出的htttp数据包: <code>http and ip.src == 192.168.0.101</code> （监控进出的为ip.addr）</p>
+
+<p>在本机(192.168.0.104)测试抓取自己的网站的用户信息：<code>ip.src == 192.168.0.104 and http.request.method == &quot;POST&quot;</code></p>
+
+<p>对于https网站，可以参考:<a href="https://certsimple.com/blog/ssl-wireshark-mac-osx">Wireshark 2 is the simplest way to inspect HTTPS on your Mac</a></p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/Kali_Linux">wikipedia Kali Linux</a></li>
+<li><a href="https://wizardforcel.gitbooks.io/daxueba-kali-linux-tutorial/content/">大学霸 Kali Linux 安全渗透教程</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-10-07
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/stress-testing/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">web服务器压力测试一例</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/pi-guardian/">
+            <span class="next-text nav-default">树莓派守护者!</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

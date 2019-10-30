@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Pharo使用笔记之http、websocket与mqtt - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="前言 Smalltalk提供了绝佳的可探索的沉浸式编程环境(live)，这是一种&amp;rdquo;红药丸&amp;rdquo;，一旦尝试就再也回不去了。于" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/pharo-http-websocket-mqtt/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Pharo使用笔记之http、websocket与mqtt" />
+<meta property="og:description" content="前言 Smalltalk提供了绝佳的可探索的沉浸式编程环境(live)，这是一种&rdquo;红药丸&rdquo;，一旦尝试就再也回不去了。于" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/pharo-http-websocket-mqtt/" />
+<meta property="article:published_time" content="2019-06-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-06-06T00:00:00+00:00" />
+<meta itemprop="name" content="Pharo使用笔记之http、websocket与mqtt">
+<meta itemprop="description" content="前言 Smalltalk提供了绝佳的可探索的沉浸式编程环境(live)，这是一种&rdquo;红药丸&rdquo;，一旦尝试就再也回不去了。于">
+
+
+<meta itemprop="datePublished" content="2019-06-06T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-06-06T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1961">
+
+
+
+<meta itemprop="keywords" content="smalltalk," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Pharo使用笔记之http、websocket与mqtt"/>
+<meta name="twitter:description" content="前言 Smalltalk提供了绝佳的可探索的沉浸式编程环境(live)，这是一种&rdquo;红药丸&rdquo;，一旦尝试就再也回不去了。于"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Pharo使用笔记之http、websocket与mqtt</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-06-06 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#环境">环境</a></li>
+<li><a href="#http">http</a>
+<ul>
+<li>
+<ul>
+<li><a href="#安装依赖">安装依赖</a></li>
+<li><a href="#实验">实验</a>
+<ul>
+<li>
+<ul>
+<li><a href="#response">response</a></li>
+<li><a href="#输出response">输出response</a></li>
+<li><a href="#request">request</a></li>
+<li><a href="#超时">超时</a></li>
+<li><a href="#retry">retry</a></li>
+<li><a href="#url构造">URL构造</a></li>
+<li><a href="#提交html表单">提交HTML表单</a></li>
+<li><a href="#headers">Headers</a></li>
+<li><a href="#提交json数据">提交json数据</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#websocket">websocket</a>
+<ul>
+<li>
+<ul>
+<li><a href="#安装依赖-https-ci-inria-fr-pharo-contribution-job-enterprisepharobook-lastsuccessfulbuild-artifact-book-result-websockets-websockets-html"><a href="https://ci.inria.fr/pharo-contribution/job/EnterprisePharoBook/lastSuccessfulBuild/artifact/book-result/WebSockets/WebSockets.html">安装依赖</a></a></li>
+<li><a href="#实验-1">实验</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#mqtt">MQTT</a>
+<ul>
+<li>
+<ul>
+<li><a href="#实验-2">实验</a>
+<ul>
+<li>
+<ul>
+<li><a href="#发布消息">发布消息</a></li>
+<li><a href="#订阅消息">订阅消息</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#提醒">提醒</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/redpill_5891238c.png" alt="" /></p>
+
+<h1 id="前言">前言</h1>
+
+<p>Smalltalk提供了绝佳的可探索的沉浸式编程环境(live)，这是一种&rdquo;红药丸&rdquo;，一旦尝试就再也回不去了。于是决定将原型构建相关的工作都放到Pharo上。</p>
+
+<p>许多业务相关的代码可能以服务的方式跑在外部，于是进程间通信（IPC）就成了实际需要。本文关注http、websocket与mqtt这几种我常用的通信策略。 （本文只关注在Pharo中运行客户端）</p>
+
+<p>日后有时间可能会加上Socket、ZeroMQ、RPC。</p>
+
+<p>以及是我的使用笔记。</p>
+
+<h1 id="环境">环境</h1>
+
+<p>目前我在MacOS 10.13.5下使用<code>Pharo 7.0.3</code>.</p>
+
+<h1 id="http">http</h1>
+
+<p>关于http的知识在此就不多说了，如果不熟悉可以参考<a href="https://zh.wikipedia.org/zh-hans/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">wikipedia http</a></p>
+
+<p>在Pharo中，我倾向于使用<a href="https://github.com/svenvc/zinc">Zinc</a>作为http client。</p>
+
+<p><a href="http://zn.stfx.eu/zn/index.html">Zinc文档</a>很齐全。Zinc既可以作为<a href="https://ci.inria.fr/pharo-contribution/job/EnterprisePharoBook/lastSuccessfulBuild/artifact/book-result/Zinc-HTTP-Server/Zinc-HTTP-Server.html">http server</a>，也可以作为<a href="https://ci.inria.fr/pharo-contribution/job/EnterprisePharoBook/lastSuccessfulBuild/artifact/book-result/Zinc-HTTP-Client/Zinc-HTTP-Client.html">http client</a>。</p>
+
+<p>如果你希望构建web server，<a href="https://github.com/SeasideSt/Seaside">Seaside</a>可能会更合适。我们接下来关注如何将Zinc用作http client。</p>
+
+<p>我们将<a href="https://httpbin.org/">httpbin.org</a>用作测试服务器。</p>
+
+<h3 id="安装依赖">安装依赖</h3>
+
+<p>Zinc已经内置在Pharo7 (更早的版本不大清楚)。所以无需安装依赖。</p>
+
+<h3 id="实验">实验</h3>
+
+<p>让我们向<code>https://httpbin.org/get</code>发送请求。</p>
+
+<h5 id="response">response</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nc">ZnClient</span> <span class="nb">new</span>
+   <span class="nf">url:</span> <span class="s">&#39;https://httpbin.org/get&#39;</span><span class="p">;</span>
+   <span class="nf">get</span><span class="p">;</span>
+   <span class="nf">response</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="http://wwj-fig-bed.just4fun.site/http_get_e59f1601.png" alt="" /></p>
+
+<h5 id="输出response">输出response</h5>
+
+<p>将response输出到Transcript中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">| response |
+response := (ZnClient new)
+   url: &#39;https://httpbin.org/get&#39;;
+   get;
+   response.
+response writeOn: Transcript.
+Transcript flush.</pre></td></tr></table>
+</div>
+</div>
+<p><img src="http://wwj-fig-bed.just4fun.site/http_cli_2b19f847.png" alt="" /></p>
+
+<h5 id="request">request</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="o">|</span><span class="nv"> request </span><span class="o">|</span>
+<span class="nv">request</span> <span class="o">:=</span> (<span class="nc">ZnClient</span> <span class="nb">new</span>)
+   <span class="nf">url:</span> <span class="s">&#39;https://httpbin.org/get&#39;</span><span class="p">;</span>
+   <span class="nf">get</span><span class="p">;</span>
+   <span class="nf">request</span><span class="p">.</span>
+<span class="nv">request</span> <span class="nf">writeOn:</span> <span class="nc">Transcript</span><span class="p">.</span>
+<span class="nc">Transcript</span> <span class="nf">flush</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="http://wwj-fig-bed.just4fun.site/figbed_2e29498a.png" alt="" /></p>
+
+<h5 id="超时">超时</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nc">ZnClient</span> <span class="nb">new</span>
+   <span class="nf">timeout:</span> <span class="m">1</span><span class="p">;</span>
+   <span class="nf">get:</span> <span class="s">&#39;https://httpbin.org/get&#39;</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="retry">retry</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nc">ZnClient</span> <span class="nb">new</span>
+   <span class="nf">logToTranscript</span><span class="p">;</span>
+   <span class="nf">numberOfRetries:</span> <span class="m">3</span><span class="p">;</span>
+   <span class="nf">retryDelay:</span> <span class="m">2</span><span class="p">;</span>
+   <span class="nf">get:</span> <span class="s">&#39;https://httpbin.org/get&#39;</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="url构造">URL构造</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">ZnClient new
+   https;
+   host: &#39;httpbin.org&#39;;
+   addPath: &#39;get&#39;;
+   get.</pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">ZnUrl new
+   scheme: #http;
+   host: &#39;www.google.com&#39;;
+   port: 80;
+   addPathSegment: &#39;search&#39;;
+   queryAt: &#39;q&#39; put: &#39;Pharo Smalltalk&#39;;
+   yourself.</pre></td></tr></table>
+</div>
+</div>
+<h5 id="提交html表单">提交HTML表单</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;search-handler&#34;</span> <span class="na">method</span><span class="o">=</span><span class="s">&#34;POST&#34;</span> <span class="na">enctype</span><span class="o">=</span><span class="s">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">&gt;</span>
+   Search for: <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;search-field&#34;</span><span class="p">/&gt;</span>
+   <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;submit&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;Go!&#34;</span><span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>表单使用默认编码<code>application/x-www-form-urlencoded</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nc">ZnClient</span> <span class="nb">new</span>
+   <span class="nf">url:</span> <span class="s">&#39;https://httpbin.org/post&#39;</span><span class="p">;</span>
+   <span class="nf">formAt:</span> <span class="s">&#39;search-field&#39;</span> <span class="nf">put:</span> <span class="s">&#39;Pharo Smalltalk&#39;</span><span class="p">;</span>
+   <span class="nf">post</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="http://wwj-fig-bed.just4fun.site/zinc_post_d81d1a3d.png" alt="" />
+<!--值得主义的是stream,使用zinc--></p>
+
+<p>上传文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;upload-handler&#34;</span> <span class="na">method</span><span class="o">=</span><span class="s">&#34;POST&#34;</span> <span class="na">enctype</span><span class="o">=</span><span class="s">&#34;multipart/form-data&#34;</span><span class="p">&gt;</span>
+   Photo file: <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;file&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;photo-file&#34;</span><span class="p">/&gt;</span>
+   <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;submit&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;Upload!&#34;</span><span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nc">ZnClient</span> <span class="nb">new</span>
+   <span class="nf">url:</span> <span class="s">&#39;https://httpbin.org/post&#39;</span><span class="p">;</span>
+   <span class="nf">addPart:</span> (<span class="nc">ZnMimePart</span>
+                <span class="nf">fieldName:</span> <span class="s">&#39;photo-file&#39;</span>
+                <span class="nf">fileNamed:</span> <span class="s">&#39;/tmp/test.jpeg&#39;</span>)<span class="p">;</span> <span class="c">&#34;todo:有问题？&#34;</span>
+   <span class="nf">post</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="headers">Headers</h5>
+
+<p><code>ZnClient new request headers at: 'accept' put: 'text/*'.</code></p>
+
+<h5 id="提交json数据">提交json数据</h5>
+
+<p>jwt认证</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">|cli headers|
+cli := ZnClient new.
+headers := cli request headers.
+headers at: &#39;Content-Type&#39; put: &#39;application/json&#39;.
+headers at: &#39;Authorization&#39; put: &#39;Bearer ACCESS_TOKEN&#39;.
+cli
+    url: 
+&#39;https://httpbin.org/post&#39;;
+    entity: (ZnEntity 
+        with:&#39;{&#34;hello&#34;: &#34;world&#34;}&#39;
+        type: ZnMimeType applicationJson);
+    post;
+	response.</pre></td></tr></table>
+</div>
+</div>
+<p><img src="http://wwj-fig-bed.just4fun.site/zinc_json_5c4672c7.png" alt="" /></p>
+
+<h1 id="websocket">websocket</h1>
+
+<h3 id="安装依赖-https-ci-inria-fr-pharo-contribution-job-enterprisepharobook-lastsuccessfulbuild-artifact-book-result-websockets-websockets-html"><a href="https://ci.inria.fr/pharo-contribution/job/EnterprisePharoBook/lastSuccessfulBuild/artifact/book-result/WebSockets/WebSockets.html">安装依赖</a></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nc">Gofer</span> <span class="nb">new</span>
+   <span class="nf">smalltalkhubUser:</span> <span class="s">&#39;SvenVanCaekenberghe&#39;</span> <span class="nf">project:</span> <span class="s">&#39;ZincHTTPComponents&#39;</span><span class="p">;</span>
+   <span class="nf">package:</span> <span class="s">&#39;ConfigurationOfZincHTTPComponents&#39;</span><span class="p">;</span>
+   <span class="nf">load</span><span class="p">.</span>
+(<span class="nc">Smalltalk</span> <span class="nf">globals</span> <span class="nf">at:</span> <span class="ss">#ConfigurationOfZincHTTPComponents</span>) <span class="nf">project</span> <span class="nf">latestVersion</span> <span class="nf">load:</span> <span class="s">&#39;WebSocket&#39;</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="实验-1">实验</h3>
+
+<p>选择<a href="https://www.websocket.org/echo.html">www.websocket.org</a>作为测试服务器。 也可以使用<a href="https://github.com/progrium/wssh">wssh</a>帮助测试，wssh类似netcat。</p>
+
+<p>让我们向<code>wss://echo.websocket.org</code>发送请求。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="o">|</span><span class="nv"> webSocket </span><span class="o">|</span>
+<span class="nv">webSocket</span> <span class="o">:=</span> <span class="nc">ZnWebSocket</span> <span class="nf">to:</span> <span class="s">&#39;wss://echo.websocket.org&#39;</span><span class="p">.</span>
+[ <span class="nv">webSocket</span>
+   <span class="nf">sendMessage:</span> <span class="s">&#39;Pharo Smalltalk using Zinc WebSockets !&#39;</span><span class="p">;</span>
+   <span class="nf">readMessage</span> ] <span class="nf">ensure:</span> [ <span class="nv">webSocket</span> <span class="nf">close</span> ]<span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="http://wwj-fig-bed.just4fun.site/pharo_websocket_f5d7888b.png" alt="" /></p>
+
+<p>做实验的时候，可能希望<code>sendMessage</code>和<code>readMessage</code>是分别手动操作的。</p>
+
+<p>对于<code>sendMessage</code>比较简单:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk">[ <span class="nv">webSocket</span>
+   <span class="nf">sendMessage:</span> <span class="s">&#39;Pharo Smalltalk using Zinc WebSockets !&#39;</span><span class="p">;</span> ] <span class="nf">value</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><code>readMessage</code>时可能会阻塞整个软件。推荐使用<a href="https://github.com/sbragagnolo/taskit">taskit</a>来并行执行。</p>
+
+<p>首先安装依赖:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nc">Metacello</span> <span class="nb">new</span>
+  <span class="nf">baseline:</span> <span class="s">&#39;TaskIt&#39;</span><span class="p">;</span>
+  <span class="nf">repository:</span> <span class="s">&#39;github://sbragagnolo/taskit&#39;</span><span class="p">;</span>
+  <span class="nf">load</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><a href="https://github.com/sbragagnolo/taskit">taskit</a>的使用非常简单：<code>[ 1 second wait. 'Waited' logCr ] schedule.</code>，打开Transcript，运行后，可以看到1秒后有一条消息打印在Transcript上。</p>
+
+<p>使用<a href="https://github.com/sbragagnolo/taskit">taskit</a>来运行<code>readMessage</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk">[ (<span class="nv">webSocket</span>
+   <span class="nf">readMessage</span>) <span class="nf">logCr</span> ]  <span class="nf">schedule</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><code>webSocket readMessage</code>每次读取一条消息，当没有消息时，会阻塞。</p>
+
+<!--
+异步
+socket io
+
+-->
+
+<h1 id="mqtt">MQTT</h1>
+
+<p>测试服务器使用<code>iot.codelab.club</code>，测试账号为<code>guest:test</code>.</p>
+
+<p>###安装依赖
+第一个例子里，我们准备使用Pharo的MQTT client发布一个消息:<code>hello from pharo</code>, 使用<a href="https://github.com/beerfactory/hbmqtt">hbmqtt</a>订阅它。</p>
+
+<p>首先让我们在Pharo中安装MQTT client, 我偏好<a href="https://github.com/svenvc/mqtt">svenvc/mqtt</a>, <a href="https://github.com/svenvc">svenvc</a>是smalltalk社区的活跃用户，维护了好几个重要的库，代码质量非常高，由于smalltalk社区很小，所以不要在意star数。 使用iceberg安装它，记得load相应的package（全部load即可）。</p>
+
+<p>接着在系统命令行里安装Python库<a href="https://github.com/beerfactory/hbmqtt">hbmqtt</a>，用于配合测试: <code>pip install hbmqtt</code></p>
+
+<h3 id="实验-2">实验</h3>
+
+<h5 id="发布消息">发布消息</h5>
+
+<p>在命令行里运行<code>hbmqtt_sub --url mqtt://guest:test@iot.codelab.club -t &quot;/pharo_mqtt&quot;</code></p>
+
+<p>接着在Pharo里发布消息,</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="o">|</span><span class="nv">client</span><span class="o">|</span>
+<span class="nv">client</span> <span class="o">:=</span> <span class="nc">MQTTExperimentalClient</span> <span class="nb">new</span>
+    <span class="nf">atLeastOnce</span><span class="p">;</span> <span class="c">&#34;QoS level 1&#34;</span>
+    <span class="nf">host:</span> <span class="s">&#39;iot.codelab.club&#39;</span><span class="p">;</span>
+    <span class="nf">username:</span> <span class="s">&#39;guest&#39;</span><span class="p">;</span>
+    <span class="nf">password:</span> <span class="s">&#39;test&#39;</span><span class="p">;</span>
+    <span class="nf">open</span><span class="p">;</span>
+    <span class="nf">sendMessage:</span> <span class="s">&#39;hello from pharo&#39;</span> <span class="nf">asByteArray</span> <span class="nf">toTopic:</span> <span class="s">&#39;/pharo_mqtt&#39;</span><span class="p">;</span>
+    <span class="nf">close</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>消息发布成功!</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/mqtt_pharo_bbb1ff8e.png" alt="" /></p>
+
+<h5 id="订阅消息">订阅消息</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="o">|</span><span class="nv">client</span><span class="o">|</span>
+<span class="nv">client</span> <span class="o">:=</span> <span class="nc">MQTTExperimentalClient</span> <span class="nb">new</span>
+    <span class="nf">atLeastOnce</span><span class="p">;</span> <span class="c">&#34;QoS level 1&#34;</span>
+    <span class="nf">host:</span> <span class="s">&#39;iot.codelab.club&#39;</span><span class="p">;</span>
+    <span class="nf">username:</span> <span class="s">&#39;guest&#39;</span><span class="p">;</span>
+    <span class="nf">password:</span> <span class="s">&#39;test&#39;</span><span class="p">;</span>
+    <span class="nf">open</span><span class="p">;</span>
+    <span class="nf">subscribeToTopic:</span> <span class="s">&#39;/hello_pharo&#39;</span><span class="p">;</span>
+    <span class="nf">readMessage</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><code>hbmqtt_pub --url mqtt://guest:test@iot.codelab.club -t &quot;/hello_pharo&quot; -m &quot;hello from hbmqtt&quot;</code></p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/ppharo_sub_cc66ea0b.png" alt="" /></p>
+
+<p>前头的程序接受1条消息就退出(阻塞式的)</p>
+
+<p>写一个接收3条消息才退出的程序</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="o">|</span><span class="nv">client</span><span class="o">|</span>
+<span class="nc">Array</span> <span class="nf">streamContents:</span> [ <span class="o">:</span><span class="nv">stream</span> <span class="o">|</span> <span class="o">|</span><span class="nv"> count </span><span class="o">|</span>
+   <span class="nv">count</span> <span class="o">:=</span> <span class="m">1</span><span class="p">.</span>
+   <span class="nc">MQTTExperimentalClient</span> <span class="nb">new</span>
+    <span class="nf">host:</span> <span class="s">&#39;iot.codelab.club&#39;</span><span class="p">;</span>
+    <span class="nf">username:</span> <span class="s">&#39;guest&#39;</span><span class="p">;</span>
+    <span class="nf">password:</span> <span class="s">&#39;test&#39;</span><span class="p">;</span>
+    <span class="nf">open</span><span class="p">;</span>
+    <span class="nf">subscribeToTopic:</span> <span class="s">&#39;/3_messages&#39;</span><span class="p">;</span>
+    <span class="nf">runWith:</span> [ <span class="o">:</span><span class="nv">message</span> <span class="o">|</span>
+        <span class="nv">stream</span> <span class="nf">nextPut:</span> <span class="nv">message</span><span class="p">.</span>
+        (<span class="nv">count</span> <span class="o">:=</span> <span class="nv">count</span> <span class="nf">+</span> <span class="m">1</span>) <span class="nf">&gt;</span> <span class="m">3</span> <span class="nb">ifTrue:</span> [ <span class="nc">ConnectionClosed</span> <span class="nf">signal</span> ] ] ]<span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>连续发三条消息:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">hbmqtt_pub --url mqtt://guest:test@iot.codelab.club -t <span class="s2">&#34;/3_messages&#34;</span> -m <span class="s2">&#34;hello1&#34;</span>
+hbmqtt_pub --url mqtt://guest:test@iot.codelab.club -t <span class="s2">&#34;/3_messages&#34;</span> -m <span class="s2">&#34;hello2&#34;</span>
+hbmqtt_pub --url mqtt://guest:test@iot.codelab.club -t <span class="s2">&#34;/3_messages&#34;</span> -m <span class="s2">&#34;hello3&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="http://wwj-fig-bed.just4fun.site/pharo_3_message_79888a22.png" alt="" /></p>
+
+<h3 id="提醒">提醒</h3>
+
+<p>smalltalk社区习惯在class里加上comment和tests，而不是单独构建文档，所以你在<a href="https://github.com/svenvc/mqtt">svenvc/mqtt</a>readme里基本读不到文档，在Pharo编程环境里去通过阅读、批注和tests去学习使用方法吧。这种方式充满乐趣，你可以拆开任何黑盒子，一探究竟。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-06-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/pharo-iot/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Pharo IoT</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%93%A6%E7%A2%8E%E9%9B%86/20190601/">
+            <span class="next-text nav-default">瓦碎集_01</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

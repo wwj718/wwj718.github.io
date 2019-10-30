@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch3 Lab: 将Scratch3接入开源硬件及AI的实验项目 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="如果你想走得快，一个人走; 如果你想走得远，一群人走 hi 大家好，我们最近在构建一个好玩的项目 我在前边花了两篇文章在架构上论述了如何为Scratc" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-lab/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch3 Lab: 将Scratch3接入开源硬件及AI的实验项目" />
+<meta property="og:description" content="如果你想走得快，一个人走; 如果你想走得远，一群人走 hi 大家好，我们最近在构建一个好玩的项目 我在前边花了两篇文章在架构上论述了如何为Scratc" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-lab/" />
+<meta property="article:published_time" content="2018-04-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-04-08T00:00:00+00:00" />
+<meta itemprop="name" content="Scratch3 Lab: 将Scratch3接入开源硬件及AI的实验项目">
+<meta itemprop="description" content="如果你想走得快，一个人走; 如果你想走得远，一群人走 hi 大家好，我们最近在构建一个好玩的项目 我在前边花了两篇文章在架构上论述了如何为Scratc">
+
+
+<meta itemprop="datePublished" content="2018-04-08T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-04-08T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1048">
+
+
+
+<meta itemprop="keywords" content="scratch," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch3 Lab: 将Scratch3接入开源硬件及AI的实验项目"/>
+<meta name="twitter:description" content="如果你想走得快，一个人走; 如果你想走得远，一群人走 hi 大家好，我们最近在构建一个好玩的项目 我在前边花了两篇文章在架构上论述了如何为Scratc"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch3 Lab: 将Scratch3接入开源硬件及AI的实验项目</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-04-08 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%A7%81%E6%9C%89/"> 私有 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#scratch3-lab">Scratch3 Lab</a>
+<ul>
+<li>
+<ul>
+<li><a href="#技术视角">技术视角</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#插件系统">插件系统</a></li>
+<li><a href="#更新">更新</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="https://codelab-adapter-docs.codelab.club/img/scratch3-extensions.png" alt="" /></p>
+
+<blockquote>
+<p>如果你想走得快，一个人走; 如果你想走得远，一群人走</p>
+</blockquote>
+
+<p>hi 大家好，我们最近在构建一个好玩的项目</p>
+
+<p>我在前边花了两篇文章在架构上论述了如何为Scratch3.0设计一个通用的插件系统，让Scratch3.0能与物理世界的万物互联，并为它们编程:</p>
+
+<ul>
+<li><a href="http://blog.just4fun.site/scratch3-plugin-1.html">为Scratch3.0设计的插件系统(上篇)</a></li>
+<li><a href="http://blog.just4fun.site/scratch3-plugin-2.html">为Scratch3.0设计的插件系统(下篇)</a></li>
+</ul>
+
+<p>这个通用的插件系统已基本完成，最近在做一些收尾的工作、重构以及撰写文档，我们之后计划将它开源并围绕它构建社区，如此一来，将你感兴趣的硬件接入Scratch3.0，将成为一件有趣的举手之劳</p>
+
+<p>利用这个插件系统，我们已将cozmo和microbit接入到scratch3中。你可以让cozmo、microbit与scratch3.0中的所有积木互动，做出令人惊叹的效果，边界是你的想象力！我们正将这两个项目作为插件案例，写入文档，向开发者们描述如何利用插件系统，通过短短的数行代码，将你的新硬件或任何其他好玩的东西接入Scrach3.0</p>
+
+<p>我们的兴趣是将Scratch3.0连接到有趣的开源硬件和AI上，甚至也包括接入你童年的那辆玩具四驱车</p>
+
+<h1 id="scratch3-lab">Scratch3 Lab</h1>
+
+<ul>
+<li><a href="https://scratch3.codelab.club/">Scratch3 Lab</a></li>
+</ul>
+
+<!--
+以上其实是同一个网站，都是Scratch3 Lab。如果你能打开第一个地址最好不过了，服务器在香港，国内可能不能访问。因为这个原因，我顺便把Scratch3 Lab部署到了github上，国内还算稳定，方便大家访问。
+
+最后一个地址是http的，用于测试http和https的差异，我们希望插件系统能尽可能支持更多的网站。Scratch3 Lab主要用于做各种好玩的实验-->
+
+<!--由于没在国内备案，带来的不便给各位道歉。当然，该道歉的也许不该是我们 ：）-->
+
+<p>如果你有什么有趣的东西想接入Scratch3，欢迎与我们联系，如果我们也觉得好玩，可能会和你一起将它接入Scratch3，如果我们兴趣不大，那欢迎你自己亲自动手啦</p>
+
+<p>我们的口号是: Just for fun</p>
+
+<h3 id="技术视角">技术视角</h3>
+
+<p>Scratch3 Lab采用Scratch官方最新的源码，使用官方的develop分支，我们尽量做到每个月都跟进官方的开发分支，如果有一些有趣的特性，我们会采用更快的更新频率</p>
+
+<p>Scratch3 Lab目前已经以extensions的形式整合了2个硬件插件和一个图像识别插件，一个文本情感分析插件，一个语音插件，一个运动检测插件</p>
+
+<p>AI相关的几个项目来自MIT media lab，我们之后准别采用他们的思路来接入国内好玩的AI平台，此外跑在本地的AI也是我们的关注方向。</p>
+
+<p>我们想让这个项目在没有互联网的环境也能正常使用，所以我们尽力做出替代云的AI插件，至少不影响概念的讲解和教学，当然趣味性也不能少，关于这一点，AI社区已经有很多有趣的尝试，这部分有空细说。我们这样做的目标是让Scratch3 Lab能完全跑在树莓派上，这样即便没有网络的贫困山区，也能完整得到极具趣味和表现力的Scratch3</p>
+
+<p>目前我们正在接入IoT(通过mqtt)和BB8(通过web bluetooth)，物联网也是Scratch3的兴趣之一</p>
+
+<h1 id="插件系统">插件系统</h1>
+
+<p>目前你可以看到插件系统的文档：</p>
+
+<ul>
+<li><a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter docs</a></li>
+</ul>
+
+<h1 id="更新">更新</h1>
+
+<p>Scratch3 Lab目前是<a href="https://www.codelab.club/">codelab</a>的一部分</p>
+
+<hr />
+
+<p>Just for you :)</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-04-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-smart-home/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">积木化编程与智能家居</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/rainy-days/">
+            <span class="next-text nav-default">雨天</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

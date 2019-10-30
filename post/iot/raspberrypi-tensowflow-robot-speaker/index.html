@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>基于树莓派和Tensowflow的物体识别-speaker - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="接上篇文章:基于树莓派和Tensowflow的物体识别-brain 上篇文章里我们用tensorflow的inception模型为树莓派探险者" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/iot/raspberrypi-tensowflow-robot-speaker/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="基于树莓派和Tensowflow的物体识别-speaker" />
+<meta property="og:description" content="接上篇文章:基于树莓派和Tensowflow的物体识别-brain 上篇文章里我们用tensorflow的inception模型为树莓派探险者" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/iot/raspberrypi-tensowflow-robot-speaker/" />
+<meta property="article:published_time" content="2016-10-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-10-25T00:00:00+00:00" />
+<meta itemprop="name" content="基于树莓派和Tensowflow的物体识别-speaker">
+<meta itemprop="description" content="接上篇文章:基于树莓派和Tensowflow的物体识别-brain 上篇文章里我们用tensorflow的inception模型为树莓派探险者">
+
+
+<meta itemprop="datePublished" content="2016-10-25T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-10-25T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1077">
+
+
+
+<meta itemprop="keywords" content="tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="基于树莓派和Tensowflow的物体识别-speaker"/>
+<meta name="twitter:description" content="接上篇文章:基于树莓派和Tensowflow的物体识别-brain 上篇文章里我们用tensorflow的inception模型为树莓派探险者"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">基于树莓派和Tensowflow的物体识别-speaker</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-10-25 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#目标">目标</a></li>
+<li><a href="#任务">任务</a></li>
+<li><a href="#解决方案">解决方案</a>
+<ul>
+<li>
+<ul>
+<li><a href="#云服务">云服务</a></li>
+<li><a href="#本地软件">本地软件</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#todo">todo</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>接上篇文章:<a href="http://blog.just4fun.site/raspberrypi-tensowflow-robot.html">基于树莓派和Tensowflow的物体识别-brain</a></p>
+
+<p>上篇文章里我们用tensorflow的inception模型为<code>树莓派探险者</code>添加智能（它的大脑（brain））。这篇文章里我们给他添加外设，使其&rdquo;说&rdquo;出物体的名称，我们将使其成为speaker</p>
+
+<p>ps：之所以叫树莓派探险者是它的行为很像一个初入地球的外星机器人，对周遭事物充满好奇，试图弄清看到的每个物体是什么（代码的实现是超声波测距+拍照+tensorflow图像识别）</p>
+
+<h1 id="目标">目标</h1>
+
+<p>我们将使树莓派探险者用中文说出看到的物体的名字，诸如<code>这是一个橘子</code></p>
+
+<h1 id="任务">任务</h1>
+
+<p>为了实现这个目标我们有几件事要做。</p>
+
+<p>tensorflow的inception模型识别完物体，将输出5个最为贴近的物体的英文名称。我们选取得分最高的物体，将其名称翻译为中文，之后用蓝牙音箱输出：<code>这是一个xxx</code></p>
+
+<p>实际上是以下两项任务：</p>
+
+<ul>
+<li>英汉翻译</li>
+<li>中文文字转语音</li>
+</ul>
+
+<h1 id="解决方案">解决方案</h1>
+
+<p>完成以上任务，有两种典型的方案，一种使用云服务，一种使用本地软件</p>
+
+<h3 id="云服务">云服务</h3>
+
+<p>使用云服务，我们可以轻松完成以上两项任务，英汉翻译使用：<a href="https://github.com/translate/translate">translate</a>, 这是一个python库，直接pip安装就行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># pip install translate</span>
+<span class="kn">from</span> <span class="nn">translate</span> <span class="kn">import</span> <span class="n">Translator</span>
+<span class="n">translator</span><span class="o">=</span> <span class="n">Translator</span><span class="p">(</span><span class="n">from_lang</span><span class="o">=</span><span class="s1">&#39;en&#39;</span><span class="p">,</span><span class="n">to_lang</span><span class="o">=</span><span class="s2">&#34;zh&#34;</span><span class="p">)</span>
+<span class="n">translation</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s2">&#34;umbrella&#34;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">translation</span> <span class="c1">#雨伞</span></code></pre></td></tr></table>
+</div>
+</div>
+<hr />
+
+<p>中文文字转语音可以使用<a href="http://yuyin.baidu.com/tts/">百度语音合成</a></p>
+
+<h3 id="本地软件">本地软件</h3>
+
+<p>为了提高响应速度和可控性，使其减少对网络的依赖（有些环境并没有网络），也许我们更倾向使用本地软件</p>
+
+<p>下面分别论述如何在不依赖网络的情况下使用本地软件来完成翻译和文字转语音的任务</p>
+
+<p>英汉翻译我们选择: <code>sdcv</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">sudo  apt-get install sdcv
+mkdir -p ~/.stardict/dic # 之后把字典下载解压到这个目录里
+sdcv orange #查询单词 orange</pre></td></tr></table>
+</div>
+</div>
+<p>之后我们用正则提取出其中的名词选项，选择最靠前的（这个策略没有认真考虑过）</p>
+
+<p>至于字典的下载可以到这里：<a href="http://abloz.com/huzheng/stardict-dic/zh_CN/">zh_CN 简体中文词典</a></p>
+
+<p>我下了三个字典：朗道英汉字典5.0、KDic11万英汉词典、牛津简明英汉袖珍辞典</p>
+
+<p>朗道英汉字典5.0内容详尽，牛津简明英汉袖珍辞典简单清晰</p>
+
+<p>我偏好后者</p>
+
+<hr />
+
+<p>下一个任务是中文文字转语音，树莓派机器人原作者Lukas使用<a href="http://www.festvox.org/flite/">Flite</a>来做文字转语音。Flite是一个小型、快速的TTS系统，是著名的语音合成系统festival的C版本，可用于嵌入式系统</p>
+
+<p>可惜这个工具不支持中文，我决定采用:<a href="https://github.com/hgneng/ekho">ekho</a>来做文字转语音的工作，项目介绍在:<a href="http://www.eguidedog.net/cn/ekho_cn.php">Ekho(余音) - 中文语音合成软件</a></p>
+
+<p>其他可选的工具还有eSpeak,安装和使用都简单。<code>espeak -vzh &quot;你好&quot;</code>，发音比较机械</p>
+
+<h1 id="todo">todo</h1>
+
+<ul>
+<li>增加看图说话功能（Show and Tell: image captioning open sourced in TensorFlow）</li>
+<li>语音识别（pocketsphinx）</li>
+</ul>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="http://blog.csdn.net/zouxy09/article/details/7942784">PocketSphinx语音识别系统的编译、安装和使用</a></li>
+<li><a href="https://github.com/jlinux/blog/blob/master/posts/voice-control.md">voice-control</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-10-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/iot/awesome-raspberry-pi-zh/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">周末、填坑与树莓派资源大全</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/raspberrypi-tensowflow-robot/">
+            <span class="next-text nav-default">基于树莓派和Tensowflow的物体识别-brain</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

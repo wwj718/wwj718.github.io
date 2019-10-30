@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Open edX各种登录方式探索 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="缘起 对异构系统的整合是我的兴趣之一，Open edX的开放式设计使它很容易与其他系统整合，其中包括用户系统的整合 前前后后折腾了edx的各种登录" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/open-edx-login-explore/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Open edX各种登录方式探索" />
+<meta property="og:description" content="缘起 对异构系统的整合是我的兴趣之一，Open edX的开放式设计使它很容易与其他系统整合，其中包括用户系统的整合 前前后后折腾了edx的各种登录" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/open-edx-login-explore/" />
+<meta property="article:published_time" content="2016-04-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-04-12T00:00:00+00:00" />
+<meta itemprop="name" content="Open edX各种登录方式探索">
+<meta itemprop="description" content="缘起 对异构系统的整合是我的兴趣之一，Open edX的开放式设计使它很容易与其他系统整合，其中包括用户系统的整合 前前后后折腾了edx的各种登录">
+
+
+<meta itemprop="datePublished" content="2016-04-12T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-04-12T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="4434">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Open edX各种登录方式探索"/>
+<meta name="twitter:description" content="缘起 对异构系统的整合是我的兴趣之一，Open edX的开放式设计使它很容易与其他系统整合，其中包括用户系统的整合 前前后后折腾了edx的各种登录"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Open edX各种登录方式探索</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-04-12 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#缘起">缘起</a></li>
+<li><a href="#cas">CAS</a></li>
+<li><a href="#oauth2">OAuth2</a>
+<ul>
+<li>
+<ul>
+<li><a href="#oauth2-client">OAuth2 client</a></li>
+<li><a href="#oauth2-server">OAuth2 server</a></li>
+<li><a href="#外部登录细节">外部登录细节</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#更改login机制">更改login机制</a></li>
+<li><a href="#qq-微信登录">QQ/微信登录</a></li>
+<li><a href="#移动端跳转">移动端跳转</a></li>
+<li><a href="#总结">总结</a></li>
+<li><a href="#工具">工具</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="缘起">缘起</h1>
+
+<p>对异构系统的整合是我的兴趣之一，Open edX的开放式设计使它很容易与其他系统整合，其中包括用户系统的整合</p>
+
+<p>前前后后折腾了edx的各种登录和注册机制，在此理一下。前几天对<a href="https://github.com/omab/python-social-auth">python-social-auth</a>做了探索，也一并做下笔记</p>
+
+<p>主要内容包括：</p>
+
+<ul>
+<li>CAS</li>
+<li>OAuth2
+
+<ul>
+<li>OAuth2 client</li>
+<li>OAuth2 server</li>
+</ul></li>
+<li>更改login机制，同时支持username/email登录</li>
+<li>QQ/微信登录</li>
+<li>移动端跳转</li>
+</ul>
+
+<h1 id="cas">CAS</h1>
+
+<p>关于CAS，我此前有写过一篇文章<a href="http://blog.just4fun.site/use-CAS-in-your-LMS.html">为什么CAS应该成为你的LMS的一部分</a></p>
+
+<p>上边文章介绍了CAS的使用场景和它的原理，也给出了一些参考资料，对CAS不熟悉的小伙伴可以参考</p>
+
+<p>看到这里就假设你基本弄懂CAS的原理啦，那我们直接讨论如何将CAS和edx对接</p>
+
+<p>@MT说edx内置的cas client坑比较多，所以我试着改造了<a href="https://github.com/kstateome/django-cas">django-cas</a>,这是改造后的：<a href="https://github.com/wwj718/django-cas">wwj718/django-cas</a>，按照项目主页的引导，你就可以直接在Open edX里使用cas啦</p>
+
+<p>具体的实现可以参考我的commit，代码很短，就几行</p>
+
+<h1 id="oauth2">OAuth2</h1>
+
+<p>关于OAuth2的学习可以参考我的笔记：<a href="http://blog.just4fun.site/OAuth2-note.html">OAuth学习笔记</a></p>
+
+<p>如果你对此熟悉 ，我们继续前进</p>
+
+<p>CAS登录中，有一个中心，这个中心是CAS server，这种登录方式往往是集中式的。而OAuth2可以用于分布式登录的场景，尽管它的用途不只于此（还包括访问受限的资源）。</p>
+
+<p>你一定使用过这种登录方式，许多网站都支持支持QQ/微信/google/facebook登录</p>
+
+<p>这便使用了OAuth2</p>
+
+<h3 id="oauth2-client">OAuth2 client</h3>
+
+<p>当我们访问网站A（比如我们的edx实例）时，使用了QQ登录，那么有以下事件发生</p>
+
+<ul>
+<li>用户访问A网站，选择QQ登录，网站将用户导向qq认证服务器。</li>
+<li>用户登录QQ，并选择是否给予网站A授权。</li>
+<li>若用户给予授权，QQ认证服务器将用户导向A网站事先指定的&rdquo;重定向URI&rdquo;（redirection URI），同时附上一个授权码。</li>
+<li>A网站收到授权码，附上早先的&rdquo;重定向URI&rdquo;，向QQ认证服务器申请令牌。这一步是在A网站的后台的服务器上完成的，对用户不可见。</li>
+<li>QQ认证服务器核对了授权码和重定向URI，确认无误后，向A网站发送访问令牌（access token）和更新令牌（refresh token）。</li>
+</ul>
+
+<p>之后A网站在后端携带用户的access token，可能拿到用户资料了。至此A网站的后端可以知道用户A是否是A 网站的合法用户，对于采用QQ登录网站A而言，已经足够了。</p>
+
+<p>如果你熟悉OAuth2，你会发现这就是使用最广泛的<code>授权码模式</code></p>
+
+<p>需要注意的是，本地用户系统如何与用户QQ资料挂钩，诸如展示用户名或者用户头像，这些不是oauth2该做的，即便走通了oauth2的流程只意味着，该用户在QQ认证服务器那边是合法用户，同时本地后台也可以拿到用户资料（QQ昵称/头像），可是如何把用户昵称和头像与网站A本地系统整合，好比username和昵称挂钩，或是与id挂钩，这需要在网站A注册系统里手写逻辑，一般在上边的最后一步做，注册完成之后，把用户重定向到dashboard。可以参考edx中既有的google/facebook/linkedin</p>
+
+<p>你也可以参考这个案例:<a href="https://github.com/joestump/python-oauth2/wiki/Logging-into-Django-w--Twitter">Logging-into-Django-w&ndash;Twitter</a>,尽管这个案例和edx无关，但它基本把流程说清了</p>
+
+<p>值得一提的事，edx整合外部登录到系统里的方式是采用用户绑定而不是直接注册，所以会导致以下问题</p>
+
+<p>如果你使用<a href="https://github.com/omab/python-social-auth">python-social-auth</a>，即便你好不容易，折腾半天，感觉已经没问题了，腾讯那边还会说<code>点击QQ登录按钮提示登录失败或出现错误信息（无跳转、提示失败、出现错误信息）</code>,于是不让你审核通过，原因是edx的<code>third_party_auth</code>并不会自动将oauth2登录通过的用户注册到edx里，而是要求你使用edx既有用户绑定一下，之后才可以使用qq登录。</p>
+
+<p>这样一来腾讯那边认为你并没有登录成功，所以没法审核通过</p>
+
+<p>以上是Open edx使用OAuth2 client登录qq的场景</p>
+
+<p>最后需要郑重提醒的是网站基本信息里回调地址得是<code>http:xxx/auth/complete/qq/</code></p>
+
+<h3 id="oauth2-server">OAuth2 server</h3>
+
+<p>lms的 OAuth2 server 用的是<a href="https://django-oauth2-provider.readthedocs.org/en/latest/getting_started.html">django-oauth2-provider</a></p>
+
+<p>下边我们讨论Open edX作为OAuth2 server的场景，这时Open edx相当于我们上边提到的QQ认证服务器的角色，此时B网站就可以使用Open edx的用户登录他们的网站，诸如insights就是这样做的，insights本身是个独立完整的网站，为了与lms/cms整合在一起，采用了OAuth2来关联用户，这时候lms就扮演了OAuth2 server的角色，只要你拥有lms的用户，就可以直接登录insights，用户的感觉是只有一个用户系统。</p>
+
+<p>整个认证的流程和上边基本相同，具体的操作可以参考<a href="https://openedx.atlassian.net/wiki/display/OpenOPS/edX+Analytics+Installation">edX Analytics Installation</a></p>
+
+<p>不同的地方主要是OAuth2 server（lms）和OAuth2 client(insights)都是自己的，所以OAuth2 client是受信任的client，这是一种<code>客户端模式</code>，比前头提到的授权码模式来得简单，关于这些模式的对比，可以参考我的这篇文章:<a href="http://blog.just4fun.site/OAuth2-note.html">OAuth学习笔记</a></p>
+
+<p>关于客户端模式的代码，参考<a href="http://blog.just4fun.site/edx-api.html">enable Open edX REST APIs(work with mobile)</a>,通过客户端模式，我们可以轻易了解用户和密码的正确性</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">requests.auth</span>
+<span class="n">client_auth</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="s1">&#39;dc107056a5335b3a7c74&#39;</span><span class="p">,</span> <span class="s1">&#39;4e3f1fad6e0583fc80d78541f2ca6cfad8a93bed&#39;</span><span class="p">)</span>
+<span class="n">post_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;grant_type&#34;</span><span class="p">:</span> <span class="s2">&#34;password&#34;</span><span class="p">,</span> <span class="s2">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;wwj&#34;</span><span class="p">,</span> <span class="s2">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;wwj&#34;</span><span class="p">}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&#34;https://127.0.0.1/oauth2/access_token&#34;</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">client_auth</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">post_data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>产生受信任客户端的核心就是我们能控制OAuth2 server，在其中执行：</p>
+
+<p><code>sudo /edx/bin/python.edxapp /edx/bin/manage.edxapp lms --setting=aws create_oauth2_client http://insight:18110 http://insight:18110/complete/edx-oidc/ confidential --client_name insights --client_id YOUR_OAUTH2_KEY --client_secret secret --trusted</code></p>
+
+<p>其中<code>http://insight:18110/complete/edx-oidc/</code>是回调地址，这一步往往是两个平台用户关联的核心所在，有兴趣的同学可以直接翻源码，出于篇幅限制，在此不详述。这个url，来自<a href="https://github.com/omab/python-social-auth">python-social-auth</a></p>
+
+<p>这里给我们的一个启示是：如果你想拓展edx，所做的拓展并不需要再界面上与edx整合（内嵌的整合可以用djangoapp/xblock），而又希望两者能看起来像一个系统（用户打通），那么采用insights的这种架构就很好，实际上，open edx的整个项目就是由若干服务组成的，edx本身的就够就是由若干异构系统拼成的，这个今天人气很高的<code>微服务</code>有异曲同工之处</p>
+
+<p>顺便再提一下，insights中有许多地方需要lms的数据，诸如题目统计里需要统计各类题目的正误情况，所以我们需要题目的信息，而这些信息insights里是不包括的，实际上这也是通过rest接口完成的，认证机制也是OAuth2，接口在这里<a href="http://edx.readthedocs.org/projects/edx-platform-api/en/latest/course_structure/index.html">Course Structure API</a></p>
+
+<p>回到OAuth2 server的话题，lms作为OAuth2 server，我们首先需要启动它，通过在<code>lms.env.json</code>里设置(FEATURES)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+...
+&#34;FEATURES: {
+	...
+	&#34;ENABLE_OAUTH2_PROVIDER&#34;: true,
+	&#34;OAUTH_ENFORCE_SECURE&#34;: false,
+	...
+}
+&#34;JWT_ISSUER&#34;: &#34;http://LMS/oauth2&#34;,
+&#34;OAUTH_OIDC_ISSUER&#34;: &#34;http://LMS/oauth2&#34;,
+&#34;OAUTH_ENFORCE_SECURE&#34;: false, #这个放在FEATURES里？
+...</pre></td></tr></table>
+</div>
+</div>
+<p>而在insight里,确保<code>/edx/etc/insights.yml</code>（如果跑脚本的时候设置正确，这些会自动生成）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+CMS_COURSE_SHORTCUT_BASE_URL: http://LMS/course
+COURSE_API_URL: http://LMS/api/course_structure/v0/
+MODULE_PREVIEW_URL: http://LMS/xblock
+SOCIAL_AUTH_EDX_OIDC_URL_ROOT: http://LMS/oauth2</pre></td></tr></table>
+</div>
+</div>
+<h3 id="外部登录细节">外部登录细节</h3>
+
+<p>我们从insights开始，我们把insights看做一个oauth2 client，登录入口为<code>/accounts/login/</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+    url(r&#39;^accounts/login/$&#39;,
+        RedirectView.as_view(url=reverse_lazy(&#39;social:begin&#39;, args=[&#39;edx-oidc&#39;]), permanent=False, query_string=True),
+        name=&#39;login&#39;),</pre></td></tr></table>
+</div>
+</div>
+<p>通信的过程是标准的oauth2登录方式，具体的请求地址可以参考：<a href="https://github.com/edx/auth-backends">auth-backends</a></p>
+
+<p>其中<a href="https://github.com/edx/auth-backends/blob/master/auth_backends/backends.py#L13">EdXOpenIdConnect</a>是关键所在</p>
+
+<p>相关请求url为：</p>
+
+<ul>
+<li>AUTHORIZATION_URL :  <a href="http://LMS/oauth2/authorize/">http://LMS/oauth2/authorize/</a>     //使用get获取code,有时效性</li>
+<li>ACCESS_TOKEN_URL : <a href="http://LMS/oauth2/access_token/">http://LMS/oauth2/access_token/</a>    //使用post 携带参数获得access_token</li>
+<li>USER_INFO_URL : <a href="http://LMS/oauth2/user_info/">http://LMS/oauth2/user_info/</a></li>
+</ul>
+
+<p>我们可以试试手动获取用户数据</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># get access_token</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">requests.auth</span>
+<span class="n">client_auth</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;secret&#39;</span><span class="p">)</span>
+<span class="n">post_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;grant_type&#34;</span><span class="p">:</span> <span class="s2">&#34;password&#34;</span><span class="p">,</span> <span class="s2">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;wwj&#34;</span><span class="p">,</span> <span class="s2">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;wwj&#34;</span><span class="p">}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&#34;http://LMS/oauth2/access_token&#34;</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">client_auth</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">post_data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;Authorization&#34;</span><span class="p">:</span> <span class="s2">&#34;bearer xxx&#34;</span><span class="p">,</span> <span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;ChangeMeClient/0.1 by YourUsername&#34;</span><span class="p">}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;http:/LMS/api/mobile/v0.5/my_user_info&#34;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+<span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>以上采用的是受信任客户端的模式</p>
+
+<hr />
+
+<p>这一块的单步调试非常错综复杂，是应为oauth2的url部分写得奇蠢无比。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">FEATURES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ENABLE_OAUTH2_PROVIDER&#39;</span><span class="p">):</span>
+    <span class="n">urlpatterns</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="c1"># These URLs dispatch to django-oauth-toolkit or django-oauth2-provider as appropriate.</span>
+        <span class="c1"># Developers should use these routes, to maintain compatibility for existing client code</span>
+        <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^oauth2/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;lms.djangoapps.oauth_dispatch.urls&#39;</span><span class="p">)),</span>
+        <span class="c1"># These URLs contain the django-oauth2-provider default behavior.  It exists to provide</span>
+        <span class="c1"># URLs for django-oauth2-provider to call using reverse() with the oauth2 namespace, and</span>
+        <span class="c1"># also to maintain support for views that have not yet been wrapped in dispatch views.</span>
+        <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^oauth2/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;edx_oauth2_provider.urls&#39;</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;oauth2&#39;</span><span class="p">)),</span> 
+        <span class="c1"># The /_o/ prefix exists to provide a target for code in django-oauth-toolkit that</span>
+        <span class="c1"># uses reverse() with the &#39;oauth2_provider&#39; namespace.  Developers should not access these</span>
+        <span class="c1"># views directly, but should rather use the wrapped views at /oauth2/</span>
+        <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^_o/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;oauth2_provider.urls&#39;</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;oauth2_provider&#39;</span><span class="p">)),</span>
+    <span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>官方采取了url覆盖的方法，而不是明确指出，以至于你如果不深入源码丛林就找不到url对应的view，而由于这些是外部库，所以ack也很不方便</p>
+
+<p>我们只好求助一些工具: <code>sudo /edx/bin/python.edxapp /edx/app/edxapp/edx-platform/manage.py lms show_urls  --settings devstack | grep user_info</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+/api/mobile/v0.5/my_user_info   rest_framework.decorators.my_user_info
+/oauth2/user_info/      oauth2_provider.views.UserInfoView      oauth2:user_info</pre></td></tr></table>
+</div>
+</div>
+<p>从中我们找到了user_info对于的方法，它来自<a href="https://github.com/edx/edx-oauth2-provider/blob/master/edx_oauth2_provider/views.py#L201">edx_oauth2_provider</a>，不要问题为何知道。。</p>
+
+<p>如果你要手动处理oauth2，试试：<a href="https://requests-oauthlib.readthedocs.org/en/latest/">requests-oauthlib</a>，分步调试的话，可以看这个:<a href="https://requests-oauthlib.readthedocs.org/en/latest/examples/google.html">examples/google</a>，不过需要https</p>
+
+<p>更多的调试细节，比如各个参数的含义，那么你需要了解oauth2协议本身，那样可以从http层面调试，否则会很艰难，还是尽量使用oauth2 client吧</p>
+
+<p>如果你对过程参数感兴趣可以参考<a href="http://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token">使用Authorization_Code获取Access_Token</a></p>
+
+<p>对原理说的最清楚的为<a href="https://developers.douban.com/wiki/?title=oauth2">使用 OAuth 2.0 访问豆瓣 API</a></p>
+
+<p>当携带code请求access_token是，使用http &ndash;form提交，例子如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">http --form http://LMS/oauth2/access_token  client_id=key client_secret=secret code=xxx grant_type=authorization_code redirect_uri=http://domain_test</pre></td></tr></table>
+</div>
+</div>
+<p>至于如何拿到code</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">http --form http://LMS/oauth2/access_token  client_id=key client_secret=secret code=xxx grant_type=authorization_code redirect_uri=http://domain_test</pre></td></tr></table>
+</div>
+</div>
+<p>```</p>
+
+<p>，然后你将得到access token，其中有id_token参数，这个参数是jwt加密后的,需要解密</p>
+
+<h1 id="更改login机制">更改login机制</h1>
+
+<p>我们可能处于各种原因需要修改login机制，诸如想同时支持email和username，诸如不想验证用户的有效性，诸如允许某些用户携带秘钥直接登录</p>
+
+<p>在此分享一下同时支持email和username的登录方式的思路。更改登录逻辑当然是核心</p>
+
+<p>登录逻辑在<code>common/djangoapps/student/views.py</code>中的login_user函数，更改这部分倒是容易，麻烦反而在前端</p>
+
+<p>前端并不写在template里，而是写在<code>openedx/core/djangoapps/user_api/views.py</code>中，找到<code>LoginSessionView</code>更改即可</p>
+
+<h1 id="qq-微信登录">QQ/微信登录</h1>
+
+<p>关于QQ登录大体流程在OAuth2 client中已经说了，如果你在这部分困难重重，除了QQ本身的坑之外（对此我们无能为力），你最好确保自己熟悉OAuth2，这样方便<code>单步调试</code>,只要你走通了一个OAuth2认证，其他的基本没有难度</p>
+
+<p>调试的细节建议参考<a href="http://wiki.connect.qq.com/%E5%BC%80%E5%8F%91%E6%94%BB%E7%95%A5_client-side">开发攻略_Client-side</a></p>
+
+<p>客户端注册：<a href="http://connect.qq.com/">connect.qq.com</a></p>
+
+<h1 id="移动端跳转">移动端跳转</h1>
+
+<p>如果你不采用彼岸准的oauth2的方式来认证用户，而是由于各种历史原因想走捷径（最好不要这么干！很脏乱，不好维护）。好吧你还是不听，那我建议你采用jwt的方式来携带用户信息，应为有加密，起码它至少是安全的</p>
+
+<p>关于jwt你可以参考我的这篇文章:<a href="http://blog.just4fun.site/jwt-note.html">JWT学习笔记</a></p>
+
+<h1 id="总结">总结</h1>
+
+<p>关于用户系统，我最喜欢的一种设计是，它应该是可插拔式的</p>
+
+<h1 id="工具">工具</h1>
+
+<ul>
+<li><a href="http://tool.chinaz.com/tools/urlencode.aspx">url转码</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-04-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/events-in-the-tracking-logs/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Tracking Logs 中的事件(翻译)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/backup-open-edx-course/">
+            <span class="next-text nav-default">Open edX课程备份工具</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

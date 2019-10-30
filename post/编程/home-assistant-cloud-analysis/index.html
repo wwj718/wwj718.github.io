@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Home Assistant Cloud 分析 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="前言 在Home Assistant 折腾笔记一文中，我们曾提及Home Assistant Cloud。 Home Assistant Cloud是什么 Home Assistant Cloud提供安全的远程连接，允许你远程控制设备(在" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/home-assistant-cloud-analysis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Home Assistant Cloud 分析" />
+<meta property="og:description" content="前言 在Home Assistant 折腾笔记一文中，我们曾提及Home Assistant Cloud。 Home Assistant Cloud是什么 Home Assistant Cloud提供安全的远程连接，允许你远程控制设备(在" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%BC%96%E7%A8%8B/home-assistant-cloud-analysis/" />
+<meta property="article:published_time" content="2019-06-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-06-27T00:00:00+00:00" />
+<meta itemprop="name" content="Home Assistant Cloud 分析">
+<meta itemprop="description" content="前言 在Home Assistant 折腾笔记一文中，我们曾提及Home Assistant Cloud。 Home Assistant Cloud是什么 Home Assistant Cloud提供安全的远程连接，允许你远程控制设备(在">
+
+
+<meta itemprop="datePublished" content="2019-06-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-06-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2053">
+
+
+
+<meta itemprop="keywords" content="programming," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Home Assistant Cloud 分析"/>
+<meta name="twitter:description" content="前言 在Home Assistant 折腾笔记一文中，我们曾提及Home Assistant Cloud。 Home Assistant Cloud是什么 Home Assistant Cloud提供安全的远程连接，允许你远程控制设备(在"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Home Assistant Cloud 分析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-06-27 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a>
+<ul>
+<li>
+<ul>
+<li><a href="#home-assistant-cloud-https-www-home-assistant-io-cloud-是什么"><a href="https://www.home-assistant.io/cloud/">Home Assistant Cloud</a>是什么</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#思路">思路</a></li>
+<li><a href="#前端分析-通信过程">前端分析(通信过程)</a>
+<ul>
+<li>
+<ul>
+<li><a href="#登陆">登陆</a></li>
+<li><a href="#开启remote-control">开启Remote Control</a></li>
+<li><a href="#关闭remote-control">关闭Remote Control</a></li>
+<li><a href="#开启alax">开启alax</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#后端分析">后端分析</a></li>
+<li><a href="#云端分析">云端分析</a>
+<ul>
+<li>
+<ul>
+<li><a href="#远程页面如何通信">远程页面如何通信</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#隐藏目录">隐藏目录</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="前言">前言</h1>
+
+<p>在<a href="https://blog.just4fun.site/Home-Assistant-note.html">Home Assistant 折腾笔记</a>一文中，我们曾提及<a href="https://www.home-assistant.io/cloud/">Home Assistant Cloud</a>。</p>
+
+<h3 id="home-assistant-cloud-https-www-home-assistant-io-cloud-是什么"><a href="https://www.home-assistant.io/cloud/">Home Assistant Cloud</a>是什么</h3>
+
+<p>Home Assistant Cloud提供安全的远程连接，允许你远程控制设备(在你外出的时候)，也允许Amazon Alexa and Google Assistant控制Home Assistant实例.</p>
+
+<p>目前该服务由Home Assistant的合作伙伴<a href="https://www.nabucasa.com/">Nabu Casa, Inc</a>提供。<a href="https://www.nabucasa.com/">Nabu Casa, Inc</a>由Home Assistant 和 Hass.io的联合创始人创建。</p>
+
+<hr />
+
+<p>Home Assistant Cloud目前由<a href="https://www.nabucasa.com/">Nabu Casa, Inc</a>提供，
+nabucasa client是开源的:<a href="https://github.com/NabuCasa/hass-nabucasa/blob/dev/hass_nabucasa/iot.py">nabucasa</a>（我当前本地安装的版本是<code>0.14</code>），对于hass_nabucasa的交互逻辑，可以从测试代码中学习:<a href="https://github.com/NabuCasa/hass-nabucasa/blob/dev/tests/test_cloud_api.py">test_cloud_api.py</a>。</p>
+
+<p>但在国内使用，延迟比较严重，哪天被墙了也难说。本文试图对Home Assistant Cloud 进行分析，为今后自行构建Home Assistant Cloud server提供参考，这个工作颇似我们此前<a href="https://blog.just4fun.site/Scratch3_api_analysis.html">对Scratch做的分析</a>。</p>
+
+<h1 id="思路">思路</h1>
+
+<p>为了理解Home Assistant Cloud的工作原理，我们将从前端开始，观察通信过程，之后跟踪到Home Assistant后端源码里(<a href="https://github.com/NabuCasa/hass-nabucasa/blob/dev/hass_nabucasa/iot.py">nabucasa</a>组件是核心部分)，最后对Home Assistant Cloud server进行推断。</p>
+
+<h1 id="前端分析-通信过程">前端分析(通信过程)</h1>
+
+<p>首先打开Home Assistant Cloud: <code>http://127.0.0.1:8123/config/cloud/account</code></p>
+
+<p>我们从登陆开始:</p>
+
+<h3 id="登陆">登陆</h3>
+
+<p>POST: <code>http://127.0.0.1:8123/api/cloud/login</code></p>
+
+<p>Request Payload: <code>{&quot;email&quot;:&quot;EMAIL&quot;,&quot;password&quot;:&quot;PASSWORD&quot;}</code></p>
+
+<p>Response: <code>{&quot;success&quot;: true}</code></p>
+
+<p>登陆完成之后， websocket发送message:<code>{&quot;type&quot;:&quot;cloud/status&quot;,&quot;id&quot;:18}</code></p>
+
+<p>收到:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&#34;success&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+  <span class="nt">&#34;result&#34;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&#34;logged_in&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&#34;prefs&#34;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&#34;alexa_enabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="nt">&#34;google_secure_devices_pin&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&#34;google_enabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="nt">&#34;remote_enabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="nt">&#34;cloudhooks&#34;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&#34;xxx&#34;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&#34;cloudhook_id&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span><span class="p">,</span>
+          <span class="nt">&#34;managed&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+          <span class="nt">&#34;cloudhook_url&#34;</span><span class="p">:</span> <span class="s2">&#34;https://hooks.nabu.casa/xxxxxx&#34;</span><span class="p">,</span>
+          <span class="nt">&#34;webhook_id&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="nt">&#34;cloud_user&#34;</span><span class="p">:</span> <span class="s2">&#34;xx&#34;</span><span class="p">,</span>
+      <span class="nt">&#34;google_entity_configs&#34;</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+    <span class="nt">&#34;email&#34;</span><span class="p">:</span> <span class="s2">&#34;EMAIL&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;remote_certificate&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&#34;alexa_entities&#34;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&#34;include_entities&#34;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="nt">&#34;exclude_domains&#34;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="nt">&#34;include_domains&#34;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="nt">&#34;exclude_entities&#34;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">},</span>
+    <span class="nt">&#34;cloud&#34;</span><span class="p">:</span> <span class="s2">&#34;connecting&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;remote_connected&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&#34;alexa_domains&#34;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&#34;fan&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;automation&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;group&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;alert&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;cover&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;lock&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;script&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;sensor&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;binary_sensor&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;climate&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;scene&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;input_boolean&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;switch&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;media_player&#34;</span><span class="p">,</span>
+      <span class="s2">&#34;light&#34;</span>
+    <span class="p">],</span>
+    <span class="nt">&#34;remote_domain&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&#34;google_entities&#34;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&#34;include_entities&#34;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="nt">&#34;exclude_domains&#34;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="nt">&#34;include_domains&#34;</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="nt">&#34;exclude_entities&#34;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;result&#34;</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>之后前端继续发送两条websocket消息:</p>
+
+<p><code>{&quot;type&quot;:&quot;webhook/list&quot;,&quot;id&quot;:19}</code>, 返回:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&#34;success&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
+  <span class="nt">&#34;result&#34;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&#34;domain&#34;</span><span class="p">:</span> <span class="s2">&#34;locative&#34;</span><span class="p">,</span>
+      <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Locative&#34;</span><span class="p">,</span>
+      <span class="nt">&#34;webhook_id&#34;</span><span class="p">:</span> <span class="s2">&#34;xxxx&#34;</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;result&#34;</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><code>{&quot;type&quot;:&quot;cloud/subscription&quot;,&quot;id&quot;:20}</code>, 返回:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&#34;success&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+  <span class="nt">&#34;result&#34;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&#34;customer_exists&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&#34;renewal_active&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="nt">&#34;subscription&#34;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&#34;canceled_at&#34;</span><span class="p">:</span> <span class="mi">1560481412</span><span class="p">,</span>
+      <span class="nt">&#34;cancel_at_period_end&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nt">&#34;trial_end&#34;</span><span class="p">:</span> <span class="mi">1563148800</span><span class="p">,</span>
+      <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="s2">&#34;trialing&#34;</span><span class="p">,</span>
+      <span class="nt">&#34;current_period_end&#34;</span><span class="p">:</span> <span class="mi">1563148800</span>
+    <span class="p">},</span>
+    <span class="nt">&#34;human_description&#34;</span><span class="p">:</span> <span class="s2">&#34;Trial user. Trial expires Jul 15, 2019.&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;delete_requested&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&#34;provider&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&#34;source&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&#34;plan_renewal_date&#34;</span><span class="p">:</span> <span class="mi">1563148800</span><span class="p">,</span>
+    <span class="nt">&#34;billing_plan_type&#34;</span><span class="p">:</span> <span class="s2">&#34;trial&#34;</span>
+  <span class="p">},</span>
+  <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;result&#34;</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="开启remote-control">开启Remote Control</h3>
+
+<p>点击<code>Remote Control</code> 右边的按钮，将打开远程控制模式。点击之后前端发送websocket消息:</p>
+
+<p><code>{&quot;type&quot;:&quot;cloud/remote/connect&quot;,&quot;id&quot;:20}</code>， 返回内容同前头<code>{&quot;type&quot;:&quot;cloud/status&quot;,&quot;id&quot;:18}</code>相似</p>
+
+<p><code>{&quot;type&quot;:&quot;cloud/status&quot;,&quot;id&quot;:21}</code>, 返回内容同前头<code>{&quot;type&quot;:&quot;cloud/status&quot;,&quot;id&quot;:18}</code>相似</p>
+
+<h3 id="关闭remote-control">关闭Remote Control</h3>
+
+<p><code>{&quot;type&quot;:&quot;cloud/remote/disconnect&quot;,&quot;id&quot;:22}</code>, 返回内容同前头<code>{&quot;type&quot;:&quot;cloud/status&quot;,&quot;id&quot;:18}</code>相似</p>
+
+<p>打开显示在页面的链接:<code>https://xxx.ui.nabu.casa</code>, 可以进行远程控制了！控制界面完全相同，目前猜测是建立了一个透明管道，就像ngrok那样</p>
+
+<h3 id="开启alax">开启alax</h3>
+
+<p><code>{&quot;type&quot;:&quot;cloud/update_prefs&quot;,&quot;alexa_enabled&quot;:true,&quot;id&quot;:24}</code>, 返回<code>{&quot;success&quot;: true, &quot;id&quot;: 24, &quot;result&quot;: null, &quot;type&quot;: &quot;result&quot;}</code></p>
+
+<h1 id="后端分析">后端分析</h1>
+
+<!--使用ngrok好像也完全做得到-->
+
+<p>根据前端的websocket message，逆向找到对应的后端源码是比较简单的一件事。</p>
+
+<p>我们重点关注一下handle<code>{&quot;type&quot;:&quot;cloud/remote/connect&quot;,&quot;id&quot;:20}</code>消息的<a href="https://github.com/home-assistant/home-assistant/blob/0.94.3/homeassistant/components/cloud/http_api.py#L436">后端源码</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@websocket_api.require_admin</span>
+<span class="nd">@_require_cloud_login</span>
+<span class="nd">@websocket_api.async_response</span>
+<span class="nd">@_ws_handle_cloud_errors</span>
+<span class="nd">@websocket_api.websocket_command</span><span class="p">({</span>
+    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;cloud/remote/connect&#39;</span>
+<span class="p">})</span>
+<span class="n">async</span> <span class="k">def</span> <span class="nf">websocket_remote_connect</span><span class="p">(</span><span class="n">hass</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;Handle request for connect remote.&#34;&#34;&#34;</span>
+    <span class="n">cloud</span> <span class="o">=</span> <span class="n">hass</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">DOMAIN</span><span class="p">]</span> <span class="c1"># </span>
+    <span class="n">await</span> <span class="n">cloud</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">prefs</span><span class="o">.</span><span class="n">async_update</span><span class="p">(</span><span class="n">remote_enabled</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">await</span> <span class="n">cloud</span><span class="o">.</span><span class="n">remote</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">send_result</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">_account_data</span><span class="p">(</span><span class="n">cloud</span><span class="p">))</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>nabucasa client部分对应的<a href="https://github.com/NabuCasa/hass-nabucasa/blob/0.14/hass_nabucasa/remote.py#L246">源码</a></p>
+
+<p>阅读RemoteUI class可以发现cloud非常值得关注，cloud作为RemoteUI初始化参数传入，我们跟踪RemoteUI的初始化过程，可以追溯到:<a href="https://github.com/NabuCasa/hass-nabucasa/blob/0.14/hass_nabucasa/__init__.py#L47">self.remote = RemoteUI(self)</a>,  nabucasa client与云相关的所有秘密都可以从这儿找到。</p>
+
+<h1 id="云端分析">云端分析</h1>
+
+<p>从前头的讨论我们感觉Home Assistant Cloud有些像ngrok server。使用ngrok好像也完全做得到这些事。 本质是把局域网服务暴露到外网。</p>
+
+<h3 id="远程页面如何通信">远程页面如何通信</h3>
+
+<p>Remote Control现实的公网控制页面<code>https://xxx.ui.nabu.casa/</code> 是如何控制我们的设备的呢，可以发现，它使用的websocket通道为 <code>wss://xxx.ui.nabu.casa/api/websocket</code>,采用的message和本地完全一样。</p>
+
+<p>看起来是个透明代理。</p>
+
+<p>从证书信息和后端源码可知证书使用 letsencrypt.org(有效期为3个月，会自动更新)</p>
+
+<h1 id="隐藏目录">隐藏目录</h1>
+
+<p>登陆之后，观察<code>.homeassistant/.cloud</code>目录, 有以下文件:</p>
+
+<ul>
+<li>acme_account.pem<br /></li>
+<li>acme_reg.json<br /></li>
+<li>production_auth.json<br /></li>
+<li>remote_fullchain.pem<br /></li>
+<li>remote_private.pem</li>
+</ul>
+
+<p><code>.storage/cloud</code>内容为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+    <span class="nt">&#34;data&#34;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&#34;alexa_enabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="nt">&#34;cloud_user&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span><span class="p">,</span>
+        <span class="nt">&#34;cloudhooks&#34;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&#34;xxx&#34;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&#34;cloudhook_id&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span><span class="p">,</span>
+                <span class="nt">&#34;cloudhook_url&#34;</span><span class="p">:</span> <span class="s2">&#34;https://hooks.nabu.casa/xxx&#34;</span><span class="p">,</span>
+                <span class="nt">&#34;managed&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="nt">&#34;webhook_id&#34;</span><span class="p">:</span> <span class="s2">&#34;xxx&#34;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&#34;google_enabled&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="nt">&#34;google_secure_devices_pin&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="nt">&#34;remote_enabled&#34;</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">},</span>
+    <span class="nt">&#34;key&#34;</span><span class="p">:</span> <span class="s2">&#34;cloud&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;version&#34;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://blog.just4fun.site/Home-Assistant-note.html">Home Assistant 折腾笔记</a></li>
+<li><a href="https://www.home-assistant.io/cloud/">Home Assistant Cloud</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-06-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/programming/">programming</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/hass-browser_mod/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">hass-browser_mod: 将浏览器变为可控制的实体</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/replit-play/">
+            <span class="next-text nav-default">Play: 像学习Scratch那样学习Python</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

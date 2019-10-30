@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>edx-analytics-pipeline源码解读 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="提供机制，而不是策略 &amp;ndash;《Unix编程艺术》 #edx-analytics-pipeline是什么鬼 它这样自我介绍： The Hadoop-based data pipeline. edx-" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/edx-analytics-pipeline-code-analysis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="edx-analytics-pipeline源码解读" />
+<meta property="og:description" content="提供机制，而不是策略 &ndash;《Unix编程艺术》 #edx-analytics-pipeline是什么鬼 它这样自我介绍： The Hadoop-based data pipeline. edx-" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/edx-analytics-pipeline-code-analysis/" />
+<meta property="article:published_time" content="2015-06-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-06-30T00:00:00+00:00" />
+<meta itemprop="name" content="edx-analytics-pipeline源码解读">
+<meta itemprop="description" content="提供机制，而不是策略 &ndash;《Unix编程艺术》 #edx-analytics-pipeline是什么鬼 它这样自我介绍： The Hadoop-based data pipeline. edx-">
+
+
+<meta itemprop="datePublished" content="2015-06-30T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-06-30T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3036">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="edx-analytics-pipeline源码解读"/>
+<meta name="twitter:description" content="提供机制，而不是策略 &ndash;《Unix编程艺术》 #edx-analytics-pipeline是什么鬼 它这样自我介绍： The Hadoop-based data pipeline. edx-"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">edx-analytics-pipeline源码解读</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-06-30 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>提供机制，而不是策略  &ndash;《Unix编程艺术》</p>
+</blockquote>
+
+<p>#<a href="https://github.com/edx/edx-analytics-pipeline">edx-analytics-pipeline</a>是什么鬼
+它这样自我介绍：</p>
+
+<blockquote>
+<p>The Hadoop-based data pipeline.</p>
+</blockquote>
+
+<p><a href="https://github.com/edx/edx-analytics-pipeline">edx-analytics-pipeline</a>是edx数据分析和可视化的成员组件之一，主要的功能是从track log中挖掘信息。数据挖掘的业务逻辑，都在这个源码库里，接受track log作为输入,（关于track log，可以参看我此前的<a href="http://wwj718.github.io/edx-tracking-logs-data-research.html">这篇文章</a>）,从中提取信息，输出结果到mysql中。至于数据的呈现，主要是<a href="https://github.com/edx/edx-analytics-dashboard">edx-analytics-dashboard</a>的职责。</p>
+
+<p>我在<a href="http://wwj718.github.io/edx-data-analysis-on-docker.html">基于docker的edx数据分析</a> 提到，我用docker打包了<a href="https://github.com/edx/edx-analytics-pipeline">edx-analytics-pipeline</a>相关的依赖，利用它可以从track log中提取信息，可以分析出</p>
+
+<ul>
+<li>每周课程活跃情况</li>
+<li>各项答案分布情况</li>
+<li>课程注册情况报表</li>
+<li>&hellip;</li>
+</ul>
+
+<p>如果你同时安装好了insights，那么将看到以下效果</p>
+
+<p><img src="img/edx/analysis/enrollment_chart.png" alt="enrollment_chart" /></p>
+
+<p><img src="img/edx/analysis/engagement_chart_SPOC.png" alt="engagement_chart_SPOC" /></p>
+
+<p><img src="img/edx/analysis/problem_display_name.png" alt="problem_display_name" /></p>
+
+<p><img src="img/edx/analysis/video_frequent_replays.png" alt="video_frequent_replays" /></p>
+
+<p>更多可视化呈现结果请看<a href="http://edx.readthedocs.org/projects/edx-insights/en/latest/engagement/Engagement_Video.html">这里</a></p>
+
+<hr />
+
+<p>#为何需要深入源码
+我们看到对学生观看视频之类的行为，虽然track log里有记录原始数据(<a href="http://edx.readthedocs.org/projects/devdata/en/latest/internal_data_formats/tracking_logs.html">tracking_logs</a>)，可目前的官方进度还没走到这里，尚未对此做出分析,就是说这些数据需要我们自己去挖掘，那么有兴趣的小伙伴们，就需要理解<a href="https://github.com/edx/edx-analytics-pipeline">edx-analytics-pipeline</a>的源码，从而能够自己去挖掘track log里丰富的信息。可以玩出的花样，取决于你的想象力</p>
+
+<p>其实，不少课程团队都会有各种动机去分析课程所产生的数据。而且这些数据的用途，和产生的价值很可能超出平台设计者的想象，那么edx在此做的很棒的工作便是，不去自作聪明地假定了解用户的需求，而是开放了数据，把分析的工作交由平台的使用者</p>
+
+<p>#切入点
+我们从一个案例开始。</p>
+
+<p>在安装好依赖后，我的第一个分析工作是从tracking log中提取出学生答案的分布情况</p>
+
+<p>也就是这条指令：<code>launch-task AnswerDistributionToMySQLTaskWorkflow [options]</code></p>
+
+<p>跟踪这条指令，弄懂它是如何被执行的，我们就能对edx-analytics-pipeline的设计和逻辑流有个大体上的认识，之后的hack和定制就会容易许多。</p>
+
+<p>##launch-task</p>
+
+<p>首先关注<code>launch-task</code>,如果你有写过python库，很容易看出<code>launch-task</code>是一个<code>command-line tool</code>，可以在setup.py的<code>entry point</code>里找到它。</p>
+
+<p>于是我们找到<code>launch-task = edx.analytics.tasks.launchers.local:main</code></p>
+
+<p>于是顺藤摸瓜，找到了入口函数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># In order to see errors during extension loading, you can uncomment the next line.</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+    <span class="c1"># Load tasks configured using entry_points</span>
+    <span class="c1"># TODO: launch tasks by their entry_point name</span>
+    <span class="n">stevedore</span><span class="o">.</span><span class="n">ExtensionManager</span><span class="p">(</span><span class="s1">&#39;edx.analytics.tasks&#39;</span><span class="p">)</span>
+
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">configuration</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">OVERRIDE_CONFIGURATION_FILE</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Using override.cfg&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">OVERRIDE_CONFIGURATION_FILE</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">override_file</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">override_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="n">configuration</span><span class="o">.</span><span class="n">add_config_path</span><span class="p">(</span><span class="n">OVERRIDE_CONFIGURATION_FILE</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;override.cfg does not exist&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Tell luigi what dependencies to pass to the Hadoop nodes</span>
+    <span class="c1"># - boto is used for all direct interactions with s3.</span>
+    <span class="c1"># - cjson is used for all parsing event logs.</span>
+    <span class="c1"># - filechunkio is used for multipart uploads of large files to s3.</span>
+    <span class="c1"># - opaque_keys is used to interpret serialized course_ids</span>
+    <span class="c1">#   - dependencies of opaque_keys:  bson, stevedore</span>
+    <span class="n">luigi</span><span class="o">.</span><span class="n">hadoop</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">boto</span><span class="p">,</span> <span class="n">cjson</span><span class="p">,</span> <span class="n">filechunkio</span><span class="p">,</span> <span class="n">opaque_keys</span><span class="p">,</span> <span class="n">bson</span><span class="p">,</span> <span class="n">stevedore</span><span class="p">,</span> <span class="n">ciso8601</span><span class="p">)</span>
+
+    <span class="c1"># TODO: setup logging for tasks or configured logging mechanism</span>
+
+    <span class="c1"># Launch Luigi using the default builder</span>
+
+    <span class="k">with</span> <span class="n">profile_if_necessary</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;WORKFLOW_PROFILER&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;WORKFLOW_PROFILER_PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)):</span>
+        <span class="n">luigi</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>啊哈，从中我们发现<code>launch-task</code>无非是对<a href="https://github.com/spotify/luigi">luigi</a>的封装，主要加入了日志记录和配置文件。</p>
+
+<p>之后我们会发现，对<a href="https://github.com/spotify/luigi">luigi</a>的熟悉程度根本上决定了我们能做的定制深度。</p>
+
+<p>而业务逻辑，便是写在luigi的task类中run函数里（多数时候是 JobTask 里的mapper和reducer函数）</p>
+
+<p>这个过程颇像rpg，一边前进一边获得新的线索，而每条新的线索又构成你前进的路标。</p>
+
+<p>希望你最后能从锁妖塔救出灵儿 ：）</p>
+
+<p>好啦游戏现在有了支线剧情，我们要了解下<a href="https://github.com/spotify/luigi">luigi</a>是什么鬼。</p>
+
+<p>在我了解了<a href="https://github.com/spotify/luigi">luigi</a>是什么鬼后，战斗力简直+1000（此处应该有动态闪光效果），在不熟悉luigi之前，launch-task的许多怪癖我根本无从理解，好比任务的幂等性，他喵的，我在这个问题上纳闷了许久，对着不能理解的任务产出无从下手。</p>
+
+<p>##<a href="https://github.com/spotify/luigi">luigi</a>
+###什么鬼
+&gt;Luigi is a Python module that helps you build complex pipelines of batch jobs. It handles dependency resolution, workflow management, visualization etc. It also comes with Hadoop support built in.</p>
+
+<p>luigi的目的是解决所有管道问题，通常与长时间运行的批处理任务相关。像Hadoop作业啦，dumping数据到数据库啦，运行机器学习算法啦，数据分析啦之类的</p>
+
+<p>edx-analytics-pipeline将luigi用于数据分析。当数据量很大，任务复杂的时候，luigi就显示出优越性了。luigi的几个特性此时很有帮助，诸如处理task依赖问题，保证所有关于文件系统的操作的原子性，后者意味着流程不会因为包含不完整数据而导致运行时崩溃。</p>
+
+<p>它还带有web界面，可以看出任务的执行状态，和依赖关系</p>
+
+<p>###Quick Start</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">luigi</span>
+
+<span class="k">class</span> <span class="nc">MyTask</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">IntParameter</span><span class="p">()</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">IntParameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">luigi</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><code>python my_task.py MyTask --local-scheduler --x 123 --y 456</code></p>
+
+<p>###核心概念
+luigi有三个核心概念：</p>
+
+<ul>
+<li>Task:抽象类，任务逻辑运行的地方，提供了一些方法来定义任务的逻辑行为。主要有run, output, requires</li>
+<li>Target:抽象类，我把它理解为类文件句柄。一般对应为磁盘上的文件，HDFS上文件或数据库等.一般开箱可用的LocalTarget和hdfs.HdfsTarget就够用了，很少需要自己写</li>
+<li>Parameter：用于控制job的运行</li>
+</ul>
+
+<p>下边这幅图很好地说明了三者的关系
+<img src="img/edx/analysis/luigi_concept.jpeg" alt="luigi_concept" /></p>
+
+<p>###注意事项
+*  luigi需要依赖于外部的调度器来触发工作流，如crontab等
+*  配置：当前工作目录下的client.cfg优先级高于 /etc/luigi
+*  luigi任务的输出都将被无限期地保存。这点的好处就是当后面的任务失败时，在重跑失败任务时可以重用前面任务的输出，而不需要重跑前面的任务。不好的地方在于，将会有大量的中间结果保存在系统上，一个比较有用的建议就是把这些输出保存在一个特定的目录中，并进行定期地清除。
+    *  一个常见的用例是每晚要运行一个Hadoop任务，但有时因为各种原因该任务会失败。一个有用的模式就是在最后建立一个虚拟任务，仅需声明依赖于最近一天实际真正的任务。</p>
+
+<p>###更多细节
+*  <a href="http://luigi.readthedocs.org/en/stable/workflows.html">文档</a>
+*  <a href="http://vincentzhwg.iteye.com/blog/2063388">Luigi&ndash;基于Python语言的流式任务调度框架教程</a></p>
+
+<p>##AnswerDistributionToMySQLTaskWorkflow
+UML类图如下（使用Understand分析的结果）</p>
+
+<p><img src="img/edx/analysis/edx_pipeline_uml.jpeg" alt="edx_pipeline_uml" /></p>
+
+<p>顺着UML类图走一遍，容易发现AnswerDistributionToMySQLTaskWorkflow从父类中继承的多是一些我们不关心的特性。</p>
+
+<p>我们的兴趣在于统计答案分布的的task，业务代码是那里实现的呢？找到业务逻辑的实现的话，我们就能够自己定制了</p>
+
+<p>容易发现AnswerDistributionToMySQLTaskWorkflow类中的唯一方法<code>insert_source_task</code>中的<code>AnswerDistributionPerCourse</code>便是关键</p>
+
+<p><code>insert_source_task</code>的doc string写的很清楚了</p>
+
+<blockquote>
+<p>Write to answer_distribution table from AnswerDistributionTSVTask.</p>
+</blockquote>
+
+<p>AnswerDistributionPerCourse 便是产生 answer_distribution的地方。</p>
+
+<p>我们接着去看下的AnswerDistributionPerCourse UML类图</p>
+
+<p><img src="img/edx/analysis/edx_pipeline_uml2.jpeg" alt="edx_pipeline_uml" /></p>
+
+<p>根据我们先前学习luigi的知识，知道继承JobTask的类往往会自己实现业务逻辑，关键方法就是<code>mapper</code>和<code>reducer</code>，通过观察UML类图发现，具体的实现被移到AnswerDistributionPerCourseMixin中，至于为何这样做，如果你熟悉Python的话，会发现使用Mixin来实现多态是Python社区的惯用做法</p>
+
+<p>至此，我们已经知道怎么编写自己定制的业务逻辑了，重写一个Mixin类去实现业务逻辑就好了呀！</p>
+
+<p>##options
+最后扫尾一下，关于在文档不足的情况下，如何了解函数的用法，好比，我们怎么知道<code>launch-task AnswerDistributionToMySQLTaskWorkflow [options]</code>中的<code>[options]</code>有哪些可用的选项。看测试用例呀</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python">    <span class="k">def</span> <span class="nf">test_answer_distribution_mysql</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">launch</span><span class="p">([</span>
+            <span class="s1">&#39;AnswerDistributionToMySQLTaskWorkflow&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--src&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_src</span><span class="p">,</span>
+            <span class="s1">&#39;--dest&#39;</span><span class="p">,</span> <span class="n">url_path_join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_root</span><span class="p">,</span> <span class="s1">&#39;dst&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;--name&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--include&#39;</span><span class="p">,</span> <span class="s1">&#39;&#34;*&#34;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;--manifest&#39;</span><span class="p">,</span> <span class="n">url_path_join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_root</span><span class="p">,</span> <span class="s1">&#39;manifest.txt&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;--base-input-format&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">INPUT_FORMAT</span><span class="p">,</span>
+            <span class="s1">&#39;--lib-jar&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">oddjob_jar</span><span class="p">,</span>
+            <span class="s1">&#39;--n-reduce-tasks&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NUM_REDUCERS</span><span class="p">),</span>
+            <span class="s1">&#39;--credentials&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_db</span><span class="o">.</span><span class="n">credentials_file_url</span><span class="p">,</span>
+        <span class="p">])</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>就酱吧</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-06-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/docker-edx-birch-1/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">发布基于docker的edx birch-1国内版本</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/edx-api/">
+            <span class="next-text nav-default">enable Open edX REST APIs(work with mobile)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

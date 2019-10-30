@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>OCR应用一例 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="晚上朋友发微信问能否帮忙折腾个东西: 明天需要整理出一份Word文档，大部分内容来自一篇公众号文章，文章内容由一张张图片组成，好几十张，字数很" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E6%95%B0%E6%8D%AE/ocr-example/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="OCR应用一例" />
+<meta property="og:description" content="晚上朋友发微信问能否帮忙折腾个东西: 明天需要整理出一份Word文档，大部分内容来自一篇公众号文章，文章内容由一张张图片组成，好几十张，字数很" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E6%95%B0%E6%8D%AE/ocr-example/" />
+<meta property="article:published_time" content="2018-03-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-03-15T00:00:00+00:00" />
+<meta itemprop="name" content="OCR应用一例">
+<meta itemprop="description" content="晚上朋友发微信问能否帮忙折腾个东西: 明天需要整理出一份Word文档，大部分内容来自一篇公众号文章，文章内容由一张张图片组成，好几十张，字数很">
+
+
+<meta itemprop="datePublished" content="2018-03-15T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-03-15T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1413">
+
+
+
+<meta itemprop="keywords" content="data," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="OCR应用一例"/>
+<meta name="twitter:description" content="晚上朋友发微信问能否帮忙折腾个东西: 明天需要整理出一份Word文档，大部分内容来自一篇公众号文章，文章内容由一张张图片组成，好几十张，字数很"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">OCR应用一例</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-03-15 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE/"> 数据 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#思路">思路</a></li>
+<li><a href="#准备工作">准备工作</a></li>
+<li><a href="#捷径">捷径</a></li>
+<li><a href="#环境安装">环境安装</a></li>
+<li><a href="#使用tesseract">使用tesseract</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>晚上朋友发微信问能否帮忙折腾个东西: 明天需要整理出一份Word文档，大部分内容来自一篇公众号文章，文章内容由一张张图片组成，好几十张，字数很多</p>
+
+<p>朋友的问题是:手动输入太累了，能否帮她用程序把图片内容转成文本，放在Word文档里</p>
+
+<p>我看了下她发过来的公众号文章，内容确实很长，好在虽然用的是图片，字体还算端正。不过用电脑打开后看，字体比较小，不大清晰。</p>
+
+<p>试着折腾了一下，大约花了半小时。记录下过程</p>
+
+<h1 id="思路">思路</h1>
+
+<p>从图片中提取出文字内容是个OCR(Optical Character Recognition,光学字符识别)问题</p>
+
+<p>首先想到的是自然是大名鼎鼎的<a href="https://github.com/tesseract-ocr/tesseract">Tesseract</a></p>
+
+<p>我比较懒，想到现在云端工具那么多，何必为这个小任务多折腾，找个好用的云端工具，5分钟弄好继续看书</p>
+
+<h1 id="准备工作">准备工作</h1>
+
+<p>微信中的图片是webp格式（可以通过chrome调试工具查看），我把整站保存后，资源文件夹中，图片有一堆，不过没带后缀，在ipython中写2行程序为所有文件，加上.webp后缀</p>
+
+<h1 id="捷径">捷径</h1>
+
+<p>之前在折腾冲顶大会外挂时，觉得百度OCR识别率还不错。为百度OCR做过简单的Python包装，想着用它来试试</p>
+
+<p>当时的百度OCR接口只接收jpg图片，我们先使用ffmpeg吧webp图片转为jpg</p>
+
+<p><code>ffmpeg -i 640\(1\).webp 01.jpg</code></p>
+
+<p>ps: <code>640\(1\)</code>是微信公众号文章保存后某个图片的默认名字</p>
+
+<p>之后使用百度OCR工具对01.jpg做识别，效果很烂，可能是图片不够清晰或其中字数很多的缘故</p>
+
+<p>我换了其他几个云端OCR工具，效果都不好</p>
+
+<p>正好上个周末在用<a href="https://github.com/tesseract-ocr/tesseract">Tesseract</a>、<a href="https://github.com/opencv/opencv">opencv</a>和树莓派帮朋友折腾个项目：目标是利用树莓派摄像头从身份证中提取信息，对tesseract还算熟悉，于是决定用<a href="https://github.com/tesseract-ocr/tesseract">Tesseract</a>来折腾试试</p>
+
+<h1 id="环境安装">环境安装</h1>
+
+<p>根据你自己的系统，按照官方wiki里的方式安装:<a href="https://github.com/tesseract-ocr/tesseract/wiki#introduction">tesseract Installation</a></p>
+
+<p>我用的是mac，使用:<code>brew install tesseract</code>来安装</p>
+
+<p>我的tesseract版本是</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">&gt;&gt;&gt; tesseract -v
+tesseract <span class="m">3</span>.05.01
+ leptonica-1.75.3
+  libjpeg 9c : libpng <span class="m">1</span>.6.34 : libtiff <span class="m">4</span>.0.9 : zlib <span class="m">1</span>.2.8</code></pre></td></tr></table>
+</div>
+</div>
+<p>我们的目标是识别简体中文，如果你不打算自行训练模型的话，可以直接下载官方训练好的</p>
+
+<p>进入到模型存放目录<code>/usr/local/Cellar/tesseract/3.05.01/share/tessdata</code>,根据系统和tesseract不同，做相应调整。如果你不知道目录在哪儿也没关系，往下读，待会儿在你实际运行命令，缺少相应语言模型的时候，系统会告诉你语言模型该放置的的目录</p>
+
+<p>在这儿下载官方训练好的简体中文模型：<code>wget https://github.com/tesseract-ocr/tessdata/raw/master/chi_sim.traineddata</code></p>
+
+<p>更多语言模型可以参考<a href="https://github.com/tesseract-ocr/tessdata">tessdata</a></p>
+
+<p>完成之后，我们就可以使用tesseract在本地提取图片中的文字了</p>
+
+<h1 id="使用tesseract">使用tesseract</h1>
+
+<p>前边的准备工作中，我们已经从微信公众号下载下来的一堆webp图片转为一堆的jpg图片：01.jpg-020.jpg</p>
+
+<p>我们先来试着将一张图片转为文本内容看看</p>
+
+<p><code>tesseract -l chi_sim /tmp/01.jpg /tmp/output</code></p>
+
+<p>ps:如果你没下载chi_sim（简体中文模型），系统会告诉你该在什么目录下放置这个模型</p>
+
+<p>图片里边文字较多，执行识别操作需要一会儿时间，完成后，在本地生成一个output.txt文件，将文本内容对照原图，正确率在90%以上！出错的地方主要是<code>，</code>容易识别为<code>'</code></p>
+
+<p>于是我们在ipython中简单写几行来遍历处理所有图片:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">import subprocess
+for i in range(1,21):
+    subprocess.call(&#34;tesseract -l chi_sim 0{}.jpg   output_{}&#34;.format(i,i),shell=True)</pre></td></tr></table>
+</div>
+</div>
+<p>ps: 如果想用更Pythonic的方式使用tesseract，你可以看看<a href="https://github.com/madmaze/pytesseract">pytesseract</a></p>
+
+<p>洗个澡回来，全部处理完毕，再写个和上边类似的几行代码，把所有output文件粘合起来，放到Word里，任务完成</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-03-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/data/">data</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-plugin-1/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">为Scratch3.0设计的插件系统(上篇)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/book-2016-2017/">
+            <span class="next-text nav-default">近两年读过的一些好书</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

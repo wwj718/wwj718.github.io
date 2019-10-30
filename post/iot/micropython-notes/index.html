@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MicroPython使用笔记 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="折腾MicroPython过程中记录的笔记。涉及资源、工具、文档等。 MicroPython概述 MicroPython是Python3(Pyt" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/iot/micropython-notes/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MicroPython使用笔记" />
+<meta property="og:description" content="折腾MicroPython过程中记录的笔记。涉及资源、工具、文档等。 MicroPython概述 MicroPython是Python3(Pyt" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/iot/micropython-notes/" />
+<meta property="article:published_time" content="2017-12-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-12-21T00:00:00+00:00" />
+<meta itemprop="name" content="MicroPython使用笔记">
+<meta itemprop="description" content="折腾MicroPython过程中记录的笔记。涉及资源、工具、文档等。 MicroPython概述 MicroPython是Python3(Pyt">
+
+
+<meta itemprop="datePublished" content="2017-12-21T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-12-21T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3360">
+
+
+
+<meta itemprop="keywords" content="micropython," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MicroPython使用笔记"/>
+<meta name="twitter:description" content="折腾MicroPython过程中记录的笔记。涉及资源、工具、文档等。 MicroPython概述 MicroPython是Python3(Pyt"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MicroPython使用笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-12-21 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#micropython概述">MicroPython概述</a>
+<ul>
+<li>
+<ul>
+<li><a href="#历史">历史</a></li>
+<li><a href="#开放性">开放性</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#pyboard">pyboard</a>
+<ul>
+<li>
+<ul>
+<li><a href="#技术参数-https-micropython-org"><a href="https://micropython.org/">技术参数</a></a></li>
+<li><a href="#烧写系统">烧写系统</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#开始编程">开始编程</a>
+<ul>
+<li>
+<ul>
+<li><a href="#脚本运行">脚本运行</a>
+<ul>
+<li><a href="#badusb">badusb</a></li>
+</ul></li>
+<li><a href="#repl">REPL</a></li>
+<li><a href="#更多工具">更多工具</a>
+<ul>
+<li><a href="#ampy">ampy</a></li>
+<li><a href="#jupyter-micropython-kernel-https-github-com-adafruit-jupyter-micropython-kernel"><a href="https://github.com/adafruit/jupyter_micropython_kernel">Jupyter MicroPython Kernel</a></a></li>
+</ul></li>
+<li><a href="#错误提醒与处理">错误提醒与处理</a></li>
+<li><a href="#第三方模块">第三方模块</a>
+<ul>
+<li><a href="#import-模块">import 模块</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#其他话题">其他话题</a>
+<ul>
+<li>
+<ul>
+<li><a href="#中断-interrupts">中断(interrupts)</a></li>
+<li><a href="#多线程">多线程</a></li>
+<li><a href="#优化">优化</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#一些实用-有趣的项目">一些实用/有趣的项目</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>折腾MicroPython过程中记录的笔记。涉及资源、工具、文档等。</p>
+
+<h1 id="micropython概述">MicroPython概述</h1>
+
+<p>MicroPython是Python3(Python 3.4)的精简高效实现，包括Python标准库的一小部分(此外，MicroPython还包括访问硬件的&rdquo;machine&rdquo;等模块)，可在微控制器和受限环境中运行。</p>
+
+<p>MicroPython包括了REPL，列表解析，生成器，异常处理等高级功能，适合运行在只有256k的代码空间和16k的RAM的芯片上。</p>
+
+<p>MicroPython尽可能与普通Python(CPython)兼容，方便你轻松将代码从桌面环境移植到微控制器或嵌入式系统。</p>
+
+<h3 id="历史">历史</h3>
+
+<p>MicroPython最初由澳大利亚程序员兼物理学家Damien George 在2013年<a href="https://www.kickstarter.com/projects/214379695/micro-python-python-for-microcontrollers">Kickstarter众筹活动</a>之后创建.
+最初的的Kickstart活动通过pyboard微控制器发布了MicroPython.</p>
+
+<p><img src="https://ksr-ugc.imgix.net/assets/011/591/465/2de115d40b068db02a2186953fd970ac_original.jpg?crop=faces&amp;w=1552&amp;h=873&amp;fit=crop&amp;v=1463684927&amp;auto=format&amp;q=92&amp;s=6f12ee64adce1799eeeb1ddcc73231a4" alt="" /></p>
+
+<p>但MicroPython支持许多基于ARM的体系结构的芯片。MicroPython已经可以运行在Arduino，ESP8266，ESP32&hellip;(具体参考<a href="http://micropython.org/download">MicroPython downloads
+</a>)。2016年，MicroPython的一个分支运行在的BBC microbit上。</p>
+
+<h3 id="开放性">开放性</h3>
+
+<p>MicroPython使用C99(C语言的官方标准第二版)编写,源码在<a href="https://github.com/micropython/micropython">这儿</a>，MicroPython内核非常开放,采用 MIT 协议.</p>
+
+<p>可以自由使用和或者修改MicroPython: 个人使用、教育和商业产品&hellip;</p>
+
+<p>pyboard的的硬件部分开放在这里:<a href="https://github.com/micropython/pyboard">micropython/pyboard</a>。</p>
+
+<h1 id="pyboard">pyboard</h1>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/pyboard2edf9179.png" alt="" /></p>
+
+<p>我目前手中的这块板子是 PYBv1.1</p>
+
+<p>引脚图如下:</p>
+
+<p><img src="http://micropython.org/resources/pybv11-pinout.jpg" alt="" /></p>
+
+<h3 id="技术参数-https-micropython-org"><a href="https://micropython.org/">技术参数</a></h3>
+
+<ul>
+<li>STM32F405RG微控制器</li>
+<li>168 MHz Cortex M4 CPU，带硬件浮点</li>
+<li>1024KiB闪存ROM和192KiB RAM</li>
+<li>微型USB连接器，用于电源和串行通信</li>
+<li>Micro SD卡插槽，支持标准和高容量SD卡</li>
+<li>3轴加速度计 (MMA7660)</li>
+<li>可选电池备份的实时时钟</li>
+<li>有29个GPIO</li>
+<li>3x12位模数转换器，16引脚，4路模拟接地屏蔽</li>
+<li>2x12位数模转换器，可在引脚X5和X6上使用</li>
+<li>1个复位和1个用户开关</li>
+<li>4个led灯(红，绿，黄、蓝)</li>
+<li>板载3.3V LDO稳压器，能够提供高达250mA的输入电压范围3.6V至16V</li>
+<li>ROM中的DFU引导加载程序，便于升级固件</li>
+</ul>
+
+<p>此外值得一提的特性:</p>
+
+<ul>
+<li>支持多种架构（x86, x86-64, ARM, ARM Thumb, Xtensa）</li>
+<li>快速的启动速度（运行到boot.py只需要150毫秒，PYBv1.1以168MHz运行）</li>
+<li>通过<code>_thread</code>支持多线程</li>
+</ul>
+
+<h3 id="烧写系统">烧写系统</h3>
+
+<p>参考: <a href="https://github.com/micropython/micropython/wiki/Pyboard-Firmware-Update">Pyboard Firmware Update</a></p>
+
+<p>按以下步骤进行(我在mac下进行，linux下基本一致，windows用户参考<a href="https://github.com/micropython/micropython/wiki/Pyboard-Firmware-Update#on-windows---using-stm-dfuse">On Windows - Using STM DfuSe</a>):</p>
+
+<ul>
+<li>将DFU pin 与 3.3V pin用杜邦线连在一起</li>
+</ul>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/pyboarda177888d.png" alt="" /></p>
+
+<ul>
+<li>安装dfu-util
+
+<ul>
+<li>mac下是: brew install dfu-util</li>
+</ul></li>
+<li>列出设备
+
+<ul>
+<li><code>sudo dfu-util -l</code></li>
+<li>备份旧系统(可选): <code>sudo dfu-util --alt 0 --upload pyboard-original.dat -s:524288</code></li>
+</ul></li>
+<li>下载MicroPython固件:<a href="http://micropython.org/download/">MicroPython downloads</a>
+
+<ul>
+<li>我选择了PYBv1.1板子，最新的threading版本的:<a href="http://micropython.org/resources/firmware/pybv11-thread-20171220-v1.9.3-207-ga1d85d61.dfu">v1.9.3-207-ga1d85d61</a></li>
+</ul></li>
+<li>开始烧录: <code>sudo dfu-util --alt 0 -D pybv11-thread-20171220-v1.9.3-207-ga1d85d61.dfu</code></li>
+<li>完成</li>
+</ul>
+
+<p>你也可以使用<a href="https://github.com/micropython/micropython/blob/master/tools/pydfu.py">pydfu.py</a>来进行烧录</p>
+
+<h1 id="开始编程">开始编程</h1>
+
+<p>有多种方式可以在pyboard中运行代码，分别是：</p>
+
+<ul>
+<li>脚本运行</li>
+<li>REPL</li>
+</ul>
+
+<p>下边分别论述：</p>
+
+<h3 id="脚本运行">脚本运行</h3>
+
+<p>我们在pyboard上运行硬件的hello world:<code>点亮led灯</code></p>
+
+<ul>
+<li>用USB数据线将pyboard连到电脑里，pyboard将以U盘模式挂载到电脑上（PYBFLASH）</li>
+
+<li><p>进入PYBFLASH，编辑main.py，内容为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pyb</span>
+<span class="n">red_led</span> <span class="o">=</span> <span class="n">pyb</span><span class="o">.</span><span class="n">LED</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+<span class="n">red_led</span><span class="o">.</span><span class="n">on</span><span class="p">()</span></code></pre></td></tr></table>
+</div>
+</div></li>
+
+<li><p>正常弹出pyboard(否则内容会丢失)，按下reset按钮(RST)按下,即可点亮红灯</p></li>
+</ul>
+
+<p>更多的教材参考:<a href="http://docs.micropython.org/en/latest/pyboard/pyboard/tutorial/index.html">MicroPython tutorial for the pyboard</a></p>
+
+<p>PYBFLASH目录下有个<code>boot.py</code>文件，该文件是启动引导脚本，默认加载main.py</p>
+
+<p>通过修改该文件，你还可以选择pyboard的挂载模式，诸如将其挂载为鼠标，有兴趣的同学可以点开这个文件，里边有相应注释。更多细节可以参考:<a href="http://docs.micropython.org/en/latest/pyboard/pyboard/tutorial/usb_mouse.html">Making the pyboard act as a USB mouse</a>。当你想把pyboard从鼠标模式改回来时,需要使用安全模式:<a href="http://docs.micropython.org/en/latest/pyboard/pyboard/general.html#boot-modes">boot-modes</a></p>
+
+<h4 id="badusb">badusb</h4>
+
+<p>下边我们来做些邪恶的事情，不知道badusb是什么的同学，请绕路不要学坏</p>
+
+<p>修改<code>boot.py</code>为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">machine</span>
+<span class="kn">import</span> <span class="nn">pyb</span>
+<span class="n">pyb</span><span class="o">.</span><span class="n">usb_mode</span><span class="p">(</span><span class="s1">&#39;VCP+HID&#39;</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>修改<code>main.py</code>为</p>
+
+<p>下边这个例子中，我们使用体感来控制鼠标</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pyb</span>
+
+<span class="n">switch</span> <span class="o">=</span> <span class="n">pyb</span><span class="o">.</span><span class="n">Switch</span><span class="p">()</span>
+<span class="n">accel</span> <span class="o">=</span> <span class="n">pyb</span><span class="o">.</span><span class="n">Accel</span><span class="p">()</span>
+<span class="n">hid</span> <span class="o">=</span> <span class="n">pyb</span><span class="o">.</span><span class="n">USB_HID</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="ow">not</span> <span class="n">switch</span><span class="p">():</span>
+    <span class="n">hid</span><span class="o">.</span><span class="n">send</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">accel</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">accel</span><span class="o">.</span><span class="n">y</span><span class="p">(),</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">pyb</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>下边这个例子中,按下USR按钮，输入hello</p>
+
+<p>修改<code>boot.py</code>为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">machine</span>
+<span class="kn">import</span> <span class="nn">pyb</span>
+<span class="n">pyb</span><span class="o">.</span><span class="n">usb_mode</span><span class="p">(</span><span class="s1">&#39;CDC+HID&#39;</span><span class="p">,</span><span class="n">hid</span><span class="o">=</span><span class="n">pyb</span><span class="o">.</span><span class="n">hid_keyboard</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>修改<code>main.py</code>为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pyb</span>
+<span class="n">led</span> <span class="o">=</span> <span class="n">pyb</span><span class="o">.</span><span class="n">LED</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sw</span> <span class="o">=</span> <span class="n">pyb</span><span class="o">.</span><span class="n">Switch</span><span class="p">()</span>
+<span class="n">kb</span> <span class="o">=</span> <span class="n">pyb</span><span class="o">.</span><span class="n">USB_HID</span><span class="p">()</span>
+<span class="n">buf</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="n">PLAIN</span> <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">SHIFT</span> <span class="o">=</span> <span class="mh">0x02</span>
+<span class="n">kbmap</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="c1"># part of second row example</span>
+<span class="n">kbmap</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x08</span><span class="p">,</span><span class="n">PLAIN</span><span class="p">)</span>
+<span class="n">kbmap</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x0B</span><span class="p">,</span><span class="n">PLAIN</span><span class="p">)</span>
+<span class="n">kbmap</span><span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x0F</span><span class="p">,</span><span class="n">PLAIN</span><span class="p">)</span>
+<span class="n">kbmap</span><span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x12</span><span class="p">,</span><span class="n">PLAIN</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">sendchr</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">kbmap</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Unknow char&#34;</span><span class="p">)</span> <span class="p">;</span> <span class="k">return</span>
+    <span class="c1"># key down</span>
+    <span class="n">buf</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">kbmap</span><span class="p">[</span><span class="n">char</span><span class="p">]</span>
+    <span class="n">kb</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+    <span class="n">pyb</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="c1">#注意 delay时间太短可能出问题</span>
+    <span class="c1"># key up</span>
+    <span class="n">buf</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span>
+    <span class="n">kb</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+    <span class="n">pyb</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">sendstr</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">str</span> <span class="p">:</span> <span class="n">sendchr</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+<span class="n">pyb</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">led</span><span class="o">.</span><span class="n">toggle</span><span class="p">()</span>
+<span class="n">string</span> <span class="o">=</span> <span class="s2">&#34;hello&#34;</span>
+<span class="n">sendstr</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<span class="n">pyb</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">led</span><span class="o">.</span><span class="n">toggle</span><span class="p">()</span>
+
+<span class="s1">&#39;&#39;&#39;
+</span><span class="s1">while 1 :
+</span><span class="s1">    if sw() :
+</span><span class="s1">        led.toggle()
+</span><span class="s1">        string = &#34;hello&#34;
+</span><span class="s1">        sendstr(string)
+</span><span class="s1">        # Wait for switch to be released
+</span><span class="s1">        led.toggle()
+</span><span class="s1">    pyb.delay(20)
+</span><span class="s1">&#39;&#39;&#39;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>这样一来你可以干任何事:)</p>
+
+<h3 id="repl">REPL</h3>
+
+<p>REPL(Read Evaluate Print Loop)提供了绝佳的学习和探索环境。Python用户对此应该深有感触</p>
+
+<p>在Mac/Linux下我偏好使用串口调试工具<code>picocom</code>来连接硬件（更多的工具参考:<a href="http://docs.micropython.org/en/latest/pyboard/pyboard/tutorial/repl.html#getting-a-micropython-repl-prompt">Getting a MicroPython REPL prompt</a>）</p>
+
+<p>通过<code>/dev/tty.usb*</code>识别出你的pyboard(通过观察pyboard插入前后的变化，多出的设备即为pyboard)，我的pyboard地址为<code>/dev/tty.usbmodem1412</code></p>
+
+<p>执行: <code>picocom /dev/tty.usbmodem1412 -b115200</code> 即可进入REPL</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/pyboardc1cdf8bd.png" alt="" /></p>
+
+<p>注: picocom使用的是emacs的快捷键,退出为:<code>Ctrl-a Ctrl-x</code></p>
+
+<h3 id="更多工具">更多工具</h3>
+
+<p>以上两种方式在开发过程都有些缺陷。以main.py脚本运行的方式，每次需要编辑文件、弹出设备、点击重置。步骤太多</p>
+
+<p>而在REPL中运行，又不放便保存代码，也不好写多行脚本(函数、类、循环)，这一点上ptpython做的很好，可惜目前不能用于MicroPython。下边介绍一些方便调试的工具</p>
+
+<h4 id="ampy">ampy</h4>
+
+<p><a href="https://github.com/adafruit/ampy">ampy</a>是Adafruit出品的一个工具，通过串口连接与MicroPython交互，提供许多实用的工具。允许你在命令行里操控MicroPython。诸如运行本机脚本,往MicroPython板子上传下载文件</p>
+
+<p>安装:<code>pip install adafruit-ampy</code></p>
+
+<p>帮助: <code>ampy --help</code></p>
+
+<p>调试脚本(假设设备为<code>/dev/tty.usbmodem1412</code>): <code>ampy --port /dev/tty.usbmodem1412 run /tmp/a.py</code></p>
+
+<h4 id="jupyter-micropython-kernel-https-github-com-adafruit-jupyter-micropython-kernel"><a href="https://github.com/adafruit/jupyter_micropython_kernel">Jupyter MicroPython Kernel</a></h4>
+
+<p>使用jupyter来交互式地编程</p>
+
+<h3 id="错误提醒与处理">错误提醒与处理</h3>
+
+<p>参考:<a href="http://docs.micropython.org/en/latest/pyboard/pyboard/general.html?highlight=error#errors-flashing-leds">Errors: flashing LEDs</a></p>
+
+<ul>
+<li>如果main.py文件中有语法错误，板子上会交替闪烁红灯和绿灯.如果四个灯同时闪烁，你需要恢复出厂设置</li>
+<li>恢复出厂设置（刷完固件之后的状态）:<a href="http://docs.micropython.org/en/latest/pyboard/pyboard/tutorial/reset.html">Safe mode and factory reset</a></li>
+</ul>
+
+<h3 id="第三方模块">第三方模块</h3>
+
+<p>参考:<a href="http://docs.micropython.org/en/latest/pyboard/reference/packages.html">Distribution packages, package management, and deploying applications</a></p>
+
+<p>和python一样，你也可以方便地安装第三方模块包:<a href="https://github.com/micropython/micropython-lib">micropython-lib</a></p>
+
+<p>如果你的板子可以联网(8266的板子可以，pyboard也有networking版本)，你可以直接使用upip来安装、管理第三方包。</p>
+
+<p>如果你的板子不能联网(目前的pyboard默认不能联网)，你可以使用交叉安装包(Cross-installing packages):现在本地安装包，然后挪到板子里(import路径下即可)。具体而言你会用到这条命令:<code>micropython -m upip install -p install_dir micropython-pystone_lowmem</code>, 之后你把install_dir拖到板子里即可</p>
+
+<p>在mac下你可以通过<code>brew install micropython</code>安装micropython</p>
+
+<h4 id="import-模块">import 模块</h4>
+
+<p>以超声波模块为例:<a href="https://github.com/rsc1975/micropython-hcsr04">micropython-hcsr04</a></p>
+
+<p>在PYBFLASH目录下，拖入<a href="https://github.com/rsc1975/micropython-hcsr04/blob/master/hcsr04.py">hcsr04.py</a>，之后在便可使用它: <code>import hcsr04</code></p>
+
+<h1 id="其他话题">其他话题</h1>
+
+<h3 id="中断-interrupts">中断(interrupts)</h3>
+
+<p>如果你想在pyboard中实现事件机制，可以使用硬件中断: <a href="http://docs.micropython.org/en/latest/pyboard/pyboard/tutorial/switch.html">The Switch, callbacks and interrupts</a></p>
+
+<p>中断回调的函数，需要注意内存</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;hello&#34;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+<span class="c1"># pyb.Pin(&#34;X17&#34;)是用户按钮</span>
+<span class="n">extint</span> <span class="o">=</span> <span class="n">pyb</span><span class="o">.</span><span class="n">ExtInt</span><span class="p">(</span><span class="n">pyb</span><span class="o">.</span><span class="n">Pin</span><span class="p">(</span><span class="s2">&#34;X17&#34;</span><span class="p">),</span> <span class="n">pyb</span><span class="o">.</span><span class="n">ExtInt</span><span class="o">.</span><span class="n">IRQ_FALLING</span><span class="p">,</span><span class="n">pyb</span><span class="o">.</span><span class="n">Pin</span><span class="o">.</span><span class="n">PULL_UP</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span> </code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="多线程">多线程</h3>
+
+<p>如果你要用多线程(诸如模拟事件)，你需要先烧录threading版本的固件，之后你就可以食用<code>_thread</code>模块</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">_thread</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="k">def</span> <span class="nf">myThread_A</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;thread A-&#39;</span><span class="p">)</span>
+    <span class="n">_thread</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">myThread_B</span><span class="p">(</span><span class="n">time_</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">time_</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;thread B-&#39;</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;thread B- Sleep 5s&#39;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;thread B-Wake up&#39;</span><span class="p">)</span>
+    <span class="n">_thread</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">myThread_C</span><span class="p">(</span><span class="n">time_</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">time_</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;thread C-&#39;</span><span class="p">)</span>
+    <span class="n">_thread</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+<span class="n">_thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">myThread_A</span><span class="p">,</span> <span class="p">())</span>
+<span class="n">_thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">myThread_B</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
+<span class="n">_thread</span><span class="o">.</span><span class="n">start_new_thread</span><span class="p">(</span><span class="n">myThread_C</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">pass</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="优化">优化</h3>
+
+<blockquote>
+<p>a cross-compiler and frozen bytecode, to have pre-compiled scripts that don&rsquo;t take any RAM (except for any dynamic objects they create)</p>
+</blockquote>
+
+<h1 id="一些实用-有趣的项目">一些实用/有趣的项目</h1>
+
+<ul>
+<li><a href="https://github.com/jeffmer/micropython-upyphone">micropython-upyphone</a>: 基于 pyboard 和 sim800l的GSM电话</li>
+<li><a href="https://github.com/dhylands/upy-examples">upy-examples</a></li>
+<li><a href="https://github.com/peterhinch/Micropython-scheduler">Micropython-scheduler</a></li>
+<li><a href="https://github.com/peterhinch/micropython-async">micropython-async</a></li>
+<li><a href="https://github.com/micropython/webrepl">webrepl</a></li>
+</ul>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/MicroPython">wikipedia MicroPython</a></li>
+<li><a href="https://micropython.org/">micropython.org</a></li>
+<li><a href="https://github.com/micropython/micropython">github micropython</a></li>
+<li><a href="https://docs.micropython.org/en/latest/pyboard/">micropython doc</a></li>
+<li><a href="https://www.kickstarter.com/projects/214379695/micro-python-python-for-microcontrollers">kickstarter micropython</a></li>
+<li><a href="https://github.com/micropython/micropython-lib">github micropython-lib</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-12-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/micropython/">micropython</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/termux-hello-world/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">神器之Termux</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/cozmo_what_is_this/">
+            <span class="next-text nav-default">Cozmo what is this</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

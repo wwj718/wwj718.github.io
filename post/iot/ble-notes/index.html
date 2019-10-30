@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>BLE学习笔记 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="近期对BLE(蓝牙低功耗)很感兴趣,我在玩几个支持BLE的教育产品: microbit wedo2 BB8 树莓派 就连接的简易性和续航方面，体验都非常好,传输距离更是超过了1" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/iot/ble-notes/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="BLE学习笔记" />
+<meta property="og:description" content="近期对BLE(蓝牙低功耗)很感兴趣,我在玩几个支持BLE的教育产品: microbit wedo2 BB8 树莓派 就连接的简易性和续航方面，体验都非常好,传输距离更是超过了1" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/iot/ble-notes/" />
+<meta property="article:published_time" content="2018-07-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-07-31T00:00:00+00:00" />
+<meta itemprop="name" content="BLE学习笔记">
+<meta itemprop="description" content="近期对BLE(蓝牙低功耗)很感兴趣,我在玩几个支持BLE的教育产品: microbit wedo2 BB8 树莓派 就连接的简易性和续航方面，体验都非常好,传输距离更是超过了1">
+
+
+<meta itemprop="datePublished" content="2018-07-31T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-07-31T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="6171">
+
+
+
+<meta itemprop="keywords" content="maker," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="BLE学习笔记"/>
+<meta name="twitter:description" content="近期对BLE(蓝牙低功耗)很感兴趣,我在玩几个支持BLE的教育产品: microbit wedo2 BB8 树莓派 就连接的简易性和续航方面，体验都非常好,传输距离更是超过了1"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">BLE学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-07-31 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#ble-蓝牙低功耗-https-zh-wikipedia-org-wiki-e8-93-9d-e7-89-99-e4-bd-8e-e5-8a-9f-e8-80-97"><a href="https://zh.wikipedia.org/wiki/%E8%93%9D%E7%89%99%E4%BD%8E%E5%8A%9F%E8%80%97">BLE(蓝牙低功耗)</a></a>
+<ul>
+<li><a href="#主要优点">主要优点</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#gatt">GATT</a>
+<ul>
+<li>
+<ul>
+<li><a href="#gap-https-learn-adafruit-com-introduction-to-bluetooth-low-energy-view-all"><a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy?view=all">GAP</a></a></li>
+<li><a href="#软件模型">软件模型</a>
+<ul>
+<li><a href="#gatt相关术语">GATT相关术语</a></li>
+<li><a href="#标识符-identifiers">标识符（Identifiers）</a></li>
+<li><a href="#gatt操作">GATT操作</a></li>
+<li><a href="#gatt-的连接与网络拓扑">GATT 的连接与网络拓扑</a></li>
+<li><a href="#gatt-通信事务">GATT 通信事务</a></li>
+</ul></li>
+<li><a href="#体验">体验</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#gatt实验笔记">GATT实验笔记</a>
+<ul>
+<li>
+<ul>
+<li><a href="#工具">工具</a></li>
+<li><a href="#在树莓派中做实验">在树莓派中做实验</a>
+<ul>
+<li><a href="#hcitool">hcitool</a></li>
+</ul></li>
+<li><a href="#gatttool">gatttool</a></li>
+<li><a href="#gatt-server">gatt server</a>
+<ul>
+<li><a href="#安装">安装</a></li>
+<li><a href="#使用">使用</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#更多好玩的">更多好玩的</a>
+<ul>
+<li>
+<ul>
+<li><a href="#bb8">BB8</a></li>
+<li><a href="#wedo2">wedo2</a></li>
+<li><a href="#渗透工具">渗透工具</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>近期对<a href="https://zh.wikipedia.org/wiki/%E8%93%9D%E7%89%99%E4%BD%8E%E5%8A%9F%E8%80%97">BLE(蓝牙低功耗)</a>很感兴趣,我在玩几个支持BLE的教育产品:</p>
+
+<ul>
+<li>microbit</li>
+<li>wedo2</li>
+<li>BB8</li>
+<li>树莓派</li>
+</ul>
+
+<p>就连接的简易性和续航方面，体验都非常好,传输距离更是超过了100米。就智能硬件在教育这个领域的应用而言，我相信BLE是未来，尤其是<a href="https://github.com/WebBluetoothCG/web-bluetooth/blob/gh-pages/implementation-status.md#chrome">web bluetooth</a>的标准化推进，使得基于web来做硬件编程教育变得简易，如此一来跨平台变得简易而开发成本也大为降低</p>
+
+<p>本文在前半部分整理了BLE相关的知识和概念（多数摘自维基百科），后半部分记录了我学完理论之后，做的GATT相关实验，介绍了一些方便做实验开源硬件和工具，以及它们的使用方法</p>
+
+<h2 id="ble-蓝牙低功耗-https-zh-wikipedia-org-wiki-e8-93-9d-e7-89-99-e4-bd-8e-e5-8a-9f-e8-80-97"><a href="https://zh.wikipedia.org/wiki/%E8%93%9D%E7%89%99%E4%BD%8E%E5%8A%9F%E8%80%97">BLE(蓝牙低功耗)</a></h2>
+
+<p>引维基百科的介绍:</p>
+
+<blockquote>
+<p>蓝牙低功耗（Bluetooth Low Energy，或称Bluetooth LE、BLE，旧商标Bluetooth Smart）也称蓝牙低能耗、低功耗蓝牙，是蓝牙技术联盟设计和销售的一种个人局域网技术，旨在用于医疗保健、运动健身、信标、安防、家庭娱乐等领域的新兴应用。相较经典蓝牙，低功耗蓝牙旨在保持同等通信范围的同时显著降低功耗和成本。<br />
+包括iOS、Android、Windows Phone和BlackBerry在内的大多数移动操作系统，以及macOS、Linux、Windows 8与Windows 10等在内的桌面操作系统，均已原生支持低功耗蓝牙。蓝牙技术联盟（SIG）预测，到2018年超过90%有蓝牙的智能手机将支持低功耗蓝牙。</p>
+</blockquote>
+
+<p>从这些信息来看，BLE已获得了各大平台的支持,具体的支持情况为:</p>
+
+<ul>
+<li>iOS 5及更高版本</li>
+<li>Windows 8及更高版本</li>
+<li>Android 4.3及更高版本</li>
+<li>Linux 3.4及更高版本，通过BlueZ 5.0</li>
+</ul>
+
+<p>大家可以放心在产品中使用。</p>
+
+<h3 id="主要优点">主要优点</h3>
+
+<ul>
+<li>低功耗，使用纽扣电池就可运行数月至数年</li>
+<li>小体积、低成本</li>
+<li>与现有的大部分手机、平板电脑和计算机兼容</li>
+</ul>
+
+<h1 id="gatt">GATT</h1>
+
+<p>GATT (Generic Attribute Profile) 的中文翻译是通用属性规范。</p>
+
+<p>维基百科里提到：</p>
+
+<blockquote>
+<p>当前所有低功耗应用profile都基于通用属性规范（GATT）。</p>
+</blockquote>
+
+<p>那么什么是profile呢</p>
+
+<blockquote>
+<p>蓝牙技术联盟沿用经典蓝牙的规范内容，为蓝牙低功耗定义了一些profile，这些profile定义了一个设备在特定应用情景下如何工作。制造商应通过在实现中遵循特定的profile以确保兼容性。一台设备可以使用多个profile。</p>
+</blockquote>
+
+<p>说回GATT</p>
+
+<blockquote>
+<p>GATT定义了属性（Attribute），作为通用的封装数据的单位，并定义了如何通过蓝牙连接传输属性从而达到传输数据的目的</p>
+</blockquote>
+
+<p>所以本文技术方面的很多内容都与GATT相关。</p>
+
+<h3 id="gap-https-learn-adafruit-com-introduction-to-bluetooth-low-energy-view-all"><a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy?view=all">GAP</a></h3>
+
+<p>介绍 GATT 之前，我们先来了解一下 GAP（Generic Access Profile）. GAP用来控制设备连接和广播。 它使你的设备被其他设备可见，并决定了你的设备是否可以以及怎样与合同设备进行交互。例如 Beacon 设备就只是向外广播，不支持连接，小米手环就等设备就可以与中心设备连接。</p>
+
+<p>GAP 给设备定义了若干角色，其中主要的两个是：外围设备（Peripheral）和中心设备（Central）。</p>
+
+<ul>
+<li>外围设备：这一般就是非常小或者简单的低功耗设备，用来提供数据，并连接到一个更加相对强大的中心设备。例如小米手环。</li>
+<li>中心设备：中心设备相对比较强大，用来连接其他外围设备。例如手机等。</li>
+</ul>
+
+<p>一旦两个设备经过 GAP 协议建立起了连接，GATT 就开始起作用了，我们就开始跳到GATT部分</p>
+
+<p>关于GAP的更多内容，可以参考:</p>
+
+<ul>
+<li><a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy?view=all">introduction-to-bluetooth-low-energy</a></li>
+<li><a href="https://www.race604.com/gatt-profile-intro/">上文的中文版本</a></li>
+</ul>
+
+<h3 id="软件模型">软件模型</h3>
+
+<h4 id="gatt相关术语">GATT相关术语</h4>
+
+<p>由于我自己目前正在学习BLE，对这个领域的知识没有全局的认识，所积累的知识多是片段式的，所以这篇文章会很枯燥，它更像一个零碎的学习笔记，而不是教程。概念相关的部分基本摘自维基百科，如果大家学习ble的相关概念，建议直接读维基百科，而不是我这这部分二道贩子文章。</p>
+
+<p>罗列一下GATT相关术语</p>
+
+<ul>
+<li>客户端(Client)：  一个发出GATT命令和请求的设备，然后接受响应。例如一个计算机或智能手机。</li>
+<li>服务器(Server)：  一个接受GATT命令和请求的设备，然后返回响应。例如一个温度传感器。</li>
+<li>特征(Characteristic)：  在客户端与服务器间传递的数据值，例如当前的电池电压。GATT 事务中的最低界别的是 Characteristic，Characteristic 是最小的逻辑数据单元。和 BLE 外设打交道，主要是通过 Characteristic</li>
+<li>服务(Service)：  有关特征的收集，具有一系列操作来执行特定功能。例如，“体温计”服务包括一个温度测量值，以及测量的时间间隔。</li>
+<li>描述符(Descriptor：  描述符提供有关特征的其他信息。例如指示一个温度值特征的单位（如摄氏度），以及传感器可以测量的最大值和最小值。描述符是可选的——每个特征可以有任何数量的描述符。</li>
+</ul>
+
+<p><img src="https://learn.adafruit.com/assets/13828" alt="" /></p>
+
+<p>值得注意的是：某些服务和特征用于管理目的——例如，“通用访问”服务中的型号名称和序列号可作为标准特征读取。设备的主要功能被称为主（primary）服务</p>
+
+<p>你可以自己实现一个类似串口（UART）的 Sevice，这个 Service 中包含两个 Characteristic，一个被配置只读的通道（RX），另一个配置为只写的通道（TX）。(TX表示发射，RX表示接收)</p>
+
+<h4 id="标识符-identifiers">标识符（Identifiers）</h4>
+
+<p>服务、特征和描述符被统称为属性（attributes），并以UUID标识。蓝牙技术联盟已预留一系列UUID供标准属性使用:<a href="https://www.bluetooth.org/en-us/specification/assigned-numbers">蓝牙分配号码</a></p>
+
+<p>16 bit 的 UUID 是官方通过认证的，需要花钱购买，128 bit 是自定义的，可以自己随便设置</p>
+
+<h4 id="gatt操作">GATT操作</h4>
+
+<p>GATT协议提供了大量用于客户端的命令以发现有关服务器的信息。这包括：</p>
+
+<ul>
+<li>发现所有主要服务的UUID</li>
+<li>使用指定UUID查找一个服务</li>
+<li>查找指定主服务的辅助服务</li>
+<li>发现指定服务的所有特征</li>
+<li>查找匹配指定UUID的特征</li>
+<li>读取特定特征的所有描述符</li>
+</ul>
+
+<p>除此之外，也提供读（从服务器传输到客户端）和写（客户端传给服务器）特征值的命令：</p>
+
+<ul>
+<li>可以指定特征的UUID或句柄（handle）值（由上面的发现命令返回）来读取值。</li>
+<li>写操作始终需要以句柄来标识特征，但可选是否需要服务器返回响应。(Q:写操作不能使用特征的UUID吗？)</li>
+</ul>
+
+<p>GATT有提供通知（notifications）和指示（indications）。客户端可以请求服务器通知一项特征。服务器可以在其变为可用时将该值发送给客户端。例如，温度传感器的服务器可以在每次测量时通知其客户端。这得以避免客户端轮询服务器，造成服务器的无线电路保持运行。</p>
+
+<p>指示（indication）与通知类似，不同之处是它需要客户端响应已收到该消息。</p>
+
+<h4 id="gatt-的连接与网络拓扑">GATT 的连接与网络拓扑</h4>
+
+<p>GATT 连接网络拓扑结构:</p>
+
+<p><img src="https://learn.adafruit.com/assets/13826" alt="" /></p>
+
+<p>GATT 连接是独占的。也就是一个 BLE 外设同时只能被一个中心设备连接（中心设备可以连接多个BLE外设）。一旦外设被连接，它就会马上停止广播，这样它就对其他设备不可见了。当设备断开，它又开始广播。</p>
+
+<h4 id="gatt-通信事务">GATT 通信事务</h4>
+
+<p>GATT 通信的双方是 C/S 关系。外设作为 GATT 服务端（Server），它维持了 ATT 的查找表以及 service 和 characteristic 的定义。中心设备是 GATT 客户端（Client），它向 Server 发起请求</p>
+
+<h3 id="体验">体验</h3>
+
+<p>上边的这些背景知识，已经足够我们开发BLE相关的项目了。</p>
+
+<p>但要体验BLE，则无需任何背景知识，如果你有一块micro:bit，你就可以快速来体验一下BLE的好处:</p>
+
+<ul>
+<li><a href="https://blog.just4fun.site/scratch3-microbit.html">scratch3.0 + micro:bit</a></li>
+<li><a href="https://scratch.mit.edu/microbit">scratch.mit.edu/microbit</a></li>
+</ul>
+
+<p>两篇教程任选其一跟着操作就行</p>
+
+<p>上边两个项目的源码都完全开放，所以你可以拿到service和characteristic的uuid，如果你有兴趣，可以翻阅源码拿到这些数据，自己写gatt client去和microbit交互</p>
+
+<h1 id="gatt实验笔记">GATT实验笔记</h1>
+
+<p>在学完GATT的相关知识后，我准备动手写写client和server</p>
+
+<p>下文是我做实验的笔记。</p>
+
+<h3 id="工具">工具</h3>
+
+<p>我准备使用树莓派(3B)和micro:bit来做实验</p>
+
+<p>可能对你有用的软件工具有：</p>
+
+<ul>
+<li>hcitool/gatttool(运行在树莓派上)</li>
+<li>BLE Scanner（运行在安卓手机上）</li>
+<li>LightBlue（运行在macOS下）</li>
+</ul>
+
+<h3 id="在树莓派中做实验">在树莓派中做实验</h3>
+
+<p>做实验之前，我们先来了解一下<a href="http://www.bluez.org/">bluez</a>，bluez是官方Linux蓝牙协议栈，是一个基于GPL协议发布的开源项目，当前的最新版本是5.50，稍后我们在树莓派里做蓝牙相关的实验，我们都得依赖它</p>
+
+<p>bluez安装玩之后，会得到hcitool与gattool，我们可以根据这些工具来轻松的调试我们的蓝牙设备。 （需要注意的是，在调试BLE设备时，需要获得root权限）</p>
+
+<p>我在树莓派刷完raspbian stretch镜像后，好像自带了bluez</p>
+
+<p>查看bluez版本：<code>bluetoothctl  -v</code>,我的当前版本是5.43</p>
+
+<h4 id="hcitool">hcitool</h4>
+
+<p>hcitool可以对蓝牙进行控制，参数分为两部分，一为正常的蓝牙设备调试，二为BLE设备调试</p>
+
+<p>为了开始我们的实验，我们得有一个GATT server，我们先实验micro:bit当GATT server</p>
+
+<p>你需要现在micro:bit烧入一个固件:<a href="https://makecode.microbit.org/55238-47183-11532-02360">microbit-bluetooth</a></p>
+
+<p>ps: pxt允许你设置蓝牙连接是否需要密码</p>
+
+<p>之后我们就能够在树莓派中搜到micro:bit了:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$ sudo hcitool lescan
+LE Scan ...
+DF:48:87:86:93:20 BBC micro:bit [zuzop]</pre></td></tr></table>
+</div>
+</div>
+<p>从中我们可以拿到microbit的地址:<code>DF:48:87:86:93:20</code></p>
+
+<p>但我在查看设备附加信息时却失败了:<code>sudo hcitool leinfo DF:48:87:86:93:20</code>，reddit里有人说可能是树莓派里蓝牙与wifi冲突（公用一个芯片）</p>
+
+<p>但我使用手机工具：<code>BLE Scanner</code>和电脑工具:<code>LightBlue</code>都没问题</p>
+
+<p>这些我们从LightBlue里都可以看到:</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/ble_f33ee366.png" width=600 /></p>
+
+<p>我们从lancaster给出的<a href="[Bluetooth Developer Studio Level 3 Profile Report](https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html)">micro:bit蓝牙文档</a>里，可以查到:</p>
+
+<ul>
+<li><a href="https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html">Bluetooth UART Service</a>的uuid为:<code>6E400001B5A3F393E0A9E50E24DCCA9E</code>.</li>
+</ul>
+
+<!--从文档里可以看到 固件更新、uart都做成了ble 服务-->
+
+<h3 id="gatttool">gatttool</h3>
+
+<p>关于gatttool的介绍我们引用<a href="https://blog.csdn.net/Chuck_lin/article/details/78846165">蓝牙工具hcitool和gatttool的使用</a>:</p>
+
+<p>使用hcitool主要是为了对设备的连接进行管理，对BLE数据进行精细化管理的话，就需要用到gattool。使用gattool对蓝牙设备发送指令的操作上要比hcitool的cmd齐全很多。</p>
+
+<p>关于gattool的使用分为两种，一种直接使用参数对蓝牙设备进行控制；二就是使用-I参数进入gattool的interactive模式对蓝牙设备进行控制</p>
+
+<p>接下来我们使用gatttool来做些<a href="http://blog.dan.drown.org/ble-micro-bit-uart/">实验</a>, 进入交互模式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">pi@raspberrypi:~ $ gatttool -I -b DF:48:87:86:93:20 -t random
+[DF:48:87:86:93:20][LE]&gt; connect
+Attempting to connect to DF:48:87:86:93:20
+Connection successful</pre></td></tr></table>
+</div>
+</div>
+<p>micro:bit将显示连接成功的图案</p>
+
+<p>接着我们来看一下UART service的相关信息:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[DF:48:87:86:93:20][LE]&gt; primary 6e400001-b5a3-f393-e0a9-e50e24dcca9e
+Starting handle: 0x0021 Ending handle: 0xffff
+[DF:48:87:86:93:20][LE]&gt; char-desc 0x0021 0xffff
+handle: 0x0021, uuid: 00002800-0000-1000-8000-00805f9b34fb
+handle: 0x0022, uuid: 00002803-0000-1000-8000-00805f9b34fb
+handle: 0x0023, uuid: 6e400002-b5a3-f393-e0a9-e50e24dcca9e
+handle: 0x0024, uuid: 00002902-0000-1000-8000-00805f9b34fb
+handle: 0x0025, uuid: 00002803-0000-1000-8000-00805f9b34fb
+handle: 0x0026, uuid: 6e400003-b5a3-f393-e0a9-e50e24dcca9e</pre></td></tr></table>
+</div>
+</div>
+<p>Q：service里同时包含Characteristic和Descriptor？</p>
+
+<p>我们在前头提到:</p>
+
+<blockquote>
+<p>可以指定特征的UUID或句柄（handle）值（由上面的发现命令返回）来读取值</p>
+</blockquote>
+
+<p>我看来看看这些uuid，从lancaster给出的<a href="https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html">micro:bit蓝牙文档</a>里，可以查到</p>
+
+<ul>
+<li>UART RX CHARACTERISTIC UUID: <code>6E400002B5A3F393E0A9E50E24DCCA9E</code></li>
+<li>UART TX CHARACTERISTIC UUID:<code>6E400003B5A3F393E0A9E50E24DCCA9E</code></li>
+</ul>
+
+<p>(TX表示发射，RX表示接收)</p>
+
+<p>Descriptor <code>00002902-0000-1000-8000-00805f9b34fb</code> (handle: 0x0024)是 Client Characteristic Configuration， 允许你从service中订阅信息</p>
+
+<p>其他三个descriptors是 Primary Service 和 Characteristic Declaration，暂时跳过</p>
+
+<p>设置 Client Characteristic Configuration为<code>0x0200</code> 将订阅 TX events.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[DF:48:87:86:93:20][LE]&gt; char-write-req 0x0024 0200
+Characteristic value was written successfully</pre></td></tr></table>
+</div>
+</div>
+<p>每次按下micro:bit上的A按钮，我将收到通知</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[DF:48:87:86:93:20][LE]&gt; char-write-req 0x0024 0200
+Characteristic value was written successfully
+Indication   handle = 0x0023 value: 01
+Indication   handle = 0x0023 value: 02
+Indication   handle = 0x0023 value: 03
+Indication   handle = 0x0023 value: 04
+Indication   handle = 0x0023 value: 05
+Indication   handle = 0x0023 value: 06</pre></td></tr></table>
+</div>
+</div>
+<p>我们也可以直接读取:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[DF:48:87:86:93:20][LE]&gt; char-read-hnd 0x0023
+Characteristic value/descriptor: 06</pre></td></tr></table>
+</div>
+</div>
+<p>接下来，让我们往micro:bit的UART中写数据,前头我们会有提到</p>
+
+<blockquote>
+<p>写操作始终需要以句柄来标识特征</p>
+</blockquote>
+
+<p>写操作对应的句柄(handle)为<code>0x0026</code></p>
+
+<p>我们在ble<a href="https://makecode.microbit.org/55238-47183-11532-02360">server 固件</a>里写的逻辑是遇:到换行，现实数据通信图标. 而换行的十六进制为: <code>0x0a</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">char-write-cmd 0x0026 0a</pre></td></tr></table>
+</div>
+</div>
+<p>可以看到数据通信图标在micro:bit中显示</p>
+
+<p>至此gatt client与gatt server的读写操作已经订阅消息，我们都做了演示</p>
+
+<h3 id="gatt-server">gatt server</h3>
+
+<p>我们可以通过在<a href="https://makecode.microbit.org/">makecode</a>中拖延积木为micro:bit搭出所需的gatt server，但事实上我们实在组合已有的服务</p>
+
+<p>下来我们实验树莓派来运行一个简单的gatt server，我们将使用<a href="https://github.com/ukBaz/python-bluezero">python-bluezero</a>提供的一个demo来讲解如何写gatt server</p>
+
+<p><a href="https://github.com/ukBaz/python-bluezero">python-bluezero</a>致力于帮助新手使用Bluez，为使用蓝牙功能的用户提供简化的API。该库底层封装了对Bluez、D-Bus API的调用，并使用“合理”的默认值来实现简化。它旨在支持创建有趣的STEM活动，而无需深入理解Bluez API或编写事件循环。</p>
+
+<p>该库假定你的BlueZ版本为5.43（Raspbian Stretch目前是这个版本）</p>
+
+<h4 id="安装">安装</h4>
+
+<p>安装过程参考<a href="http://bluezero.readthedocs.io/en/stable/install_bluez.html">文档</a></p>
+
+<h4 id="使用">使用</h4>
+
+<p>安装完系统依赖之后，就可以安装<a href="https://github.com/ukBaz/python-bluezero">python-bluezero</a>了，我选择在python3中使用，将项目克隆到本地之后,进入目录:  <code>python3 setup.py install</code></p>
+
+<p>下边我们来看一下<a href="https://github.com/ukBaz/python-bluezero#gatt-server-peripheral-role">GATT Server (Peripheral role)</a></p>
+
+<p>这个例子实现了一个报告cpu温度的characteristic，允许client请求服务器通知温度变化。</p>
+
+<p>源码为<a href="https://github.com/ukBaz/python-bluezero/blob/master/examples/cpu_temperature.py">cpu_temperature.py</a></p>
+
+<p>运行之后，可以看到:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">pi@cozmo1:~/python-bluezero/examples $ python3 cpu_temperature.py
+cpu_temp: temp=57.5&#39;C
+
+CPU temperature is 57.5C
+cpu_temp: temp=58.0&#39;C
+
+sint16: b&#39;\xa8\x16&#39;
+b&#39;\xa8\x16&#39;
+cpu_temp: temp=58.0&#39;C
+
+Advertisement registered</pre></td></tr></table>
+</div>
+</div>
+<p>如果你分不清那个是你的树莓派，如果树莓派离你很近，就接着选择信号好的外围设备（Peripheral）,连接它，就可以读取树莓派的cpu温度了</p>
+
+<p><img width=300px src="http://wwj-fig-bed.just4fun.site/ble_d3bd4f6b.png" /></p>
+
+<p>我在界面点击R(read),可以看到温度值的十六进制表示为: <code>0xBA13</code></p>
+
+<p>我们在树莓派里看到当前温度为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">cpu_temp: temp=50.5&#39;C
+sint16: b&#39;\xba\x13&#39;</pre></td></tr></table>
+</div>
+</div>
+<p>这两者是怎么联系起来的呢，我们翻下<a href="https://github.com/ukBaz/python-bluezero/blob/master/examples/cpu_temperature.py">源码</a>，跟踪一下当gatt client读取温度时，发生了什么</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">ReadValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">reading</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_cpu_temperature</span><span class="p">()]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">GATT_CHRC_IFACE</span><span class="p">][</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reading</span>
+        <span class="k">return</span> <span class="n">dbus</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span>
+            <span class="n">cpu_temp_sint16</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">GATT_CHRC_IFACE</span><span class="p">][</span><span class="s1">&#39;Value&#39;</span><span class="p">])</span>
+        <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">cpu_temp_sint16</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">value_int16</span> <span class="o">=</span> <span class="n">sint16</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="nb">bytes</span> <span class="ow">in</span> <span class="n">value_int16</span><span class="p">:</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dbus</span><span class="o">.</span><span class="n">Byte</span><span class="p">(</span><span class="nb">bytes</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">answer</span>
+
+<span class="k">def</span> <span class="nf">sint16</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>可见温度被sint16函数做了转化，我们来看下十进制的50.5被转完之后是什么:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">In [1]: def sint16(value):
+   ...:     return int(value * 100).to_bytes(2, byteorder=&#39;little&#39;, signed=True)
+   ...:
+   ...:
+
+In [2]: t = 50.5
+
+In [3]: sint16(50.5)
+Out[3]: b&#39;\xba\x13&#39;</pre></td></tr></table>
+</div>
+</div>
+<p>前导<code>\x</code>转义序列意味着接下来的两个字符被解释为字符代码的十六进制数字，所以<code>\xaa</code>等于<code>chr(0xaa)</code>. 和手机里显示的正好对起来啦</p>
+
+<p>我们如何把它逆向转化呢，毕竟我们在client只看到它的16进制表示:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">In [4]: int.from_bytes(b&#39;\xba\x13&#39;, byteorder=&#39;little&#39;)
+Out[4]: 5050  #50.5 * 100</pre></td></tr></table>
+</div>
+</div>
+<p>源码的其他部分，语义十分清晰，如果你有GATT的基础知识（前头我们整理的那些），读起来应该很轻松</p>
+
+<!--
+### 开始实验
+
+gatttool -I -b DF:48:87:86:93:20 -t random
+-->
+
+<h1 id="更多好玩的">更多好玩的</h1>
+
+<h3 id="bb8">BB8</h3>
+
+<p>BB8基于ble基于与外部通信，允许GATT client读取它的状态信息并控制它，我们使用LightBlue对其做个了解</p>
+
+<p>如果你想了解BB8提供的所有服务，可以参考<a href="https://github.com/WebBluetoothCG/demos/blob/gh-pages/bluetooth-toy-bb8/index.html#L269">bluetooth-toy-bb8</a></p>
+
+<p>这里有几个项目实现了手写gatt client与BB8通信:</p>
+
+<ul>
+<li><a href="https://github.com/jchadwhite/SpheroBB8-python/blob/master/BB8_driver.py">BB8_driver.py</a>
+
+<ul>
+<li>使用了<a href="https://github.com/IanHarvey/bluepy">bluepy</a></li>
+</ul></li>
+<li><a href="https://github.com/operasoftware/bb8/blob/gh-pages/main.js">bb8/main.js</a></li>
+</ul>
+
+<p>协议相关的部分参考:<a href="https://github.com/orbotix/DeveloperResources/blob/master/docs/Sphero_API_1.50.pdf">Sphero_API_1.50</a></p>
+
+<h3 id="wedo2">wedo2</h3>
+
+<p>乐高为教育推出的wedo2套件，通信部分也是基于ble</p>
+
+<p>社区里有人将其封装为一个python库: <a href="https://github.com/jannopet/LEGO-WeDo-2.0-Python-SDK/">LEGO-WeDo-2.0-Python-SDK</a>, 基于<a href="https://github.com/peplin/pygatt">pygatt</a>, 由于pygatt实现了BGAPI，所以可以使用BLED112，直接在mac下使用</p>
+
+<p>如果你想在其他平台上与wedo2交互，可以看官方的例子:<a href="https://education.lego.com/en-us/support/wedo-2/developer-kits">wedo-2/developer-kits</a></p>
+
+<p>可以一直接看社区小伙伴提取出的协议细节:<a href="https://github.com/cpseager/WeDo2-BLE-Protocol/blob/master/wedo2_summary.txt">WeDo2-BLE-Protocol</a></p>
+
+<h3 id="渗透工具">渗透工具</h3>
+
+<p>对于关注安全的小伙伴，可以参考这篇文章:<a href="http://www.freebuf.com/sectool/174234.html">神器分享：物联网安全测试工具包</a></p>
+
+<!--
+# 已经探索
+
+  wedo2 python
+
+gatttool -i hci0 -b CC:78:AB:7A:B3:2D --char-write -a 0x003d -n 01010164 树莓派可以连接硬件
+
+购买了 BLED112 （v2）
+    The Bluegiga BLED112 dongle is compelling because it has a self-contained BLE stack and doesn’t require any software support on the host computer
+
+
+#### mac
+mac打开蓝牙会自动发设ble 服务
+估计是文件传输
+
+### python
+https://github.com/getsenic/gatt-python  client
+
+example 中很全： https://github.com/pybluez/pybluez/blob/master/examples/ble/scan.py
+
+https://github.com/TheCellule/python-bleson git clone 之后手动pip3安装
+
+### micropython
+https://github.com/dmazzella/uble
+
+-->
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E8%93%9D%E7%89%99%E4%BD%8E%E5%8A%9F%E8%80%97">wikipedia 蓝牙低功耗</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Bluetooth_Low_Energy">wikipedia Bluetooth Low Energy</a></li>
+<li><a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy?view=all">introduction-to-bluetooth-low-energy</a></li>
+<li><a href="https://www.race604.com/gatt-profile-intro/">GATT Profile 简介</a></li>
+<li><a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy/gatt">adafruit gatt</a></li>
+<li><a href="https://github.com/ukBaz/python-bluezero">ukBaz/python-bluezero</a></li>
+<li><a href="https://github.com/peplin/pygatt">pygatt</a></li>
+<li><a href="https://github.com/pcborenstein/bluezDoc/wiki/hcitool-and-gatttool-example">hcitool and gatttool example</a></li>
+<li><a href="https://blog.csdn.net/Chuck_lin/article/details/78846165">蓝牙工具hcitool和gatttool的使用</a></li>
+<li><a href="https://blog.csdn.net/talkxin/article/details/50610984">原Bluez调试工具hcitool与gattool的使用实例</a></li>
+<li><a href="https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html">Bluetooth Developer Studio Level 3 Profile Report</a></li>
+<li><a href="https://github.com/operasoftware/bb8">operasoftware/bb8</a></li>
+<li><a href="https://github.com/jchadwhite/SpheroBB8-python/blob/master/BB8_driver.py">SpheroBB8-python/BB8_driver.py</a></li>
+<li><a href="https://www.freebuf.com/articles/wireless/187843.html">低功耗蓝牙（BLE）攻击分析</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-07-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/maker/">maker</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-microbit-analysis/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">分析scratch3.0与micro:bit的通信</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/edx-beijing-2018-meetup/">
+            <span class="next-text nav-default">Beijing Open edX Meetup 2018#1</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

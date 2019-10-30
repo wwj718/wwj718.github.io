@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在树莓派中玩转Sense HAT - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="上图来自ESA(欧洲空间局) 介绍 从Sense HAT的产品介绍中,我们知道Sense HAT是Raspberry Pi的附加板，直接插到树莓派的针" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/iot/rpi_sense_hat/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="在树莓派中玩转Sense HAT" />
+<meta property="og:description" content="上图来自ESA(欧洲空间局) 介绍 从Sense HAT的产品介绍中,我们知道Sense HAT是Raspberry Pi的附加板，直接插到树莓派的针" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/iot/rpi_sense_hat/" />
+<meta property="article:published_time" content="2017-05-14T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-05-14T00:00:00+00:00" />
+<meta itemprop="name" content="在树莓派中玩转Sense HAT">
+<meta itemprop="description" content="上图来自ESA(欧洲空间局) 介绍 从Sense HAT的产品介绍中,我们知道Sense HAT是Raspberry Pi的附加板，直接插到树莓派的针">
+
+
+<meta itemprop="datePublished" content="2017-05-14T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-05-14T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1430">
+
+
+
+<meta itemprop="keywords" content="rpi," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在树莓派中玩转Sense HAT"/>
+<meta name="twitter:description" content="上图来自ESA(欧洲空间局) 介绍 从Sense HAT的产品介绍中,我们知道Sense HAT是Raspberry Pi的附加板，直接插到树莓派的针"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">在树莓派中玩转Sense HAT</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-05-14 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#介绍">介绍</a></li>
+<li><a href="#上手">上手</a>
+<ul>
+<li>
+<ul>
+<li><a href="#更新python-sense-hat">更新python-sense-hat</a></li>
+<li><a href="#连接硬件">连接硬件</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#跑起来">跑起来</a>
+<ul>
+<li>
+<ul>
+<li><a href="#其他传感器">其他传感器</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#跑个游戏玩">跑个游戏玩</a></li>
+<li><a href="#脑洞">脑洞</a>
+<ul>
+<li>
+<ul>
+<li><a href="#官方的有趣教程">官方的有趣教程</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#资料">资料</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/sense_hatfeb71968.png" alt="" /></p>
+
+<p>上图来自ESA(欧洲空间局)</p>
+
+<h1 id="介绍">介绍</h1>
+
+<p>从<a href="https://www.raspberrypi.org/products/sense-hat/">Sense HAT</a>的产品介绍中,我们知道Sense HAT是Raspberry Pi的附加板，直接插到树莓派的针脚阵列上即可使用，十分方便</p>
+
+<p>Sense HAT为<a href="https://astro-pi.org/">Astro Pi</a>而生，它在2015年登上国际空间站，有兴趣的同学可以看<a href="https://astro-pi.org/about/">这里</a>,目前这个活动吸引了很多孩子的眼球，毕竟你写的代码可能跑在空间站里呢</p>
+
+<p>我上周入手了一块Sense HAT，它长这样:</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/sense_hat18d0c89e.png" alt="" /></p>
+
+<p>我们可以看到，它有一块8x8的led阵列，值得一提的是它是RGB的，可以把它视为一个彩色像素屏。此外它还带有一个五个按钮的操纵杆，同时携带以下传感器:</p>
+
+<ul>
+<li>陀螺仪传感器</li>
+<li>加速度传感器</li>
+<li>磁传感器</li>
+<li>温度传感器</li>
+<li>气压传感器</li>
+<li>湿度传感器</li>
+</ul>
+
+<p>本着自带电池的python精神，当然也是有一个python库来方便你使用这些硬件设备的:<a href="http://pythonhosted.org/sense-hat/">Python module to control the Raspberry Pi Sense HAT</a></p>
+
+<p>是不是有点激动！你再不用吭哧吭哧地逐个购买传感器，然后吭哧吭哧地去连线，还得担心引脚被占用而购买面包板，接好传感器，你又得吭哧吭哧地去网上逐个搜索驱动它们的代码，不出意外的话，许多地代码年久失修跑不起来，又或者系统地更新导致的不兼容&hellip;</p>
+
+<p>现在你一次性得到这么多与物理世界沟通的设备，而需要做的不过是把这块板子插入树莓派</p>
+
+<h1 id="上手">上手</h1>
+
+<p>首先你当然需要一个可运行的树莓派，如果你是新手，可以参考我之前的文章:<a href="http://blog.just4fun.site/raspberrypi-install-and-config.html">树莓派折腾笔记之系统安装与配置</a></p>
+
+<p>我用的是2016-05-27的版本(最新的版本特别不稳定，我当小白鼠也是当够了)</p>
+
+<p>如果你用的也是我这个版本，那么你的sense-hat不是最新的(默认是2.1.0)，你最好去更新以下它(截止到2017-05-20，sense-hat最新的版本是2.2.0)</p>
+
+<h3 id="更新python-sense-hat">更新python-sense-hat</h3>
+
+<p>直接更新:<code>sudo pip install sense-hat==2.2.0</code>尽管也能安装成功，不过使用的时候会报错，系统依赖问题,你需要按照下边的做法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">virtualenv env --system-site-packages <span class="c1">#这样能使用系统已有的依赖，不然会报错</span>
+<span class="nb">source</span> env/bin/activate
+pip install sense-hat<span class="o">==</span><span class="m">2</span>.2.0</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="连接硬件">连接硬件</h3>
+
+<p>连接硬件特简单,直接对着针脚插上去就行,如果你连外壳都买了，组装好应该和下边一样:</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/sense_hat55f99856.png" alt="" /></p>
+
+<p>美美哒</p>
+
+<h1 id="跑起来">跑起来</h1>
+
+<p>我们可以跟着起步教程来做:<a href="https://www.raspberrypi.org/learning/getting-started-with-the-sense-hat/worksheet/">Getting Started with the Sense HAT</a>，你可以现在网页上看模拟器的表现</p>
+
+<p>首先当然是<code>hello world</code>啦</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sense_hat</span> <span class="kn">import</span> <span class="n">SenseHat</span>
+<span class="n">sense</span> <span class="o">=</span> <span class="n">SenseHat</span><span class="p">()</span>
+<span class="n">sense</span><span class="o">.</span><span class="n">show_message</span><span class="p">(</span><span class="s2">&#34;Hello world&#34;</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>在树莓派中运行上边的代码，led屏幕上将滑过<code>hello world</code>，很像店面门口电子公告板上闪烁的: <code>春节快乐</code>这种公告</p>
+
+<p>不过遗憾的是，并不能显示中文</p>
+
+<h3 id="其他传感器">其他传感器</h3>
+
+<p>其他传感器的用法,在<a href="https://www.raspberrypi.org/learning/getting-started-with-the-sense-hat/worksheet/">Getting Started with the Sense HAT</a>都有范例</p>
+
+<p>你也可以把<a href="https://www.raspberrypi.org/learning/astro-pi-guide/">A Guide to Astro Pi</a>当成学习传感器入口</p>
+
+<h1 id="跑个游戏玩">跑个游戏玩</h1>
+
+<p>黑客门对像素游戏的痴迷可以追溯到计算机早期，《黑客：计算机革命的英雄》一书中提到的life就是有趣的像素游戏，我原本想在这个8*8的led阵列上做一个life，后来在<a href="https://trinket.io/sense-hat">trinket.io</a>已经有人做了不少有意思的游戏，于是决定先试玩它们</p>
+
+<p>flappy是我喜欢的一个游戏，恰好看到有人把它移植到sense hat里，就玩了下，很有意思</p>
+
+<p>我把代码放到gist上了,你可以直接从gist上拉取代码:<code>wget https://gist.githubusercontent.com/wwj718/81ba103c1e64c66c5bec3eb94cbfb062/raw/1a0a6547b5c9e059029d09c2df98057e2b5e7816/flappy_hat.py</code></p>
+
+<p>然后运行它:<code>python flappy_hat.py</code></p>
+
+<video src="http://wwj-tmp-video2.just4fun.site/sense_cut.mp4" autoplay controls="controls"></video>
+
+<p>哈哈 玩得开心</p>
+
+<h1 id="脑洞">脑洞</h1>
+
+<p>我之前用树莓派和超声波传感器/震动传感器做了flappy（疯狂的小鸟）的体感版本</p>
+
+<p>如今我们有了sense hat要做体感游戏容易多了，它有陀螺仪传感器和加速度传感器 ，而且非常灵敏</p>
+
+<p>等之后闲下来慢慢玩</p>
+
+<h3 id="官方的有趣教程">官方的有趣教程</h3>
+
+<p>树莓派官方网站有许多开脑洞的教程:</p>
+
+<ul>
+<li><a href="https://www.raspberrypi.org/learning/sense-hat-pong/worksheet/">Make a Pong clone for your Sense HAT</a></li>
+<li><a href="https://www.raspberrypi.org/learning/sense-hat-marble-maze/worksheet/">Sense Hat Marble Maze</a></li>
+<li><a href="https://www.raspberrypi.org/learning/pixel-pet/worksheet/">Interactive Pixel Pet</a></li>
+<li><a href="ihttps://github.com/bennuttall/sense-hat-examples/blob/master/python/minecraft_colour.py">minecraft_colour</a></li>
+<li><a href="https://www.raspberrypi.org/learning/exploring-space-with-minecraft/worksheet2/">Displaying data from the Sense HAT in Minecraft</a></li>
+</ul>
+
+<h1 id="资料">资料</h1>
+
+<ul>
+<li><a href="https://www.raspberrypi.org/learning/getting-started-with-the-sense-hat/worksheet/">Getting Started with the Sense HAT</a><br /></li>
+<li><a href="https://github.com/RPi-Distro/python-sense-hat">python-sense-hat</a></li>
+<li><a href="https://www.raspberrypi.org/learning/astro-pi-guide/">A Guide to Astro Pi</a></li>
+<li><a href="https://www.raspberrypi.org/products/sense-hat/">SENSE HAT</a></li>
+<li><a href="https://trinket.io/sense-hat">trinket.io</a><br /></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-05-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/rpi/">rpi</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/webduino-analysis/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">对webduino运行流程的分析</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-sound_recognition/">
+            <span class="next-text nav-default">在blockly中构建语音识别/合成 积木块</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

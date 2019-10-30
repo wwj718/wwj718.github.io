@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>分析scratch3.0与micro:bit的通信 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="Scratch在七月底举行了一个大会:conference, 大会上, scratch团队向大家介绍了即将推出的Scratch 3.0, 赶在会议开始之前" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-microbit-analysis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="分析scratch3.0与micro:bit的通信" />
+<meta property="og:description" content="Scratch在七月底举行了一个大会:conference, 大会上, scratch团队向大家介绍了即将推出的Scratch 3.0, 赶在会议开始之前" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-microbit-analysis/" />
+<meta property="article:published_time" content="2018-08-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-08-01T00:00:00+00:00" />
+<meta itemprop="name" content="分析scratch3.0与micro:bit的通信">
+<meta itemprop="description" content="Scratch在七月底举行了一个大会:conference, 大会上, scratch团队向大家介绍了即将推出的Scratch 3.0, 赶在会议开始之前">
+
+
+<meta itemprop="datePublished" content="2018-08-01T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-08-01T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="6834">
+
+
+
+<meta itemprop="keywords" content="scratch ," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="分析scratch3.0与micro:bit的通信"/>
+<meta name="twitter:description" content="Scratch在七月底举行了一个大会:conference, 大会上, scratch团队向大家介绍了即将推出的Scratch 3.0, 赶在会议开始之前"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">分析scratch3.0与micro:bit的通信</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-08-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%A7%81%E6%9C%89/"> 私有 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#尝鲜">尝鲜</a></li>
+<li><a href="#原理">原理</a></li>
+<li><a href="#分析">分析</a>
+<ul>
+<li>
+<ul>
+<li><a href="#推断">推断</a></li>
+<li><a href="#bleuuid-https-github-com-llk-scratch-vm-blob-develop-src-extensions-scratch3-microbit-index-js-l35"><a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js#L35">BLEUUID</a></a></li>
+<li><a href="#展开追踪">展开追踪</a></li>
+<li><a href="#关于write">关于write</a></li>
+<li><a href="#使用gatttool做些实验">使用gatttool做些实验</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#tips">tips</a>
+<ul>
+<li>
+<ul>
+<li><a href="#连接设备">连接设备</a></li>
+<li><a href="#https校验问题">https校验问题</a>
+<ul>
+<li><a href="#scratch-link的内部服务怎么写">Scratch Link的内部服务怎么写</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="http://wwj-fig-bed.just4fun.site/scratch_microbit_0f5be12b.png" width=600 /></p>
+
+<p>Scratch在七月底举行了一个大会:<a href="https://scratch.mit.edu/conference">conference</a>, 大会上, scratch团队向大家介绍了即将推出的Scratch 3.0, 赶在会议开始之前，scratch团队完成了对micro:bit的官方支持，项目页连同使用说明也正式上线:<a href="[scratch.mit.edu/microbit](https://scratch.mit.edu/microbit)">microbit</a></p>
+
+<p>scratch与micro:bit作为全球最有名的两个少儿编程项目（分别是软件和硬件），能够结合在一起，太振奋人心。之前社区里大家就围绕这块在做许多探索，如：</p>
+
+<ul>
+<li>基于<a href="https://github.com/WebBluetoothCG/web-bluetooth/blob/gh-pages/implementation-status.md#chrome">web bluetooth</a>的<a href="https://blog.just4fun.site/scratch3-microbit.html">scratch3.0 + micro:bit</a></li>
+<li><a href="https://codelab-adapter-docs.codelab.club/user_guide/usage/">scratch3-adapter</a></li>
+</ul>
+
+<h1 id="尝鲜">尝鲜</h1>
+
+<p>只要你手边有micro:bit就可以开始体验了.</p>
+
+<p>按照<a href="https://scratch.mit.edu/microbit">使用说明</a>，将micro:bit接入scratch3.0毫无障碍:</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/scratch_microbit_0f5be12b.png" width=600 /></p>
+
+<p>完成连接后就可以开始你的创作了，<a href="https://scratch.mit.edu/microbit">使用说明</a>页面里给出了几个例子,大家可以从这儿入手</p>
+
+<p><img src="http://wwj-fig-bed.just4fun.site/scratch_heart_a30a52b1.png" width=600 /></p>
+
+<h1 id="原理">原理</h1>
+
+<p>体验完scratch与micro:bit的互动，我们来分析一下官方是如何做到的。</p>
+
+<p>回顾<a href="https://scratch.mit.edu/microbit">使用说明</a>和体验过程，容易猜到Scratch Link起代理的作用，Scratch Link在内部跑了一个websocket服务，允许网页与其交互，同时在启动时扫描周围的BLE设备</p>
+
+<p>思路和<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>几乎完全一致</p>
+
+<p>Scratch Link与<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>的不同之处有：</p>
+
+<ul>
+<li>Scratch Link目前不支持扩展，似乎也没计划开源，原因可能我猜测是Scratch Link将支持乐高机器人，而乐高机器人是闭源商业项目。<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>允许你自行扩展</li>
+<li>Scratch Link在使用上更为简易</li>
+<li><a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>兼容更多的系统环境以及支持所有的开源硬件</li>
+</ul>
+
+<p>Scratch Link在易用性上做得非常好，这也<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>准备向它学习的地方。<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>的目标之一是完全兼容Scratch Link的功能</p>
+
+<p>这篇文章就来分析一下官方在这块的巧思。以便于我们可以将其用到其他地方。</p>
+
+<h1 id="分析">分析</h1>
+
+<h3 id="推断">推断</h3>
+
+<p>从scratch的<a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js">micro:bit extension</a>来看，Scratch Link仅仅只是一个代理，scratch与micro:bit的交互逻辑都在<a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js">micro:bit extension</a>中。</p>
+
+<p>所以我们暂时不必使用<a href="https://www.wireshark.org/download.html">wireshark</a>抓包分析，而仅仅通过阅读<a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js">micro:bit extension</a>，应该就能知道通信的细节，之后我们使用gatttool来验证。</p>
+
+<p>如果你对BLE/GATT相关的概念不熟悉，可以看看我之前的文章:<a href="https://blog.just4fun.site/ble-notes.html">BLE学习笔记</a></p>
+
+<!--adapter与硬件直接是不是只是代理  建立连接，转发消息-->
+
+<h3 id="bleuuid-https-github-com-llk-scratch-vm-blob-develop-src-extensions-scratch3-microbit-index-js-l35"><a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js#L35">BLEUUID</a></h3>
+
+<p>从<a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js">micro:bit extension源码</a>里我们可以找到micro:bit里跑的服务和属性的uuid，也正是这个证据，让我们猜测Scratch Link只是个透明代理</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">const BLEUUID = {
+    service: 0xf005,
+    rxChar: &#39;5261da01-fa7e-42ab-850b-7c80220097cc&#39;,
+    txChar: &#39;5261da02-fa7e-42ab-850b-7c80220097cc&#39;
+};</pre></td></tr></table>
+</div>
+</div>
+<p>对比lancaster大学的<a href="https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html">Bluetooth Developer Studio Level 3 Profile Report</a>,可知scratch自己重写了很多东西，而没有使用现成的UART service，这点我颇为不解。</p>
+
+<h3 id="展开追踪">展开追踪</h3>
+
+<p>我们接着来跟踪一下<code>A button pressed？</code>这个积木涉及的通信过程，从一个具体例子里突破。经过这个例子，我们对整个通信流程应该会有一个整体的了解，之后我们再对不同类型的积木逐类探索。</p>
+
+<p>GATT 通信的双方是 C/S 关系, 为了知道micr:bit上A按钮的状态，一般采用两种方式：</p>
+
+<ul>
+<li>其一是利用GATT的通知机制，每当按钮状态变化时，通知给电脑(Scratch Link会把消息代理给scratch)</li>
+<li>其二是每当<code>A button pressed？</code>积木被触发时，主动去read相应的属性值。</li>
+</ul>
+
+<p><a href="https://llk.github.io/scratch-gui/microbit">scratch-gui/microbit</a>应该是用这两种方式中的一种</p>
+
+<p>但<a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js">micro:bit extension</a>有些特殊，它构建了UART service，之后的的数据都走UART service，逻辑上这更像经典的串口通信。只是实现在GATT上而已。</p>
+
+<p>从源码中可以看到buttonA是否按下取决于 <a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js#L491">this._device.buttonA</a></p>
+
+<p>而<a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js#L323">this._device = new MicroBit(this.runtime, Scratch3MicroBitBlocks.EXTENSION_ID);</a></p>
+
+<p>顺藤摸瓜，可以跟踪到</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="cm">/**
+</span><span class="cm">     * Process the sensor data from the incoming BLE characteristic.
+</span><span class="cm">     * @param {object} base64 - the incoming BLE data.
+</span><span class="cm">     * @private
+</span><span class="cm">     */</span>
+    <span class="nx">_processSessionData</span> <span class="p">(</span><span class="nx">base64</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// parse data
+</span><span class="c1"></span>        <span class="k">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">Base64Util</span><span class="p">.</span><span class="nx">base64ToUint8Array</span><span class="p">(</span><span class="nx">base64</span><span class="p">);</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltX</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">|</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltX</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">15</span><span class="p">))</span> <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltX</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltY</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">|</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltY</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">15</span><span class="p">))</span> <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltY</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">);</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">buttonA</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">buttonB</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">touchPins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">touchPins</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">7</span><span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">touchPins</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">gestureState</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+
+        <span class="c1">// cancel disconnect timeout and start a new one
+</span><span class="c1"></span>        <span class="nb">window</span><span class="p">.</span><span class="nx">clearInterval</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_timeoutID</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_timeoutID</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">setInterval</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">disconnectSession</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="nx">BLETimeout</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>注释里说得很清楚:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">     * Process the sensor data from the incoming BLE characteristic.
+     * @param {object} base64 - the incoming BLE data.</pre></td></tr></table>
+</div>
+</div>
+<p>从逻辑和语义上，可以看出<code>_processSessionData</code>是个回调函数，micro:bit会通过串口源源不断把它自身的状态数据(sensor data)不断发给<code>_processSessionData</code>,  如此一来，scratch就能得知microbit的A按钮是否按下，为了验证我们的想法，我们得继续跟踪:<code>this._ble.read(BLEUUID.service, BLEUUID.rxChar, true, callback);</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="cm">/**
+</span><span class="cm">     * Starts reading data from device after BLE has connected to it.
+</span><span class="cm">     */</span>
+    <span class="nx">_onSessionConnect</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="nx">callback</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_processSessionData</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_ble</span><span class="p">.</span><span class="nx">read</span><span class="p">(</span><span class="nx">BLEUUID</span><span class="p">.</span><span class="nx">service</span><span class="p">,</span> <span class="nx">BLEUUID</span><span class="p">.</span><span class="nx">rxChar</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_timeoutID</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">setInterval</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">disconnectSession</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="nx">BLETimeout</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>_ble看去是个通用的抽象io(BLESession)，<code>_ble.read</code>在语义上类似UART read，只是实现上是基于GATT的，如果你熟悉GATT，至此应该基本都猜到了。当然我们会继续剖析。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">    /**
+     * Called by the runtime when user wants to scan for a device.
+     */
+    startDeviceScan () {
+        this._ble = new BLESession(this._runtime, {
+            filters: [
+                {services: [BLEUUID.service]}
+            ]
+        }, this._onSessionConnect.bind(this));
+    }</pre></td></tr></table>
+</div>
+</div>
+<p>跟踪到BLESession类里， <code>BLESession</code>继承自<code>JSONRPCWebSocket</code>, 这里提示我们scratch与Scratch Link是如何通信的，基于WebSocket，同时使用远程调用的概念, RPC使用起来要比流简单很多。这是scratch官方很聪明的举措之一，我们在文末的tips里还将列出官方其他的聪明做法</p>
+
+<p>如果你不打算自己实现类似Scratch Link的东西，JSONRPCWebSocket不必太关注。我实现了类似Scratch Link的<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>，但使用的是消息通信，策略上和scratch团队不大一样。这块我们先不细说</p>
+
+<p>回到BLESession上边，我们前头关注<code>_ble.read</code>,在此将看到它的实现:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="nx">read</span> <span class="p">(</span><span class="nx">serviceId</span><span class="p">,</span> <span class="nx">characteristicId</span><span class="p">,</span> <span class="nx">optStartNotifications</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">onCharacteristicChanged</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">serviceId</span><span class="p">,</span>
+            <span class="nx">characteristicId</span>
+        <span class="p">};</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">optStartNotifications</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">startNotifications</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_characteristicDidChangeCallback</span> <span class="o">=</span> <span class="nx">onCharacteristicChanged</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">sendRemoteRequest</span><span class="p">(</span><span class="s1">&#39;read&#39;</span><span class="p">,</span> <span class="nx">params</span><span class="p">)</span>
+            <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span> <span class="p">=&gt;</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_sendError</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+            <span class="p">});</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p><a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js">micro:bit extension</a>对它的调用是:</p>
+
+<p><code>this._ble.read(BLEUUID.service, BLEUUID.rxChar, true, callback);</code></p>
+
+<p>至此，我们就搞懂了<code>A button pressed？</code>是如何实现的，optStartNotifications被设置为True，语义上是接受通知，当micro:bit上数据变化时，及时通知给scratch。技术层面使用了GATT的</p>
+
+<blockquote>
+<p>客户端可以请求服务器通知一项特征</p>
+</blockquote>
+
+<p>关于这点，我们在<a href="https://blog.just4fun.site/ble-notes.html">BLE学习笔记</a>有提到</p>
+
+<p>因为弄懂了<code>A button pressed？</code>，所以<code>When A button pressed</code>积木也不难理解，当然这需要你熟悉：scatch的HAT类型的积木(事件风格)。源码一目了然</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="nx">whenButtonPressed</span> <span class="p">(</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">BTN</span> <span class="o">===</span> <span class="s1">&#39;any&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_device</span><span class="p">.</span><span class="nx">buttonA</span> <span class="o">|</span> <span class="k">this</span><span class="p">.</span><span class="nx">_device</span><span class="p">.</span><span class="nx">buttonB</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">BTN</span> <span class="o">===</span> <span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_device</span><span class="p">.</span><span class="nx">buttonA</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">BTN</span> <span class="o">===</span> <span class="s1">&#39;B&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_device</span><span class="p">.</span><span class="nx">buttonB</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="关于write">关于write</h3>
+
+<p>既然我们分析完read，顺手看一下write的实现,直接上源码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="nx">write</span> <span class="p">(</span><span class="nx">serviceId</span><span class="p">,</span> <span class="nx">characteristicId</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">encoding</span> <span class="o">=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span><span class="nx">serviceId</span><span class="p">,</span> <span class="nx">characteristicId</span><span class="p">,</span> <span class="nx">message</span><span class="p">};</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">encoding</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">encoding</span> <span class="o">=</span> <span class="nx">encoding</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">sendRemoteRequest</span><span class="p">(</span><span class="s1">&#39;write&#39;</span><span class="p">,</span> <span class="nx">params</span><span class="p">)</span>
+            <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span> <span class="p">=&gt;</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_sendError</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+            <span class="p">});</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>没什么需要特别说的</p>
+
+<p>我们以一个使用write的积木为例，来看看具体的细节,以display text为例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="nx">displayText</span> <span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">text</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">output</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">text</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_writeSessionData</span><span class="p">(</span><span class="nx">BLECommand</span><span class="p">.</span><span class="nx">CMD_DISPLAY_TEXT</span><span class="p">,</span> <span class="nx">output</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">_writeSessionData</span> <span class="p">(</span><span class="nx">command</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">getPeripheralIsConnected</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
+        <span class="k">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="nx">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">command</span><span class="p">;</span> <span class="c1">// attach command to beginning of message
+</span><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">message</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">output</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">message</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">Base64Util</span><span class="p">.</span><span class="nx">uint8ArrayToBase64</span><span class="p">(</span><span class="nx">output</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ble</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">BLEUUID</span><span class="p">.</span><span class="nx">service</span><span class="p">,</span> <span class="nx">BLEUUID</span><span class="p">.</span><span class="nx">txChar</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="s1">&#39;base64&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>使用display text打印<code>hello</code>字符串，观察websocket传输的数据:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span><span class="nt">&#34;jsonrpc&#34;</span><span class="p">:</span><span class="s2">&#34;2.0&#34;</span><span class="p">,</span><span class="nt">&#34;method&#34;</span><span class="p">:</span><span class="s2">&#34;write&#34;</span><span class="p">,</span><span class="nt">&#34;params&#34;</span><span class="p">:{</span><span class="nt">&#34;serviceId&#34;</span><span class="p">:</span><span class="mi">61445</span><span class="p">,</span><span class="nt">&#34;characteristicId&#34;</span><span class="p">:</span><span class="s2">&#34;5261da02-fa7e-42ab-850b-7c80220097cc&#34;</span><span class="p">,</span><span class="nt">&#34;message&#34;</span><span class="p">:</span><span class="s2">&#34;gWhlbGxv&#34;</span><span class="p">,</span><span class="nt">&#34;encoding&#34;</span><span class="p">:</span><span class="s2">&#34;base64&#34;</span><span class="p">},</span><span class="nt">&#34;id&#34;</span><span class="p">:</span><span class="mi">4</span><span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>这里值得一提的是编码方式:<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array">Uint8Array</a>:  Uint8Array 数组类型表示一个8位无符号整型数组，创建时内容被初始化为0</p>
+
+<p><a href="http://www.w3school.com.cn/js/jsref_charCodeAt.asp">charCodeAt</a>: 方法可返回指定位置的字符的 Unicode 编码。这个返回值是 0 - 65535 之间的整数。</p>
+
+<p>硬件的通信使用的编码可能部位web开发者熟悉，我对底层编码也不熟，多是现学现用，基本也够用.说到编码，想起一本书特别赞:<a href="https://book.douban.com/subject/4822685/">编码</a></p>
+
+<h3 id="使用gatttool做些实验">使用gatttool做些实验</h3>
+
+<p>我在<a href="https://blog.just4fun.site/ble-notes.html">BLE学习笔记</a>有演示gatttool的使用</p>
+
+<p>我们在分析了Scratch/Scratch Link与micro:bit的通信之后，使用ble工具来做些分析，我在树莓派里使用gatttool，你可可以选择其他工具</p>
+
+<p>首先扫描micro:bit的地址</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">pi@cozmo1:~ $ sudo hcitool lescan
+DF:48:87:86:93:20 BBC micro:bit [zuzop]</pre></td></tr></table>
+</div>
+</div>
+<p>连接它并进入交互模式:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">pi@cozmo1:~ $ gatttool -I -b DF:48:87:86:93:20 -t random
+[DF:48:87:86:93:20][LE]&gt; connect
+Attempting to connect to DF:48:87:86:93:20
+Connection successful</pre></td></tr></table>
+</div>
+</div>
+<p>连接成功！</p>
+
+<p>接着我们来看一下UART service的相关信息:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[DF:48:87:86:93:20][LE]&gt; primary 0xf005 # 输入0xf005和f005相同，都被处理为16进制
+Starting handle: 0x0013 Ending handle: 0xffff
+[DF:48:87:86:93:20][LE]&gt; char-desc 0x0013 0xffff
+handle: 0x0013, uuid: 00002800-0000-1000-8000-00805f9b34fb
+handle: 0x0014, uuid: 00002803-0000-1000-8000-00805f9b34fb
+handle: 0x0015, uuid: 5261da01-fa7e-42ab-850b-7c80220097cc
+handle: 0x0016, uuid: 00002902-0000-1000-8000-00805f9b34fb
+handle: 0x0017, uuid: 00002803-0000-1000-8000-00805f9b34fb
+handle: 0x0018, uuid: 5261da02-fa7e-42ab-850b-7c80220097cc</pre></td></tr></table>
+</div>
+</div>
+<p>前头我们从源码里读到:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">BLEUUID</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">service</span><span class="o">:</span> <span class="mh">0xf005</span><span class="p">,</span>
+    <span class="nx">rxChar</span><span class="o">:</span> <span class="s1">&#39;5261da01-fa7e-42ab-850b-7c80220097cc&#39;</span><span class="p">,</span>
+    <span class="nx">txChar</span><span class="o">:</span> <span class="s1">&#39;5261da02-fa7e-42ab-850b-7c80220097cc&#39;</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>可知我们的猜测完全正确！Scratch Link是个透明代理。</p>
+
+<p>接着让我们来读取micro:bit的sensor数据,<code>rxChar: '5261da01-fa7e-42ab-850b-7c80220097cc'</code>对应的handle为<code>0x0015</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[DF:48:87:86:93:20][LE]&gt; char-read-hnd 0x0015
+Characteristic value/descriptor: 00 5f ff f3 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</pre></td></tr></table>
+</div>
+</div>
+<p>当我们按住按钮A时读到的数据为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[DF:48:87:86:93:20][LE]&gt; char-read-hnd 0x0015
+Characteristic value/descriptor: 00 44 fe 57 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</pre></td></tr></table>
+</div>
+</div>
+<p>多次按下和松开，并观察，我们猜测按钮存储在<code>00 44 fe 57 01</code>中的<code>1</code>这个位置上</p>
+
+<p>回忆一下前头的<code>_processSessionData</code>函数，据此我们就弄懂了数据的编解码方式，我们可以还原出从rxChar读到的经base64编码的数据</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="nx">_processSessionData</span> <span class="p">(</span><span class="nx">base64</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// parse data
+</span><span class="c1"></span>        <span class="k">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">Base64Util</span><span class="p">.</span><span class="nx">base64ToUint8Array</span><span class="p">(</span><span class="nx">base64</span><span class="p">);</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltX</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">|</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltX</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">15</span><span class="p">))</span> <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltX</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltY</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">|</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltY</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">15</span><span class="p">))</span> <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">tiltY</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">);</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">buttonA</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">buttonB</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">touchPins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">touchPins</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">7</span><span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">touchPins</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_sensors</span><span class="p">.</span><span class="nx">gestureState</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+
+        <span class="c1">// cancel disconnect timeout and start a new one
+</span><span class="c1"></span>        <span class="nb">window</span><span class="p">.</span><span class="nx">clearInterval</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_timeoutID</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_timeoutID</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">setInterval</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">disconnectSession</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="nx">BLETimeout</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>我们也可以开启通知 <!--0100还是0200完全是猜的，有依据吗--></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[DF:48:87:86:93:20][LE]&gt; char-write-req 0x0016 0100
+Characteristic value was written successfully
+Notification handle = 0x0015 value: 00 29 00 8b 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Notification handle = 0x0015 value: 00 2d 00 85 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Notification handle = 0x0015 value: 00 2d 00 85 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Notification handle = 0x0015 value: 00 2d 00 86 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Notification handle = 0x0015 value: 00 2d 00 8b 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Notification handle = 0x0015 value: 00 2c 00 8d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Notification handle = 0x0015 value: 00 2a 00 8d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Notification handle = 0x0015 value: 00 2c 00 89 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</pre></td></tr></table>
+</div>
+</div>
+<!--使用pygatt读取数据，使用BLED112 跨平台， 使用scratch3-adapter
+mac下使用BLED112 https://github.com/peplin/pygatt/issues/159
+ vim /usr/local/lib/python3.6/site-packages/pygatt/backends/bgapi/bgapi.py
+adapter.scan() ok
+但connect有问题
+python  Byte Array to Hex String
+
+https://stackoverflow.com/questions/19210414/byte-array-to-hex-string
+-->
+
+<p>接着试试使用pygatt+BLED112在macOS下与micro:bit通信，使用BLED112，我们可以在mac/windows/linux下与ble设备通信</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pygatt</span>
+<span class="n">adapter</span> <span class="o">=</span> <span class="n">pygatt</span><span class="o">.</span><span class="n">BGAPIBackend</span><span class="p">()</span> <span class="c1"># 使用BLED112</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="c1"># pygatt在macOS下有bug需要hack start函数: https://github.com/peplin/pygatt/issues/159， 也可以参考：https://github.com/jannopet/LEGO-WeDo-2.0-Python-SDK/blob/master/wedo2/smarthub.py#L20</span>
+
+<span class="n">DEVICE_ADDRESS</span> <span class="o">=</span> <span class="s2">&#34;DF:48:87:86:93:20&#34;</span>
+<span class="n">ADDRESS_TYPE</span> <span class="o">=</span> <span class="n">pygatt</span><span class="o">.</span><span class="n">BLEAddressType</span><span class="o">.</span><span class="n">random</span>
+<span class="n">device</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">DEVICE_ADDRESS</span><span class="p">,</span> <span class="n">address_type</span><span class="o">=</span><span class="n">ADDRESS_TYPE</span><span class="p">)</span>
+<span class="c1">#value = device.char_read(&#34;5261da01-fa7e-42ab-850b-7c80220097cc&#34;)</span>
+
+<span class="kn">from</span> <span class="nn">binascii</span> <span class="kn">import</span> <span class="n">hexlify</span>
+<span class="k">def</span> <span class="nf">handle_data</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">    handle -- integer, characteristic read handle the data was received on
+</span><span class="s2">    value -- bytearray, the data returned in the notification
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;Received data: </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">hexlify</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="c1"># todo 模仿前头js源码，对数据进行解包</span>
+
+<span class="n">device</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">&#34;5261da01-fa7e-42ab-850b-7c80220097cc&#34;</span><span class="p">,</span>
+                     <span class="n">callback</span><span class="o">=</span><span class="n">handle_data</span><span class="p">)</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>运行后，输出为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">Received data: b&#39;00ab003600000000000000000000000000000000&#39;
+Received data: b&#39;00ad003200000000000000000000000000000000&#39;
+Received data: b&#39;00ad003000000000000000000000000000000000&#39;
+Received data: b&#39;00ad003700000000000000000000000000000000&#39;
+Received data: b&#39;00ad003700000000000000000000000000000000&#39;
+Received data: b&#39;00ad003900000000000000000000000000000000&#39;
+Received data: b&#39;00ad003900000000000000000000000000000000&#39;
+Received data: b&#39;00ad003c00000000000000000000000000000000&#39;
+Received data: b&#39;00ad003900000000000000000000000000000000&#39;
+Received data: b&#39;00ad003700000000000000000000000000000000&#39;
+Received data: b&#39;00ad003900000000000000000000000000000000&#39;
+Received data: b&#39;00ad003c00000000000000000000000000000000&#39;
+Received data: b&#39;00a9003d00000000000000000000000000000000&#39;</pre></td></tr></table>
+</div>
+</div>
+<p>如此一来我们就可以自己写Scratch Link了，而不必使用官方的！例如在scratch3-adapter中将microbit作为一个extension. 我最近正在将这部分写为一个python库。感兴趣的同学可以一起参与:<a href="https://github.com/wwj718/scratch-microbit-python-sdk">scratch-microbit-python-sdk</a></p>
+
+<hr />
+
+<p>接着我们来实验往microbit中写数据，我们前头提道display text积木，我们对其稍作调整,使其可在console运行，观察编码后的内容是什么:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
+</span><span class="cm"> * Enum for micro:bit BLE command protocol.
+</span><span class="cm"> * https://github.com/LLK/scratch-microbit-firmware/blob/master/protocol.md
+</span><span class="cm"> * @readonly
+</span><span class="cm"> * @enum {number}
+</span><span class="cm"> */</span>
+
+<span class="kd">var</span> <span class="nx">CMD_DISPLAY_TEXT</span> <span class="o">=</span> <span class="mh">0x81</span><span class="p">;</span>
+
+
+<span class="kd">function</span> <span class="nx">Uint8ToBase64</span><span class="p">(</span><span class="nx">u8Arr</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">CHUNK_SIZE</span> <span class="o">=</span> <span class="mh">0x8000</span><span class="p">;</span> <span class="c1">//arbitrary number
+</span><span class="c1"></span>  <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">u8Arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">slice</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">index</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">slice</span> <span class="o">=</span> <span class="nx">u8Arr</span><span class="p">.</span><span class="nx">subarray</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">index</span> <span class="o">+</span> <span class="nx">CHUNK_SIZE</span><span class="p">,</span> <span class="nx">length</span><span class="p">));</span> 
+    <span class="nx">result</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">slice</span><span class="p">);</span>
+    <span class="nx">index</span> <span class="o">+=</span> <span class="nx">CHUNK_SIZE</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">btoa</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="kd">function</span> <span class="nx">displayText</span> <span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">text</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">output</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">text</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">_writeSessionData</span><span class="p">(</span><span class="nx">CMD_DISPLAY_TEXT</span><span class="p">,</span> <span class="nx">output</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="kd">function</span>  <span class="nx">_writeSessionData</span> <span class="p">(</span><span class="nx">command</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="nx">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">command</span><span class="p">;</span> <span class="c1">// attach command to beginning of message
+</span><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">message</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">output</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">message</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="c1">// const data = Base64Util.uint8ArrayToBase64(output);
+</span><span class="c1"></span>        <span class="k">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">Uint8ToBase64</span><span class="p">(</span><span class="nx">output</span><span class="p">);</span>
+        
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">output</span><span class="p">)</span>
+        
+        <span class="c1">// return this._ble.write(BLEUUID.service, BLEUUID.txChar, data, &#39;base64&#39;);
+</span><span class="c1"></span>    <span class="p">}</span>
+
+<span class="nx">displayText</span> <span class="p">(</span><span class="s2">&#34;hello&#34;</span><span class="p">)</span> 
+</code></pre></td></tr></table>
+</div>
+</div>
+<p><code>hello</code>被编码后的为<code>gWhlbGxv</code>，发现和前头websocket捕获的一致:<code>gWhlbGxv</code></p>
+
+<p>但base64应该是Scratch Link与scratch通信时的编解码方式，为了使用gatttool与micro:bit通信，我们需要猜测Scratch Linkmicro:bit里的固件是如何如何约定编解码的，关于这点，官方采取了闭源的策略，估计是有意为之，我们稍后来hack它</p>
+
+<p><code>hello</code> 被编码后分别为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">gWhlbGxv //base64
+Uint8Array(6) [129, 104, 101, 108, 108, 111]  //Uint8Array</pre></td></tr></table>
+</div>
+</div>
+<p>试着以几种方式将他们转为16进制，都没有成功在micro:bit中显示</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">char-write-cmd 0x0018  xxx</pre></td></tr></table>
+</div>
+</div>
+<!--
+const resetEnergyExpended = new Uint8Array([1]);
+    // resetEnergyExpended 的值是'1'，表示重置
+    return characteristic.writeValue(resetEnergyExpended);
+
+    是啥 会变为16进制吗
+
+function buf2hex(buffer) { // buffer is an ArrayBuffer
+  return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+}
+
+// EXAMPLE:
+const buffer = new Uint8Array([129, 97]).buffer;
+console.log(buf2hex(buffer)); // = 8161
+-->
+
+<p>这导致我们需要使用一些嗅探工具抓包(BLE Sniffer)，之后用<a href="https://www.wireshark.org/download.html">wireshark</a>来分析，不过我手边暂时没有相应硬件，准备淘宝上买一个</p>
+
+<p>破解纯粹出于好玩，我们理解了官方的思路之后，自己重写一个micro:bit固件和是适配器也许比破解来得简单.使用makecode可以很轻松把gatt服务都搭了出来, 参考:<a href="https://github.com/jaafreitas/scratch-microbit-extension/tree/master/firmware">scratch-microbit-extension</a></p>
+
+<hr />
+
+<p>&mdash;2018年8月2号更新&mdash;</p>
+
+<hr />
+
+<p>我昨晚回去路上一致在想如何在没买到嗅探工具之前，进行破解，网购到货得几天，路上想到几个策略，洗澡的时候又想到几个策略，兴奋不易，可惜晚上没带电脑和树莓派回去，没法做实验</p>
+
+<p>我想到的策略有：</p>
+
+<ul>
+<li>观察micro:bit ble 的extension是如何将Uint8Array数据write到txChar，这个extension不包含Scratch Link，源码都在js中，所以即便加密，策略也可以被看出，而micro:bit固件不太可能重写，如果弄清楚micro:bit ble 的extension的机制，估计就能hack官方的机制</li>
+<li>使用树莓派伪装成micro:bit，从js可以可以看出，只要能自定义service uuid就可以骗过官方插件，于是引诱它将数据写入树莓派中，如果有加密，有了加密前后的数据，就可以猜测加密的规则。但这样做的一个风险是Scratch Link可能会检验sensor数据的合法性（我在scratch3-adapter中就考虑了这个机制），如果不合法，可能会断开连接。当然这些需要做实验才知道</li>
+<li>等待官方完成wedo2的插件，由于它们共用Scratch Link，如果有加密，加密的机制很可能被抽象得一样，而wedo2已经被破解了，所以可以逆向分析出micro:bit部分的加密方式</li>
+</ul>
+
+<p>今早一来试了下第一条猜想就成功了，事实证明我想多了，官方并没有做加密</p>
+
+<p>我们来看看在micro:bit ble extension中，官方是如何发送display text数据的</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">displayText</span> <span class="p">(</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="nx">text</span> <span class="o">=</span> <span class="nb">String</span><span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">TEXT</span><span class="p">).</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">19</span><span class="p">);</span>
+        <span class="k">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="nx">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">BLECommand</span><span class="p">.</span><span class="nx">CMD_DISPLAY_TEXT</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">text</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">output</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">text</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nb">window</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">({</span><span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;command&#39;</span><span class="p">,</span> <span class="nx">buffer</span><span class="o">:</span> <span class="nx">output</span><span class="p">},</span> <span class="s1">&#39;*&#39;</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;command&#39;</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">txChar</span><span class="p">.</span><span class="nx">writeValue</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">buffer</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;status&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="s1">&#39;connected&#39;</span><span class="p">)</span>
+            <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;gui.menuBar.bluetoothIndicator&#39;</span><span class="p">).</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">greenIndicatorIcon</span><span class="p">;</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="s1">&#39;disconnected&#39;</span><span class="p">)</span>
+            <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;gui.menuBar.bluetoothIndicator&#39;</span><span class="p">).</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">orangeIndicatorIcon</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>可以看出官方啥也没做: <code>txChar.writeValue(event.data.buffer);</code></p>
+
+<p>我们从简单的字符串分析入手，先试试<code>a</code></p>
+
+<p>websocket显示从前端发往Scratch Link的是：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span><span class="nt">&#34;jsonrpc&#34;</span><span class="p">:</span><span class="s2">&#34;2.0&#34;</span><span class="p">,</span><span class="nt">&#34;method&#34;</span><span class="p">:</span><span class="s2">&#34;write&#34;</span><span class="p">,</span><span class="nt">&#34;params&#34;</span><span class="p">:{</span><span class="nt">&#34;serviceId&#34;</span><span class="p">:</span><span class="mi">61445</span><span class="p">,</span><span class="nt">&#34;characteristicId&#34;</span><span class="p">:</span><span class="s2">&#34;5261da02-fa7e-42ab-850b-7c80220097cc&#34;</span><span class="p">,</span><span class="nt">&#34;message&#34;</span><span class="p">:</span><span class="s2">&#34;gWE=&#34;</span><span class="p">,</span><span class="nt">&#34;encoding&#34;</span><span class="p">:</span><span class="s2">&#34;base64&#34;</span><span class="p">},</span><span class="nt">&#34;id&#34;</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>在前端被编码后结果分别为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">gWE= //base64
+Uint8Array(2) [129, 97]  //Uint8Array</pre></td></tr></table>
+</div>
+</div>
+<p>我们只需要把buffer转为hex就行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">function buf2hex(buffer) { // buffer is an ArrayBuffer
+  return Array.prototype.map.call(new Uint8Array(buffer), x =&gt; (&#39;00&#39; + x.toString(16)).slice(-2)).join(&#39;&#39;);
+}
+
+// EXAMPLE:
+const buffer = new Uint8Array([129, 97]).buffer; // display a -&gt; [129, 97]
+console.log(buf2hex(buffer)); // = 8161</pre></td></tr></table>
+</div>
+</div>
+<p>在树莓派的gatttool中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[DF:48:87:86:93:20][LE]&gt; char-write-cmd 0x0018 8161</pre></td></tr></table>
+</div>
+</div>
+<p><img src="http://wwj-fig-bed.just4fun.site/microbit_scratch_2de5e6c9.png" width=500 /></p>
+
+<p>大功告成！</p>
+
+<!--
+read和write都是sendRemoteRequest 到 scratch link，关注语义，所以在scratch link中只需要关注read write！使用jsonrpc确实更合适，比消息简单-->
+
+<h1 id="tips">tips</h1>
+
+<p>记录一些scratch团队的机智做法</p>
+
+<h3 id="连接设备">连接设备</h3>
+
+<p><a href="https://github.com/LLK/scratch-vm/blob/develop/src/extensions/scratch3_microbit/index.js#L116">startDeviceScan</a></p>
+
+<p>用户选中extesion之后开始连接，只扫描出extension对应的设备，而不是把周围的BLE都扫描出来，体验十分友好</p>
+
+<h3 id="https校验问题">https校验问题</h3>
+
+<p>由于网站都逐渐过渡到https，而Scratch Link是个本地websocker server，要让Scratch Link与浏览器通信，需要使用wss协议。而本地websocker server采用openssl本地自生成的证书的话，浏览器要让用户在一个新页面里点击高级设置才行，体验很不友好</p>
+
+<p>scratch团队的解决方案十分聪明, 让<code>device-manager.scratch.mit.edu</code>这个域名指向<code>127.0.0.1</code>，websocker server就可以使用这个域名的证书。</p>
+
+<h4 id="scratch-link的内部服务怎么写">Scratch Link的内部服务怎么写</h4>
+
+<p><a href="https://github.com/LLK/scratch-vm/blob/develop/src/io/bleSession.js#L3">ScratchLinkWebSocket</a>对应的server为<code>'wss://device-manager.scratch.mit.edu:20110/scratch/ble'</code></p>
+
+<p>BLESession的定位是:</p>
+
+<blockquote>
+<p>A BLE device session object.  It handles connecting, over web sockets, to BLE devices, and reading and writing data to them.</p>
+</blockquote>
+
+<p>看去是透明代理</p>
+
+<p>所以根据js的接口，要独立实现Scratch Link应该不难</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://scratch.mit.edu/microbit">scratch.mit.edu/microbit</a></li>
+<li><a href="https://scratch.mit.edu/conference">conference</a></li>
+<li><a href="https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html">Bluetooth Developer Studio Level 3 Profile Report</a></li>
+<li><a href="https://blog.just4fun.site/ble-notes.html">BLE学习笔记</a></li>
+<li><a href="https://cn0xroot.com/2016/06/12/ble-hacking%EF%BC%9Able-scan-and-sniffer-withubertooth-one/">BLE Hacking：使用Ubertooth one扫描嗅探低功耗蓝牙</a></li>
+<li><a href="https://draapho.github.io/2016/11/15/1616-python-ble/">使用python实现BLE通讯</a></li>
+<li><a href="https://github.com/peplin/pygatt">pygatt</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-08-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch </a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/movie-2018-8/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">八月电影放映计划</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/ble-notes/">
+            <span class="next-text nav-default">BLE学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

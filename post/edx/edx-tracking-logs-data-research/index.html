@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>基于tracking logs的数据分析 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="最近打算写edX数据相关的文章，这一块庞大繁杂，资料分散，近来在这块花了大量时间，收集了大量资料源码以及阅读了基本所有可读的文档，决定将其整" /><meta name="keywords" content="Technology, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/edx/edx-tracking-logs-data-research/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="基于tracking logs的数据分析" />
+<meta property="og:description" content="最近打算写edX数据相关的文章，这一块庞大繁杂，资料分散，近来在这块花了大量时间，收集了大量资料源码以及阅读了基本所有可读的文档，决定将其整" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/edx/edx-tracking-logs-data-research/" />
+<meta property="article:published_time" content="2015-05-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-05-06T00:00:00+00:00" />
+<meta itemprop="name" content="基于tracking logs的数据分析">
+<meta itemprop="description" content="最近打算写edX数据相关的文章，这一块庞大繁杂，资料分散，近来在这块花了大量时间，收集了大量资料源码以及阅读了基本所有可读的文档，决定将其整">
+
+
+<meta itemprop="datePublished" content="2015-05-06T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-05-06T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2242">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="基于tracking logs的数据分析"/>
+<meta name="twitter:description" content="最近打算写edX数据相关的文章，这一块庞大繁杂，资料分散，近来在这块花了大量时间，收集了大量资料源码以及阅读了基本所有可读的文档，决定将其整"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">基于tracking logs的数据分析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-05-06 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>最近打算写edX数据相关的文章，这一块庞大繁杂，资料分散，近来在这块花了大量时间，收集了大量资料源码以及阅读了基本所有可读的文档，决定将其整理出来，目的有二：</p>
+
+<ul>
+<li>整理一下自己的资料，不至于让数据成为坟墓，为下次深入留下线索，不至于重头开始</li>
+<li>也希望能帮助到后来的人，不会像我此前一般毫无头绪，备受煎熬</li>
+</ul>
+
+<p>还没想好怎么组织这些文档资料和心得，先从一个具体的需求入手好了。</p>
+
+<p>#任务描述
+统计每个学生在每门课上的花费的学习时间</p>
+
+<p>#Tracking Logs
+为了完成以上任务，首先想到了<a href="http://edx.readthedocs.org/projects/devdata/en/latest/internal_data_formats/tracking_logs.html">Tracking Logs</a></p>
+
+<p>这是个什么东西呢，文档中是这样介绍的</p>
+
+<blockquote>
+<p>Events are emitted by the server, the browser, or the mobile device to capture information about interactions with the courseware and the Instructor Dashboard in the LMS, and are stored in JSON documents. In the data package, event data is delivered in a log file.</p>
+</blockquote>
+
+<p>就是说这是个日志文件，内容为json格式，记录着用户与平台交互时发生的特定事件，事件可能由浏览器/后台系统或是手机端触发。</p>
+
+<p>那么都有哪些行为会被记录呢？</p>
+
+<p>这是所有的<a href="http://edx.readthedocs.org/projects/devdata/en/latest/internal_data_formats/event_list.html">事件列表</a></p>
+
+<p>其中比较有趣的是学生观看视频的许多行为都被记录，比如</p>
+
+<ul>
+<li>edx.video.loaded</li>
+<li>edx.video.paused</li>
+<li>edx.video.played</li>
+<li>edx.video.position.changed</li>
+<li>edx.video.stopped</li>
+<li>edx.video.transcript.hidden</li>
+<li>edx.video.transcript.shown</li>
+<li>and so on&hellip;</li>
+</ul>
+
+<p>从这里可能挖掘出大量对改良教学本身有所助益的数据，好比学生反复回看某个视频段，那么团队可能发现这里也许讲解的不够清晰，更多有趣的行为分析，大家可以发挥想象，我觉得这也是edX最有趣的地方之一</p>
+
+<p>最后给一个日志例子，我们就结束对Tracking Logs的介绍</p>
+
+<pre>
+{
+    "username": "AAAAAAAAAA",
+    "event_source": "server",
+    "name": "edx.course.enrollment.deactivated",
+    "referer": "http:\/\/localhost:8001\/container\/i4x:\/\/edX\/DemoX\/vertical\/69dedd38233a46fc89e4d7b5e8da1bf4?action=new",
+    "accept_language": "en-US,en;q=0.8",
+    "time": "2014-01-26T00:28:28.388782+00:00",
+    "agent": "Mozilla\/5.0 (Windows NT 6.1; WOW64; Trident\/7.0; rv:11.0) like Gecko",
+    "page": null
+    "host": "courses.edx.org",
+    "session": "a14j3ifhskngw0gfgn230g",
+    "context": {
+      "user_id": 9999999,
+      "org_id": "edX",
+      "course_id": "edX\/DemoX\/Demo_Course",
+      "path": "\/change_enrollment",
+    },
+    "ip": "NN.NN.NNN.NNN",
+    "event": {
+      "course_id": "edX\/DemoX\/Demo_Course",
+      "user_id": 9999999,
+      "mode": "honor"
+    },
+    "event_type": "edx.course.enrollment.deactivated"
+  }
+</pre>
+
+<p>更多的信息大家可自行去看日志文件,在<code>/edx/var/log/tracking</code></p>
+
+<p>对tracking log结构有兴趣的同学可以查看edx admin中的<code>/admin/track/trackinglog/add/</code></p>
+
+<p>#思路
+既然<a href="http://edx.readthedocs.org/projects/devdata/en/latest/internal_data_formats/tracking_logs.html">tracking_logs</a>跟踪记录了学生的所有行为数据，那么我们就从这里入手。看看能否从中挖掘出每个学生在每一门课所花的时间。<br />
+那么接下去的工作自然就变成对日志文本的解读，了解每个数据项的含义，这部分的文档也都在<a href="http://edx.readthedocs.org/projects/devdata/en/latest/internal_data_formats/tracking_logs.html#video-interaction-events">这里</a>。此外我们知道，了解用户是否在线，sessions往往是关键。<br />
+而后设计计算用户在线时长的算法，再往后使用splunk或是hadoop来计算。<br />
+此后我去edx社区发了个求助帖，看看社区的建议，大家回复也基本是从sessions入手，@Alexander的回复让我很是开心，他说</p>
+
+<blockquote>
+<p>The million dollar question</p>
+</blockquote>
+
+<p>哈哈，我也觉得这是件很有价值的数据挖掘工作，此外@Kristin女神提到</p>
+
+<blockquote>
+<p>and as far as I know there is no hearbeat event&hellip;</p>
+</blockquote>
+
+<p>她还提到些session的细节，诸如粒度只到半小时（没有心跳检测），她似乎对这块很了解，还提出记录鼠标移动点击页面之类的事件，以此作为心跳检测，这是个很有趣的思路，这种思路也可以用来防作弊用。有兴趣的同学可以进一步挖掘，或是自定义事件来观察用户行为。</p>
+
+<p>#just do it
+而后我就开始阅读理解这些数据，和思考算法。<br />
+这个过程中，我也在github上搜索相关的项目，发现McGill大学也在做了<a href="https://github.com/McGillX/edx_data_research">这方面的工作</a>，McGill是edX用户，这是加拿大的一所顶级名校，被誉为“加拿大的哈佛”。<br />
+随后翻了他们的源码库，发现他们在数据分析这块，可能是除了edx核心源码库之外走的最远的了，而且更棒的是，他们的分析多是以脚本形式，耦合度很低。读了几个脚本，发现和我此前的思路基本一致，很容易理解，那么我们就跟着McGill做好啦！！<br />
+所有功劳归McGill！</p>
+
+<p>#步骤细节
+建议数据分析在单独的机器上做，避免影响服务器性能</p>
+
+<p>##导出tracking logs
+tracking Logs位于<code>/edx/var/log/tracking</code><br />
+使用rsync同步这些文件，好处是rsync效率很高，每次只同步新增的部分。</p>
+
+<p>##导入到mongo
+使用以下脚本：<a href="https://raw.githubusercontent.com/wwj718/edx_data_research/master/parsing/tracking_logs/load_tracking_logs_to_mongo.py">load_tracking_logs_to_mongo</a>  将log加载到mongo里</p>
+
+<p><code>python load_tracking_logs_to_mongo.py db_name collection_name &lt;path_to_directory&gt;</code></p>
+
+<p>当然也可以选择性地处理日志文件</p>
+
+<p><code>python load_tracking_logs_to_mongo.py db_name collection_name &lt;path_to_file_1&gt; &lt;path_to_file_2&gt;</code></p>
+
+<p>此外还可以选择性地加载课程相关的日志，并且指定时间段。可参考<a href="https://github.com/wwj718/edx_data_research/tree/master/parsing/tracking_logs">这里</a></p>
+
+<p>以上是我从Mcgill大学fork的仓库，他们的<a href="https://github.com/wwj718/edx_data_research/tree/master/reporting_scripts">reporting_scripts</a>里有一个小bug,我修复了，顺便提了个pull request,好像上游仓库还没处理，所以大家可以先用我的</p>
+
+<p>##查看课程
+现在可以在mongo里查下都有哪些课程<br />
+<code>db.tracking.distinct('context.course_id')</code><br />
+通过以上command可以得到log里的所有course_id</p>
+
+<p>##归并文档
+<code>db.tracking.aggregate([{$match :{ 'context.course_id' : 'your_course_id' }}, {$out : 'your_course_id'}])</code><br />
+以上指令根据你指定的course_id，归并文档成为一个collection。</p>
+
+<p>##统计用户在线时间
+下载<a href="https://raw.githubusercontent.com/wwj718/edx_data_research/master/reporting_scripts/session_info.py">session_info</a>脚本，修改里边的参数（DATABASE_NAME和collection_name）<br />
+执行<code>python session_info.py</code>，就可以得到所有用户这门课中每个session期间的在线时长，结果以一份csv报表(session_info.csv)呈现，
+报表内容为<code>['Username', 'Session ID', 'Number of Events', 'Start Time', 'End Time', 'Time Spent']</code>,</p>
+
+<p>如果需要统计同个用户在该课程下的花费的所有时长，只需要做个累加就行。使用pandas可能很方便~</p>
+
+<p>#后记
+以上只是一个可行方案，并没考虑效率，今天我翻了下我在5月4号发的帖子，@Alexander回复说</p>
+
+<blockquote>
+<p>we created that script to get an initial idea but found it a very poor proxy and not helpful.</p>
+</blockquote>
+
+<p>我这才得知他便是McGill大学<a href="https://github.com/McGillX/edx_data_research">edx_data_research</a>项目的开发者。的确这只是个零时的不够优雅的解决方案。</p>
+
+<p>如果要生产环境使用，必须考虑效率问题，可能以下几个内容会被考虑到：</p>
+
+<ul>
+<li>使用单独的计算资源，不要影响主服务器</li>
+<li>定时计划任务(cron)</li>
+<li>考虑并发</li>
+<li>使用hadoop或者spark</li>
+<li>将计算结果存回数据库</li>
+<li>新建一个页面向课程团队展示分析结果</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-05-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A9%BA%E6%83%B3/zhan-ni-mei/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">占你妹</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/rainy-day/">
+            <span class="next-text nav-default"> 下雨天</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://localhost:1313/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
