@@ -91,7 +91,24 @@ def replace2():
             # break
             file_p.write_text(content)
 
-replace2()
+# replace2()
+
+def replace3():
+    '''
+    add aliases: ["/blame-a-cat","/blame-a-cat.html"]
+    '''
+    for file_p in files:
+        # print(file_p)
+        # import IPython;IPython.embed()
+        content = file_p.read_text()
+        pattern = r'^---' # 有效文章
+        if re.match(pattern, content) and ("draft: true" not in content):
+            content = re.sub(r'([Ss]lug: (.*))', rf'\1\naliases: ["\2","\2.html"]', content)
+            # print(content[:150])
+            file_p.write_text(content)
+
+
+replace3()
 
 '''
 	file_name, file_extension = os.path.splitext(file)
