@@ -103,7 +103,7 @@ def replace3():
         content = file_p.read_text()
         pattern = r'^---' # 有效文章
         if re.match(pattern, content) and ("draft: true" not in content):
-            content = re.sub(r'([Ss]lug: (.*))', rf'\1\naliases: ["\2","\2.html"]', content)
+            content = re.sub(r'([Ss]lug: (.*))', rf'\1\naliases: ["/\2","/\2.html"]', content)
             # print(content[:150])
             file_p.write_text(content)
 
