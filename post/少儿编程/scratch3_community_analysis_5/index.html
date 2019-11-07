@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch3技术分析之社区 API(第5篇) - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="我们主要关心以下页面的API: 社区主页: https://scratch.mit.edu/ 发现页: https://scratch.mit.edu/explore/projects/all 我们可以把这些API视为项目查询接口，查询社区用户已创建的项目(Projects), 这些" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_community_analysis_5/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch3技术分析之社区 API(第5篇)" />
+<meta property="og:description" content="我们主要关心以下页面的API: 社区主页: https://scratch.mit.edu/ 发现页: https://scratch.mit.edu/explore/projects/all 我们可以把这些API视为项目查询接口，查询社区用户已创建的项目(Projects), 这些" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_community_analysis_5/" />
+<meta property="article:published_time" content="2019-01-15T16:00:00+00:00" />
+<meta property="article:modified_time" content="2019-01-15T16:00:00+00:00" />
+<meta itemprop="name" content="Scratch3技术分析之社区 API(第5篇)">
+<meta itemprop="description" content="我们主要关心以下页面的API: 社区主页: https://scratch.mit.edu/ 发现页: https://scratch.mit.edu/explore/projects/all 我们可以把这些API视为项目查询接口，查询社区用户已创建的项目(Projects), 这些">
+
+
+<meta itemprop="datePublished" content="2019-01-15T16:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-01-15T16:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="499">
+
+
+
+<meta itemprop="keywords" content="scratch," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch3技术分析之社区 API(第5篇)"/>
+<meta name="twitter:description" content="我们主要关心以下页面的API: 社区主页: https://scratch.mit.edu/ 发现页: https://scratch.mit.edu/explore/projects/all 我们可以把这些API视为项目查询接口，查询社区用户已创建的项目(Projects), 这些"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch3技术分析之社区 API(第5篇)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-01-15 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#社区主页">社区主页</a>
+<ul>
+<li>
+<ul>
+<li><a href="#未登录用户">未登录用户</a></li>
+<li><a href="#已登陆用户">已登陆用户</a>
+<ul>
+<li>
+<ul>
+<li><a href="#新闻接口">新闻接口:</a></li>
+<li><a href="#关注者赞过的项目">关注者赞过的项目</a></li>
+<li><a href="#关注的工作室的项目">关注的工作室的项目</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#发现页">发现页</a>
+<ul>
+<li>
+<ul>
+<li><a href="#默认请求">默认请求</a></li>
+<li><a href="#最受欢迎的动画">最受欢迎的动画</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p>我们主要关心以下页面的API:</p>
+
+<ul>
+<li>社区主页: <code>https://scratch.mit.edu/</code></li>
+<li>发现页: <code>https://scratch.mit.edu/explore/projects/all</code></li>
+</ul>
+
+<p>我们可以把这些API视为项目查询接口，查询社区用户已创建的项目(Projects), 这些接口的不同只是查询的条件不同。</p>
+
+<h1 id="社区主页">社区主页</h1>
+
+<p>已登陆用户和未登录用户看到的社区主页，略有不同，我们分别分析。</p>
+
+<h3 id="未登录用户">未登录用户</h3>
+
+<p><code>GET https://api.scratch.mit.edu/proxy/featured</code></p>
+
+<p><img src="/post/img/scratch-api_4802bb5c.png" alt="" /></p>
+
+<h3 id="已登陆用户">已登陆用户</h3>
+
+<p><code>GET https://api.scratch.mit.edu/proxy/featured</code></p>
+
+<p>返回数据相同。</p>
+
+<p>已登陆用户会请求更多的API:</p>
+
+<h5 id="新闻接口">新闻接口:</h5>
+
+<p><code>GET https://api.scratch.mit.edu/news?limit=3</code></p>
+
+<p>返回:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">181868395058</span><span class="p">,</span>
+    <span class="s2">&#34;stamp&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-09T13:53:40.000Z&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;headline&#34;</span><span class="o">:</span> <span class="s2">&#34;Updates and Bug Fixes!&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;url&#34;</span><span class="o">:</span> <span class="s2">&#34;https://scratch.mit.edu/discuss/topic/331439/&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;image&#34;</span><span class="o">:</span> <span class="s2">&#34;https://66.media.tumblr.com/2bbe2bc9317585c1de96c91f56bb061b/tumblr_inline_pad1ik8d2k1tqsk9m_540.png&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;copy&#34;</span><span class="o">:</span> <span class="s2">&#34;We have some updates and bug fixes for you! See here for more information…&#34;</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">181645899223</span><span class="p">,</span>
+    <span class="s2">&#34;stamp&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-02T14:49:48.000Z&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;headline&#34;</span><span class="o">:</span> <span class="s2">&#34;Scratch 3.0 is here!&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;url&#34;</span><span class="o">:</span> <span class="s2">&#34;https://scratch.mit.edu/discuss/topic/326861/&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;image&#34;</span><span class="o">:</span> <span class="s2">&#34;https://66.media.tumblr.com/2bbe2bc9317585c1de96c91f56bb061b/tumblr_inline_pad1ik8d2k1tqsk9m_540.png&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;copy&#34;</span><span class="o">:</span> <span class="s2">&#34;Scratch 3.0 has launched! See here for more information…&#34;</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">181645869948</span><span class="p">,</span>
+    <span class="s2">&#34;stamp&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-02T14:48:22.000Z&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;headline&#34;</span><span class="o">:</span> <span class="s2">&#34;First Scratch Design Studio in 3.0&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;url&#34;</span><span class="o">:</span> <span class="s2">&#34;https://scratch.mit.edu/studios/5801323/&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;image&#34;</span><span class="o">:</span> <span class="s2">&#34;https://66.media.tumblr.com/ee9c9705a8c0334c07c6a32303ec0748/tumblr_inline_p7in9yfrIU1tqsk9m_540.png&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;copy&#34;</span><span class="o">:</span> <span class="s2">&#34;Have you ever wondered what life might be like in the year 3000? Here is your chance to share your dreams and wishes for the future!  &#34;</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h5 id="关注者赞过的项目">关注者赞过的项目</h5>
+
+<p><code>GET https://api.scratch.mit.edu/users/wwj718/following/users/loves</code></p>
+
+<p>返回:</p>
+
+<p><img src="/post/img/scratch-api_180455c6.png" alt="" /></p>
+
+<h5 id="关注的工作室的项目">关注的工作室的项目</h5>
+
+<p><code>GET https://api.scratch.mit.edu/users/wwj718/following/studios/projects</code></p>
+
+<p>返回:</p>
+
+<p><img src="/post/img/scratch-api_b6bc3beb.png" alt="" /></p>
+
+<h1 id="发现页">发现页</h1>
+
+<p>发现页可以用于发现<code>项目</code>和<code>工作室</code>。工作室(Studio)目前官方还没有迁移完，我们暂时不关心。（工作室非常接近知乎<code>收藏夹</code>的概念）。</p>
+
+<h3 id="默认请求">默认请求</h3>
+
+<p><code>GET https://api.scratch.mit.edu/explore/projects?limit=16&amp;offset=0&amp;language=zh-cn&amp;mode=trending&amp;q=*</code></p>
+
+<p><img src="/post/img/scratch-api_7096b7d1.png" alt="" /></p>
+
+<p>默认情况下，选择了<code>全部</code>、<code>热门的</code>、<code>简体中文</code>(页底)，从url参数你可以看到这些。</p>
+
+<h3 id="最受欢迎的动画">最受欢迎的动画</h3>
+
+<p><code>GET https://api.scratch.mit.edu/explore/projects?limit=16&amp;offset=0&amp;language=zh-cn&amp;mode=popular&amp;q=animations</code></p>
+
+<p>观察URL参数，我们便搞懂了发现页的API细节了。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-01-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_project_json_analysis_6/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Scratch3技术分析之项目内部数据(第6篇）</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_user_api_analysis_4/">
+            <span class="next-text nav-default">Scratch3技术分析之User API(第4篇)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

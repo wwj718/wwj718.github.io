@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>codelab-adapter内置微信(wechat)插件 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="codelab-adapter最新版本(0.6.2)内置了微信(wechat)插件。 我们此前在关于codelab.club里提到 我们希望让创" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/adapter-wechat-extension/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="codelab-adapter内置微信(wechat)插件" />
+<meta property="og:description" content="codelab-adapter最新版本(0.6.2)内置了微信(wechat)插件。 我们此前在关于codelab.club里提到 我们希望让创" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/adapter-wechat-extension/" />
+<meta property="article:published_time" content="2019-02-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-02-15T00:00:00+00:00" />
+<meta itemprop="name" content="codelab-adapter内置微信(wechat)插件">
+<meta itemprop="description" content="codelab-adapter最新版本(0.6.2)内置了微信(wechat)插件。 我们此前在关于codelab.club里提到 我们希望让创">
+
+
+<meta itemprop="datePublished" content="2019-02-15T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-02-15T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1111">
+
+
+
+<meta itemprop="keywords" content="codelab," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="codelab-adapter内置微信(wechat)插件"/>
+<meta name="twitter:description" content="codelab-adapter最新版本(0.6.2)内置了微信(wechat)插件。 我们此前在关于codelab.club里提到 我们希望让创"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">codelab-adapter内置微信(wechat)插件</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-15 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#一些有趣的场景">一些有趣的场景</a>
+<ul>
+<li>
+<ul>
+<li><a href="#说声晚安">说声晚安</a></li>
+<li><a href="#芝麻开门">芝麻开门</a></li>
+<li><a href="#想你的夜">想你的夜</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#使用">使用</a>
+<ul>
+<li>
+<ul>
+<li><a href="#运行codelab-adapter-微信插件">运行codelab-adapter 微信插件</a></li>
+<li><a href="#在scratch3-0中使用微信插件">在Scratch3.0中使用微信插件</a></li>
+<li><a href="#群消息">群消息</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#演示">演示</a></li>
+<li><a href="#开始创作">开始创作</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/eextension-wechat_f232e4a1.png" alt="" /></p>
+
+<p>codelab-adapter<a href="https://codelab-adapter-docs.codelab.club/user_guide/install/">最新版本(0.6.2)</a>内置了微信(wechat)插件。</p>
+
+<p>我们此前在<a href="https://blog.just4fun.site/about-codelab-club.html">关于codelab.club</a>里提到</p>
+
+<blockquote>
+<p>我们希望让创造成为一种运动、一种生活方式，我们喜欢约翰·杜威提倡的:</p>
+
+<p>Education as life.</p>
+</blockquote>
+
+<p>微信是国内用户量最大的社交软件，人们的人际网络多在其中。通过接入微信，我们希望能支持更广泛的创造, 让周围的人与事物激起创造者的创作热情。我们当然不会止步于微信，接下来将为海外用户接入 Telegram/Line。</p>
+
+<p>codelab试图践行《终身幼儿园》的理念，我们此前提到:</p>
+
+<blockquote>
+<p>弗兰西斯·培根在17世纪说: &ldquo;知识就是力量&rdquo;(Knowledge is power)。今天，应该没什么人会反对这句话了。但问题是我们如何有效获得这种力量呢?教科书式的知识罗列多半是枯燥无味的，我们努力去记忆，却收效甚微，当然，通过努力记忆和练习往往可以考得不错成绩，但你希望得到的是知识，而不是考试成绩，这两者的不同，杜威论述了很多。知识、逻辑和理性都不具有主动性。不排除一些人天生对微积分、形式系统和康德感兴趣，但更多的人，热情可能来自于帮助家人与朋友、恶作剧以及制作有趣的东西。codelab.club希望做的，便是与你一起去寻找热情所在，一旦找到那些让你热血沸腾之事，你便会开始对知识感兴趣，因为知识能帮你更好地实现目标，接下来你将愉快且高效地掌握所需的知识。</p>
+</blockquote>
+
+<h1 id="一些有趣的场景">一些有趣的场景</h1>
+
+<h3 id="说声晚安">说声晚安</h3>
+
+<p>codelab-adapter已经接入了主流的智能家居设备，在微信插件加持下，我们可以做到用微信控制家庭设备，睡前关灯再也不用喊天猫精灵，一喊睡意全没了，给自己的账号发条晚安就行:)</p>
+
+<p>下雪天不想起床关灯？ 读书困了不想起床关灯？ 我就是懒不想起床关灯？ 没关系的，懒惰是创造者的美德:)</p>
+
+<p>发一条晚安信息，房间与你一同进入睡眠模式。</p>
+
+<h3 id="芝麻开门">芝麻开门</h3>
+
+<p>codelab-adapter正在接入智能门锁(深圳绿米公司赠与了我们智能门锁，希望一起探索这块的合作可能)。</p>
+
+<p>设想你组织了个party，每次有人按门铃都得去开门，是不是很烦躁？</p>
+
+<p>把参与者拉到一个微信群，他们一到门口，在群里吼一身<code>芝麻开门</code>, 门即刻自动打开。 codelab-adapter一端连接微信，一端连接智能门锁。要做到这点，只需在Scratch中拖几块积木，将它们拼一起即可。 这便是我们期待的编程教育。</p>
+
+<h3 id="想你的夜">想你的夜</h3>
+
+<p>我们正在接入脑电波传感器。当你想念某个人的时候，脑电波传感器一旦捕获到你的情绪，立刻触发微信积木块，给心上人发送一条来自远方的惦念。</p>
+
+<h1 id="使用">使用</h1>
+
+<h3 id="运行codelab-adapter-微信插件">运行codelab-adapter 微信插件</h3>
+
+<p><img src="/post/img/wechat_extension_qr_957e2a99.png" width=400 ></p>
+
+<p>用微信扫码即可登陆</p>
+
+<h3 id="在scratch3-0中使用微信插件">在Scratch3.0中使用微信插件</h3>
+
+<p><img src="/post/img/eextension-wechat_f232e4a1.png" alt="" /></p>
+
+<p><img src="/post/img/wechat_extension_25bf1b48.png" alt="" /></p>
+
+<h3 id="群消息">群消息</h3>
+
+<p><img src="/post/img/groupwechat_d7336886.png" alt="" /></p>
+
+<h1 id="演示">演示</h1>
+
+<video width=600px src="http://scratch3-files.just4fun.site/wechat_extension.mp4" controls="controls"></video>
+
+<h1 id="开始创作">开始创作</h1>
+
+<ul>
+<li><a href="https://www.codelab.club/">codelab.club</a></li>
+</ul>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://codelab-adapter-docs.codelab.club/extension_guide/wechat/">extension 微信(wechat)</a></li>
+<li><a href="https://blog.just4fun.site/about-codelab-club.html">关于codelab.club</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-02-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">codelab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%97%E8%AF%8D/round-theater/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">浣溪沙·圆形剧场</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/bvalentine-day-drama/">
+            <span class="next-text nav-default">浣溪沙 情人节看话剧</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

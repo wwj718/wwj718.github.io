@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>积木化编程与3D场景 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="缘起 近期试着把类似code.org的编程项目移植到3D场景中。 我们最初使用three.js实现了原型，后来发现了Blender和Verge3" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-3d/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="积木化编程与3D场景" />
+<meta property="og:description" content="缘起 近期试着把类似code.org的编程项目移植到3D场景中。 我们最初使用three.js实现了原型，后来发现了Blender和Verge3" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-3d/" />
+<meta property="article:published_time" content="2018-09-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-09-26T00:00:00+00:00" />
+<meta itemprop="name" content="积木化编程与3D场景">
+<meta itemprop="description" content="缘起 近期试着把类似code.org的编程项目移植到3D场景中。 我们最初使用three.js实现了原型，后来发现了Blender和Verge3">
+
+
+<meta itemprop="datePublished" content="2018-09-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-09-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3649">
+
+
+
+<meta itemprop="keywords" content="工具," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="积木化编程与3D场景"/>
+<meta name="twitter:description" content="缘起 近期试着把类似code.org的编程项目移植到3D场景中。 我们最初使用three.js实现了原型，后来发现了Blender和Verge3"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">积木化编程与3D场景</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-26 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#缘起">缘起</a></li>
+<li><a href="#blender-https-www-blender-org"><a href="https://www.blender.org/">Blender</a></a>
+<ul>
+<li>
+<ul>
+<li><a href="#blender是什么">Blender是什么</a></li>
+<li><a href="#案例">案例</a></li>
+<li><a href="#blender与电影">Blender与电影</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#verge3d">Verge3D</a>
+<ul>
+<li>
+<ul>
+<li><a href="#puzzles编辑器">Puzzles编辑器</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#blender与python">Blender与Python</a>
+<ul>
+<li>
+<ul>
+<li><a href="#安装python第三方库">安装python第三方库</a></li>
+<li><a href="#python-api">python api</a></li>
+<li><a href="#如何运行python脚本">如何运行python脚本</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#教程">教程</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/verge3d_fc0fd21f.png" alt="" /></p>
+
+<h1 id="缘起">缘起</h1>
+
+<p>近期试着把类似code.org的编程项目移植到3D场景中。</p>
+
+<p>我们最初使用<a href="https://threejs.org/">three.js</a>实现了原型，后来发现了Blender和Verge3D，十分称心，便切换到这个技术栈里。</p>
+
+<h1 id="blender-https-www-blender-org"><a href="https://www.blender.org/">Blender</a></h1>
+
+<p>Blender名声在外，早有听闻，但一直没去试用。</p>
+
+<p>近期在树莓派的<a href="https://projects.raspberrypi.org/">项目页面</a>看到<a href="https://projects.raspberrypi.org/en/projects?software%5B%5D=blender">3D modelling projects</a></p>
+
+<p>看了几个学习项目，觉得还不错，这些项目依赖于Blender，便下载试用了Blender，在学习Blender过程中发现许多惊艳的东西，在此做个笔记。</p>
+
+<p>也是在了解Blender过程中，意外地发现<a href="https://www.soft8soft.com">Verge3D</a>，觉得这就是我要找的工具，用来构建3D场景的编程教育项目。</p>
+
+<p>最近常在浏览开源项目中意外解决了手头的问题。而且事后发现它们往往是最佳解决方案，原本以为要花上几个月的工作量常常变成了几周或几天。甚至几分钟(如昨天发现的<a href="https://github.com/mherrmann/fbs">fbs</a>将彻底省下我之后重构scratch3-adapter的时间)</p>
+
+<h3 id="blender是什么">Blender是什么</h3>
+
+<p>Blender主页上的介绍是:</p>
+
+<blockquote>
+<p>Open Source 3D creation. Free to use for any purpose, forever</p>
+</blockquote>
+
+<p>在阅读介绍之前，我喜欢先把软件下载下来，凭感觉胡乱捣鼓一番，先做个感性的认识，再做知性的了解。</p>
+
+<p>Blender的下载地址为<a href="https://www.blender.org/download/">download</a>, 我目前使用的版本是<code>v2.79b</code></p>
+
+<p>以下内容摘自维基百科词条:<a href="https://zh.wikipedia.org/wiki/Blender">Blender</a></p>
+
+<p>Blender是一套专业的，自由及开放源代码的三维计算机图形软件。由荷兰的一个动画工作室NeoGeo创建。</p>
+
+<p>Blender使用Python语言来创作及制作游戏及工作自动化脚本。这令我们这些python拥趸跃跃欲试，我在还不会使用blender的时候，就先去翻它的python文档。</p>
+
+<p>Blender有个子计划叫<a href="https://zh.wikipedia.org/wiki/Game_Blender">Game Blender</a>,用于制作实时交互内容。该游戏引擎使用 C++ 程序语言编写，并支持 Python 脚本和 OpenAL 3D 音频。</p>
+
+<p>Blender的先进功能包括:</p>
+
+<ul>
+<li>在Blender中，物体与数据是分离的，这使其可以快速塑模。</li>
+<li>可以将多个场景合并至单一文件（称为&rdquo;.blend&rdquo;的文件）</li>
+<li>所有Blender所生成的&rdquo;.blend&rdquo;文件均有完善的向前，向后版本的兼容性，同时亦具有完整的跨平台支持。</li>
+<li>所有场景，对象，材料，材质，声音，图片，后期制作特效均可集成至最后生成的&rdquo;.blend&rdquo;动画档里。</li>
+<li>可透过&rdquo;.blend&rdquo;文件来自定义用户界面。</li>
+</ul>
+
+<h3 id="案例">案例</h3>
+
+<p>NASA为火星探测车“好奇”着陆三周年纪念日作出了交互web-软件。探测车的动作、摄影机和机械手的操纵是基于 Blender 和 <a href="https://en.wikipedia.org/wiki/Blend4Web">Blend4Web</a> 创造的软件实现的。Blend4Web是用于创建和在网页浏览器中显示交互式三维计算机图形的开源框架。近期NASA将技术栈从Blend4Web迁移到Verge3D。</p>
+
+<p>这是个非常炫酷的项目:<a href="https://opensourcerover.jpl.nasa.gov/#!/home">opensourcerover</a></p>
+
+<h3 id="blender与电影">Blender与电影</h3>
+
+<p>第一套使用Blender专业视频是蜘蛛侠2，在该片制作中用来绘制分镜脚本。</p>
+
+<p>Blender基金会牵头制作了一些开源电影。</p>
+
+<p>这些通过 Blender 创作出的电影作品，都是根据CC协议（Creative Commons）发表的。因此 DVD 内带有所有电影创作相关 .blend 文件、模型、纹理和其他材料，还有原始剧本、支配表、画面分镜剧本，以及技术细节文档和视频，教你如何使用这些素材，所有人可以下载该作品或其源文件，用于修改后重新发布。</p>
+
+<p>这些开源电影包括:</p>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/zh-hans/%E5%A4%A7%E8%B1%A1%E4%B9%8B%E6%A2%A6">大象之梦</a>（开源视频计划：橙）</li>
+<li><a href="https://zh.wikipedia.org/zh-hans/Big_Buck_Bunny">大雄兔（Big Buck Bunny）</a> （开源视频计划：桃）</li>
+<li><a href="https://zh.wikipedia.org/zh-hans/%E8%BE%9B%E7%89%B9%E5%B0%94">辛特尔（sintel）</a>（开源视频计划：榴莲）</li>
+<li><a href="https://movie.douban.com/subject/19965709/">钢铁之泪 Tears of Steel</a>（开源视频计划：芒果）</li>
+</ul>
+
+<p>大家可以看其中的一个例子（辛特尔）:</p>
+
+<video width=800 src="https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f1/Sintel_movie_4K.webm/Sintel_movie_4K.webm.480p.webm" controls="controls"></video>
+
+<p>这些例子令人震惊之处在于，创作者所使用的工具全都开源，任何人可以轻松获得，他们把作品的所有细节，从剧本到素材也都开源，你可以看到一个人手握屠龙刀，斩落恶龙的所有细节。这就给人一种希望，只要努力，有朝一日，我们也可能创作出如此惊人的作品。事实上极少人最终走到这一步。有时候，令人难过的是，你本来有机会做出一些令人惊叹的事，外部环境已足够友好，也有前辈尽力予以支持，但却因为自身的原因，不够努力或不够聪明，未能达成目标。</p>
+
+<p>在开源的世界里，无论你想成为一个顶级黑客，还是想建构一个新的虚拟世界，或是用程序操控现实中的万物，屠龙刀都是可以轻易获得的，但屠龙技却得靠自己的努力去习得。</p>
+
+<h1 id="verge3d">Verge3D</h1>
+
+<p><a href="https://zh.wikipedia.org/zh-hans/Verge3D">Verge3D</a>是一个用于创建运行于网页的3D交互式体验的实时渲染器和工具套件。</p>
+
+<p>Verge3D是由以前创建的Blend4Web 框架的核心软件工程师团队创建。 Verge3D使用户能够利用常用的三维设计工具(目前支持 Autodesk 3ds Max 和 Blender )创做3D交互内容，并直接转换到网络浏览器中查看。</p>
+
+<p>Verge3D基于 WebGL 进行渲染，整合了 Three.js 库，并向程序开发人员公开<a href="https://www.soft8soft.com/docs/">API接口</a>。</p>
+
+<h3 id="puzzles编辑器">Puzzles编辑器</h3>
+
+<p>Puzzles编辑器是基于Blockly编写的可视化编程环境。Verge3D的程序功能可直接编写代码或使用Puzzles编辑器添加 JavaScript 脚本。 Puzzles主要面向非程序员，使其可通过 拖放 操作快速创建交互场景。</p>
+
+<!--截图有1.9M-->
+
+<p><img width=800 src="/post/img/verge3d_fc0fd21f.png" /></p>
+
+<p>使用Puzzles，非技术用户(如艺术家)可以轻松创作出动态的场景或游戏。步骤是在Blender中导入或创建好3D模型，接着在Puzzles中拼搭积木为3D场景/物体编程。强大而友好得令人震惊！</p>
+
+<p>Verge3D的工作流与主流的WebGL框架有很大的不同，它追求的是一个强大的面向艺术家的方法。开发一个新的Verge3D应用开发通常是从3D对象的建模、纹理和动画开始的，在单一的<em>.max或</em>.blend文件中组装模型完成3D场景。然后即可在App Manager调用该文件，作为初始化Verge3D项目的基础。</p>
+
+<p>此外以团队协作的视角来看，通过在程序员和设计师之间分配责任，将提高团队的效率。这个神奇的工具既可用于快速原型制作，也可用于生产。</p>
+
+<p>需要注意的是，Puzzles项目的底层使用了three.js，物体之间的交互逻辑由js控制。所以一个使用python来控制逻辑的<code>.blend</code>项目导入Puzzles后，python逻辑不生效。</p>
+
+<p>Puzzles是对blender内置的<a href="https://docs.blender.org/manual/de/dev/game_engine/logic/sensors/introduction.html">逻辑编辑器</a>的替代。</p>
+
+<!--
+# 灵感
+佟
+minecraft  blender
+swift
+边缘监测
+
+制作地形
+-->
+
+<h1 id="blender与python">Blender与Python</h1>
+
+<p>我们前头提到</p>
+
+<blockquote>
+<p>Blender使用Python语言来创作及制作游戏及工作自动化脚本。</p>
+</blockquote>
+
+<p>Blender v2.79b携带的Python版本是3.5.3</p>
+
+<p><a href="https://cgmasters.net/free-tutorials/python-scripting/">这篇教程</a>介绍了如何使用Python与Blender的内置的游戏引擎打交道，快速做一个游戏。文章里的代码直接可用(2012年的文章，可见其兼容性之好)</p>
+
+<h3 id="安装python第三方库">安装python第三方库</h3>
+
+<p>由于Blender支持Python，所以我们可以把Blender接入到更广阔的世界中，让外部世界与Blender虚构的3维空间交互。</p>
+
+<p>在这个过程中我们可能需要安装一些第三方python库，下边是教程，演示如何安装<code>pyserial</code>.</p>
+
+<p>参考<a href="https://gist.github.com/csaudiodesign/3e243fbe284cc0c02270d4b8c455e3aa">Install packages for blender bundled python</a></p>
+
+<!--
+陀螺仪控制3D场景 microbit，都用python编程。只需要ws client就行，读取数据
+-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> /Applications/Blender/blender.app/Contents/Resources/2.79/python
+wget https://bootstrap.pypa.io/get-pip.py
+./bin/python3.5m ./get-pip.py --prefix /Applications/Blender/blender.app/Contents/Resources/2.79/python
+./bin/python3.5m bin/pip3 install pyserial</code></pre></td></tr></table>
+</div>
+</div>
+<p>我近期会将Scratch3-adapter接入blender中！如此一来就建立了现实世界与虚拟世界的连接，你甚至可以和电影中的角色打交道。很多著名的电影都使用了blender来创作。</p>
+
+<p>一旦scratch3-adapter与Blender连接完成，你可以徒手创作minecraft中的世界(借助leapmotion，而minecraft的资源包社区里已经有了:<a href="http://theduckcow.com/dev/blender/mcprep/">BLENDER MINECRAFT ADDON</a>)。你也可以使用micro:bit制作的魔法棒与虚拟世界的哈利波特一决高下。</p>
+
+<p>我们之前的<a href="https://codelab-adapter-docs.codelab.club/user_guide/gallery/">演示案例</a>很快将延伸到虚拟世界中。</p>
+
+<h3 id="python-api">python api</h3>
+
+<p>Blender相关的python API参考<a href="https://docs.blender.org/api/current/">Python API</a></p>
+
+<p>而BGE(Blender Game Engine)相关的api则参考:<a href="https://docs.blender.org/manual/de/dev/game_engine/python_api/videotexture.html#first-example">game_engine</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 移动名为Cube的对象的顶点</span>
+<span class="kn">import</span> <span class="nn">bpy</span>
+<span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="s2">&#34;Cube&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">co</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="mf">1.0</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>一个bge例子</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># car</span>
+<span class="kn">import</span> <span class="nn">bge</span>
+<span class="n">cont</span> <span class="o">=</span> <span class="n">bge</span><span class="o">.</span><span class="n">logic</span><span class="o">.</span><span class="n">getCurrentController</span><span class="p">()</span>
+<span class="n">own</span> <span class="o">=</span> <span class="n">cont</span><span class="o">.</span><span class="n">owner</span>
+<span class="n">move</span> <span class="o">=</span> <span class="n">cont</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s2">&#34;move&#34;</span><span class="p">]</span>
+<span class="n">pressup</span> <span class="o">=</span> <span class="n">cont</span><span class="o">.</span><span class="n">sensors</span><span class="p">[</span><span class="s2">&#34;up&#34;</span><span class="p">]</span>
+<span class="n">pressdown</span> <span class="o">=</span> <span class="n">cont</span><span class="o">.</span><span class="n">sensors</span><span class="p">[</span><span class="s2">&#34;down&#34;</span><span class="p">]</span>
+<span class="n">speed</span> <span class="o">=</span> <span class="n">move</span><span class="o">.</span><span class="n">dLoc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">pressup</span><span class="o">.</span><span class="n">positive</span><span class="p">:</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span> <span class="o">+</span> <span class="mf">0.05</span>
+    <span class="n">move</span><span class="o">.</span><span class="n">dLoc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+    <span class="n">cont</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+    
+<span class="k">elif</span> <span class="n">pressdown</span><span class="o">.</span><span class="n">positive</span><span class="p">:</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">cont</span><span class="o">.</span><span class="n">deactivate</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+    <span class="n">move</span><span class="o">.</span><span class="n">dLoc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>此外我写了一个简单的完整例子:<a href="http://scratch3-files.just4fun.site/test_bge.blend">test_bge.blend</a></p>
+
+<h3 id="如何运行python脚本">如何运行python脚本</h3>
+
+<p><a href="https://docs.blender.org/api/current/info_overview.html#script-loading">Script Loading</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"># alias blender=/Applications/Blender/blender.app/Contents/MacOS/blender
+blender  --python my_script.py # 会打开新的blender窗口
+# blender --python --help
+blender --python a.py  test_bge.blend # 这种模式下blend编辑器里的输出会在命令行打印出来！</pre></td></tr></table>
+</div>
+</div>
+<h1 id="教程">教程</h1>
+
+<p>在学习Blender的过程中，发现不少很不错的教程，记录如下:</p>
+
+<ul>
+<li><a href="https://www.youtube.com/watch?v=JYj6e-72RDs">Blender Beginner Tutorial - Part 1: User Interface</a>: 主播生动有趣，十分推荐</li>
+<li><a href="https://github.com/mikepan/GameEngineBook">GameEngineBook</a></li>
+<li><a href="https://projects.raspberrypi.org/en/projects?software%5B%5D=blender">raspberrypi 3D</a></li>
+</ul>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://projects.raspberrypi.org/en/projects?software%5B%5D=blender">raspberrypi 3D</a></li>
+<li><a href="https://www.blender.org/">www.blender.org</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Blender">wikipedia Blender</a></li>
+<li><a href="https://github.com/mikepan/GameEngineBook">GameEngineBook</a></li>
+<li><a href="https://www.youtube.com/channel/UCSMOQeBJ2RAnuFungnQOxLg">youtube Blender</a></li>
+<li><a href="https://gist.github.com/csaudiodesign/3e243fbe284cc0c02270d4b8c455e3aa">Install packages for blender bundled python</a></li>
+<li>Blend4Web
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Blend4Web">wikipedia Blend4Web</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Blend4Web">wikipedia zh Blend4Web</a></li>
+<li><a href="https://github.com/TriumphLLC/Blend4Web">github Blend4Web</a></li>
+</ul></li>
+<li><a href="https://www.soft8soft.com">Verge3D</a>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/zh-hans/Verge3D">wikipedia zh Verge3D</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Verge3D">wikipedia Verge3D</a></li>
+<li>NASA Switches from Blend4Web to Verge3D</li>
+<li>demo: NASA</li>
+<li><a href="https://www.soft8soft.com/blender-to-webgl-in-4-simple-steps/">BLENDER TO WEBGL IN 4 SIMPLE STEPS</a></li>
+<li><a href="https://www.youtube.com/watch?v=2SNQsWSRGsQ">Verge3D Puzzles Visual Logic</a></li>
+<li><a href="https://github.com/Soft8Soft">github.com/Soft8Soft</a></li>
+<li><a href="https://www.soft8soft.com/cn/verge3d/">Verge3D 中文</a></li>
+<li><a href="https://www.soft8soft.com/docs/#manual/introduction/Beginner-Guide">Beginner&rsquo;s Guide</a></li>
+<li>Puzzles，使用<code>python3 -m server</code>在项目目录下可把包含html的项目跑起来</li>
+<li><a href="https://www.soft8soft.com/topic/some-questions-about-verge3d/">some-questions-about-verge3d</a></li>
+</ul></li>
+<li><a href="https://www.creativebloq.com/3d-tips/blender-tutorials-1232739">31 brilliant Blender tutorials</a></li>
+<li><a href="https://cgmasters.net/free-tutorials/python-scripting/">Python Scripting for the Blender Game Engine</a></li>
+<li>bge
+
+<ul>
+<li><a href="https://github.com/alabd14313/awesome-BGE">awesome-BGE</a></li>
+<li><a href="https://pymove3d.readthedocs.io/en/latest/stations/blender-game-engine/a_introduction.html">Starting the Blender Game Engine (BGE)</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Game_Blender">Game_Blender</a></li>
+</ul></li>
+<li><a href="https://armory3d.org/">armory3d</a>: 3D Game Engine for Blender
+
+<ul>
+<li><a href="https://github.com/armory3d/armory">github armory3d</a></li>
+</ul></li>
+<li><a href="https://github.com/a1studmuffin/SpaceshipGenerator">SpaceshipGenerator</a>:  A Blender script to procedurally generate 3D spaceships</li>
+<li><a href="https://github.com/ptabriz/FOSS4G_workshop">FOSS4G_workshop</a>: Real-time 3D visualization of geospatial data with Blender</li>
+<li><a href="https://www.youtube.com/watch?v=JYj6e-72RDs">Blender Beginner Tutorial - Part 1: User Interface</a>: 生动有趣，推荐！</li>
+<li><a href="https://github.com/MadMinstrel/blender-sculpt-tools">blender-sculpt-tools</a>: Python addon streamlining some Blender tools for sculpting</li>
+<li><a href="https://sketchfab.com/">sketchfab</a>:  publish &amp; find 3D models online
+
+<ul>
+<li><a href="https://sketchfab.com/models?date=week&amp;features=downloadable&amp;sort_by=-likeCount&amp;type=models">sketchfab downloadable</a>
+
+<ul>
+<li><a href="https://sketchfab.com/models/578dae149c17402c97010ed848404f4a">Scacchiera Bosco</a></li>
+<li><a href="https://sketchfab.com/models/d0157e20709e45089c282b2db9145a4f">M3-GTS car</a></li>
+<li><a href="https://sketchfab.com/models/7ae4966708504f5c9e3cf2fad42476fc">V The Vbot</a></li>
+<li><a href="https://sketchfab.com/models/66c18ecd7a834d4a99dabc46b5ee6e4a">Low Poly Beach Assets</a></li>
+<li><a href="https://sketchfab.com/models/82b92dbcdb194235b6bfc54cb9b473f6">Otter T pose</a></li>
+<li><a href="https://sketchfab.com/models/b275000eacf24b1e96747e940a26a377">Hatsune Miku</a></li>
+<li><a href="https://sketchfab.com/models/cbcf188a01f54d63a10f10c227c5a6ff?ref=related">Tiki Treasure</a></li>
+<li><a href="https://sketchfab.com/models/7ae818dc56be44de88cdf5f4845ec0ee">Elephant Rhino Bear</a></li>
+</ul></li>
+</ul></li>
+<li><a href="http://theduckcow.com/dev/blender/mcprep/">BLENDER MINECRAFT ADDON</a></li>
+<li><a href="https://www.rymdnisse.net/download/blender-rigs/minecraft-blender-rig/">Minecraft Blender Rig</a></li>
+<li><a href="https://orange.blender.org/">orange.blender.org</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Yo_Frankie!">鼯鼠弗兰基（Yo Frankie!，代号 Apricot）</a> : 开源动作游戏,使用 Python作为脚本语言</li>
+<li><a href="https://durian.blender.org/">sintel project</a></li>
+<li><a href="https://docs.blender.org/manual/de/dev/game_engine/logic/sensors/introduction.html">game_engine</a>: game_engine提供很多逻辑砖，它们在逻辑编辑器里，逻辑关联到实体。和node-red很像。</li>
+<li><a href="https://blenderartists.org/t/running-background-jobs-with-asyncio/673805">Running background jobs with Asyncio</a>
+<!--对软件的学习通过开源图书，项目的学习通过树莓派--></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-09-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E5%B7%A5%E5%85%B7/">工具</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/webusb-microbit/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">WebUSB与micro:bit</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/overnight-at-wugong-mountain/">
+            <span class="next-text nav-default">夜宿武功山顶</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

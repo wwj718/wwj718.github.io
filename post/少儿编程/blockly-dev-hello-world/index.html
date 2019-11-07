@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>blockly开发之hello world(0) - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="之前在blockly入门与介绍中，对blockly做了一番介绍，讨论了在技术视角之下，blockly是什么、可以做哪些有趣的事 在这篇文章里，" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-dev-hello-world/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="blockly开发之hello world(0)" />
+<meta property="og:description" content="之前在blockly入门与介绍中，对blockly做了一番介绍，讨论了在技术视角之下，blockly是什么、可以做哪些有趣的事 在这篇文章里，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-dev-hello-world/" />
+<meta property="article:published_time" content="2018-01-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-01-03T00:00:00+00:00" />
+<meta itemprop="name" content="blockly开发之hello world(0)">
+<meta itemprop="description" content="之前在blockly入门与介绍中，对blockly做了一番介绍，讨论了在技术视角之下，blockly是什么、可以做哪些有趣的事 在这篇文章里，">
+
+
+<meta itemprop="datePublished" content="2018-01-03T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-01-03T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1533">
+
+
+
+<meta itemprop="keywords" content="blockly," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="blockly开发之hello world(0)"/>
+<meta name="twitter:description" content="之前在blockly入门与介绍中，对blockly做了一番介绍，讨论了在技术视角之下，blockly是什么、可以做哪些有趣的事 在这篇文章里，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">blockly开发之hello world(0)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-01-03 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#开始之前">开始之前</a></li>
+<li><a href="#quickstart">quickstart</a>
+<ul>
+<li>
+<ul>
+<li><a href="#依赖文件">依赖文件</a></li>
+<li><a href="#积木箱-toolbox">积木箱(toolbox)</a></li>
+<li><a href="#往页面注入编辑器">往页面注入编辑器</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#总结">总结</a></li>
+<li><a href="#延伸">延伸</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<!--公司内部分享: file:///Users/wwj/workplace/code_org/presentation-blockly/blockly.slides.html#/-->
+
+<p>之前在<a href="http://blog.just4fun.site/blockly-overview.html">blockly入门与介绍</a>中，对blockly做了一番介绍，讨论了在技术视角之下，blockly是什么、可以做哪些有趣的事</p>
+
+<p>在这篇文章里，我们将以一个开发者的视角，开始blockly之旅</p>
+
+<h1 id="开始之前">开始之前</h1>
+
+<p>关于blockly是什么，上边的文章里提到过，在此重申一下（敲黑板）: blockly是一个编辑器</p>
+
+<blockquote>
+<p>The web-based visual programming editor</p>
+</blockquote>
+
+<p>blockly作为编辑器，它的输入为用户对积木的拖曳操作（用户拖曳积木作为一种输入，可以类比为用户在普通编辑器的键盘输入），输出为积木的组合方式(可转化为对应代码)。使用blockly可以快速打造一个特定领域的可视化 块编程 编辑器</p>
+
+<p>至于积木（block）如何生成代码，代码用于什么用途，blockly则通通不关心，由用户自己掌控。</p>
+
+<h1 id="quickstart">quickstart</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">git clone https://github.com/google/blockly --depth=1
+cd blockly/demos
+# open index.html</pre></td></tr></table>
+</div>
+</div>
+<p>打开<code>index.html</code>之后，将看到</p>
+
+<p><img src="/post/img/blockly3e33e71a.png" alt="" /></p>
+
+<p>这儿给出了一些很棒的案例，供开发者入门</p>
+
+<p><code>Fixed Blockly</code>是最简单的例子，可以视为blockly的hello world (把blockly编辑器注入到html中的div标签中:<code>id=&quot;blocklyDiv&quot;</code>)</p>
+
+<p><img src="/post/img/blockly3ff212dd.png" alt="" /></p>
+
+<p>我们用这个编辑器来写一个简单的程序: <code>如果5+6等于11就输出&quot;恭喜你, 蒙对啦&quot;，否则输出&quot;小学数学是语文老师教的吗&quot;</code></p>
+
+<p><img src="/post/img/blockly4b406de9.png" alt="" /></p>
+
+<p>目前这段程序还不能运行，在之后的章节里，之后我们会让它run起来</p>
+
+<p>查看源码也只短短的一屏:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;utf-8&#34;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Blockly Demo: Fixed Blockly<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../blockly_compressed.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../blocks_compressed.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;../../msg/js/en.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+    <span class="nt">body</span> <span class="p">{</span>
+      <span class="k">background-color</span><span class="p">:</span> <span class="mh">#fff</span><span class="p">;</span>
+      <span class="k">font-family</span><span class="p">:</span> <span class="kc">sans-serif</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nt">h1</span> <span class="p">{</span>
+      <span class="k">font-weight</span><span class="p">:</span> <span class="kc">normal</span><span class="p">;</span>
+      <span class="k">font-size</span><span class="p">:</span> <span class="mi">140</span><span class="kt">%</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://developers.google.com/blockly/&#34;</span><span class="p">&gt;</span>Blockly<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span> <span class="ni">&amp;gt;</span>
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;../index.html&#34;</span><span class="p">&gt;</span>Demos<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span> <span class="ni">&amp;gt;</span> Fixed Blockly<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>This is a simple demo of injecting Blockly into a fixed-sized &#39;div&#39; element.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span><span class="ni">&amp;rarr;</span> More info on <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;https://developers.google.com/blockly/guides/configure-blockly/web/fixed-size&#34;</span><span class="p">&gt;</span>injecting fixed-sized Blockly<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span><span class="ni">&amp;hellip;</span><span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;blocklyDiv&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;height: 480px; width: 600px;&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">xml</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;toolbox&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;display: none&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;controls_if&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;logic_compare&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;controls_repeat_ext&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;math_number&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;math_arithmetic&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">block</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text_print&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">block</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">xml</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="kd">var</span> <span class="nx">demoWorkspace</span> <span class="o">=</span> <span class="nx">Blockly</span><span class="p">.</span><span class="nx">inject</span><span class="p">(</span><span class="s1">&#39;blocklyDiv&#39;</span><span class="p">,</span>
+        <span class="p">{</span> <span class="nx">media</span><span class="o">:</span> <span class="s1">&#39;../../media/&#39;</span><span class="p">,</span>
+          <span class="nx">toolbox</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;toolbox&#39;</span><span class="p">)}</span>
+        <span class="p">);</span>
+  <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>这些代码里，真正有用的只有一半，分以下几块说明:</p>
+
+<h3 id="依赖文件">依赖文件</h3>
+
+<p>head中只有这几个依赖</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">  &lt;script src=&#34;../../blockly_compressed.js&#34;&gt;&lt;/script&gt;
+  &lt;script src=&#34;../../blocks_compressed.js&#34;&gt;&lt;/script&gt;
+  &lt;script src=&#34;../../msg/js/en.js&#34;&gt;&lt;/script&gt;</pre></td></tr></table>
+</div>
+</div>
+<p>分别说明:</p>
+
+<ul>
+<li><code>&lt;script src=&quot;../../blockly_compressed.js&quot;&gt;&lt;/script&gt;</code> 是Blockly内核文件。</li>
+<li><code>&lt;script src=&quot;../../blocks_compressed.js&quot;&gt;&lt;/script&gt;</code> 是基础积木集(blocks_compressed中定义了一些基础积木: 类似print、if、list等，我们可以在自己的js脚本中自定义更多的积木)</li>
+<li><code>&lt;script src=&quot;../../msg/js/en.js&quot;&gt;&lt;/script&gt;</code>是英语语言包。目前40多门语言</li>
+</ul>
+
+<p>js脚本名称中的<code>compressed</code>表示它们都被压缩过，可读性差。如果你想看积木积木是怎么定义的，可以使用chrome开发者面板的pretty print功能查看源码</p>
+
+<p><img src="/post/img/blockly61f553fb.png" alt="" /></p>
+
+<h3 id="积木箱-toolbox">积木箱(toolbox)</h3>
+
+<p>在积木面板中引入我们需要的积木</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">  &lt;xml id=&#34;toolbox&#34; style=&#34;display: none&#34;&gt;
+    &lt;block type=&#34;controls_if&#34;&gt;&lt;/block&gt;
+    &lt;block type=&#34;logic_compare&#34;&gt;&lt;/block&gt;
+    &lt;block type=&#34;controls_repeat_ext&#34;&gt;&lt;/block&gt;
+    &lt;block type=&#34;math_number&#34;&gt;&lt;/block&gt;
+    &lt;block type=&#34;math_arithmetic&#34;&gt;&lt;/block&gt;
+    &lt;block type=&#34;text&#34;&gt;&lt;/block&gt;
+    &lt;block type=&#34;text_print&#34;&gt;&lt;/block&gt;
+  &lt;/xml&gt;</pre></td></tr></table>
+</div>
+</div>
+<p>这些积木都预定义在<code>&lt;script src=&quot;../../blocks_compressed.js&quot;&gt;&lt;/script&gt;</code></p>
+
+<p>至于如何自定一自己的积木，我们也放到之后的章节中说明. 诚信写作:)，说好写hello world，就绝不不引入太多概念</p>
+
+<h3 id="往页面注入编辑器">往页面注入编辑器</h3>
+
+<p>页面中准备好注入点: <code>&lt;div id=&quot;blocklyDiv&quot; style=&quot;height: 480px; width: 600px;&quot;&gt;&lt;/div&gt;</code></p>
+
+<p>之后将编辑器注入页面即可</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">    <span class="kd">var</span> <span class="nx">demoWorkspace</span> <span class="o">=</span> <span class="nx">Blockly</span><span class="p">.</span><span class="nx">inject</span><span class="p">(</span><span class="s1">&#39;blocklyDiv&#39;</span><span class="p">,</span>
+        <span class="p">{</span> <span class="nx">media</span><span class="o">:</span> <span class="s1">&#39;../../media/&#39;</span><span class="p">,</span>
+          <span class="nx">toolbox</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;toolbox&#39;</span><span class="p">)}</span>
+        <span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>这段js代码的语意是：往blocklyDiv中注入Blockly编辑器，积木箱的id为toolbox，media文件目录为<code>../../media/</code>（包括一些图标文件和声音文件）</p>
+
+<!--
+
+# 定一个小目标
+
+
+
+# 进阶
+
+# 添砖加瓦
+Python表达
+
+js运行
+
+跟踪过程
+
+
+
+# 探索更多
+下载`https://github.com/google/closure-library` zip文件，与blockly目录同级(参考[blockly: Closure Library](https://developers.google.com/blockly/guides/modify/web/closure),不要使用`ln -s`)
+
+
+cd blockly/tests
+# open playground.html
+
+
+![](/post/img/blockly078869e4.png)
+
+-->
+
+<h1 id="总结">总结</h1>
+
+<p>在这篇文章我们看到了一个blockly的最小案例。</p>
+
+<p>在下一篇系列文章中，我们准备让上边写的那么程序run起来，使用这个程序来看看你的小学数学是不是语文老师教的</p>
+
+<!-- 下篇文章中我们将定义一个自己的积木块，并生成python代码 -->
+
+<!-- 选择是否，生成python代码 实际意义 import time;time.sleep(5) -->
+
+<h1 id="延伸">延伸</h1>
+
+<p>我最近在写一份blockly的入门和进阶教程，这个官方例子都被我纳入教程中，作为blockly hello world:<a href="https://github.com/wwj718/blockly_dev/blob/master/src/blockly_1_hello_world/index.html">blockly_1_hello_world</a>，目前教程以源码的形式出现:<a href="https://github.com/wwj718/blockly_dev">wwj718/blockly_dev</a>，还没写成博客。大家能阅读js的话，可以自行阅读。或者等我有空补上文章</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://github.com/google/blockly">github blockly</a></li>
+<li><a href="https://developers.google.com/blockly/guides/overview">Google for Education : Blockly</a>
+
+<ul>
+<li><a href="https://developers.google.com/blockly/guides/configure/web/fixed-size">Fixed-sized Workspace</a></li>
+<li><a href="https://developers.google.com/blockly/guides/configure/web/toolbox">Toolbox</a></li>
+</ul></li>
+<li><a href="https://groups.google.com/forum/#!forum/blockly">blockly 开发者论坛</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-01-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/blockly/">blockly</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-dev-run-code/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">blockly开发之生成并运行js代码(1)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/microbit-notes/">
+            <span class="next-text nav-default">micro:bit使用笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用micro:bit自制PPT翻页笔 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="Word的成功是形式对内容的胜利 近期偶尔到高校做些技术分享。我不喜欢写PPT，Word/PowerPoint是我最厌恶的几个软件，对Keyn" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/microbit-ppt/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用micro:bit自制PPT翻页笔" />
+<meta property="og:description" content="Word的成功是形式对内容的胜利 近期偶尔到高校做些技术分享。我不喜欢写PPT，Word/PowerPoint是我最厌恶的几个软件，对Keyn" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/microbit-ppt/" />
+<meta property="article:published_time" content="2018-07-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-07-10T00:00:00+00:00" />
+<meta itemprop="name" content="使用micro:bit自制PPT翻页笔">
+<meta itemprop="description" content="Word的成功是形式对内容的胜利 近期偶尔到高校做些技术分享。我不喜欢写PPT，Word/PowerPoint是我最厌恶的几个软件，对Keyn">
+
+
+<meta itemprop="datePublished" content="2018-07-10T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-07-10T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1719">
+
+
+
+<meta itemprop="keywords" content="microbit," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用micro:bit自制PPT翻页笔"/>
+<meta name="twitter:description" content="Word的成功是形式对内容的胜利 近期偶尔到高校做些技术分享。我不喜欢写PPT，Word/PowerPoint是我最厌恶的几个软件，对Keyn"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用micro:bit自制PPT翻页笔</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-07-10 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#要有光">要有光</a>
+<ul>
+<li>
+<ul>
+<li><a href="#用jupyter写ppt">用jupyter写PPT</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#翻页笔">翻页笔</a>
+<ul>
+<li>
+<ul>
+<li><a href="#micro-bit-ppt翻页笔">micro:bit PPT翻页笔</a></li>
+<li><a href="#开始使用">开始使用</a></li>
+<li><a href="#想象空间">想象空间</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/ppt_f5a212e3.png" alt="" /></p>
+
+<blockquote>
+<p>Word的成功是形式对内容的胜利</p>
+</blockquote>
+
+<p>近期偶尔到高校做些技术分享。我不喜欢写PPT，Word/PowerPoint是我最厌恶的几个软件，对Keynote也没有好感，没什么耐心在这些软件里点来点去</p>
+
+<p>但我并不排斥为讨论和演讲做些书面上的准备。如果可以专注在内容，以Markdown来写作，而不必分心到排版和样式这些事情上，写完演讲所需要的内容之后，PPT能自动从markdown文本中生成，那该多怯意</p>
+
+<h1 id="要有光">要有光</h1>
+
+<p>幸运的是，<a href="http://jupyter.org/">jupyter</a>允许我们这样做。</p>
+
+<p><a href="http://jupyter.org/">jupyter</a>是个令人振奋的项目，如果要挑选出我最喜欢的几个工具，<a href="http://jupyter.org/">jupyter</a>应该会排在前三</p>
+
+<p>如果你来自 生物科学/物理学/人工智能/数据分析/量化 社区，<a href="http://jupyter.org/">jupyter</a>可能已经在你的工具箱里了，如果你平时喜欢探索性的编码工作，那么你值得花一些时间上手<a href="http://jupyter.org/">jupyter</a></p>
+
+<h3 id="用jupyter写ppt">用jupyter写PPT</h3>
+
+<p>首先安装jupyterlab: <code>pip3 install jupyterlab</code>，jupyterLab是jupyter的下一代用户界面。安装完成之后，即可运行:<code>jupyter lab</code></p>
+
+<p><img src="/post/img/microbitslide_3f5f1127.png" width=600 /></p>
+
+<p>接着创建一个notebook，你就可以开始用Markdown写作PPT了</p>
+
+<p>你可以把每个cell视为一页PPT，使用markdown在其中写作或代码，就像写博客，写完之后，点击右边栏的<code>Cell Tools</code>, 来设置cell</p>
+
+<p><img src="/post/img/microbitslides_47c7c5c3.png" width=600 /></p>
+
+<p>每个cell可以设置为以下多种类型：</p>
+
+<p><img src="/post/img/microbitslide_2dcbd1f4.png" width=600 /></p>
+
+<p>写作完毕，选择导出为Slides:</p>
+
+<p><img src="/post/img/microbitslide_18fe0a6e.png" width=600 /></p>
+
+<p>导出文件为html，依赖于<a href="https://github.com/hakimel/reveal.js/">reveal.js</a>（没有使用CDN），所以你需要在导出文件的同级别目录放置<a href="https://github.com/hakimel/reveal.js/">reveal.js</a>（下载后解压即可）。</p>
+
+<p>之后打开下载的html文件，你就可以在浏览器里看到使用jupyter写的PPT了，你可以把它们称为web PPT，演示的时候将浏览器全屏即可。</p>
+
+<h1 id="翻页笔">翻页笔</h1>
+
+<p>PPT翻页笔大约长这样:</p>
+
+<p><img src="/post/img/ppt_c7c6b349.png" width=400 /></p>
+
+<p>你在台上演讲时，手握翻页笔，可以无线切换PPT，从而使PPT内容与你的演讲进度同步。</p>
+
+<h3 id="micro-bit-ppt翻页笔">micro:bit PPT翻页笔</h3>
+
+<p><img src="http://tech.microbit.org/docs/hardware/assets/microbit-overview.png" width=600 /></p>
+
+<p>因为micro:bit中有蓝牙模块，所以我们可以利用micro:bit的蓝牙功能，来实现无线通讯；它还自带两个按钮，很适合用于制作翻页笔（前后翻页）</p>
+
+<p>制作过程十分简单:</p>
+
+<p>首先下载<a href="https://raw.githubusercontent.com/wwj718/slide_microbit/master/FD18_NRF51_MICROBIT.hex">microbit固件</a>到本地，然后拖拽到micro:bit中</p>
+
+<p>完成之后，micro:bit将对外提供<a href="https://en.wikipedia.org/wiki/Bluetooth_Low_Energy">ble</a>按钮服务，之后我们利用<a href="https://github.com/WebBluetoothCG/web-bluetooth/blob/gh-pages/implementation-status.md#chrome">web bluetooth</a>可以将浏览器，连上micro:bit，从而让micro:bit与js交互，而<a href="https://revealjs.com/">reveal.js</a>有js api， 这就是micro:bit PPT翻页笔的原理.</p>
+
+<p><strong>注意</strong>:注意: <a href="https://github.com/WebBluetoothCG/web-bluetooth/blob/gh-pages/implementation-status.md#chrome">web bluetooth</a>目前只支持macOS、chrome OS、安卓三个平台下的 Chrome浏览器,暂不支持Windows系统</p>
+
+<p>这块所需的js代码，我已经写好的。在你写作PPT时，只需在jupyter lab的第一个cell里贴上如下代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"># 连接micro:bit
+*  打开电脑的蓝牙
+*  点击右边的连接按钮
+
+&lt;button id=&#34;ble_button&#34; style=&#34;color:blue&#34;&gt;连接&lt;/button&gt;
+&lt;script src=&#34;microbit_ble.js&#34;&gt;&lt;/script&gt;</pre></td></tr></table>
+</div>
+</div>
+<p>然后把<a href="https://raw.githubusercontent.com/wwj718/slide_microbit/master/microbit_ble.js">microbit_ble.js</a>下载到jupyter lab导出的slide同级目录即可</p>
+
+<p>听起来很绕的话，直接看<a href="https://github.com/wwj718/slide_microbit">源代码</a>可能更清楚</p>
+
+<h3 id="开始使用">开始使用</h3>
+
+<p>打开导出的slide，点击连接，选择micro:bit</p>
+
+<p><img src="/post/img/microbitslide_0c59526e.png" width=600 /></p>
+
+<p>至此，你就可以手握micro:bit开始你的演讲啦，使用电池供电，你就可以带着micro:bit在台上四处走啦</p>
+
+<video width=300 src="http://scratch3-files.just4fun.site/microbitslide.mp4" controls="controls"></video>
+
+<h3 id="想象空间">想象空间</h3>
+
+<p>如果你和我一样，是scratch和micro:bit的粉丝。你可以将microbit当作PPT翻页笔，而用scratch演示PPT。</p>
+
+<p>具体策略有很多，最有趣的一种是直接用scratch创作动态内容，而将micro:bit作为一种体感设备，如此一来，你可以与你的PPT进行富有表现里的互动。如果你愿意，你可以选择跳一跳切屏或摇一摇抽奖</p>
+
+<p>另一种策略，要简单一些，表现力也更弱，和传统PPT无异:将你的PPT转为<code>480x360</code>的图片，之后将图片作为背景导入scratch即可。然后使用我在<a href="https://blog.just4fun.site/scratch3-microbit.html">scratch3.0 + micro:bit</a>所介绍的方法，将micro:bit与scratch3.0连起来</p>
+
+<!--
+形式与内容的分离
+
+Word是内容与形式同时处理
+
+Word是所见即所得
+
+
+# 使用
+
+日本的文章
+官方接口
+
+-->
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://sspai.com/post/37340">反思Markdown：Markdown的长与短</a></li>
+<li><a href="https://github.com/wwj718/slide_microbit">slide_microbit</a></li>
+<li><a href="https://blog.just4fun.site/document-factory-pandoc.html">文档格式转化神器pandoc</a></li>
+<li><a href="http://jupyter.org/">jupyter</a></li>
+<li><a href="https://revealjs.com/">reveal.js</a></li>
+<li><a href="https://blog.just4fun.site/microbit-notes.html">micro:bit使用笔记</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-07-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microbit/">microbit</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">两种硬件编程风格的比较</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/the-collected-dialogues-of-plato/">
+            <span class="next-text nav-default">柏拉图对话集</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

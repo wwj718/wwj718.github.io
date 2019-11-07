@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>WebUSB与micro:bit - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="webusb WebUSB API在简介里说到： WebUSB API提供了一种将USB设备服务安全地公开给Web的方法。 借此API，硬件制造商将能够为其设备构建跨平台JavaS" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/webusb-microbit/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="WebUSB与micro:bit" />
+<meta property="og:description" content="webusb WebUSB API在简介里说到： WebUSB API提供了一种将USB设备服务安全地公开给Web的方法。 借此API，硬件制造商将能够为其设备构建跨平台JavaS" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/webusb-microbit/" />
+<meta property="article:published_time" content="2018-09-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-09-27T00:00:00+00:00" />
+<meta itemprop="name" content="WebUSB与micro:bit">
+<meta itemprop="description" content="webusb WebUSB API在简介里说到： WebUSB API提供了一种将USB设备服务安全地公开给Web的方法。 借此API，硬件制造商将能够为其设备构建跨平台JavaS">
+
+
+<meta itemprop="datePublished" content="2018-09-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-09-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2213">
+
+
+
+<meta itemprop="keywords" content="microbit," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="WebUSB与micro:bit"/>
+<meta name="twitter:description" content="webusb WebUSB API在简介里说到： WebUSB API提供了一种将USB设备服务安全地公开给Web的方法。 借此API，硬件制造商将能够为其设备构建跨平台JavaS"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">WebUSB与micro:bit</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-27 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#webusb">webusb</a></li>
+<li><a href="#硬件设备的困扰">硬件设备的困扰</a></li>
+<li><a href="#使用场景">使用场景</a>
+<ul>
+<li>
+<ul>
+<li><a href="#教育设备">教育设备</a></li>
+<li><a href="#网络驱动程序">网络驱动程序</a></li>
+<li><a href="#设备更新和诊断">设备更新和诊断</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#文档">文档</a></li>
+<li><a href="#使用webusb与microbit通信">使用webusb与microbit通信</a>
+<ul>
+<li>
+<ul>
+<li><a href="#怎么做">怎么做</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#注意">注意⚠️</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/webusb_a5dff4a7.png" alt="" /></p>
+
+<h1 id="webusb">webusb</h1>
+
+<p><a href="https://wicg.github.io/webusb/">WebUSB API</a>在简介里说到：</p>
+
+<p>WebUSB API提供了一种将USB设备服务安全地公开给Web的方法。</p>
+
+<p>借此API，硬件制造商将能够为其设备构建跨平台JavaScript SDK。web平台成为调度硬件的一等公民。</p>
+
+<h1 id="硬件设备的困扰">硬件设备的困扰</h1>
+
+<p><img width=800 src="/post/img/webusb_9a77f466.png" /></p>
+
+<p>我们从<a href="https://www.numworks.com">numworks</a>说起，<a href="https://www.numworks.com">numworks</a>是一个支持绘图的计算器，目标是使学习数学更容易。刷<a href="https://news.ycombinator.com/">hacker news</a>时偶然发现了这个项目，十分惊艳，<a href="https://www.numworks.com">numworks</a>支持运行python，它甚至写了个自己的操作系统，这些都是开放的:<a href="https://github.com/numworks/epsilon">epsilon</a></p>
+
+<p><a href="https://www.numworks.com">numworks</a> 在<a href="https://www.numworks.com/blog/webusb-firmware-update/">Writing a device updater? Seriously consider WebUSB!</a>中描述了它们为更新设备固件所遇到的麻烦，最终发现webusb是理想选择。</p>
+
+<p>文章里写道<a href="https://www.numworks.com">numworks</a>的目标是确保他们的设备固件可以轻松升级，为了达到目标，需要满足以下要求:</p>
+
+<ul>
+<li>尽可能跨更多的平台</li>
+<li>用户不必为了更新设备而安装特定软件。</li>
+<li>尽可能少编写代码。代码越少，错误越少。</li>
+</ul>
+
+<p>webusb完美地满足这些要求.在跨平台方面,webusb适用于各种设备和操作系统（Android，Windows，macOS和Linux）,而且是开箱即用的</p>
+
+<p>文章里有不少有趣的部分，诸如作者提到，解决方案之一是使用配有USB-to-HTTP桥接器的Web应用程序(Scratch Link和scratch3-adapter都是这种程序),<a href="https://www.numworks.com">numworks</a>也使用了一段时间这个选项，但我们最终决定放弃它，原因是</p>
+
+<ol>
+<li>因为无法为localhost提供有效证书</li>
+<li>分发仍然很痛苦，您仍然可能需要更新网桥</li>
+</ol>
+
+<p>这两个问题其实都有很好的解决方案，问题1，我在已经给出了解决方案:<a href="https://blog.just4fun.site/localhost-https-ssl.html">本地https/wss服务与SSL安全证书</a>，问题2的理想解决方案是<a href="https://github.com/mherrmann/fbs">fbs</a></p>
+
+<p><a href="https://www.numworks.com">numworks</a>的案例很好地给出了选择WebUSB更新固件的理由，WebUSB的应用场景当然远不只是更新固件。下边写出一些<a href="https://wicg.github.io/webusb/">WebUSB API</a>中提到的使用场景</p>
+
+<h1 id="使用场景">使用场景</h1>
+
+<h3 id="教育设备">教育设备</h3>
+
+<p>基于Web的软件交付模型适合于教育教育领域，因为它们可以快速加载到任何计算机上，而无需考虑平台兼容性。平台的兼容性在教育领域产生的影响可能远远超出你的预期，尤其是国内。</p>
+
+<p>基于Web的硬件API，允许将设备的支持直接构建到现有的在线课程材料中，从而提供无缝的连接体验。而不会增加实施成本，诸如在每台电脑安装一个客户端软件。</p>
+
+<p>学生可利用在线开发人员工具编写和上传他们的代码，老师可以随时查阅，管理和干预。因为数据都在线上，这就提供了AI介入的可能。</p>
+
+<p>此外学生的作品可以在线分享，可以据此构建在线社区。</p>
+
+<p>当设备可以被接入web，那么我们就可以将大量的web玩法引入到硬件教育中。诸如远程指导，协同编程等等</p>
+
+<p>我相信web bluetooth和webusb是教育领域的未来。</p>
+
+<h3 id="网络驱动程序">网络驱动程序</h3>
+
+<p>Web的可组合性，可能发展出生态系统。</p>
+
+<p>以3D打印机为例，想象一下托管3D模型的网站希望将打印直接集成到他们的页面中。目前，Web支持2D打印（普通打印机），但3D版本还没有API。如果使用WebUSB API将数据从网站发送到其打印机，则站点可以使用这些页面来集成对硬件的支持，就像将嵌入式地图等功能一样，可以添加到许多现有站点中。成为一种通用积木。</p>
+
+<h3 id="设备更新和诊断">设备更新和诊断</h3>
+
+<p>虽然蓝牙等无线协议通常是消费级设备的更方便选择，但USB端口不断扩散，因为它们是电源传输的简单解决方案，并且可以在设备不工作时作为最后的连接方式。</p>
+
+<p>设备制造商只要将用户引导到自己的网站上，就可以为用户提供在线诊断。</p>
+
+<h1 id="文档">文档</h1>
+
+<p>Google的这篇文档很赞: <a href="https://developers.google.com/web/updates/2016/03/access-usb-devices-on-the-web">Access USB Devices on the Web</a></p>
+
+<p>文档里提到chrome内置的一些调试工具:</p>
+
+<ul>
+<li>chrome://device-log</li>
+<li>chrome://usb-internals</li>
+</ul>
+
+<h1 id="使用webusb与microbit通信">使用webusb与microbit通信</h1>
+
+<p>microbit是个为编程教育而生的硬件，对microbit不了解的小伙伴，可以参考我之前的文章:<a href="https://blog.just4fun.site/microbit-notes.html">micro:bit使用笔记</a></p>
+
+<p>microbit官方推荐的两个编程工具：<a href="https://python.microbit.org/v/beta">Python Editor</a>和<a href="https://makecode.microbit.org/beta#editor">makecode</a>近期都将支持webusb，这当然是个明智之举，将进一步降低学习者的门槛。</p>
+
+<p>相关文档在: <a href="https://support.microbit.org/support/solutions/articles/19000084059-beta-testing-web-usb">Beta testing - Web USB</a></p>
+
+<p>在此，我做个操作纪录.</p>
+
+<h3 id="怎么做">怎么做</h3>
+
+<p>为了让microbit能使用webusb，我们首先需要将它的固件更新到0250，我这里直接给出固件，大家烧录即可。</p>
+
+<p>烧入方式为: 按住microbit背后的复位按钮，然后连上电脑，电脑将出现名为<code>MAINTENANCE</code>的设备，把如下固件:<a href="http://scratch3-files.just4fun.site/0250_kl26z_microbit_0x8000.hex">0250_kl26z_microbit_0x8000.hex</a>拖入<code>MAINTENANCE</code>即可。</p>
+
+<p>之后你就可以在线为microbit编程了.</p>
+
+<p><img width=800 src="/post/img/webusb_de2a5177.png" /></p>
+
+<p>有两点值得一提，其一是烧录的过程比较慢，得10s+。原因是每回都得烧录完整的固件(500K左右)</p>
+
+<p>其二是，你可以在线使用REPL功能，它甚至支持自动补全，REPL的另一个好处是，它提供实时反馈！此外它的速度很快！因为每次只有代码文本在阐述，几个字节而已。</p>
+
+<p><img width=800 src="/post/img/webusb_ac39183d.png" /></p>
+
+<p>所以我目前在进行的工作是，将REPL的管道分离出来。供在线课程使用。我希望提供即时的反馈,关于理由我之前在<a href="https://blog.just4fun.site/Hardware-Programming-style.html">两种硬件编程风格的比较</a>论述过。</p>
+
+<p><a href="https://firialabs.com/">firialabs</a>是一门microbit的课程，它使用webusb来建立网页与microbit的连接。</p>
+
+<h1 id="注意">注意⚠️</h1>
+
+<p>WebUSB已被收录在Chrome 61中，在这之后的版本都可以使用，iOS设备不受支持，由于chrome对XP只支持到49，所以XP无法使用WebUSB。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://developers.google.com/web/updates/2016/03/access-usb-devices-on-the-web">Access USB Devices on the Web</a></li>
+<li><a href="https://support.microbit.org/support/solutions/articles/19000084059-beta-testing-web-usb">Beta testing - Web USB</a></li>
+<li><a href="https://support.microbit.org/support/solutions/articles/19000019131-how-to-upgrade-the-firmware-on-the-micro-bit">How to upgrade the firmware on the micro:bit</a></li>
+<li><a href="https://python.microbit.org/v/beta">python.microbit.org/v/beta</a></li>
+<li><a href="https://github.com/ARMmbed/DAPLink/releases/tag/v0250">DAPLink v0250</a></li>
+<li><a href="https://makecode.microbit.org/beta#editor">makecode webusb</a></li>
+<li><a href="https://micropython.top/editor-zh-hans.html">PythonEditor cn</a></li>
+<li><a href="https://www.numworks.com/">numworks</a>
+
+<ul>
+<li><a href="https://www.numworks.com/blog/webusb-firmware-update/">Writing a device updater? Seriously consider WebUSB!</a></li>
+</ul></li>
+<li><a href="https://makitosan.github.io/vue-microbit-webusb/">vue-microbit-webusb</a></li>
+<li><a href="http://www.micropython.org.cn/bbs/forum.php?mod=viewthread&amp;tid=1262">microbit的webusb功能测试</a></li>
+<li><a href="https://firialabs.com/">microbit webusb course</a></li>
+<li><a href="https://github.com/WICG/webusb">WICG/webusb</a></li>
+<li><a href="http://www.freebuf.com/sectool/101511.html">WebUSB API：让你的USB设备安全的接入网络</a></li>
+<li><a href="https://wicg.github.io/webusb/">WebUSB API</a></li>
+<li><a href="https://github.com/bbcmicrobit/PythonEditor/tree/webusb-beta">PythonEditor webusb-beta</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-09-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microbit/">microbit</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/wugong-mountain/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">徒步武功山</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-3d/">
+            <span class="next-text nav-default">积木化编程与3D场景</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

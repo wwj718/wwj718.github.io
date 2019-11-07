@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>基于树莓派的积木化编程解决方案 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="前言 此前在一辆树莓派可编程小车的问题一文中论述了构建一个服务于编程教学的树莓派小车，将遭遇的问题。 本文基于我们在codelab-adapte" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-rpi-mqtt-solution/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="基于树莓派的积木化编程解决方案" />
+<meta property="og:description" content="前言 此前在一辆树莓派可编程小车的问题一文中论述了构建一个服务于编程教学的树莓派小车，将遭遇的问题。 本文基于我们在codelab-adapte" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-rpi-mqtt-solution/" />
+<meta property="article:published_time" content="2019-02-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-02-26T00:00:00+00:00" />
+<meta itemprop="name" content="基于树莓派的积木化编程解决方案">
+<meta itemprop="description" content="前言 此前在一辆树莓派可编程小车的问题一文中论述了构建一个服务于编程教学的树莓派小车，将遭遇的问题。 本文基于我们在codelab-adapte">
+
+
+<meta itemprop="datePublished" content="2019-02-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-02-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2618">
+
+
+
+<meta itemprop="keywords" content="codelab," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="基于树莓派的积木化编程解决方案"/>
+<meta name="twitter:description" content="前言 此前在一辆树莓派可编程小车的问题一文中论述了构建一个服务于编程教学的树莓派小车，将遭遇的问题。 本文基于我们在codelab-adapte"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">基于树莓派的积木化编程解决方案</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-26 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#为何选择mqtt">为何选择MQTT</a></li>
+<li><a href="#已有工作">已有工作</a></li>
+<li><a href="#继续前行">继续前行</a>
+<ul>
+<li>
+<ul>
+<li><a href="#动起手来">动起手来！</a></li>
+<li><a href="#远程管理">远程管理</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#一些注意事项">一些注意事项</a>
+<ul>
+<li>
+<ul>
+<li><a href="#codelab-adapter的命令行模式">codelab-adapter的命令行模式</a></li>
+<li><a href="#开机自启">开机自启</a></li>
+<li><a href="#默认加载插件">默认加载插件</a></li>
+<li><a href="#网络问题">网络问题</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#接下来">接下来</a>
+<ul>
+<li>
+<ul>
+<li><a href="#工具链">工具链</a></li>
+<li><a href="#定制积木">定制积木</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#补遗">补遗</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/codelab-rpi_107126cc.png" alt="" /></p>
+
+<h1 id="前言">前言</h1>
+
+<p>此前在<a href="https://blog.just4fun.site/rpi-car-difficult.html">一辆树莓派可编程小车的问题</a>一文中论述了构建一个服务于编程教学的树莓派小车，将遭遇的问题。</p>
+
+<p>本文基于我们在<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>、IoT和积木化编程这几方面的探索，继续前行，试图构建一个服务于编程教育的解决方案，它是开放的！我们将展示一个原型，欢迎社区开发者加入进来继续完善它。目前已有两家公司愿意与我们一起探索树莓派生态。</p>
+
+<p>我们在<a href="https://blog.just4fun.site/codelab-love-iot.html">CodeLab ❤️ IoT</a>承诺说:</p>
+
+<blockquote>
+<p>本周，我会给出一个具体例子: 在树莓派中使用extension_iot.py，定制出extension_iot_rpi.py， 而后者是可以实际服务于硬件教学的插件。 在这个例子中我们将展示，如何在几天内快速构建一个教学产品，可以直接推向最终用户，它甚至包括了管理功能(如远程故障处理和升级)!</p>
+</blockquote>
+
+<p>CodeLab关注:</p>
+
+<ul>
+<li>开放性</li>
+<li>简单易用</li>
+<li>可扩展</li>
+</ul>
+
+<h1 id="为何选择mqtt">为何选择MQTT</h1>
+
+<p>尽管使用EIM插件也能构建出完整解决方案，诸如我们此前演示的</p>
+
+<ul>
+<li><a href="https://blog.just4fun.site/adapter-tensorflow.html">运行在树莓派中的scratch3-adapter tensorflow插件</a></li>
+<li><a href="https://blog.just4fun.site/adapter-opencv.html">运行在树莓派中的 scratch3-adapter opencv 插件</a></li>
+</ul>
+
+<p>但本文试图使用mqtt来做。使用mqtt的一个好处是，可以提供远程故障处理和升级！</p>
+
+<p>即便在内网中，<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>也提供了<a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/blob/master/extension_mqtt_broker.py">MQTT Broker插件</a>，使用mqtt，可以轻松地远程维护和管理设备。</p>
+
+<h1 id="已有工作">已有工作</h1>
+
+<p>CodeLab在mqtt(IoT)这块的工作，<a href="https://blog.just4fun.site/codelab-love-iot.html">CodeLab ❤️ IoT</a>一文做了梳理。</p>
+
+<p>简而言之，我们做了如下工作:</p>
+
+<ul>
+<li>Scratch IoT Extension: 构建了与mqtt通信的通用Scratch3积木(类似EIM)</li>
+<li>codelab-adapter <a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/blob/master/extension_iot.py">extension_iot</a>:  构建了可用于订阅和发布mqtt消息的codelab-adapter通用插件(类似extension_eim)</li>
+<li>IoT server: iot.codelab.club:  构建了运行在公网上的mqtt server(MQTT Messaging Broker)(支持用户身份)</li>
+</ul>
+
+<h1 id="继续前行">继续前行</h1>
+
+<p>有了以上工作，要完成我们的目标，只有一件事需要做了，就是基于<a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/blob/master/extension_iot.py">extension_iot</a>去处理订阅地消息即可！</p>
+
+<p>无论是教学产品的具体功能，还是管理这个教学产品，通过消息都可以完成这些任务。想想EIM的含义(也是它的理念): Everything Is Message。</p>
+
+<p>我们暂时还是将教学产品设想为一辆树莓派小车，正如我们在<a href="https://blog.just4fun.site/rpi-car-difficult.html">一辆树莓派可编程小车的问题</a>所做的假设。一旦你理解原理，构建任何项目都是ok的。</p>
+
+<p>为了简化这个问题，我就不去实际淘宝一辆小车配件了。为了展示原理，我们将构建类似<code>def move_forward(distance): print(&quot;move_forward:{}&quot;.format(distance))</code>的函数，用以说明问题。实际中，无非在这些函数里写上具体功能罢了。</p>
+
+<h3 id="动起手来">动起手来！</h3>
+
+<p>这儿将展示Scratch中的积木如何让小车运动起来。</p>
+
+<p>源码参考<a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/blob/master/extension_iot_rpi.py">extension_iot_rpi</a></p>
+
+<p>只需要关注如何处理消息部分即可(想想我们以前在EIM中做的讨论，思路完全一样！)</p>
+
+<p>其中与树莓派小车功能相关的代码，放到一个类中:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">RpiCar</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&#34;myRpiCar&#34;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+
+    <span class="k">def</span> <span class="nf">move_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance</span><span class="p">):</span>
+        <span class="c1"># todo 采用gpiozero去驱动舵机实现</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;move_forward:{}&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">distance</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">move_backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;move_backward:{}&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">distance</span><span class="p">))</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>运行起来试试效果！</p>
+
+<p><img src="/post/img/codelab-rpi_9ee24405.png" alt="" /></p>
+
+<p>完美运行！</p>
+
+<p>上述示例插件中，只提供picar(picar 是RpiCar的实例)、<a href="https://github.com/RPi-Distro/python-gpiozero">gpiozero</a>供外部调用。如果你希望给出更多的自由，可以参考<a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/blob/master/extension_python_kernel.py">extension_python_kernel</a></p>
+
+<p>一旦建立了连接，至于怎么处理消息，社区里有大量案例可以学习:</p>
+
+<ul>
+<li><a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/blob/master/extension_vector.py">extension_vector</a></li>
+<li><a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/blob/master/extension_cozmo.py">extension_cozmo</a></li>
+<li><a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/blob/master/extension_python_kernel.py">extension_python_kernel</a></li>
+</ul>
+
+<h3 id="远程管理">远程管理</h3>
+
+<p>除了要用积木控制小车(这是我们的核心任务)。我们前边还承诺要构建管理功能(如远程故障处理和升级)。解决方案同样基于消息。</p>
+
+<p>管理功能可能会涉及硬件的批量升级之类的功能。 安全问题需要做些考虑，建议使用独立的mqtt用户来做(概念上，这个用户是管理员)。权限相关的问题可以基于用户模型来做，这个话题涉及基于角色的访问控制(Role-Based Access Control，RBAC)的讨论，linux操作系统也是这样做的，有兴趣，可以看我之前的文章:<a href="https://blog.just4fun.site/understand-permission.html">理解权限系统</a></p>
+
+<p>我建议将远程管理作为独立的codelab-adapter extension。而不要混杂在<a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/blob/master/extension_iot_rpi.py">extension_iot_rpi</a>，否则，一不小心容易有安全隐患。 限于篇幅，安全这块不过多讨论。做好权限控制，一般就不会有大问题。</p>
+
+<p>这里给出一个演示例子，试图给出概念上的说明: 怎么基于消息来做远程设备管理。和前边一样，同样通过消息安装系统依赖只需发送消息<code>myRpiManager.install_system_pkg(&quot;git&quot;)</code>， 相关源码是:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="k">class</span> <span class="nc">RpiManager</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&#34;myRpiManager&#34;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">run_shell_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cmd</span><span class="p">):</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span> <span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="c1"># 是否需要运行结果</span>
+
+    <span class="k">def</span> <span class="nf">pip3_install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pkg_name</span><span class="p">):</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&#34;pip3 install {}&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pkg_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_shell_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">install_system_pkg</span><span class="p">(</span><span class="n">pkg_name</span><span class="p">):</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&#34;sudo apt install {}&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pkg_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_shell_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">restart</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 使用sudo 需要用超级用户运行codelab-adapter</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&#34;sudo restart&#34;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_shell_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">get_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+        <span class="k">exec</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="c1"># python exec</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>如果你要使用<code>sudo</code>(如安装系统软件), 那么你就需要使用sudo来运行<code>codelab-adapter</code>。</p>
+
+<h1 id="一些注意事项">一些注意事项</h1>
+
+<p>为了实现开箱可用，我们做了不少工作。</p>
+
+<h3 id="codelab-adapter的命令行模式">codelab-adapter的命令行模式</h3>
+
+<p>codelab-adapter目前支持命令行运行:<code>./codelab-adapter --mode cli</code></p>
+
+<p><img src="/post/img/codelab-cli_0b468f64.png" alt="" /></p>
+
+<h3 id="开机自启">开机自启</h3>
+
+<p>使用<code>supervisor</code>管理<code>./codelab-adapter --mode cli</code>就能实现开机自启。</p>
+
+<p>参考<a href="https://blog.just4fun.site/raspberrypi-install-and-config.html#supervisor">supervisor</a></p>
+
+<h3 id="默认加载插件">默认加载插件</h3>
+
+<p>通过配置<code>user_settings</code>, 允许自定义默认启动的extension。</p>
+
+<p>新建<code>~/codelab_adapter/user_settings.py</code>， 添加:</p>
+
+<p><code>cli_load_extension_threads = [&quot;extension_iot_rpi&quot;]</code></p>
+
+<h3 id="网络问题">网络问题</h3>
+
+<p>注意网络问题，确认网络通畅后，才启动插件，因为MQTT需要联网。这块可以在插件内部写, 联网之后再启动插件主体。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">socket</span>
+<span class="k">def</span> <span class="nf">is_network_alive</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># connect to the host</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;www.baidu.com&#34;</span>
+        <span class="n">socket</span><span class="o">.</span><span class="n">create_connection</span><span class="p">((</span><span class="s2">&#34;www.baidu.com&#34;</span><span class="p">,</span> <span class="mi">80</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="bp">False</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>在插件的下个版本，我会内置这些特性，先放出思路，心急的开发者一起来改进它。</p>
+
+<!--
+# 开了mqtt可能失败
+突然断网 如何重连 mqtt 就让它失败，然后有外部进程重启。 所以需要捕获状态。做实验。
+-->
+
+<h1 id="接下来">接下来</h1>
+
+<h3 id="工具链">工具链</h3>
+
+<p>我们会继续打造好用的工具链，用于支持开发者生态, 诸如设备和数据统计的页面。正如我们之前提到的:</p>
+
+<blockquote>
+<p>CodeLab之后除了对外提供基础工具，也希望能对外提供基础服务。</p>
+</blockquote>
+
+<h3 id="定制积木">定制积木</h3>
+
+<p>与EIM一样 我们目前提供的MQTT积木也是一组通用积木， 对于每个教育硬件(如树莓派小车)，可能需要定制出相应积木。思路与我们之前在EIM所做的讨论完全相同。</p>
+
+<p>欢迎交流讨论：）</p>
+
+<h1 id="补遗">补遗</h1>
+
+<p>如果你关注推送更新、检查状态、查看日志等后期的维护和升级。基于容器的物联网解决方案: <a href="https://github.com/balena-io">balena-io</a>非常值得关注。它们打造了大量基础设施，而且对开源社区极为友好。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://blog.just4fun.site/codelab-adapter-love-Raspberry%20Pi.html">codelab-adapter ❤️ Raspberry Pi</a></li>
+<li><a href="https://blog.just4fun.site/codelab-love-iot.html">CodeLab ❤️ IoT</a></li>
+<li><a href="https://blog.just4fun.site/raspberrypi-install-and-config.html">树莓派折腾笔记之系统安装与配置</a></li>
+<li><a href="https://blog.just4fun.site/understand-permission.html">理解权限系统</a></li>
+<li><a href="https://github.com/balena-io">balena-io</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-02-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">codelab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-wormhole/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">codelab-adapter的虫洞(wormhole)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/rpi-car-difficult/">
+            <span class="next-text nav-default">一辆树莓派可编程小车的问题</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

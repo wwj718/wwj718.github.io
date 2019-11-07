@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>来自Dynamicland的笔记: 为树莓派(Raspberry Pi)编程 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="Omar Rizwan上周在博客里记录了Dynamicland近期的探索和方向: Notes from Dynamicland: programming Raspberry Pis，为我们钩画了极为令人振奋的未来。 Dynamicla" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/notes-from-dynamicland-programming-raspberry-pis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="来自Dynamicland的笔记: 为树莓派(Raspberry Pi)编程" />
+<meta property="og:description" content="Omar Rizwan上周在博客里记录了Dynamicland近期的探索和方向: Notes from Dynamicland: programming Raspberry Pis，为我们钩画了极为令人振奋的未来。 Dynamicla" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/notes-from-dynamicland-programming-raspberry-pis/" />
+<meta property="article:published_time" content="2018-12-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-12-12T00:00:00+00:00" />
+<meta itemprop="name" content="来自Dynamicland的笔记: 为树莓派(Raspberry Pi)编程">
+<meta itemprop="description" content="Omar Rizwan上周在博客里记录了Dynamicland近期的探索和方向: Notes from Dynamicland: programming Raspberry Pis，为我们钩画了极为令人振奋的未来。 Dynamicla">
+
+
+<meta itemprop="datePublished" content="2018-12-12T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-12-12T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="7410">
+
+
+
+<meta itemprop="keywords" content="code ," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="来自Dynamicland的笔记: 为树莓派(Raspberry Pi)编程"/>
+<meta name="twitter:description" content="Omar Rizwan上周在博客里记录了Dynamicland近期的探索和方向: Notes from Dynamicland: programming Raspberry Pis，为我们钩画了极为令人振奋的未来。 Dynamicla"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">来自Dynamicland的笔记: 为树莓派(Raspberry Pi)编程</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-12-12 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#摘要">摘要</a></li>
+<li><a href="#realtalk-与-树莓派">Realtalk 与 树莓派</a></li>
+<li><a href="#今天与pi沟通">今天与Pi沟通</a></li>
+<li><a href="#dynamicland中的pi">Dynamicland中的Pi</a></li>
+<li><a href="#切换activity-led">切换activity LED</a></li>
+<li><a href="#led切换器的工作原理">LED切换器的工作原理</a>
+<ul>
+<li>
+<ul>
+<li><a href="#realtalk数据库">Realtalk数据库</a></li>
+<li><a href="#信息应该流经realtalk数据库">信息应该流经Realtalk数据库</a></li>
+<li><a href="#切换器-toggler-的代码">切换器(toggler)的代码</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#完整的编程系统">完整的编程系统</a></li>
+<li><a href="#意见">意见</a></li>
+<li><a href="#未来的暗示">未来的暗示</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/dynamicland_18bcdbbf.png" alt="" /></p>
+
+<p>Omar Rizwan上周在博客里记录了Dynamicland近期的探索和方向: <a href="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/">Notes from Dynamicland: programming Raspberry Pis</a>，为我们钩画了极为令人振奋的未来。</p>
+
+<p>Dynamicland的目标是重塑人机交互的方式，重塑计算机。</p>
+
+<p>下边是我的翻译。</p>
+
+<h1 id="摘要">摘要</h1>
+
+<ul>
+<li>树莓派(Raspberry Pi)是一种小型的单片机计算机；它可以通过其引脚和接口与外部硬件通信。
+
+<ul>
+<li>Pi(树莓派的简称)展示了我们可以如何分解大型的Realbox机器，使Dynamicland成为许多计算机、传感器和执行器的生态系统，而不是服务器上的软件。</li>
+<li>“&hellip;&hellip;Pi之于Dynamicland正如USB接口之于笔记本电脑：这就是我将东西插入Dynamicland的方式。”</li>
+</ul></li>
+<li>使用Realtalk来打开/关闭Pi上LED的最小示例。</li>
+<li>解释Realtalk的“反应数据库”(reactive database)编程模型; 它如何使动感桌(dynamic table)中的Pi编程变得异常简单。Pi的编程与Dynamicland中的任何其他编程没什么区别。
+
+<ul>
+<li>通过向Pi发送完整程序来进行远程控制，而不是用一些动力不足的控制语言与之通信。 <!--远程RPC？安全问题？消息即源码？--></li>
+</ul></li>
+<li>关于Pi如何在未来发挥作用的猜想。</li>
+</ul>
+
+<h1 id="realtalk-与-树莓派">Realtalk 与 树莓派</h1>
+
+<p>如今，<a href="https://dynamicland.org/">Dynamicland</a>有一系列的动感桌：</p>
+
+<p><video width="600px" src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/dynamic-table.mp4" controls="controls"></video>
+正在运行<a href="https://www.gapminder.org/">Gapminder</a> demo的动感桌</p>
+
+<p>每张桌子都由一个&rsquo;Realbox&rsquo;机器驱动, &lsquo;Realbox&rsquo;机器充当计算引擎，它运行着Linux，它能执行桌子上的纸页(纸页上的功能代码)，并连接到摄像机和投影仪。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/realbox9-ceiling.jpg" width=500 />
+安装在天花板上的Realbox。我争辩说，这只是一个权宜之计</p>
+
+<p>Realbox都通过Realtalk协议联合在一起，因此桌子可以在整个房间内进行通信并共享数据和程序。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/monolithic-realbox-diagram.png" width=600 />
+目前Realbox体系：Realbox驱动的桌子，由Realtalk协议联网在一起</p>
+
+<p>我想说我们不应该需要那些Realboxes（以及它们包含的复杂软件栈），它们只是一个权宜之计。</p>
+
+<p>Realboxes功能是什么？大多数Realtalk程序（比如我以前的<a href="https://rsnous.com/posts/notes-from-dynamicland-geokit/">Geokit</a>）都使用摄像头作为输入和投影仪作为输出。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/input-output-board.jpg" width=600 />
+带有简单输入和输出的海报(<a href="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/input-output-board.jpg">原图</a>)，使用了摄像头和投影仪</p>
+
+<p>Realbox有两个目标：</p>
+
+<ul>
+<li>通过USB和HDMI与摄像头和投影仪对话（<a href="https://en.wikipedia.org/wiki/Hardware_abstraction">硬件抽象</a>，输入输出(I/O)，&rsquo;控制&rsquo;）</li>
+<li>执行程序（&rsquo;计算&rsquo;, &lsquo;模拟&rsquo;）</li>
+</ul>
+
+<p>考虑一下程序如何在你的笔记本电脑上运行：主要使用鼠标和键盘来输入，使用屏幕来输出，程序在笔记本电脑主板上的CPU上执行。</p>
+
+<p>但是，Realtalk的编程模型比这种特殊配置更加通用和强大。它根本不是关于摄像头、投影仪、彩色斑点或纸页。这是一个协议，用于各类动态的、物理的、可再编程的计算。</p>
+
+<p>该协议不需要像Realbox这样的大型Linux计算机来运行。Realtalk在小型计算机上同样可以运行（如树莓派）：</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/pi-vs-realbox.jpg" width=500 />
+树莓派(左）和Realbox(右)运行相同的Realtalk系统！</p>
+
+<p>如果你不熟悉树莓派的话，我们简单介绍一下，树莓派是一块带有Wi-Fi和USB接口的小型单片机计算机，此外它拥有通用数字I/O引脚。它像我们日常所说的“计算机”一样功能齐全: 人们经常在其上运行桌面Linux操作系统，并插入显示器、鼠标和键盘。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/pi-3.png" width=500 />
+树莓派3（来自<a href="https://en.wikipedia.org/wiki/Raspberry_Pi#Connectors">维基百科</a>）</p>
+
+<p>如果我们有这些小型Realtalk主机，为何我们还要将桌面上的所有内容连接到大型的Realbox上？每个传感器（如摄像机）和每个执行器（例如投影仪）都可以连接到它自己的Pi，或类似的&rdquo;接口计算机&rdquo;上 ，它可以在电信号和Realtalk语句之间进行转换。而这些Pi可以通过Realtalk协议联合在一起。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/ecosystem.png" width=500 />
+未来的Realtalk生态系统，每个传感器和执行器都连接到自己的“接口计算机”上</p>
+
+<p>Pi能够与物理世界进行很好的连接，因为它具有丰富的接口和引脚，可用于与传感器和执行器通信。你可以<a href="https://twitter.com/rsnous/status/1029913286500732928">接入电机并使Pi驱动🚗</a>或 者<a href="https://twitter.com/rsnous/status/1036838826751094784">连接触摸传感器👆</a>。它与Dynamicland的目标非常契合，它是我们跳出了<code>摄像头-投影仪</code>模式。</p>
+
+<p>Dynamicland是一个生态系统，而不是在Linux设备上运行的一段代码，它可以很容易地连接新的传感器和执行器，并且易于理解和修改单个部件。</p>
+
+<p>进一步设想一下不需要投影仪和摄像头的未来，今天我们打印的页面，在未来变为纸片薄的计算机，而不是木浆。代码存在于真实可见的物理世界，它便宜且不可变，因此它们保留了我们想要的Dynamicland<a href="https://twitter.com/rsnous/status/1027045351646146560">属性</a>。但是这些页面本身拥有计算能力，而不需要高高在上的<code>摄像头-投影仪</code>系统。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/smart-pages.png" width=500 />
+未来的Realtalk生态系统，具有“智能页面”而非摄像头-投影仪</p>
+
+<p>这些页面如何相互通信？它们又如何与周围的其他硬件相互通信？你如何与分布式计算机进行交互？那台计算机又如何赋予你权力？</p>
+
+<p>您可以将Dynamicland视为未来原型的尝试，并将Realtalk视为它可能是如何工作的一种建议：不是一个操作系统、网络协议、数据库、编程语言或用户界面范例，而是所有这些中的一部分。</p>
+
+<h1 id="今天与pi沟通">今天与Pi沟通</h1>
+
+<p>我们已经在Dynamicland中建立了网络概念; 我们已经拥有了由独立的Realtalk主机驱动的独立动感桌，所有这些都使用Realtalk协议相互通信。你可以在桌子之间轻松地进行通信。</p>
+
+<p>现在，为了与Pi交谈，我们将Realtalk主机软件和Lua解释器移植到Pi，因此Pi在每个桌子上运行着相同的基础软件。</p>
+
+<p>Pi变成了“虚拟桌子”。在<code>桌子 &lt;-&gt; Pi</code>之间的对话与 <code>桌子 &lt;-&gt; 其他桌子</code>之间的对话并无不同。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/monolithic-realbox-diagram-with-pi.png" width=500 />
+今天的Pi：一个“虚拟桌子”，与Realboxes地位相同</p>
+
+<p>下边将展示一个小例子，在Pi上切换LED，然后解释它是如何工作的以及它将来可能做些什么。</p>
+
+<h1 id="dynamicland中的pi">Dynamicland中的Pi</h1>
+
+<p>让我们看看树莓派现在Dynamicland中的样子。我已将Pi附加到纸页（18858），因此房间总是看得到纸页并知道Pi的确切位置。这个纸页就像是树莓派的&rdquo;句柄&rdquo;(<a href="https://en.wikipedia.org/wiki/Handle_%28computing%29">handle</a>); 我可以在其他程序中引用Pi的纸页(id)来控制它。</p>
+
+<p><img src="/post/img/pipage_66cdcf37.png" width=500 />
+左边是未通电的Pi，右边是已启动且已连接的Pi <Processor pi-74a6></p>
+
+<p>Pi打开并连接(wifi?)后，页面变为绿色。接着，Pi的页面也会显示其标识符<code>&lt;Processor pi-74a6&gt;</code>。<code>74a6</code>是Pi的MAC地址的最后两个字节，每个Pi都是唯一的。</p>
+
+<h1 id="切换activity-led">切换activity LED</h1>
+
+<p>activity LED是Pi上的一个LED灯，平时用于指示Pi的工作状态。</p>
+
+<p>现在我想在Pi上切换activity LED的状态。切换activity LED是我们可以对Pi的最简单又可见的事情。因此它适合用来测试Pi-Realtalk的集成。</p>
+
+<p>activity LED很难被发现, 它是Pi板子上红色LED上方的绿色LED：</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/activity-led.jpg" width=500 />
+Pi上的绿色活动LED（当前已打开）</p>
+
+<p>我抓住我的<code>控制activity LED</code>程序(也是一个纸页)，它生发出一根绿色的胡须。当我让这根胡须去戳Pi时，Pi的activity LED将会打开; 否则，它将熄灭。（我稍后会更详细地解释这个程序。）</p>
+
+<p><video width="600px" src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/toggle-act-led.mp4" controls="controls"></video>
+使用程序切换activity LED的状态</p>
+
+<p>实际上，这个程序不仅限于那个Pi：它适用于桌面上的任何Pi。程序会打开胡须戳中的Pi上边的activity LED，而关闭其他Pi上边的activity LED。</p>
+
+<p>让我们在多个Pi上尝试</p>
+
+<p><video width="600px" src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/multiple-toggle-act-led.mp4" controls="controls"></video>
+在多个Pi上activity LED的状态</p>
+
+<p>如果没有Realtalk系统，你要如何制作这种LED切换器？听起来很痛苦。也许你会ssh到每个Pi中，编写并执行一些Python脚本。（如果随后要更改代码，你要如何将更改部署到所有Pi上？）你需要实现对某些指针对象的跟踪以便控制它们。你需要一些通信协议来将信息从跟踪系统传送到所有Pi上。你需要手头的笔记本电脑来完成所有编程。如果你想添加第四、第五或第十个Pi呢，又该怎么办？</p>
+
+<p>你首先会有这些想法吗？</p>
+
+<h1 id="led切换器的工作原理">LED切换器的工作原理</h1>
+
+<p>为了展示这个程序如何在桌面和Pi上工作，我需要解释一下Realtalk。</p>
+
+<h3 id="realtalk数据库">Realtalk数据库</h3>
+
+<p>Realtalk是一个编程系统，但它也是一种反应型数据库(reactive database)。</p>
+
+<p>运行着Realtalk的每台机器都知道每帧中一组一致的Realtalk 语句(statements)（如&rsquo;30帧/秒&rsquo;）。语句是Realtalk程序的声明(claim)或愿望(wish)。</p>
+
+<p>从我之前的<a href="https://rsnous.com/posts/notes-from-dynamicland-geokit/">Geokit帖子</a>中考虑这个最小的例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">-- Page 17813
+-- Made-up claim demo
+Claim (you) blahblahblah.
+
+-- Page 17814
+-- Made-up claim when demo
+When /page/ blahblahblah:
+    Wish (page) is highlighted &#34;blue&#34;.
+End</pre></td></tr></table>
+</div>
+</div>
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/made-up-claim.jpg" width=500 />
+最小的Claim/When/Wish示例来说明数据库</p>
+
+<p>当页面17813和17814同时在桌子上面朝上时，桌子数据库将每帧包含这些语句：</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/realbox-2-statements.png" width=500 /></p>
+
+<p>如果我移走了下边一张页面（17814），后续帧中的数据库将只包含</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/realbox-1-statement.png" width=500 /></p>
+
+<p>因为底下的页面不再是“显示蓝色”的愿望(wish)了。</p>
+
+<p>如果我移走了顶部页（17813），但保留了底部页，数据库将不含有这两个语句。由于Realtalk的反应式设计，删除<code>blahblahblah</code>声明会自动删除其依赖，即“显示蓝色”的愿望。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/realbox-0-statements.png" width=500 /></p>
+
+<p>即使底部页仍留在桌面上，它的<code>When</code>也不再匹配任何<code>blahblahblah</code>声明，因此底页不再产生愿望(wish)。</p>
+
+<h3 id="信息应该流经realtalk数据库">信息应该流经Realtalk数据库</h3>
+
+<p>页面通过在Realtalk数据库中读取和写入语句进行通信，而不是通过调用函数或定义变量。 <!--动态性的来源，动态订阅似乎可以实现--></p>
+
+<p>我相信这些机制的灵感来自<a href="https://en.wikipedia.org/wiki/Tuple_space">元组空间</a>或<a href="https://en.wikipedia.org/wiki/Blackboard_system#Metaphor">黑板</a>概念，以及<a href="https://github.com/harc/nl-datalog">Datalog</a>，但我对这段历史知之甚少。你可以将Realtalk语句(statements)（声明和愿望）视为存在于“黑板”之上，所有程序都盯着这个“黑板”。然而，在Realtalk中，语句不仅仅是抽象数据; 他们应该关注现实世界。我们的“元组空间”(tuple space)模仿了桌子的社交空间，在这儿，每个人都可以看到和听到对方，同样地，Realtalk中的程序都可以看到彼此的声明(statements)。</p>
+
+<p>只要信息流经Realtalk数据库，之后就可以轻松检查、拦截、跟踪、调试和扩展！查询该数据库的进程将自动对更改进行实时响应。我经常制作一些<a href="https://twitter.com/rsnous/status/1031067767485546498">一些小工具</a>
+与我手头的程序互动，交互式地探索它。</p>
+
+<p>相反，如果你坚持使用传统的函数和变量，那么你的程序将被封闭，并且对外部世界不透明。传统上构建的程序是静态的：除非您明确地对其进行编码以进行更新，否则它不会响应输入的更改（或周围程序的更改）。</p>
+
+<p>在我们的例子中，桌子和Pi是两个独立的Realtalk主机，因此每个（在Realtalk的当前实现中）都有自己的数据库（帧速率和每帧语句集）。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/realbox-pi-separate-statements.png" width=500 /></p>
+
+<p>请注意，Pi并未连接到摄像机，并且无法独立查看任何程序，因此Pi基本上是惰性的（没有外部刺激）：在别处运行的程序必须手动将程序和语句转发给Pi，以使其执行或了解外部世界的任何事情。</p>
+
+<h3 id="切换器-toggler-的代码">切换器(toggler)的代码</h3>
+
+<p>切换器(toggler)是我们前头图片里带绿色胡须的程序。</p>
+
+<p>这是我之前的LED切换程序。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/control-pi-act-led.jpg" width=500 />
+我正在使用的程序: 切换Pi 的activity LED的状态</p>
+
+<p>你了解<a href="https://en.wikipedia.org/wiki/Fork_(system_call)#Application_usage">Unix上的fork</a>吗?上边这个程序与Unix上使用fork的程序谜之相似:它与自己的分身并行运作。一个部分在这里运行，另一个部分在那里运行。</p>
+
+<p>你应该了解的是,<code>processor</code>是一个全局变量，它标识着底层的Realtalk机器:</p>
+
+<ul>
+<li>如果页面在桌面上运行，那<code>processor</code>形如<Processor realbox7></li>
+<li>如果页面正在Pi上运行，<code>processor</code>形如 <Processor pi-74a6>。</li>
+</ul>
+
+<p>该页面由两个代码块组成。该页面同时在Pi和动感桌上执行 ; 每个代码块的第一行检查页面正在执行的处理器(processor)类型，每个代码块据此决定是否运行。</p>
+
+<ul>
+<li><p>上边的代码块： <code>if not is_pi(processor) then ...</code>, 像一个普通的Realtalk纸页运行在桌子上，全局函数<code>is_pi</code>检查<code>processor</code>是否是Pi.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-lua" data-lang="lua"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-lua" data-lang="lua"><span class="kr">if</span> <span class="ow">not</span> <span class="n">is_pi</span><span class="p">(</span><span class="n">processor</span><span class="p">)</span> <span class="kr">then</span>
+<span class="c1">-- This block runs on the realbox (the table).</span>
+
+<span class="n">When</span> <span class="o">/</span><span class="n">pi</span><span class="o">/</span> <span class="n">is</span> <span class="n">pi</span> <span class="o">/</span><span class="n">something</span><span class="o">/</span><span class="p">:</span>
+    <span class="c1">-- for each Pi on the table,</span>
+    <span class="n">Wish</span> <span class="p">(</span><span class="n">you</span><span class="p">)</span> <span class="n">runs</span> <span class="n">remotely</span> <span class="n">on</span> <span class="p">(</span><span class="n">pi</span><span class="p">).</span>
+
+    <span class="n">When</span> <span class="p">(</span><span class="n">you</span><span class="p">)</span> <span class="n">points</span> <span class="s2">&#34;up&#34;</span> <span class="n">at</span> <span class="p">(</span><span class="n">pi</span><span class="p">):</span>
+        <span class="n">Wish</span> <span class="p">(</span><span class="n">pi</span><span class="p">)</span> <span class="n">sets</span> <span class="n">led</span> <span class="n">brightness</span> <span class="n">to</span> <span class="s2">&#34;1&#34;</span><span class="p">.</span>
+    <span class="n">Otherwise</span><span class="p">:</span>
+        <span class="n">Wish</span> <span class="p">(</span><span class="n">pi</span><span class="p">)</span> <span class="n">sets</span> <span class="n">led</span> <span class="n">brightness</span> <span class="n">to</span> <span class="s2">&#34;0&#34;</span><span class="p">.</span>
+    <span class="n">End</span>
+    <span class="n">Wish</span> <span class="p">(</span><span class="n">processor</span><span class="p">)</span> <span class="n">shares</span> <span class="n">statements</span> <span class="n">with</span> <span class="n">relation</span>
+        <span class="s2">&#34;_ wishes _ sets led brightness to _.&#34;</span><span class="p">.</span>
+<span class="n">End</span>
+<span class="kr">end</span></code></pre></td></tr></table>
+</div>
+</div></li>
+
+<li><p>找到桌子所有Pi的句柄(handles)，对于每个Pi,</p>
+
+<ul>
+<li>将自身运行在Pi上: <code>Wish (you) runs remotely on (pi).</code>, 接着</li>
+<li>投射绿色胡须:<code>When (you) points &quot;up&quot; at (pi)</code>,如果那个胡须碰到pi，那么希望(wish)它的LED开启; 否则，希望(wish)它的LED关闭.</li>
+</ul></li>
+
+<li><p><code>Wish (processor) shares statements with relation &quot;_ wishes _ sets led brightness to _&quot;</code>联合该形式的所有愿望。不仅仅停留在桌子数据库中，也希望(wish)被转发到房间中所有其他Realtalk主机的数据库，包括Pi！</p></li>
+</ul>
+
+<p>当我指向我的LED切换器时<code>pi-74a6</code>，顶部块可能会在桌子数据库中生成这些语句（假设桌子本身由realbox7驱动）：</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/led-realbox-statements.png" width=500 /></p>
+
+<p>底部块, <code>When /someone/ wishes (you) runs remotely on (processor): ... runs</code>只运行在Pi上。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-lua" data-lang="lua"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-lua" data-lang="lua"><span class="n">When</span> <span class="o">/</span><span class="n">someone</span><span class="o">/</span> <span class="n">wishes</span> <span class="p">(</span><span class="n">you</span><span class="p">)</span> <span class="n">runs</span> <span class="n">remotely</span> <span class="n">on</span> <span class="p">(</span><span class="n">processor</span><span class="p">):</span>
+    <span class="c1">-- This block runs on the Pi itself.</span>
+
+    <span class="n">os.execute</span><span class="p">(</span><span class="s1">&#39;echo gpio | sudo tee /sys/class/leds/led0/trigger&#39;</span><span class="p">)</span>
+    <span class="n">When</span> <span class="o">/</span><span class="n">pi</span><span class="o">/</span> <span class="n">is</span> <span class="n">processor</span> <span class="p">(</span><span class="n">processor</span><span class="p">),</span>
+         <span class="o">/</span><span class="n">someone</span><span class="o">/</span> <span class="n">wishes</span> <span class="o">/</span><span class="n">pi</span><span class="o">/</span> <span class="n">sets</span> <span class="n">led</span> <span class="n">brightness</span> <span class="n">to</span> <span class="o">/</span><span class="n">value</span><span class="o">/</span><span class="p">:</span>
+        <span class="n">os.execute</span><span class="p">(</span><span class="s1">&#39;echo &#39;</span><span class="o">..</span><span class="n">value</span><span class="o">..</span><span class="s1">&#39; | sudo tee /sys/class/leds/led0/brightness&#39;</span><span class="p">)</span>
+    <span class="n">End</span>
+<span class="n">End</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>顶部块让这些程序自身运行在每个Pi上，它还在房间内共享一些语句到每个Pi的数据库（右）中。我们可以使用<code>When</code>来匹配哪些语句应该在Pi上运行，哪些该在桌子上运行。</p>
+
+<p><img src="https://rsnous.com/posts/notes-from-dynamicland-programming-raspberry-pis/led-sharing-statements.png" width=500 />
+从Realbox（左）到Pi（右）共享的语句</p>
+
+<p>底部代码块的第一个检查: <code>When /someone/ wishes (you) runs remotely on (processor)</code>实质上是检查我们执行的原因。</p>
+
+<p>它之所以运行，是因为有人把它放在桌子上，或者顶部块（放在桌子上的）希望它在当前设备“远程运行” 。如果是后者，那么它必须在Pi上运行; 因此，如果这个<code>When</code>被匹配，说明它正运行在Pi中。</p>
+
+<p>现在这段代码正在Pi上执行，可以使用<a href="https://www.jeffgeerling.com/blogs/jeff-geerling/controlling-pwr-act-leds-raspberry-pi">普通的Unix命令来控制activity LED</a>，就好像我们在Pi上的终端中键入命令一样。</p>
+
+<p>一旦我们开始，我们就会运行一个<code>echo | sudo tee</code>命令将activity LED初始化为GPIO模式，以便我们以后可以控制它。</p>
+
+<p>接着，每当得到一个wish（来自桌子，如图中所示）来设置我们的<code>led brightness to some value,</code>，就运行一个<code>echo | sudo tee</code>实际设置LED亮度的命令。</p>
+
+<p>我确实有一种高级语言来处理: Wish (pi) runs unix command，你通常不需要这种明确声明<code>run remotely</code>的模式(上边两个代码块的模式)。但我想在这里演示一些基本原理; 更高级别的接口是由这种基本模式构建的。</p>
+
+<h1 id="完整的编程系统">完整的编程系统</h1>
+
+<p>由于我们在Pi上运行完整的Realtalk系统，并且我们可以在那里远程运行页面代码，我们现在可以在页面上对Pi执行任何操作：我们可以控制任何外设并进行任何计算。机器人、乐器、旋钮/按钮、环境传感器、触摸板 &ndash; 我们可以在桌面上编程​​所有这些。我们可以在桌子上为所有的这些编程。</p>
+
+<!--和远程命令有什么区别 分布式动态，不是RPC-->
+
+<p>它不像Pi上存在的固定服务，我们只限于一些预设命令来告诉它该做什么。它让我想起了打印机、<a href="http://dev.rsnous.com/dewdrop/executive/">NeWS</a>、<a href="https://lwn.net/Articles/740157/">eBPF</a>中的<a href="https://en.wikipedia.org/wiki/PostScript">PostScript</a>，甚至现代Web本身：不是制作一些动力不足的命令语言，所以A可以控制B，<strong>让A将程序发送给B</strong>，B在B端执行。然后A（桌子上的页面）可以使用B（Pi）的全部功能。</p>
+
+<!--有些像远程RPC-->
+
+<h1 id="意见">意见</h1>
+
+<blockquote>
+<p>在更深层次上，在单个统一接口上构建所有资源可以简化互操作性。一旦资源导出9P接口，它就可以透明地与系统的任何其他部分组合，以构建非同寻常的应用程序; 细节是隐藏的。<br />
+- Rob Pike等人，<a href="https://www.usenix.org/legacy/publications/compsystems/1995/sum_pike.pdf#page=30">贝尔实验室的Plan 9</a>（1995）</p>
+</blockquote>
+
+<!--不要用rpc？-->
+
+<ul>
+<li>Realtalk是<a href="https://en.wikipedia.org/wiki/Network_transparency">网络透明的</a>。无论是来自本地Realtalk实例还是来自远程Realtalk实例，语句都是相同的。
+
+<ul>
+<li>最终，我们希望在Realtalk实例之间自动共享语句，因此您根本不需要明确地联合它们。想象一下所有Realtalk联合在一起的世界。</li>
+<li>你可以从Pi透明地访问回桌子，进行计算、交互和调试; 相反，在你为Arduino之类地东西编程时，它与你的笔记本电脑交互并输出运算结果通常需要额外的工作。</li>
+</ul></li>
+<li>每个Pi只是一个外围设备(peripheral)。Pi不持有任何代码或持久状态。事实上，我在它们地SD卡中烧录的是同一个镜像。</li>
+</ul>
+
+<p>所有实际行为都存在于我手中的页面上，而不在Pi内，这意味着任何人都可以理解并编辑它，就像Dynamicland中的任何其他内容一样。<!--无状态--><br />
+任何人都可以进入并添加更多传感器和执行器（如果他们有Pi），无需插入天花板或修改“系统软件”。<br />
+我几乎认为Pi之于Dynamicland相当于USB端口之于我地笔记本电脑。它是我将东西接入Dynamicland的方式。
+*  这个例子代码不多。<a href="https://www.arduino.cc/en/Guide/Introduction">Arduino的平台</a>扩展了对物理计算的访问，超越传统的“嵌入式程序员。” Dynamicland中的Pi可以走得更远; 代码可以像Arduino的草图一样简洁明了，而且构建过程更轻巧，更连续，因为你无需连接到笔记本电脑或IDE上。
+*  在桌面上可以轻易运行多个程序/Pi，通过指向来切换它们。这种桌子支持多人并发做游戏。很多人可以同时尝试很多想法。你只需拿出你的旧页面即可切换回旧程序或添加调试视图。</p>
+
+<p>真的，我根本不是为树莓派编程; 我正在为房间编程，而树莓派已成为房间的一种功能。我没有放弃Dynamicland模型的任何强大功能。所有代码仍在桌面上。</p>
+
+<h1 id="未来的暗示">未来的暗示</h1>
+
+<p>我相信树莓派暗示了Dynamicland的未来。</p>
+
+<p>说实话，我开始这个项目是因为我厌倦了在天花板上移动大型Realtalk投影机&ndash;摄像头系统，它们会造成中断。我想玩单独的页面无法实现的交互: 移动真实物体、精确定位、直接触摸页面&hellip;&hellip; Pi为我们提供了逐步添加新交互的途径。</p>
+
+<p>鉴于这些Pi作为接口计算机，你还可以插入各种传感器并基于它们进行计算（例如，作为科学家或教师）。你在工作台上对现实世界进行测量，并连续分析这些测量结果，而不是要求您从实验室仪器切换到笔记本电脑。我们希望Dynamicland成为一种有利于跟踪而不是模拟现实世界的媒介，而Pi是支持该系统的传感器的平台。</p>
+
+<p>最后，正如我在介绍中所说，Pi暗示我们如何从单机“Realtalk系统”过渡到Realtalk主机的分布式生态系统。Dynamicland并不意味着拥有一台运行整个房间的服务器软件; 它意味着是一台由小型计算机组成的计算机，所有计算机都通过通用协议相互通信。</p>
+
+<p>我们试图找出正确的协议和抽象来使这个生态系统发挥作用，以及正确的价值观和界面范式，使其增强人类而不是疏远人类。</p>
+
+<p>如果你想继续听听这些想法，你可以在Twitter上<a href="https://twitter.com/rsnous">关注我@rsnous</a>和 <a href="https://twitter.com/dynamicland1">@Fynamicland1</a>。你可能还想阅读我之前关于<a href="https://rsnous.com/posts/notes-from-dynamicland-geokit/">Geokit地图框架</a>的帖子。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/zh/%E6%A0%91%E8%8E%93%E6%B4%BE">树莓派</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-12-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/code/">code </a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-club-recent-situation/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">CodeLab近况_01</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/zerynth-vs-micropython/">
+            <span class="next-text nav-default">zerynth与micropython</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

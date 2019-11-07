@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>两种硬件编程风格的比较 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="人的心智活动透过简单的概念而发挥它的力量，方法主要可分为三种：第一，把数个简单的概念组合成一个复合的概念，于是所有复杂的概念成焉。第二，将两" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="两种硬件编程风格的比较" />
+<meta property="og:description" content="人的心智活动透过简单的概念而发挥它的力量，方法主要可分为三种：第一，把数个简单的概念组合成一个复合的概念，于是所有复杂的概念成焉。第二，将两" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/" />
+<meta property="article:published_time" content="2018-07-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-07-10T00:00:00+00:00" />
+<meta itemprop="name" content="两种硬件编程风格的比较">
+<meta itemprop="description" content="人的心智活动透过简单的概念而发挥它的力量，方法主要可分为三种：第一，把数个简单的概念组合成一个复合的概念，于是所有复杂的概念成焉。第二，将两">
+
+
+<meta itemprop="datePublished" content="2018-07-10T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-07-10T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="6094">
+
+
+
+<meta itemprop="keywords" content=" scratch," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="两种硬件编程风格的比较"/>
+<meta name="twitter:description" content="人的心智活动透过简单的概念而发挥它的力量，方法主要可分为三种：第一，把数个简单的概念组合成一个复合的概念，于是所有复杂的概念成焉。第二，将两"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">两种硬件编程风格的比较</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-07-10 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#灌入式">灌入式</a>
+<ul>
+<li>
+<ul>
+<li><a href="#编程方式">编程方式</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#交互式">交互式</a>
+<ul>
+<li>
+<ul>
+<li><a href="#编程方式-1">编程方式</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#对比分析">对比分析</a>
+<ul>
+<li>
+<ul>
+<li><a href="#反驳灌入式的优势">反驳灌入式的优势</a></li>
+<li><a href="#交互式的优势">交互式的优势</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#如何实现">如何实现</a></li>
+<li><a href="#补遗">补遗</a>
+<ul>
+<li>
+<ul>
+<li><a href="#通讯补丁">通讯补丁</a></li>
+<li><a href="#关于灌入式与交互式的混合">关于灌入式与交互式的混合</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/message_a34afc78.png" alt="" /></p>
+
+<blockquote>
+<p>人的心智活动透过简单的概念而发挥它的力量，方法主要可分为三种：第一，把数个简单的概念组合成一个复合的概念，于是所有复杂的概念成焉。第二，将两个概念，不论简单或复杂，不将它们结合，而是同时并列在一起观察，如此就能得知何为相互关联。第三，把某些概念，与伴随它们其他真实存在的概念区隔出来，称为这抽象艺术化，所有一般化，概化的概念皆是由此而生  - 约翰·洛克《人类理解论》</p>
+</blockquote>
+
+<p>在<a href="https://blog.just4fun.site/scratch3-microbit.html">scratch3.0 + micro:bit</a>中，我们提到</p>
+
+<blockquote>
+<p>在少儿编程/硬件编程教育领域，硬件编程有两种风格，我将这两种风格分别称为<code>灌入式</code>和<code>交互式</code></p>
+</blockquote>
+
+<p>我相信就编程教育而言，<code>交互式</code>优于<code>灌入式</code></p>
+
+<p>这篇文章我们将讨论这两种编程风格给学习者的编程体验 以及心理状态所带来的影响。所谈论的很多内容，在编程语言的发展历史中都被反复讨论过。</p>
+
+<p>本文中，我们只讨论图形化硬件编程，但得出的结论并不局限于此</p>
+
+<h3 id="灌入式">灌入式</h3>
+
+<p><code>灌入式</code>阵营有名的图形化项目包括：</p>
+
+<ul>
+<li><a href="https://www.microsoft.com/en-us/makecode">makecode</a></li>
+<li><a href="https://github.com/bbcmicrobit/PythonEditor">PythonEditor</a></li>
+<li><a href="http://mixly.org/">mixly</a></li>
+<li>以及国内大多数项目(makeblock、mcookie&hellip;)</li>
+</ul>
+
+<p>事实上，几乎所有传统的硬件编程都是灌入式的</p>
+
+<h5 id="编程方式">编程方式</h5>
+
+<p>我们以<a href="https://pxt.microbit.org/">makecode microbit</a>为例，来展示灌入式编程的编程方式.</p>
+
+<p><img src="/post/img/microbit_gr_de9399e6.png" width=500 /></p>
+
+<p>在<a href="https://pxt.microbit.org/">makecode microbit</a>中，通过拖拽积木，拼搭出我们的程序，接着将程序下载到本地（程序在线上完成编译），最后将下载的文件拖入micro:bit，即可运行。</p>
+
+<p>将代码/固件灌入硬件中，代码(代码编译出的固件)将在硬件运行。我将这种编程风格称为<code>灌入式</code>。</p>
+
+<p>如果你熟悉blockly,你会发现这是一种典型的blockly风格(当然，blockly也可以写出交互式风格的blockly app)</p>
+
+<h3 id="交互式">交互式</h3>
+
+<p><code>交互式</code>阵营的图形化编程项目有:</p>
+
+<ul>
+<li><a href="https://www.anki.com/en-us/cozmo/code-lab">Cozmo code lab</a></li>
+<li><a href="https://en.scratch-wiki.info/wiki/PicoBoard">scratch Picoboard</a></li>
+<li><a href="http://s4a.cat/">S4A</a></li>
+<li><a href="https://llk.github.io/scratch-gui/microbit/">scratch microbit extension</a></li>
+<li><a href="https://blog.just4fun.site/lab/scratch3-adapter-docs/">scratch3-adapter</a></li>
+</ul>
+
+<h5 id="编程方式-1">编程方式</h5>
+
+<p>我们以<a href="https://www.anki.com/en-us/cozmo/code-lab">cozmo code lab</a>为例，来展示<code>交互式</code>编程的编程方式.</p>
+
+<p><img src="/post/img/cozmof70f49bd.png" alt="" /></p>
+
+<p>在<a href="https://www.anki.com/en-us/cozmo/code-lab">cozmo code lab</a>中，你同样身处积木化的编程界面里，通过拖拽积木，拼搭出所需的程序，点击运行，cozmo即可按照程序的逻辑运行。</p>
+
+<p>程序运行在ipad/手机上，每个积木在实际执行的时候，将消息发给cozmo，从而控制cozmo，这是我将这种风格程序成为<code>交互式</code>的原因</p>
+
+<p>在<a href="https://www.anki.com/en-us/cozmo/code-lab">cozmo code lab</a>中一个非常惊艳的编程体验是:如果你不知道一个积木有什么作用，你不必去翻说明书，你只需要点击一下这个积木，cozmo立马执行这个积木的逻辑，你可以直观地理解陌生的积木。交互式编程所具有的及时反馈特性，鼓励学习者去探索。这是交互式编程给学习者心理上带来的影响之一。</p>
+
+<p><a href="https://zh.wikipedia.org/wiki/%E5%BB%BA%E6%A7%8B%E4%B8%BB%E7%BE%A9_(%E5%AD%B8%E7%BF%92%E7%90%86%E8%AB%96)">建构主义</a>者(如皮亚杰、艾伦凯、派普特)应该会喜欢这种风格</p>
+
+<p>如果你熟悉scratch，你会发现这是一种典型的<code>scratch</code>风格（对象响应消息，很<a href="https://zh.wikipedia.org/zh-hans/Smalltalk">Smalltalk</a>）。关于scratch风格和blockly风格的比较可以参考我之前的文章:<a href="https://blog.just4fun.site/scratch3-blockly.html">Blockly与Scratch3.0的比较分析及选型建议</a></p>
+
+<h1 id="对比分析">对比分析</h1>
+
+<blockquote>
+<p>真理越辩越明</p>
+</blockquote>
+
+<!--
+我很喜欢柏拉图《对话录》里苏格拉底对战普罗塔戈拉那一卷
+
+工程师小普和小苏分别拥护`灌入式`和`交互式`，他们决定cosplay苏格拉底对战普罗塔戈拉来一场辩论
+
+小苏:  好久不见啊小普，近来忙些什么
+
+小普:  
+-->
+
+<p>在此我们来对比分析一下<code>灌入式</code>和<code>交互式</code>各自的优势</p>
+
+<p>灌入式阵营可能列出的优势有:</p>
+
+<ol>
+<li>灌入式可以离线运行，只需要将代码烧入进去，即可脱离编程工具</li>
+<li>灌入式将带来优于交互式的实时性</li>
+<li>灌入式因为需要generate代码，学生可以查看代码</li>
+</ol>
+
+<p>如果有遗漏，欢迎拥护<code>灌入式</code>编程的小伙伴来信(wuwenjie718@gmail.com)补充</p>
+
+<p>由于我拥护<code>交互式</code>编程，所以我准备在下文里，反驳<code>灌入式</code>的优势，并指出<code>交互式</code>所具有的优势。如果你不赞同，欢迎来信反驳，观点合理的话，我会及时更新到本文，如有必要，我们也可以使用<a href="https://www.kialo.com/">理性辩论的平台 Kialo</a>来进行辩论</p>
+
+<h3 id="反驳灌入式的优势">反驳灌入式的优势</h3>
+
+<p>我们针对上边<code>灌入式</code>阵营提出的三条优势，逐条反驳</p>
+
+<blockquote>
+<p>灌入式可以离线运行，只需要将代码烧入进去，即可脱离编程工具</p>
+</blockquote>
+
+<p>这个论述本身并没有需要反驳的地方，它只是陈述了一个事实，在此我想提出的是，对于教育而言，<code>离线运行</code>不是很重要的特性，如果是工业级的项目或者解决具体问题的硬件产品，离线运行可能是重要的，但对于教育项目而言，我认为这个特性并不重要，如果你实在不愿意一直开着电脑，你可以把上位机运行在树莓派里，若嫌贵，可以使用荔枝派(只要9块9哦)。但需要提醒的是，为了得到<code>离线运行</code>的特性，我们很可能会失去交互性(这个问题不是很好讨论，如果需要,我们之后专门来说说这两个特性在什么情况可能冲突，而不可兼得)。</p>
+
+<blockquote>
+<p>灌入式将带来优于交互式的实时性</p>
+</blockquote>
+
+<p>和上一条观点一样，我认为严格的<code>实时性</code>在编程教育中并不重要，交互式理论上足以提供毫秒级别的实时性，更高的实时性在教育中是否必要，我持怀疑态度。我将<code>离线运行</code>和<code>实时性</code>视为一种对机器性能的优化，前者节约资源、后者节约时间，但这种节约下来的时间，短得也许人类不能感知。我承认在一些竞技类的比赛中，<code>实时性</code>是至关重要的，但在教育中，尤其是低龄化编程教育中，被教育者是这件事的核心，我认为这些特性并不重要，尤其是考虑到这些特性可能和交互性冲突</p>
+
+<blockquote>
+<p>灌入式因为需要generate代码，学生可以查看代码</p>
+</blockquote>
+
+<p>给用户呈现积木所对应的代码，是个帮助用户从图形化过度到文本编程的好办法. 但generate代码这件事并不限于<code>灌入式</code>,<code>交互式</code>的编程界面里，虽然你并不需要generate代码，但如果愿意，完全可以为每个积木生成对应的代码，而且可以是<code>任何语言，任何抽象粒度</code>。<code>灌入式</code>阵营的小伙伴可能会反驳说，你们generate的代码并不是真正用于运行的。我会回答说: 对，我恰恰认为，不该把真正执行的代码generate出来给用户看。积木之所以是个好工具，正是因为它能自如地隐藏复杂度，暴露出合适粒度的概念颗粒，积木并不只是帮助我们省去记忆语法规则，更重要的是，它允许我们根据学生所处的阶段，给予他不同抽象程度的积木。我很喜欢来自lisp社区的忠告:<code>表达你的意图，而不是操作过程，这样有助于我们能站在更高的抽象层面上</code></p>
+
+<p>关于这一点，<a href="code.org">code.org</a>给了我们很好的示范，一个学习者，在<a href="code.org">code.org</a>里在拖拽了两个积木之后，他看到页面里愤怒的小鸟往东飞一步，接着又往北飞一步，最后成功击中了小猪。</p>
+
+<p>如果学习者愿意，他可以看看与积木等价的代码：</p>
+
+<p><img src="/post/img/codeorg_9b3de524.png" width=600 /></p>
+
+<p>我们看到，这些代码隐藏了很多实现的细节，你也许要抱怨说code.org在欺骗学习者，这并不是真正运行的代码，<code>真正的代码</code>是由js在操控svg的元素，但你确定你要给出这个粒度的东西吗？<code>真正的代码</code>也许是一串<code>001101101...</code>. 我认为平台给出合适抽象粒度的积木在编程教育里是至关重要的</p>
+
+<p>就这点而言，目前很多灌入式的图形化编程并不适合编程教育，尤其不适合少儿编程，他们直接把驱动硬件代码包装到积木下就了事了，积木颗粒在抽象程度上与硬件文本编程无异。如何设计出合适抽象粒度的积木块，不是个简单的问题，我认为这块的从业者都该多看看cozmo和makecode</p>
+
+<h3 id="交互式的优势">交互式的优势</h3>
+
+<p>反驳完灌入式的优势，接着我们来谈谈<code>交互式</code>的优势何在，我先简单列出，之后逐条陈述</p>
+
+<ol>
+<li>及时的反馈</li>
+<li>允许单步调试</li>
+<li>软件编程和硬件编程，不必区分，虚拟人物与现实硬件能彼此联动</li>
+<li>强大的可扩展性</li>
+</ol>
+
+<p>罗列完<code>交互式</code>的优势后，我们来逐条陈述它们.</p>
+
+<blockquote>
+<p>及时的反馈</p>
+</blockquote>
+
+<p>我认为这一条，对编程教育是至关重要的。</p>
+
+<p>我们从<code>REPL</code>（Read-Eval-Print-Loop）说起，<a href="https://zh.wikipedia.org/wiki/LISP">LISP</a>最早为我们带来<a href="https://zh.wikipedia.org/zh-hans/%E8%AF%BB%E5%8F%96%EF%B9%A3%E6%B1%82%E5%80%BC%EF%B9%A3%E8%BE%93%E5%87%BA%E5%BE%AA%E7%8E%AF">REPL</a>。REPL是个交互式的编程环境，用户输入的表达式及时被求值运行，并输出，这对于学习一门新的编程语言有很大的帮助，因为它能立刻对初学者做出回应，所以这个概念被移植到很多编程语言环境里（Python, Scala , Java(since jdk-9)&hellip;）。这种交互式的编程环境使得探索性的编程和调试更加便捷，因为“读取-求值-输出”循环通常会比经典的“编辑-编译-运行-调试”模式要更快，这两者的差异很像<code>交互式</code>和<code>灌入式</code>的差异。我自己使用REPL的一个强烈感受是，在REPL环境中（如ipython），我更乐于探索，对于不懂的api，我会直接做个实验，看看效果，获得直观感受。REPL鼓励每个人在探索中成为自己知识的构建者。而这点正式是早期致力于推广少儿编程的先驱们(艾伦凯、派普特)所追求的</p>
+
+<p>我将硬件编程里的<code>交互式</code>编程方式，视为一种硬件编程的<code>REPL</code>。如同我在前头举例说的</p>
+
+<blockquote>
+<p>在<a href="https://www.anki.com/en-us/cozmo/code-lab">cozmo code lab</a>中一个非常惊艳的编程体验是:如果你不知道一个积木有什么作用，你不必去翻说明书，你只需要点击一下这个积木，cozmo立马执行这个积木的逻辑，你可以直观地理解陌生的积木。交互式编程所具有的及时反馈特性，鼓励学习者去探索系统。这是交互式编程给学习者心理上带来的影响之一。</p>
+</blockquote>
+
+<p>对教学和平台而言，及时的反馈也能带来诸多好处，有了来自硬件的反馈信息，我们可以在平台中给出更多的提示信息，来指导学生修正错误，或者引导他抵达目标，目前国外社区已经有这块的试水者，我正在关注，之后有机会专门写一篇文章。</p>
+
+<p>&mdash; 2019.01.26更新</p>
+
+<p>Bret Victor在<a href="https://www.youtube.com/watch?v=PUv66718DII">Inventing on Principle</a>支持了这个观点。及时的反馈对于创造是非常重要的。</p>
+
+<p>“创造者需要即时的反馈”</p>
+
+<p>“如果你无法即时看到东西，就无法找到你要的灵感”</p>
+
+<p>“你应该看到你做出的改变对系统的即时影响”</p>
+
+<p>“想法需要一个环境，创作者可以培育它们”</p>
+
+<!--媒体连接原则， 创作者需要看到什么 看到时间和世界线
+if there is something in the world you feel the wrong and you have a vision for what a better world could be
+what matters you？ what you believe in？ what you might fight for？
+-->
+
+<blockquote>
+<p>允许单步调试</p>
+</blockquote>
+
+<p>如果学习者写了一段较为复杂的代码，运行时没有达到预期效果，人们往往无法通过阅读代码找出问题（错误往往揭示了知识或思维盲区），它需要逐行运行代码，看看效果，然后判断究竟是哪一步出了问题，这就是单步调试之所以如此重要的原因，即便对于专业程序员，也是如此。在<code>灌入式</code>中我们无法做到单步调试，因为代码是一股脑灌入硬件的。但<code>交互式</code>允许我们这样做，因为每次都是消息通信，所以编程界面可以逐步地给硬件发送控制指令。如果你观察过学生在code.org中通过单步调试找到问题，并顺利前行，你就知道这个特性有多棒</p>
+
+<blockquote>
+<p>软件编程和硬件编程，不必区分，虚拟角色与现实硬件能彼此联动</p>
+</blockquote>
+
+<p>在图形化编程这块，学习者很可能是先学了软件编程，通过闯关式的学习，利用积木控制虚拟角色来达到目标，在这个过程中掌握编程概念。<code>交互式</code>硬件编程允许你把硬件也接入到这些web平台里。如此一来，无论是教学软件还是硬件，平台架构上将毫无差别，学生的编程体验也几乎没有差别。它们学习软件编程所积累的知识完全可以用于硬件部分。</p>
+
+<p>而在创作类平台中(比如scratch)，<code>交互式</code>编程允许虚拟角色与物理硬件彼此沟通，你可以自由联通虚拟与现实世界，制作体感游戏和富有表现力的故事。这将为我们带来更高的<code>高天花板</code>和更多的趣味性，从而点燃大家的热情</p>
+
+<p>关于这块的有趣例子可以参考:<a href="https://codelab-adapter-docs.codelab.club/user_guide/gallery/">scratch3-adapter-docs gallery</a></p>
+
+<blockquote>
+<p>强大的可扩展性</p>
+</blockquote>
+
+<p><code>交互式</code>还将为我们带来强大的可扩展性，<a href="https://zh.wikipedia.org/zh-hans/ROS">ROS(Robot Operating System)</a>和<a href="https://codelab-adapter-docs.codelab.club/">scratch3_adapter</a>是很好的两个例子。因为基于消息通信，各个部分彼此解耦，这些系统本质上是分布式的，你可以接入任何东西，在<a href="https://codelab-adapter-docs.codelab.club/">scratch3_adapter</a>中，硬件方面,我们已经接入了:</p>
+
+<ul>
+<li><a href="http://microbit.org/">micro:bit</a></li>
+<li><a href="https://www.anki.com/en-us/cozmo">Cozmo</a></li>
+<li><a href="https://store.sphero.com/products/bb-8-by-sphero">BB8</a></li>
+<li><a href="https://www.raspberrypi.org/">树莓派</a></li>
+<li><a href="https://blog.just4fun.site/scratch3-smart-home.html">智能家居</a></li>
+</ul>
+
+<p>AI方面，我们接入了:</p>
+
+<ul>
+<li><a href="https://azure.microsoft.com/zh-cn/services/cognitive-services/">微软认知服务</a></li>
+<li><a href="https://js.tensorflow.org/">本地化的机器视觉</a></li>
+<li><a href="https://opencv.org/">opencv</a></li>
+<li><a href="https://pjreddie.com/darknet/yolo/">实时物体检测</a></li>
+<li>一些简单的本地自然语言处理(移植了mit media lab的实验项目)</li>
+</ul>
+
+<p>如果你愿意，你可以将小时候的玩具四驱车接入进来。</p>
+
+<h1 id="如何实现">如何实现</h1>
+
+<blockquote>
+<p>everything is message</p>
+</blockquote>
+
+<p>天色已晚，明天要早起，这部分就不多写了，之后单独讨论</p>
+
+<p>如果你熟悉LISP,为了实现一个 LISP REPL，只需要实现read、eval、print三个函数和一个不停轮询的函数(loop)即可,一个基本的REPL可以用如下的简单形式表达：(loop (print (eval (read))))</p>
+
+<p>一旦你理解了这个概念，就可以自己动手去硬件上实现了。</p>
+
+<p>事实上，社区里的交互式项目(如S4A、snap4arduino、s4m)思路基本都是一样的</p>
+
+<p>我们自己动手实现了<a href="https://codelab-adapter-docs.codelab.club/">scratch3_adapter</a></p>
+
+<p>我把思考和构建<a href="https://codelab-adapter-docs.codelab.club/">scratch3_adapter</a>的过程都记录在博客里，如果你有兴趣，也可以根据我的架构设计，自己实现:</p>
+
+<ul>
+<li><a href="https://blog.just4fun.site/scratch3-plugin-1.html">为Scratch3.0设计的插件系统(上篇)</a></li>
+<li><a href="https://blog.just4fun.site/scratch3-plugin-2.html">为Scratch3.0设计的插件系统(下篇)</a></li>
+<li><a href="https://blog.just4fun.site/Scratch3-Lab.html">Scratch3 Lab: 将Scratch3接入开源硬件及AI的实验项目</a></li>
+<li><a href="https://codelab-adapter-docs.codelab.club/">scratch3-adapter-docs</a></li>
+</ul>
+
+<p>当然我更鼓励你加入我们，我们已经为开发者准备好了<a href="https://codelab-adapter-docs.codelab.club/dev_guide/helloworld/">开发手册</a></p>
+
+<p>我私下认为<a href="https://codelab-adapter-docs.codelab.club/">scratch3_adapter</a>基于zeromq的实现也许是目前扩展性最好的，欢迎入坑 ：）</p>
+
+<!--
+### 可扩展性
+ROS和adapter是个很好的例子，可以做出任意复杂的东西，
+
+这背后的想法是，硬件只是更大系统的一部分  观察传感器的状态
+
+你可以把利用云端的AI，利用本地的摄像头 来自不同的硬件 当温度30度时  人物说很热
+
+
+这是一种，ROS的策略，adapter在架构上，很多地方模仿了ROS，关于这点，参考:[]()
+
+在体验式，引导你尝试，而这是少儿编程的开创者们所鼓励的 在实践中去把我概念
+
+当温度25度时 打开空调
+
+# 为何交互式是更好的模式
+学习硬件本身 还是利用硬件做出其他应用
+
+我为何要知道串口式什么
+
+就像我们教学python的时候，不会教学它的C实现  操作系统原理
+
+adapter致力于将万物积木化，在adapter你可以让google的AI与小米的智能家居互动，这是scratch的思路
+
+mixly则是一个blockly app，致力于映射，你可以将硬件抽象为积木
+
+# microbit
+用键盘控制micro:bit
+
+使用消息  可以控制粒度
+
+使用烧录，必须控制串口
+
+总是能写出server代码的，但设计上 这块应该被抽象
+
+-->
+
+<h1 id="补遗">补遗</h1>
+
+<h3 id="通讯补丁">通讯补丁</h3>
+
+<p>灌入式编程在一定程度上，也可以实现<code>交互</code>特性，一种策略是采用<code>通讯变量</code>的概念, makeblock的mblock很好地利用了这点</p>
+
+<p>利用通讯变量，你可以让上下位机实现彼此沟通</p>
+
+<p>技术实现的话，也不会太难，在硬件里跑一个独立的通信进程就行，之后通过uart或其他通道与上位机沟通就行</p>
+
+<p>你最好将这种方式视为一种补丁，<code>通讯变量</code>是一种补充策略，通过这种补丁，你无法做到<code>交互式</code>的所有特性，但这依然不失为一种很聪明的做法</p>
+
+<h3 id="关于灌入式与交互式的混合">关于灌入式与交互式的混合</h3>
+
+<p>如何看待一个编辑器同时支持灌入式与交互式风格？</p>
+
+<p>我的看法是:</p>
+
+<blockquote>
+<p>do one thing and do it well</p>
+</blockquote>
+
+<p>大体来说，我不认同这种做法。我不知道什么是好的方案来协调这两者，能兼得二者的好处，如果你有好的建议，愿意分享就太棒啦。</p>
+
+<p>我目前只看到一些<a href="https://zh.wikipedia.org/wiki/%E5%8F%8D%E9%9D%A2%E6%A8%A1%E5%BC%8F">反模式(anti-pattern)</a>。为了同时支持灌入式与交互式，意味着需要模式的切换，无论这种切换是不是智能的。都会导致积木无法彼此兼容(当然你可以做到局部兼容)，用户如果希望组合两类积木来实现创意，在UI上他们的确拼在一起了，语义上也正确，这时编辑器弹出错误提示说: 灌入式积木与交互式积木无法组合使用，用户会非常沮丧，而且摸不着头脑。此外，有些积木两种模式都能用(诸如逻辑积木、数字积木)，而有些积木则不行(有些需要灌入硬件，有些需要在网页emit消息)，那么使用者还要时刻担心这种组合是否合适，提心吊胆倒也罢了，更糟的是错误出现的时候，他不知道是究竟是自己逻辑错了，还是混搭错了种类。这是对使用者的影响。</p>
+
+<p>接下来说说它如何增加编辑器的复杂度。</p>
+
+<p>以上问题当然有解决方案，诸如增强check功能、强化积木的<code>类型</code>，用做一个IDE的策略来做，上边列出的冲突总能够得到某种程度的缓和。但就这个编辑器本身而言，复杂度的提升，软件一致性的削弱，意味着出bug概率增多。</p>
+
+<p>如果非要在一个编辑器中兼容这两种模式，有3种方案不算太坏：</p>
+
+<p>其一是<code>通讯补丁</code>的策略，在这种模式下，用户的编程范式不需要变换，本质是交互式。灌入代码是为了获得交互的能力。</p>
+
+<p>其二是显式地切换模式。诸如一些公司用<a href="https://electronjs.org/">electron</a>打包<a href="https://github.com/LLK/scratch-gui">scratch3.0</a>，通过切换target来切换模式，同时禁用其他积木。</p>
+
+<p>其三是单向切换:<code>积木</code>-&gt;<code>代码</code>。 这种方案在技术上可以做到完美无bug，但依然无法解决用户心理模型的问题。</p>
+
+<p>值得注意的是，scratch3.0的插件系统架构并不基于target。scratch3.0的插件系统架构本质上适合<code>交互式</code>。这是官方团队权衡后的结果。</p>
+
+<p>在我看来，这是一种强行整合，丝毫没有理念上的一致性，它致力于达到&rdquo;我有这个功能&rdquo;。</p>
+
+<p>总而言之，我不赞同兼容这两者的方案。</p>
+
+<p>关于这个话题的更多内容，参考<a href="https://forums.codelab.club/t/topic/60">我和@Cyke的这个讨论</a></p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Protocol">Protocol</a></li>
+<li><a href="http://hintjens.com/blog:_unprotocols">unprotocols</a></li>
+<li><a href="https://en.scratch-wiki.info/wiki/PicoBoard">PicoBoard</a>
+
+<ul>
+<li><a href="https://github.com/sparkfun/PicoBoard">sparkfun/PicoBoard</a></li>
+</ul></li>
+<li><a href="https://www.raspberrypi.org/blog/scratch-2-raspberry-pi/">scratch-2-raspberry-pi</a></li>
+<li><a href="http://s4a.cat/">S4A</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/24770930">Mixly，初学Arduino的最佳图形化编程工具</a></li>
+<li><a href="https://github.com/firmata/protocol">Firmata</a></li>
+<li><a href="http://snap4arduino.rocks/">snap4arduino</a></li>
+<li><a href="https://nick.zoic.org/art/micropython-webusb/">MicroPython with WebUSB!</a></li>
+<li><a href="https://hackernoon.com/software-development-at-1-hz-5530bb58fc0e">Software development at 1 Hz</a></li>
+<li><a href="https://developers.google.com/web/updates/2016/03/access-usb-devices-on-the-web">Access USB Devices on the Web</a></li>
+<li><a href="https://wicg.github.io/webusb/">WebUSB API</a></li>
+<li><a href="https://zh.wikipedia.org/zh-hans/%E8%AF%BB%E5%8F%96%EF%B9%A3%E6%B1%82%E5%80%BC%EF%B9%A3%E8%BE%93%E5%87%BA%E5%BE%AA%E7%8E%AF">读取﹣求值﹣输出循环(REPL)</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/LISP">LISP</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%BB%BA%E6%A7%8B%E4%B8%BB%E7%BE%A9_(%E5%AD%B8%E7%BF%92%E7%90%86%E8%AB%96)">建构主义 (学习理论)</a></li>
+<li><a href="https://www.feld.com/archives/2018/07/the-repl-for-hardware.html">The REPL For Hardware</a></li>
+<li><a href="https://zh.wikipedia.org/zh-hans/%E5%8F%8D%E9%9D%A2%E6%A8%A1%E5%BC%8F">反面模式</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-07-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/"> scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/edx-community-members/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">盘点Open edX社区中拥抱开源的公司及值得关注的项目</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/microbit-ppt/">
+            <span class="next-text nav-default">使用micro:bit自制PPT翻页笔</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

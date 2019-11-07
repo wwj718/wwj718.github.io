@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>为Scratch3.0设计的插件系统(下篇) - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="Imagine, Program, Share 在上篇文章里，关于Scratch3.0如何与外部硬件(设备/玩具)通信，我们梳理了社区里的常见做法 在这篇文章中，准备写写我的架构设计," /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-plugin-2/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="为Scratch3.0设计的插件系统(下篇)" />
+<meta property="og:description" content="Imagine, Program, Share 在上篇文章里，关于Scratch3.0如何与外部硬件(设备/玩具)通信，我们梳理了社区里的常见做法 在这篇文章中，准备写写我的架构设计," />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-plugin-2/" />
+<meta property="article:published_time" content="2018-03-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-03-26T00:00:00+00:00" />
+<meta itemprop="name" content="为Scratch3.0设计的插件系统(下篇)">
+<meta itemprop="description" content="Imagine, Program, Share 在上篇文章里，关于Scratch3.0如何与外部硬件(设备/玩具)通信，我们梳理了社区里的常见做法 在这篇文章中，准备写写我的架构设计,">
+
+
+<meta itemprop="datePublished" content="2018-03-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-03-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3688">
+
+
+
+<meta itemprop="keywords" content="scratch," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="为Scratch3.0设计的插件系统(下篇)"/>
+<meta name="twitter:description" content="Imagine, Program, Share 在上篇文章里，关于Scratch3.0如何与外部硬件(设备/玩具)通信，我们梳理了社区里的常见做法 在这篇文章中，准备写写我的架构设计,"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">为Scratch3.0设计的插件系统(下篇)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-03-26 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#设计原则与初衷">设计原则与初衷</a></li>
+<li><a href="#插件系统功能描述">插件系统功能描述</a></li>
+<li><a href="#思路">思路</a></li>
+<li><a href="#架构图">架构图</a>
+<ul>
+<li>
+<ul>
+<li><a href="#具体实现">具体实现</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#why-and-why-not">why and why not</a>
+<ul>
+<li>
+<ul>
+<li><a href="#why-not-web-bluetooth">why not Web Bluetooth</a></li>
+<li><a href="#why-not-chrome-serial">why not chrome serial</a></li>
+<li><a href="#为何不在websocket-server中直接操控硬件">为何不在websocket server中直接操控硬件</a></li>
+<li><a href="#采用基于消息的架构-对社区有什么好处">采用基于消息的架构，对社区有什么好处</a></li>
+<li><a href="#为何要做成一个开放的系统-而不是发布一个针对某个具体产品的软件">为何要做成一个开放的系统，而不是发布一个针对某个具体产品的软件</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<blockquote>
+<p>Imagine, Program, Share</p>
+</blockquote>
+
+<p>在<a href="http://blog.just4fun.site/scratch3-plugin-1.html">上篇文章</a>里，关于Scratch3.0如何与外部硬件(设备/玩具)通信，我们梳理了社区里的常见做法</p>
+
+<p>在这篇文章中，准备写写我的架构设计,文中会给出架构图，解释这样设计的原因，以及不采用目前主流做法的原因。<!--unix哲学--></p>
+
+<h1 id="设计原则与初衷">设计原则与初衷</h1>
+
+<blockquote>
+<p>编程是伪装成艺术的科学</p>
+</blockquote>
+
+<p>近来在编程方面，对我影响最深的一本书是《ROS机器人编程实践》。在这本书里，我们看到通过遵循Unix哲学可以构建出何等强大、灵活而简单的系统(Unix哲学在《Unix编程艺术》中被阐述得很精彩)</p>
+
+<p>当然，ROS的<code>简单</code>，是指它在面对所处理的问题时，已尽可能地简单，这个系统本身还是有一定复杂度的。当我们在说《哲学问题》把哲学阐述如此清晰、简单时，其中的简单也是这个意思。你不能指望一本书能把N-S方程的推导过程讲解得和天线宝宝的情节一样简单。如果有作者声称他能，要么他是骗子，要么他是疯子，要么他是伯特兰·罗素</p>
+
+<p>Unix哲学里鼓励如何构建一个系统呢？</p>
+
+<p>我很喜欢<a href="https://github.com/booksbyus/zguide">zguide</a>（zguide是ZeroMQ的教材，写得几乎和ZeroMQ这个项目一样出色）中的这个阐述</p>
+
+<blockquote>
+<p>The physics of software is not algorithms, data structures, languages and abstractions. These are just tools we make, use, throw away. The real physics of software is the physics of people&ndash;specifically, our limitations when it comes to complexity, and our desire to work together to solve large problems in pieces. This is the science of programming: make building blocks that people can understand and use easily, and people will work together to solve the very largest problems.</p>
+</blockquote>
+
+<p>作为社会成员的我们，在遇到一个高度复杂的问题时，我们会群策群力，分工合作，将问题拆分为若干个部分，一起解决。这里就体现了编程的科学：创建一组小型的构建模块，让人们易于理解和使用，那么大家就会一起用它来解决问题。</p>
+
+<p>想想你的Unix工具箱中的grep/find/awk/sed组合起来时何等地强大。当一堆的小工具能彼此沟通时，事情就变得有趣了。</p>
+
+<p>和ROS一样，我们鼓励社区的参与，我们想设计一个开放的系统，允许更多的插件加入进来，允许你去连接更多有趣的设备，在这个架构中鼓励人们重用社区的经验，在别人的基础上工作，也方便人们将自己的工作分享给社区。</p>
+
+<p>我们不想构建一个封闭、精致且庞大的系统。</p>
+
+<h1 id="插件系统功能描述">插件系统功能描述</h1>
+
+<ul>
+<li>连接scratch3.0(或者任何client)与来自物理世界的各种硬件及开放系统</li>
+<li>可以配合scratch3.0官方网站使用。自行架设的scratch3.0网站如果与官方插件系统兼容，那么你也能直接使用这套插件系统。就是说等scratch3.0发布之后，任何采用官方扩展机制的网站，都能使用这套插件系统，而无须hack核心源码</li>
+<li>允许你为系统写扩展插件，将任何你能操控的系统接入Scratch3.0中</li>
+<li>当然如果你有兴趣，甚至可以把这套系统接入Scratch3.0之外的地方，比如你想把它接入Blockly或者node-red中，插件系统虽然最初是为Scratch3.0而做，但Scratch3.0并不特殊，它仅仅是一个消息订阅者和发布者而已</li>
+</ul>
+
+<h1 id="思路">思路</h1>
+
+<p>项目的架构思路主要来自ROS(Robot Operating System)。ROS是个复杂系统，当今世上有趣和复杂机器人大多都运行着ROS，从国际空间站的R2机器人到一些路上自动驾驶的汽车。我觉得ROS系统中处理的很多问题，在使用Scratch驱动外部设备/机器人时也会遇到，尤其当你不甘于只是简单地灌入代码、想做出交互性更好的机器人时(比如Cozmo)。这些问题包括：</p>
+
+<ul>
+<li>传感器的数据发布机制；</li>
+<li>服务(service)与动作(action)的区分，以及各自处理的问题；</li>
+<li>如何重用消息结构，让一套积木块能将相同的语义传递给不同的硬件，只需调整最末端的驱动代码便可控制天上飞的、地上走的、水里游的。</li>
+<li>&hellip;</li>
+</ul>
+
+<p>Cozmo显然就是利用这些概念构建了令人惊叹的操作体验</p>
+
+<p>我最近在构建一个叫ROLS(Robot Operating Lite System)的项目，从名字可以看出，这个项目是想做个轻量级的ROS,目前只开了个坑:<a href="https://github.com/wwj718/ROLS">ROLS</a>。在github上创建项目的动机常常是，想到了一个好名字，不知道你们有没有这种情况</p>
+
+<p>ROS的作者也在重写这个项目，如他自己在ROS2.0的设计文档中说的其实ROS的核心是一个<code>匿名的发布-订阅中间件系统</code></p>
+
+<p>本文为Scratch3.0设计的插件系统本质上便是一个匿名的发布-订阅中间件系统，组件之间通过消息彼此沟通。系统中所有的节点都对等，即便是Scratch3.0也不特殊。</p>
+
+<p>至于为这个系统提供更多好用的小工具(诸如roscore、rosrun、rostopic等)，我会在<a href="https://github.com/wwj718/ROLS">ROLS</a>中陆续折腾出来它们的轻量级替代品</p>
+
+<h1 id="架构图">架构图</h1>
+
+<p><img src="/post/img/%E6%8F%92%E4%BB%B6%E7%B3%BB%E7%BB%9F.png" alt="scratch3.0插件系统" /></p>
+
+<p>我们自上往下看。</p>
+
+<p>首先看Scratch3.0部分。在Scratch3.0中，我们需要写一个js插件，这个插件就像特洛伊木马，作为我们的<code>内应</code>，之后它将负责与外部沟通。如果你对这部分不熟悉，应该先去看看官方文档:<a href="https://github.com/LLK/scratch-vm/wiki/Scratch-3.0-Extensions-Specification">Scratch 3.0 Extensions Specification
+</a></p>
+
+<p>这部分是Scratch3.0的原生扩展机制。目前官方已经完成了好几个扩展，有兴趣的话，可以自行阅读源码。其中wedo2的扩展很值得一读。</p>
+
+<p>你在Scratch3.0中写js扩展时，除了要定义出积木块的样式之外，还需要定义出opcode(语义)和它的具体实现，这部分将在vm中执行，我们参考了wedo2的机制，采用
+socketio来传递消息(当然你也可以直接使用websocket)。</p>
+
+<p>插件系统中有一个websocket server(这个架构很像jupyter)，与vm进行双向通信。</p>
+
+<p>websocket server采用zeromq来sub/pub消息</p>
+
+<p>而每个硬件被程序代理，代理程序也采用zeromq来sub/pub消息</p>
+
+<p>系统看去有些啰嗦，比如代理程序似乎是不必要的。如果你为scratch3.0写过插件，你可能会想，我们为何不把websocket server视为vm的延伸，如果vm的概念延伸到物理机器上，不就具备了和硬件交互的能力！(已经从浏览器蔓延到了系统进程中)那么为何还需要多一层硬件代理。原因是为了构建一个匿名的发布-订阅系统，以便解耦和重用。</p>
+
+<h3 id="具体实现">具体实现</h3>
+
+<p>上图是一张语言无关的架构图，你可以用任何你喜欢的语言去实现它，下边说说我们目前自己的实现（这部分由@izuo和我一起实现）：</p>
+
+<p><img src="/post/img/%E6%88%91%E7%9A%84%E5%AE%9E%E7%8E%B0.png" alt="" /></p>
+
+<p>在少儿编程领域，microbit，scratch，Cozmo是我最喜欢的三个项目，所以我们第一步先做了microbit的scratch插件 ，下一步计划是把cozmo也带入scratch中</p>
+
+<p>相比于js，我更偏好python，所以在具体实现上，我没有选择electron，而是使用python来构建，之后使用pyinstaller打包分发到各个平台 (目前我们完成了mac系统和win10系统的打包，更多的环境还在陆续添加，因为scratch3.0正式发布还远，所以平台兼容这块，倒也不急，但会考虑服务于国内教育环境(比如对windows 32位系统的兼容))</p>
+
+<!--
+我们要做什么: 为scratch构建插件系统，使其能与物理世界连接
+-->
+
+<h1 id="why-and-why-not">why and why not</h1>
+
+<p>原本想回答一些why的问题，这些问题我和@izuo讨论了许多，但一时半会可能也不好说清，天色已晚，今天写几个对why not的思考，就该睡了。</p>
+
+<h3 id="why-not-web-bluetooth">why not Web Bluetooth</h3>
+
+<p>Web Bluetooth个很棒的方案，我们目前正在这块做一些实验，Web Bluetooth让vm可以直接与硬件交互！</p>
+
+<p>这个方案另一个好处是对移动端友好，安卓中你甚至只需要浏览器，就能控制硬件，ios中，浏览器目前不支持 Web Bluetooth，你需要包装成app。apple正在成为过去的微软</p>
+
+<p>不过并非所有人都喜欢蓝牙，也不是所有场景都适合蓝牙，如果我们想把cozmo和microbit接入scratch，我们就做不到（microbit通过一些方式可能能做到，不过会有一些其他问题）</p>
+
+<p>要把bb8接入，倒是做得到的，bb8支持ble(Web Bluetooth需要ble)</p>
+
+<p>此外值得一提的是，来自国内的mCookie用到了Web Bluetooth的策略.此外有趣的是他们用了NW.js而不是electron</p>
+
+<h3 id="why-not-chrome-serial">why not chrome serial</h3>
+
+<p>这也是个有趣方案，我们也在关注和实验</p>
+
+<p>这个方案对chrome的版本要求比Web Bluetooth低，对老机器支持比较好，不过需要安装浏览器插件</p>
+
+<h3 id="为何不在websocket-server中直接操控硬件">为何不在websocket server中直接操控硬件</h3>
+
+<p>除了前头解释过的原因之外，还有一个异步执行的问题，这个问题我在jupyter的架构中讨论过，有兴趣的话可以翻翻那篇文章。jupyter和我们遇到相似的问题，这部分的架构也基本一样</p>
+
+<h3 id="采用基于消息的架构-对社区有什么好处">采用基于消息的架构，对社区有什么好处</h3>
+
+<p>最坏情况下(比如大家没有好的协同习惯)，社区依然能够共享大多的经验，因为架构强行使用消息来通信，你可以看到任何组件是如何收发消息的(通过源码或是类似rostopic的工具)。而在最好的情况下，如果大家都共用消息结构，引入一个新的硬件，你通常只需要需要修改最底层驱动的几行代码</p>
+
+<p>这种架构的灵活性，ROS已经向我们充分显示了。当然设计出色且通用的消息体又是另一个话题了</p>
+
+<h3 id="为何要做成一个开放的系统-而不是发布一个针对某个具体产品的软件">为何要做成一个开放的系统，而不是发布一个针对某个具体产品的软件</h3>
+
+<p>我不喜欢封闭的系统</p>
+
+<p>我们处在一个封闭、占地为王、屁股决定脑袋的世界。open source、重用、fork&hellip;这些概念在软件行业之外的领域，受到猛烈抨击。如果你在开源社区之外去做这些事，不只是政治不正确，你还可能吃官司。关于这些话题，到处都是屁股决定脑袋的言论</p>
+
+<p>我们喜欢scratch社区的口号：</p>
+
+<blockquote>
+<p>Imagine, Program, Share</p>
+</blockquote>
+
+<!--
+# todo
+思考对移动端的支持: web bluetooth等
+
+
+如果你对Scratch3.0已有的插件机制不熟悉，恐怕这篇文章无法教会你用Scratch3.0来驱动硬件
+
+why
+
+在这个架构之下 scratch也仅是一个组件而已
+
+raspberry4pi
+
+vm的延迟
+
+就像很多人会怀念忙碌的高中一样
+如果你不知道要干嘛
+
+关注是差异的开始
+
+驯服 建立联系
+订阅
+
+一些你可能会遇到的坑
+
+如果你的硬件和cozmo一样复杂
+
+mblock的做法  通讯变量
+你需要ros
+
+‌你不能指望一本书能把傅立叶讲解得和天线宝宝的情节一样简单
+‌如果作者说它能
+‌要么他是个骗子 要么他是个疯子  要么他是波特兰罗素
+‌
+‌
+scratch源码是复杂的 
+
+它复杂到 甚至发了izuo不短的一段时间去理解它
+‌要么这个作者是罗素
+‌要么
+-->
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-03-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%97%E8%AF%8D/rainy-days/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">雨天</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-plugin-1/">
+            <span class="next-text nav-default">为Scratch3.0设计的插件系统(上篇)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

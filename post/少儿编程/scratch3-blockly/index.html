@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Blockly与Scratch3.0的比较分析及选型建议 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="可是时间究竟是什么？没有人问我，我倒清楚，有人问我，我想给他解释，却茫然不解了 &amp;ndash;奥古斯丁 Blockly与Scratch3.0的比" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-blockly/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Blockly与Scratch3.0的比较分析及选型建议" />
+<meta property="og:description" content="可是时间究竟是什么？没有人问我，我倒清楚，有人问我，我想给他解释，却茫然不解了 &ndash;奥古斯丁 Blockly与Scratch3.0的比" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-blockly/" />
+<meta property="article:published_time" content="2018-04-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-04-30T00:00:00+00:00" />
+<meta itemprop="name" content="Blockly与Scratch3.0的比较分析及选型建议">
+<meta itemprop="description" content="可是时间究竟是什么？没有人问我，我倒清楚，有人问我，我想给他解释，却茫然不解了 &ndash;奥古斯丁 Blockly与Scratch3.0的比">
+
+
+<meta itemprop="datePublished" content="2018-04-30T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-04-30T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="5258">
+
+
+
+<meta itemprop="keywords" content="scratch, blockly," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Blockly与Scratch3.0的比较分析及选型建议"/>
+<meta name="twitter:description" content="可是时间究竟是什么？没有人问我，我倒清楚，有人问我，我想给他解释，却茫然不解了 &ndash;奥古斯丁 Blockly与Scratch3.0的比"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Blockly与Scratch3.0的比较分析及选型建议</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-04-30 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#blockly与scratch3-0的比较分析">Blockly与Scratch3.0的比较分析</a>
+<ul>
+<li>
+<ul>
+<li><a href="#blockly是什么">Blockly是什么</a></li>
+<li><a href="#scratch3-0是什么">Scratch3.0是什么</a>
+<ul>
+<li>
+<ul>
+<li><a href="#scratch3-0是scratch2-0的下一个版本-使用html5构建">Scratch3.0是Scratch2.0的下一个版本，使用html5构建</a></li>
+<li><a href="#scratch3-0是个-低门槛-宽围墙-高天花板-的playground">Scratch3.0是个<code>低门槛、宽围墙、高天花板</code>的playground</a></li>
+<li><a href="#scratch3-0是一个blockly-app">Scratch3.0是一个Blockly APP</a></li>
+<li><a href="#scratch3-0是scratch-gui-scratch-blocks-scratch-vm-scratch-render">Scratch3.0是scratch-gui + scratch-blocks + scratch-vm + scratch-render + &hellip;</a></li>
+<li><a href="#scratch3-0是那种你用过就知道是什么的东西">Scratch3.0是那种你用过就知道是什么的东西</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#比较分析">比较分析</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#选型建议">选型建议</a></li>
+<li><a href="#尾声">尾声</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/thdfebdb2d.png" alt="" /></p>
+
+<blockquote>
+<p>可是时间究竟是什么？没有人问我，我倒清楚，有人问我，我想给他解释，却茫然不解了 &ndash;奥古斯丁</p>
+</blockquote>
+
+<h1 id="blockly与scratch3-0的比较分析">Blockly与Scratch3.0的比较分析</h1>
+
+<p>在我们分析Blockly与Scratch3.0之前，我们需要先阐述一下，Scratch3.0与Blockly分别是什么</p>
+
+<h3 id="blockly是什么">Blockly是什么</h3>
+
+<blockquote>
+<p>The web-based visual programming editor</p>
+</blockquote>
+
+<p>blockly将自己定位为一个编辑器。这个描述再精当不过</p>
+
+<p>我在之前的文章: <a href="http://blog.just4fun.site/blockly-overview.html">blockly入门与介绍</a>里说:</p>
+
+<blockquote>
+<p>blockly作为编辑器，它的输入为用户的拖曳（拖曳作为一种输入，可以类比为普通编辑器的键盘输入），输出为生成的代码。使用blockly可以快速打造一个特定领域的可视化 块编程 编辑器</p>
+
+<p>至于每个积木（block）如何生成代码，代码用于什么用途，blockly则通通不关心，用户自己掌控。</p>
+</blockquote>
+
+<p>我们可以简单将blockly视为积木化的编辑器，编辑器的输出只有代码。<code>Do one thing</code>的原则让它成为一个灵活小巧的库，而不是框架，可以轻松与其他工具整合</p>
+
+<h3 id="scratch3-0是什么">Scratch3.0是什么</h3>
+
+<p>那么Scratch3.0是什么呢，相比于<code>Blockly是什么</code>，这个问题要难回答很多，可能的答案有:</p>
+
+<ul>
+<li>Scratch3.0是Scratch2.0的下一个版本，使用html5构建</li>
+<li>Scratch3.0是个<code>低门槛、宽围墙、高天花板</code>的playground</li>
+<li>Scratch3.0是一个Blockly APP</li>
+<li>Scratch3.0是scratch-gui + scratch-vm + scratch-render + &hellip;</li>
+<li>Scratch3.0是那种你用过就知道是什么的东西</li>
+</ul>
+
+<p>这几条阐述颇有盲人摸象的味道，我们站在不同侧面去阐述我们看到的Scratch3.0</p>
+
+<blockquote>
+<p>其触牙者，即言象形如莱茯根；其触耳者，言象如箕；其触头者，言象如石；其触鼻者，言象如杵；其触脚者，言象如木臼；其触脊者，言象如床；其触腹者，言象如瓮；其触尾者，言象如绳</p>
+</blockquote>
+
+<p>盲人摸象的比喻异常深刻，不盲的我们，看到<code>真实的事物</code>是经过这样一个过程：可见光进入视网膜，经过神经元对光信号的解释和传递，在大脑渲染出一个图景,尽管隔了这么多层，我们坚信看到了所谓的<code>真实</code></p>
+
+<p>我们可能确实看到了<code>真实</code>，毕竟我们有阐述<code>真实</code>的权利:)</p>
+
+<p>下边我们来逐条阐述<code>Scratch3.0是什么</code></p>
+
+<h5 id="scratch3-0是scratch2-0的下一个版本-使用html5构建">Scratch3.0是Scratch2.0的下一个版本，使用html5构建</h5>
+
+<p>这条侧重在解释<code>3.0</code>，Scratch3.0是对Scratch2.0的升级，3.0基于html5技术构建，可以跨平台运行</p>
+
+<p>这条回答站在Scratch发展过程的视角来看，如果你是Scratch的老用户，这句话也许足以让你醍醐灌顶。但新认识Scratch3.0的小伙伴对这个阐述应该不会感到满意。</p>
+
+<p>学习哲学的一种好办法是学习哲学史，溯本求源常常是个不错的方法，对scratch前世今生的追溯，可以参考我之前的这篇文章:<a href="http://blog.just4fun.site/scratch.html">Scratch的前世今生</a></p>
+
+<h5 id="scratch3-0是个-低门槛-宽围墙-高天花板-的playground">Scratch3.0是个<code>低门槛、宽围墙、高天花板</code>的playground</h5>
+
+<p>这个比喻精彩之极，它阐述了Scratch的设计哲学。</p>
+
+<p>Scratch被设计为一个playground，一个playground应该尽可能提供丰富的基础设施，供它的使用者们嬉戏玩乐和探索。所以我们在Scratch3.0中看到了丰富的积木块和富有表现力的舞台效果，以及强大的可扩展性</p>
+
+<p>关于这点，<a href="http://learn.media.mit.edu/lcl/weeks/week5/">Learning Creative Learning 第五周的课里</a>里Scratch的创始人做了精彩的阐述</p>
+
+<h5 id="scratch3-0是一个blockly-app">Scratch3.0是一个Blockly APP</h5>
+
+<p>就这篇文章而言，这是个不错的答案，它甚至应该放到下文<code>Blockly与Scratch3.0的比较分析</code>的部分里</p>
+
+<p><code>Scratch3.0是一个Blockly APP</code>这句话的意思是，Scratch3.0基于<code>Blockly</code>构建，就是说Scratch3.0中包含了Blockly。</p>
+
+<p>那么什么是<code>Blockly APP</code>呢，按blockly官方说法，你需要做以下三步：</p>
+
+<ul>
+<li>集成blockly编辑器</li>
+<li>定义你的app里的功能块（block）</li>
+<li>构建app的其余部分，blockly仅充当代码生成器，你需要决定这些用户生成的代码用于做什么，这也是你的app的核心功能所在</li>
+</ul>
+
+<p>Scratch之前并不是基于Blockly构建的，3.0的版本里，才这样做，为何之前的Scratch不基于Blockly呢，因为Scratch这个项目比Blockly更早诞生，Scratch前几个版本的积木块都是自己造的轮子。现在Blockly几乎是公认最好的积木化编辑器，所以Scratch在3.0里把轮子换成Blockly</p>
+
+<p>说<code>Scratch3.0基于Blockly构建</code>依然显得含糊其辞，Scratch3.0是个庞大的项目，包含了很多组件，只有其中的scratch-blocks基于Blockly，</p>
+
+<h5 id="scratch3-0是scratch-gui-scratch-blocks-scratch-vm-scratch-render">Scratch3.0是scratch-gui + scratch-blocks + scratch-vm + scratch-render + &hellip;</h5>
+
+<p>这条阐述是程序员视角，站在Scratch3.0的项目结构上解释它</p>
+
+<blockquote>
+<p>Talk is cheap , show me the code</p>
+</blockquote>
+
+<p>我们直接打开<a href="https://github.com/LLK">Scratch在github的主页</a>，就可以看到相关的项目细节，源码一览无余都在其中, scratch wiki中对此也有<a href="https://en.scratch-wiki.info/wiki/Scratch_Source_Code">介绍</a></p>
+
+<p>这也是程序员们理解一个项目最常用的一种方式，这种方式给了你一种安全感，你看到了项目<code>内部</code>的细节，源代码不会骗人，代码也不会给你看一堆有的没的PPT，或像我一样，扯一些有的没的形而上学</p>
+
+<p>代码虽然不会骗人，但庞大的代码，在没有架构描述，没有好的文档的时候，对新手而言，跟读天书也差不太多，它不骗你，它只是让你晕头转向，Scratch团队目前要忙的事情实在太多，限于人力，你不能在短期内指望他们提供文档</p>
+
+<p>尽管没有文档，我们要一窥Scratch3.0的整体组成还是不难的，scratch-gui聚合了其他的组件:</p>
+
+<ul>
+<li>scratch-vm</li>
+<li>scratch-blocks</li>
+<li>scratch-render</li>
+<li>scratch-storage</li>
+<li>scratch-audio</li>
+<li>&hellip;</li>
+</ul>
+
+<p>构成了完整的Scratch3.0</p>
+
+<h5 id="scratch3-0是那种你用过就知道是什么的东西">Scratch3.0是那种你用过就知道是什么的东西</h5>
+
+<p>这个阐述比较抖机灵，就像说</p>
+
+<blockquote>
+<p>诗是那些翻译之后就消失的东西</p>
+</blockquote>
+
+<p>或者</p>
+
+<blockquote>
+<p>风景是拍进照片就不见的那些东西</p>
+</blockquote>
+
+<p>这些阐述有某种禅的味道，或者是对其进行的恶意模仿</p>
+
+<p>但我相信这个阐述会得到让·皮亚杰、Papert和艾伦.凯的赞同，你可以轻松在使用过程中掌握一个概念或工具，而很难在一种概念的文本化阐述中掌握它。关于这点皮亚杰做了精彩的论述，但是他的书真是太难读了。大家有兴趣可以看看：<a href="http://blog.just4fun.site/scratch.html">Scratch的前世今生</a></p>
+
+<h3 id="比较分析">比较分析</h3>
+
+<p>一圈阐述下来，我们对Blockly的理解相对清晰: 这是一个积木化代码编辑器</p>
+
+<p>对于Scratch3.0，我们从很多个侧面试着阐述它。Scratch3.0是复杂的，我觉得没有必要回避这一点，对于复杂事物，相比于下个断言，我更愿意从不同侧面观察它。</p>
+
+<p>现在我们来比较一下这两者，这些比较的视角，是我临时拍脑袋想到的一些方面，有了前边对二者的分析和阐述，你其实也可以写出一大堆的比较分析。</p>
+
+<p>我们可以把Blockly视为一个库，而把Scratch3.0视为一个框架。一个库往往遵循<code>Do one thing</code>的Unix哲则，你可以轻松将它组合到你的项目中，Blockly库只负责从积木中生成代码，怎么去使用这些代码？这些代码是控制虚拟角色还是实际的硬件？它何时被解释运行？是否支持并行？代码运行生命周期是怎样的？解释器在本地还是在另一个硬件上？Blockly通通不关心。Blockly给予你自由，同时你也不得不肩负起自己的责任，你需要去考虑构建一个Blockly APP剩下的部分，当然一个典型的Blockly APP我相信是有最佳实践的，目前我认为这里边存在需要解决的大的问题有且仅有3大类，这个话题与本文关系不大，之后有机会再说。值得提醒的是，你遇到的一些觉得难以绕过困难，可能是一些构建一个解释器会遇到的困难，这个困难和普通的编写程序很不一样，因为大部分时间里，我们都是在使用解释器，而不是构建一个，这可能是让很多开发者不知所措的地方。</p>
+
+<p>相比于Blockly，Scratch3.0则更像一个框架，Scratch3.0几乎开箱可用，它有各个组件，你可以通过修改这些组件来定制它，当然你需要先理解它。你可以通过插件系统加入自己的扩展，无论是软件还是硬件，你都可以进行拓展。如果是对硬件的扩展，你可以考虑基于我们的工作来做，会轻松很多，参考:<a href="http://blog.just4fun.site/Scratch3-Lab.html">Scratch3 Lab: 将Scratch3接入开源硬件及AI的实验项目</a></p>
+
+<p>说Scratch3.0是框架，侧重在强调它的结构完整性和灵活性，它不是vue、django那种框架，Scratch3.0介于框架和项目之间，它给予你的自由度要比一般意义上的框架要小</p>
+
+<p>Scratch3.0的解释器相关部分:scratch-vm 十分强大和灵活，要做到这点很不容易。如果你在做和Scratch3.0类似的事，最后不要重造轮子。已经有大厂试着从Blockly开始，重造一个Scratch3.0，他们确实也造出来了。很难的工作在于重写scratch-vm。在一个典型blockly APP中，大家一般使用官方推荐的interpreter来解释执行代码，但在一个复杂项目中，可能是不够的。如果你准备重写scratch-vm，最好有懂解释器的人。而且最好不要去做这件事，尽管你可能做得到，但它的灵活性很难有scratch-vm那么好。</p>
+
+<h1 id="选型建议">选型建议</h1>
+
+<p>那么我们究竟什么时候选择Blockly，而在另一些时候选择Scratch3.0？</p>
+
+<p>这恐怕是不容易说清楚的问题，我试着给出一些建议。大多时候需要你对自己正在做的事情有清晰的阐述之后，才好给具体建议。<code>认识你自己</code>总是没错的</p>
+
+<p>简单地说如果你才涉足积木化编程这一块，那么从Blockly开始常常是个好建议，因为Scratch3.0很复杂，除非你想原原本本地使用Scratch3.0,否则对它的任何修改，对早期团队来说都是艰难的；你折腾任何积木化编程项目的时候，可能都会遇到一些共性的问题，如我前头提到的那一大串，Scratch3.0在这块探索了很久，也给出了很多优秀的解决方案，但你一来就读Scratch3.0相关组件的源码，很可能云里雾里，你可能先要从钻木取火开始（从Blockly基础项目开始），等你意识到这个问题域的常见困境之后，才会意识到什么好的解决方案。在困境出现之前，好的解决方案会被看作一种过度复杂的设计</p>
+
+<p>也许你最终选择使用Scratch3.0，但Scratch3.0基于Blockly构建，对Blockly的早期投入，总是能帮助到你理解Scratch3.0的</p>
+
+<p>关于如何开始Blockly的旅程的教程目前少的可怜，如果你愿意可以从我之前写得东西入手，源码和文章都有：<a href="http://blog.just4fun.site/blockly-overview.html">blockly入门与介绍</a>, 文末附有教程和源码</p>
+
+<p>前边只是泛泛地建议说你应该从Blockly开始，对于你最终应该选择什么，并没有给出具体建议</p>
+
+<p>让我们假设你已经对Blockly和Scratch3.0都有了清晰的了解，这时候的选型问题，就取决于你要做的具体事情了，我们来讨论一些典型的场景</p>
+
+<p>比如你想做一个code.org或者Tynker这类网站，Blockly是个理想的选择，事实上，code.org或者Tynker也确实是这样做的，<code>Blockly+interpreter</code>是这类网站理想的解决方案，简单灵活。code.org和Tynker中的每个关卡都是一个典型的Blockly APP。当然如果你愿意，你也可以使用scratch-blocks来做，深圳已经有公司这样做，你可以将scratch-blocks视为Blockly的定制版（使用scratch-blocks和使用blockly几乎没有区别，我在教程里也写了这部分），只是改了积木的UI风格，但它们依然可以被当作干净的库使用，而不牵扯太多Scratch3.0的其他东西，至于generate代码的功能也完全一样</p>
+
+<p>假如你想做一个机器人控制/教学平台，两者都可选，目前市面上的机器人使用scratch2.0控制的居多(部分原因是Blockly出现的比较迟)。新出的机器人使用两者的都有，使用Blockly的优势，如前边说的：轻量，自由，但也意味着你要去操心更多解释和实现上的细节工作，这是个复杂的工作，有机会单独讨论；使用scratch的话，你只要专心写插件部分就好了，如果你的机器人是交互式的，比如Cozmo（我已经把它接入Scratch3中)，关于代码如何被vm解释运行，如何控制生命周期，如何支持事件和并行，scratch-vm都帮你做了！</p>
+
+<p>关于积木化编程工具与硬件/机器人交互的话题，涉及很多典型问题：代码灌入式的还是服务风格的？通信方式是什么？基于web控制还是基于APP控制？是否支持事件风格编程？值得专门写一片文章谈论</p>
+
+<h1 id="尾声">尾声</h1>
+
+<p>这篇文章，拖了好久才写完，写这篇文章的时候，我在碧山，阿朱阿碧的碧，满目山河的山，写完后，我下午该从这儿离开了，昨晚下了一夜的雨</p>
+
+<p>我晚上撑着伞，走过村头巷尾，路过一户人家的厨房，很旧的房子，门很小，雨很大，我在门口站了一会儿就走了</p>
+
+<p>上次夜里路过一户人家厨房的时候，你说着彼得潘的故事，我这回在这儿读完了彼得潘</p>
+
+<blockquote>
+<p>只有一个陌生的小男孩，从窗外向里张望。他的乐趣数也数不清，那是别的孩子永远得不到的。但是，只有这一种快乐，他隔窗看到的那种快乐，他却被关在了外面，永远也得不到</p>
+</blockquote>
+
+<!-- 
+当人们问scratch是什么是，他所期待的可能是"scratch"为何有如此的魔力，这个问题在我看来是个形而上问题，我无法回答
+
+诗是什么的时候，你告诉它格律是什么是不够的
+
+那么诗是什么，诗是`诗是翻译之后就消失的哪些东西`这样的俏皮话，让人会心一笑
+
+那么阐述是什么意思，阐述意思是你可以用一件事来解释另一件事，但这是可能的吗？ 这些问题留给该死的哲学家吧
+
+# 选型建议
+
+积木化编程有且仅有几类问题
+
+    *  软件 游戏引擎
+    *  硬件 通信
+    *  一个平台
+
+用积木表达原语
+解释、执行 vm
+
+是不是许多事件和多线程 
+
+硬件应该是 server
+
+协议设计
+我的手机  11:01:26
+那scratch3.0是什么呢
+是个blockly app
+但这句话包含的信息很少
+
+就像你问我，keras
+是什么的呢，我说是一个Python项目
+
+关于scratch，我只是说了，它包含了blockly而已
+
+如果你是一个开发者，你会觉得我说得太少了
+
+那么你在什么情况下选择blockly
+
+设计出正交而富有表现力的积木 并不容易
+
+block只是scratch的编辑器
+
+怎么并行，把破坏控制在局部
+
+有哪些接口，操作原语
+是否需要并行
+是否支持事件
+交互  
+解释器在哪里
+是否与外部通信
+
+
+事实上大多数的读者们，并不知道scratch是什么，要回答scratch是什么，最好的方法之一，是去读一读media lab的《爆裂》一书，scratch也诞生自这个实验室
+
+阐述是一件很有趣的活动，阐述这个要求你用一件事来解释另一件事，如果你是个怀疑论者，你会说，为何我们可以用一件事去解释另一件事，这个问题留给该死的哲学家们，就我们来说，这种解释
+-->
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-04-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch-blockly/">scratch, blockly</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%9E%B6%E6%9E%84/log-system-event/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">日志系统与事件记录</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/on-the-way/">
+            <span class="next-text nav-default">途中</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

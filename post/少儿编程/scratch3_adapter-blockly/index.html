@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用scratch3_adapter连接blockly与硬件 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="everything is message 我们在scratch3_adapter的项目介绍中说 我们不想针对某个硬件产品发布一个客户端，我们相信创意来自广泛的连接，我们致力于做一" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_adapter-blockly/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用scratch3_adapter连接blockly与硬件" />
+<meta property="og:description" content="everything is message 我们在scratch3_adapter的项目介绍中说 我们不想针对某个硬件产品发布一个客户端，我们相信创意来自广泛的连接，我们致力于做一" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_adapter-blockly/" />
+<meta property="article:published_time" content="2018-05-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-05-29T00:00:00+00:00" />
+<meta itemprop="name" content="使用scratch3_adapter连接blockly与硬件">
+<meta itemprop="description" content="everything is message 我们在scratch3_adapter的项目介绍中说 我们不想针对某个硬件产品发布一个客户端，我们相信创意来自广泛的连接，我们致力于做一">
+
+
+<meta itemprop="datePublished" content="2018-05-29T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-05-29T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3722">
+
+
+
+<meta itemprop="keywords" content="scratch," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用scratch3_adapter连接blockly与硬件"/>
+<meta name="twitter:description" content="everything is message 我们在scratch3_adapter的项目介绍中说 我们不想针对某个硬件产品发布一个客户端，我们相信创意来自广泛的连接，我们致力于做一"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用scratch3_adapter连接blockly与硬件</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-05-29 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#初心">初心</a></li>
+<li><a href="#why-blockly">why blockly</a></li>
+<li><a href="#连接blockly与micro-bit">连接blockly与micro:bit</a>
+<ul>
+<li><a href="#目标">目标</a></li>
+<li><a href="#动起手来">动起手来</a>
+<ul>
+<li>
+<ul>
+<li><a href="#步骤1-编写blockly源码">步骤1:  编写blockly源码</a></li>
+<li><a href="#步骤2-打开scratch3-adapter-选择内置的micro-bit插件">步骤2: 打开scratch3_adapter,选择内置的micro:bit插件</a></li>
+<li><a href="#步骤3-运行">步骤3: 运行!</a></li>
+</ul></li>
+<li><a href="#想象空间">想象空间</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/blockly_698b1f0a.png" alt="" /></p>
+
+<blockquote>
+<p>everything is message</p>
+</blockquote>
+
+<p>我们在<a href="https://blog.just4fun.site/lab/scratch3-adapter-docs/">scratch3_adapter的项目介绍</a>中说</p>
+
+<blockquote>
+<p>我们不想针对某个硬件产品发布一个客户端，我们相信创意来自广泛的连接，我们致力于做一个<code>中立</code>的东西，将Scratch3.0连接到更广阔的领域，我们想做到<a href="http://learn.media.mit.edu/lcl/weeks/week5/">宽围墙</a></p>
+</blockquote>
+
+<p>事实上，scratch3_adapter比我们所描述的还有更中立一些。它中立起来，连自己的名字(<code>scratch3</code>_adapter)都忘了，scratch3_adapter不止可以将Scratch3.0接入各种有趣的硬件和AI中(如它的名字所暗示的)，也可以连接Blockly和各种有趣的硬件/AI</p>
+
+<p>在这篇文章中，我们将介绍如何使用<code>scratch3_adapter</code>连接blockly与micro:bit。利用文章演示的方法，你可以将blockly接入到其他有趣的系统中，远不止是micro:bit</p>
+
+<p>也许在此我们应该叫它:<code>blockly_adapter</code> :)</p>
+
+<h1 id="初心">初心</h1>
+
+<blockquote>
+<p>模仿是最大的致敬</p>
+</blockquote>
+
+<p>构建<code>scratch3_adapter</code>之前的一段时间，我有两个周末沉迷于《ROS机器人编程实践》，为这套系统的架构所折服，看到作者设计得正交且清晰的API时，叹服之余，也暗自坐在书店地上设想: API的背后是怎样的？如果我来做，我会怎么实现它？而后带着自己的设想，和作者源码做对照。</p>
+
+<p>看这本书之前我正巧看完Pieter Hintjens的《ZeroMQ：云时代极速消息通信库》,zeromq是个极其灵活、强大的工具，健壮有力而优美。有了zeromq这把称心的斧头，那段时间里我倾向于把一切都视为钉子(everything is message)，于是我决定把整个ROS视为一个消息系统。</p>
+
+<p>开始重造轮子时，从sub和pub入手，觉得无碍; 到了重构rescore命令行工具时，我将其视为一个服务发现组件，挑选工具时，在python原生的dict和redis中犹豫，最终决定选择redis。</p>
+
+<p>后来在翻阅ROS的资料时，发现作者也正在重构ROS(ROS2),他说ROS本质上时一个匿名的消息系统，早年他在构建ROS时，由于社区里工具的匮乏，他造了很多轮子，如果ROS写于今天，他会选择zeromq和redis（为了实时性，他最终选了DDS）。看到这儿我颇为振奋，觉得方向猜的还挺准</p>
+
+<p>我把早先的尝试放在<a href="https://github.com/wwj718/ROLS">ROLS</a>(Robot Operating Lite System),往后折腾的时候发现，重造一个ROS比我想象的要复杂得多。那段时间，我正好在考虑为Scratch3.0写一个插件系统，发现可以模仿ROS的局部设计来做这个插件系统。于是决定先放下ROLS，在插件系统这个更有实际价值的场景里，去实践从ROS学来的东西</p>
+
+<blockquote>
+<p>ROS本质上是一个匿名的消息系统</p>
+</blockquote>
+
+<p>ROS作者阐述的ROS消息的匿名性以及由此带来的回报，令我着迷。以至于我一直试图将scratch3_adapter设计为一个匿名的消息系统，就像你刚看完一本精彩的小说，恨不得说话的语气都模仿喜欢的角色。在设计scratch3_adapter时，我有一天跟@izuo说，也许我们不该叫它<code>scratch3_adapter</code>，因为Scratch3.0仅仅是它的一个client，并不占主体地位，<code>scratch3_adapter</code>可以对接到blockly或者任何其他的地方，没有任何差异。</p>
+
+<p>但我后来意识到(在实际使用extension时)，匿名性对我们价值并不大，在scratch3_adapter的使用场景里，各个节点并不是对等的，它其实不是一个分布式的系统(ROS本质却是一个分布式的系统)。scratch3_adapter有它的中心，积木化界面就是它的中心。于是我们着手开始削弱匿名性，如果你看到代码的变迁过程，就会看到想法的变迁过程</p>
+
+<p>尽管我们已经削弱了它的匿名性，也继续沿用<code>scratch3_adapter</code>这个名字，但它依然有很强的适应性，本质的原因我想源自它是一个消息系统。</p>
+
+<p>在使用scratch3_adapter的时候，你可以很轻松将scratch3替换为blockly，使用scratch3_adapter连接你的blockly和其他系统(硬件或AI)，而几乎不会有任何损失。</p>
+
+<h1 id="why-blockly">why blockly</h1>
+
+<p>谈论怎么做之前，我们先来谈谈为何要这么做。</p>
+
+<p>那么，我们为何要连接blockly和硬件/AI？</p>
+
+<p>我认为最重要的一个原因是，blockly是少儿编程领域，大多数教学平台的基础。而教学平台除了教学软件相关的课程，也希望教学硬件和AI。</p>
+
+<p>ps:值得一提的是，scratch-blocks本质上是blockly，而不是Scratch3.0，关于这一点，常常会引起一些混乱</p>
+
+<p>如果你问blockly为何是少儿编程领域内，大多数教学平台的基础？</p>
+
+<p>这个问题会逼着我们思考讨论的特性和差异，我之前做过这个讨论: <a href="https://blog.just4fun.site/scratch3-blockly.html">Blockly与Scratch3.0的比较分析及选型建议</a></p>
+
+<p>尽管原因很多（如我前边谈的），但重要的原因，简而言之，是因为blockly和Scratch3.0的定位不同，Scratch3.0定位为playground，而blockly只是个轻巧的编辑器。所以blockly可以承载更多个性化的定制部分，教育很难千篇一律，大家倾向一个轻巧灵活的工具以适应课程。</p>
+
+<p>不过，目前的少儿编程教育蛮千篇一律的 :)</p>
+
+<p>你会看到少儿编程这个领域，目前似乎只有两种模式：</p>
+
+<ul>
+<li>一种是playground式的，国外如scratch，国内如编程猫
+
+<ul>
+<li>我认为playground的价值在于&rdquo;低门槛、高天花板、宽围墙&rdquo;，而开放和社区是核心，所以我正在写一篇文章:《为何你应该选择Scratch3.0作为playground》</li>
+</ul></li>
+<li>一种是关卡式的，如code.org、Tynker
+
+<ul>
+<li>关卡式的平台其实很套路，架构一个这样的平台基本可以分三步走完成，这部分我们之后有机会再细说</li>
+</ul></li>
+</ul>
+
+<p>scratch3_adapter是个中立的系统，以上两种模式的平台我们都支持</p>
+
+<h1 id="连接blockly与micro-bit">连接blockly与micro:bit</h1>
+
+<h2 id="目标">目标</h2>
+
+<p>构建一个blockly积木块，用来在micro:bit上打印任意字符串</p>
+
+<h2 id="动起手来">动起手来</h2>
+
+<p>下边跟着我一起动起手来，脖子扭扭屁股扭扭</p>
+
+<h4 id="步骤1-编写blockly源码">步骤1:  编写blockly源码</h4>
+
+<p>在此假设你对blockly开发有基本的了解，如果你blockly开发并不了解，可以看我的系列教程:<a href="https://blog.just4fun.site/blockly-overview.html">blockly入门与介绍</a> (教程链接在文末）</p>
+
+<p>我们先直接上源码，稍后讲解:<a href="https://github.com/wwj718/blockly_dev/blob/master/src/blockly_2.2_custom_block_run_js_with_interpreter/index.html#L92">blockly_2.2_custom_block_run_js_with_interpreter</a></p>
+
+<p>除去html和无关紧要的部分，将scratch3_adapter接入blockly的核心源码就几行：</p>
+
+<p>首先是建立连接:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">var socket = io(&#39;ws://127.0.0.1:12358&#39; + &#39;/test&#39;, {transports: [&#39;websocket&#39;]});</pre></td></tr></table>
+</div>
+</div>
+<p>这一行代码，将blockly课程或创作平台与scratch3_adapter进行连接。</p>
+
+<p>ps: scratch3_adapter用到好几个端口，12358是其中一个，scratch3_adapter中端口的选择藏着彩蛋 :) 有兴趣的小伙伴可以自己去解读</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js">      <span class="kd">var</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">text</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;actuator&#39;</span><span class="p">,</span>
+                         <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;microbit&#39;</span><span class="p">,</span>
+                          <span class="nx">data</span><span class="o">:</span> <span class="nx">text</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span>
+                          <span class="nx">topic</span><span class="o">:</span> <span class="s2">&#34;actuators/say&#34;</span><span class="p">});</span>
+      <span class="p">};</span>
+      
+      <span class="nx">interpreter</span><span class="p">.</span><span class="nx">setProperty</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="s1">&#39;say&#39;</span><span class="p">,</span>
+        <span class="nx">interpreter</span><span class="p">.</span><span class="nx">createNativeFunction</span><span class="p">(</span><span class="nx">wrapper</span><span class="p">));</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>这是我们使用blockly积木控制micro:bit（硬件）的关键所在，如果你是个有经验的程序员，我已不必多说什么了，你已经可以使用scratch3_adapter将blockly接入任何硬件/AI</p>
+
+<p>enjoy it ~</p>
+
+<h4 id="步骤2-打开scratch3-adapter-选择内置的micro-bit插件">步骤2: 打开scratch3_adapter,选择内置的micro:bit插件</h4>
+
+<p><img width="300px" src="/post/img/microbit_bb63ac6b.png"/></p>
+
+<p>此刻你应该看到micro:bit背后的信号灯在高频闪烁，如果它没有高频闪烁，则按一下micro:bit背部的复位按钮</p>
+
+<h4 id="步骤3-运行">步骤3: 运行!</h4>
+
+<p>点击运行blockly积木块，你将看到blockly已经能成功驱动micro:bit了</p>
+
+<video src="http://scratch3-files.just4fun.site/microbit_blockly.mp4" controls="controls"></video>
+
+<p>你可以把blockly接入更多的硬件，包括控制你的蓝牙硬件、你的ROS机器人、你那跑着opencv的树莓派或者你童年那辆心爱的玩具四驱车，可以参考我们的:<a href="https://blog.just4fun.site/lab/scratch3-adapter-docs/dev_guide/helloworld/">开发手册</a></p>
+
+<h3 id="想象空间">想象空间</h3>
+
+<p>我们把scratch3_adapter设计为一个独立的小工具(10M左右)，而不是连同Scratch3.0一起用electron打包在一起，个中原因除了</p>
+
+<blockquote>
+<p>人生苦短、我用Python</p>
+</blockquote>
+
+<p>更重要的是，我们想让它成为一个通用的工具，无论你的网站是什么，无论你使用scratch3.0、blockly还是某种自主研发的其他什么东西，你都无需做什么伤筋动骨的事，只需要在网站中写一些js代码，你就能将网站接入scratch3_adapter，进而与各类开源硬件/AI相连。</p>
+
+<p>这部分值得玩味的地方是，你可以在网页上做所有的教学，无论是结合某一款开源硬件还是某一个AI系统。而scratch3_adapter将允许你用积木来驱动它们，你也能拿到积木/代码在外部系统的执行结果，判断学生是否掌握该知识点，而这对教学可能是很重要的。</p>
+
+<p>scratch3_adapter在向ROS学习，我们之后将引入action，如此一来你甚至可以设置开放性的课程，诸如某个关卡是要求学生用积木写一个智能体，让它走出现实世界的迷宫，里边可能涉及到各种复杂的策略和不可预期的情况，这种系统必须是异步的，最好带有状态机，ROS在这块做得十分惊艳。ROS的的action适合这种任务。尽管scratch3_adapter目前也能支持，但可能需要你写比较多的代码。对智能的关注是我的兴趣之一，我之后会来增强这块。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-05-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-mobile/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">scratch3-adapter的移动端解决方案</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_adapter/">
+            <span class="next-text nav-default">发布scratch3_adapter</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
