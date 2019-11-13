@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch项目解析器 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="Scratch增强计划 此前在Scratch增强计划中提到: 由于需要解析sb3文件，所以会顺手打造一些通用的小工具&amp;hellip;简单写了一个" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-sb3-parser/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch项目解析器" />
+<meta property="og:description" content="Scratch增强计划 此前在Scratch增强计划中提到: 由于需要解析sb3文件，所以会顺手打造一些通用的小工具&hellip;简单写了一个" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-sb3-parser/" />
+<meta property="article:published_time" content="2019-11-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-11-13T00:00:00+00:00" />
+<meta itemprop="name" content="Scratch项目解析器">
+<meta itemprop="description" content="Scratch增强计划 此前在Scratch增强计划中提到: 由于需要解析sb3文件，所以会顺手打造一些通用的小工具&hellip;简单写了一个">
+
+
+<meta itemprop="datePublished" content="2019-11-13T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-11-13T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1338">
+
+
+
+<meta itemprop="keywords" content="tools,Scratch,Python," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch项目解析器"/>
+<meta name="twitter:description" content="Scratch增强计划 此前在Scratch增强计划中提到: 由于需要解析sb3文件，所以会顺手打造一些通用的小工具&hellip;简单写了一个"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch项目解析器</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-13 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#scratch增强计划">Scratch增强计划</a></li>
+<li><a href="#解析scratch项目">解析Scratch项目</a></li>
+<li><a href="#社区同伴">社区同伴</a></li>
+<li><a href="#项目一览">项目一览</a>
+<ul>
+<li><a href="#安装">安装</a></li>
+<li><a href="#使用">使用</a></li>
+<li><a href="#分析有插件的项目">分析有插件的项目</a></li>
+</ul></li>
+<li><a href="#前进">前进</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="scratch增强计划">Scratch增强计划</h1>
+
+<p>此前在<a href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/enhance-scratch3/">Scratch增强计划</a>中提到:</p>
+
+<blockquote>
+<p>由于需要解析sb3文件，所以会顺手打造一些通用的小工具&hellip;简单写了一个脚本, 允许用户解压sb3文件，本地编辑之后，再重新生成sb3，之后在scratch3.0编辑器中依然能加载它. 这有什么用呢？还挺有用的，比如说我目前的一个用例: 之前保存的一些sb3项目在新的scratch3.0编辑器中打不开了(可能是新的平台不存在旧的extension)，我通过移除sb3中对应的extension block就可以重新加载项目&hellip;脚本源码和使用方法在这里:<a href="https://gist.github.com/wwj718/cd2447e68409a0f36141f4d1d7698fd9">sb3_compress.py</a></p>
+</blockquote>
+
+<h1 id="解析scratch项目">解析Scratch项目</h1>
+
+<p>要实现<a href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/enhance-scratch3/">Scratch增强计划</a>提到的计划，对Scratch项目的解析是基础工作，而解析工作的基础又是以理解Scratch项目的结构为基础，我在前文里提到</p>
+
+<blockquote>
+<p>我希望让新的vm(Virtual Machine)能够解释运行sb3文件。sb3文件结构的设计是很优秀的,我在<a href="https://blog.just4fun.site/Scratch3_project_json_analysis_6.html">Scratch3技术分析之项目内部数据(第6篇）</a>做了阐述。</p>
+</blockquote>
+
+<p>原本准备使用<a href="https://pharo.org/">Pharo(Smalltalk)</a>来做实现它，Pharo中有一些工具很适合做此项工作(<a href="https://github.com/moosetechnology/PetitParser">PetitParser</a>、<a href="https://github.com/svenvc/NeoJSON">NeoJSON</a>、<a href="https://moosetechnology.org/">Moose</a>、<a href="https://gtoolkit.com/">Glamorous Toolkit</a>)</p>
+
+<p>但近来事情特多，刚参加完Maker Faire，下个月还准备与国家图书馆一起做一个活动。就暂时鸽了这件事。</p>
+
+<h1 id="社区同伴">社区同伴</h1>
+
+<p>Scratch Team很早就发布了一个项目叫<a href="https://github.com/LLK/scratch-parser">scratch-parser</a>，目标是也是解析Scratch项目，后来似乎也鸽了。</p>
+
+<p>今天偶然发现<a href="https://github.com/apple502j">apple502j</a>在这块做了不少工作:<a href="https://github.com/apple502j/sb3">apple502j/sb3</a>, 于是我准备在<a href="https://github.com/apple502j">apple502j</a>上前进，之后有时间再迁移到Pharo(我看中Pharo在数据分析上的便利性，当然，Python/Jupyter也很不错)，换一门语言是很快的，解析的业务代码却是耗时的，可喜的是，apple502j已经为我们做了很多辛苦的工作。</p>
+
+<p><a href="https://github.com/apple502j">apple502j</a>是个Scratcher, Ta在Scratch社区的账号是<a href="https://scratch.mit.edu/users/apple502j/">apple502j</a>, apple502j除了活跃于Scratch社区，在github上也积极帮助scratch团队和社区开发者解决问题。</p>
+
+<h1 id="项目一览">项目一览</h1>
+
+<p>我们来简单看看<a href="https://github.com/apple502j/sb3">apple502j/sb3</a>项目。</p>
+
+<h2 id="安装">安装</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">pip3 install sb3</code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="使用">使用</h2>
+
+<p>我们对<a href="https://adapter.codelab.club/sb3/Pong_Starter.sb3">Pong_Starter.sb3</a>进行一些测试, 你可以在<a href="https://scratch3v2.codelab.club/?sb3url=https://adapter.codelab.club/sb3/Pong_Starter.sb3">CodeLab Scratch打开它</a>。</p>
+
+<p><img src="/post/img/scratch_Pong_Starter.png" alt="" /></p>
+
+<p>让我们在Jupyter中对项目做一些探索:</p>
+
+<p><img src="/post/img/scratch_sb3_Pong_Starter_python.png" alt="" /></p>
+
+<h2 id="分析有插件的项目">分析有插件的项目</h2>
+
+<p>接下来让我们来分析一个带有CodeLab自定义插件的项目:</p>
+
+<p><a href="https://scratch3v2.codelab.club/?sb3url=https://adapter.codelab.club/sb3/microbit_%E4%B9%90%E5%99%A8.sb3">microbit_乐器.sb3</a></p>
+
+<p><img src="/post/img/sb3_python_extensions.png" width=400 /></p>
+
+<h1 id="前进">前进</h1>
+
+<p>有了这个基础项目，我们未来的数据可视化工作以及评估用户的计算思维(computational thinking)会容易许多。</p>
+
+<blockquote>
+<p>做新的解释器过程中，我们需要深入到scratch程序的所有细节里，这就逼着我们做出类似静态分析器的东西，我们自然会理解用户用到的所有程序元素，我们可以据此评估他在程序中展现的计算思维(computational thinking)。评估的教育框架会采用Scratch之父(Mitchel Resnick)早年的论文。  &ndash; <a href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/enhance-scratch3/">Scratch增强计划</a></p>
+</blockquote>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://github.com/apple502j/sb3">apple502j/sb3</a></li>
+<li><a href="https://phosphorus.github.io/">phosphorus</a>:runs your Scratch projects really fast by compiling them to JavaScript.</li>
+<li><a href="https://sheeptester.github.io/words-go-here/htmlifier/">htmlifier</a>:packages your Scratch project into a single HTML file</li>
+<li><a href="https://github.com/LLK/scratch-parser">scratch-parser</a></li>
+<li><a href="https://github.com/LLK/scratch-analysis">scratch-analysis</a>:Analysis tool for summarizing the structure, composition, and complexity of Scratch programs.</li>
+<li><a href="https://scratch.mit.edu/users/apple502j/">apple502j</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          <a href="/tags/scratch/">Scratch</a>
+          <a href="/tags/python/">Python</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/i-am-busy/">
+            <span class="next-text nav-default">忙归忙</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
