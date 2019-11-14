@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>博客迁移:从Pelican到Hugo - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="前言 timqian在Github上收集中文独立博客，提到独立博客虽已式微，但爱其“自由的排版，自由的说话”。 将自己的独立博客提交到列表的时候" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B7%A5%E5%85%B7/from-pelican-to-hugo/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="博客迁移:从Pelican到Hugo" />
+<meta property="og:description" content="前言 timqian在Github上收集中文独立博客，提到独立博客虽已式微，但爱其“自由的排版，自由的说话”。 将自己的独立博客提交到列表的时候" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B7%A5%E5%85%B7/from-pelican-to-hugo/" />
+<meta property="article:published_time" content="2019-10-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-10-30T00:00:00+00:00" />
+<meta itemprop="name" content="博客迁移:从Pelican到Hugo">
+<meta itemprop="description" content="前言 timqian在Github上收集中文独立博客，提到独立博客虽已式微，但爱其“自由的排版，自由的说话”。 将自己的独立博客提交到列表的时候">
+
+
+<meta itemprop="datePublished" content="2019-10-30T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-10-30T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1406">
+
+
+
+<meta itemprop="keywords" content="blog,tools," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="博客迁移:从Pelican到Hugo"/>
+<meta name="twitter:description" content="前言 timqian在Github上收集中文独立博客，提到独立博客虽已式微，但爱其“自由的排版，自由的说话”。 将自己的独立博客提交到列表的时候"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">博客迁移:从Pelican到Hugo</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-10-30 </span>
+        <div class="post-category">
+            <a href="/categories/tools/"> tools </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#犹豫的原因">犹豫的原因</a></li>
+<li><a href="#动手">动手</a>
+<ul>
+<li>
+<ul>
+<li><a href="#meta数据">meta数据</a></li>
+<li><a href="#兼容旧的链接">兼容旧的链接</a></li>
+<li><a href="#迁移自定义的东西">迁移自定义的东西</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#更多">更多</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="前言">前言</h1>
+
+<p><a href="https://github.com/timqian">timqian</a>在Github上收集<a href="https://github.com/timqian/chinese-independent-blogs">中文独立博客</a>，提到独立博客虽已式微，但爱其“自由的排版，自由的说话”。</p>
+
+<p>将自己的独立博客提交到列表的时候，timeqian提醒我RSS似乎有误，于是修理了一下博客工具（五年前的版本），不修还好，修理之下问题越来越多，一咬牙，决心切换到Hugo，文章有点多，只好写了自动迁移脚本，结果编译速度从一分钟下降到了3秒不到（591篇文章）！终于甩掉了6年前的老旧风格，换上自己喜欢的干净<a href="https://github.com/olOwOlo/hugo-theme-even/blob/master/README-zh.md">主题</a>。</p>
+
+<h1 id="犹豫的原因">犹豫的原因</h1>
+
+<p>在静态博客生成器中，<a href="https://gohugo.io/">Hugo</a>口碑很好，速度快是其核心优势, slogan是</p>
+
+<blockquote>
+<p>The world&rsquo;s fastest framework for building websites.</p>
+</blockquote>
+
+<p>迟迟没有迁移的原因有二:</p>
+
+<ol>
+<li>需要调整meta数据(categories,tag,Slug&hellip;)</li>
+<li>兼容旧的链接(外部引用或者搜索结果)</li>
+<li>需要迁移自定义的东西(访客统计脚本等)，忘了当初在哪做的配置</li>
+</ol>
+
+<p>这些工作想想就觉得费时。</p>
+
+<h1 id="动手">动手</h1>
+
+<h3 id="meta数据">meta数据</h3>
+
+<p>既然决定动手，便先在Google/Github上搜罗了一圈，看看前人都是如何吃螃蟹的，提前了解一下风险，也看看社区里是不是已经有自动化迁移工具了。</p>
+
+<p>首先注意到了<a href="https://github.com/anthonynelzin/pelican-to-hugo/blob/master/pelican-to-hugo.py">pelican-to-hugo.py</a></p>
+
+<p>这个脚本似乎能帮我解决第一个问题:</p>
+
+<blockquote>
+<p>需要调整meta数据(categories,tag,Slug&hellip;)</p>
+</blockquote>
+
+<p>使用正则表达式，批量替换meta数据。</p>
+
+<p>虽有些地方需要调整，但有了这个骨架，剩下就是一些细活了，我的正则表达式功底还不错(推荐《精通正则表达式》)，调整起来很快。</p>
+
+<p>对文件和路径的处理，我都采用pathlib，代码比前头要整洁。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;**/*.md&#39;</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">file_p</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="c1"># print(file_p)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">file_p</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">xxx</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="c1"># 业务逻辑</span>
+        <span class="n">file_p</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">content</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="兼容旧的链接">兼容旧的链接</h3>
+
+<p>Hugo为文章生成url有它的默认规则。</p>
+
+<p>我希望旧的文章保持和之前同样的url，因为搜索引擎近期搜出的文章还是老旧的连接，不希望用户搜出我的博客文章后，打开却是404。此外也希望保持对被人引用的兼容。</p>
+
+<p>如果你在不同时间内阅读过腾讯开发者文档，就知道url改来改去是多操蛋的一件事了。真令人生气。所以我现在尽量回避腾讯生态的技术设施。</p>
+
+<p>hugo有两个meta信息允许你自定义文档url，其一是<code>slug</code>, 其二是<code>aliases</code>。<code>slug</code>。我们来看个例子.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">---
+Date: 2019-09-09
+title: &#34;开源项目与开源社区&#34;
+Slug: about-opensource
+aliases: [&#34;/about-opensource&#34;,&#34;/about-opensource.html&#34;]
+---</pre></td></tr></table>
+</div>
+</div>
+<p>这篇文章分别可以使用以下链接访问:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">https://blog.just4fun.site/post/编程/about-opensource/
+
+https://blog.just4fun.site/about-opensource
+https://blog.just4fun.site/about-opensource.html</pre></td></tr></table>
+</div>
+</div>
+<p><code>slug</code>和目录结构有关。</p>
+
+<p><code>aliases</code>的左右类似重定向，这样就能很好做到兼容。aliases是我用正则表达式自动生成的。</p>
+
+<h3 id="迁移自定义的东西">迁移自定义的东西</h3>
+
+<p>这部分倒简单，原因是hugo有庞大的社区，所以像统计脚本之类的，都只需要做个简单配置就行。</p>
+
+<h1 id="更多">更多</h1>
+
+<p>既然已经对博客大动刀子了，索性不如来个彻底，把想做却迟迟没有实施的事情一并做了。</p>
+
+<p>此前博客图片一直放在qiniu上，为此还写了一个<a href="https://github.com/wwj718/figbed">自动化截图工具</a>。</p>
+
+<p>七牛是很好的云服务，对开发者也友好。但和国内所有的事情一样: 政策风险太高，哪天说不能访问就不能访问，诸如前段时间的leancloud，这些都不是技术问题。</p>
+
+<p>所以我决定让博客尽可能自托管，其中核心的一个工作是将图片自托管。于是写了一些简单的正则表达式，提取出所有图片:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">ack -ho <span class="s2">&#34;http:[^\(\)\[\]]*?\.(png|jpg|jpeg|gif|PNG|JPG|JPEG)&#34;</span> &gt; /tmp/blog_img_list.txt
+ack -ho <span class="s2">&#34;http://.*?.(mp4|MP4)&#34;</span> &gt; /tmp/blog_mp4_list.txt</code></pre></td></tr></table>
+</div>
+</div>
+<p>使用wget下载到hugo文件目录里。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;/tmp//tmp/blog_img_list.txt&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">png_url_list</span><span class="p">:</span>
+    <span class="n">urls</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">png_url_list</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span> <span class="c1"># 去重</span>
+<span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span> 
+    <span class="k">if</span> <span class="s2">&#34;just4fun&#34;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&#34;wget {url}&#34;</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://gohugo.io/getting-started/quick-start/">Hugo Quick Start</a></li>
+<li><a href="https://github.com/olOwOlo/hugo-theme-even/blob/master/README-zh.md">Hugo theme even</a></li>
+<li><a href="https://github.com/anthonynelzin/pelican-to-hugo/blob/master/pelican-to-hugo.py">pelican-to-hugo.py</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-10-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/blog/">blog</a>
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%97%E8%AF%8D/lie/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">谎言</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/blame-a-cat/">
+            <span class="next-text nav-default">冤枉一只猫</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
