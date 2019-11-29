@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译]Smalltalk背后的设计原则 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="前言 Design Principles Behind Smalltalk是我最喜欢的两篇Smalltalk文章之一，另一篇是The Early History Of Smalltalk。 前者来自Daniel HH Ing" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译]Smalltalk背后的设计原则" />
+<meta property="og:description" content="前言 Design Principles Behind Smalltalk是我最喜欢的两篇Smalltalk文章之一，另一篇是The Early History Of Smalltalk。 前者来自Daniel HH Ing" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/" />
+<meta property="article:published_time" content="2019-11-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-11-29T00:00:00+00:00" />
+<meta itemprop="name" content="[译]Smalltalk背后的设计原则">
+<meta itemprop="description" content="前言 Design Principles Behind Smalltalk是我最喜欢的两篇Smalltalk文章之一，另一篇是The Early History Of Smalltalk。 前者来自Daniel HH Ing">
+
+
+<meta itemprop="datePublished" content="2019-11-29T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-11-29T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="6872">
+
+
+
+<meta itemprop="keywords" content="Smalltalk," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译]Smalltalk背后的设计原则"/>
+<meta name="twitter:description" content="前言 Design Principles Behind Smalltalk是我最喜欢的两篇Smalltalk文章之一，另一篇是The Early History Of Smalltalk。 前者来自Daniel HH Ing"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译]Smalltalk背后的设计原则</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-29 </span>
+        <div class="post-category">
+            <a href="/categories/smalltalk/"> Smalltalk </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#语言">语言</a></li>
+<li><a href="#交流对象">交流对象</a></li>
+<li><a href="#组织">组织</a></li>
+<li><a href="#用户界面">用户界面</a></li>
+<li><a href="#未来的工作">未来的工作</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="前言">前言</h1>
+
+<p><a href="http://www.cs.virginia.edu/~evans/cs655/readings/smalltalk.html">Design Principles Behind Smalltalk</a>是我最喜欢的两篇Smalltalk文章之一，另一篇是<a href="http://worrydream.com/EarlyHistoryOfSmalltalk/">The Early History Of Smalltalk</a>。</p>
+
+<p>前者来自<a href="https://en.wikipedia.org/wiki/Daniel_H._H._Ingalls_Sr.">Daniel HH Ingalls</a>，后者来自Alan Kay, 两人都是Smalltalk的核心贡献者。</p>
+
+<p>Daniel HH Ingalls是Alan Kay在施乐(Xerox Palo Alto)的老搭档。《The Early History Of Smalltalk》提到:</p>
+
+<blockquote>
+<p>我们所有人都同意，在Smalltalk的大部分开发中，Daniel是核心人物&hellip;Daniel不仅仅是一个出色的实现者，随着Smalltalk进入到现实世界，Daniel逐渐承担越来越多设计师的职责，不仅是语言设计师，还包括用户界面设计师。</p>
+</blockquote>
+
+<p>我是第三次阅读这篇文章，随手做个翻译。 以下是译文。</p>
+
+<p>ps: 我将这篇文章视为Smalltalk的认识论和世界观。</p>
+
+<hr />
+
+<p>Smalltalk项目的目的是为所有人的创新精神提供计算机支持。我们的工作源于这样一个愿景: 其中包括一个富有创造力的人和尽可能好的计算硬件。我们专注于两个主要的研究领域：一种描述性语言（编程语言），它充当人类大脑模型与计算硬件模型之间的接口，以及一种交互式语言（用户界面）。充当人与计算机之间的通信系统。我们的工作遵循了两到四年的周期，这可以与科学方法相提并论：</p>
+
+<ul>
+<li>在当前系统内构建一个应用程序（进行观察）</li>
+<li>根据经验，重新设计语言（形成一种理论）</li>
+<li>基于新设计构建新系统（做出可测试的预测）</li>
+</ul>
+
+<p>Smalltalk-80系统标志着我们第五次处于以上周期中。在本文中，我将介绍我们在工作过程中观察到的一些一般原则。尽管演示文稿经常涉及Smalltalk的&rdquo;母性&rdquo;(motherhood))，但这些原则本身更为通用，被证明对评估其他系统和指导未来的工作都很有用。</p>
+
+<p>为了热身，我将从一个比技术更加社会化的<code>原则</code>开始，并且该原则在很大程度上归因于Smalltalk项目的特别倾向：</p>
+
+<blockquote>
+<p>个人精通：如果一个系统要发挥创造精神，那么一个人必须完全可以理解该系统。</p>
+</blockquote>
+
+<p>这里的重点是人类的潜能在个体中体现出来。为了实现这种潜能，我们必须提供一种可以由个体掌握的媒体。用户和系统某些部分之间存在的任何障碍最终都会成为创造性表达的障碍。系统中任何无法更改或通用性不足的部分可能都是障碍。如果系统的一部分工作方式与所有其他部分不同，则该部分将需要付出更多的努力来掌握。这样增加的负担可能会损害最终结果，并会阻碍将来在这部分的尝试。因此，我们可以推断出设计的一般原则：</p>
+
+<blockquote>
+<p>良好的设计：系统应以最少的不可变零件组成；这些部分应尽可能通用；系统的所有部分都应聚拢一个统一的框架中。</p>
+</blockquote>
+
+<h1 id="语言">语言</h1>
+
+<p>在设计计算机语言时，不必费劲就能找到有用的提示。我们所知道的有关人们如何思考和交流的一切都适用。人们思考和交流的机制已被设计了数百万年，我们应该将其视为合理的设计。而且，由于我们必须在未来的一百万年中继续使用这种设计，如果我们使计算机模型与思维(mind)兼容，将节省时间。</p>
+
+<p>图1 说明了我们讨论中的主要组成部分。一个人被认为具有身体和思想。身体是大多数经验发生的场所，它是感知宇宙和实现意图的物理渠道。经验(Experience)是在思维(mind)中记忆和处理的。创造性思维（无需深入探讨其机制）可以看作是思维中信息的自发出现。语言是获取这些信息的关键：</p>
+
+<blockquote>
+<p>语言的目的： 提供交流的框架。</p>
+</blockquote>
+
+<p>两个人之间的互动在 图1 中表示为两个弧线。实线代表明确的交流：发出和感知的实际单词与动作。虚线弧表示隐式交流：形成显式交流的上下文的共享文化和经验。在人类交互中，许多实际的交流是通过引用共享上下文来实现的，而人类语言就是围绕这种影射(allusion)而建立的。计算机也是如此。</p>
+
+<p>可以将计算机视为 图1 中的参与者之一并非偶然, 在这种情况下，&rdquo;身体&rdquo;(body)提供信息的视觉显示并感知来自人类用户的输入。计算机的&rdquo;思维&rdquo;(mind)包括内部存储器和处理元件及其内容。图1 显示了计算机语言的设计涉及几个不同的问题：</p>
+
+<blockquote>
+<p>范围：使用计算机的语言的设计必须处理内部模型、外部媒体，以及发生在人与计算机之间的交互作用。</p>
+</blockquote>
+
+<p>这个事实导致了难以向这些人解释Smalltalk: 他们站在更受限的意义上去看待计算机语言。Smalltalk不仅是组织过程的更好方法，还是存储管理的另一种技术。它不仅是数据类型的可扩展层次结构，还是图形用户界面。它是让 图1 中所示的交互作用能够发生所需的所有东西。</p>
+
+<p>[](<a href="http://www.cs.virginia.edu/~evans/cs655/readings/smalltalk_files/dpbs_figure1.gif">http://www.cs.virginia.edu/~evans/cs655/readings/smalltalk_files/dpbs_figure1.gif</a>)</p>
+
+<p>图1：语言设计的范围。两个人之间（或一个人和一台计算机之间）的通信包括两个级别的通信。显式通信包括在给定消息中发送的信息。隐式交流包括两个人共有的相关假设。</p>
+
+<h1 id="交流对象">交流对象</h1>
+
+<p>思维(mind)观察着广泛的经验(experience)，包括眼前的和记忆的。只要让这种经历保持原样，就可以与宇宙产生一种整体感。但是，如果有人希望参与(字面上)到宇宙中，则必须加以区分两者的区别。此时，人们将辨识宇宙中的一个具体物体，其余所有物体都不是那个物体。<code>区分</code>本身是一个开始，但是区分的过程并没那么容易。每当你要谈论<code>那把椅子</code>时，你必须重复辨别那把椅子的整个过程。这就是<code>引用</code>(reference)行为的来源：我们可以将唯一标识符与对象相关联，从那时起，只有提及该标识符才需要引用原始对象。</p>
+
+<p>我们已经说过，计算机系统应该提供与思维一致的模型。因此：</p>
+
+<blockquote>
+<p>对象：计算机语言应支持<code>对象</code>的概念，并提供一种统一的方式来引用其宇宙中的对象。</p>
+</blockquote>
+
+<p>Smalltalk存储管理器为整个系统提供了一个面向对象的内存模型。只需将唯一的整数与系统中的每个对象相关联，即可实现一致的引用。这种一致性很重要，因为这意味着系统中的变量可以采用相差很大的值，并且可以实现为简单的存储单元。在对表达式求值时会创建对象，并且可以通过一致的引用传递对象，因此在操作它们的过程中无需提供存储对象的条件。当所有对对象的引用都从系统中消失后，该对象本身将消失，并回收其存储。此类行为对于完全支持对象隐喻至关重要：</p>
+
+<blockquote>
+<p>存储管理：要真正做到<code>面向对象</code>，计算机系统必须提供自动存储管理。</p>
+</blockquote>
+
+<p>找出一种语言是否运行良好的一种方法是: 查看程序的样子是否像他们正在做的事情。如果它们充斥着与存储管理有关的陈述，那么它们的内部模型与人类的模型就不太匹配。相信一下你平时的做法: 分别处理别人交代你的事情，当你完成时告知他们，之后忘记它。</p>
+
+<p>我们宇宙中的每个物体都有自己的生命。类似地，大脑为每个心理对象提供独立的处理和存储预算。这表明了设计的第三条原则：</p>
+
+<blockquote>
+<p>消息：应将计算视为对象的固有功能，可以通过发送消息统一调用它们。</p>
+</blockquote>
+
+<p>正如如果显式处理对象存储时程序会变得混乱一样，如果在外部执行处理，系统中的控制也会变得复杂。让我们考虑将一个数字<code>+5</code>的过程。在大多数计算机系统中，编译器会弄清楚数字是什么类型，并生成将其<code>+5</code>的代码。这对于面向对象的系统来说还不够好，因为编译器无法确定确切的数字类型（稍后将对此进行详细介绍）。一种可能的解决方案是调用常规加法例程，该例程检查参数的类型以确定近似动作。这不是一个好办法，因为这意味着这个关键例程必须由只想尝试自己的数字类别的新手来编辑。这也是一个糟糕的设计，因为在整个系统中都散布着关于对象内部的深入了解。</p>
+
+<p>Smalltalk提供了一种更为简洁的解决方案：它将所需操作的名称以及所有参数作为消息发送给那么数字（接收者），接收者最了解如何执行所需的操作。我们拥有一个行为良好的对象世界，它们礼貌地要求对方执行其各种愿望(译者注:realtalk受这个观念影响)，而不是用比特研磨机蹂躏和掠夺数据结构。消息的传输是唯一在对象外部进行的过程，理当如此，因为消息在对象之间传播。可以对语言重新定义良好设计的原则：</p>
+
+<blockquote>
+<p>统一隐喻:  应该围绕一种强大的隐喻设计一种语言，该隐喻可以统一应用于所有领域。</p>
+</blockquote>
+
+<p>在这方面成功的例子包括:</p>
+
+<ul>
+<li>LISP，它建立在链接结构模型的基础上。</li>
+<li>APL，它建立在数组模型上；</li>
+<li>Smalltalk，它建立在通信对象模型的基础上。</li>
+</ul>
+
+<p>在上述每种情形中，都采用 与构建系统的基本单元相同的方式构建大型应用程序(译者注: 递归)。特别是在Smalltalk中，采用与计算机与用户之间的最高级别交互相同的方式来构建最原始对象之间的交互。Smalltalk中的每个对象，甚至是一个很小的整数，都有一组消息，一个协议，定义了该对象可以响应的显式通信。在内部，对象可以具有本地存储并可以访问其他共享信息，这些信息包括所有通信的隐式上下文。例如，消息<code>+ 5</code>带有一个隐含的假设: 消息发给一个被加数。</p>
+
+<h1 id="组织">组织</h1>
+
+<p>统一的隐喻提供了一个框架，可以在其中构建复杂的系统。几个相关的组织原则有助于成功管理复杂性。首先：</p>
+
+<blockquote>
+<p>模块化：复杂系统中的任何组件都不应依赖于任何其他组件的内部细节。</p>
+</blockquote>
+
+<p><img src="http://www.cs.virginia.edu/~evans/cs655/readings/smalltalk_files/dpbs_figure2.gif" alt="" /></p>
+
+<p>图2： 系统复杂度。随着系统中组件数量的增加，进行不必要的交互的机会也会迅速增加。因此，应设计一种计算机语言以最小化这种相互依赖的可能性。</p>
+
+<p>该原理在 图2 中显示。如果系统中有N个组件，则它们之间大约有N平方的潜在依存关系。如果要在复杂的人工任务中使用计算机系统，则必须将计算机系统设计为最小化这种相互依赖性。消息发送隐喻通过将消息的意图（以消息的名称体现）与接收者执行意图的方法脱钩，从而提供了模块化。由于对对象内部状态的所有访问都是通过统一的消息接口进行的，因此结构信息受到类似的保护。</p>
+
+<p>通常可以通过将相似的组件分组来降低系统的复杂性。通过常规编程语言中的数据键入以及Smalltalk中的类可以实现这种分组。一个类描述其他对象&ndash;它们的内部状态，它们识别的消息协议以及响应这些消息的内部方法。这些被描述的对象称为<code>该类的实例</code>。甚至类本身也适合这个框架。它们只是<code>Class</code>类的实例，它描述了用于对象描述的适当协议和实现。</p>
+
+<blockquote>
+<p>分类： 语言必须提供一种用于对相似对象进行分类的方法，并用于在与系统内核类相同的基础上添加新的对象类。</p>
+</blockquote>
+
+<p>分类是意识的客观化。换句话说，当人们看到椅子时，体验既是字面上的<code>那个东西</code>，又抽象地是<code>那个椅子样的东西</code>(译者注: 柏拉图在《理想国》中谈论理念时，有类似言论)。这种抽象是由于头脑具有融合<code>相似</code>体验的出色能力而产生的，这种抽象将自身表现为头脑中的另一个对象，柏拉图式的椅子或椅子性。</p>
+
+<p>类是Smalltalk中主要的扩展机制。例如，通过添加新的类来创建音乐系统，这些类描述Note、Melody、Score、Timbre、Player的表示形式和交互协议，等等。上述原则的<code>相同基础</code>(equal footing)条款很重要，因为它确保了系统将按设计使用。换句话说，melody可以表示为音高、持续时间和其他参数的整数临时集合，但是如果该语言可以像Integers一样容易地处理Notes，那么用户自然会将旋律描述为Notes集合。在设计的每个阶段，如果系统能够提供最有效的表示形式，则人们自然会选择它。模块化原则对系统中的程序组件具有有趣的含义：</p>
+
+<blockquote>
+<p>多态性： 程序应当仅指定对象的行为，而不指定对象的表示。</p>
+</blockquote>
+
+<p>关于此原则的传统说法是，程序永远不要声明给定对象是SmallInteger还是LargeInteger，而只能声明它响应整数协议。这种通用描述对于现实世界的模型至关重要。</p>
+
+<p>考虑汽车交通模拟。这种系统中的许多程序将涉及各种车辆。假设有人希望添加一个清洁车。如果代码依赖于它所操纵的对象，那么进行这种简单的扩展将涉及大量的计算量（以重新编译的形式）和可能的错误。消息接口为这种扩展建立了理想的框架。假设清洁车与所有其他车辆都支持相同的协议，则无需更改即可将其包括在系统中：</p>
+
+<blockquote>
+<p>分解：系统中的每个独立组件都只会出现在一个地方。</p>
+</blockquote>
+
+<p>此原则有很多原因。首先，如果只需要在一个地方添加系统，就可以节省时间、精力和存储空间。其次，用户可以更轻松地找到满足给定需求的组件。第三，在缺乏适当分解的情况下，同步更改并确保所有相互依赖的组件保持一致时会出现问题。你会看到分解的失败就等于违反了模块化。</p>
+
+<p>Smalltalk通过继承鼓励精心分解的设计。每个类都从其超类继承行为。这种继承通过越来越通用的类扩展，最终以Object类结束，该类描述了系统中所有对象的默认行为。在上面的车辆模拟系统中，清洁车（和所有其他车辆类别）将被描述为通用车辆类别的子类，从而继承了适当的默认行为并避免了在许多不同地方重复相同的概念。继承说明了分解的另一个实用的好处：</p>
+
+<blockquote>
+<p>杠杆：当一个系统被充分分解，用户和实施者均可充分利用。</p>
+</blockquote>
+
+<p>以排序对象的有序集合为例。在Smalltalk中，用户将在OrderedCollection 类中定义一条称为sort的消息。完成此操作后，系统中的所有形式的有序集合都将通过继承立即获得这项新功能。顺便说一句，值得注意的是，相同的方法可以按字母顺序排列文本以及排序数字，因为比较协议被支持文本和数字的类所识别。</p>
+
+<p>结构化对于实施者(implementers)的好处是显而易见的。首先，将要实现的原语更少。例如，Smalltalk中的所有图形都是通过单个基本操作执行的。只需完成一项任务，实施者就可以在每条指令上给予极大的关注，因为他们知道效率的每一个小提高都会在整个系统中得到放大。很自然地要问哪一组基本操作足以支持整个计算系统。这个问题的答案称为虚拟机规范：</p>
+
+<blockquote>
+<p>虚拟机：虚拟机规范为技术应用建立了框架。</p>
+</blockquote>
+
+<p>Smalltalk虚拟机建立用于存储的面向对象模型，用于处理(processing)的面向消息模型以及用于可视化显示信息的位图模型。通过使用microcode以及最终使用硬件，可以显着提高系统性能，而不会影响系统的其他优点。</p>
+
+<h1 id="用户界面">用户界面</h1>
+
+<p>用户界面只是一种语言，其中大多数通信都是可视的。由于视觉表现与人类文化深度交叠，因此美学在这一领域起着非常重要的作用。由于计算机系统的所有功能最终都是通过用户界面提供的，因此灵活性在这里也至关重要。用户界面的足够灵活性的得以实现的条件之一是以下一条面向对象原则：</p>
+
+<blockquote>
+<p>反应性原则：用户可访问的每个组件都应能够以有意义的方式展示自己，以进行观察和操作。</p>
+</blockquote>
+
+<p>通信对象模型很好地支持了该标准。根据定义，每个对象都为交互提供了适当的消息协议。该协议本质上是特定于该类对象的微语言(microlanguage)。在用户界面的级别上，屏幕上每个对象的适当语言以可视方式呈现（如文本，菜单，图片），并通过键盘活动和使用指点设备(鼠标等)进行感测。</p>
+
+<p>应当指出，操作系统似乎违反了这一原则。在这里，程序员必须脱离原本一致的描述框架，离开已建立的任何上下文，并处理完全不同且通常非常原始的环境。不必这样：</p>
+
+<blockquote>
+<p>操作系统：操作系统是不适合于语言的事物的集合。</p>
+</blockquote>
+
+<p>以下是一些已自然地合并到Smalltalk语言中的常规操作系统组件的示例：</p>
+
+<ul>
+<li>存储管理&ndash;完全自动化。对象通过发送给它的类的消息创建，并在不存在对它们的引用时回收。通过虚拟内存扩展地址空间同样是透明的。</li>
+<li>文件系统&ndash;通过对象（例如具有支持文件访问的消息协议的文件和目录）包含在常规框架中。</li>
+<li>显示处理&ndash;显示只是Form类的一个实例，该类是连续可见的，并且该类中定义的图形操作消息用于更改可见图像。</li>
+<li>键盘输入&ndash;类似地，用户输入设备被建模为带有适当消息的对象，用于确定其状态或将其历史记录作为事件序列。</li>
+<li>子系统的访问&ndash;子系统自然地作为Smalltalk中的独立对象并入：它们可以利用现有的大量描述空间，涉及与用户交互的子系统可以作为组件参与用户界面。</li>
+<li>调试器&ndash;Smalltalk处理器的状态可以作为拥有堆栈链的Process类的实例进行访问。调试器只是Smalltalk子系统，可以访问已暂停进程的状态。应该注意的是，Smalltalk中几乎唯一发生的运行时错误是消息无法被其接收者识别。</li>
+</ul>
+
+<p>Smalltalk本身没有<code>操作系统</code>。响应其他常规的Smalltalk消息，将诸如从磁盘读取页面之类的必要基本操作作为基本方法合并。</p>
+
+<h1 id="未来的工作">未来的工作</h1>
+
+<p>可以预料到，在Smalltalk上仍有工作要做。最简单的部分是继续应用本文中的原理。例如，Smalltalk-80系统的分解不足，因为它仅支持层次继承。未来的Smalltalk系统会将此模型推广到多继承。此外，消息协议尚未正式化。目前虽有协议，但当前协议从一个类到另一个类保持一致只是风格问题。通过提供可以一致共享的正确协议对象，可以轻松地解决此问题。然后，这将允许通过协议对变量进行正式键入而不会丢失多态性的优点。</p>
+
+<p>其他剩余的工作不太容易表达。显然，人类思想中还有其他方面尚未解决。这些必须被识别为可以补充现有语言模型的隐喻。</p>
+
+<p>有时，计算机系统的进步似乎缓慢得令人沮丧。我们忘记了蒸汽机对我们的祖父母是高科技的。我对这种情况持乐观态度。实际上，计算机系统变得越来越简单，因此也变得越来越有用。我想以指导这一过程的一般原则来结束本文：</p>
+
+<blockquote>
+<p>自然选择：合理设计的语言和系统将继续存在，只有更好的语言和系统才能取代它们。</p>
+</blockquote>
+
+<p>随着时间的流逝，越来越多的计算机对创新精神的支持也在不断发展。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="http://www.cs.virginia.edu/~evans/cs655/readings/smalltalk.html">Design Principles Behind Smalltalk</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Daniel_H._H._Ingalls_Sr.">Daniel HH Ingalls</a></li>
+<li><a href="http://worrydream.com/EarlyHistoryOfSmalltalk/">The Early History Of Smalltalk</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/smalltalk-scratch/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Smalltalk与Scratch</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/smalltalk-shell/">
+            <span class="next-text nav-default">命令行Smalltalk</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
