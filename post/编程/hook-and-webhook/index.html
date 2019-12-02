@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>关于 hook 与 webhook - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="从钩子(hook)说起 按 wikipedia 的说法: hooking 指通过拦截软件模块间的函数调用、消息传递、事件传递来修改或扩展操作系统、应用程序或其他软件组件的行为的各" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/hook-and-webhook/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="关于 hook 与 webhook" />
+<meta property="og:description" content="从钩子(hook)说起 按 wikipedia 的说法: hooking 指通过拦截软件模块间的函数调用、消息传递、事件传递来修改或扩展操作系统、应用程序或其他软件组件的行为的各" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/hook-and-webhook/" />
+<meta property="article:published_time" content="2019-12-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-12-02T00:00:00+00:00" />
+<meta itemprop="name" content="关于 hook 与 webhook">
+<meta itemprop="description" content="从钩子(hook)说起 按 wikipedia 的说法: hooking 指通过拦截软件模块间的函数调用、消息传递、事件传递来修改或扩展操作系统、应用程序或其他软件组件的行为的各">
+
+
+<meta itemprop="datePublished" content="2019-12-02T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-12-02T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1845">
+
+
+
+<meta itemprop="keywords" content="编程,Python," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="关于 hook 与 webhook"/>
+<meta name="twitter:description" content="从钩子(hook)说起 按 wikipedia 的说法: hooking 指通过拦截软件模块间的函数调用、消息传递、事件传递来修改或扩展操作系统、应用程序或其他软件组件的行为的各"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">关于 hook 与 webhook</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-02 </span>
+        <div class="post-category">
+            <a href="/categories/python/"> Python </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#从钩子-hook-说起">从钩子(hook)说起</a>
+<ul>
+<li><a href="#物理修改">物理修改</a></li>
+<li><a href="#运行时修改">运行时修改</a></li>
+</ul></li>
+<li><a href="#webhook">webhook</a>
+<ul>
+<li><a href="#技术视角">技术视角</a>
+<ul>
+<li><a href="#回调-callback">回调(callback)</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#我的兴趣点">我的兴趣点</a>
+<ul>
+<li><a href="#webhook-https-github-com-adnanh-webhook"><a href="https://github.com/adnanh/webhook">webhook</a></a>
+<ul>
+<li><a href="#使用">使用</a>
+<ul>
+<li><a href="#python-script">Python script</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#websocketd-https-github-com-joewalnes-websocketd"><a href="https://github.com/joewalnes/websocketd">websocketd</a></a></li>
+<li><a href="#quick-and-dirty-mock-service-with-starlette-https-www-mattlayman-com-blog-2019-starlette-mock-service"><a href="https://www.mattlayman.com/blog/2019/starlette-mock-service/">Quick and dirty mock service with Starlette</a></a></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="从钩子-hook-说起">从钩子(hook)说起</h1>
+
+<p>按 wikipedia 的说法:</p>
+
+<blockquote>
+<p>hooking 指通过拦截软件模块间的函数调用、消息传递、事件传递来修改或扩展操作系统、应用程序或其他软件组件的行为的各种技术。处理被拦截的函数调用、事件、消息的代码，被称为钩子（hook）。</p>
+
+<p>hooking 有多种用途，如调试、扩展功能。例如在键盘或鼠标事件到达应用程序之前拦截这些事件；拦截应用程序或其他模块的操作系统调用以监督行为、修改功能。也广泛用于 benchmarking 程序，如度量 3D 游戏的帧率&hellip;游戏外挂是另一类例子。</p>
+</blockquote>
+
+<p>有两种方法实现 hooking，物理修改和运行时修改</p>
+
+<h2 id="物理修改">物理修改</h2>
+
+<blockquote>
+<p>在应用程序执行之前，物理修改可执行程序，这典型通过找到函数调用入口点，修改入口点使之在函数被执行前先执行其他的代码。</p>
+</blockquote>
+
+<h2 id="运行时修改">运行时修改</h2>
+
+<blockquote>
+<p>操作系统与软件可提供方法，在运行时插入事件钩子&hellip;Linux 允许类似的钩子通过 NetFilter 以处理网络事件。</p>
+
+<p>也可拦截进程的库函数调用，在函数调用开始处注入代码。这可通过修改内存中的进程的中断向量表或输入表（import table）实现。</p>
+</blockquote>
+
+<p>从这条描述可以看出，钩子当然也是黑客感兴趣的东西。</p>
+
+<h1 id="webhook">webhook</h1>
+
+<p>对 webhook 的兴趣最初来自 Github 和 IFTTT，两者都支持 webhook:</p>
+
+<ul>
+<li><a href="https://developer.github.com/webhooks/">Github webhooks</a></li>
+<li><a href="https://ifttt.com/maker_webhooks">IFTTT maker_webhooks</a></li>
+</ul>
+
+<p>通过 webhook，用户可以根据自己的需求灵活当前使用的系统(Github/IFTTT)，而不需要对已有系统做修改。这是一种叫做<a href="https://zh.wikipedia.org/zh-cn/%E4%BA%8B%E4%BB%B6%E9%A9%85%E5%8B%95%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88">事件驱动</a>的编程模型。</p>
+
+<p>这种可扩展性令我很感兴趣。</p>
+
+<p>尤其是读了 minsky 的《心智社会》之后，对于可组合的事物更是充满兴趣，相信智能会从中生长出来。</p>
+
+<p>在概念上，可以将 webhook 视为可组合的材料。</p>
+
+<p>webhook 所勾连的行为，往往是未知的，多数时候不发生在系统部署的当下，而是发生在未来，所发生事件并不知道它将引起什么行为。如此一来，充满了灵活性，而这种灵活性，大大地提高了可能性空间。智能和复杂行为便都有可能从中生长出来。</p>
+
+<h2 id="技术视角">技术视角</h2>
+
+<p>从技术视角看，webhook 平淡无奇: 系统 A 请求系统 B 的一个 URI。</p>
+
+<p>它的威力在于它背后的想法: <a href="https://zh.wikipedia.org/wiki/%E6%B7%B7%E6%90%AD_(%E4%BA%92%E8%81%AF%E7%B6%B2)">混搭(Mashup)</a>。前头提及的可组合性与此有关。</p>
+
+<p>但这里值得注意的是，系统 A 请求系统 B 的一个 URI，这个 URI 由用户自定义，而且请求 URI 触发的行为，也是用户自定义的，这里包含了极大的灵活性。 我们将这个 URI 称为 callback， 充满事件驱动的味道。</p>
+
+<h3 id="回调-callback">回调(callback)</h3>
+
+<blockquote>
+<p>Webhooks 是<code>用户定义的HTTP回调</code>。它们通常是由某些事件触发的，例如将代码推送到存储库或将评论发布到博客。当该事件发生时，源站点向为 Webhook 配置的 URL 发出 HTTP 请求。用户可以将它们配置为导致一个站点上的事件调用另一个站点上的行为。</p>
+
+<p>这些回调可以由不一定与原始网站或应用程序有关联的第三方用户和开发人员维护，修改和管理。</p>
+</blockquote>
+
+<h1 id="我的兴趣点">我的兴趣点</h1>
+
+<p><a href="https://adapter.codelab.club/">CodeLab Adapter</a>致力于<code>连接</code>, 关注可扩展性, webhook 在此能派上许多用场。</p>
+
+<p>这是我近期重新把视线放在 webhook 上的原因，一番搜罗下，对几个项目很感兴趣</p>
+
+<ul>
+<li><a href="https://github.com/adnanh/webhook">webhook</a></li>
+<li><a href="https://github.com/joewalnes/websocketd">websocketd</a></li>
+<li><a href="https://www.mattlayman.com/blog/2019/starlette-mock-service/">Quick and dirty mock service with Starlette</a></li>
+</ul>
+
+<h2 id="webhook-https-github-com-adnanh-webhook"><a href="https://github.com/adnanh/webhook">webhook</a></h2>
+
+<blockquote>
+<p>webhook 是轻量级响应 webhook 请求(incoming webhook server)的服务器，用于运行 shell 命令.</p>
+
+<p>可配置工具，它使你可以轻松地在服务器上创建 HTTP endpoints（hook），用于执行已配置的命令。还可以将数据从 HTTP 请求（例如 header，payload 或查询变量）传递到 shell 命令。webhook 还允许你指定触发 hook 必须满足的规则。</p>
+</blockquote>
+
+<p>webhook 专注在以下事情:</p>
+
+<ol>
+<li>接收请求，</li>
+<li>解析 header，payload 和查询变量，</li>
+<li>检查是否满足 hook 的指定规则，</li>
+<li>最后，通过命令行参数或环境变量将指定的参数传递给指定的命令。</li>
+</ol>
+
+<p>其余事情都交给你。确实是个轻量又灵活的小工具，小而美。</p>
+
+<h3 id="使用">使用</h3>
+
+<p>在树莓派中可以直接安装它: <code>sudo apt-get install webhook</code></p>
+
+<p>开始一个简单的例子: hooks.json</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[
+  {
+    &#34;id&#34;: &#34;test-webhook&#34;,
+    &#34;execute-command&#34;: &#34;/tmp/test.sh&#34;,
+    &#34;command-working-directory&#34;: &#34;/tmp&#34;
+  }
+]</pre></td></tr></table>
+</div>
+</div>
+<p><code>/tmp/test.sh</code>内容为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+</span><span class="cp"></span><span class="nb">echo</span> <span class="s2">&#34;hello webhook&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>赋予脚本运行权限: <code>chmod +x test.sh</code></p>
+
+<p>启用 webhook: <code>webhook -hooks hooks.json -verbose</code></p>
+
+<p>访问<code>http://rpi4.codelab.club:9000/hooks/test-webhook</code></p>
+
+<h4 id="python-script">Python script</h4>
+
+<p>我们当然也可以使用 python 脚本替代<code>test.sh</code></p>
+
+<p><code>/tmp/test.py</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&#34;hello webhook python&#34;</span><span class="p">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>赋予脚本运行权限: <code>chmod +x test.sh</code></p>
+
+<p>hooks.json 相应调整为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[
+  {
+    &#34;id&#34;: &#34;test-webhook&#34;,
+    &#34;execute-command&#34;: &#34;/tmp/test.py&#34;,
+    &#34;command-working-directory&#34;: &#34;/tmp&#34;
+  }
+]</pre></td></tr></table>
+</div>
+</div>
+<hr />
+
+<p>webhook 思路是完全通用的，我们可以自行实现它，我之后准备在 CodeLab Adapter 中视线一个 webhook extension。</p>
+
+<h2 id="websocketd-https-github-com-joewalnes-websocketd"><a href="https://github.com/joewalnes/websocketd">websocketd</a></h2>
+
+<p>严格来说，websocketd 与 webhook 关系不大，但我却认为它是很好的工具，用来构建 web hook(字面意思)。对于一些流式行为，websocket 是理想选择，所以我将 websocketd 视为流版本的 webhook。</p>
+
+<p>关于 websocketd 更多内容，我之前做过笔记:<a href="https://blog.just4fun.site/post/%E5%B7%A5%E5%85%B7/websocketd/">websocketd:一个小而美的管道工具</a></p>
+
+<h2 id="quick-and-dirty-mock-service-with-starlette-https-www-mattlayman-com-blog-2019-starlette-mock-service"><a href="https://www.mattlayman.com/blog/2019/starlette-mock-service/">Quick and dirty mock service with Starlette</a></h2>
+
+<p>这篇文章阐述了如何利用异步机制构建webhook服务。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Hooking">wikipedia Hooking</a>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%92%A9%E5%AD%90%E7%BC%96%E7%A8%8B">wikipedia 钩子编程</a></li>
+</ul></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%BD%91%E7%BB%9C%E9%92%A9%E5%AD%90">wikipedia 网络钩子</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%B7%B7%E6%90%AD_(%E4%BA%92%E8%81%AF%E7%B6%B2)">Mashup</a></li>
+<li><a href="https://www.mattlayman.com/blog/2019/starlette-mock-service/">https://www.mattlayman.com/blog/2019/starlette-mock-service/</a></li>
+<li><a href="https://github.com/adnanh/webhook">webhook</a></li>
+<li><a href="https://medium.com/square-corner-blog/reliable-webhooks-using-serverless-architecture-e009a2096732">Reliable Webhooks Using Serverless Architecture</a></li>
+<li><a href="https://www.instructables.com/id/XiaoMi-Vacuum-Amazon-Button-Dash-Cleaning/">XiaoMi Vacuum + Amazon Button = Dash Cleaning</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E7%BC%96%E7%A8%8B/">编程</a>
+          <a href="/tags/python/">Python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/scratch-cdn-music/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Scratch CDN镜像笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/joker/">
+            <span class="next-text nav-default">小丑</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
