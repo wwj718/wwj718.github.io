@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch 社区数据分析 与 智能系统 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="前言 近期，受疫情影响，远程办公。 前几天给 @liuqing 发了封邮件，同步一下接下来我准备做的一些事情, 关注 CodeLab 的朋友可能对此也有兴趣，我把邮件的内容也放到这" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/scratch-community-data-analysis-and-graph-server/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch 社区数据分析 与 智能系统" />
+<meta property="og:description" content="前言 近期，受疫情影响，远程办公。 前几天给 @liuqing 发了封邮件，同步一下接下来我准备做的一些事情, 关注 CodeLab 的朋友可能对此也有兴趣，我把邮件的内容也放到这" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/scratch-community-data-analysis-and-graph-server/" />
+<meta property="article:published_time" content="2020-02-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-02-11T00:00:00+00:00" />
+<meta itemprop="name" content="Scratch 社区数据分析 与 智能系统">
+<meta itemprop="description" content="前言 近期，受疫情影响，远程办公。 前几天给 @liuqing 发了封邮件，同步一下接下来我准备做的一些事情, 关注 CodeLab 的朋友可能对此也有兴趣，我把邮件的内容也放到这">
+
+
+<meta itemprop="datePublished" content="2020-02-11T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-02-11T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2179">
+
+
+
+<meta itemprop="keywords" content="scratch," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch 社区数据分析 与 智能系统"/>
+<meta name="twitter:description" content="前言 近期，受疫情影响，远程办公。 前几天给 @liuqing 发了封邮件，同步一下接下来我准备做的一些事情, 关注 CodeLab 的朋友可能对此也有兴趣，我把邮件的内容也放到这"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/join-us/">
+        <li class="mobile-menu-item">Join-Us</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/join-us/">Join-Us</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch 社区数据分析 与 智能系统</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-02-11 </span>
+        <div class="post-category">
+            <a href="/categories/scratch/"> scratch </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#scratch-社区数据分析-与-智能系统">Scratch 社区数据分析 与 智能系统</a>
+<ul>
+<li><a href="#数据分析">数据分析</a></li>
+<li><a href="#机器学习">机器学习</a></li>
+</ul></li>
+<li><a href="#附">附</a>
+<ul>
+<li><a href="#注1">注1</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/scratch_community_homepage.png" alt="" /></p>
+
+<h1 id="前言">前言</h1>
+
+<p>近期，受疫情影响，远程办公。</p>
+
+<p>前几天给 @liuqing 发了封邮件，同步一下接下来我准备做的一些事情, 关注 CodeLab 的朋友可能对此也有兴趣，我把邮件的内容也放到这儿，掐去开头简短寒暄。</p>
+
+<hr />
+
+<h1 id="scratch-社区数据分析-与-智能系统">Scratch 社区数据分析 与 智能系统</h1>
+
+<p>使用爬虫，抓取 Scratch 社区的所有数据。我准备用整个社区的数据（用户、项目、用户的动态、用户喜欢的项目、用户彼此的关系、项目彼此的 remix 的关系…）抓取下来。</p>
+
+<p>目前 Scratch 官方社区有接近 5170 万用户，4955 万已分享项目，里头的用户基本都是自发地在创作（不是像国内大多数编程产品，采用外部压力和激励去刺激他们），考虑到这点，觉得它近乎奇迹。</p>
+
+<p>《蒙台梭利早期教育法》里头，对外部奖励的攻击，读来真痛快。（注1，见文末）</p>
+
+<p>更多官方统计数据看<a href="https://scratch.mit.edu/statistics/">这里</a>。我已经写完获取所有<a href="https://scratch.mit.edu/users/griffpatch">用户信息（以 griffpatch 用户为例）</a>和用户关系(<a href="https://scratch.mit.edu/users/griffpatch/followers/">griffpatch followers</a>、<a href="https://scratch.mit.edu/users/griffpatch/following">griffpatch following</a>)的爬虫了。</p>
+
+<p>我准备拿这些数据干嘛呢？</p>
+
+<p>得从 AI 说起，假期里我上完了两门课 <a href="https://course.elementsofai.com/">course.elementsofai.com</a> 和 <a href="https://www.coursera.org/learn/ai-for-everyone">ai-for-everyone</a>, 让我对数据和 AI 重新燃起兴趣。（也推荐你这两门课，我们接下里可能涉足 AI 教育）</p>
+
+<p>我想做 2 件事。</p>
+
+<h2 id="数据分析">数据分析</h2>
+
+<p>其一是“数据分析”，从大规模数据中提取出某些见解和洞见，并将其用作实施建议。</p>
+
+<p>由于接下来线上社区会提上日程，我想看看目前这个领域最好的社区是怎样的全景：</p>
+
+<ul>
+<li>里边的人是如何连接的(followers、following)；</li>
+<li>他们<a href="https://scratch.mit.edu/messages/ajax/user-activity/?user=griffpatch&amp;max=100">日常在干嘛(以 griffpatch 用户为例)</a>；</li>
+<li>那些热情的创造者是如何找到感兴趣的人与项目的（我将 <a href="https://scratch.mit.edu/users/griffpatch/favorites/">favorites</a> 视为用户兴趣的一个度量，而将 followers 和 following 视为他们的 peers)。</li>
+<li>那些最受欢迎的项目是如何在社区里传播开的(从 remix 的链条中可以看出来)</li>
+<li>…</li>
+</ul>
+
+<p>我想当一个蒙台梭利那样的观察者，Scratch 社区为我提供了非常多自发且真实的数据。</p>
+
+<h2 id="机器学习">机器学习</h2>
+
+<p>我想做的另一件事是“机器学习”，利用机器学习将这些数据转化为一些模型。利用这些模型来为 Scratch 社区用户提供某些服务。</p>
+
+<ul>
+<li>诸如通过“聚类”算法找找到不同类型的人群，这些不同的人群，有不同维度的相似性，从中我们可能发现许多有意思的东西，诸如我们可能发现一群喜欢音乐的孩子，从中我们又可以跟踪到许多这个人群喜欢的项目，这些信息，我们之后可以拿来推荐给类似的孩子，让他们能找到这个群体。</li>
+<li>利用“协同过滤”，构建起推荐系统。背后的想法很简单，如果用户 A 与用户 B 相似。当我们在活动日志中发现用户 A 喜欢项目 C，那么我们可以猜测说用户 B 也喜欢，便可以给他推荐这个项目。</li>
+</ul>
+
+<p>这类的智能系统可能能回答这个问题： 在一个自由而宽阔的社区里，如何找到自己感兴趣的人和项目。</p>
+
+<p>Scratch 官方在这块的工作很少，我想从这些群体数据中，提取一些价值。</p>
+
+<p>我自己日常在 Github 社区，Github 的推荐数据流时常让我找到许多感兴趣的人和项目，我非常喜欢这个社区，许多技能也从中习得。</p>
+
+<p><img src="/post/img/github_my_homepage.png" width=600 /></p>
+
+<p>如果你对前头提到的这些感兴趣，我也想听听你的想法，我们如果拿到社区的所有数据：用户彼此的关系、用户的喜好、用户的近期活动、项目之间的 remix 关系。那么我们可以做哪些有意思的事情呢，可以为 Scratcher 提供什么有价值的服务？ 对我们之后构建国内社区是否有帮助？</p>
+
+<p>此外， 我已经读完《蒙台梭利早期教育法》，深受冲击，我几乎认同蒙台梭利做的所有事情，她在书中表现出来的情感，真让我热泪盈眶。</p>
+
+<hr />
+
+<h1 id="附">附</h1>
+
+<h2 id="注1">注1</h2>
+
+<p>假期里读完《蒙台梭利早期教育法》(The Montessori Method), @liuqing 推荐我读这本书。</p>
+
+<p>里头对<code>奖励</code>的攻击十分精彩，摘录如下</p>
+
+<ul>
+<li><blockquote>
+<p>在一般的教室里，老师们必须向学生的脑子里灌输事先预备好的材料。他们发现，为了顺利完成这项枯燥的任务，有必要约束学生，让他们一动不动，被迫集中精力。对于被迫做听众的人，老师必须迫使他们的身体和精神达到要求的那种状态，<strong>奖励</strong>和惩罚就是现成、有效的辅助手段。</p>
+</blockquote></li>
+
+<li><blockquote>
+<p>这样的<strong>奖惩</strong>，如果我可以这么说的话，就是心灵的坐凳，精神奴役的工具。</p>
+</blockquote></li>
+
+<li><blockquote>
+<p>人类的所有胜利，所有进步，都是以内在的力量为基石的。</p>
+</blockquote></li>
+
+<li><blockquote>
+<p>外在奖励的确存在。例如，当演说家见到听众的表情随着他所唤起的情绪情感而发生变化时，他体验到了美妙无比的滋味，那种滋味只有在一个人发现自己被人爱时由衷的喜悦，才可与之相提并论。我们的喜悦是去触摸、征服灵魂，那才是能带给我们真正报偿的“奖励”</p>
+</blockquote></li>
+
+<li><blockquote>
+<p>有那么一刻，我们会因自己是万物之灵中的一员而喜不自胜。能够继续安稳地生活，也是令人幸福的时刻。这可能是得到真爱时，收到孩子的礼物时，有了伟大的发现，抑或是书籍出版之时；在这样的时刻，我们感到，自己是超凡绝伦的。如果此刻，某权威人士前来授予我们一枚勋章或是一个奖品，他反而会成为我们的真正奖赏的最大破坏者——“你算是什么人？”我们那消失的幻觉立刻会叫道，“你凭什么把我唤回现实，明白我不是高高在上的？谁地位比我高这么多，居然有资格给我颁奖？”</p>
+</blockquote></li>
+
+<li><blockquote>
+<p>今天我们把学生扣留在学校，用课桌，还有奖励和惩罚这些损害身心健康的工具来约束他们。我们的唯一目标就是让他们变得一动不动、一言不发，便于管束。管束是为了什么？却往往漫无目的。</p>
+</blockquote></li>
+
+<li><blockquote>
+<p>对孩子的教育，通常就是向他们的脑子里灌输学校的课程知识。通常，这些课程由教育行政部门编撰成册，通过法律明文规定，强迫教师和学生使用。 这样愚钝、顽固地忽视孩子正在成长的内在生命，我们应该羞愧地低下头，内疚地用双手捂住脸！</p>
+</blockquote></li>
+</ul>
+
+<p>说得痛快淋漓，<a href="https://book.douban.com/subject/30285992//">《终生幼儿园》</a>中关于这个话题也有很多精彩讨论。</p>
+
+<p>Scratch社区是难能可贵的少儿编程社区，不以<code>奖励</code>手段来灌输知识，而坚持鼓励孩子去寻找自己的热情、同伴，去寻找有趣的项目，并动手去创建那些激动人心的东西。</p>
+
+<p>追随热情而不是奖章。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-02-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/language-and-silence/">
+            <span class="next-text nav-default">语言与沉默</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://blog.just4fun.site/post/%E9%9A%8F%E7%AC%94/join-us/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
