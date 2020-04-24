@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="Scratch 拓展最佳实践 &amp;ndash; 以 Cozmo 为例 本文目标 本文有两个目标。
+其一是想像之前在两种硬件编程风格的比较，区分出问题，问题是什么，我们在解决这个问题中，3.0 发布以后，收到很多反馈和鼓励，大家 CodeLab
+ 两种硬件编程的风格：离线下载和在线交互 Scratch3.0 二次开发｜ 9. Extensions microbit 解读  灌入式和交互式，是我生造的两种硬件编程风格。在 STEM 灌入式和交互式，意识到这个问题
+在社区上，超过官方的原生软件，如何做到这点，更多的厂商都可以做到 其二是分享如何将一款优秀硬件设备接入到，使其超过官方的 APP 的能力。 1 开放性与内置的连接能力 2 默认得到 codelab 的能力
+接收反驳
+收到的邮件
+我们做了什么 有什么资格谈论领域最佳实践呢？ 如果作为，作为一种设计架构，我们确实认为整个领域缺乏真正有野心和想象力的项目。
+![诗 吐槽 热闹的愚蠢]()
+最灵活的系统
+区分三种类型积木 以Scratch为例，事件 按钮 command 前进 询问 时间，颜色
+reporter 和 when 有关，它们的想法是，回答某个时刻判断 repoter 将判断结果返回，when 则报告这件事是否为真，如果是真，则继续运行接下来的代码，语义上当某件事发送，它的实现方式是 为真 把它转化为代码 在重写一个smalltalk，线程，跨线程通信，在另一个语言中模拟Scratch，非常不容易， 实际是模拟smalltalk。 无法实现，如何与舞台交互呢？ 并不是说这种系统，我反编译过一些公司的代码，很聪明，投入巨大人力财力，难以维护和脆弱的，聪明的代码是可怕的，《Unix设计哲学》从历史上，失败的大型项目上，KISS，10w行代码，复杂通常是脆弱的同义词。 CodeLab Adapter通常是更好的选择，我们没有投入一个大团队，也没有投入好多年，快速生长，可理解。愉快而有趣
+cqrs
+1 2 3  command query event   查询 命令 事件" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-%E6%8B%93%E5%B1%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="" />
+<meta property="og:description" content="Scratch 拓展最佳实践 &ndash; 以 Cozmo 为例 本文目标 本文有两个目标。
+其一是想像之前在两种硬件编程风格的比较，区分出问题，问题是什么，我们在解决这个问题中，3.0 发布以后，收到很多反馈和鼓励，大家 CodeLab
+ 两种硬件编程的风格：离线下载和在线交互 Scratch3.0 二次开发｜ 9. Extensions microbit 解读  灌入式和交互式，是我生造的两种硬件编程风格。在 STEM 灌入式和交互式，意识到这个问题
+在社区上，超过官方的原生软件，如何做到这点，更多的厂商都可以做到 其二是分享如何将一款优秀硬件设备接入到，使其超过官方的 APP 的能力。 1 开放性与内置的连接能力 2 默认得到 codelab 的能力
+接收反驳
+收到的邮件
+我们做了什么 有什么资格谈论领域最佳实践呢？ 如果作为，作为一种设计架构，我们确实认为整个领域缺乏真正有野心和想象力的项目。
+![诗 吐槽 热闹的愚蠢]()
+最灵活的系统
+区分三种类型积木 以Scratch为例，事件 按钮 command 前进 询问 时间，颜色
+reporter 和 when 有关，它们的想法是，回答某个时刻判断 repoter 将判断结果返回，when 则报告这件事是否为真，如果是真，则继续运行接下来的代码，语义上当某件事发送，它的实现方式是 为真 把它转化为代码 在重写一个smalltalk，线程，跨线程通信，在另一个语言中模拟Scratch，非常不容易， 实际是模拟smalltalk。 无法实现，如何与舞台交互呢？ 并不是说这种系统，我反编译过一些公司的代码，很聪明，投入巨大人力财力，难以维护和脆弱的，聪明的代码是可怕的，《Unix设计哲学》从历史上，失败的大型项目上，KISS，10w行代码，复杂通常是脆弱的同义词。 CodeLab Adapter通常是更好的选择，我们没有投入一个大团队，也没有投入好多年，快速生长，可理解。愉快而有趣
+cqrs
+1 2 3  command query event   查询 命令 事件" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-%E6%8B%93%E5%B1%95%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" />
+
+<meta itemprop="name" content="">
+<meta itemprop="description" content="Scratch 拓展最佳实践 &ndash; 以 Cozmo 为例 本文目标 本文有两个目标。
+其一是想像之前在两种硬件编程风格的比较，区分出问题，问题是什么，我们在解决这个问题中，3.0 发布以后，收到很多反馈和鼓励，大家 CodeLab
+ 两种硬件编程的风格：离线下载和在线交互 Scratch3.0 二次开发｜ 9. Extensions microbit 解读  灌入式和交互式，是我生造的两种硬件编程风格。在 STEM 灌入式和交互式，意识到这个问题
+在社区上，超过官方的原生软件，如何做到这点，更多的厂商都可以做到 其二是分享如何将一款优秀硬件设备接入到，使其超过官方的 APP 的能力。 1 开放性与内置的连接能力 2 默认得到 codelab 的能力
+接收反驳
+收到的邮件
+我们做了什么 有什么资格谈论领域最佳实践呢？ 如果作为，作为一种设计架构，我们确实认为整个领域缺乏真正有野心和想象力的项目。
+![诗 吐槽 热闹的愚蠢]()
+最灵活的系统
+区分三种类型积木 以Scratch为例，事件 按钮 command 前进 询问 时间，颜色
+reporter 和 when 有关，它们的想法是，回答某个时刻判断 repoter 将判断结果返回，when 则报告这件事是否为真，如果是真，则继续运行接下来的代码，语义上当某件事发送，它的实现方式是 为真 把它转化为代码 在重写一个smalltalk，线程，跨线程通信，在另一个语言中模拟Scratch，非常不容易， 实际是模拟smalltalk。 无法实现，如何与舞台交互呢？ 并不是说这种系统，我反编译过一些公司的代码，很聪明，投入巨大人力财力，难以维护和脆弱的，聪明的代码是可怕的，《Unix设计哲学》从历史上，失败的大型项目上，KISS，10w行代码，复杂通常是脆弱的同义词。 CodeLab Adapter通常是更好的选择，我们没有投入一个大团队，也没有投入好多年，快速生长，可理解。愉快而有趣
+cqrs
+1 2 3  command query event   查询 命令 事件">
+
+
+
+<meta itemprop="wordCount" content="124">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="Scratch 拓展最佳实践 &ndash; 以 Cozmo 为例 本文目标 本文有两个目标。
+其一是想像之前在两种硬件编程风格的比较，区分出问题，问题是什么，我们在解决这个问题中，3.0 发布以后，收到很多反馈和鼓励，大家 CodeLab
+ 两种硬件编程的风格：离线下载和在线交互 Scratch3.0 二次开发｜ 9. Extensions microbit 解读  灌入式和交互式，是我生造的两种硬件编程风格。在 STEM 灌入式和交互式，意识到这个问题
+在社区上，超过官方的原生软件，如何做到这点，更多的厂商都可以做到 其二是分享如何将一款优秀硬件设备接入到，使其超过官方的 APP 的能力。 1 开放性与内置的连接能力 2 默认得到 codelab 的能力
+接收反驳
+收到的邮件
+我们做了什么 有什么资格谈论领域最佳实践呢？ 如果作为，作为一种设计架构，我们确实认为整个领域缺乏真正有野心和想象力的项目。
+![诗 吐槽 热闹的愚蠢]()
+最灵活的系统
+区分三种类型积木 以Scratch为例，事件 按钮 command 前进 询问 时间，颜色
+reporter 和 when 有关，它们的想法是，回答某个时刻判断 repoter 将判断结果返回，when 则报告这件事是否为真，如果是真，则继续运行接下来的代码，语义上当某件事发送，它的实现方式是 为真 把它转化为代码 在重写一个smalltalk，线程，跨线程通信，在另一个语言中模拟Scratch，非常不容易， 实际是模拟smalltalk。 无法实现，如何与舞台交互呢？ 并不是说这种系统，我反编译过一些公司的代码，很聪明，投入巨大人力财力，难以维护和脆弱的，聪明的代码是可怕的，《Unix设计哲学》从历史上，失败的大型项目上，KISS，10w行代码，复杂通常是脆弱的同义词。 CodeLab Adapter通常是更好的选择，我们没有投入一个大团队，也没有投入好多年，快速生长，可理解。愉快而有趣
+cqrs
+1 2 3  command query event   查询 命令 事件"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/join-us/">
+        <li class="mobile-menu-item">Join-Us</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/join-us/">Join-Us</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title"></h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 0001-01-01 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#scratch-拓展最佳实践-以-cozmo-为例">Scratch 拓展最佳实践 &ndash; 以 Cozmo 为例</a></li>
+<li><a href="#本文目标">本文目标</a>
+<ul>
+<li><a href="#我们做了什么">我们做了什么</a></li>
+<li><a href="#区分三种类型积木">区分三种类型积木</a>
+<ul>
+<li><a href="#区分两种">区分两种</a></li>
+</ul></li>
+<li><a href="#反模式">反模式</a></li>
+<li><a href="#模式">模式</a></li>
+<li><a href="#可理解性">可理解性</a></li>
+<li><a href="#源码一览">源码一览</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="scratch-拓展最佳实践-以-cozmo-为例">Scratch 拓展最佳实践 &ndash; 以 Cozmo 为例</h1>
+
+<h1 id="本文目标">本文目标</h1>
+
+<p>本文有两个目标。</p>
+
+<p>其一是想像之前在<a href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a>，区分出问题，问题是什么，我们在解决这个问题中，3.0 发布以后，收到很多反馈和鼓励，大家 CodeLab</p>
+
+<ul>
+<li><a href="https://thinkhard.tech/2019/06/13/about-interpreter/">两种硬件编程的风格：离线下载和在线交互</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/111399860">Scratch3.0 二次开发｜ 9. Extensions microbit 解读</a></li>
+</ul>
+
+<p>灌入式和交互式，是我生造的两种硬件编程风格。在 STEM 灌入式和交互式，意识到这个问题</p>
+
+<p>在社区上，超过官方的原生软件，如何做到这点，更多的厂商都可以做到
+其二是分享如何将一款优秀硬件设备接入到，使其超过官方的 APP 的能力。
+1 开放性与内置的连接能力
+2 默认得到 codelab 的能力</p>
+
+<p>接收反驳</p>
+
+<p>收到的邮件</p>
+
+<h2 id="我们做了什么">我们做了什么</h2>
+
+<p>有什么资格谈论领域最佳实践呢？ 如果作为，作为一种设计架构，我们确实认为整个领域缺乏真正有野心和想象力的项目。</p>
+
+<p>![诗 吐槽 热闹的愚蠢]()</p>
+
+<p>最灵活的系统</p>
+
+<h2 id="区分三种类型积木">区分三种类型积木</h2>
+
+<p>以Scratch为例，事件 按钮
+command 前进
+询问 时间，颜色</p>
+
+<p>reporter 和 when 有关，它们的想法是，回答某个时刻判断
+    repoter 将判断结果返回，when 则报告这件事是否为真，如果是真，则继续运行接下来的代码，语义上当某件事发送，它的实现方式是 <code>为真</code>
+        把它转化为代码
+            在重写一个smalltalk，线程，跨线程通信，在另一个语言中模拟Scratch，非常不容易， 实际是模拟smalltalk。
+            无法实现，如何与舞台交互呢？
+            并不是说这种系统，我反编译过一些公司的代码，很聪明，投入巨大人力财力，难以维护和脆弱的，聪明的代码是可怕的，《Unix设计哲学》从历史上，失败的大型项目上，KISS，10w行代码，复杂通常是脆弱的同义词。
+            CodeLab Adapter通常是更好的选择，我们没有投入一个大团队，也没有投入好多年，快速生长，可理解。愉快而有趣</p>
+
+<p>cqrs</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">command
+query
+event</pre></td></tr></table>
+</div>
+</div>
+<p>查询
+命令
+事件</p>
+
+<p>流</p>
+
+<p>when的本质
+    流 缓冲区</p>
+
+<h3 id="区分两种">区分两种</h3>
+
+<p>阻塞/非阻塞</p>
+
+<p>同步是异步的一种特例。</p>
+
+<h2 id="反模式">反模式</h2>
+
+<p>将积木看作代码的严格生成器，让学生看到 <strong>真实的代码</strong> 是一种<a href="https://zh.wikipedia.org/zh-cn/%E5%8F%8D%E9%9D%A2%E6%A8%A1%E5%BC%8F">反面模式（anti-pattern）</a>, 或许是最糟糕的一种。</p>
+
+<p>这种想法的本质是将积木想象为代码生成器。</p>
+
+<p>上下文，保持原子化，滋生 bug 的温床，脆弱，学到的不过时一堆离开这个拍脑袋的系统就失效的一堆规则。</p>
+
+<p>事实上，我反对的依然是灌入式，REPL。增量前进的系统，可以与它交谈，遇到错误时，可以缩小范围，问问系统，是这行错了吗，那行错了吗？</p>
+
+<p><a href="https://zh.wikipedia.org/wiki/%E5%B7%A8%E9%9B%86">宏(Macro)</a>.</p>
+
+<p>但这个问题并不好讨论，我将在此勉为一试。</p>
+
+<p>使用积木生成代码的策略是相当愚蠢的，但这种愚蠢并不显而易见，但是，深藏的愚蠢毕竟也是愚蠢。</p>
+
+<p>C++程序员或许是例外， 像 Alan Kay 在<a href="https://queue.acm.org/detail.cfm?id=1039523">接收 acmqueue 采访时提到的</a>，将 C++用的很好的那些人，多是是将 C++当作一种宏处理器来使用。</p>
+
+<p>想象有一个交谈的环境,虚拟机的概念(vm),当然是广义上的，当你这样想的时候，你最终就会开始重造一个CodeLab Adapter。</p>
+
+<p>并不是说，传递代码是，想象每一次通信是REPL，Jupyter是这个想法最好的实践者之一。</p>
+
+<h2 id="模式">模式</h2>
+
+<p>以 cozmo 和 microbit 为例</p>
+
+<p>积木内扩展</p>
+
+<p>编程模型是什么
+    编程式在思考什么呢？有统一的心理模型吗，还是每个积木都需要一份说明，破碎的功能</p>
+
+<h2 id="可理解性">可理解性</h2>
+
+<p>是什么？</p>
+
+<p>smalltalk
+物体之间通过消息通讯
+lazy bind
+object
+失去了所有这些</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">消息</pre></td></tr></table>
+</div>
+</div>
+<h2 id="源码一览">源码一览</h2>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        0001-01-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter%E5%8F%91%E5%B8%833.0%E7%89%88%E6%9C%AC/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default"></span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter3/">
+            <span class="next-text nav-default"></span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://blog.just4fun.site/post/%E9%9A%8F%E7%AC%94/join-us/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://blog.just4fun.site/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="http://www.beian.miit.gov.cn">苏ICP备18043473号</a></span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">种瓜</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
