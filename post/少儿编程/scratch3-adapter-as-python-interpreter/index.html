@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>将codelab-adapter用作Python解释器 - 某行人</title>
+  <title>将CodeLab Adapter用作Python解释器 - 某行人</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="everything is message; message is everything 新的插件 近期我们构建了 extension_python_kernel.py插件， 已经内置在scratch3-adapter最新版" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="everything is a message; message is everything 说明 这是之前的文章，更新以匹配 CodeLab Adapter 3.0 新的插件 CodeLab Adapter 3.0内置extension_python.py插件, 使用文档在此。 同时插件市" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -38,26 +38,26 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="将codelab-adapter用作Python解释器" />
-<meta property="og:description" content="everything is message; message is everything 新的插件 近期我们构建了 extension_python_kernel.py插件， 已经内置在scratch3-adapter最新版" />
+<meta property="og:title" content="将CodeLab Adapter用作Python解释器" />
+<meta property="og:description" content="everything is a message; message is everything 说明 这是之前的文章，更新以匹配 CodeLab Adapter 3.0 新的插件 CodeLab Adapter 3.0内置extension_python.py插件, 使用文档在此。 同时插件市" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-as-python-interpreter/" />
-<meta property="article:published_time" content="2019-01-14T00:00:00+00:00" />
-<meta property="article:modified_time" content="2019-01-14T00:00:00+00:00" />
-<meta itemprop="name" content="将codelab-adapter用作Python解释器">
-<meta itemprop="description" content="everything is message; message is everything 新的插件 近期我们构建了 extension_python_kernel.py插件， 已经内置在scratch3-adapter最新版">
+<meta property="article:published_time" content="2020-04-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-04-24T00:00:00+00:00" />
+<meta itemprop="name" content="将CodeLab Adapter用作Python解释器">
+<meta itemprop="description" content="everything is a message; message is everything 说明 这是之前的文章，更新以匹配 CodeLab Adapter 3.0 新的插件 CodeLab Adapter 3.0内置extension_python.py插件, 使用文档在此。 同时插件市">
 
 
-<meta itemprop="datePublished" content="2019-01-14T00:00:00&#43;00:00" />
-<meta itemprop="dateModified" content="2019-01-14T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1068">
+<meta itemprop="datePublished" content="2020-04-24T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-04-24T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="747">
 
 
 
 <meta itemprop="keywords" content="scratch," />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="将codelab-adapter用作Python解释器"/>
-<meta name="twitter:description" content="everything is message; message is everything 新的插件 近期我们构建了 extension_python_kernel.py插件， 已经内置在scratch3-adapter最新版"/>
+<meta name="twitter:title" content="将CodeLab Adapter用作Python解释器"/>
+<meta name="twitter:description" content="everything is a message; message is everything 说明 这是之前的文章，更新以匹配 CodeLab Adapter 3.0 新的插件 CodeLab Adapter 3.0内置extension_python.py插件, 使用文档在此。 同时插件市"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -128,10 +128,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">将codelab-adapter用作Python解释器</h1>
+      <h1 class="post-title">将CodeLab Adapter用作Python解释器</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2019-01-14 </span>
+        <span class="post-time"> 2020-04-24 </span>
         <div class="post-category">
             <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
             </div>
@@ -144,15 +144,16 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
 <ul>
+<li><a href="#说明">说明</a></li>
 <li><a href="#新的插件">新的插件</a>
 <ul>
 <li>
 <ul>
-<li><a href="#将codelab-adapter用作python解释器">将codelab-adapter用作Python解释器</a></li>
+<li><a href="#将-codelab-adapter-用作-python-解释器">将 CodeLab Adapter 用作 Python 解释器</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#在scratch中构建python-repl">在Scratch中构建Python REPL</a></li>
-<li><a href="#codelab-adapter可以支持其他编程平台吗">codelab-adapter可以支持其他编程平台吗？</a></li>
+<li><a href="#在-scratch-中构建-python-repl">在 Scratch 中构建 Python REPL</a></li>
+<li><a href="#codelab-adapter-可以支持其他编程平台吗">CodeLab Adapter 可以支持其他编程平台吗？</a></li>
 </ul>
 </nav>
   </div>
@@ -163,32 +164,35 @@
 <p><img src="/post/img/python_1a60e935.png" alt="" /></p>
 
 <blockquote>
-<p>everything is message; message is everything</p>
+<p>everything is a message; message is everything</p>
 </blockquote>
+
+<h1 id="说明">说明</h1>
+
+<p>这是之前的文章，更新以匹配 CodeLab Adapter 3.0</p>
 
 <h1 id="新的插件">新的插件</h1>
 
-<p>近期我们构建了
-<a href="https://github.com/Scratch3Lab/scratch3_adapter_extensions/blob/master/extension_python_kernel.py">extension_python_kernel.py</a>插件， 已经内置在<a href="https://codelab-adapter-docs.codelab.club">scratch3-adapter</a>最新版本中</p>
+<p><a href="https://www.codelab.club/blog/3-release/">CodeLab Adapter 3.0</a>内置<a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_python.py">extension_python.py</a>插件, <a href="https://adapter.codelab.club/extension_guide/extension_python_kernel/">使用文档在此</a>。</p>
 
-<p>同时我们正在规划插件市场:<a href="https://codelab-adapter-docs.codelab.club/extension_guide/extension_market/">extension_market</a>。</p>
+<p>同时<a href="https://codelab-adapter-docs.codelab.club/extension_guide/extension_market/">插件市场</a>中有功能更强大的<a href="https://adapter.codelab.club/extension_guide/python_exec/">python_exec</a>。用户可以自行下载。</p>
 
-<p><a href="https://github.com/Scratch3Lab/scratch3_adapter_extensions/blob/master/extension_python_kernel.py">extension_python_kernel.py</a>插件用以支持以下使用场景：</p>
+<p><a href="https://github.com/Scratch3Lab/scratch3_adapter_extensions/blob/master/extension_python_kernel.py">extension_python.py</a>插件用以支持以下使用场景：</p>
 
 <ol>
-<li>将<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>用作Python解释器，解释运行网页发送过来的Python代码</li>
-<li>在Scratch3.0中构建Python REPL</li>
-<li>以简易的方式粘合Python和Scratch3.0</li>
+<li>将 CodeLab Adapter 用作 Python 解释器，解释运行网页发送过来的 Python 代码</li>
+<li>在 Scratch3.0 中构建 Python REPL</li>
+<li>以简易的方式粘合 Python 和 Scratch3.0</li>
 <li>&hellip;</li>
 </ol>
 
-<h3 id="将codelab-adapter用作python解释器">将codelab-adapter用作Python解释器</h3>
+<h3 id="将-codelab-adapter-用作-python-解释器">将 CodeLab Adapter 用作 Python 解释器</h3>
 
-<p>第一个使用场景: <code>将codelab-adapter用作Python解释器，可以运行网页发送过来的Python代码</code></p>
+<p>第一个使用场景: <code>将 CodeLab Adapter 用作 Python 解释器，可以运行网页发送过来的 Python 代码</code></p>
 
-<p>通过这个插件，允许在前端构建编辑器，而将<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>用作实际运行代码的后端，前端拿到代码执行结果，或者错误信息(stdout/stderr)。这和<a href="https://jupyter.org/">jupyter</a>的架构很相似，我之前写过几篇分析jupyter架构的文章，jupyter是codelab-adapter的灵感来源之一。</p>
+<p>通过这个插件，允许在前端构建编辑器，而将 CodeLab Adapter 用作实际运行代码的后端，前端拿到代码执行结果，或者错误信息(stdout/stderr)。这和<a href="https://jupyter.org/">jupyter</a>的架构很相似，我之前写过几篇分析 jupyter 架构的文章，jupyter 是 CodeLab Adapter 的灵感来源之一。</p>
 
-<p>如此一来，为了教学Python，就不必使用javascript实现的Python解释器了。不再需要烦心不同解释器之间的差异。学习者也不会为此困惑。更重要的是，得到了一个完全真实的Python解释器，它可以与网络交互，可以与文件系统交互！你在网页里写的Python代码可以做到任何事！喜欢<code>requests</code>库？尽情使用它吧，在下个发行版中，我们将在codelab-adapter内置常用的Python库！</p>
+<p>如此一来，为了教学 Python，就不必使用 javascript 实现的 Python 解释器了。不再需要烦心不同解释器之间的差异。学习者也不会为此困惑。更重要的是，得到了一个完全真实的 Python 解释器，它可以与网络交互，可以与文件系统交互！你在网页里写的 Python 代码可以做到任何事！喜欢<code>requests</code>库？尽情使用它吧，在下个发行版中，我们将在 CodeLab Adapter 内置常用的 Python 库！</p>
 
 <!--
 ### 插件的使用方法
@@ -198,9 +202,9 @@
 插件的使用方法参考:[extension Usage](https://codelab-adapter-docs.codelab.club/extension_guide/usage/)
 -->
 
-<h1 id="在scratch中构建python-repl">在Scratch中构建Python REPL</h1>
+<h1 id="在-scratch-中构建-python-repl">在 Scratch 中构建 Python REPL</h1>
 
-<p>下边来做一件有趣的事，借助<a href="https://github.com/Scratch3Lab/scratch3_adapter_extensions/blob/master/extension_python_kernel.py">extension_python_kernel.py</a>, 搭配codelab的scratch3.0 EIM extension，只需9块积木，就可以在在scratch 3.0中构建一个python REPL！</p>
+<p>下边来做一件有趣的事，借助 <code>extension_python.py</code>, 搭配 CodeLab 的 scratch3.0 EIM extension，只需 9 块积木，就可以在在 scratch 3.0 中构建一个 python REPL！</p>
 
 <p><img src="/post/img/python-interrapter_fd18e1f5.png" alt="" /></p>
 
@@ -212,17 +216,17 @@
 
 <p><img src="/post/img/python_08ac7c0b.png" alt="" /></p>
 
-<p>来测试一个更复杂的代码:<code>import re;print(re.search(r'just4fun', 'blog.just4fun.site').span())</code>, 测试代码的逻辑是 找出blog.just4fun.site中just4fun的起止位置。</p>
+<p>来测试一个更复杂的代码:<code>import re;print(re.search(r'just4fun', 'blog.just4fun.site').span())</code>, 测试代码的逻辑是 找出 blog.just4fun.site 中 just4fun 的起止位置。</p>
 
 <p><img src="/post/img/python_feada21f.png" alt="" /></p>
 
-<p>结果显示just4fun的起止位置为<code>(5,13)</code></p>
+<p>结果显示 just4fun 的起止位置为<code>(5,13)</code></p>
 
-<p>9块积木完成python REPL！</p>
+<p>9 块积木完成 python REPL！</p>
 
-<h1 id="codelab-adapter可以支持其他编程平台吗">codelab-adapter可以支持其他编程平台吗？</h1>
+<h1 id="codelab-adapter-可以支持其他编程平台吗">CodeLab Adapter 可以支持其他编程平台吗？</h1>
 
-<p>如果你希望将codelab-adapter用作你自己的编程平台(无论是scratch3还是blockly)的Python解释器。参考<a href="https://codelab-adapter-docs.codelab.club/user_guide/FAQ/#codelab-adapter">codelab-adapter可以支持其他编程平台吗？</a></p>
+<p>如果你希望将 CodeLab Adapter 用作你自己的编程平台(无论是 scratch3 还是 blockly)的 Python 解释器。参考<a href="https://codelab-adapter-docs.codelab.club/user_guide/FAQ/#codelab-adapter">CodeLab Adapter 可以支持其他编程平台吗？</a></p>
 
     </div>
 
@@ -234,7 +238,7 @@
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        2019-01-14
+        2020-04-24
         
     </span>
   </p>
@@ -246,13 +250,9 @@
           <a href="/tags/scratch/">scratch</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-presentation/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">使用Scratch3.0制作幻灯片</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-microbit-windows7/">
-            <span class="next-text nav-default">Scratch3.0、micro:bit与Windows7</span>
+        
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/release-adapter-3/">
+            <span class="next-text nav-default">发布 CodeLab Adapter 3.0</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>

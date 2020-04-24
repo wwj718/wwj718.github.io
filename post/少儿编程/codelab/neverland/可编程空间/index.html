@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="CodeLab 可编程空间 背后的设计原则 风格 Smalltalk 背后的设计原则
+可编程空间3.0
+不断有人想实施它。
+对 Daniel Ingalls Smalltalk 背后的设计原则一文的致敬和模仿。
+目标是什么，之后进行推演，需要有哪些原则，再落实到设计，目前有两个项目，CodeLab Nerverland和龙眼创造乐园
+环球影城 可编程的含义，你想用魔杖控制其他东西，定点控制 它可以按照你的想法运行，你不只是体验，而是创造 空间 你的生活 小狗在门口，自动开门，这就是实施AI教育的理想契机，蒙台梭利 dynamicland 计算机在过去是一个房间，在未来它很可能也是一个房间，泛灵论者 下一件大事是一个房间，Alan kay ，这是未来 可理解 可见性
+理念 《mindstorm》 建构主义，建构主义定义 land 法国学法语 real playing 尽可能少的知识，消息，简单的语法 教育即生活 为创造精神提供计算机支持
+live programming 可扩展性 多语言 阔平台支持 与生活关联 AI IoT 开源硬件，我们关注这些项目的原因与大家不同，我们不关心是CNN还是，这是只是，下个十年会变更。思想
+仅仅让物体彼此连接是不够的，理解它的理念 不然你永远不知道是什么，bret引用
+一些之前的案例，展示灵活性 AI 服务 赛车 why 这是一种多功能lab，服务于 使用codelab adapter ， 社区版neverland， 如果你想获取商业方案，龙眼团队
+参考 [柳青的文章]() dynamicland 作为骨架
+ neverland  介绍当时的考虑点  阶梯教室 升降   学校 家庭  教育即生活   以 neverland 为例，谈论实施可编程空间可能遇到的问题 第一篇文章（neverland），设计者提出的建议 https://blog." /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab/neverland/%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="" />
+<meta property="og:description" content="CodeLab 可编程空间 背后的设计原则 风格 Smalltalk 背后的设计原则
+可编程空间3.0
+不断有人想实施它。
+对 Daniel Ingalls Smalltalk 背后的设计原则一文的致敬和模仿。
+目标是什么，之后进行推演，需要有哪些原则，再落实到设计，目前有两个项目，CodeLab Nerverland和龙眼创造乐园
+环球影城 可编程的含义，你想用魔杖控制其他东西，定点控制 它可以按照你的想法运行，你不只是体验，而是创造 空间 你的生活 小狗在门口，自动开门，这就是实施AI教育的理想契机，蒙台梭利 dynamicland 计算机在过去是一个房间，在未来它很可能也是一个房间，泛灵论者 下一件大事是一个房间，Alan kay ，这是未来 可理解 可见性
+理念 《mindstorm》 建构主义，建构主义定义 land 法国学法语 real playing 尽可能少的知识，消息，简单的语法 教育即生活 为创造精神提供计算机支持
+live programming 可扩展性 多语言 阔平台支持 与生活关联 AI IoT 开源硬件，我们关注这些项目的原因与大家不同，我们不关心是CNN还是，这是只是，下个十年会变更。思想
+仅仅让物体彼此连接是不够的，理解它的理念 不然你永远不知道是什么，bret引用
+一些之前的案例，展示灵活性 AI 服务 赛车 why 这是一种多功能lab，服务于 使用codelab adapter ， 社区版neverland， 如果你想获取商业方案，龙眼团队
+参考 [柳青的文章]() dynamicland 作为骨架
+ neverland  介绍当时的考虑点  阶梯教室 升降   学校 家庭  教育即生活   以 neverland 为例，谈论实施可编程空间可能遇到的问题 第一篇文章（neverland），设计者提出的建议 https://blog." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab/neverland/%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/" />
+
+<meta itemprop="name" content="">
+<meta itemprop="description" content="CodeLab 可编程空间 背后的设计原则 风格 Smalltalk 背后的设计原则
+可编程空间3.0
+不断有人想实施它。
+对 Daniel Ingalls Smalltalk 背后的设计原则一文的致敬和模仿。
+目标是什么，之后进行推演，需要有哪些原则，再落实到设计，目前有两个项目，CodeLab Nerverland和龙眼创造乐园
+环球影城 可编程的含义，你想用魔杖控制其他东西，定点控制 它可以按照你的想法运行，你不只是体验，而是创造 空间 你的生活 小狗在门口，自动开门，这就是实施AI教育的理想契机，蒙台梭利 dynamicland 计算机在过去是一个房间，在未来它很可能也是一个房间，泛灵论者 下一件大事是一个房间，Alan kay ，这是未来 可理解 可见性
+理念 《mindstorm》 建构主义，建构主义定义 land 法国学法语 real playing 尽可能少的知识，消息，简单的语法 教育即生活 为创造精神提供计算机支持
+live programming 可扩展性 多语言 阔平台支持 与生活关联 AI IoT 开源硬件，我们关注这些项目的原因与大家不同，我们不关心是CNN还是，这是只是，下个十年会变更。思想
+仅仅让物体彼此连接是不够的，理解它的理念 不然你永远不知道是什么，bret引用
+一些之前的案例，展示灵活性 AI 服务 赛车 why 这是一种多功能lab，服务于 使用codelab adapter ， 社区版neverland， 如果你想获取商业方案，龙眼团队
+参考 [柳青的文章]() dynamicland 作为骨架
+ neverland  介绍当时的考虑点  阶梯教室 升降   学校 家庭  教育即生活   以 neverland 为例，谈论实施可编程空间可能遇到的问题 第一篇文章（neverland），设计者提出的建议 https://blog.">
+
+
+
+<meta itemprop="wordCount" content="171">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="CodeLab 可编程空间 背后的设计原则 风格 Smalltalk 背后的设计原则
+可编程空间3.0
+不断有人想实施它。
+对 Daniel Ingalls Smalltalk 背后的设计原则一文的致敬和模仿。
+目标是什么，之后进行推演，需要有哪些原则，再落实到设计，目前有两个项目，CodeLab Nerverland和龙眼创造乐园
+环球影城 可编程的含义，你想用魔杖控制其他东西，定点控制 它可以按照你的想法运行，你不只是体验，而是创造 空间 你的生活 小狗在门口，自动开门，这就是实施AI教育的理想契机，蒙台梭利 dynamicland 计算机在过去是一个房间，在未来它很可能也是一个房间，泛灵论者 下一件大事是一个房间，Alan kay ，这是未来 可理解 可见性
+理念 《mindstorm》 建构主义，建构主义定义 land 法国学法语 real playing 尽可能少的知识，消息，简单的语法 教育即生活 为创造精神提供计算机支持
+live programming 可扩展性 多语言 阔平台支持 与生活关联 AI IoT 开源硬件，我们关注这些项目的原因与大家不同，我们不关心是CNN还是，这是只是，下个十年会变更。思想
+仅仅让物体彼此连接是不够的，理解它的理念 不然你永远不知道是什么，bret引用
+一些之前的案例，展示灵活性 AI 服务 赛车 why 这是一种多功能lab，服务于 使用codelab adapter ， 社区版neverland， 如果你想获取商业方案，龙眼团队
+参考 [柳青的文章]() dynamicland 作为骨架
+ neverland  介绍当时的考虑点  阶梯教室 升降   学校 家庭  教育即生活   以 neverland 为例，谈论实施可编程空间可能遇到的问题 第一篇文章（neverland），设计者提出的建议 https://blog."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/join-us/">
+        <li class="mobile-menu-item">Join-Us</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/join-us/">Join-Us</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title"></h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 0001-01-01 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#codelab-可编程空间-背后的设计原则">CodeLab 可编程空间 背后的设计原则</a></li>
+<li><a href="#之前资料-概念">之前资料 概念</a></li>
+<li><a href="#理念-与-精神">理念 与 精神</a></li>
+<li><a href="#学校">学校</a></li>
+<li><a href="#应该有什么">应该有什么</a></li>
+<li><a href="#问题">问题</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="codelab-可编程空间-背后的设计原则">CodeLab 可编程空间 背后的设计原则</h1>
+
+<p>风格
+    <a href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a></p>
+
+<p>可编程空间3.0</p>
+
+<p>不断有人想实施它。</p>
+
+<p>对 Daniel Ingalls <a href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a>一文的致敬和模仿。</p>
+
+<p>目标是什么，之后进行推演，需要有哪些原则，再落实到设计，目前有两个项目，CodeLab Nerverland和龙眼创造乐园</p>
+
+<p>环球影城
+    可编程的含义，你想用魔杖控制其他东西，定点控制
+        它可以按照你的想法运行，你不只是体验，而是创造
+    空间
+        你的生活
+            小狗在门口，自动开门，这就是实施AI教育的理想契机，蒙台梭利
+        dynamicland
+            计算机在过去是一个房间，在未来它很可能也是一个房间，泛灵论者
+            下一件大事是一个房间，Alan kay ，这是未来
+        可理解 可见性</p>
+
+<p>理念
+    《mindstorm》 建构主义，建构主义定义
+        land
+            法国学法语
+    real playing
+        尽可能少的知识，消息，简单的语法
+    教育即生活
+    为创造精神提供计算机支持</p>
+
+<p>live programming
+可扩展性
+多语言
+阔平台支持
+与生活关联
+    AI IoT 开源硬件，我们关注这些项目的原因与大家不同，我们不关心是CNN还是，这是只是，下个十年会变更。思想</p>
+
+<p>仅仅让物体彼此连接是不够的，理解它的理念
+    不然你永远不知道是什么，bret引用</p>
+
+<p>一些之前的案例，展示灵活性
+    AI 服务 赛车
+        why
+    这是一种多功能lab，服务于
+    使用codelab adapter ， 社区版neverland，
+    如果你想获取商业方案，龙眼团队</p>
+
+<p>参考
+    [柳青的文章]()
+    dynamicland
+        作为骨架</p>
+
+<hr />
+
+<ul>
+<li>neverland
+
+<ul>
+<li>介绍当时的考虑点
+
+<ul>
+<li>阶梯教室</li>
+<li>升降</li>
+</ul></li>
+</ul></li>
+<li>学校</li>
+<li>家庭
+
+<ul>
+<li>教育即生活</li>
+</ul></li>
+</ul>
+
+<p>以 neverland 为例，谈论实施可编程空间可能遇到的问题
+    第一篇文章（neverland），设计者提出的建议
+        <a href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-club-recent-situation/">https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-club-recent-situation/</a></p>
+
+<p>教育
+    内容驱动
+    灵活
+        多场景支持
+部署
+    默认值
+颜色
+    木头 以孩子为中心
+可升降桌子椅子
+    不同年龄段
+桌子可移动
+家长
+    休息
+换鞋
+隐藏式
+不需要大门
+休息阅读区
+    书
+投影用电视
+区分设备类型
+    cqrs
+    控制
+    查询
+    事件通知
+        scratch有这三类积木
+    理解编程的一些范式
+        异步 同步 阻塞 请求
+            杜威 它是精心设计的，不是随机发生</p>
+
+<h1 id="之前资料-概念">之前资料 概念</h1>
+
+<p>社区版 neverland</p>
+
+<h1 id="理念-与-精神">理念 与 精神</h1>
+
+<p>land
+法国学法语</p>
+
+<h1 id="学校">学校</h1>
+
+<p>细节方案
+设计图
+默认值
+摆放
+教学案例</p>
+
+<h1 id="应该有什么">应该有什么</h1>
+
+<ul>
+<li>门 感应器</li>
+<li>灯</li>
+<li>面板</li>
+</ul>
+
+<p>空间编程
+dynamicland</p>
+
+<h1 id="问题">问题</h1>
+
+<ul>
+<li>包含哪些设备</li>
+<li>服务于教学 典型厂家</li>
+<li>可组性
+
+<ul>
+<li>摄像头通用
+
+<ul>
+<li>哪些典型项目呢</li>
+</ul></li>
+</ul></li>
+<li>门
+
+<ul>
+<li>事件</li>
+</ul></li>
+
+<li><p>推荐那些组件
+_ 全局还是小组还是个人
+_ 需要设计
+_ 包含 cozmo(机器人 AI)
+_ 每个小组一个 * 支持 Python 和 scratch 编程</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">    *</pre></td></tr></table>
+</div>
+</div>
+<p>看看 AI lab 怎么描述</p></li>
+
+<li><p>电脑推荐什么
+台式机
+普通学校</p></li>
+</ul>
+
+<p>包含不同区域？还是分组</p>
+
+<p>从已有的方案里调整
+创客实验室
+柴火
+ai-lab</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        0001-01-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab/neverland/codelab%E7%BC%96%E7%A8%8B%E6%BC%AB%E6%B8%B8%E6%8C%87%E5%8D%97/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default"></span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab/%E6%B4%BB%E5%8A%A8/11-23/">
+            <span class="next-text nav-default"></span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://blog.just4fun.site/post/%E9%9A%8F%E7%AC%94/join-us/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://blog.just4fun.site/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="http://www.beian.miit.gov.cn">苏ICP备18043473号</a></span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">种瓜</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
