@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-04-26T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-04-26T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="7285">
+<meta itemprop="wordCount" content="7564">
 
 
 
@@ -355,9 +355,7 @@
 <h3 id="最佳实践之争">最佳实践之争</h3>
 
 <blockquote>
-<blockquote>
 <p>Designing a learning system without a solid understanding of the principles in this book is like designing a mechanical system without understanding &ldquo;the lever&rdquo;. Or &ldquo;gravity&rdquo;. If you are reading this essay (and I&rsquo;m pretty sure you are!) then you need to read &ldquo;Mindstorms&rdquo;. &ndash; Bret Victor 《LEARNABLE PROGRAMMING Designing a programming system for understanding programs》</p>
-</blockquote>
 </blockquote>
 
 <!--先介绍最佳实践 再介绍反模式-->
@@ -534,7 +532,13 @@
 
 <p>关于同步、异步、阻塞、非阻塞，没有过分布式系统开发经验的开发者会常常会将它们混为一谈，这篇文章，做了很好梳理: <a href="https://www.zhihu.com/question/19732473">怎样理解阻塞非阻塞与同步异步的区别？</a></p>
 
-<p>在此我们的论点是，在 Scratch 内的积木尽量使用同步阻塞风格，而它的实现却应该是异步的。</p>
+<blockquote>
+<p>同步和异步关注的是消息通信机制 (synchronous communication/ asynchronous communication)。所谓同步，就是在发出一个<strong>调用</strong>时，在没有得到结果之前，该<strong>调用</strong>就不返回。但是一旦调用返回，就得到返回值了&hellip; 而异步则是相反，<strong>调用</strong>在发出之后，这个调用就直接返回了，所以没有返回结果。</p>
+
+<p>阻塞和非阻塞关注的是程序在等待调用结果（消息，返回值）时的状态&hellip;阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
+</blockquote>
+
+<p>在此我们的论点是，在 Scratch 内的积木尽量使用同步阻塞风格，而它的实现却应该是异步非阻塞的。 具体实现部分主要是:<a href="https://github.com/CodeLabClub/scratch3_cozmo/blob/master/index.js#L98">emit_with_messageid</a>及与之相关的代码。</p>
 
 <p>之所以应该尽量使用同步阻塞风格，是因为 Scratch 默认支持多任务，所以让积木采用同步阻塞风格并不会破坏 Scratch 的并发能力。除非你有正当理由使用非阻塞风格(诸如 Scratch 里的非阻塞播放音乐),否则同步积木应该是默认选择，由于 Javascript 默认是异步非阻塞，在消息通信中如何实现同步，使用 promise，细节参考我们开放出来的 Scratch 插件源码。</p>
 
