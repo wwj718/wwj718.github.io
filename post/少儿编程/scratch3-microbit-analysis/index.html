@@ -184,7 +184,7 @@
 
 <ul>
 <li>基于<a href="https://github.com/WebBluetoothCG/web-bluetooth/blob/gh-pages/implementation-status.md#chrome">web bluetooth</a>的<a href="https://blog.just4fun.site/scratch3-microbit.html">scratch3.0 + micro:bit</a></li>
-<li><a href="https://codelab-adapter-docs.codelab.club/user_guide/usage/">scratch3-adapter</a></li>
+<li><a href="https://adapter.codelab.club/user_guide/usage/">scratch3-adapter</a></li>
 </ul>
 
 <h1 id="尝鲜">尝鲜</h1>
@@ -205,17 +205,17 @@
 
 <p>回顾<a href="https://scratch.mit.edu/microbit">使用说明</a>和体验过程，容易猜到Scratch Link起代理的作用，Scratch Link在内部跑了一个websocket服务，允许网页与其交互，同时在启动时扫描周围的BLE设备</p>
 
-<p>思路和<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>几乎完全一致</p>
+<p>思路和<a href="https://adapter.codelab.club/">codelab-adapter</a>几乎完全一致</p>
 
-<p>Scratch Link与<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>的不同之处有：</p>
+<p>Scratch Link与<a href="https://adapter.codelab.club/">codelab-adapter</a>的不同之处有：</p>
 
 <ul>
-<li>Scratch Link目前不支持扩展，似乎也没计划开源，原因可能我猜测是Scratch Link将支持乐高机器人，而乐高机器人是闭源商业项目。<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>允许你自行扩展</li>
+<li>Scratch Link目前不支持扩展，似乎也没计划开源，原因可能我猜测是Scratch Link将支持乐高机器人，而乐高机器人是闭源商业项目。<a href="https://adapter.codelab.club/">codelab-adapter</a>允许你自行扩展</li>
 <li>Scratch Link在使用上更为简易</li>
-<li><a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>兼容更多的系统环境以及支持所有的开源硬件</li>
+<li><a href="https://adapter.codelab.club/">codelab-adapter</a>兼容更多的系统环境以及支持所有的开源硬件</li>
 </ul>
 
-<p>Scratch Link在易用性上做得非常好，这也<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>准备向它学习的地方。<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>的目标之一是完全兼容Scratch Link的功能</p>
+<p>Scratch Link在易用性上做得非常好，这也<a href="https://adapter.codelab.club/">codelab-adapter</a>准备向它学习的地方。<a href="https://adapter.codelab.club/">codelab-adapter</a>的目标之一是完全兼容Scratch Link的功能</p>
 
 <p>这篇文章就来分析一下官方在这块的巧思。以便于我们可以将其用到其他地方。</p>
 
@@ -397,7 +397,7 @@
 </div>
 <p>跟踪到BLESession类里， <code>BLESession</code>继承自<code>JSONRPCWebSocket</code>, 这里提示我们scratch与Scratch Link是如何通信的，基于WebSocket，同时使用远程调用的概念, RPC使用起来要比流简单很多。这是scratch官方很聪明的举措之一，我们在文末的tips里还将列出官方其他的聪明做法</p>
 
-<p>如果你不打算自己实现类似Scratch Link的东西，JSONRPCWebSocket不必太关注。我实现了类似Scratch Link的<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>，但使用的是消息通信，策略上和scratch团队不大一样。这块我们先不细说</p>
+<p>如果你不打算自己实现类似Scratch Link的东西，JSONRPCWebSocket不必太关注。我实现了类似Scratch Link的<a href="https://adapter.codelab.club/">codelab-adapter</a>，但使用的是消息通信，策略上和scratch团队不大一样。这块我们先不细说</p>
 
 <p>回到BLESession上边，我们前头关注<code>_ble.read</code>,在此将看到它的实现:</p>
 <div class="highlight"><div class="chroma">
