@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>CodeLab DynamicTable: 一个可实施的技术方案 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="我的命题可以用以下方式解释：了解我作法的人，会用这些命题当做梯子，越过它们，最终会发现这些梯子是是荒谬的。他必须超越这些命题，之后才能正确的" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-dynamictable-an-instance/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="CodeLab DynamicTable: 一个可实施的技术方案" />
+<meta property="og:description" content="我的命题可以用以下方式解释：了解我作法的人，会用这些命题当做梯子，越过它们，最终会发现这些梯子是是荒谬的。他必须超越这些命题，之后才能正确的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-dynamictable-an-instance/" />
+<meta property="article:published_time" content="2020-05-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-05-31T00:00:00+00:00" />
+<meta itemprop="name" content="CodeLab DynamicTable: 一个可实施的技术方案">
+<meta itemprop="description" content="我的命题可以用以下方式解释：了解我作法的人，会用这些命题当做梯子，越过它们，最终会发现这些梯子是是荒谬的。他必须超越这些命题，之后才能正确的">
+
+
+<meta itemprop="datePublished" content="2020-05-31T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-05-31T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1795">
+
+
+
+<meta itemprop="keywords" content="CodeLab," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CodeLab DynamicTable: 一个可实施的技术方案"/>
+<meta name="twitter:description" content="我的命题可以用以下方式解释：了解我作法的人，会用这些命题当做梯子，越过它们，最终会发现这些梯子是是荒谬的。他必须超越这些命题，之后才能正确的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/join-us/">
+        <li class="mobile-menu-item">Join-Us</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/join-us/">Join-Us</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">CodeLab DynamicTable: 一个可实施的技术方案</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-05-31 </span>
+        <div class="post-category">
+            <a href="/categories/codelab/"> CodeLab </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#第-0-号-codelab-dynamictable">第 0 号 CodeLab DynamicTable</a>
+<ul>
+<li><a href="#硬件-设备">硬件/设备</a>
+<ul>
+<li><a href="#桌子">桌子</a></li>
+<li><a href="#显示设备-超短焦投影仪">显示设备(超短焦投影仪)</a></li>
+<li><a href="#可打印的-marker">可打印的 Marker</a>
+<ul>
+<li><a href="#aruco-marker-的类型">ArUco Marker 的类型</a></li>
+<li><a href="#如何生成以及打印-marker">如何生成以及打印 Marker</a></li>
+<li><a href="#每个-marker-多大合适呢">每个 marker 多大合适呢？</a></li>
+</ul></li>
+<li><a href="#摄像头">摄像头</a></li>
+</ul></li>
+<li><a href="#软件">软件</a>
+<ul>
+<li><a href="#codelab-adapter">CodeLab Adapter</a></li>
+<li><a href="#codelab-scratch">CodeLab Scratch</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<blockquote>
+<p>我的命题可以用以下方式解释：了解我作法的人，会用这些命题当做梯子，越过它们，最终会发现这些梯子是是荒谬的。他必须超越这些命题，之后才能正确的看待世界。 &ndash; 维特根斯坦 《逻辑哲学论》</p>
+</blockquote>
+
+<h1 id="前言">前言</h1>
+
+<p><a href="https://www.codelab.club/blog/codelab-dynamictable-a-seeing-world/">CodeLab DynamicTable: A Seeing World</a> 可以看作 CodeLab DynamicTable 的白皮书。 文章里，我们着重阐述了想法的来源、设计原则以及可能性，尽管也站在技术视角做了一些讨论，却未给出完整的可实施技术方案。</p>
+
+<p>本文则试着给出一个可实施的技术方案， 它包含一些硬件设备清单和源码细节。</p>
+
+<p>需要强调的是，开放性和可扩展性是 CodeLab DynamicTable 的灵魂，大家可以随意改造它，构建自己想要的东西，而且我们鼓励你也为用户保留这种灵活性，让 Ta 自己成为创造者。</p>
+
+<p>看待本文的方式，是将它是为一个脚手架，而不是某种标准答案。或者将其看作一个帮助你爬上墙头的梯子，一旦你爬上去之后，去做你自己想做的事情，不要拘泥于梯子本身。</p>
+
+<h1 id="第-0-号-codelab-dynamictable">第 0 号 CodeLab DynamicTable</h1>
+
+<p>CodeLab 目前有 4 张办公桌，3 个全职人员。我们将第 4 张桌子构建为 DynamicTable。</p>
+
+<p><img src="https://adapter.codelab.club/img/WechatIMG1527.jpeg" alt="" /></p>
+
+<p>可以把这张桌子视为 <code>第0号 DynamicTable</code>。</p>
+
+<p>我们在<a href="https://www.codelab.club/blog/codelab-dynamictable-a-seeing-world/">CodeLab DynamicTable: A Seeing World</a>提到说， DynamicTable 的构成包括</p>
+
+<ul>
+<li>铅笔</li>
+<li>剪刀</li>
+<li>纸张</li>
+<li>橡皮泥</li>
+<li>可打印的 Marker</li>
+<li>摄像头</li>
+<li>显示设备(超短焦投影仪)</li>
+<li>桌子</li>
+<li>CodeLab Scratch</li>
+<li>CodeLab Adapter</li>
+<li>&hellip;</li>
+</ul>
+
+<p>铅笔、剪刀、纸张、橡皮泥 是日常实物，不做讨论。</p>
+
+<p>其中硬件/设备包括:</p>
+
+<ul>
+<li>桌子</li>
+<li>显示设备(超短焦投影仪)</li>
+<li>可打印的 Marker</li>
+<li>摄像头</li>
+</ul>
+
+<p>软件包括:</p>
+
+<ul>
+<li>CodeLab Adapter</li>
+<li>CodeLab Scratch</li>
+</ul>
+
+<p>接下来，我们站在实施的视角来讨论它们。</p>
+
+<h2 id="硬件-设备">硬件/设备</h2>
+
+<h3 id="桌子">桌子</h3>
+
+<p>我们采用了宜家的<a href="https://www.ikea.cn/cn/zh/p/bekant-bei-ken-te-zuo-zhan-liang-yong-shi-ban-gong-zhuo-bai-se-xiang-mu-tie-mian-bai-se-s69386410/">这款升降桌</a>。</p>
+
+<p>我们选择了橡木纹理表面，这个纹理表面在弱光下，挺适合直接作为投影表面。</p>
+
+<p>它的尺寸信息是:</p>
+
+<ul>
+<li>长度: 120 厘米</li>
+<li>宽度: 80 厘米</li>
+</ul>
+
+<p>选择这款升降桌的最初动机是 来 CodeLab 参加编程活动的孩子身高不同。此外，它也支持我们站立办公。</p>
+
+<p>需要说明的是: DynamicTable 对桌子没有特别要求。可以任意选择。如果它的表面纹理不适合投影，可以考虑铺一层桌布。</p>
+
+<h3 id="显示设备-超短焦投影仪">显示设备(超短焦投影仪)</h3>
+
+<p><img src="https://adapter.codelab.club/img/1eec2b121660441c6d5ba7ceceef469c.png" alt="" /></p>
+
+<p>我们选择了 LG 的这款<a href="https://www.lg.com/cn/projectors/lg-PH450UG">超短焦投影仪: PH450UG</a>，33cm 就可以获得 80 英寸的大屏幕。</p>
+
+<p>它内置电池，续航超过 2.5 小时。</p>
+
+<p>体积小巧(132 x 200 x 80.5 mm)，单手可握。更详细的参数，参看<a href="https://www.lg.com/cn/projectors/lg-PH450UG">产品页</a>。</p>
+
+<p>投影既可以是桌面，也可以投射到墙上。</p>
+
+<h3 id="可打印的-marker">可打印的 Marker</h3>
+
+<p><img src="https://adapter.codelab.club/img/e6cc193e54fdda12ae3ada44c2299dfd.png" alt="" /></p>
+
+<p>我们目前选择 ArUco 作为 Marker 。上图一共有 <code>5x6 = 30</code> 个 Marker， 按照从左到右，从上到下的顺序，id 依次从 1 到 30。</p>
+
+<p>你可以将 Marker 视为一种二维码，计算机可以识别它。计算机除了可以理解它的 id (编号)信息, 还可以理解它在什么位置，旋转角是多少，以及中心点和边缘 4 个角点在镜头下的坐标是多少。</p>
+
+<p>它是一个携带空间信息的二维码。</p>
+
+<p><a href="https://docs.opencv.org/trunk/d5/dae/tutorial_aruco_detection.html">ArUco Marker</a> 在 AR 和 机器人领域都用得很广泛，是一个开放项目。</p>
+
+<p>我们目前使用 OpenCV(Python)解析它。</p>
+
+<p>CodeLab 已经构建了解析 <a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/nodes_v3/node_physical_blocks.py">ArUco Marker Adapter 插件</a>，你可以在不了解它的情况下, 在 Scratch 中使用它。</p>
+
+<p>如果你愿意深入学习 ArUco Marker，推荐学习<a href="https://mecaruco2.readthedocs.io/en/latest">MECARUCO: mechanics &amp; aruco</a>。</p>
+
+<h4 id="aruco-marker-的类型">ArUco Marker 的类型</h4>
+
+<p>ArUco Marker 有多种类型， 我们选择了 <code>4X4_50</code>布局的， 一共有 50 个不同的 Marker。</p>
+
+<p>如果选择<code>7X7_1000</code> 则一共有 1000 种不同的 Marker。</p>
+
+<p>你可以在线查看它们直接的区别: <a href="https://chev.me/arucogen/">arucogen</a>， 也可以从以上页面生成可打印 Marker。</p>
+
+<h4 id="如何生成以及打印-marker">如何生成以及打印 Marker</h4>
+
+<p>有多种方式生成 Marker，既可以从 <a href="https://chev.me/arucogen/">arucogen</a> 每次生成一个 marker 。</p>
+
+<p>也可以使用 Python 代码批量生成 marker:</p>
+
+<p><img src="https://adapter.codelab.club/img/e6cc193e54fdda12ae3ada44c2299dfd.png" alt="" /></p>
+
+<p>生成以上 marker 的代码为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">from</span> <span class="nn">cv2</span> <span class="kn">import</span> <span class="n">aruco</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="c1"># %matplotlib inline</span>
+
+<span class="n">aruco_dict</span> <span class="o">=</span> <span class="n">aruco</span><span class="o">.</span><span class="n">Dictionary_get</span><span class="p">(</span><span class="n">aruco</span><span class="o">.</span><span class="n">DICT_4X4_50</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">nx</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">ny</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nx</span><span class="o">*</span><span class="n">ny</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">ny</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">aruco</span><span class="o">.</span><span class="n">drawMarker</span><span class="p">(</span><span class="n">aruco_dict</span><span class="p">,</span><span class="n">i</span><span class="p">,</span> <span class="mi">700</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">,</span> <span class="n">interpolation</span> <span class="o">=</span> <span class="s2">&#34;nearest&#34;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+
+<span class="c1"># plt.savefig(&#34;_data/markers.pdf&#34;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&#34;markers.png&#34;</span><span class="p">)</span>
+<span class="c1"># plt.show()</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="每个-marker-多大合适呢">每个 marker 多大合适呢？</h4>
+
+<p>这个可能需要通过做实验来获得。摄像头摆放的高度，以及分辨率， 都可能影响 marker 识别率。</p>
+
+<p>我们目前在 A4 纸上以黑白模式打印 ArUco Marker，大小是这样的:</p>
+
+<p><img src="https://adapter.codelab.club/img/WechatIMG1528.jpeg" alt="" /></p>
+
+<p>在一张 A4 纸上打印 2 份 30 张的 marker。</p>
+
+<p>如果你想让 marker 更小，也是可以的，最好做一些实验，确保识别度。如果你愿意把 marker 打印得更大，可以随意去做。</p>
+
+<h3 id="摄像头">摄像头</h3>
+
+<p>我们选择了<a href="https://www.logitech.com.cn/zh-cn/product/c922-pro-stream-webcam?crid=34">logitech C922PRO 摄像头</a>， 全高清分辨率 1080P 视频流。</p>
+
+<p>选择这款摄像头是因为，我们准备在 CodeLab 办公室做直播。</p>
+
+<p>DynamicTable 使用 Scratch 的视频数据(480x360), 这么低的分辨率对摄像头要求很低，所以绝大多数 USB 摄像头都可以。</p>
+
+<p>为了保证灵活性，最好有一个摄像头活动支架:</p>
+
+<p><img src="https://adapter.codelab.club/img/WechatIMG1529.jpeg" alt="" /></p>
+
+<hr />
+
+<p>以上便说完了 DynamicTable 的硬件/设备构成。</p>
+
+<h2 id="软件">软件</h2>
+
+<h3 id="codelab-adapter">CodeLab Adapter</h3>
+
+<p>使用 CodeLab Adapter 插件: <a href="https://adapter.codelab.club/extension_guide/physical_blocks/">node_physical_blocks.py</a>, 我们可以解析摄像头所见到的 ArUco Marker ，并按照从左到右、从上到下的顺序依次列出 Marker id。</p>
+
+<p>目前 node_physical_blocks.py 已经在<a href="https://adapter.codelab.club/extension_guide/extension_market/">插件市场</a>中。</p>
+
+<h3 id="codelab-scratch">CodeLab Scratch</h3>
+
+<p>以下是一个简单的案例，识别出拼写单词</p>
+
+<p><a href="https://scratch3v3.codelab.club/?sb3url=https://adapter.codelab.club/sb3/Scratch-spell-demo.sb3">Scratch-spell-demo</a></p>
+
+<p>你可能会想到这个例子:</p>
+
+<video width=80% src="/video/1590154622682774.mp4" controls="controls"></video>
+
+<p>只要将 <a href="https://scratch3v3.codelab.club/?sb3url=https://adapter.codelab.club/sb3/Scratch-spell-demo.sb3">Scratch-spell-demo</a> 稍加修改，就可以作出视频里的案例。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://www.codelab.club/blog/codelab-dynamictable-a-seeing-world/">CodeLab DynamicTable: A Seeing World</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-05-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">CodeLab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-dynamictable-a-seeing-world/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">CodeLab DynamicTable: A Seeing World</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/dynamictable-and-animation/">
+            <span class="next-text nav-default">使用 CodeLab DynamicTable 解释动画原理</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://blog.just4fun.site/post/%E9%9A%8F%E7%AC%94/join-us/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://blog.just4fun.site/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="http://www.beian.miit.gov.cn">苏ICP备18043473号</a></span>
+  <span class="division">|</span>
+  <span>枕戈待白昼</span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
