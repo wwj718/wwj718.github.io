@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="CodeLab" /><meta name="description" content="我们近期发布了一个新的 Adapter 插件: extension_http_eim.py (可在插件市场下载)。
+<meta name="author" content="CodeLab" /><meta name="description" content="我们近期发布了一个新的 Adapter 插件: extension_Siri.py (可在插件市场下载)
 使用该插件，可将 Siri 接入到 Scratch，并于 CodeLab 可编程空间里的一切互动。
 " /><meta name="keywords" content="education, programming, Technology" />
 
@@ -41,7 +41,7 @@
 
 
 <meta property="og:title" content="CodeLab ❤ Siri" />
-<meta property="og:description" content="我们近期发布了一个新的 Adapter 插件: extension_http_eim.py (可在插件市场下载)。
+<meta property="og:description" content="我们近期发布了一个新的 Adapter 插件: extension_Siri.py (可在插件市场下载)
 
 使用该插件，可将 Siri 接入到 Scratch，并于 CodeLab 可编程空间里的一切互动。" />
 <meta property="og:type" content="article" />
@@ -49,21 +49,21 @@
 <meta property="article:published_time" content="2020-06-28T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-06-28T00:00:00+00:00" />
 <meta itemprop="name" content="CodeLab ❤ Siri">
-<meta itemprop="description" content="我们近期发布了一个新的 Adapter 插件: extension_http_eim.py (可在插件市场下载)。
+<meta itemprop="description" content="我们近期发布了一个新的 Adapter 插件: extension_Siri.py (可在插件市场下载)
 
 使用该插件，可将 Siri 接入到 Scratch，并于 CodeLab 可编程空间里的一切互动。">
 
 
 <meta itemprop="datePublished" content="2020-06-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-06-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="687">
+<meta itemprop="wordCount" content="558">
 
 
 
 <meta itemprop="keywords" content="CodeLab," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="CodeLab ❤ Siri"/>
-<meta name="twitter:description" content="我们近期发布了一个新的 Adapter 插件: extension_http_eim.py (可在插件市场下载)。
+<meta name="twitter:description" content="我们近期发布了一个新的 Adapter 插件: extension_Siri.py (可在插件市场下载)
 
 使用该插件，可将 Siri 接入到 Scratch，并于 CodeLab 可编程空间里的一切互动。"/>
 
@@ -158,8 +158,8 @@
 <li><a href="#原理">原理</a>
 <ul>
 <li><a href="#构建一个接受-http-请求的-web-server">构建一个接受 http 请求的 web server</a></li>
-<li><a href="#使用-siri-的输入-语音识别结果-构建-http-请求">使用 Siri 的输入(语音识别结果)构建 http 请求</a></li>
 </ul></li>
+<li><a href="#使用文档">使用文档</a></li>
 <li><a href="#进一步">进一步</a></li>
 </ul></li>
 <li><a href="#参考">参考</a></li>
@@ -168,17 +168,13 @@
   </div>
 </div>
     <div class="post-content">
-      <p>我们近期发布了一个新的 Adapter 插件: <a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_http_eim.py">extension_http_eim.py</a> (可在<a href="https://adapter.codelab.club/extension_guide/extension_market/">插件市场</a>下载)。</p>
+      <p>我们近期发布了一个新的 Adapter 插件: <a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_Siri.py">extension_Siri.py</a> (可在<a href="https://adapter.codelab.club/extension_guide/extension_market/">插件市场</a>下载)</p>
 
 <p>使用该插件，可将 Siri 接入到 Scratch，并于 CodeLab 可编程空间里的一切互动。</p>
 
 <h2 id="demo">Demo</h2>
 
 <video width=80% src="https://adapter.codelab.club/video/1593328552202841.mp4" controls="controls"></video>
-
-<p>Scratch 相关源码</p>
-
-<p><img src="https://adapter.codelab.club/img/ab316a73cce7fc8e3d4ffe010bc514dc.png" alt="" /></p>
 
 <h2 id="原理">原理</h2>
 
@@ -189,44 +185,36 @@
 <li>使用 Siri 的输入(语音识别结果)构建 http 请求</li>
 </ul>
 
+<p>来自快接指令的输入经由 http post 到 web server，再自动转化为 EIM 消息进入 Adapter。之后进入 CodeLab Scratch 。</p>
+
+<p>值得注意的是，通过使用<a href="https://apps.apple.com/cn/app/%E5%BF%AB%E6%8D%B7%E6%8C%87%E4%BB%A4/id915249334">快捷指令</a>里的<code>列表</code>，你可以构建多轮对话。</p>
+
 <h3 id="构建一个接受-http-请求的-web-server">构建一个接受 http 请求的 web server</h3>
 
-<p><a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_http_eim.py">extension_http_eim.py</a> 实际上是一个 web server，fork 自<a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_webserver.py">extension_webserver.py</a></p>
+<p><a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_Siri.py">extension_Siri.py</a> 实际上是一个 web server，fork 自<a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_webserver.py">extension_webserver.py</a></p>
 
 <p>插件运行之后，会打开一个新页面，显示当前计算机的 IP。</p>
 
 <p>它有两个重要 API:</p>
 
 <ul>
-<li>接受来自 <code>http://&lt;IP&gt;:18081/api/message/eim?message=hi</code> 的<code>GET</code>请求, 并将请求参数 message 的值作为 eim 消息发送到 Scratch。</li>
-<li>接受来自 <code>http://&lt;IP&gt;:18081/api/message/eim</code> 的<code>POST</code>请求, 并将请求参数 message 的值作为 eim 消息发送到 Scratch(json)</li>
+<li>接受来自 <code>http://&lt;IP&gt;:18081/api/message/siri?message=hi</code> 的<code>GET</code>请求, 并将请求参数 message 的值作为 eim 消息发送到 Scratch。</li>
+<li>接受来自 <code>http://&lt;IP&gt;:18081/api/message/siri</code> 的<code>POST</code>请求, 并将请求参数 message 的值作为 eim 消息发送到 Scratch(json)</li>
 </ul>
 
 <p>如果你的请求参数包含中文，建议使用 POST。</p>
 
 <p>熟悉 Adapter 的朋友可能会发现，该插件的功能和 <a href="https://adapter.codelab.club/dev_guide/REST-API/">Adapter REST API</a>相近，为何要写成独立插件？原因是 Adapter 默认采用 https，但 https 容易遇到各种安全机制问题， http api 则不会遇到这类问题。</p>
 
-<h3 id="使用-siri-的输入-语音识别结果-构建-http-请求">使用 Siri 的输入(语音识别结果)构建 http 请求</h3>
+<h2 id="使用文档">使用文档</h2>
 
-<p>利用 iOS 的<a href="https://apps.apple.com/cn/app/%E5%BF%AB%E6%8D%B7%E6%8C%87%E4%BB%A4/id915249334">快捷指令</a>。我们可以在 iOS 里自定义一些任务。</p>
-
-<p><img src="https://adapter.codelab.club/img/IMG_0014.PNG" alt="" /></p>
-
-<p><img src="https://adapter.codelab.club/img/IMG_0015.PNG" alt="" /></p>
-
-<p>以上自定义任务的功能是<code>控制乐高</code>， 当你说<code>hey siri 控制乐高</code> 这条任务就会被触发。</p>
-
-<hr />
-
-<p>假设你选择了<code>顺时针旋转</code>, 该命令就会经由 http post 到 web server，再自动转化为 EIM 消息进入 Adapter。你在 CodeLab Scratch 中就能为乐高的<code>顺时针旋转</code>编写相应逻辑。</p>
-
-<p>演示视频里的控制房间和控制小车也是同理。值得注意的是，通过使用<a href="https://apps.apple.com/cn/app/%E5%BF%AB%E6%8D%B7%E6%8C%87%E4%BB%A4/id915249334">快捷指令</a>里的<code>列表</code>，你可以构建多轮对话。</p>
-
-<p>快捷指令里还有很多有意思的积木。</p>
+<p><a href="https://adapter.codelab.club/extension_guide/siri/">文档</a></p>
 
 <h2 id="进一步">进一步</h2>
 
-<p>如果你想对文本做进一步的语义处理，又不想使用云端 API，推荐使用<a href="https://github.com/crownpku/Rasa_NLU_Chi">Rasa_NLU_Chi</a>，我近期计划基于它写一个 Adapter 语义解析插件。</p>
+<p>如果你想对文本做进一步的语义处理，又不想使用云端 API，推荐使用<a href="https://github.com/crownpku/Rasa_NLU_Chi">Rasa_NLU_Chi</a>，我在 Scratch 里写一个简单的 Adapter 语义解析插件。</p>
+
+<p>以下是它的应用案例: <a href="https://www.codelab.club/blog/hey-siri-control-lego/">hey siri</a></p>
 
 <p>NLU 的处理结果如何操控实物呢？<a href="https://almond.stanford.edu/doc/thingtalk-intro.md">ThingTalk</a> 和 <a href="https://iot.mozilla.org/">WebThings</a> 提供了很好的思路。</p>
 
