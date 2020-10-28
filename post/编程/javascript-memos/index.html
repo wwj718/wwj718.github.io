@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>JavaScript 备忘 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 处理数组 For loops, array reduce" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/javascript-memos/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="JavaScript 备忘" />
+<meta property="og:description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 处理数组 For loops, array reduce" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/javascript-memos/" />
+<meta property="article:published_time" content="2020-10-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-10-28T00:00:00+00:00" />
+<meta itemprop="name" content="JavaScript 备忘">
+<meta itemprop="description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 处理数组 For loops, array reduce">
+
+
+<meta itemprop="datePublished" content="2020-10-28T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-10-28T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1178">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="JavaScript 备忘"/>
+<meta name="twitter:description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 处理数组 For loops, array reduce"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/join-us/">
+        <li class="mobile-menu-item">Join-Us</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/join-us/">Join-Us</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">JavaScript 备忘</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-10-28 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a>
+<ul>
+<li><a href="#处理数组">处理数组</a>
+<ul>
+<li><a href="#for-loops-array-reduce-and-method-chaining-https-www-30secondsofcode-org-blog-s-code-anatomy-chaining-reduce-for-loop"><a href="https://www.30secondsofcode.org/blog/s/code-anatomy-chaining-reduce-for-loop">For loops, array reduce and method chaining</a></a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+<li><a href="#数组与对象">数组与对象</a>
+<ul>
+<li>
+<ul>
+<li><a href="#4种数组相关的方法-https-www-30secondsofcode-org-blog-s-4-javascript-array-methods"><a href="https://www.30secondsofcode.org/blog/s/4-javascript-array-methods">4种数组相关的方法</a></a></li>
+<li><a href="#将可迭代对象转换为数组-https-www-30secondsofcode-org-blog-s-javascript-iterable-to-array"><a href="https://www.30secondsofcode.org/blog/s/javascript-iterable-to-array">将可迭代对象转换为数组</a></a></li>
+<li><a href="#for-in-for-of-and-foreach-https-www-30secondsofcode-org-blog-s-javascript-for-in-for-of-foreach"><a href="https://www.30secondsofcode.org/blog/s/javascript-for-in-for-of-foreach">for&hellip;in, for&hellip;of and forEach</a></a></li>
+</ul></li>
+<li><a href="#map-object-https-www-30secondsofcode-org-js-s-map-object"><a href="https://www.30secondsofcode.org/js/s/map-object">map-object</a></a></li>
+<li><a href="#reduce-https-developer-mozilla-org-zh-cn-docs-web-javascript-reference-global-objects-array-reduce"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">reduce</a></a></li>
+</ul></li>
+<li><a href="#this">this</a>
+<ul>
+<li><a href="#了解javascript中的-this-关键字-https-www-30secondsofcode-org-blog-s-javascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解JavaScript中的&rsquo;this&rsquo;关键字</a></a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h1 id="前言">前言</h1>
+
+<p>近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。</p>
+
+<h2 id="处理数组">处理数组</h2>
+
+<h3 id="for-loops-array-reduce-and-method-chaining-https-www-30secondsofcode-org-blog-s-code-anatomy-chaining-reduce-for-loop"><a href="https://www.30secondsofcode.org/blog/s/code-anatomy-chaining-reduce-for-loop">For loops, array reduce and method chaining</a></h3>
+
+<p>For loops</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">files</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;foo.txt &#39;</span><span class="p">,</span> <span class="s1">&#39;.bar&#39;</span><span class="p">,</span> <span class="s1">&#39;   &#39;</span><span class="p">,</span> <span class="s1">&#39;baz.foo&#39;</span> <span class="p">];</span>
+<span class="k">const</span> <span class="nx">filePaths</span> <span class="o">=</span> <span class="nx">files</span>
+  <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">file</span> <span class="p">=&gt;</span> <span class="nx">file</span><span class="p">.</span><span class="nx">trim</span><span class="p">())</span>
+  <span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nb">Boolean</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">fileName</span> <span class="p">=&gt;</span> <span class="sb">`~/cool_app/</span><span class="si">${</span><span class="nx">fileName</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+
+<span class="c1">// filePaths = [ &#39;~/cool_app/foo.txt&#39;, &#39;~/cool_app/.bar&#39;, &#39;~/cool_app/baz.foo&#39;]
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>函数式风格，易于阅读和扩展，但对迭代的控制较少，不能return跳过元素。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://github.com/30-seconds/30-seconds-of-code">30-seconds-of-code</a>
+
+<ul>
+<li><a href="https://www.30secondsofcode.org/js/t/array/p/1">30secondsofcode</a></li>
+</ul></li>
+<li><a href="https://github.com/getify/You-Dont-Know-JS">You-Dont-Know-JS</a></li>
+<li><a href="https://github.com/leonardomso/33-js-concepts">33-js-concepts</a></li>
+</ul>
+
+<h1 id="数组与对象">数组与对象</h1>
+
+<h3 id="4种数组相关的方法-https-www-30secondsofcode-org-blog-s-4-javascript-array-methods"><a href="https://www.30secondsofcode.org/blog/s/4-javascript-array-methods">4种数组相关的方法</a></h3>
+
+<p>JavaScript数组具有非常健壮的API，提供了许多惊人的工具</p>
+
+<p><img src="/post/img/cdfsdfdsfsdf.png" alt="" /></p>
+
+<p>map : 将提供的转换应用于原始数组的每个元素, 结果是一个数组的长度与原始数组相同</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+<span class="k">const</span> <span class="kr">double</span> <span class="o">=</span> <span class="nx">x</span> <span class="p">=&gt;</span> <span class="nx">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nx">arr</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kr">double</span><span class="p">);</span> <span class="c1">// [2, 4, 6]
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>filter:  使用过滤函数创建新数组，以仅保留true基于该函数返回的元素。结果是一个等于或小于原始数组长度的数组</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+<span class="k">const</span> <span class="nx">isOdd</span> <span class="o">=</span> <span class="nx">x</span> <span class="p">=&gt;</span> <span class="nx">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nx">arr</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">isOdd</span><span class="p">);</span> <span class="c1">// [1, 3]
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>reduce: 根据reduce函数和初始值创建任何类型的单一输出值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+
+<span class="k">const</span> <span class="nx">sum</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">;</span>
+<span class="nx">arr</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">sum</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">// 6
+</span><span class="c1"></span>
+<span class="k">const</span> <span class="nx">increment</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">[...</span><span class="nx">x</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">x</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">y</span><span class="p">];</span>
+<span class="nx">arr</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">increment</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="c1">// [0, 1, 3, 6]
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>reduce相关参数与细节参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">Array.prototype.reduce()</a></p>
+
+<p>find: 返回匹配器函数返回的第一个元素true。结果是原始数组中的单个元素。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+<span class="k">const</span> <span class="nx">isOdd</span> <span class="o">=</span> <span class="nx">x</span> <span class="p">=&gt;</span> <span class="nx">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nx">arr</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">isOdd</span><span class="p">);</span> <span class="c1">// 1
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="将可迭代对象转换为数组-https-www-30secondsofcode-org-blog-s-javascript-iterable-to-array"><a href="https://www.30secondsofcode.org/blog/s/javascript-iterable-to-array">将可迭代对象转换为数组</a></h3>
+
+<p>使用<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax">spread operator</a></p>
+
+<p>String</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;Zelda&#39;</span><span class="p">;</span>
+<span class="k">const</span> <span class="nx">letters</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">name</span><span class="p">];</span> <span class="c1">// &#39;Z&#39;, &#39;e&#39;, &#39;l&#39;, &#39;d&#39;, &#39;a&#39;
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Set</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="k">const</span> <span class="nx">values</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="k">const</span> <span class="nx">uniqueValues</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">values</span><span class="p">];</span> <span class="c1">// [1, 2, 3, 4]
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>NodeList</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">nodes</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">;</span>
+<span class="k">const</span> <span class="nx">nodeArray</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">nodes</span><span class="p">];</span> <span class="c1">// [ &lt;!DOCTYPE html&gt;, html ]
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="for-in-for-of-and-foreach-https-www-30secondsofcode-org-blog-s-javascript-for-in-for-of-foreach"><a href="https://www.30secondsofcode.org/blog/s/javascript-for-in-for-of-foreach">for&hellip;in, for&hellip;of and forEach</a></h3>
+
+<p><code>for...in</code> 可用于数组字符串或普通对象，但不能用于Map或Set对象。(适合我)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">prop</span> <span class="k">in</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>            <span class="c1">// 0, 1, 2 (array indexes)
+</span><span class="c1"></span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">prop</span> <span class="k">in</span> <span class="s1">&#39;str&#39;</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>            <span class="c1">// 0, 1, 2 (string indexes)
+</span><span class="c1"></span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">prop</span> <span class="k">in</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">c</span><span class="o">:</span> <span class="mi">3</span><span class="p">})</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>            <span class="c1">// a, b, c (object property names)
+</span><span class="c1"></span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">prop</span> <span class="k">in</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]))</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>            <span class="c1">// undefined (no enumerable properties)
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>forEach()仅迭代数组，但它可以在迭代时访问每个元素的值和索引。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span>
+  <span class="nx">val</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>     <span class="c1">// a, b, c (array values)
+</span><span class="c1"></span><span class="p">);</span>
+
+<span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span>
+  <span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>  <span class="c1">// 0, 1, 2 (array indexes)
+</span><span class="c1"></span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p><code>for...of</code> 可用于数组，字符串Map或Set对象，但不能用于普通对象。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">val</span> <span class="k">of</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>            <span class="c1">// a, b, c (array values)
+</span><span class="c1"></span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">val</span> <span class="k">of</span> <span class="s1">&#39;str&#39;</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>            <span class="c1">// s, t, r (string characters)
+</span><span class="c1"></span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">val</span> <span class="k">of</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">c</span><span class="o">:</span> <span class="mi">3</span><span class="p">})</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span>           <span class="c1">// TypeError (not iterable)
+</span><span class="c1"></span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">val</span> <span class="k">of</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]))</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>            <span class="c1">// a, b, d (Set values)
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="map-object-https-www-30secondsofcode-org-js-s-map-object"><a href="https://www.30secondsofcode.org/js/s/map-object">map-object</a></h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">mapObject</span> <span class="o">=</span> <span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span> <span class="p">=&gt;</span>
+  <span class="nx">arr</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">el</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">acc</span><span class="p">[</span><span class="nx">el</span><span class="p">]</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">el</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">arr</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+  <span class="p">},</span> <span class="p">{});</span>
+<span class="c1">// EXAMPLES
+</span><span class="c1"></span><span class="nx">mapObject</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="nx">a</span> <span class="p">=&gt;</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">a</span><span class="p">);</span> <span class="c1">// { 1: 1, 2: 4, 3: 9 }
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="reduce-https-developer-mozilla-org-zh-cn-docs-web-javascript-reference-global-objects-array-reduce"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">reduce</a></h2>
+
+<p>reduce() 方法对数组中的每个元素执行一个由您提供的reducer函数(升序执行)，将其结果汇总为单个返回值。</p>
+
+<p>reducer 函数接收4个参数:</p>
+
+<ul>
+<li>Accumulator (acc) (累计器)</li>
+<li>Current Value (cur) (当前值)</li>
+<li>Current Index (idx) (当前索引)</li>
+<li>Source Array (src) (源数组)</li>
+</ul>
+
+<p>arr.reduce(callback(accumulator, currentValue[, index[, array]])[, initialValue])</p>
+
+<p>参数细节参考原文。</p>
+
+<p>initialValue: 作为第一次调用 callback函数时的第一个参数的值。 如果没有提供初始值，则将使用数组中的第一个元素。 在没有初始值的空数组上调用 reduce 将报错。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// 计算数组中每个元素出现的次数
+</span><span class="c1"></span>
+<span class="kd">var</span> <span class="nx">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Tiff&#39;</span><span class="p">,</span> <span class="s1">&#39;Bruce&#39;</span><span class="p">,</span> <span class="s1">&#39;Alice&#39;</span><span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">countedNames</span> <span class="o">=</span> <span class="nx">names</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">allNames</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span> 
+  <span class="k">if</span> <span class="p">(</span><span class="nx">name</span> <span class="k">in</span> <span class="nx">allNames</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">allNames</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">allNames</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">allNames</span><span class="p">;</span>
+<span class="p">},</span> <span class="p">{});</span>
+<span class="c1">// countedNames is:
+</span><span class="c1">// { &#39;Alice&#39;: 2, &#39;Bob&#39;: 1, &#39;Tiff&#39;: 1, &#39;Bruce&#39;: 1 }
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="this">this</h1>
+
+<h2 id="了解javascript中的-this-关键字-https-www-30secondsofcode-org-blog-s-javascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解JavaScript中的&rsquo;this&rsquo;关键字</a></h2>
+
+<p>参考连接</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-10-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/smalltalk-explore-notes/">
+            <span class="next-text nav-default">smalltalk 探索笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://blog.just4fun.site/post/%E9%9A%8F%E7%AC%94/join-us/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://blog.just4fun.site/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="http://www.beian.miit.gov.cn">苏ICP备18043473号</a></span>
+  <span class="division">|</span>
+  <span>枕戈待白昼</span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
