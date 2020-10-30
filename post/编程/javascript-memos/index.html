@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-10-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-10-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1285">
+<meta itemprop="wordCount" content="1397">
 
 
 
@@ -166,6 +166,17 @@
 <li><a href="#了解-javascript-中的-this-关键字-https-www-30secondsofcode-org-blog-s-javascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解 JavaScript 中的&rsquo;this&rsquo;关键字</a></a></li>
 </ul></li>
 <li><a href="#promise">Promise</a></li>
+<li><a href="#库">库</a>
+<ul>
+<li><a href="#systemjs-https-github-com-systemjs-systemjs"><a href="https://github.com/systemjs/systemjs">systemjs</a></a></li>
+</ul></li>
+<li><a href="#杂货铺">杂货铺</a>
+<ul>
+<li>
+<ul>
+<li><a href="#sleep">sleep</a></li>
+</ul></li>
+</ul></li>
 <li><a href="#感受">感受</a></li>
 <li><a href="#参考">参考</a></li>
 </ul>
@@ -509,6 +520,56 @@
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise">JavaScript 标准内置对象Promise</a></li>
 </ul>
 
+<h1 id="库">库</h1>
+
+<h2 id="systemjs-https-github-com-systemjs-systemjs"><a href="https://github.com/systemjs/systemjs">systemjs</a></h2>
+
+<p>Dynamic ES module loader</p>
+
+<p>SystemJS允许编写和使用依赖于 ES6 导入和导出语句的模块化javacsript代码。</p>
+
+<h1 id="杂货铺">杂货铺</h1>
+
+<h3 id="sleep">sleep</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">sleep</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span>
+    <span class="nx">resolve</span> <span class="p">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">ms</span><span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kr">async</span> <span class="kd">function</span> <span class="nx">delayedFunc</span><span class="p">()</span> <span class="p">{</span> 
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="k">of</span> <span class="p">[...</span><span class="nb">Array</span><span class="p">(</span><span class="mi">30</span><span class="p">).</span><span class="nx">keys</span><span class="p">()]){</span>
+	  <span class="kr">await</span> <span class="nx">sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+    <span class="c1">// this.rotation = i; // 让object旋转起来
+</span><span class="c1"></span>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="p">}</span>
+
+
+<span class="nx">delayedFunc</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)();</span>
+</code></pre></td></tr></table>
+</div>
+</div>
 <h1 id="感受">感受</h1>
 
 <p>我侧重使用函数式风格（map/reduce/filter）的表达方式，js 可真是有着 C 语法的 LISP</p>
