@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-10-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-10-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1397">
+<meta itemprop="wordCount" content="1836">
 
 
 
@@ -163,7 +163,14 @@
 </ul></li>
 <li><a href="#this">this</a>
 <ul>
-<li><a href="#了解-javascript-中的-this-关键字-https-www-30secondsofcode-org-blog-s-javascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解 JavaScript 中的&rsquo;this&rsquo;关键字</a></a></li>
+<li><a href="#了解-javascript-中的-this-关键字-https-www-30secondsofcode-org-blog-s-javascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解 JavaScript 中的&rsquo;this&rsquo;关键字</a></a>
+<ul>
+<li><a href="#对象上下文">对象上下文</a></li>
+<li><a href="#箭头函数上下文">箭头函数上下文</a></li>
+<li><a href="#事件处理程序上下文">事件处理程序上下文</a></li>
+<li><a href="#binding-this">Binding this</a></li>
+<li><a href="#class-this-https-developer-mozilla-org-zh-cn-docs-web-javascript-reference-classes"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes">class &amp; this</a></a></li>
+</ul></li>
 </ul></li>
 <li><a href="#promise">Promise</a></li>
 <li><a href="#库">库</a>
@@ -505,8 +512,132 @@
 
 <h2 id="了解-javascript-中的-this-关键字-https-www-30secondsofcode-org-blog-s-javascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解 JavaScript 中的&rsquo;this&rsquo;关键字</a></h2>
 
-<p>参考连接</p>
+<p>在JavaScript中，this关键字指的是当前正在执行代码的对象。简而言之，常见情况：</p>
 
+<ul>
+<li>默认情况下，this引用全局对象。</li>
+<li>在函数中，当不处于严格模式时，this指的是全局对象。</li>
+<li>在函数中，在严格模式下this为 undefined。</li>
+<li>在<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">箭头函数</a>中，this保留<a href="https://developer.mozilla.org/en-US/docs/Glossary/Scope">封闭词法上下文</a>中this的值this。</li>
+<li>在对象方法中，this指的是调用该方法的对象。</li>
+<li>在构造函数调用中，this绑定到正在构造的新对象。</li>
+<li>在事件处理程序中，this绑定到放置侦听器的元素。</li>
+</ul>
+
+<h3 id="对象上下文">对象上下文</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">f</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">const</span> <span class="nx">myObj</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
+<span class="nx">myObj</span><span class="p">.</span><span class="nx">foo</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myObj</span><span class="p">.</span><span class="nx">f</span><span class="p">());</span> <span class="c1">// { foo: 1 }
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="箭头函数上下文">箭头函数上下文</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="nb">window</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">// &lt;-- notice me?
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">Person</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span> <span class="c1">// &lt;-- notice me?
+</span><span class="c1"></span>  <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="c1">// &lt;-- Arrow function executing in the &#34;p&#34; (an instance of Person) scope
+</span><span class="c1"></span>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;this.age&#34;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">);</span> <span class="c1">// yields &#34;42&#34; because the function executes on the Person scope
+</span><span class="c1"></span>  <span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="事件处理程序上下文">事件处理程序上下文</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">el</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;my-el&#39;</span><span class="p">);</span>
+
+<span class="nx">el</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span> <span class="o">===</span> <span class="nx">el</span><span class="p">);</span> <span class="c1">// true
+</span><span class="c1"></span><span class="p">});</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="binding-this">Binding this</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">foo</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">bind</span><span class="p">({</span><span class="nx">foo</span><span class="o">:</span> <span class="s1">&#39;hello&#39;</span><span class="p">});</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">());</span> <span class="c1">// &#39;hello&#39;
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="class-this-https-developer-mozilla-org-zh-cn-docs-web-javascript-reference-classes"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes">class &amp; this</a></h3>
+
+<p>实例的属性必须定义在类的方法里.  ES6 类的方法内部如果含有this，它默认指向类的实例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">class</span> <span class="nx">Rectangle</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">height</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span> <span class="p">{</span>    
+    <span class="k">this</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">height</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">width</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
 <h1 id="promise">Promise</h1>
 
 <!--.then(successCallback, failureCallback);-->

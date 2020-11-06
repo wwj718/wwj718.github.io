@@ -42,15 +42,15 @@
 <meta property="og:description" content="最近的兴趣集中在 如何构建灵活、实时的编程环境, 为教育、创造和探索提供友好的支持 正在研究以下几个项目: Etoys Dynamicland Croquet Lively 本文主要对 Lively 相关资料做一番梳理，" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/dan-ingalls-and-lively/" />
-<meta property="article:published_time" content="2020-01-19T00:00:00+00:00" />
-<meta property="article:modified_time" content="2020-01-19T00:00:00+00:00" />
+<meta property="article:published_time" content="2020-11-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-11-06T00:00:00+00:00" />
 <meta itemprop="name" content="Dan Ingalls 与 Lively">
 <meta itemprop="description" content="最近的兴趣集中在 如何构建灵活、实时的编程环境, 为教育、创造和探索提供友好的支持 正在研究以下几个项目: Etoys Dynamicland Croquet Lively 本文主要对 Lively 相关资料做一番梳理，">
 
 
-<meta itemprop="datePublished" content="2020-01-19T00:00:00&#43;00:00" />
-<meta itemprop="dateModified" content="2020-01-19T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="2893">
+<meta itemprop="datePublished" content="2020-11-06T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-11-06T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="4086">
 
 
 
@@ -131,7 +131,7 @@
       <h1 class="post-title">Dan Ingalls 与 Lively</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2020-01-19 </span>
+        <span class="post-time"> 2020-11-06 </span>
         <div class="post-category">
             <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
             </div>
@@ -156,6 +156,37 @@
 <li><a href="#目的">目的</a></li>
 <li><a href="#演示">演示</a></li>
 <li><a href="#特性-https-lively-next-org"><a href="https://lively-next.org/">特性</a></a></li>
+<li><a href="#架构-https-lively-next-org-architecture-html"><a href="https://lively-next.org/architecture.html">架构</a></a>
+<ul>
+<li><a href="#核心">核心</a>
+<ul>
+<li><a href="#lively-modules-https-github-com-livelykernel-lively-next-tree-master-lively-modules"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.modules">lively.modules</a></a></li>
+<li><a href="#lively-ast-lively-source-transform">lively.ast + lively.source-transform</a></li>
+<li><a href="#lively-vm">lively.vm</a></li>
+</ul></li>
+<li><a href="#持久化和数据">持久化和数据</a>
+<ul>
+<li><a href="#lively-resources-lively-storage">lively.resources + lively.storage</a></li>
+<li><a href="#lively-serializer2">lively.serializer2</a></li>
+<li><a href="#lively-partsbin">lively.partsbin</a></li>
+</ul></li>
+<li><a href="#服务器和系统互操作">服务器和系统互操作</a>
+<ul>
+<li><a href="#lively-shell-https-github-com-livelykernel-lively-next-tree-master-lively-shell"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.shell">lively.shell</a></a></li>
+<li><a href="#lively-server-https-github-com-livelykernel-lively-next-tree-master-lively-shell"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.shell">lively.server</a></a></li>
+</ul></li>
+<li><a href="#多用户和网络">多用户和网络</a>
+<ul>
+<li><a href="#lively-2lively-https-github-com-livelykernel-lively-next-tree-master-lively-2lively"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.2lively">lively.2lively</a></a></li>
+<li><a href="#lively-user">lively.user</a></li>
+</ul></li>
+<li><a href="#图形用户界面和工具">图形用户界面和工具</a>
+<ul>
+<li><a href="#lively-morphic-https-github-com-livelykernel-lively-next-tree-master-lively-morphic-lively-graphics-https-github-com-livelykernel-lively-next-tree-master-lively-graphics"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.morphic">lively.morphic</a> + <a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.graphics">lively.graphics</a></a></li>
+<li><a href="#lively-bindings-https-github-com-livelykernel-lively-next-tree-master-lively-bindings"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.bindings">lively.bindings</a></a></li>
+<li><a href="#lively-ide-https-github-com-livelykernel-lively-next-tree-master-lively-ide"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.ide">lively.ide</a></a></li>
+</ul></li>
+</ul></li>
 <li><a href="#体验lively-next">体验lively-next</a></li>
 </ul></li>
 <li><a href="#lively-4-https-github-com-livelykernel-lively4-core"><a href="https://github.com/LivelyKernel/lively4-core">Lively-4</a></a>
@@ -235,6 +266,8 @@
 <li><a href="https://github.com/LivelyKernel/lively4-core">Lively-4</a>: Lively-4是我们在Hasso Plattner Institute的合作者的工作 ，位于德国波茨坦。它具有与网页DOM结构更紧密结合的体系结构。提供了与非Lively网页进行更紧密交互的可能性。</li>
 </ul>
 
+<p>我的兴趣主要在<a href="https://lively-next.org/">lively.next</a></p>
+
 <p>逐一做些记录</p>
 
 <h1 id="lively-next-https-lively-next-org"><a href="https://lively-next.org/">lively.next</a></h1>
@@ -292,6 +325,80 @@
 </ul></li>
 </ul>
 
+<h2 id="架构-https-lively-next-org-architecture-html"><a href="https://lively-next.org/architecture.html">架构</a></h2>
+
+<!--Smalltalk 社区以环境（整个系统）为文档，而不是额外维护一个文本文档。 -->
+
+<p>lively.next 是用 JavaScript 实现的，但也可以与其他语言和系统进行互操作。允许将其他应用程序混搭并“提升”到Lively编程领域。</p>
+
+<h3 id="核心">核心</h3>
+
+<h4 id="lively-modules-https-github-com-livelykernel-lively-next-tree-master-lively-modules"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.modules">lively.modules</a></h4>
+
+<p>包和模块，lively.next的主干。它包含类似于Smalltalk的元接口，该接口允许Lively（或使用Lively packages 的程序）具有允许检查和修改的 runtime。</p>
+
+<h4 id="lively-ast-lively-source-transform">lively.ast + lively.source-transform</h4>
+
+<p>JavaScript源码解析和转换工具。 这是为了对代码进行分析和 instrument，从而可以进行检查、评估和调试。 代码分析也被用于lively.next的IDE的各种工具中。</p>
+
+<h4 id="lively-vm">lively.vm</h4>
+
+<p>受控的代码执行，可以实现运行时系统的修改和扩展。lively.vm提供了一种方法，可以将作用域注入到正常的JS eval(求值) 和 instruments code中，以观察副作用和控制流程。</p>
+
+<h3 id="持久化和数据">持久化和数据</h3>
+
+<h4 id="lively-resources-lively-storage">lively.resources + lively.storage</h4>
+
+<p>对HTTP和文件系统资源的高级访问，很容易扩展到其他后端。</p>
+
+<p>浏览器和服务器端数据库，用于对象存储和版本管理。 基于CouchDB和PouchDB，提供同步和复制功能。</p>
+
+<h4 id="lively-serializer2">lively.serializer2</h4>
+
+<p>JavaScript object graphs 的序列化和反序列化，允许快照对象和 Lively 页面（世界）的状态。 wiki系统和PartsBin的基础。 提供插件系统，使其兼容库和其他数据源和对象类型。</p>
+
+<h4 id="lively-partsbin">lively.partsbin</h4>
+
+<p>共享和发布应用程序及其组件的对象库。</p>
+
+<p>ps: <code>PartsBin</code> 正在迁移到 <code>Master Components</code></p>
+
+<h3 id="服务器和系统互操作">服务器和系统互操作</h3>
+
+<h4 id="lively-shell-https-github-com-livelykernel-lively-next-tree-master-lively-shell"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.shell">lively.shell</a></h4>
+
+<p>可用于远程运行和控制Unix / Linux / Windows上的操作系统进程。 还提供了通过lively.2lively消息系统发起交互的集成。</p>
+
+<h4 id="lively-server-https-github-com-livelykernel-lively-next-tree-master-lively-shell"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.shell">lively.server</a></h4>
+
+<p>基于node.js的服务器，围绕着与客户端lively.next相同的灵活概念构建。 提供一个插件系统，可以用来轻松扩展服务器端功能。</p>
+
+<h3 id="多用户和网络">多用户和网络</h3>
+
+<h4 id="lively-2lively-https-github-com-livelykernel-lively-next-tree-master-lively-2lively"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.2lively">lively.2lively</a></h4>
+
+<p>lively.next系统之间的远程点对点消息发送机制。 它是围绕着一个简单的<strong>接收者-选择者-参数</strong>（receiver-selector-argument）语义构建的，它允许lively.next系统以比普通的<strong>客户端-服务器</strong>（client-server）交互更灵活的方式交换信息。</p>
+
+<h4 id="lively-user">lively.user</h4>
+
+<p>用户认证和授权系统。 提供一个基于token的用户模型。 用户对象可供其他子系统使用，用于Wiki和PartsBin对象的授权。 可用于设计多用户交互系统</p>
+
+<h3 id="图形用户界面和工具">图形用户界面和工具</h3>
+
+<h4 id="lively-morphic-https-github-com-livelykernel-lively-next-tree-master-lively-morphic-lively-graphics-https-github-com-livelykernel-lively-next-tree-master-lively-graphics"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.morphic">lively.morphic</a> + <a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.graphics">lively.graphics</a></h4>
+
+<p>丰富的、交互式的、可组合的图形用户界面，以Self的Morphic UI为蓝本。 提供了一个高于HTML / SVG / Canvas的抽象，但可以与本地Web内容集成，以创建混搭和系统集成。 使用ObjectEditor，图形对象可以直接被脚本化，这降低了典型编程任务的抽象性。</p>
+
+<h4 id="lively-bindings-https-github-com-livelykernel-lively-next-tree-master-lively-bindings"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.bindings">lively.bindings</a></h4>
+
+<p>用于反应式数据绑定的数据流系统。与lively.morphic结合使用，它具有图形扩展，该图形扩展允许交互式连接对象，类似于可视数据流编程。</p>
+
+<p><a href="https://lively-next.org/tutorials/lively.bindings/index.html">文档</a></p>
+
+<h4 id="lively-ide-https-github-com-livelykernel-lively-next-tree-master-lively-ide"><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.ide">lively.ide</a></h4>
+
+<p>用于编程和调试JavaScript，HTML，CSS，shell的工具。也可以集成其他语言（请参见cloxp和LivelyR）</p>
+
 <h2 id="体验lively-next">体验lively-next</h2>
 
 <p><a href="https://lively-next.org/worlds/">点击这儿</a></p>
@@ -323,7 +430,11 @@
 <p>lively4和live-next都在积极推进中，目前存在不少bug，诸如:</p>
 
 <ul>
-<li><a href="https://github.com/LivelyKernel/lively.next">lively.next源码库</a>无法正常install</li>
+<li><a href="https://github.com/LivelyKernel/lively.next">lively.next源码库</a>正在快速更新，<code>PartsBin</code> 正在迁移到 <code>Master Components</code>
+
+<ul>
+<li>目前的安装问题已经解决</li>
+</ul></li>
 <li><a href="https://lively-next.org/doc/todo-list-tutorial.html">todo-list-tutorial</a> 拖拽checkbox到tex中有问题</li>
 <li>&hellip;</li>
 </ul>
@@ -388,7 +499,7 @@
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        2020-01-19
+        2020-11-06
         
     </span>
   </p>
@@ -400,13 +511,9 @@
           <a href="/tags/programming/">programming</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/history-and-contempt/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">历史与轻蔑感</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/on-the-way-to-dynamicland/">
-            <span class="next-text nav-default">往Dynamicland途中</span>
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/smalltalk-guide/">
+            <span class="next-text nav-default">Smalltalk 入门导览</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>
