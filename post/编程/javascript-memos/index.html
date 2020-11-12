@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-10-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-10-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1836">
+<meta itemprop="wordCount" content="2489">
 
 
 
@@ -173,6 +173,7 @@
 </ul></li>
 </ul></li>
 <li><a href="#promise">Promise</a></li>
+<li><a href="#prototype-https-developer-mozilla-org-zh-cn-docs-web-javascript-inheritance-and-the-prototype-chain"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">prototype</a></a></li>
 <li><a href="#库">库</a>
 <ul>
 <li><a href="#systemjs-https-github-com-systemjs-systemjs"><a href="https://github.com/systemjs/systemjs">systemjs</a></a></li>
@@ -650,6 +651,112 @@
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises">使用 Promise</a></li>
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise">JavaScript 标准内置对象Promise</a></li>
 </ul>
+
+<h1 id="prototype-https-developer-mozilla-org-zh-cn-docs-web-javascript-inheritance-and-the-prototype-chain"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">prototype</a></h1>
+
+<p>Self语言基于 prototype</p>
+
+<p>在 ES2015/ES6 中引入了 class 关键字，但那只是语法糖，JavaScript 仍然是基于原型的</p>
+
+<p>JavaScript 对象是动态的属性“包”（指其自己的属性）。JavaScript 对象有一个指向一个原型对象的链。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">f</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+   <span class="k">this</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+   <span class="k">this</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cm">/* 这么写也一样
+</span><span class="cm">function f() {
+</span><span class="cm">  this.a = 1;
+</span><span class="cm">  this.b = 2;
+</span><span class="cm">}
+</span><span class="cm">*/</span>
+<span class="kd">let</span> <span class="nx">o</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">f</span><span class="p">();</span> <span class="c1">// {a: 1, b: 2}
+</span><span class="c1"></span>
+<span class="c1">// 在f函数的原型上定义属性
+</span><span class="c1"></span><span class="nx">f</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="nx">f</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+<span class="c1">// 不要在 f 函数的原型上直接定义 f.prototype = {b:3,c:4};这样会直接打破原型链
+</span><span class="c1">// o.[[Prototype]] 有属性 b 和 c
+</span><span class="c1">//  (其实就是 o.__proto__ 或者 o.constructor.prototype)
+</span><span class="c1">// o.[[Prototype]].[[Prototype]] 是 Object.prototype.
+</span><span class="c1">// 最后o.[[Prototype]].[[Prototype]].[[Prototype]]是null
+</span><span class="c1">// 这就是原型链的末尾，即 null，
+</span><span class="c1">// 根据定义，null 就是没有 [[Prototype]]。
+</span><span class="c1"></span>
+<span class="c1">// 综上，整个原型链如下: 
+</span><span class="c1"></span>
+<span class="c1">// {a:1, b:2} ---&gt; {b:3, c:4} ---&gt; Object.prototype---&gt; null
+</span><span class="c1"></span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">a</span><span class="p">);</span> <span class="c1">// 1
+</span><span class="c1">// a是o的自身属性吗？是的，该属性的值为 1
+</span><span class="c1"></span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// 2
+</span><span class="c1">// b是o的自身属性吗？是的，该属性的值为 2
+</span><span class="c1">// 原型上也有一个&#39;b&#39;属性，但是它不会被访问到。
+</span><span class="c1">// 这种情况被称为&#34;属性遮蔽 (property shadowing)&#34;
+</span><span class="c1"></span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">c</span><span class="p">);</span> <span class="c1">// 4
+</span><span class="c1">// c是o的自身属性吗？不是，那看看它的原型上有没有
+</span><span class="c1">// c是o.[[Prototype]]的属性吗？是的，该属性的值为 4
+</span><span class="c1"></span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">d</span><span class="p">);</span> <span class="c1">// undefined
+</span><span class="c1">// d 是 o 的自身属性吗？不是，那看看它的原型上有没有
+</span><span class="c1">// d 是 o.[[Prototype]] 的属性吗？不是，那看看它的原型上有没有
+</span><span class="c1">// o.[[Prototype]].[[Prototype]] 为 null，停止搜索
+</span><span class="c1">// 找不到 d 属性，返回 undefined
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>当继承的函数被调用时，this 指向的是当前继承的对象，而不是继承的函数所在的原型对象。</p>
 
 <h1 id="库">库</h1>
 
