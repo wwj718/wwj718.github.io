@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-10-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-10-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="2489">
+<meta itemprop="wordCount" content="4125">
 
 
 
@@ -174,8 +174,31 @@
 </ul></li>
 <li><a href="#promise">Promise</a></li>
 <li><a href="#prototype-https-developer-mozilla-org-zh-cn-docs-web-javascript-inheritance-and-the-prototype-chain"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">prototype</a></a></li>
-<li><a href="#库">库</a>
+<li><a href="#闭包-closure">闭包 (Closure)</a></li>
+<li><a href="#元编程">元编程</a>
 <ul>
+<li><a href="#反射-reflect">反射(Reflect)</a></li>
+<li><a href="#代理-proxy">代理（Proxy</a></li>
+</ul></li>
+<li><a href="#事件">事件</a></li>
+<li><a href="#try-except-error">try/except &amp; error</a></li>
+<li><a href="#函数">函数</a>
+<ul>
+<li><a href="#函数参数">函数参数</a>
+<ul>
+<li><a href="#默认参数">默认参数</a></li>
+<li><a href="#剩余参数">剩余参数</a></li>
+</ul></li>
+<li><a href="#arguments-对象-https-developer-mozilla-org-zh-cn-docs-web-javascript-guide-functions-e4-bd-bf-e7-94-a8-arguments-e5-af-b9-e8-b1-a1"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Functions#%E4%BD%BF%E7%94%A8_arguments_%E5%AF%B9%E8%B1%A1">arguments 对象</a></a></li>
+</ul></li>
+<li><a href="#正则表达式">正则表达式</a>
+<ul>
+<li><a href="#创建">创建</a></li>
+<li><a href="#使用正则表达式的方法">使用正则表达式的方法</a></li>
+</ul></li>
+<li><a href="#模块">模块</a>
+<ul>
+<li><a href="#es6-模块-https-developer-mozilla-org-zh-cn-docs-web-javascript-guide-modules-dynamic-module-loading"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules#Dynamic_module_loading">ES6 模块</a></a></li>
 <li><a href="#systemjs-https-github-com-systemjs-systemjs"><a href="https://github.com/systemjs/systemjs">systemjs</a></a></li>
 </ul></li>
 <li><a href="#杂货铺">杂货铺</a>
@@ -346,6 +369,11 @@
 </div>
 <h3 id="for-in-for-of-and-foreach-https-www-30secondsofcode-org-blog-s-javascript-for-in-for-of-foreach"><a href="https://www.30secondsofcode.org/blog/s/javascript-for-in-for-of-foreach">for&hellip;in, for&hellip;of and forEach</a></h3>
 
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Loops_and_iteration#for...in_%E8%AF%AD%E5%8F%A5">MDN: for&hellip;of 语句</a>
+for&hellip;in 语句循环一个指定的变量来循环一个对象所有可枚举的属性。</p>
+
+<p>for&hellip;of 语句在可迭代对象（包括Array、Map、Set、arguments 等等）上创建了一个循环，对值的每一个独特属性调用一次迭代。</p>
+
 <p><code>for...in</code> 可用于数组字符串或普通对象，但不能用于 Map 或 Set 对象。(适合我)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -512,6 +540,8 @@
 <h1 id="this">this</h1>
 
 <h2 id="了解-javascript-中的-this-关键字-https-www-30secondsofcode-org-blog-s-javascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解 JavaScript 中的&rsquo;this&rsquo;关键字</a></h2>
+
+<!--this 关键字指向函数的执行上下文。-->
 
 <p>在JavaScript中，this关键字指的是当前正在执行代码的对象。简而言之，常见情况：</p>
 
@@ -758,7 +788,317 @@
 </div>
 <p>当继承的函数被调用时，this 指向的是当前继承的对象，而不是继承的函数所在的原型对象。</p>
 
-<h1 id="库">库</h1>
+<h1 id="闭包-closure">闭包 (Closure)</h1>
+
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%97%AD%E5%8C%85_(%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6)">wikipedia 闭包</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Closures">MDN Closures</a></li>
+</ul>
+
+<p>闭包在实现上是一个结构体，它存储了一个函数和一个关联的环境。环境里是若干对符号和值的对应关系.</p>
+
+<!--一个函数和对其周围状态的引用捆绑在一起，这样的组合就是闭包（closure）-->
+
+<p>闭包跟函数最大的不同在于，当捕捉闭包的时候，它的自由变量会在捕捉时被确定，这样即便脱离了捕捉时的上下文，它也能照常运行.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">makeFunc</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="s2">&#34;Mozilla&#34;</span><span class="p">;</span>
+    <span class="kd">function</span> <span class="nx">displayName</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">displayName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">myFunc</span> <span class="o">=</span> <span class="nx">makeFunc</span><span class="p">();</span>
+<span class="nx">myFunc</span><span class="p">();</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>在一些编程语言中，一个函数中的局部变量仅存在于此函数的执行期间。一旦 makeFunc() 执行完毕，你可能会认为 name 变量将不能再被访问。</p>
+
+<p>JavaScript 中情况显然与此不同。 displayName 的实例维持了一个对它的词法环境（变量 name 存在于其中）的引用。因此，当 myFunc 被调用时，变量 name 仍然可用，其值 Mozilla 就被传递到alert中。</p>
+
+<h1 id="元编程">元编程</h1>
+
+<h2 id="反射-reflect">反射(Reflect)</h2>
+
+<p>反射（reflection）是指计算机程序在运行时（runtime）可以访问、检测和修改它本身状态或行为的一种能力。用比喻来说，反射就是程序在运行的时候能够“观察”并且修改自己的行为。</p>
+
+<p>Reflect 是一个内置的对象，它提供拦截 JavaScript 操作的方法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">duck</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Maurice&#39;</span><span class="p">,</span>
+  <span class="nx">color</span><span class="o">:</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span>
+  <span class="nx">greeting</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Quaaaack! My name is </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">Reflect</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">duck</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">);</span>
+<span class="c1">// true
+</span><span class="c1"></span><span class="nx">Reflect</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">duck</span><span class="p">,</span> <span class="s1">&#39;haircut&#39;</span><span class="p">);</span>
+<span class="c1">// false
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="代理-proxy">代理（Proxy</h2>
+
+<p>在 ECMAScript 6 中引入的 Proxy 对象可以拦截某些操作并实现自定义行为）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">handler</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">name</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">name</span> <span class="k">in</span> <span class="nx">target</span> <span class="o">?</span> <span class="nx">target</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">:</span> <span class="mi">42</span><span class="p">;</span>
+<span class="p">}};</span>
+
+<span class="kd">let</span> <span class="nx">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Proxy</span><span class="p">({},</span> <span class="nx">handler</span><span class="p">);</span>
+<span class="nx">p</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">a</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// 1, 42
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Proxy 对象定义了一个目标（这里是一个空对象）和一个实现了 get 陷阱的 handler 对象。这里，代理的对象在获取未定义的属性时不会返回 undefined，而是返回 42。</p>
+
+<h1 id="事件">事件</h1>
+
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Building_blocks/Events">事件</a>
+是你正在编写的 <strong>系统</strong> 中发生的动作或事件，系统告诉你的是这些动作或事件，如果需要的话，你可以以某种方式对它们做出反应。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">btn</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">&#39;button&#39;</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">random</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">*</span><span class="p">(</span><span class="nx">number</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="nx">btn</span><span class="p">.</span><span class="nx">onclick</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="nx">rndCol</span> <span class="o">=</span> <span class="s1">&#39;rgb(&#39;</span> <span class="o">+</span> <span class="nx">random</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nx">random</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nx">random</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">;</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="nx">rndCol</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="try-except-error">try/except &amp; error</h1>
+
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Control_flow_and_error_handling">流程控制与错误处理</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">doSomethingErrorProne</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">ourCodeMakesAMistake</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="p">(</span><span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;The message&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">doSomethingToGetAJavascriptError</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="p">....</span>
+<span class="k">try</span> <span class="p">{</span>
+  <span class="nx">doSomethingErrorProne</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span> <span class="c1">// logs &#39;Error&#39;
+</span><span class="c1"></span>  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span> <span class="c1">// logs &#39;The message&#39; or a JavaScript error message)
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">//finally
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="函数">函数</h1>
+
+<h2 id="函数参数">函数参数</h2>
+
+<h3 id="默认参数">默认参数</h3>
+
+<p>从ECMAScript 6开始，有两个新的类型的参数：默认参数，剩余参数。</p>
+
+<p>在JavaScript中，函数参数的默认值是undefined。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">function multiply(a, b = 1) {
+  return a*b;
+}
+
+multiply(5); // 5</pre></td></tr></table>
+</div>
+</div>
+<h3 id="剩余参数">剩余参数</h3>
+
+<p>剩余参数语法允许将不确定数量的参数表示为数组。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">multiply</span><span class="p">(</span><span class="nx">multiplier</span><span class="p">,</span> <span class="p">...</span><span class="nx">theArgs</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">theArgs</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">x</span> <span class="p">=&gt;</span> <span class="nx">multiplier</span> <span class="o">*</span> <span class="nx">x</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">multiply</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arr</span><span class="p">);</span> <span class="c1">// [2, 4, 6]
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="arguments-对象-https-developer-mozilla-org-zh-cn-docs-web-javascript-guide-functions-e4-bd-bf-e7-94-a8-arguments-e5-af-b9-e8-b1-a1"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Functions#%E4%BD%BF%E7%94%A8_arguments_%E5%AF%B9%E8%B1%A1">arguments 对象</a></h2>
+
+<p>函数的实际参数会被保存在一个类似数组的arguments对象中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">myConcat</span><span class="p">(</span><span class="nx">separator</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span> <span class="c1">// 把值初始化成一个字符串，这样就可以用来保存字符串了！！
+</span><span class="c1"></span>   <span class="kd">var</span> <span class="nx">i</span><span class="p">;</span>
+   <span class="c1">// iterate through arguments
+</span><span class="c1"></span>   <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">result</span> <span class="o">+=</span> <span class="nx">arguments</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">separator</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// returns &#34;red, orange, blue, &#34;
+</span><span class="c1"></span><span class="nx">myConcat</span><span class="p">(</span><span class="s2">&#34;, &#34;</span><span class="p">,</span> <span class="s2">&#34;red&#34;</span><span class="p">,</span> <span class="s2">&#34;orange&#34;</span><span class="p">,</span> <span class="s2">&#34;blue&#34;</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h1 id="正则表达式">正则表达式</h1>
+
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions">正则表达式</a>是用于匹配字符串中字符组合的模式。</p>
+
+<p>在 JavaScript中，正则表达式也是对象。这些模式被用于 RegExp 的 exec 和 test 方法, 以及 String 的 match、matchAll、replace、search 和 split 方法。</p>
+
+<h2 id="创建">创建</h2>
+
+<ul>
+<li>字面量: <code>var re = /ab+c/;</code></li>
+<li>构造函数: <code>var re = new RegExp(&quot;ab+c&quot;);</code></li>
+</ul>
+
+<h2 id="使用正则表达式的方法">使用正则表达式的方法</h2>
+
+<ul>
+<li>exec:    一个在字符串中执行查找匹配的RegExp方法，它返回一个数组（未匹配到则返回 null）。</li>
+<li>test:    一个在字符串中测试是否匹配的RegExp方法，它返回 true 或 false。</li>
+<li>match:   一个在字符串中执行查找匹配的String方法，它返回一个数组，在未匹配到时会返回 null。</li>
+<li>matchAll:    一个在字符串中执行查找所有匹配的String方法，它返回一个迭代器（iterator）。</li>
+<li>search:  一个在字符串中测试匹配的String方法，它返回匹配到的位置索引，或者在失败时返回-1。</li>
+<li>replace: 一个在字符串中执行查找匹配的String方法，并且使用替换字符串替换掉匹配到的子字符串。</li>
+
+<li><p>split:   一个使用正则表达式或者一个固定字符串分隔一个字符串，并将分隔后的子字符串存储到数组中的 String 方法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">myRe</span> <span class="o">=</span> <span class="sr">/d(b+)d/g</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">myArray</span> <span class="o">=</span> <span class="nx">myRe</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="s2">&#34;cdbbdbsbz&#34;</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+
+<h1 id="模块">模块</h1>
+
+<h2 id="es6-模块-https-developer-mozilla-org-zh-cn-docs-web-javascript-guide-modules-dynamic-module-loading"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules#Dynamic_module_loading">ES6 模块</a></h2>
+
+<p>最新的浏览器开始原生支持模块功能</p>
+
+<p>使用JavaScript 模块依赖于import和 export</p>
 
 <h2 id="systemjs-https-github-com-systemjs-systemjs"><a href="https://github.com/systemjs/systemjs">systemjs</a></h2>
 
@@ -815,6 +1155,12 @@
 <h1 id="参考">参考</h1>
 
 <ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript">MDN JavaScript</a>
+
+<ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide">分类入口</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Equality_comparisons_and_sameness">相等性判断</a></li>
+</ul></li>
 <li><a href="https://github.com/30-seconds/30-seconds-of-code">30-seconds-of-code</a>
 
 <ul>
