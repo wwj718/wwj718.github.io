@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-11-17T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-11-17T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1423">
+<meta itemprop="wordCount" content="1604">
 
 
 
@@ -362,16 +362,11 @@ q := SharedQueue2 new.
 pub_cmd := []
 [(Delay forSeconds: 5) wait. Beeper beep] fork
 ```
-
-todo 某个被改变的状态 然后返回
-自己操控 promise 状态
-
-好像这些项目都不爱写 
 -->
 
 <p>我们暂不使用 Actors 编程模型，只使用它携带的原始 Promise</p>
 
-<p>先展示Promise的简单用法。</p>
+<p>先展示Promise的简单用法:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
@@ -384,9 +379,106 @@ todo 某个被改变的状态 然后返回
 <span class="nf">p</span> <span class="nf">resolveWith:</span> <span class="m">1</span></code></pre></td></tr></table>
 </div>
 </div>
-<hr />
+<!--
+构建一个类 SyncCmdPromise pub_cmd _promiseResolves
 
-<p>wait&hellip;</p>
+promise 不是process！
+-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nc">Object</span> <span class="nf">subclass:</span> <span class="ss">#SyncCmdPromise</span>
+              <span class="nf">instanceVariableNames:</span> <span class="s">&#39;promise_resolves&#39;</span>
+              <span class="nf">classVariableNames:</span> <span class="s">&#39;&#39;</span>
+              <span class="nf">poolDictionaries:</span> <span class="s">&#39;&#39;</span>
+              <span class="nf">category:</span> <span class="s">&#39;mylab&#39;</span><span class="p">.</span>
+
+<span class="c">&#34;以下是方法&#34;</span>
+
+<span class="nf">initialize</span>
+	<span class="nv">promise_resolves</span> <span class="o">:=</span> <span class="nc">Dictionary</span> <span class="nb">new</span><span class="p">.</span> 
+
+<span class="nf">promise_resolves</span>
+	<span class="o">^</span><span class="nv">promise_resolves</span>
+
+<span class="nf">pub_cmd:</span> <span class="nv">cmd</span>
+	<span class="c">&#34;to pub message: cmd&#34;</span>
+	<span class="nf">|</span> <span class="nv">uuid</span> <span class="nf">p</span> <span class="nf">|</span>
+	<span class="c">&#34;uuid := UUID new asString.&#34;</span>
+	<span class="nv">uuid</span> <span class="o">:=</span> <span class="nv">cmd</span><span class="p">.</span>
+	<span class="nv">p</span> <span class="o">:=</span> <span class="nc">Promise</span> <span class="nb">new</span><span class="p">.</span>
+	<span class="nv">promise_resolves</span> <span class="nf">at:</span><span class="nv">uuid</span> <span class="nf">put:</span><span class="nv">p</span><span class="p">.</span>
+	<span class="o">^</span><span class="nv">p</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>写一个方法，模拟接收消息，并 resolve promise</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nf">mock_sub:</span> <span class="nv">message_id_list</span>
+	<span class="c">&#34;[Transcript show: (s pub_cmd: &#39;cmd1&#39;) wait.Beeper beep.] fork.&#34;</span>
+	
+	[<span class="nv">message_id_list</span> <span class="nf">do:</span> [<span class="o">:</span><span class="nv">message_id</span> <span class="o">|</span> (<span class="nc">Delay</span> <span class="nf">forSeconds:</span> <span class="m">2</span>) <span class="nf">wait</span><span class="p">.</span>  (<span class="nv">promise_resolves</span> <span class="nf">includesKey:</span> <span class="nv">message_id</span>) <span class="nb">ifTrue:</span> [
+		(<span class="nv">promise_resolves</span> <span class="nf">at:</span><span class="nv">message_id</span>) <span class="nf">resolveWith:</span> <span class="s">&#39;reply &#39;</span><span class="nf">,</span> <span class="nv">message_id</span>
+		]<span class="p">.</span> 
+	]<span class="p">.</span>] <span class="nf">fork</span><span class="p">.</span>
+	
+	<span class="nc">Transcript</span> <span class="nf">show:</span> (<span class="bp">self</span> <span class="nf">pub_cmd:</span> <span class="s">&#39;cmd1&#39;</span>) <span class="nf">wait</span><span class="p">.</span><span class="nc">Beeper</span> <span class="nf">beep</span><span class="p">.</span>
+	<span class="nc">Transcript</span> <span class="nf">show:</span> (<span class="bp">self</span> <span class="nf">pub_cmd:</span> <span class="s">&#39;cmd2&#39;</span>) <span class="nf">wait</span><span class="p">.</span><span class="nc">Beeper</span> <span class="nf">beep</span><span class="p">.</span>
+	<span class="nc">Transcript</span> <span class="nf">show:</span> (<span class="bp">self</span> <span class="nf">pub_cmd:</span> <span class="s">&#39;cmd3&#39;</span>) <span class="nf">wait</span><span class="p">.</span><span class="nc">Beeper</span> <span class="nf">beep</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>完整测试它:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nv">s</span> <span class="o">:=</span> <span class="nc">SyncCmdPromise</span> <span class="nb">new</span><span class="p">.</span>
+<span class="nv">s</span> <span class="nf">mock_sub:</span> <span class="ss">#(</span><span class="s">&#39;cmd1&#39;</span> <span class="s">&#39;cmd2&#39;</span> <span class="s">&#39;cmd3&#39;</span><span class="ss">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="/post/img/e5c81bacdc816e2ed9a8f62385d58300.png" alt="" /></p>
+
+<!--
+Promise 仅意味着对 **未来之事的承诺**，它的实现方式是自由的，既可以在线程上实现（ROS 1.0 Python客户端），也可以在协程上实现(Python)
+-->
 
 <h1 id="参考">参考</h1>
 
@@ -405,6 +497,7 @@ todo 某个被改变的状态 然后返回
 <li><a href="https://wiki.squeak.org/squeak/382">Squeak Threading Model</a></li>
 <li><a href="https://wiki.squeak.org/squeak/2130">Process Browser</a></li>
 <li><a href="https://wiki.squeak.org/squeak/543">Thread-safe</a></li>
+<li><a href="http://forum.world.st/Threads-safety-in-Pharo-td4957814.html">Threads safety in Pharo(dict)</a></li>
 </ul>
 
     </div>
