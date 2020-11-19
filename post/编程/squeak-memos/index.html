@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak 环境介绍(视频) Squeak from the very start 常用 Morphic Morphic late binding 在持续积累 late binding 相关" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的 发挥" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -39,25 +39,25 @@
 
 
 <meta property="og:title" content="Squeak 备忘" />
-<meta property="og:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak 环境介绍(视频) Squeak from the very start 常用 Morphic Morphic late binding 在持续积累 late binding 相关" />
+<meta property="og:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的 发挥" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/squeak-memos/" />
 <meta property="article:published_time" content="2020-11-18T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-11-18T00:00:00+00:00" />
 <meta itemprop="name" content="Squeak 备忘">
-<meta itemprop="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak 环境介绍(视频) Squeak from the very start 常用 Morphic Morphic late binding 在持续积累 late binding 相关">
+<meta itemprop="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的 发挥">
 
 
 <meta itemprop="datePublished" content="2020-11-18T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-11-18T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="392">
+<meta itemprop="wordCount" content="762">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Squeak 备忘"/>
-<meta name="twitter:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak 环境介绍(视频) Squeak from the very start 常用 Morphic Morphic late binding 在持续积累 late binding 相关"/>
+<meta name="twitter:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的 发挥"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -144,7 +144,15 @@
 <ul>
 <li><a href="#一些材料">一些材料</a>
 <ul>
-<li><a href="#语法备忘">语法备忘</a></li>
+<li><a href="#语法备忘">语法备忘</a>
+<ul>
+<li><a href="#array-list">Array(list)</a>
+<ul>
+<li><a href="#create">create</a></li>
+<li><a href="#query-utils">query &amp;&amp; utils</a></li>
+</ul></li>
+<li><a href="#dictionaries">Dictionaries</a></li>
+</ul></li>
 <li><a href="#环境介绍-视频">环境介绍(视频)</a></li>
 </ul></li>
 <li><a href="#常用">常用</a>
@@ -182,6 +190,131 @@
 
 <p><a href="https://squeak.org/documentation/terse_guide/">Terse Guide to Squeak</a></p>
 
+<h3 id="array-list">Array(list)</h3>
+
+<p>将 list 视为不可变的结构（历史不可变），每次都生成新的</p>
+
+<p>发挥 LISP 精神，灵活操控 list</p>
+
+<p>只使用少量操作符:</p>
+
+<ul>
+<li>atom</li>
+<li>eq</li>
+<li>car  (<code>[:x |x at: 1.]</code>)</li>
+<li>cdr  (<code>[:x |x copyFrom: 2 to: x size.]</code>)</li>
+<li>cons (<code>[:x :y|Array with: x with: y]</code>)</li>
+
+<li><p>eq</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nv">car</span> <span class="o">:=</span> [<span class="o">:</span><span class="nv">x</span> <span class="o">|</span><span class="nv">x</span> <span class="nf">at:</span> <span class="m">1</span><span class="p">.</span>]<span class="p">.</span>
+<span class="nv">cdr</span> <span class="o">:=</span> [<span class="o">:</span><span class="nv">x</span> <span class="o">|</span><span class="nv">x</span> <span class="nf">copyFrom:</span> <span class="m">2</span> <span class="nf">to:</span> <span class="nv">x</span> <span class="nf">size</span><span class="p">.</span>]<span class="p">.</span>
+<span class="err">cons</span><span class="o">:=</span> [<span class="o">:</span><span class="nv">x</span> <span class="o">:</span><span class="nv">y</span><span class="o">|</span><span class="nc">Array</span> <span class="nf">with:</span> <span class="nv">x</span> <span class="nf">with:</span> <span class="nv">y</span>]<span class="p">.</span>
+<span class="nv">car</span> <span class="nf">value:</span> <span class="ss">#(</span><span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="ss">)</span><span class="p">.</span>
+<span class="nv">cdr</span> <span class="nf">value:</span> <span class="ss">#(</span><span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="ss">)</span><span class="p">.</span>
+<span class="nv">cons</span> <span class="nf">value:</span> <span class="ss">#(</span><span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="ss">)</span> <span class="nf">value:</span> <span class="m">1</span><span class="p">.</span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+
+<p><img src="/post/img/3e08d52387f63a4eee59f247e3ae566c.png" alt="" /></p>
+
+<h4 id="create">create</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nv">x</span> <span class="o">:=</span> <span class="ss">#(</span><span class="m">4</span> <span class="m">3</span> <span class="m">2</span> <span class="m">1</span><span class="ss">)</span><span class="p">.</span> 
+
+<span class="c">&#34;Array 长度固定&#34;</span>
+<span class="nv">x</span> <span class="o">:=</span> <span class="nc">Array</span> <span class="nf">with:</span> <span class="m">5</span> <span class="nf">with:</span> <span class="m">4</span> <span class="nf">with:</span> <span class="m">3</span> <span class="nf">with:</span> <span class="m">2</span><span class="p">.</span>                 <span class="c">&#34;create array with up to 4 elements&#34;</span>
+
+<span class="nv">x</span> <span class="o">:=</span> <span class="nc">Array</span> <span class="nf">new:</span> <span class="m">4</span><span class="p">.</span>                                          <span class="c">&#34;allocate an array with specified size&#34;</span>
+<span class="nv">x</span>                                                           <span class="c">&#34;set array elements&#34;</span>
+   <span class="nf">at:</span> <span class="m">1</span> <span class="nf">put:</span> <span class="m">5</span><span class="p">;</span>
+   <span class="nf">at:</span> <span class="m">2</span> <span class="nf">put:</span> <span class="m">4</span><span class="p">;</span>
+   <span class="nf">at:</span> <span class="m">3</span> <span class="nf">put:</span> <span class="m">3</span><span class="p">;</span>
+   <span class="nf">at:</span> <span class="m">4</span> <span class="nf">put:</span> <span class="m">2</span><span class="p">.</span>
+
+<span class="nv">a</span> <span class="o">:=</span> <span class="s">&#39;hi&#39;</span>
+<span class="nf">x</span> <span class="o">:=</span> {<span class="nv">a</span> <span class="p">.</span> <span class="m">1</span> <span class="p">.</span> <span class="m">2</span>} <span class="c">&#34;a 将被解析。 #(a 1 2)-&gt;a是symbol&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="query-utils">query &amp;&amp; utils</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nv">x</span> <span class="nf">isEmpty</span><span class="p">.</span>
+<span class="nv">x</span> <span class="nf">size</span><span class="p">.</span>
+<span class="nv">x</span> <span class="nf">includes:</span> <span class="m">3</span><span class="p">.</span>
+<span class="nv">x</span> <span class="nf">select:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nv">a</span> <span class="nf">&gt;</span> <span class="m">2</span>]<span class="p">.</span>
+<span class="nv">x</span> <span class="nf">do:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nc">Transcript</span> <span class="nf">show:</span> <span class="nv">a</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">cr</span>]<span class="p">.</span>            <span class="c">&#34;iterate over the array&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="dictionaries">Dictionaries</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nv">x</span> <span class="o">:=</span> <span class="nc">Dictionary</span> <span class="nb">new</span><span class="p">.</span>
+<span class="nv">x</span> <span class="nf">at:</span> <span class="ss">#e</span> <span class="nf">put:</span> <span class="m">3</span><span class="p">.</span>
+<span class="nv">x</span> <span class="nf">at:</span> <span class="s">&#39;key1&#39;</span> <span class="nf">put:</span> <span class="m">3</span><span class="p">.</span>
+<span class="nv">x</span> <span class="nf">includesKey:</span> <span class="ss">#a</span><span class="p">.</span>
+<span class="nv">x</span> <span class="nf">keys</span><span class="p">.</span>
+<span class="nv">x</span> <span class="nf">values</span><span class="p">.</span>
+<span class="nv">x</span> <span class="nf">do:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nc">Transcript</span> <span class="nf">show:</span> <span class="nv">a</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">cr</span>]        <span class="c">&#34;iterate over the values collection&#34;</span>
+<span class="nf">x</span> <span class="nf">keysDo:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nc">Transcript</span> <span class="nf">show:</span> <span class="nv">a</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">cr</span>]<span class="p">.</span>   <span class="c">&#34;iterate over the keys collection&#34;</span>
+<span class="nv">x</span> <span class="nf">keysAndValuesDo:</span> [<span class="o">:</span><span class="nv">aKey</span> <span class="o">:</span><span class="nv">aValue</span> <span class="o">|</span> <span class="nc">Transcript</span>         <span class="c">&#34;iterate over keys and values&#34;</span>
+   <span class="nf">show:</span> <span class="nv">aKey</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">space</span><span class="p">;</span>
+   <span class="nf">show:</span> <span class="nv">aValue</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">cr</span>]<span class="p">.</span>
+<span class="nv">x</span> <span class="nf">select:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nv">a</span> <span class="nf">&gt;</span> <span class="m">2</span>]<span class="p">.</span>       <span class="c">&#34;return collection(dict) of elements that(value) pass test&#34;</span>
+
+<span class="nc">Smalltalk</span> <span class="nf">globals</span> <span class="nf">keys</span></code></pre></td></tr></table>
+</div>
+</div>
 <h2 id="环境介绍-视频">环境介绍(视频)</h2>
 
 <p><a href="https://www.youtube.com/playlist?list=PL6601A198DF14788D">Squeak from the very start</a></p>
