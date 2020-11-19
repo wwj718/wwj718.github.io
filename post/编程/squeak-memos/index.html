@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的 发挥" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的. 发" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -39,25 +39,25 @@
 
 
 <meta property="og:title" content="Squeak 备忘" />
-<meta property="og:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的 发挥" />
+<meta property="og:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的. 发" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/squeak-memos/" />
 <meta property="article:published_time" content="2020-11-18T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-11-18T00:00:00+00:00" />
 <meta itemprop="name" content="Squeak 备忘">
-<meta itemprop="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的 发挥">
+<meta itemprop="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的. 发">
 
 
 <meta itemprop="datePublished" content="2020-11-18T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-11-18T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="762">
+<meta itemprop="wordCount" content="824">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Squeak 备忘"/>
-<meta name="twitter:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的 发挥"/>
+<meta name="twitter:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的. 发"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -192,20 +192,19 @@
 
 <h3 id="array-list">Array(list)</h3>
 
-<p>将 list 视为不可变的结构（历史不可变），每次都生成新的</p>
+<p>将 list 视为不可变的结构（历史不可变），每次都生成新的.</p>
 
-<p>发挥 LISP 精神，灵活操控 list</p>
+<p>发挥 LISP 精神，灵活操控 list。</p>
 
 <p>只使用少量操作符:</p>
 
 <ul>
 <li>atom</li>
-<li>eq</li>
+<li>eq   (<code>x=y</code>)</li>
 <li>car  (<code>[:x |x at: 1.]</code>)</li>
 <li>cdr  (<code>[:x |x copyFrom: 2 to: x size.]</code>)</li>
-<li>cons (<code>[:x :y|Array with: x with: y]</code>)</li>
 
-<li><p>eq</p>
+<li><p>cons (<code>[:x :y|Array with: x with: y]</code>)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
@@ -228,6 +227,17 @@
 
 <p><img src="/post/img/3e08d52387f63a4eee59f247e3ae566c.png" alt="" /></p>
 
+<p>Smalltalk 源码不是S表达式，尽可能将 list 用作 S表达式, 灵活使用 block, 诸如: <code>#([:x |x at:1.], 1 2 3)</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="nv">y</span> <span class="o">:=</span> {[<span class="o">:</span><span class="nv">x</span> <span class="o">|</span><span class="nv">x</span> <span class="nf">at:</span><span class="m">1</span><span class="p">.</span>] <span class="p">.</span> <span class="m">1</span> <span class="p">.</span> <span class="m">2</span> <span class="p">.</span> <span class="m">3</span>}<span class="p">.</span>
+(<span class="nv">car</span> <span class="nf">value:</span> <span class="nv">y</span>) <span class="nf">value:</span> (<span class="nv">cdr</span> <span class="nf">value:</span> <span class="nv">y</span>)<span class="p">.</span> <span class="c">&#34;1&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
 <h4 id="create">create</h4>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
