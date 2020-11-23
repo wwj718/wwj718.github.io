@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 处理数组 For loops, array reduce" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 表达式与运算符 在" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -39,25 +39,25 @@
 
 
 <meta property="og:title" content="JavaScript 备忘" />
-<meta property="og:description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 处理数组 For loops, array reduce" />
+<meta property="og:description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 表达式与运算符 在" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/javascript-memos/" />
 <meta property="article:published_time" content="2020-10-28T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-10-28T00:00:00+00:00" />
 <meta itemprop="name" content="JavaScript 备忘">
-<meta itemprop="description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 处理数组 For loops, array reduce">
+<meta itemprop="description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 表达式与运算符 在">
 
 
 <meta itemprop="datePublished" content="2020-10-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-10-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="4125">
+<meta itemprop="wordCount" content="4298">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="JavaScript 备忘"/>
-<meta name="twitter:description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 处理数组 For loops, array reduce"/>
+<meta name="twitter:description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 表达式与运算符 在"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -144,6 +144,10 @@
 <ul>
 <li><a href="#前言">前言</a>
 <ul>
+<li><a href="#表达式与运算符">表达式与运算符</a>
+<ul>
+<li><a href="#展开语法-spread-syntax">展开语法(Spread syntax)</a></li>
+</ul></li>
 <li><a href="#处理数组">处理数组</a>
 <ul>
 <li><a href="#for-loops-array-reduce-and-method-chaining-https-www-30secondsofcode-org-blog-s-code-anatomy-chaining-reduce-for-loop"><a href="https://www.30secondsofcode.org/blog/s/code-anatomy-chaining-reduce-for-loop">For loops, array reduce and method chaining</a></a></li>
@@ -222,6 +226,50 @@
 <p>近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。</p>
 
 <!--学习的方向：熟悉map/reduce/filter/find，函数式操作-->
+
+<h2 id="表达式与运算符">表达式与运算符</h2>
+
+<p>在函数调用/数组构造时, 将数组表达式语法层面展开；还可以在构造字面量对象时, 将对象表达式按key-value的方式展开。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">sum</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">z</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">+</span> <span class="nx">z</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="nx">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum</span><span class="p">(...</span><span class="nx">numbers</span><span class="p">));</span>
+<span class="c1">// expected output: 6
+</span><span class="c1"></span>
+<span class="kd">var</span> <span class="nx">arr1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">];</span>
+<span class="kd">var</span> <span class="nx">arr2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">];</span>
+<span class="kd">var</span> <span class="nx">arr3</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">arr1</span><span class="p">,</span> <span class="p">...</span><span class="nx">arr2</span><span class="p">];</span> <span class="c1">//[0, 1, 2, 3, 4, 5]
+</span><span class="c1"></span>
+<span class="kd">var</span> <span class="nx">obj1</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">foo</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="nx">x</span><span class="o">:</span> <span class="mi">42</span> <span class="p">};</span>
+<span class="kd">var</span> <span class="nx">obj2</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">foo</span><span class="o">:</span> <span class="s1">&#39;baz&#39;</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mi">13</span> <span class="p">};</span>
+<span class="kd">var</span> <span class="nx">mergedObj</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span><span class="nx">obj1</span><span class="p">,</span> <span class="p">...</span><span class="nx">obj2</span> <span class="p">};</span> <span class="c1">// {foo: &#34;baz&#34;, x: 42, y: 13}
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="展开语法-spread-syntax">展开语法(Spread syntax)</h3>
 
 <h2 id="处理数组">处理数组</h2>
 
