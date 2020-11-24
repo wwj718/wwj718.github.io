@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-10-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-10-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="4298">
+<meta itemprop="wordCount" content="5467">
 
 
 
@@ -165,6 +165,10 @@
 <li><a href="#map-keys-https-www-30secondsofcode-org-js-s-map-keys"><a href="https://www.30secondsofcode.org/js/s/map-keys">map-keys</a></a></li>
 <li><a href="#reduce-https-developer-mozilla-org-zh-cn-docs-web-javascript-reference-global-objects-array-reduce"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">reduce</a></a></li>
 </ul></li>
+<li><a href="#对象">对象</a>
+<ul>
+<li><a href="#使用getter和setter方法扩展原型">使用getter和setter方法扩展原型</a></li>
+</ul></li>
 <li><a href="#this">this</a>
 <ul>
 <li><a href="#了解-javascript-中的-this-关键字-https-www-30secondsofcode-org-blog-s-javascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解 JavaScript 中的&rsquo;this&rsquo;关键字</a></a>
@@ -178,6 +182,11 @@
 </ul></li>
 <li><a href="#promise">Promise</a></li>
 <li><a href="#prototype-https-developer-mozilla-org-zh-cn-docs-web-javascript-inheritance-and-the-prototype-chain"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">prototype</a></a></li>
+<li><a href="#async-和-await">async 和 await</a>
+<ul>
+<li><a href="#async">async</a></li>
+<li><a href="#await">await</a></li>
+</ul></li>
 <li><a href="#闭包-closure">闭包 (Closure)</a></li>
 <li><a href="#元编程">元编程</a>
 <ul>
@@ -195,6 +204,18 @@
 </ul></li>
 <li><a href="#arguments-对象-https-developer-mozilla-org-zh-cn-docs-web-javascript-guide-functions-e4-bd-bf-e7-94-a8-arguments-e5-af-b9-e8-b1-a1"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Functions#%E4%BD%BF%E7%94%A8_arguments_%E5%AF%B9%E8%B1%A1">arguments 对象</a></a></li>
 </ul></li>
+<li><a href="#变量">变量</a>
+<ul>
+<li>
+<ul>
+<li><a href="#变量的作用域">变量的作用域</a>
+<ul>
+<li><a href="#语句块">语句块</a></li>
+</ul></li>
+<li><a href="#全局变量">全局变量</a></li>
+<li><a href="#常量-constants">常量(Constants)</a></li>
+</ul></li>
+</ul></li>
 <li><a href="#正则表达式">正则表达式</a>
 <ul>
 <li><a href="#创建">创建</a></li>
@@ -202,6 +223,14 @@
 </ul></li>
 <li><a href="#模块">模块</a>
 <ul>
+<li><a href="#export">export</a>
+<ul>
+<li><a href="#默认-export">默认 export</a></li>
+</ul></li>
+<li><a href="#import">import</a>
+<ul>
+<li><a href="#模块对象">模块对象</a></li>
+</ul></li>
 <li><a href="#es6-模块-https-developer-mozilla-org-zh-cn-docs-web-javascript-guide-modules-dynamic-module-loading"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules#Dynamic_module_loading">ES6 模块</a></a></li>
 <li><a href="#systemjs-https-github-com-systemjs-systemjs"><a href="https://github.com/systemjs/systemjs">systemjs</a></a></li>
 </ul></li>
@@ -585,6 +614,42 @@ for&hellip;in 语句循环一个指定的变量来循环一个对象所有可枚
 </span></code></pre></td></tr></table>
 </div>
 </div>
+<h1 id="对象">对象</h1>
+
+<p>在javascript中，一个对象可以是一个单独的拥有属性和类型的实体。我们拿它和一个杯子做下类比。一个杯子是一个对象(物体)，拥有属性。杯子有颜色，图案，重量，由什么材质构成等等。同样，javascript对象也有属性来定义它的特征。</p>
+
+<h2 id="使用getter和setter方法扩展原型">使用getter和setter方法扩展原型</h2>
+
+<p>使用getter和setter方法扩展 Date原型，为预定义好的Date类添加一个year的属性。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="s2">&#34;year&#34;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getFullYear</span><span class="p">()</span> <span class="p">},</span>
+  <span class="nx">set</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">setFullYear</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">now</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">now</span><span class="p">.</span><span class="nx">year</span><span class="p">);</span> <span class="c1">// 2000
+</span><span class="c1"></span><span class="nx">now</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="mi">2001</span><span class="p">;</span> <span class="c1">// 987617605170
+</span><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">now</span><span class="p">);</span>
+<span class="c1">// Wed Apr 18 11:13:25 GMT-0700 (Pacific Daylight Time) 2001
+</span></code></pre></td></tr></table>
+</div>
+</div>
 <h1 id="this">this</h1>
 
 <h2 id="了解-javascript-中的-this-关键字-https-www-30secondsofcode-org-blog-s-javascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解 JavaScript 中的&rsquo;this&rsquo;关键字</a></h2>
@@ -836,6 +901,94 @@ for&hellip;in 语句循环一个指定的变量来循环一个对象所有可枚
 </div>
 <p>当继承的函数被调用时，this 指向的是当前继承的对象，而不是继承的函数所在的原型对象。</p>
 
+<h1 id="async-和-await">async 和 await</h1>
+
+<p>ECMAScript 2017 JavaScript版的一部分</p>
+
+<p>简单来说，它们是基基于promises的语法糖，使异步代码更易于编写和阅读。通过使用它们，异步代码看起来更像是老式同步代码</p>
+
+<h2 id="async">async</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">hello</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">&#34;Hello&#34;</span> <span class="p">};</span>
+<span class="nx">hello</span><span class="p">();</span> <span class="c1">// 调用该函数会返回一个 promise
+</span><span class="c1"></span>
+<span class="c1">// 异步函数表达式
+</span><span class="c1"></span><span class="kd">let</span> <span class="nx">hello</span> <span class="o">=</span> <span class="kr">async</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">&#34;Hello&#34;</span> <span class="p">};</span>
+<span class="nx">hello</span><span class="p">();</span>
+
+<span class="kd">let</span> <span class="nx">hello</span> <span class="o">=</span> <span class="kr">async</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">&#34;Hello&#34;</span> <span class="p">};</span>
+
+<span class="c1">// 要实际使用promise完成时返回的值，我们可以使用.then()块
+</span><span class="c1"></span><span class="nx">hello</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>将 async 关键字加到函数申明中，可以告诉它们返回的是 promise，而不是直接返回值。此外，它避免了同步函数为支持使用 await 带来的任何潜在开销。</p>
+
+<h2 id="await">await</h2>
+
+<p>await 只在异步函数里面才起作用。它可以放在任何异步的，基于 promise 的函数之前。它会暂停代码在该行上，直到 promise 完成，然后返回结果值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">hello</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">greeting</span> <span class="o">=</span> <span class="kr">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">&#34;Hello&#34;</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">hello</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">alert</span><span class="p">);</span> <span class="c1">// 当前这行代码并不会阻塞上下文，它的内部是阻塞的，它自身被循环队列处理。
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>由于 async 关键字将函数转换为 promise，您可以使用 promise 和 await 的混合方式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">myFetch</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;coffee.jpg&#39;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="kr">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">blob</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="nx">myFetch</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">blob</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">objectURL</span> <span class="o">=</span> <span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">image</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">);</span>
+  <span class="nx">image</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">objectURL</span><span class="p">;</span>
+  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">image</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></td></tr></table>
+</div>
+</div>
 <h1 id="闭包-closure">闭包 (Closure)</h1>
 
 <ul>
@@ -1103,6 +1256,85 @@ multiply(5); // 5</pre></td></tr></table>
 </code></pre></td></tr></table>
 </div>
 </div>
+<h1 id="变量">变量</h1>
+
+<h3 id="变量的作用域">变量的作用域</h3>
+
+<p>在函数之外声明的变量，叫做全局变量, 因为它可被 <strong>当前文档</strong> 中的任何其他代码所访问。</p>
+
+<p>ES 6 有 语句块 作用域；语句块中声明的变量将成为 <strong>语句块</strong> 所在函数（或全局作用域）的局部变量</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">if (true) {
+  let y = 5;
+}
+console.log(y); // ReferenceError: y 没有被声明</pre></td></tr></table>
+</div>
+</div>
+<p>let不像 var 一样，let不会在全局对象里新建一个属性。</p>
+
+<h4 id="语句块">语句块</h4>
+
+<p>语句块通常用于流程控制，如if，for，while等等。 该块由一对大括号界定</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">while</span> <span class="p">(</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">x</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">//这里{ x++; }就是语句块。
+</span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+  <span class="c1">// expected output: 2
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+<span class="c1">// expected output: 1
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="全局变量">全局变量</h3>
+
+<p>全局变量是全局对象的属性。在网页中，（译注：缺省的）全局对象是 window ，所以你可以用形如 window.variable 的语法来设置和访问全局变量。</p>
+
+<h3 id="常量-constants">常量(Constants)</h3>
+
+<p>用关键字 const 创建一个只读的常量</p>
+
+<p>常量的作用域规则与 let 块级作用域变量相同。</p>
+
 <h1 id="正则表达式">正则表达式</h1>
 
 <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions">正则表达式</a>是用于匹配字符串中字符组合的模式。</p>
@@ -1142,6 +1374,71 @@ multiply(5); // 5</pre></td></tr></table>
 
 <h1 id="模块">模块</h1>
 
+<p>浏览器开始原生支持。</p>
+
+<p><code>&lt;script type=&quot;module&quot;&gt;</code> 属性用于指示引入的模块:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;module&#34;</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;main.mjs&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>只能在模块内部使用 import 和export 语句 ；不是普通脚本文件</p>
+
+<h2 id="export">export</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// 在模块文件的末尾使用一个export 语句
+</span><span class="c1"></span><span class="k">export</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">draw</span><span class="p">,</span> <span class="nx">reportArea</span><span class="p">,</span> <span class="nx">reportPerimeter</span> <span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="默认-export">默认 export</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// 注意，不要大括号。 import 也是
+</span><span class="c1"></span><span class="k">export</span> <span class="k">default</span> <span class="nx">randomSquare</span><span class="p">;</span>
+<span class="c1">// import randomSquare from &#39;./modules/square.mjs&#39;; 等效于 import {default as randomSquare} from &#39;./modules/square.mjs&#39;;
+</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="import">import</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">import</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">draw</span><span class="p">,</span> <span class="nx">reportArea</span><span class="p">,</span> <span class="nx">reportPerimeter</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;/js-examples/modules/basic-modules/modules/square.mjs&#39;</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="模块对象">模块对象</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">Module</span> <span class="nx">from</span> <span class="s1">&#39;/modules/module.mjs&#39;</span><span class="p">;</span>
+
+<span class="nx">Module</span><span class="p">.</span><span class="nx">function1</span><span class="p">()</span>
+<span class="nx">Module</span><span class="p">.</span><span class="nx">function2</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div>
 <h2 id="es6-模块-https-developer-mozilla-org-zh-cn-docs-web-javascript-guide-modules-dynamic-module-loading"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules#Dynamic_module_loading">ES6 模块</a></h2>
 
 <p>最新的浏览器开始原生支持模块功能</p>

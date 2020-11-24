@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-11-22T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-11-22T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="820">
+<meta itemprop="wordCount" content="863">
 
 
 
@@ -571,6 +571,19 @@
 </span><span class="lnt"> 9
 </span><span class="lnt">10
 </span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-js" data-lang="js"><span class="k">import</span> <span class="nx">EIMClient</span> <span class="nx">from</span> <span class="s2">&#34;CodeLabAdapterClient/index.js&#34;</span><span class="p">;</span>
@@ -579,11 +592,24 @@
 <span class="kd">let</span> <span class="nx">runtime</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 <span class="kd">let</span> <span class="nx">eim_client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EIMClient</span><span class="p">(</span><span class="nx">NODE_ID</span><span class="p">,</span> <span class="nx">HELP_URL</span><span class="p">,</span> <span class="nx">runtime</span><span class="p">);</span>
 <span class="c1">//eim_client.adapter_base_client.emit_with_messageid(&#39;eim/extension_python&#39;, &#39;1+1&#39;)
+</span><span class="c1"></span>
+<span class="c1">// promise
 </span><span class="c1"></span><span class="nx">eim_client</span><span class="p">.</span><span class="nx">adapter_base_client</span>
 	<span class="p">.</span><span class="nx">emit_with_messageid</span><span class="p">(</span><span class="s2">&#34;eim/extension_python&#34;</span><span class="p">,</span> <span class="s2">&#34;1+1&#34;</span><span class="p">)</span>
 	<span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">r</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
 		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">r</span><span class="p">);</span>
 	<span class="p">});</span>
+
+<span class="c1">// async, return promise
+</span><span class="c1"></span><span class="kr">async</span> <span class="kd">function</span> <span class="nx">emit_with_messageid</span><span class="p">(</span><span class="nx">node_id</span><span class="p">,</span> <span class="nx">content</span><span class="p">){</span>
+	<span class="c1">// todo resolve / reject -&gt; timeout
+</span><span class="c1"></span> 	<span class="kd">let</span> <span class="nx">reply</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">eim_client</span><span class="p">.</span><span class="nx">adapter_base_client</span>
+	<span class="p">.</span><span class="nx">emit_with_messageid</span><span class="p">(</span><span class="nx">node_id</span><span class="p">,</span> <span class="nx">content</span><span class="p">);</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">reply</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+ 	<span class="k">return</span> <span class="nx">reply</span>
+<span class="p">}</span>
+
+<span class="nx">emit_with_messageid</span><span class="p">(</span><span class="s2">&#34;eim/extension_python&#34;</span><span class="p">,</span> <span class="s2">&#34;1+1&#34;</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">data</span><span class="p">)=&gt;{</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)})</span>
 </code></pre></td></tr></table>
 </div>
 </div>
