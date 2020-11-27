@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-11-27T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-11-27T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="3357">
+<meta itemprop="wordCount" content="3794">
 
 
 
@@ -160,6 +160,7 @@
 <li><a href="#python-实现">Python 实现</a></li>
 <li><a href="#站在-smalltalk-角度">站在 Smalltalk 角度</a></li>
 </ul></li>
+<li><a href="#实现">　实现</a></li>
 <li><a href="#参考">参考</a></li>
 </ul>
 </nav>
@@ -378,6 +379,18 @@ mqtt也是这种系统, Linda只是发布订阅系统？-->
 <p>我觉得 Linda 似乎受到 Smalltalk 传统的深远影响, <!--它背弃 smalltalk 基于同步消息的通信模型，采用异步通信的思路进一步走远，--> 将<strong>晚绑定(late binding)</strong>的目标进一步推进。</p>
 
 <p><!--但并未背弃 Smalltalk 背后的理念，-->这是一种更好的 <strong>协作</strong> 模型， 并发只是技术和时间层面的视角，相对于协作的概念，它也不太重要</p>
+
+<h1 id="实现">　实现</h1>
+
+<p>目前我对 Linda 的实现存在一些疑问。</p>
+
+<p>论文只描述了Linda模型对外提供的四个原语，对于它内部的实现并未讨论。</p>
+
+<p>谁想这样一种场景，在一个 Linda 实现的系统中，两辆小车在寻找停车位，此后并无停车位，于是它们同时阻塞在 in 语句（等待空车位元组），这属于资源竞争吗？它们似乎在想同时争夺元组资源，是我们对元组使用的方式不对吗？或许不该将空车位（资源）表达为元组？否则只是把资源竞争问题转移到元组中而已。还是说Linda的tuple操作（in/out）本身确实存在资源竞争问题，需要Linda的实现者自行解决，诸如锁定tuple（monior）或者采用协程自行维护tuple这个资源。</p>
+
+<p>这里我们似乎绕不开tuple本身是一种可能被并发操作的资源这个问题，我们是就近采用宿主语言内的并发模型来解决，还是说 Linda 有实现建议呢？</p>
+
+<p>我们应该将 tuple space 视为一种服务吗？当 client 操作tuple space时，tuple space与它们的交互是并发的吗？tuple space是否允许是阻塞式的？Linda是否有更细致的实现规范？</p>
 
 <h1 id="参考">参考</h1>
 
