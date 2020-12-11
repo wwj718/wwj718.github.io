@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title> - 某行人</title>
+  <title>在 Adapter 中实现 Linda 并发模型 - 某行人</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,13 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="Scratch去中心化社区01 &amp;ndash; 架构 ActivityPub是什么 wikipedia ActivityPub
- ActivityPub is an open, decentralized social networking protocol based on Pump.io&amp;rsquo;s ActivityPump protocol. It provides a client/server API for creating, updating and deleting content, as well as a federated server-to-server API for delivering notifications and content.
- todo 关注 协议的思路 ，实体同步(project)，行为同步(love/favorites)
-https://www.w3.org/TR/activitypub/
-不好快速进入 工具细节
-参考  wikipedia ActivityPub  Pump.io  StatusNet/GNU_social   ActivityPub Mastodon
- microblog.pub  github microblog.pub  activitypub: A general Python ActivityPub library little-boxes: Tiny ActivityPub framework written in Python, both database and server agnostic." /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="Linda &amp;amp; Adapter 4.0 本周我们在 CodeLab Adapter 里基本实现了 Linda 并发模型，没有采用Linda 初始论文(1986)的策略，而是采纳了 Alan Kay 今年年初接受采访时提到的想法: &amp;l" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -32,7 +26,7 @@ https://www.w3.org/TR/activitypub/
 <meta name="generator" content="Hugo 0.56.3 with theme even" />
 
 
-<link rel="canonical" href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/scratch%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96%E7%A4%BE%E5%8C%BA-01/" />
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/adapter-linda/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -44,42 +38,26 @@ https://www.w3.org/TR/activitypub/
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="" />
-<meta property="og:description" content="Scratch去中心化社区01 &ndash; 架构 ActivityPub是什么 wikipedia ActivityPub
- ActivityPub is an open, decentralized social networking protocol based on Pump.io&rsquo;s ActivityPump protocol. It provides a client/server API for creating, updating and deleting content, as well as a federated server-to-server API for delivering notifications and content.
- todo 关注 协议的思路 ，实体同步(project)，行为同步(love/favorites)
-https://www.w3.org/TR/activitypub/
-不好快速进入 工具细节
-参考  wikipedia ActivityPub  Pump.io  StatusNet/GNU_social   ActivityPub Mastodon
- microblog.pub  github microblog.pub  activitypub: A general Python ActivityPub library little-boxes: Tiny ActivityPub framework written in Python, both database and server agnostic." />
+<meta property="og:title" content="在 Adapter 中实现 Linda 并发模型" />
+<meta property="og:description" content="Linda &amp; Adapter 4.0 本周我们在 CodeLab Adapter 里基本实现了 Linda 并发模型，没有采用Linda 初始论文(1986)的策略，而是采纳了 Alan Kay 今年年初接受采访时提到的想法: &l" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/scratch%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96%E7%A4%BE%E5%8C%BA-01/" />
-
-<meta itemprop="name" content="">
-<meta itemprop="description" content="Scratch去中心化社区01 &ndash; 架构 ActivityPub是什么 wikipedia ActivityPub
- ActivityPub is an open, decentralized social networking protocol based on Pump.io&rsquo;s ActivityPump protocol. It provides a client/server API for creating, updating and deleting content, as well as a federated server-to-server API for delivering notifications and content.
- todo 关注 协议的思路 ，实体同步(project)，行为同步(love/favorites)
-https://www.w3.org/TR/activitypub/
-不好快速进入 工具细节
-参考  wikipedia ActivityPub  Pump.io  StatusNet/GNU_social   ActivityPub Mastodon
- microblog.pub  github microblog.pub  activitypub: A general Python ActivityPub library little-boxes: Tiny ActivityPub framework written in Python, both database and server agnostic.">
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/adapter-linda/" />
+<meta property="article:published_time" content="2020-12-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-12-11T00:00:00+00:00" />
+<meta itemprop="name" content="在 Adapter 中实现 Linda 并发模型">
+<meta itemprop="description" content="Linda &amp; Adapter 4.0 本周我们在 CodeLab Adapter 里基本实现了 Linda 并发模型，没有采用Linda 初始论文(1986)的策略，而是采纳了 Alan Kay 今年年初接受采访时提到的想法: &l">
 
 
-
-<meta itemprop="wordCount" content="126">
+<meta itemprop="datePublished" content="2020-12-11T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-12-11T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="885">
 
 
 
-<meta itemprop="keywords" content="" />
+<meta itemprop="keywords" content="CodeLab," />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="Scratch去中心化社区01 &ndash; 架构 ActivityPub是什么 wikipedia ActivityPub
- ActivityPub is an open, decentralized social networking protocol based on Pump.io&rsquo;s ActivityPump protocol. It provides a client/server API for creating, updating and deleting content, as well as a federated server-to-server API for delivering notifications and content.
- todo 关注 协议的思路 ，实体同步(project)，行为同步(love/favorites)
-https://www.w3.org/TR/activitypub/
-不好快速进入 工具细节
-参考  wikipedia ActivityPub  Pump.io  StatusNet/GNU_social   ActivityPub Mastodon
- microblog.pub  github microblog.pub  activitypub: A general Python ActivityPub library little-boxes: Tiny ActivityPub framework written in Python, both database and server agnostic."/>
+<meta name="twitter:title" content="在 Adapter 中实现 Linda 并发模型"/>
+<meta name="twitter:description" content="Linda &amp; Adapter 4.0 本周我们在 CodeLab Adapter 里基本实现了 Linda 并发模型，没有采用Linda 初始论文(1986)的策略，而是采纳了 Alan Kay 今年年初接受采访时提到的想法: &l"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -150,10 +128,10 @@ https://www.w3.org/TR/activitypub/
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title"></h1>
+      <h1 class="post-title">在 Adapter 中实现 Linda 并发模型</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 0001-01-01 </span>
+        <span class="post-time"> 2020-12-11 </span>
         
         
       </div>
@@ -164,9 +142,10 @@ https://www.w3.org/TR/activitypub/
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
 <ul>
-<li><a href="#scratch去中心化社区01-架构">Scratch去中心化社区01 &ndash; 架构</a></li>
-<li><a href="#activitypub是什么">ActivityPub是什么</a></li>
-<li><a href="#todo">todo</a></li>
+<li><a href="#linda-adapter-4-0">Linda &amp; Adapter 4.0</a></li>
+<li><a href="#完成度">完成度</a></li>
+<li><a href="#实验">实验</a></li>
+<li><a href="#未来">未来</a></li>
 <li><a href="#参考">参考</a></li>
 </ul>
 </nav>
@@ -175,61 +154,87 @@ https://www.w3.org/TR/activitypub/
     <div class="post-content">
       
 
-<h1 id="scratch去中心化社区01-架构">Scratch去中心化社区01 &ndash; 架构</h1>
+<h1 id="linda-adapter-4-0">Linda &amp; Adapter 4.0</h1>
 
-<h1 id="activitypub是什么">ActivityPub是什么</h1>
+<p>本周我们在 CodeLab Adapter 里基本实现了 Linda 并发模型，没有采用<a href="http://worrydream.com/refs/Carriero%20-%20Linda%20in%20Context.pdf">Linda 初始论文(1986)</a>的策略，而是采纳了 Alan Kay 今年年初接受采访时提到的想法: &ldquo;在对象之间 <strong>协商</strong> 意义，在 pub/sub 中实现它&rdquo;。</p>
 
-<p><a href="https://en.wikipedia.org/wiki/ActivityPub">wikipedia ActivityPub</a></p>
+<p>Linda 是 CodeLab Adapter 4.0 的基础，不久将发布。 有了 Linda，我们距离 Bret 在 Dynamicland 所构建的基础架构已经不远。</p>
 
-<blockquote>
-<p>ActivityPub is an open, decentralized social networking protocol based on <a href="https://en.wikipedia.org/wiki/Pump.io">Pump.io</a>&rsquo;s ActivityPump protocol. It provides a client/server API for creating, updating and deleting content, as well as a federated server-to-server API for delivering notifications and content.</p>
-</blockquote>
+<p>我们将 Linda tuple space 实现为 server，在技术层面，它是一个 Adapter Node，内置在 CodeLab Adapter 之中，可为任何 Adapter Node 提供 Linda tuple space 服务。</p>
 
-<h1 id="todo">todo</h1>
+<p>如此一来，在空间中协调不同事物（object）变得极为简易，这鼓励编程者大胆去想象，让事物随意去 talk ，而不必担心会被连接和协调的复杂性压垮（多进程/线程和状态共享是个灾难）。</p>
 
-<p>关注 协议的思路 ，实体同步(project)，行为同步(love/favorites)</p>
+<h1 id="完成度">完成度</h1>
 
-<p><a href="https://www.w3.org/TR/activitypub/">https://www.w3.org/TR/activitypub/</a></p>
+<p>我们目前实现了如下原语:</p>
 
-<p>不好快速进入 工具细节</p>
+<ul>
+<li>in
+
+<ul>
+<li>inp(非阻塞)</li>
+</ul></li>
+<li>out</li>
+<li>rd
+
+<ul>
+<li>rdp(非阻塞)</li>
+</ul></li>
+</ul>
+
+<hr />
+
+<p>我们还构建了一些辅助工具，这部分是我自己的扩展，与 linda 原始想法无关，用于控制 linda server。</p>
+
+<p>我已经完全习惯了 smalltalk 的开发方式: 随时去增强开发环境，这些辅助工具帮助我开发 linda 本身，它们让我方便与 Linda server 对象沟通。</p>
+
+<ul>
+<li>dump</li>
+<li>status</li>
+<li>reboot</li>
+</ul>
+
+<h1 id="实验">实验</h1>
+
+<p>以下是我们测试 Linda Node（它们扩展了原先了 AdapterNode 类）时的截图：</p>
+
+<p><img src="https://adapter.codelab.club/img/d9ee61835a046a25db5638c06a5ced18.png" alt="" /></p>
+
+<p><img src="https://adapter.codelab.club/img/2ac37189638327778dcdeb5691c15db1.png" alt="" /></p>
+
+<p>这个项目演示了两个 Adapter Node 的通信。</p>
+
+<p>我们分别在 AdapterNode 和 AdapterNodeAio 里都实现 linda client，所以你也可以在 Python 异步代码中使用它。</p>
+
+<p><img src="https://adapter.codelab.club/img/d553c2bc843ee29c3a5e519eead5e843.png" alt="" /></p>
+
+<p>使用原先的 AdapterNode 也可以做到这些，但不够优雅，而且内部实现复杂，复杂往往是可理解性和可生长性的敌人，linda 十分简单，采用 linda 之后，对象之间协调的变的惊人简单，这让 Adapter 可以进一步生长。</p>
+
+<p>我最近处在 Alan Kay 的巨大影响之下: 用生物学视角看待软件。</p>
+
+<h1 id="未来">未来</h1>
+
+<p>近期我们将基于 Linda 在 Neverland 2 中构建若干 demo。 采用 <a href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">smalltalk 的迭代周期方法论</a>: 在系统中构建应用, 以便于获得对系统的直观感受 ,并据此观察和迭代系统。</p>
+
+<p>在未来， 我们可能会将 Linda 剥离出来，分享给社区。</p>
+
+<p>近期内我们将完善不同语言的 client， 目前python client 最完善的，我们正在实施</p>
+
+<ul>
+<li>系统调用 client</li>
+<li>JavaScript client</li>
+<li>rest api/http client</li>
+</ul>
+
+<p>如果你想在 smalltalk 中使用它，可以先与 Python 互操作。</p>
 
 <h1 id="参考">参考</h1>
 
 <ul>
-<li><a href="https://en.wikipedia.org/wiki/ActivityPub">wikipedia ActivityPub</a>
-
-<ul>
-<li><a href="https://en.wikipedia.org/wiki/Pump.io">Pump.io</a>
-
-<ul>
-<li><a href="https://en.wikipedia.org/wiki/GNU_social">StatusNet/GNU_social</a></li>
-</ul></li>
-</ul></li>
-<li><a href="https://www.w3.org/TR/activitypub/">ActivityPub</a></li>
-<li><a href="https://blog.joinmastodon.org/">Mastodon</a><br /></li>
-<li><a href="https://microblog.pub/">microblog.pub</a>
-
-<ul>
-<li><a href="https://github.com/tsileo/microblog.pub">github microblog.pub</a></li>
-</ul></li>
-<li><a href="https://github.com/dsblank/activitypub">activitypub</a>: A general Python ActivityPub library</li>
-<li><a href="https://github.com/tsileo/little-boxes">little-boxes</a>: Tiny ActivityPub framework written in Python, both database and server agnostic.
-
-<ul>
-<li><a href="https://github.com/autogestion/pubgate">pubgate</a>: Asyncronous Lightweight ActivityPub API / CMS</li>
-<li>Until a first version is released, the main goal of this framework is to power the <a href="http://github.com/tsileo/microblog.pub">microblog.pub</a> microblog engine.</li>
-</ul></li>
-<li><a href="https://github.com/w3c/activitystreams/issues/427">issue: Python ActivityPub server implementation</a>
-
-<ul>
-<li><a href="https://github.com/jaywink/federation">federation</a>:Python library for abstracting social federation protocols s
-
-<ul>
-<li><a href="https://federation.readthedocs.io/en/latest/protocols.html#activitypub">activitypub</a></li>
-<li><a href="https://federation.readthedocs.io/en/latest/usage.html#django">django</a></li>
-<li><a href="https://github.com/diaspora/diaspora">diaspora</a>: A privacy-aware, distributed, open source social network.</li>
-</ul></li>
-</ul></li>
+<li><a href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/linda-intro/">Linda: 比 Actor 更好的并发模型</a></li>
+<li><a href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/alan-key-between-oo-fp/">[译]Alan Kay 看待&rsquo;对象&rsquo;的几次观点转变</a></li>
+<li><a href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/">建立在异步消息之上的同步指令: 分别在 JavaScript、Python、Squeak 上实现</a></li>
+<li><a href="https://blog.just4fun.site/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">[译]Smalltalk背后的设计原则</a></li>
 </ul>
 
     </div>
@@ -242,7 +247,7 @@ https://www.w3.org/TR/activitypub/
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        0001-01-01
+        2020-12-11
         
     </span>
   </p>
@@ -250,15 +255,13 @@ https://www.w3.org/TR/activitypub/
   
 </div>
 <footer class="post-footer">
-      
+      <div class="post-tags">
+          <a href="/tags/codelab/">CodeLab</a>
+          </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/ros%E5%A4%87%E5%BF%98/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default"></span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/scratch%E5%A4%87%E5%BF%98/">
-            <span class="next-text nav-default"></span>
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/neverland2-digimon/">
+            <span class="next-text nav-default">Neverland2.0原型之 兴趣的【指向】</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>
