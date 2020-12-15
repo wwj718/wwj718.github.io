@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-12-11T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2020-12-11T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="946">
+<meta itemprop="wordCount" content="1197">
 
 
 
@@ -145,6 +145,8 @@
 <li><a href="#linda-adapter-4-0">Linda &amp; Adapter 4.0</a></li>
 <li><a href="#完成度">完成度</a></li>
 <li><a href="#实验">实验</a></li>
+<li><a href="#性能">性能</a></li>
+<li><a href="#问题">问题</a></li>
 <li><a href="#未来">未来</a></li>
 <li><a href="#参考">参考</a></li>
 </ul>
@@ -214,6 +216,25 @@
 <p>使用原先的 AdapterNode 也可以做到这些，但不够优雅，而且内部实现复杂，复杂往往是可理解性和可生长性的敌人，linda 十分简单，采用 linda 之后，对象之间协调的变的惊人简单，这让 Adapter 可以进一步生长。</p>
 
 <p>我最近处在 Alan Kay 的巨大影响之下: 用生物学视角看待软件。</p>
+
+<h1 id="性能">性能</h1>
+
+<p>以下是一个大概的测试结果（2.3 GHz Intel Core i5）</p>
+
+<p>在单一节点上，当ZMQ_LOOP_TIME为默认参数(0.02s)时</p>
+
+<ul>
+<li>out: 10000帧/秒</li>
+<li>in/inp/rd/rdp: 30帧/秒</li>
+</ul>
+
+<p>影响性能的主要是PUB/SUB的速率（数量级的影响），而不是机器本身的性能，所以在树莓派和高性能笔记本上，差异不大。</p>
+
+<p>如果想提高linda通信速率，可通过修改 Adapter 的 ZMQ_LOOP_TIME 配置参数，ZMQ_LOOP_TIME 越小，linda通信速率越快，基本是线性提升。相应的代价是 Adapter 会占用更多CPU运行时。</p>
+
+<h1 id="问题">问题</h1>
+
+<p><code>in/inp</code> 原语， 没有遵循 <a href="https://en.wikipedia.org/wiki/Command%E2%80%93query_separation">CQRS</a>原则（<a href="https://blog.just4fun.site/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-extension-best-practice-cozmo-case/#scratch-%E6%89%A9%E5%B1%95">Scratch 拓展最佳实践 &ndash; 以 Cozmo 为例</a>）。</p>
 
 <h1 id="未来">未来</h1>
 
