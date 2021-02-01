@@ -187,11 +187,11 @@
 
 <h1 id="前言">前言</h1>
 
-<p>此前在<a href="https://blog.just4fun.site/rpi-car-difficult.html">一辆树莓派可编程小车的问题</a>一文中论述了构建一个服务于编程教学的树莓派小车，将遭遇的问题。</p>
+<p>此前在<a href="/rpi-car-difficult.html">一辆树莓派可编程小车的问题</a>一文中论述了构建一个服务于编程教学的树莓派小车，将遭遇的问题。</p>
 
 <p>本文基于我们在<a href="https://adapter.codelab.club/">codelab-adapter</a>、IoT和积木化编程这几方面的探索，继续前行，试图构建一个服务于编程教育的解决方案，它是开放的！我们将展示一个原型，欢迎社区开发者加入进来继续完善它。目前已有两家公司愿意与我们一起探索树莓派生态。</p>
 
-<p>我们在<a href="https://blog.just4fun.site/codelab-love-iot.html">CodeLab ❤️ IoT</a>承诺说:</p>
+<p>我们在<a href="/codelab-love-iot.html">CodeLab ❤️ IoT</a>承诺说:</p>
 
 <blockquote>
 <p>本周，我会给出一个具体例子: 在树莓派中使用extension_iot.py，定制出extension_iot_rpi.py， 而后者是可以实际服务于硬件教学的插件。 在这个例子中我们将展示，如何在几天内快速构建一个教学产品，可以直接推向最终用户，它甚至包括了管理功能(如远程故障处理和升级)!</p>
@@ -210,8 +210,8 @@
 <p>尽管使用EIM插件也能构建出完整解决方案，诸如我们此前演示的</p>
 
 <ul>
-<li><a href="https://blog.just4fun.site/adapter-tensorflow.html">运行在树莓派中的scratch3-adapter tensorflow插件</a></li>
-<li><a href="https://blog.just4fun.site/adapter-opencv.html">运行在树莓派中的 scratch3-adapter opencv 插件</a></li>
+<li><a href="/adapter-tensorflow.html">运行在树莓派中的scratch3-adapter tensorflow插件</a></li>
+<li><a href="/adapter-opencv.html">运行在树莓派中的 scratch3-adapter opencv 插件</a></li>
 </ul>
 
 <p>但本文试图使用mqtt来做。使用mqtt的一个好处是，可以提供远程故障处理和升级！</p>
@@ -220,7 +220,7 @@
 
 <h1 id="已有工作">已有工作</h1>
 
-<p>CodeLab在mqtt(IoT)这块的工作，<a href="https://blog.just4fun.site/codelab-love-iot.html">CodeLab ❤️ IoT</a>一文做了梳理。</p>
+<p>CodeLab在mqtt(IoT)这块的工作，<a href="/codelab-love-iot.html">CodeLab ❤️ IoT</a>一文做了梳理。</p>
 
 <p>简而言之，我们做了如下工作:</p>
 
@@ -236,7 +236,7 @@
 
 <p>无论是教学产品的具体功能，还是管理这个教学产品，通过消息都可以完成这些任务。想想EIM的含义(也是它的理念): everything is a message。</p>
 
-<p>我们暂时还是将教学产品设想为一辆树莓派小车，正如我们在<a href="https://blog.just4fun.site/rpi-car-difficult.html">一辆树莓派可编程小车的问题</a>所做的假设。一旦你理解原理，构建任何项目都是ok的。</p>
+<p>我们暂时还是将教学产品设想为一辆树莓派小车，正如我们在<a href="/rpi-car-difficult.html">一辆树莓派可编程小车的问题</a>所做的假设。一旦你理解原理，构建任何项目都是ok的。</p>
 
 <p>为了简化这个问题，我就不去实际淘宝一辆小车配件了。为了展示原理，我们将构建类似<code>def move_forward(distance): print(&quot;move_forward:{}&quot;.format(distance))</code>的函数，用以说明问题。实际中，无非在这些函数里写上具体功能罢了。</p>
 
@@ -297,7 +297,7 @@
 
 <p>除了要用积木控制小车(这是我们的核心任务)。我们前边还承诺要构建管理功能(如远程故障处理和升级)。解决方案同样基于消息。</p>
 
-<p>管理功能可能会涉及硬件的批量升级之类的功能。 安全问题需要做些考虑，建议使用独立的mqtt用户来做(概念上，这个用户是管理员)。权限相关的问题可以基于用户模型来做，这个话题涉及基于角色的访问控制(Role-Based Access Control，RBAC)的讨论，linux操作系统也是这样做的，有兴趣，可以看我之前的文章:<a href="https://blog.just4fun.site/understand-permission.html">理解权限系统</a></p>
+<p>管理功能可能会涉及硬件的批量升级之类的功能。 安全问题需要做些考虑，建议使用独立的mqtt用户来做(概念上，这个用户是管理员)。权限相关的问题可以基于用户模型来做，这个话题涉及基于角色的访问控制(Role-Based Access Control，RBAC)的讨论，linux操作系统也是这样做的，有兴趣，可以看我之前的文章:<a href="/understand-permission.html">理解权限系统</a></p>
 
 <p>我建议将远程管理作为独立的codelab-adapter extension。而不要混杂在<a href="https://github.com/codelabclub/codelab_adapter_extensions/blob/master/extension_iot_rpi.py">extension_iot_rpi</a>，否则，一不小心容易有安全隐患。 限于篇幅，安全这块不过多讨论。做好权限控制，一般就不会有大问题。</p>
 
@@ -380,7 +380,7 @@
 
 <p>使用<code>supervisor</code>管理<code>./codelab-adapter --mode cli</code>就能实现开机自启。</p>
 
-<p>参考<a href="https://blog.just4fun.site/raspberrypi-install-and-config.html#supervisor">supervisor</a></p>
+<p>参考<a href="/raspberrypi-install-and-config.html#supervisor">supervisor</a></p>
 
 <h3 id="默认加载插件">默认加载插件</h3>
 
@@ -449,10 +449,10 @@
 <h1 id="参考">参考</h1>
 
 <ul>
-<li><a href="https://blog.just4fun.site/codelab-adapter-love-Raspberry%20Pi.html">codelab-adapter ❤️ Raspberry Pi</a></li>
-<li><a href="https://blog.just4fun.site/codelab-love-iot.html">CodeLab ❤️ IoT</a></li>
-<li><a href="https://blog.just4fun.site/raspberrypi-install-and-config.html">树莓派折腾笔记之系统安装与配置</a></li>
-<li><a href="https://blog.just4fun.site/understand-permission.html">理解权限系统</a></li>
+<li><a href="/codelab-adapter-love-Raspberry%20Pi.html">codelab-adapter ❤️ Raspberry Pi</a></li>
+<li><a href="/codelab-love-iot.html">CodeLab ❤️ IoT</a></li>
+<li><a href="/raspberrypi-install-and-config.html">树莓派折腾笔记之系统安装与配置</a></li>
+<li><a href="/understand-permission.html">理解权限系统</a></li>
 <li><a href="https://github.com/balena-io">balena-io</a></li>
 </ul>
 

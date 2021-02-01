@@ -244,7 +244,7 @@
 
 <p>理由如下:</p>
 
-<p>首先成本高昂，关于edx日志系统，我在一篇文章里有细述:<a href="https://blog.just4fun.site/explore-Open-edX-tracking-system.html">explore Open edX tracking system</a></p>
+<p>首先成本高昂，关于edx日志系统，我在一篇文章里有细述:<a href="/explore-Open-edX-tracking-system.html">explore Open edX tracking system</a></p>
 
 <p>在架构层面，这里边并没有什么复杂性，无非是利用了Django的log机制(其实是对python logging模块的包装)，繁琐的是层层的包装。我觉得去理解和hack这些包装是痛苦且不必要的。原因是日志在存储层面无非是一种文本序列，你可以分别/分布式地存储它们。如果最终的分析需要合并，有很多优秀的工具帮你归并日志（诸如<a href="https://github.com/elastic/beats">Beats</a>、Logstash之类）。日志的聚合是最后考虑的问题，而且你大可放心。</p>
 
@@ -309,7 +309,7 @@
 </div>
 <p>这是一条相对简单的事件。但我们可以看到基于json的日志，表现力极强(因为支持嵌套结构)，你可以轻松将你关心的信息，都组织在嵌套json结构中。但也别忘了<code>扁平优于嵌套</code>。这个例子里另一个具有参考价值的是对一些业务无关的信息，诸如username、event_source、referer这些都是通用的概念，这就是我们提到的事件描述相关的部分。</p>
 
-<p>如果你对细节有更多的兴趣，可以参考我之前的文章:<a href="https://blog.just4fun.site/edx-tracking-logs-data-research.html">基于tracking logs的数据分析</a>.如果你的兴趣在open edx本身，那么我之前和同事一起翻译的<a href="https://blog.just4fun.site/events-in-the-tracking-logs.html">Tracking Logs 中的事件(翻译)</a>你可能有兴趣。</p>
+<p>如果你对细节有更多的兴趣，可以参考我之前的文章:<a href="/edx-tracking-logs-data-research.html">基于tracking logs的数据分析</a>.如果你的兴趣在open edx本身，那么我之前和同事一起翻译的<a href="/events-in-the-tracking-logs.html">Tracking Logs 中的事件(翻译)</a>你可能有兴趣。</p>
 
 <p>open edx中的日志系统给我的影响主要是:你可以直接使用django的日志系统并选择json作为日志格式，此外我们就不必深入了。当然，如果你对open edx本身熟悉，过一遍它的事件类型，作为案例学习，看看它是如何选择事件信息(这需要里理解业务)，也是很有益的</p>
 
@@ -323,7 +323,7 @@
 
 <p>通知系统和日志系统很大程度是重叠的。核心都是<code>事件</code>,那么怎么描述事件就摆到桌面来了。</p>
 
-<p>在关于通知系统的讨论中，这块被讨论得多些，我之前也专门整理了一篇文章：<a href="https://blog.just4fun.site/notification-system-thinking-concept-and-Implementation.html">notification system思路、概念与实现</a>,我们在paperweekly，所做的基本是对这篇文章提到的概念做了实现，这块@izuo做了大量出色的工作。 最近@izuo将这块的工作梳理在<a href="http://monad.site/2018/05/30/notification-system/">消息系统的概念、设计与实现</a></p>
+<p>在关于通知系统的讨论中，这块被讨论得多些，我之前也专门整理了一篇文章：<a href="/notification-system-thinking-concept-and-Implementation.html">notification system思路、概念与实现</a>,我们在paperweekly，所做的基本是对这篇文章提到的概念做了实现，这块@izuo做了大量出色的工作。 最近@izuo将这块的工作梳理在<a href="http://monad.site/2018/05/30/notification-system/">消息系统的概念、设计与实现</a></p>
 
 <p>如何把你关心的事件结构化，一种好的策略是把它们描述为AVOT的结构（我们之所以需要AVOT是因为我们需要结构化事件，我们之所以需要结构化事件，是因为程序善于处理结构化数据，否则你就需要处理一堆脏数据了）。AVOT分别是:</p>
 
