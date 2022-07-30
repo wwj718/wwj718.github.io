@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>XBlock的国际化和本地化问题 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="此前遇到过XBlock中translation相关的问题，解决得很是敷衍，上周末@MT兄也提到这个问题，于是认真解决了下 #需求场景 我们可能在" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/xblocks-i18n/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="XBlock的国际化和本地化问题" />
+<meta property="og:description" content="此前遇到过XBlock中translation相关的问题，解决得很是敷衍，上周末@MT兄也提到这个问题，于是认真解决了下 #需求场景 我们可能在" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/xblocks-i18n/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-08-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-08-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="XBlock的国际化和本地化问题">
+<meta itemprop="description" content="此前遇到过XBlock中translation相关的问题，解决得很是敷衍，上周末@MT兄也提到这个问题，于是认真解决了下 #需求场景 我们可能在"><meta itemprop="datePublished" content="2015-08-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-08-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="602">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="XBlock的国际化和本地化问题"/>
+<meta name="twitter:description" content="此前遇到过XBlock中translation相关的问题，解决得很是敷衍，上周末@MT兄也提到这个问题，于是认真解决了下 #需求场景 我们可能在"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">XBlock的国际化和本地化问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-08-03 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>此前遇到过XBlock中translation相关的问题，解决得很是敷衍，上周末@MT兄也提到这个问题，于是认真解决了下</p>
+<p>#需求场景
+我们可能在两类场景中需要考虑translation相关的问题:</p>
+<ul>
+<li>使用国外的开发者的XBlock,需要考虑汉化</li>
+<li>自己做的XBlock，想贡献给社区</li>
+</ul>
+<p>对于第一个问题，直接看下边的解决方案就行。对于第二个问题，需要我们在代码和模板里标注翻译字符串</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">#在代码里
+</span></span><span class="line"><span class="cl">from django.utils.translation import ugettext as _
+</span></span><span class="line"><span class="cl">_(&#34;hello world&#34;)
+</span></span><span class="line"><span class="cl">#在模板里,首先将 {% load i18n %} 放在模板最前面
+</span></span><span class="line"><span class="cl">&lt;title&gt;{% trans &#34;hello world&#34; %}&lt;/title&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>#解决方案</p>
+<p>###使用mako模板
+此前在群里同@Datochen兄讨论过这个话题，他当时的解决方案是使用mako模板，mako模板支持unicode，所以可以直接写中文。这个方案无法解决以上的两个问题，它能做的是允许你在自己开发的XBlock里写中文字符串</p>
+<p>具体的做法可以参考@Datochen兄的<a href="http://icfly.cn/post/18.html">博客</a></p>
+<p>###使用django的国际化机制
+为了解决以上两个问题，我决定采用django的国际化机制</p>
+<p>思路是将XBlock伪装成django app</p>
+<p>具体步骤如下:</p>
+<ul>
+<li>将XBlock软链接到django app目录下</li>
+<li>进入XBlock，mkdir locale</li>
+<li>收集翻译字符串，生成.po文件：django-admin.py makemessages -l zh_CN</li>
+<li>翻译po文件</li>
+<li>在XBlock里编译:django-admin.py compilemessages</li>
+</ul>
+<p>此外，我觉得软链接那一步应该可有可无，只要进入到virtualenv环境里，不过还没做测试</p>
+<p>#参考
+<a href="http://www.djangobook.com/en/2.0/chapter19.html">Internationalization</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-08-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/bigbluebutton-install/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">搭建远程会议系统(简单得集成到edx里)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/gogs-install/">
+            <span class="next-text nav-default">搭建 gogs 代码托管服务器</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

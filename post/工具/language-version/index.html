@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Ruby/Nodejs解释器版本依赖笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="缘起 最近在折腾一个项目，对Ruby/Nodejs的版本有要求 版本目标 ruby &amp;ndash;version // ruby 2.2.3 node &amp;ndash;version // v0.12.4 npm &amp;ndash;version // 2.10.1 系统环境 Ubuntu14.04 Ruby RVM 采用RVM来管理Ruby版本，当" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/language-version/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Ruby/Nodejs解释器版本依赖笔记" />
+<meta property="og:description" content="缘起 最近在折腾一个项目，对Ruby/Nodejs的版本有要求 版本目标 ruby &ndash;version // ruby 2.2.3 node &ndash;version // v0.12.4 npm &ndash;version // 2.10.1 系统环境 Ubuntu14.04 Ruby RVM 采用RVM来管理Ruby版本，当" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/language-version/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-05-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-05-30T00:00:00+00:00" />
+
+<meta itemprop="name" content="Ruby/Nodejs解释器版本依赖笔记">
+<meta itemprop="description" content="缘起 最近在折腾一个项目，对Ruby/Nodejs的版本有要求 版本目标 ruby &ndash;version // ruby 2.2.3 node &ndash;version // v0.12.4 npm &ndash;version // 2.10.1 系统环境 Ubuntu14.04 Ruby RVM 采用RVM来管理Ruby版本，当"><meta itemprop="datePublished" content="2016-05-30T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-05-30T00:00:00+00:00" />
+<meta itemprop="wordCount" content="613">
+<meta itemprop="keywords" content="tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Ruby/Nodejs解释器版本依赖笔记"/>
+<meta name="twitter:description" content="缘起 最近在折腾一个项目，对Ruby/Nodejs的版本有要求 版本目标 ruby &ndash;version // ruby 2.2.3 node &ndash;version // v0.12.4 npm &ndash;version // 2.10.1 系统环境 Ubuntu14.04 Ruby RVM 采用RVM来管理Ruby版本，当"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Ruby/Nodejs解释器版本依赖笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-05-30 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#rvm">RVM</a>
+      <ul>
+        <li><a href="#ubuntu">Ubuntu</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#update-nodejs">update nodejs</a></li>
+    <li><a href="#nvm">NVM</a>
+      <ul>
+        <li><a href="#mac">mac</a></li>
+        <li><a href="#使用">使用</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#pyenv">pyenv</a></li>
+        <li><a href="#macos">MacOS</a></li>
+        <li><a href="#linux">linux</a></li>
+        <li><a href="#手动">手动</a></li>
+        <li><a href="#virtualenv">virtualenv</a></li>
+        <li><a href="#问题">问题</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="缘起">缘起</h1>
+<p>最近在折腾一个项目，对Ruby/Nodejs的版本有要求</p>
+<h1 id="版本目标">版本目标</h1>
+<ul>
+<li>ruby &ndash;version // ruby 2.2.3</li>
+<li>node &ndash;version // v0.12.4</li>
+<li>npm &ndash;version  // 2.10.1</li>
+</ul>
+<h1 id="系统环境">系统环境</h1>
+<p>Ubuntu14.04</p>
+<h1 id="ruby">Ruby</h1>
+<h2 id="rvm">RVM</h2>
+<p>采用<a href="https://rvm.io/">RVM</a>来管理Ruby版本，当然也可以使用<a href="https://github.com/rbenv/rbenv">rbenv</a></p>
+<h3 id="ubuntu">Ubuntu</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+</span></span><span class="line"><span class="cl">curl -sSL https://get.rvm.io <span class="p">|</span> bash -s stable
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> /home/ubuntu/.rvm/scripts/rvm
+</span></span><span class="line"><span class="cl">rvm install 2.2.3
+</span></span><span class="line"><span class="cl">rvm use 2.2.3 --default
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="nodejs">Nodejs</h1>
+<h2 id="update-nodejs">update nodejs</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo add-apt-repository ppa:chris-lea/node.js
+</span></span><span class="line"><span class="cl">sudo apt-get update
+</span></span><span class="line"><span class="cl">sudo apt-get install nodejs
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="nvm">NVM</h2>
+<p>采用<a href="https://github.com/creationix/nvm">NVM</a>来管理Nodejs版本</p>
+<p>使用n更方便(npm install -g n)</p>
+<p>###Ubuntu</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh <span class="p">|</span> bash
+</span></span><span class="line"><span class="cl">nvm install 0.12.4
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="mac">mac</h3>
+<p>brew install nvm</p>
+<p>fish使用：https://github.com/Alex7Kom/nvm-fish</p>
+<h3 id="使用">使用</h3>
+<p>nvm install v4.2
+nvm use V4.2</p>
+<h1 id="python">Python</h1>
+<h3 id="pyenv">pyenv</h3>
+<p><a href="https://github.com/yyuu/pyenv">pyenv</a></p>
+<ul>
+<li>brew install pyenv</li>
+<li>pyenv install 2.7.11</li>
+</ul>
+<p>在fish下需要在 .config/fish/config.fish添加:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">setenv PATH &#34;$HOME/.pyenv/bin&#34; $PATH
+</span></span><span class="line"><span class="cl">eval (pyenv init - fish)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>ps:我的vim比较奇怪，需要在system版本的python下才正常，有时为了用ssl需要2.7.10以上的版本的python，所以策略是采用pyenv local 2.7.11,临时变更版本</p>
+<h3 id="macos">MacOS</h3>
+<p><code>env PYTHON_CONFIGURE_OPTS=&quot;--enable-framework&quot; pyenv install 3.7.5</code></p>
+<h3 id="linux">linux</h3>
+<p><code>env PYTHON_CONFIGURE_OPTS=&quot;--enab-shared&quot; pyenv install 3.7.5</code></p>
+<h3 id="手动">手动</h3>
+<p>我们顺便也把python的依赖记录下，一般来说，python一般版本只区分2/3，所以直接用系统包管理来装就行，注意区分pip2/pip3就好</p>
+<h3 id="virtualenv">virtualenv</h3>
+<p>使用-p参数指定python版本</p>
+<p>virtualenv -p /usr/local/bin/python3 testenv3</p>
+<h4 id="ubuntu下安装">ubuntu下安装</h4>
+<p>参考<a href="https://github.com/yyuu/pyenv-installer">pyenv-installer</a>,最后需要:<code>source ~/.bashrc</code></p>
+<p>如果遇到requests的ssl问题，建议使用python2.7.11或以上</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python -c <span class="err">&#39;</span>import ssl<span class="p">;</span> print<span class="o">(</span>ssl.OPENSSL_VERSION<span class="o">)</span>’
+</span></span><span class="line"><span class="cl"><span class="c1"># OpenSSL 1.0.2h  3 May 2016  才正常</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="问题">问题</h3>
+<h4 id="sqlite3">sqlite3</h4>
+<p>参考<a href="http://www.cnblogs.com/itflycat/p/4461897.html">关于 ImportError: No module named _sqlite3 报错解决方法</a></p>
+<p>github/pyenv/pyrnv/wiki</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-05-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/kinto-note-05-31/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">如何架空经常500的后端程序员</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/learn-redis/">
+            <span class="next-text nav-default">redis学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>从Python转向Pharo - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="Do not make end-users suffer because of your laziness or ineptness &amp;ndash;Alan Kay 前言 过年的假期里写了篇文章: Smalltalk(Pharo)学习之旅, 提到 Bret让我相信smalltalk对我很" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/from-python-to-pharo/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="从Python转向Pharo" />
+<meta property="og:description" content="Do not make end-users suffer because of your laziness or ineptness &ndash;Alan Kay 前言 过年的假期里写了篇文章: Smalltalk(Pharo)学习之旅, 提到 Bret让我相信smalltalk对我很" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/from-python-to-pharo/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-03-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-03-19T00:00:00+00:00" />
+
+<meta itemprop="name" content="从Python转向Pharo">
+<meta itemprop="description" content="Do not make end-users suffer because of your laziness or ineptness &ndash;Alan Kay 前言 过年的假期里写了篇文章: Smalltalk(Pharo)学习之旅, 提到 Bret让我相信smalltalk对我很"><meta itemprop="datePublished" content="2019-03-19T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-03-19T00:00:00+00:00" />
+<meta itemprop="wordCount" content="5034">
+<meta itemprop="keywords" content="programming," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="从Python转向Pharo"/>
+<meta name="twitter:description" content="Do not make end-users suffer because of your laziness or ineptness &ndash;Alan Kay 前言 过年的假期里写了篇文章: Smalltalk(Pharo)学习之旅, 提到 Bret让我相信smalltalk对我很"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">从Python转向Pharo</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#技术细节">技术细节</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/smalltalk_11b30625.png" alt=""></p>
+<blockquote>
+<p>Do not make end-users suffer because of your laziness or ineptness &ndash;Alan Kay</p>
+</blockquote>
+<h1 id="前言">前言</h1>
+<p>过年的假期里写了篇文章: <a href="/Pharo-trip.html">Smalltalk(Pharo)学习之旅</a>, 提到</p>
+<blockquote>
+<p>Bret让我相信smalltalk对我很重要.</p>
+</blockquote>
+<p>我在文章里信誓旦旦地说 准备使用Pharo(smalltalk的一门方言)将Scratch重新带回<a href="https://zh.wikipedia.org/zh-hans/Smalltalk">smalltalk</a>(Scratch的第一个版本便是用smalltalk写的)，我甚至给这个计划起了一个好听的名字:<code>回到未来</code>。可惜在一个假期里习得的能力，并不足以支持我动手干这件事。一半原因也赖Pharo<a href="https://mooc.pharo.org/">官方mooc</a>教程，这实在不是一份好教程。</p>
+<p>现在差不多有能力来做这件事了，接下来对Scratch的改进，大多数会用smalltalk来做。</p>
+<p>如果你掌握了基本的编程概念（通过<a href="https://scratch.mit.edu">Scratch</a>、或者玩20分钟<a href="http://www.squeakland.org/">Etoys</a>足以<a href="https://www.quora.com/What-does-Alan-Kay-think-of-using-either-Squeak-or-Pharo-as-the-first-language-for-introducing-programming">掌握这些基础概念</a>），<a href="https://github.com/SquareBracketAssociates/UpdatedPharoByExample">UpdatedPharoByExample</a>对你而言将是绝佳的Pharo教程。非常喜欢这份教程，它是我读过最好的编程教程之一,陪伴我渡过好几个美妙的夜晚。另一个印象深刻的编程教程是<a href="https://book.douban.com/subject/10518092/">Head First Programming</a>（这本书使用Python来讲解编程基本概念，面向毫无编程经验的新手，内容有趣又友好）</p>
+<p>我倾心于建构主义者(<a href="https://zh.wikipedia.org/zh-cn/%E8%A5%BF%E6%91%A9%E7%88%BE%C2%B7%E6%B4%BE%E6%99%AE%E7%89%B9">西摩尔·派普特</a>、<a href="https://zh.wikipedia.org/zh-cn/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">艾伦·凯</a>、<a href="http://worrydream.com">Bret Victor</a>&hellip;)的认知论和教育理论，阅读了他们许多文章和工作成果之后，越来越难以忍受今天的编程工具和环境，你从他们那儿瞥见了未来，目光再落回现实，便开始挑剔，震惊于周遭环境的原始和逼仄。</p>
+<p>艾伦凯在smalltalk上的工作，向我们展示了未来的样子，关于什么是适合人类的创造环境，这是一个伟大的人文主义者为我们带来的伟大礼物。我认为艾伦凯首先是个人文主义者和教育者，其次才是计算机科学家。(他在Ted的自我介绍里，首先提到自己是个教育工作者，其次才说是计算机科学家)，作为教育者的艾伦凯，充满了人文关怀; 而作为计算机科学家的艾伦凯，则充满了想象力和热情。</p>
+<p>在所有哲学家中，我最喜欢<a href="https://zh.wikipedia.org/zh-cn/%E4%BC%AF%E7%89%B9%E5%85%B0%C2%B7%E7%BD%97%E7%B4%A0">伯特兰·罗素</a>, 在所有计算机科学家中，我最喜欢艾伦凯。</p>
+<blockquote>
+<p>Three passions, simple but overwhelmingly strong, have governed my life: the longing for love, the search for knowledge, and unbearable pity for the suffering of mankind.  &ndash; Bertrand Russell</p>
+</blockquote>
+<hr>
+<p><a href="http://worrydream.com">Bret Victor</a>在<a href="https://zh.wikipedia.org/wiki/%E9%81%93%E6%A0%BC%E6%8B%89%E6%96%AF%C2%B7%E6%81%A9%E6%A0%BC%E5%B0%94%E5%B7%B4%E7%89%B9">Douglas Engelbart</a>去世的那天写了篇文章: <a href="http://worrydream.com/Engelbart/">A few words on Doug Engelbart</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Say you bring up his 1968 demo on YouTube and watch a bit. At one point, the face of a remote collaborator, Bill Paxton, appears on screen, and Engelbart and Paxton have a conversation.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&#34;Ah!&#34;, you say. &#34;That&#39;s like Skype!&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Then, Engelbart and Paxton start simultaneously working with the document on the screen.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&#34;Ah!&#34;, you say. &#34;That&#39;s like screen sharing!&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">No. It is not like screen sharing at all.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">If you look closer, you&#39;ll notice that there are two individual mouse pointers. Engelbart and Paxton are each controlling their own pointer.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&#34;Okay,&#34; you say, &#34;so they have separate mouse pointers, and when we screen share today, we have to fight over a single pointer. That&#39;s a trivial detail; it&#39;s still basically the same thing.&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">No. It is not the same thing. At all. It misses the intent of the design, and for a research system, the intent matters most.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>很少有现代计算机编程语言不受smalltalk的影响。但正如许多伟大的事物一样（如上文Douglas Engelbart的<a href="https://zh.wikipedia.org/zh-hant/%E6%89%80%E6%9C%89%E6%BC%94%E7%A4%BA%E4%B9%8B%E6%AF%8D">The Mother of All Demos</a>），人们将其断章取义地理解之后，造出无数糟糕得多的东西。</p>
+<p>这些东西因为种种原因流行起来，于是胜利者们一副胜者为王的姿态，说&quot;我是最流行的，我当然就是最好的，你如果真的那么好，为何没有流行起来&quot;。舞台上的C++换上了Java，最近好像又差不多换上了Python。正如柏拉图换上了卢梭，然后是黑格尔、尼采、希特勒，他们轮番站上历史的聚光灯下，拥护者们重复着<code>存在即合理</code>、<code>胜者即正义</code>的信条。</p>
+<p>Pharo作为smalltalk的现代方言，它从<a href="https://zh.wikipedia.org/zh-hans/Squeak">Squeak</a>出发，忠于smalltalk精神，继续向前。</p>
+<blockquote>
+<p>Everything is an object, and objects communicate only by sending each other message.</p>
+</blockquote>
+<p>我已经体验到Pharo带来的无尽乐趣和自由，在其中创造和表达是如此自在和舒适, 很难再回到原先使用的任何语言中了。</p>
+<p>艾伦凯精心设计了smalltalk。他将使用者摆在第一位置，他们是有情感的人类, 他们不是机器，他们不善于记住一大堆规则，他们遇到未知会疑惑，遇到困难会烦躁。正如艾伦凯在<a href="https://www.quora.com/What-does-Alan-Kay-think-of-using-either-Squeak-or-Pharo-as-the-first-language-for-introducing-programming">What does Alan Kay think of using either Squeak or Pharo as the first language for introducing programming?</a>谈到的，smalltalk在设计之初就考虑了</p>
+<blockquote>
+<p>减少认知负担</p>
+</blockquote>
+<p>并致力于在用户入门时提供</p>
+<blockquote>
+<p>真正的演奏(real playing)</p>
+</blockquote>
+<p>作为设计者, 艾伦凯说:</p>
+<blockquote>
+<p>不要让用户因为你的懒惰或无能而受苦.</p>
+</blockquote>
+<p>我不知道今天主流编程语言的设计者们看到这些话，作何感想。有许多编程语言设计者对自己<code>闲着没事，花了一周就整了个编程语言</code>津津乐道。当这些糟糕的语言竟被推上历史舞台，受苦的便是它的用户。Bret在<a href="http://worrydream.com/#!/LearnableProgramming">LearnableProgramming</a>一文中对<code>Programming</code>这门语言的攻击是非常精彩的。而<code>Programming</code>在糟糕语言排行榜里并不靠前。</p>
+<p>更多关于smalltalk的思想来源，可以参考<a href="http://worrydream.com/EarlyHistoryOfSmalltalk/#p53">The Early History Of Smalltalk</a>。</p>
+<h1 id="缘聚缘散">缘聚缘散</h1>
+<p>Python并不坏，在所有目前流行的编程语言中，我最喜欢它。它有友好的社区、简洁的语法、完善的生态。如那句流行的口号说的:</p>
+<blockquote>
+<p>人生苦短，我用Python.</p>
+</blockquote>
+<p>我大约大三(2012-2013年)开始使用Python，之后一直将其作为主要编程语言。Python一路从小众语言成长为今天的主流语言。</p>
+<p>与Python结缘，得从周日的一个晚上说起，当时在校园海报上，看到一个招募帖，有个技术团队在招募前端开发，我那时的兴趣完全在前端开发，它那么鲜活有趣。比php/asp可好玩多了。</p>
+<p>团队由一位口才极好的石姓学长发起，他人很有趣，演讲也富有感染力。回想起来，这应该是改变我人生轨迹的一个夜晚，如果没有加入这个4人小团队，我不大可能从事计算机行业。</p>
+<p>团队里写后端的是一位何姓学长，他使用Ubuntu/Vim/Python。看着光标在黑乎乎的命令行里移动如飞，这场景满足了我对黑客的所有幻想。这些工具被我一一记下，后来都在我的工具箱里。</p>
+<p>那时学校里使用这门语言编程的人可能是个位数，我只知道寥寥三人，何姓学长是一位，我自己是一位，我还忽悠了@ymj换用这门语言。@ymj后来去了创新工场做人工智能；何姓学长杳无踪迹，可能隐姓埋名做了黑客；我则对计算机的许多领域都很好奇，Python的胶水特性十分适合我。</p>
+<p>Python是那种理性的姑娘乐意选择一起生活的结婚对象(当然，理性的姑娘可能选择不婚)，它贴心、随和、经济实用，它有很暖的社区。Python即便有缺点，也绝非不能忍受，最多就是坐在沙发上抠抠脚之类的生活琐碎细节。许多婚姻可能因为争夺遥控器破裂，但很少因为抠脚破裂的，别小看了争夺遥控器这件事，它可能是三观不和的征兆，你们彼此不满于对方的精神食粮。</p>
+<p>遇见smalltalk，对我来说，大抵类似郭襄在风陵渡口的遭遇，你如此清楚地知道，这就是你的所有期待，无论往后岁月黯不黯淡，江山易不易主，江河干不干枯，它都熠熠生辉，如满月，如焰火，如雪夜围炉时，对方眼里倒映的光。</p>
+<p>在很长一段时间内，我还会将Python用作我的工作语言，用它写些脚本来管理系统、科学计算、异步编程&hellip;</p>
+<p>但创造和探索，或者如Scratch社区鼓励的:表达自己， 这些激动人心的活动，我都将使用smalltalk. 我将smalltalk视为一个创造友好的语言。我也将编程看作和木工、表演、绘画一样的创造性工作，它的人文属性并不弱于工程属性。个人计算机的早期推动者们 <a href="https://zh.wikipedia.org/zh-cn/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">艾伦·凯</a>、<a href="https://zh.wikipedia.org/wiki/%E9%81%93%E6%A0%BC%E6%8B%89%E6%96%AF%C2%B7%E6%81%A9%E6%A0%BC%E5%B0%94%E5%B7%B4%E7%89%B9">Douglas Engelbart</a>希望它拥有人文属性。 未来计算机的探索者们<a href="https://zh.wikipedia.org/zh-cn/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">艾伦·凯</a>、<a href="http://worrydream.com">Bret Victor</a>也希望它有这种属性。</p>
+<h1 id="增量前进">增量前进</h1>
+<p>Python在很长的一段时间里依然会是系统管理、信息安全(入侵渗透)、胶水工具、科学计算、人工智能的主力语言。</p>
+<p>我也不希望将之前在这些领域里积累起来的技能都抛弃了，我喜欢增量地前进，而不是换个工具从头再来。</p>
+<p>尽管在原则上我认同爱因斯坦说的:</p>
+<blockquote>
+<p>什么是教育？把在学校里学到的所有东西全部忘光了之后留下来的东西才叫教育。</p>
+</blockquote>
+<p><code>还记得基本思想</code>和<code>能操作自如</code>中间的鸿沟，是需要时间来填补的。有大量细碎的细节和习惯，固化在某个具体技术框架里，要完全迁移到另一个体系中，时间成本并太低。</p>
+<p>所以，在往后的时间里，我即便使用smalltalk来构建新项目，恐怕也会混合Python代码，会用到一些基于Python的顺手工具。</p>
+<p>如何在smalltalk中运行Python代码，让他们能够混合编程？是我接下来需要面对的问题。尤其在过渡阶段，当遇到困难，会想退回到之前熟悉的安全域里。如果smalltalk能够方便调用Python，我就能够放心地增量前进。每次前进一点点，进可攻，退可守。</p>
+<p>这也正是我们之前坚持让Python与Scathch能够互操作地原因，之前在<a href="/scratch-adapter-eim-script.html">使用Python拓展Scratch的能力</a>里讨论说:</p>
+<blockquote>
+<p>如果这种过渡是必要的，我希望它们是渐进的，而不是割裂的，否则就不叫过渡了。初学者熟悉scratch，也喜欢它，我知道大多数使用scratch的孩子，对它的好感大都胜过文本语言。你不必抛弃scratch，如果你需要一些更强大的功能，使用Python去扩展它，这个过程应该很愉快，你写了很少的Python代码，立马就能应用到你喜欢的Scratch项目上，你看到你逐渐能做更多有趣的事，你感到充满乐趣，所学的新知识，立马应用在你感兴趣的项目里。<br>
+我们反对割裂式的教学，学习者从scratch切换到Python，很长时间内只能通过print看到输出，没有生动的反馈，于是许多人便对阶段感到沮丧，踏上一条从入门到放弃的路。</p>
+</blockquote>
+<h3 id="技术细节">技术细节</h3>
+<p>最后记录下技术细节。在Pharo中调用Python是很简单的，所受的约束很小，可以自如地在Pharo中调用Python库，并允许采用Pharo语法来调用它们。</p>
+<p>我目前采用<a href="https://github.com/juliendelplanque/Python3Generator">Python3Generator</a>。</p>
+<p>操作方式非常简单，首先在Pharo(我目前使用<code>Pharo 7.0.1</code>)中安装依赖库</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Metacello new
+</span></span><span class="line"><span class="cl">    baseline: &#39;Python3Generator&#39;;
+</span></span><span class="line"><span class="cl">    repository: &#39;github://juliendelplanque/Python3Generator/repository&#39;;
+</span></span><span class="line"><span class="cl">    load
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后就可以自如调用Python啦:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;Use and initialize the FFI interpreter.&#34;
+</span></span><span class="line"><span class="cl">P3GInterpreter useFFIInterpreter.
+</span></span><span class="line"><span class="cl">P3GInterpreter current pathToPython: &#39;/Library/Frameworks/Python.framework/Versions/3.7/bin/python3&#39;.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">instr := P3GInstructionsList new.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">json := &#39;json&#39; asP3GIdentifier.
+</span></span><span class="line"><span class="cl">file := &#39;file&#39; asP3GIdentifier.
+</span></span><span class="line"><span class="cl">os := &#39;os&#39; asP3GIdentifier.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">instr addAll: {
+</span></span><span class="line"><span class="cl">    json import.
+</span></span><span class="line"><span class="cl">    os import.
+</span></span><span class="line"><span class="cl">    file &lt;- (&#39;open&#39; asP3GIdentifier callWith: #(&#39;/tmp/osp3g.json&#39; &#39;w&#39;)).
+</span></span><span class="line"><span class="cl">    (file=&gt;#write) callWith: { (json=&gt;#dumps) callWith: {{
+</span></span><span class="line"><span class="cl">                                                &#39;os&#39; -&gt; (os=&gt;#name).
+</span></span><span class="line"><span class="cl">                                                &#39;uname&#39; -&gt; (os=&gt;#uname) call } asDictionary} }.
+</span></span><span class="line"><span class="cl">    ((file=&gt;#close) call)
+</span></span><span class="line"><span class="cl">}.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">instr execute.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行之后,查看<code>/tmp/osp3g.json</code>:</p>
+<p><img src="/post/img/phpharo_python_6bb2c472.png" alt=""></p>
+<p>调用强大的第三方库(如<code>numpy</code>、<code>matplotlib</code>)也是OK的！</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;Use and initialize the FFI interpreter.&#34;
+</span></span><span class="line"><span class="cl">P3GInterpreter useFFIInterpreter.
+</span></span><span class="line"><span class="cl">P3GInterpreter current pathToPython: &#39;/usr/bin/python3&#39;.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">numpy := &#39;numpy&#39; asP3GIdentifier.
+</span></span><span class="line"><span class="cl">mlab := &#39;matplotlib&#39; asP3GIdentifier=&gt;#mlab.
+</span></span><span class="line"><span class="cl">pyplot := &#39;matplotlib&#39; asP3GIdentifier=&gt;#pyplot.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">instr := P3GInstructionsList new.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">instr addAll: {
+</span></span><span class="line"><span class="cl">    &#34;Import modules.&#34;
+</span></span><span class="line"><span class="cl">    numpy import.
+</span></span><span class="line"><span class="cl">    mlab import.
+</span></span><span class="line"><span class="cl">    pyplot import.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    &#34;Set seed for random.&#34;
+</span></span><span class="line"><span class="cl">    (numpy=&gt;#random=&gt;#seed) callWith: #(0).
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    &#34;Example data&#34;
+</span></span><span class="line"><span class="cl">    #mu asP3GIdentifier &lt;- 100.
+</span></span><span class="line"><span class="cl">    #sigma asP3GIdentifier &lt;- 15.
+</span></span><span class="line"><span class="cl">    #x asP3GIdentifier &lt;- (#mu asP3GIdentifier + (#sigma asP3GIdentifier * ((numpy=&gt;#random=&gt;#randn) callWith: #(437)))).
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    #num_bin asP3GIdentifier &lt;- 50.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    #res asP3GIdentifier &lt;- (pyplot=&gt;#subplots) call.
+</span></span><span class="line"><span class="cl">    #fig asP3GIdentifier &lt;- (#res asP3GIdentifier at: 0).
+</span></span><span class="line"><span class="cl">    #ax asP3GIdentifier &lt;- (#res asP3GIdentifier at: 1).
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    &#34;Plot histogram of data.&#34;
+</span></span><span class="line"><span class="cl">    #res asP3GIdentifier &lt;- ((#ax asP3GIdentifier=&gt;#hist) callWith: {#x asP3GIdentifier.#num_bin asP3GIdentifier} with: {&#39;normed&#39; -&gt; 1 } asDictionary).
+</span></span><span class="line"><span class="cl">    #bins asP3GIdentifier &lt;- (#res asP3GIdentifier at: 1).
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    &#34;Add a &#39;best fit line&#39;&#34;
+</span></span><span class="line"><span class="cl">    #y asP3GIdentifier &lt;- ((mlab=&gt;#normpdf) callWith: {#bins asP3GIdentifier . #mu asP3GIdentifier . #sigma asP3GIdentifier}).
+</span></span><span class="line"><span class="cl">    (#ax asP3GIdentifier=&gt;#plot) callWith: { #bins asP3GIdentifier . #y asP3GIdentifier . &#39;--&#39; }.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    (pyplot=&gt;#show) call
+</span></span><span class="line"><span class="cl"> }.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">instr execute
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>效果如下:</p>
+<p><img src="/post/img/pharo_python_28e89981.png" alt=""></p>
+<!--
+>  It seems to me that unless the Smalltalk community goes for economic self-sufficiency we will forever be reading answers to questions about languages that say, essentially, “there’s a much better way, exemplified by Smalltalk” but have as subtext “but we’ve failed to put that power into people’s hands, we’ve failed to live up to our claims in real systems or any kind of ubiquity” to which the rest of the world, quite reasonably, says “so what?”. -- [Eliot Miranda](https://www.quora.com/Why-does-Smalltalk-not-become-a-commonly-used-platform-for-learning-presentations-and-video-lecture-constructors-Squeak-looks-great-as-an-interactive-presentation-platform-for-college-lecturers)
+-->
+<h1 id="第三方库">第三方库</h1>
+<p>尽管Pharo社区没有Python社区壮大，但社区里已经有很多高质量的第三方库，我整理了一些我喜欢的。 其中<a href="https://gtoolkit.com/">gtoolkit</a>、<a href="http://moosetechnology.org/">Moose</a>和<a href="http://www.drgeo.eu/home">Dr Geo</a>令我大吃一惊。整个Pharo社区充满了人文主义精神，这种精神体现在软件本身里，体现在软件的<a href="https://gtoolkit.com/#design">设计原则</a>里，体现在<a href="http://www.drgeo.eu/home">软件的介绍</a>里。他们秉承艾伦凯在smalltalk中展现的理念，继续做着令人震惊和振奋的工作。</p>
+<ul>
+<li><a href="https://gtoolkit.com/">gtoolkit</a>: We want the environment to fit the context of the current system and when it does not, we want to mold it seamlessly. This change is transformational.
+<ul>
+<li>Programming is the coolest job on the planet, and it should feel like that all the time.</li>
+<li><a href="https://github.com/feenkcom/gtoolkit">gtoolkit</a></li>
+</ul>
+</li>
+<li><a href="http://moosetechnology.org/">Moose</a>: Moose is a platform for software and data analysis.
+<ul>
+<li><a href="https://github.com/moosetechnology/Moose">github.com/moosetechnology/Moose</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/ObjectProfile/Roassal2">Roassal2</a></li>
+<li><a href="https://github.com/ObjectProfile/Roassal3">Roassal3</a></li>
+<li><a href="https://github.com/ba-st/Winter">Winter</a>: Winter is a 2D game engine for Pharo Smalltalk</li>
+<li><a href="https://github.com/bouraqadi/PharoJS">PharoJS</a></li>
+<li><a href="https://github.com/juliendelplanque/Python3Generator">Python3Generator</a></li>
+<li><a href="https://github.com/guillep/Scale">Scale</a>: Pharo in the shell</li>
+<li><a href="https://github.com/lxsang/PTerm">PTerm</a>
+<ul>
+<li><a href="https://blog.lxsang.me/post/id/24">PTerm: yet another Terminal Emulator for Pharo</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/pharo-contributions/OSSubprocess">OSSubprocess</a></li>
+<li><a href="https://github.com/SeasideSt/Seaside">Seaside</a></li>
+<li><a href="https://github.com/svenvc/ston">ston</a></li>
+<li><a href="https://github.com/pharo-ide/TelePharo">TelePharo</a>: Tools to manage and develop remote Pharo images</li>
+<li><a href="https://github.com/pharo-iot/PharoThings">PharoThings</a>:Live programming platform for IoT projects based on Pharo
+<ul>
+<li>Raspberry driven by WiringPi library
+<ul>
+<li><a href="https://www.youtube.com/watch?v=0H9of7PQet0">a demo about low level board model</a></li>
+</ul>
+</li>
+<li>Arduino driven by Firmata, soon</li>
+<li>Beaglebone, soon</li>
+</ul>
+</li>
+<li><a href="https://github.com/SquareBracketAssociates/EnterprisePharo">EnterprisePharo</a>:  A new book describing Pharo librairies to make business.</li>
+<li><a href="https://github.com/pharo-open-documentation/pharo-wiki">pharo-wiki</a></li>
+<li><a href="https://github.com/pharo-graphics/Bloc">Bloc</a>:  Low-level UI infrastructure &amp; framework for Pharo</li>
+<li><a href="https://github.com/svenvc/zinc">zinc</a>: Zinc HTTP Components is an open-source Smalltalk framework to deal with the HTTP networking protocol.</li>
+<li><a href="https://github.com/svenvc/P3">P3</a>: A lean and mean PostgreSQL client for Pharo</li>
+<li><a href="https://github.com/ronsaldo/woden">woden</a>:  World Dynamic Engine - A 3D graphics engine for Pharo</li>
+<li><a href="https://github.com/zeroflag/Teapot">Teapot</a>: Teapot micro web framework for Pharo Smalltalk</li>
+<li><a href="https://github.com/VincentBlondeau/Cruiser">Cruiser</a>: A Pharo Tool to package applications</li>
+<li><a href="https://github.com/pharo-nosql/voyage">voyage</a>: an object persistence abstraction layer for Pharo.</li>
+<li><a href="https://github.com/jmari/JupyterTalk">JupyterTalk</a>: Pharo Smaltalk kernel for Jupyter:  It uses ZeroMQ ported from <a href="http://smalltalkhub.com/#!/~panuw/zeromq">zeromq</a> project to uFFI！！！
+<ul>
+<li><a href="http://smalltalkhub.com/#!/~panuw/zeromq">zeromq</a>: ZeroMQ bindings for Pharo. Currently uses FFI interface. Supports ZeroMQ versions 2 and 3 (2.2 and 3.2 at least)</li>
+</ul>
+</li>
+<li><a href="https://github.com/unchartedworks/SmalltalkVimMode">SmalltalkVimMode</a>: Vim Mode for Playground, System Browser, Debugger in Pharo.</li>
+<li><a href="https://github.com/hernanmd/pi">pi</a>:Pharo Install - A CLI tool for installing Pharo Smalltalk packages (pip-like)</li>
+<li><a href="https://github.com/svenvc/NeoJSON">NeoJSON</a>: read and write JSON converting to or from Smalltalk objects.</li>
+<li><a href="https://github.com/pavel-krivanek/terminal">terminal</a>:Pseudoterminal emulator for Pharo</li>
+<li><a href="https://github.com/pharo-nosql/mongotalk">mongotalk</a>: A Pharo driver for MongoDB</li>
+<li><a href="https://github.com/astares/Pharo-Chrome">Pharo-Chrome</a>: Pharo support for Google Chrome</li>
+<li><a href="https://github.com/ObjectProfile/KerasWrapper">KerasWrapper</a>: Keras bindings for Pharo</li>
+<li><a href="http://bergel.eu/MyPapers/Infa18a-Keras.pdf">Experience in Bridging Keras for Python with Pharo</a></li>
+<li><a href="https://github.com/juliendelplanque/JRPC">JRPC</a>: JSON-RPC 2.0 implementation for Pharo Smalltalk</li>
+<li><a href="http://www.drgeo.eu/home">Dr Geo</a>: A software to design &amp; manipulate interactive geometric sketches. It helps kids to explore geometry.</li>
+<li><a href="https://github.com/souravdatta/turtles">turtles</a>: A turtle implementation in Pharo Smalltalk</li>
+<li><a href="https://github.com/moosetechnology/PetitParser">PetitParser</a></li>
+</ul>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://www.quora.com/Why-does-Smalltalk-not-become-a-commonly-used-platform-for-learning-presentations-and-video-lecture-constructors-Squeak-looks-great-as-an-interactive-presentation-platform-for-college-lecturers">Why does Smalltalk not become a commonly used platform for learning presentations and video lecture constructors? Squeak looks great as an interactive presentation platform for college lecturers.</a></li>
+<li><a href="https://www.quora.com/What-book-s-would-you-recommend-to-a-computer-science-student">What book(s) would you recommend to a computer science student?</a></li>
+<li><a href="https://www.quora.com/Is-there-a-programming-language-thats-effectively-a-successor-to-Smalltalk">Is there a programming language that&rsquo;s effectively a successor to Smalltalk?</a></li>
+<li><a href="https://www.quora.com/What-does-Alan-Kay-use-in-lieu-of-PowerPoint">What does Alan Kay use in lieu of PowerPoint?</a></li>
+<li><a href="https://www.quora.com/As-a-beginner-what-are-the-best-ways-to-approach-Computer-Science">As a beginner, what are the best ways to approach Computer Science?</a></li>
+<li><a href="http://www.vpri.org/pdf/rn2005001_learning.pdf">Squeak Etoys, Children &amp; Learning</a></li>
+<li><a href="https://www.quora.com/What-does-Alan-Kay-think-of-using-either-Squeak-or-Pharo-as-the-first-language-for-introducing-programming">What does Alan Kay think of using either Squeak or Pharo as the first language for introducing programming?</a></li>
+<li><a href="http://worrydream.com/EarlyHistoryOfSmalltalk/#p53">The Early History Of Smalltalk</a></li>
+<li><a href="http://www.cs.virginia.edu/~evans/cs655/readings/smalltalk.html">Design Principles Behind Smalltalk</a></li>
+<li><a href="https://medium.com/morning-light/smalltalk-and-raspberry-pi-8d85793b132f">Smalltalk and Raspberry Pi</a></li>
+<li><a href="https://medium.com/smalltalk-talk/behold-pharo-the-modern-smalltalk-38e132c46053">Behold Pharo: The Modern Smalltalk</a></li>
+<li><a href="https://hackernoon.com/back-to-the-future-with-smalltalk-57c68fab583a">Back to the Future with Smalltalk</a></li>
+<li><a href="https://github.com/pharo-open-documentation/awesome-pharo">awesome-pharo</a></li>
+<li><a href="https://github.com/dorellang/hunter">hunter</a>: a JavaScript reengineering platform.</li>
+<li><a href="https://amber-lang.net/">amber</a>: A new language and live environment made for the web.</li>
+<li><a href="https://exercism.io/tracks/pharo-smalltalk">Pharo Track</a></li>
+<li><a href="https://github.com/jecisc/TinyLogger">TinyLogger</a>:A really small logger for Pharo applications.</li>
+<li><a href="https://github.com/khinsen/ipfs-pharo">ipfs-pharo</a>: IPFS interface for Pharo</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-03-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/programming/">programming</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/monty-hall-problem-programming/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">三门问题的程序模拟</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/iot-open-source-projects/">
+            <span class="next-text nav-default">物联网相关开源项目整理</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

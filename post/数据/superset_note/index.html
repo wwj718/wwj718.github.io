@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> superset使用笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="superset是什么 superset马甲比较多，它曾经叫过:Panoramix，Caravel， 关于入门和介绍可以我此前的文章: carav" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/superset_note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content=" superset使用笔记" />
+<meta property="og:description" content="superset是什么 superset马甲比较多，它曾经叫过:Panoramix，Caravel， 关于入门和介绍可以我此前的文章: carav" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/superset_note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-01-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-01-05T00:00:00+00:00" />
+
+<meta itemprop="name" content=" superset使用笔记">
+<meta itemprop="description" content="superset是什么 superset马甲比较多，它曾经叫过:Panoramix，Caravel， 关于入门和介绍可以我此前的文章: carav"><meta itemprop="datePublished" content="2017-01-05T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2017-01-05T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1567">
+<meta itemprop="keywords" content="data," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=" superset使用笔记"/>
+<meta name="twitter:description" content="superset是什么 superset马甲比较多，它曾经叫过:Panoramix，Caravel， 关于入门和介绍可以我此前的文章: carav"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title"> superset使用笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-01-05 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE/"> 数据 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装依赖">安装依赖</a>
+      <ul>
+        <li><a href="#ubuntu">ubuntu</a></li>
+        <li><a href="#centos">centos</a></li>
+        <li><a href="#docker">docker</a></li>
+        <li><a href="#安装与初始化">安装与初始化</a></li>
+        <li><a href="#数据永久化">数据永久化</a></li>
+        <li><a href="#更多数据库">更多数据库</a></li>
+        <li><a href="#简单配置">简单配置</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#认证系统">认证系统</a></li>
+        <li><a href="#汉化">汉化</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/superset9b9f8e53.png" alt=""></p>
+<h1 id="superset是什么">superset是什么</h1>
+<p>superset马甲比较多，它曾经叫过:<code>Panoramix</code>，<code>Caravel</code>，</p>
+<p>关于入门和介绍可以我此前的文章:</p>
+<ul>
+<li><a href="http://blog.just4fun.site/caravel-startup-and-install.html">caravel系列之安装与入门</a></li>
+<li><a href="http://blog.just4fun.site/caravel-config.html">caravel系列之简易配置/定制</a></li>
+<li><a href="http://blog.just4fun.site/caravel-demo-analysis.html">caravel系列之案例讲解与分析</a></li>
+<li><a href="http://blog.just4fun.site/caravel-code.html">caravel系列之架构与源码浅析</a></li>
+</ul>
+<p>最近公司想用新版本中的SQL Lab的功能，于是我将caravel升级到superset。在此做个笔记</p>
+<p>除了增加了几个新特性，变化不大，此前写的caveral文章基本可用，如果遇到问题，参考<a href="http://airbnb.io/superset/installation.html">官方文档</a>即可</p>
+<h1 id="安装">安装</h1>
+<p>安装基本没坑，跟着<a href="http://airbnb.io/superset/installation.html">官方教程</a>做就行</p>
+<p>我是ubuntu系统，所以安装过程为：</p>
+<h2 id="安装依赖">安装依赖</h2>
+<h3 id="ubuntu">ubuntu</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo apt-get install build-essential libssl-dev libffi-dev python-dev python-pip libsasl2-dev libldap2-dev
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="centos">centos</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">yum makecache
+</span></span><span class="line"><span class="cl">sudo easy_install -i http://pypi.douban.com/simple/ pip
+</span></span><span class="line"><span class="cl">sudo easy_install pip
+</span></span><span class="line"><span class="cl">sudo yum install gcc libffi-devel python-devel python-pip python-wheel openssl-devel libsasl2-devel openldap-devel
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="docker">docker</h3>
+<p>参考<a href="https://github.com/airbnb/superset#resources">Docker image (community contributed)</a></p>
+<h3 id="安装与初始化">安装与初始化</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Install superset
+</span></span><span class="line"><span class="cl">pip install superset -i http://pypi.douban.com/simple --trusted-host pypi.douban.com #我的版本是superset==0.15.1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Create an admin user
+</span></span><span class="line"><span class="cl">fabmanager create-admin --app superset
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Initialize the database
+</span></span><span class="line"><span class="cl">superset db upgrade
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Load some data to play with
+</span></span><span class="line"><span class="cl">superset load_examples
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Create default roles and permissions
+</span></span><span class="line"><span class="cl">superset init
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Start the web server on port 8088
+</span></span><span class="line"><span class="cl">superset runserver -p 8088 -a 0.0.0.0 # -a 0.0.0.0使其允许外部访问
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># To start a development web server, use the -d switch
+</span></span><span class="line"><span class="cl"># superset runserver -d 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="数据永久化">数据永久化</h3>
+<p>默认数据库在<code>~/.superset/superset.db</code>,可通过在配置文件里修改<code>SQLALCHEMY_DATABASE_URI</code>来指定sqlite数据库文件路径</p>
+<h3 id="更多数据库">更多数据库</h3>
+<p>默认支持sqlite</p>
+<p>如果需要添加其他数据库需要安装依赖：<a href="http://airbnb.io/superset/installation.html#database-dependencies">Database dependencies</a></p>
+<p>诸如mssql: <code>pip install pymssql</code></p>
+<p>添加mssql，uri形如: <code>mssql+pymssql://username:pass@192.168.0.6:10025/db_name?charset=utf8</code></p>
+<h4 id="oracle">oracle</h4>
+<p>oracle比较烦人，如果是ubuntu可以参考<a href="http://git.oschina.net/wuwenjie/Oracle-Instant-Client">Oracle-Instant-Client</a></p>
+<h3 id="简单配置">简单配置</h3>
+<p>配置方法和<a href="http://blog.just4fun.site/caravel-config.html">caravel系列之简易配置/定制</a>相同，只需要把配置文件名由<code>caravel_config.py</code>改为<code>superset_config.py</code>即可</p>
+<p>我的配置是:(<code>superset_config.py</code>) 记得:export PYTHONPATH=/xxx (superset_config.py所在目录)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#---------------------------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Caravel specific config</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#---------------------------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="n">ROW_LIMIT</span> <span class="o">=</span> <span class="mi">5000</span>
+</span></span><span class="line"><span class="cl"><span class="n">CARAVEL_WORKERS</span> <span class="o">=</span> <span class="mi">16</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">CARAVEL_WEBSERVER_PORT</span> <span class="o">=</span> <span class="mi">8000</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#---------------------------------------------------------</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#---------------------------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Flask App Builder configuration</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#---------------------------------------------------------</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Your App secret key</span>
+</span></span><span class="line"><span class="cl"><span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\2\1</span><span class="s1">thisismyscretkey</span><span class="se">\1\2</span><span class="s1">\e\y\y\h&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">LANGUAGES</span> <span class="o">=</span> <span class="s2">&#34;en&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">APP_ICON</span> <span class="o">=</span> <span class="s2">&#34;your logo&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">APP_NAME</span> <span class="o">=</span> <span class="s2">&#34;yout app name&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">BABEL_DEFAULT_LOCALE</span> <span class="o">=</span> <span class="s1">&#39;en&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">LANGUAGES</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="s1">&#39;zh&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;cn&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Chinese&#39;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="s1">&#39;en&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;us&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;English&#39;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="s1">&#39;fr&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;fr&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;French&#39;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="c1"># &#39;fr&#39;: {&#39;flag&#39;: &#39;fr&#39;, &#39;name&#39;: &#39;French&#39;},</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="s1">&#39;sqlite:////home/wwj/superset_lab/superset.db&#39;</span> <span class="c1">#存储superset的系统信息，改为你自己的数据库路径，默认在~/.superset</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Flask-WTF flag for CSRF</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#CSRF_ENABLED = True</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="定制化">定制化</h1>
+<h3 id="认证系统">认证系统</h3>
+<p>考虑到数据的隐私和安全，访问superset的内容需要登陆验证，你可以加入公司已有的认证系统，诸如LDAP,database之类的，目前superset支持以下积累验证：<code>database, OpenID, LDAP, OAuth &amp; REMOTE_USER</code></p>
+<p>这部分功能由<code>Flask AppBuiler</code>提供，如果你想做深度定制，可以对此做更深入了解:<a href="http://flask-appbuilder.readthedocs.io/en/latest/security.html#authentication-methods">Authentication Methods</a></p>
+<p>另外如果你想把superset的slice集成到其他系统会遇到用户登陆问题，如果你想无缝衔接，可以考虑OAuth</p>
+<p>至于是否可以用CAS，我还没做实验，猜测在Flask AppBuiler的认证部分增加flask cas模块能做到</p>
+<p>#坑</p>
+<h3 id="汉化">汉化</h3>
+<p>当前版本，打包过程没用把翻译文件放进去，需要手动处理</p>
+<p>首先进入安装包目录(我的是:<code>/home/wwj/superset_lab/env/lib/python3.4/site-packages/superset</code>)</p>
+<p>然后：<code>mkdir -p translations/zh/LC_MESSAGES</code></p>
+<p>接着获取:<code>wget https://github.com/airbnb/superset/raw/0.15.1/superset/translations/zh/LC_MESSAGES/messages.mo</code></p>
+<p>如果翻译不完整可以手动翻译: 下载： <code>wget https://github.com/airbnb/superset/raw/0.15.1/superset/translations/zh/LC_MESSAGES/messages.po</code>,校验:<code>msgfmt -c messages.po</code>, 然后编译为mo:<code>msgunfmt messages.po -o messages.mo</code></p>
+<p>如果想反向编译，即 mo -&gt; po , 可以使用 :<code>msgfmt xxx.mo -o xxx.po</code> ，可以参考:<a href="http://stackoverflow.com/questions/10863840/how-to-convert-gettext-mo-file-into-po-file">How to convert gettext .mo file into .po file</a></p>
+<p>如果你想做更多定制,诸如做自己的发行版，参考:<a href="http://airbnb.io/superset/installation.html#making-your-own-build">Making your own build</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-01-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/data/">data</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/team-manage-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">团队管理笔记_00</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/edx-note_2017_1_5/">
+            <span class="next-text nav-default">open edx近期笔记(2017.01)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>可理解的粒子系统 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="More Is Different 许多物理、生物和社会现象以及数学概念可以被模拟为分散的复杂系统。这种系统的模拟可以用大规模并行粒子来编写。在一个典型的去中心化系统中，" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/learnable-particle-systems/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="可理解的粒子系统" />
+<meta property="og:description" content="More Is Different 许多物理、生物和社会现象以及数学概念可以被模拟为分散的复杂系统。这种系统的模拟可以用大规模并行粒子来编写。在一个典型的去中心化系统中，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/learnable-particle-systems/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-11-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-11-12T00:00:00+00:00" />
+
+<meta itemprop="name" content="可理解的粒子系统">
+<meta itemprop="description" content="More Is Different 许多物理、生物和社会现象以及数学概念可以被模拟为分散的复杂系统。这种系统的模拟可以用大规模并行粒子来编写。在一个典型的去中心化系统中，"><meta itemprop="datePublished" content="2020-11-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-11-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1575">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="可理解的粒子系统"/>
+<meta name="twitter:description" content="More Is Different 许多物理、生物和社会现象以及数学概念可以被模拟为分散的复杂系统。这种系统的模拟可以用大规模并行粒子来编写。在一个典型的去中心化系统中，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">可理解的粒子系统</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-11-12 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#主要改进">主要改进</a></li>
+    <li><a href="#核心概念3个">核心概念(3个)</a></li>
+    <li><a href="#设计理念">设计理念</a></li>
+    <li><a href="#并行的语义与脚本执行过程">并行的语义与脚本执行过程</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>More Is Different</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>许多物理、生物和社会现象以及数学概念可以被模拟为分散的复杂系统。这种系统的模拟可以用大规模并行粒子来编写。在一个典型的去中心化系统中，每个粒子的行为往往是非常简单的，然而它们之间的相互作用，甚至仅仅是它们的数量就会产生有趣的行为。” – 《Kedama: A GUI-based Interactive Massively Parallel Particle Programming System》</p>
+</blockquote>
+<h1 id="前言">前言</h1>
+<p>近期一边阅读论文（主要在阅读 Bret 整理的这个列表:<a href="http://worrydream.com/refs/">worrydream ref</a>，我把喜欢的文章放在<a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">这里</a>了），一边深入到 Smalltalk 社区成员的工作。</p>
+<p>使用 Etoys 的时候，对 Kedama 感到好奇，首先这个词是什么意思我就没弄明白。后来发现它并不是一个英文单词。</p>
+<p>读完这篇论文（<a href="http://www.vpri.org/pdf/tr2005001_ohshima_kedama.pdf">Kedama: A GUI-based Interactive Massively Parallel Particle Programming System</a>），才弄懂它是什么，设计思路，以及使用方式。</p>
+<p>本文也可以视为这篇论文的阅读笔记。</p>
+<h1 id="对孩子友好的粒子系统">对孩子友好的粒子系统</h1>
+<blockquote>
+<p>分散和复杂的系统可以成为数学、科学和工程概念建模的强大工具。StarLogo 和 NetLogo 是第一个允许初中和高中学生从成千上万的可编程粒子中建立动态模型的系统。</p>
+</blockquote>
+<p>StarLogo 的作者是 Scratch 之父 Resnick. StarLogo 它是 Logo 的扩展， 而 Logo 的作者则是 Resnick 的老师 Seymour Parpert。</p>
+<p>Scratch 对粒子也有很好的支持，我建立了一个工作室，收藏社区里的一些粒子项目：https://create.codelab.club/studios/299/。</p>
+<h1 id="kedama--squeak">Kedama &amp; Squeak</h1>
+<p>StarLogo 启发了 Kedama。由 Yoshiki Ohshima 在 Squeak 中实现。</p>
+<p>Etoys 里有一些有趣的粒子项目（基于 <a href="http://www.vpri.org/pdf/tr2005001_ohshima_kedama.pdf">Kedama</a>）</p>
+<p><img src="/post/img/34b686c9853f95ca80c6d7dd59d49468.png" alt=""></p>
+<p>分子扩散：</p>
+<p><img src="/post/img/ffd6174da6010ce58533c0fba1027044b927414b_2_1346x1000.png" alt=""></p>
+<p>气体模型：</p>
+<p><img src="/post/img/009dea2f199a3b7fbb6e15fd5a9646509f149089_2_1366x1000.png" alt=""></p>
+<p>Kedama 也内置在 Squeak 中:</p>
+<p><img src="/post/img/67053bc392811f7c903c6893189f0579.png" alt=""></p>
+<p><a href="http://www.vpri.org/pdf/tr2005001_ohshima_kedama.pdf">Kedama: A GUI-based Interactive Massively Parallel Particle Programming System</a> 文中，对 Squeak 有非常精彩介绍。由于 Yoshiki Ohshima 自己参与到 Etoys 的开发中，所以他对 Etoys 的理念有深刻理解和清晰阐述。</p>
+<h2 id="主要改进">主要改进</h2>
+<p>由于 Kedama 在Squeak(Smalltalk) 中实现，使得它拥有强大的动态性:</p>
+<blockquote>
+<p>即使在用户修改系统的时候，整个系统一直在执行。</p>
+</blockquote>
+<p>此外也免费获得了 Squeak 的其他优秀特性：</p>
+<ul>
+<li>可视化脚本(The Tile Scripting Language): 界面类似于 Etoys, 易于掌握
+<ul>
+<li>使用与Squeak等价的模型：<code>&lt;receiver&gt;&lt;command&gt;&lt;zero-or-more args&gt;</code></li>
+<li>statically-typed: 当用户试图将一个Tile组合到另一个Tile上时，它将会自动检查，
+只有当这些Tile满足类型限制时才会成功。并有视觉反馈。</li>
+</ul>
+</li>
+<li>直接操作: 数据和代码被显示为图形对象，因此它们可以被直接操作。</li>
+<li>更简洁的语法和语义: 统一的面向对象的语法更适合编写并行粒子程序。语义简单明了，类似于Squeak Etoys</li>
+<li>性能: 但在Kedama中，一个简单的等价程序的运行速度通常比StarLogo和NetLogo快3到10倍</li>
+<li>可移植性: Squeak可以运行在20多个平台上</li>
+</ul>
+<p>Kedama展示了一个更简单、更动态、用户友好和快速实现大规模并行粒子系统的可能性。</p>
+<h2 id="核心概念3个">核心概念(3个)</h2>
+<ul>
+<li>parallel turtle(最重要，有不同种类)</li>
+<li>Kedama world（是一个二维平面，有自己的坐标系）</li>
+<li>patch variable（二维的单元格矩阵，每个单元对应于Kedama世界坐标中的一个网格点，并拥有一个整数值）</li>
+</ul>
+<h2 id="设计理念">设计理念</h2>
+<p>当人们设计一个编程系统时，系统所提供的功能多少是有相应代价的。如果功能越多，虽然用户可以编写更复杂的程序，但太多的功能也容易让用户感到困惑。</p>
+<p>Kedama的主要受众是学生，不一定是技术群体。系统不应该让用户感到无所适从。另外，Kedama的编程界面是图形化的。太多的控件会占用更多的屏幕 &ldquo;空间&rdquo;。</p>
+<h2 id="并行的语义与脚本执行过程">并行的语义与脚本执行过程</h2>
+<p>由于并行性的存在，需要注意脚本的语义。不仅要容纳并行性，而且要在不牺牲性能的前提下，让非技术用户能够理解。</p>
+<p>有两个重要的问题需要回答，以细化语义。这些问题是:</p>
+<ul>
+<li>一条命令被执行多少次？</li>
+<li>命令的执行顺序是什么？</li>
+</ul>
+<p>以下脚本执行过程：</p>
+<img width=400 src="/post/img/59b9de6aaf340d5b2ca457f2dfe75112.png"/>
+<p>密集的线条表示每个粒子都要执行一次语句。</p>
+<h1 id="附录">附录</h1>
+<p>许多 游戏/3D 引擎也会带有粒子系统。</p>
+<ul>
+<li><a href="https://arcade.academy/examples/particle_systems.html">arcade particle_systems</a></li>
+<li><a href="https://docs.blender.org/manual/en/latest/physics/particles/index.html">blender Particle System</a>
+<ul>
+<li><a href="https://docs.blender.org/api/current/bpy.types.ParticleSystem.html">bpy ParticleSystem</a></li>
+</ul>
+</li>
+<li><a href="https://docs.unrealengine.com/en-US/PythonAPI/class/ParticleSystem.html">unrealengine ParticleSystem</a></li>
+</ul>
+<p>我日常主要使用Python，列出一些Python相关的粒子系统:</p>
+<ul>
+<li><a href="https://pythonhosted.org/lepton/">lepton</a></li>
+</ul>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://www.vpri.org/pdf/tr2005001_ohshima_kedama.pdf">Kedama: A GUI-based Interactive Massively Parallel Particle Programming System</a></li>
+<li>马文·闵斯基《心智社会》</li>
+<li>M. Resnick, Turtles, Termites, and Traffic Jams: Ex- plorations in Massively Parallel Microworlds (Com- plex Adaptive Systems). MIT Press, 1994.</li>
+<li><a href="https://en.wikipedia.org/wiki/StarLogo">StarLogo</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-11-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/list-s/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">为什么递归在LISP中如此强大</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/dan-ingalls-and-lively/">
+            <span class="next-text nav-default">Dan Ingalls 与 Lively</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

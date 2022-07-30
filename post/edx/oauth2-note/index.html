@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>OAuth学习笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="既然最近在学习身份认证相关的东西，OAuth2就是一个绕不开的部分了 OAuth致力于解决的是授权相关的问题。它和认证并不相同。 OAuth致力" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/oauth2-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="OAuth学习笔记" />
+<meta property="og:description" content="既然最近在学习身份认证相关的东西，OAuth2就是一个绕不开的部分了 OAuth致力于解决的是授权相关的问题。它和认证并不相同。 OAuth致力" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/oauth2-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-12-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-12-29T00:00:00+00:00" />
+
+<meta itemprop="name" content="OAuth学习笔记">
+<meta itemprop="description" content="既然最近在学习身份认证相关的东西，OAuth2就是一个绕不开的部分了 OAuth致力于解决的是授权相关的问题。它和认证并不相同。 OAuth致力"><meta itemprop="datePublished" content="2015-12-29T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-12-29T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2320">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="OAuth学习笔记"/>
+<meta name="twitter:description" content="既然最近在学习身份认证相关的东西，OAuth2就是一个绕不开的部分了 OAuth致力于解决的是授权相关的问题。它和认证并不相同。 OAuth致力"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">OAuth学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-12-29 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>既然最近在学习身份认证相关的东西，OAuth2就是一个绕不开的部分了</p>
+<p>OAuth致力于解决的是<code>授权</code>相关的问题。它和认证并不相同。</p>
+<p>OAuth致力于为跨站的授权提供解决方案，而OpenID则是为了解决跨站点认证问题，当然这两个协议有重叠处，授权和认证常常关系紧密</p>
+<p>当前流行的OAuth版本是OAuth2.0，就是著名的OAuth2</p>
+<p>#介绍
+维基上描述说，OAuth（<code>开放授权</code>）是一个开放标准，允许用户让第三方应用访问该用户在某一网站上存储的私密的资源（如照片，视频，联系人列表），而无需将用户名和密码提供给第三方应用。</p>
+<p>OAuth允许用户提供一个令牌，而不是用户名和密码来访问他们存放在特定服务提供者的数据。每一个令牌授权一个特定的网站（例如，视频编辑网站)在特定的时段（例如，接下来的2小时内）内访问特定的资源（例如仅仅是某一相册中的视频）。这样，OAuth让用户可以授权第三方网站访问他们存储在另外服务提供者的某些特定信息，而非所有内容。</p>
+<p>#意义
+关于OAuth能给你带来什么好处，课程格子的创始人李天放在知乎有一段很棒的回答，我摘过来：</p>
+<blockquote>
+<p>新浪微博就是你的家。偶尔你会想让一些人（第三方应用）去你的家里帮你做一些事，或取点东西。你可以复制一把钥匙（用户名和密码）给他们，但这里有三个问题：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>别人拿了钥匙后可以去所有的房间</li>
+<li>别人拿到你的钥匙后也许会不小心丢到，甚至故意送到它人手里。这样你都不知到谁有你家钥匙。</li>
+<li>过一段时间你也许会想要回自己的钥匙，但别人不还怎么办？</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>OAuth 是高级钥匙:</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>你可以配置不同权限的钥匙。有些只能进大厅（读取你的微博流）。有些钥匙可以进储藏柜（读取你的相片)</li>
+<li>钥匙上带着指纹验证的（指纹 = appkey)。 收到钥匙的人只能自己用，不能转让</li>
+<li>你可以远程废除之前发出的钥匙相对来说, OAuth比给出用户名密码安全</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>相对来说, OAuth比给出用户名密码安全</p>
+</blockquote>
+<p>我觉得以上的回答简介形象又切中要害</p>
+<p>#原理
+关于入门引导和原理介绍，阮一峰老师的博客一直是极好的学习之处，关于OAuth部分，他的博客依然精彩，我在文后给出了链接。在此引述一些关键内容</p>
+<p>###相关名词
+我们先把名词定义理清楚</p>
+<ul>
+<li>Resource Owner(RO)：资源所有者</li>
+<li>Authorization Server(AS)：认证服务器，即服务提供商专门用来处理认证的服务器。</li>
+<li>Resource Server(RS)：资源服务器，即服务提供商存放用户生成的资源的服务器。它与认证服务器，可以是同一台服务器，也可以是不同的服务器。</li>
+</ul>
+<p>###基本思路
+OAuth在&quot;客户端&quot;与&quot;服务提供商&quot;之间，设置了一个授权层（authorization layer）。&ldquo;客户端&quot;不能直接登录&quot;服务提供商&rdquo;，只能登录授权层，以此将用户与客户端区分开来。&ldquo;客户端&quot;登录授权层所用的令牌（token），与用户的密码不同。用户可以在登录的时候，指定授权层令牌的权限范围和有效期。</p>
+<p>&ldquo;客户端&quot;登录授权层以后，&ldquo;服务提供商&quot;根据令牌的权限范围和有效期，向&quot;客户端&quot;开放用户储存的资料。</p>
+<p>#客户端获取授权的四种模式
+客户端必须得到用户的授权（authorization grant），才能获得令牌（access token）。OAuth 2.0定义了四种授权方式:</p>
+<ul>
+<li>授权码模式（authorization code）</li>
+<li>简化模式（implicit）</li>
+<li>密码模式（resource owner password credentials）</li>
+<li>客户端模式（client credentials）</li>
+</ul>
+<p>###授权码模式
+授权码模式（authorization code）是功能最完整、流程最严密的授权模式，也是我们最长见到的那种模式，当我们使用开放api的时候</p>
+<p>步骤如下：</p>
+<ol>
+<li>用户访问客户端，后者将前者导向认证服务器。</li>
+<li>用户选择是否给予客户端授权。</li>
+<li>假设用户给予授权，认证服务器将用户导向客户端事先指定的&quot;重定向URI&rdquo;（redirection URI），同时附上一个授权码。</li>
+<li>客户端收到授权码，附上早先的&quot;重定向URI&rdquo;，向认证服务器申请令牌。这一步是在客户端的后台的服务器上完成的，对用户不可见。</li>
+<li>认证服务器核对了授权码和重定向URI，确认无误后，向客户端发送访问令牌（access token）和更新令牌（refresh token）。</li>
+</ol>
+<p>更多细节可以阅读阮一峰老师的原文</p>
+<p>###客户端模式
+在这种模式中，用户直接向客户端注册，客户端以自己的名义要求&quot;服务提供商&quot;提供服务</p>
+<p>步骤为：</p>
+<ol>
+<li>客户端向认证服务器进行身份认证，并要求一个访问令牌。</li>
+<li>认证服务器确认无误后，向客户端提供访问令牌。</li>
+</ol>
+<p>之所以特意列出这种模式是因为之前为Open edX写微信后端，微信后端是一个独立的web app，采用Flask来写，由于edx信任这个应用，所以采用这种模式</p>
+<p>#后记
+##refresh_token
+之前在给Open edX写微信后端时，access_token过期的问题困扰了我很久，由于对OAuth还不够了解，我一拍脑袋重造了车轮来处理过期问题。</p>
+<p>豆瓣的<a href="https://developers.douban.com/wiki/?title=oauth2">这篇文档</a>很清楚地说明了access_token 有效期 与 refresh_token相关的问题</p>
+<p>如果access_token过期，根据服务端返回的标识（106错误：<code>access_token_has_expired</code>）,此时既可以再次引导用户进行授权来获取 access_token，还可以通过 refresh_token 的方式来换取新的 access_token 和 refresh_token。</p>
+<p>refresh_token 只有在 access_token 过期时才能使用，并且只能使用一次。当换取到的 access_token 再次过期时，使用新的 refresh_token 来换取 access_token</p>
+<p>#参考</p>
+<ul>
+<li><a href="https://zh.wikipedia.org/zh-cn/OAuth">OAuth 维基百科</a></li>
+<li><a href="http://oauth.net/2/">OAuth 2.0</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html">理解OAuth 2.0</a></li>
+<li><a href="http://blog.csdn.net/seccloud/article/details/8192707">帮你深入理解OAuth2.0协议</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-12-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/jwt-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">JWT学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/use-cas-in-your-lms/">
+            <span class="next-text nav-default">为什么CAS应该成为你的LMS的一部分</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

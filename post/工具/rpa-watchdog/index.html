@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>自动化工作之watchdog - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 昨天收到一封用户邮件，提到CodeLab的IoT服务器证书过期了。 原因是Let&amp;rsquo;s Encrypt每三个月会更新一次证书(推荐" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/rpa-watchdog/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="自动化工作之watchdog" />
+<meta property="og:description" content="前言 昨天收到一封用户邮件，提到CodeLab的IoT服务器证书过期了。 原因是Let&rsquo;s Encrypt每三个月会更新一次证书(推荐" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/rpa-watchdog/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-14T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-11-14T00:00:00+00:00" />
+
+<meta itemprop="name" content="自动化工作之watchdog">
+<meta itemprop="description" content="前言 昨天收到一封用户邮件，提到CodeLab的IoT服务器证书过期了。 原因是Let&rsquo;s Encrypt每三个月会更新一次证书(推荐"><meta itemprop="datePublished" content="2019-11-14T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-11-14T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1354">
+<meta itemprop="keywords" content="技术,python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="自动化工作之watchdog"/>
+<meta name="twitter:description" content="前言 昨天收到一封用户邮件，提到CodeLab的IoT服务器证书过期了。 原因是Let&rsquo;s Encrypt每三个月会更新一次证书(推荐"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">自动化工作之watchdog</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-14 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#思路">思路</a></li>
+    <li><a href="#动手">动手</a>
+      <ul>
+        <li><a href="#和watchmedo">和watchmedo</a></li>
+        <li><a href="#watchdog">watchdog</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>昨天收到一封用户邮件，提到CodeLab的IoT服务器证书过期了。</p>
+<p>原因是<a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a>每三个月会更新一次证书(推荐使用<a href="https://github.com/Neilpang/acme.sh">acme.sh</a>)，而我的mqtt broker又要求直接把证书放在它的特定目录下。于是我此前的做法是，每次<a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a>更新证书，我就手动复制一份到mqtt broker配置目录里，然后重启它。</p>
+<p>麻烦是，有时候我会忘掉这件事，这不，前头的用户邮件就是一个例子。</p>
+<blockquote>
+<p>DRY(Don&rsquo;t repeat yourself)是面向对象编程中的基本原则，程序员的行事准则。旨在软件开发中，减少重复的信息。 DRY的原则是“系统中的每一部分，都必须有一个单一的、明确的、权威的代表”，指的是（由人编写而非机器生成的）代码和测试所构成的系统，必须能够表达所应表达的内容，但是不能含有任何重复代码。</p>
+</blockquote>
+<p>将DRY的概念延伸到日常工作上，会让我们视图将周期性/重复劳动自动化。</p>
+<p>今年比较热门的RPA(机器人流程自动化), 这个想法便与此有关。</p>
+<p>我挺喜欢将编程技能用于解决日常生活里的问题，此前做过一些有关笔记:</p>
+<ul>
+<li><a href="/post/%E6%8A%80%E6%9C%AF/for-dinner/">for dinner</a></li>
+<li><a href="/post/iot/blockly4pi_codetest_u_disk/">u盘程序自启</a></li>
+<li><a href="/post/%E6%8A%80%E6%9C%AF/python-for-system-administrators/">Python与系统日常管理</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/from-pyautogui-to-automagica/">让智能技术服务于日常工作: 从PyAutoGUI到automagica</a></li>
+</ul>
+<h1 id="解决问题">解决问题</h1>
+<p>为了避免每三个月手动更新一次证书，我准备将其自动化</p>
+<h2 id="思路">思路</h2>
+<p>思路其实很简单，使用<a href="https://github.com/gorakhargosh/watchdog">watchdog</a>监控证书文件，当其更新时，触发一个脚本，该脚本会将证书复制到目标路径，并重启mqtt broker。犹豫服务器基本不会关机，所有整个程序运行在tmux里即可，而不必构建开机自启程序(<a href="http://supervisord.org/">supervisor</a>).</p>
+<p>我原先想采用<a href="https://github.com/dbader/schedule">schedule</a>，<code>定时</code>触发程序，但证书的确切更新时间我是不知的。所以采用<a href="https://github.com/gorakhargosh/watchdog">watchdog</a>会更合适，这是一种典型的事件驱动: 当发生x时触发y。</p>
+<h2 id="动手">动手</h2>
+<p>首先安装watchdog:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">pip3 install watchdog
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>pip install watchdog</code>会同时为我们装上watchdog(Python库)和watchmedo(命令行工具)</p>
+<p>我们先来看看命令行工具的用法:</p>
+<h3 id="和watchmedo">和watchmedo</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">watchmedo log <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --patterns<span class="o">=</span><span class="s2">&#34;*.py;*.txt&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --ignore-directories <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --recursive <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    .
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/post/img/watchdog_test.png" alt=""></p>
+<p>以上脚本的含义是: 递归记录与当前目录下*.py和*.txt文件有关的事件</p>
+<p>使用<code>shell-command</code>参数，来触发脚本</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">watchmedo shell-command <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --patterns<span class="o">=</span><span class="s2">&#34;*.py;*.txt&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --recursive <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --command<span class="o">=</span><span class="s1">&#39;echo &#34;${watch_event_type}&#34;&#39;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    .
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我接下来想表达这个逻辑: 如果<code>${watch_event_type}</code>是<code>created</code>，则执行目标脚本，结果写bash if条件语句老是出错，原本以为是个hello world级的工作，bash语法真迷。</p>
+<h3 id="watchdog">watchdog</h3>
+<p>watchdog是Python库！</p>
+<p>上述逻辑我们可以轻松写出， 微调以下<a href="https://github.com/gorakhargosh/watchdog/blob/master/docs/source/examples/simple.py">官方示例</a>即可:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># python3 mycertsdog.py .</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">logging</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">subprocess</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">watchdog.events</span> <span class="kn">import</span> <span class="n">FileSystemEventHandler</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">watchdog.observers</span> <span class="kn">import</span> <span class="n">Observer</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MyEventHandler</span><span class="p">(</span><span class="n">FileSystemEventHandler</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">my_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&#34;cp /home/wwj/.acme.sh/codelab.club/codelab.club.key /home/wwj/mqtt/emqx/etc/certs/key.pem&#34;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&#34;cp /home/wwj/.acme.sh/codelab.club/fullchain.cer /home/wwj/mqtt/emqx/etc/certs/cert.pem&#34;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&#34;/home/wwj/mqtt/emqx/bin/emqx restart&#34;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">on_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># test: cp ~/privkey.pem privkey.pem</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># import IPython;IPython.embed()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="s2">&#34;codelab.club.key&#34;</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">src_path</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">my_task</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">path</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">event_handler</span> <span class="o">=</span> <span class="n">MyEventHandler</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">observer</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">observer</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">event_handler</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">observer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">observer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">observer</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在tmux中运行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">python3 mycertsdog.py /home/wwj/.acme.sh/codelab.club/
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="通知">通知</h1>
+<p>我想让下次更新证书时，给我发个通知。</p>
+<p>准备采用<a href="https://ifttt.com/maker_webhooks">ifttt webhook</a>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">curl -X POST https://maker.ifttt.com/trigger/cert_update/with/key/xxxxxx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>塞到<code>my_task</code>，使用subprocess调用它即可。</p>
+<p>如果你准备给自己发邮件(SMTP)的话，可以试试<a href="https://github.com/notifiers/notifiers">notifiers</a></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="/post/%E6%8A%80%E6%9C%AF/for-dinner/">for dinner</a></li>
+<li><a href="/post/iot/blockly4pi_codetest_u_disk/">u盘程序自启</a></li>
+<li><a href="/post/%E6%8A%80%E6%9C%AF/python-for-system-administrators/">Python与系统日常管理</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/from-pyautogui-to-automagica/">让智能技术服务于日常工作: 从PyAutoGUI到automagica</a>: RPA
+<ul>
+<li><a href="ttps://github.com/seleniumbase/SeleniumBase">SeleniumBase</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/gorakhargosh/watchdog">watchdog</a></li>
+<li><a href="https://github.com/dbader/schedule">schedule</a></li>
+<li><a href="https://github.com/notifiers/notifiers">notifiers</a></li>
+<li><a href="https://ifttt.com/maker_webhooks">IFTTT webhook</a></li>
+<li><a href="https://tinydb.readthedocs.io/en/latest/intro.html#why-use-tinydb">tinydb</a></li>
+<li><a href="http://amoffat.github.io/sh/usage.html">sh</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          <a href="/tags/python/">python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-microbit-deep-connect/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">CodeLab Adapter 深度连接 micro:bit 生态</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-sb3-parser/">
+            <span class="next-text nav-default">Scratch项目解析器</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>codelab-adapter的虫洞(wormhole) - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="相隔遥远的两个巫师同时讲一句相同的魔法咒语，这导致了他们之间建立了某种神秘的联系。接着一个巫师把魔法书扔进虫洞，书就从另一个巫师身边的虫洞掉" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-wormhole/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="codelab-adapter的虫洞(wormhole)" />
+<meta property="og:description" content="相隔遥远的两个巫师同时讲一句相同的魔法咒语，这导致了他们之间建立了某种神秘的联系。接着一个巫师把魔法书扔进虫洞，书就从另一个巫师身边的虫洞掉" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-wormhole/" />
+<meta property="article:published_time" content="2019-03-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-03-01T00:00:00+00:00" />
+<meta itemprop="name" content="codelab-adapter的虫洞(wormhole)">
+<meta itemprop="description" content="相隔遥远的两个巫师同时讲一句相同的魔法咒语，这导致了他们之间建立了某种神秘的联系。接着一个巫师把魔法书扔进虫洞，书就从另一个巫师身边的虫洞掉">
+
+
+<meta itemprop="datePublished" content="2019-03-01T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-03-01T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2880">
+
+
+
+<meta itemprop="keywords" content="codelab," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="codelab-adapter的虫洞(wormhole)"/>
+<meta name="twitter:description" content="相隔遥远的两个巫师同时讲一句相同的魔法咒语，这导致了他们之间建立了某种神秘的联系。接着一个巫师把魔法书扔进虫洞，书就从另一个巫师身边的虫洞掉"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">codelab-adapter的虫洞(wormhole)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#思考">思考</a></li>
+<li><a href="#理念">理念</a></li>
+<li><a href="#发布计划">发布计划</a></li>
+<li><a href="#使用场景">使用场景</a>
+<ul>
+<li>
+<ul>
+<li><a href="#学习者">学习者</a></li>
+<li><a href="#教师">教师</a></li>
+<li><a href="#开发者">开发者</a></li>
+<li><a href="#scratch社区">Scratch社区</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#because-we-can">because we can</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/wormhole_4fcface5.png" alt="" /></p>
+
+<blockquote>
+<p>相隔遥远的两个巫师同时讲一句相同的魔法咒语，这导致了他们之间建立了某种神秘的联系。接着一个巫师把魔法书扔进虫洞，书就从另一个巫师身边的虫洞掉了出来。</p>
+</blockquote>
+
+<p>上上周去了趟杭州/南京，与几个团队碰面交流。期间聊到许多有趣的技术话题，大家对codelab-adapter的架构设计、合作计划以及未来目标都很感兴趣。</p>
+
+<p>其中聊到的一个话题让我印象深刻: codelab-adapter计划对classroom/club中的协作者提供怎样的支持？</p>
+
+<p>设想这样一种场景，一群用户聚集在一个线下空间里，线下空间可能是一个线下俱乐部(如<a href="https://coderdojo.com">coderdojo</a>)、一个线下培训机构、一个班级、以及我们的<a href="https://blog.just4fun.site/about-codelab-club.html#neverland">codelab neverland</a>。他们接入同一个局域网中。学习者们身处同样的物理空间，我们是否考虑将他们所处的虚拟空间和创作平台中也连接在一起，支持更多的协作和交互。</p>
+
+<p>Scratch本身有考虑人的连接，出于这个考虑，他们构建了<a href="https://scratch.mit.edu">线上社区</a>, <a href="https://en.wikipedia.org/wiki/Mitchel_Resnick">Mitchel Resnick</a>(Scratch之父)宣称相比于Scratch这个创作工具，Scratch社区是他们更重要的创造。</p>
+
+<p>但目前Scratch社区并不支持强连接，诸如构建一个聊天工具或联网游戏。</p>
+
+<p>如果你是《终身幼儿园》的忠实粉丝，你会发现为classroom/club提供强连接是践行4P理念(Projects, Passion, Peers, Play)的绝佳机会。</p>
+
+<p>从杭州/南京回来之后，一直在想这件事。</p>
+
+<h1 id="思考">思考</h1>
+
+<p>将局域网内的机器进行联机不是什么难事。利用局域网内的ip地址或hostname，建立socket连接，就可以连接局域网内的机器。</p>
+
+<p>这只是技术上可行，教育层面呢？拿ip地址来说，当我们告诉学习者如何查看ip地址时，Ta需要了解ip地址这个概念吗？还是只是做一个机械操作(<code>ifconfig/ipconfig</code>)？又或者我们应该在教学工具中内置查看ip地址功能呢？</p>
+
+<p><a href="https://zh.wikipedia.org/zh-hans/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">艾伦·凯</a>上周在Quora上回答了一个问题 <a href="https://www.quora.com/What-does-Alan-Kay-think-of-using-either-Squeak-or-Pharo-as-the-first-language-for-introducing-programming">为何艾伦·凯认为入门编程应当使用Squeak/Pharo</a>，他说:</p>
+
+<blockquote>
+<p>服务于教学和学习的用户界面有许多需要考虑的因素。如果你只想选择一个重点来考虑，那应该是&rdquo;减少认知负担&rdquo;。</p>
+
+<p>它需要处于试图学习的人的心理空间中。</p>
+</blockquote>
+
+<p>艾伦·凯对编程教育的观点极大影响着CodeLab，我们对codelab-adapter的设计以及积木的设计都深受他的影响。</p>
+
+<p>我们希望&rdquo;减少认知负担&rdquo;。如果我们希望构建一种积木，允许实时在局域网内的Scratch中传递消息。它最好是类似<code>broadcask</code>和<code>when I receive</code>这类的积木， 它与Scratch的事件积木以及CodeLab的EIM积木保持完全相同的结构。这样用户无需学习新概念，只需要利用<code>传递消息</code>就能进行联网创作。</p>
+
+<p>我们想构建这样的积木:</p>
+
+<p><img src="/post/img/wormhole_b1b53851.png" width=400 /></p>
+
+<p>于是，我们想到&rdquo;虫洞&rdquo;的概念。<a href="https://github.com/warner/magic-wormhole">magic-wormhole</a>是我很喜欢的一个开源项目，它的灵感来自:</p>
+
+<blockquote>
+<p>相隔遥远的两个巫师同时讲一句相同的魔法咒语，这导致了他们之间建立了某种神秘的联系。接着一个巫师把魔法书扔进虫洞，书就从另一个巫师身边的虫洞掉了出来。</p>
+</blockquote>
+
+<p>这个概念如此简洁。巫师只是说了相同的咒语，连接就自动建立了。虫洞是声明式的！上帝说要有光，于是就有了光，看起来也类似申明式编程。</p>
+
+<p>我们将&rdquo;虫洞&rdquo;内置到codelab-adapter中，codelab-adapter通过一个&rdquo;咒语&rdquo;发现彼此，之后自动建立连接，消息在adapter内置的虫洞中传递，用户只要收取虫洞里的消息即可。</p>
+
+<p>一旦有了目标，github里总有项目能节约你90%的编程工作：）</p>
+
+<p>我们选择zeromq来传递消息。zeromq有着比socket优美得多的设计。<a href="https://blog.codingnow.com/">云风</a>在他的博客文章<a href="https://blog.codingnow.com/2011/02/zeromq_message_patterns.html">ZeroMQ 的模式</a>里写道:</p>
+
+<blockquote>
+<p>任何分布式，并行的需求，都可以用这三种模型组合起来解决问题。ZeroMQ 只专注和解决了消息通讯这一基本问题，干的非常漂亮。</p>
+</blockquote>
+
+<p>任何消息通讯相关的问题，ZeroMQ都是非常好的选择。</p>
+
+<p>还有一件事需要考虑，传递消息之前，需要发现局域网中的各个codelab-adapter的ip，可以采用<a href="http://www.cs.ubbcluj.ro/~dadi/compnet/labs/lab3/udp-broadcast.html">UDP – Broadcast</a>来做。</p>
+
+<h1 id="理念">理念</h1>
+
+<p>Bret Victor在他的出色演讲《Inventing on Principle》里说</p>
+
+<blockquote>
+<p>If there is something in the world you feel the wrong and you have a vision for what a better world could be, you can find your guiding principle and you can fight for a cause.</p>
+</blockquote>
+
+<p>codelab-adapter的guiding principle是</p>
+
+<blockquote>
+<p>Everything Is Message(EIM)</p>
+</blockquote>
+
+<p>灵感来自艾伦凯设计smalltalk时采用的原则:</p>
+
+<blockquote>
+<p>Everything is an object, and objects communicate only by sending each other messages.</p>
+</blockquote>
+
+<p>smalltalk的一致性，允许所有的语法(概念)在一张明信片中写完，一个小孩在Ta入门的时候学会这些概念，可以用于创造小玩具。待Ta长大后，如果雄心勃勃想构建一个操作系统，需要的所有东西，都在Ta小时候看过的那张明信片上。</p>
+
+<p>wormhole的设计依然满足EIM原则，codelab-adapter的架构试图保持一致性。我们之所以重视一致性，原因之一是计划等到codelab-adapter开源之后，用它的源码本身来教学编程。我们希望一致性带来简单和清晰，让一个3年级的孩子可以完全理解codelab-adapter。并能轻松去改造和拓展它。</p>
+
+<h1 id="发布计划">发布计划</h1>
+
+<p>codelab-adapter的下个版本将内置虫洞(wormhole)功能。</p>
+
+<p><img src="/post/img/extension-wormhole_6cc39199.png" width=350/></p>
+
+<h1 id="使用场景">使用场景</h1>
+
+<p>虫洞功能将支持很多有趣的场景。</p>
+
+<p>它尤其适合classroom/club/线下活动 场景。正如我们前头提到的: 一群人聚集在一个物理空间里，他们接入同样的局域网，虫洞就发生作用。</p>
+
+<h3 id="学习者">学习者</h3>
+
+<p>利用虫洞功能，学习者可以轻松为他的小区或学校创建聊天程序，当然也可以用于在Scratch中制作网络游戏。</p>
+
+<p>利用codelab-adapter连接硬件的能力，他们甚至可以一起构建一个&rdquo;机器军团&rdquo;。</p>
+
+<h3 id="教师">教师</h3>
+
+<p>在俱乐部/教室场景中，教师可以利用虫洞功能管理局域网中的设备，甚至构建教学引导程序。就像在机房中教室机与学生机的互动。只要基于虫洞构建新的插件来支持这些场景即可。</p>
+
+<p>虫洞本身也可以用于教学计算机网络。</p>
+
+<h3 id="开发者">开发者</h3>
+
+<p><code>Everything Is Message(EIM)</code>。 虫洞由消息实现，通过处理收发消息，开发者可以任意改造它！</p>
+
+<p><img src="/post/img/wormhole_ba56fdff.png" width=500></p>
+
+<h3 id="scratch社区">Scratch社区</h3>
+
+<p>我们来展示一个例子:</p>
+
+<video width=600 src="http://scratch3-files.just4fun.site/wormhole.mp4" controls="controls"></video>
+
+<p>右边的“螃蟹”由树莓派中的adapter驱动(用户A)，而左边的小猫则由电脑中的adapter驱动(用户B)。任何一个设备上的操作将传递到局域中的所有adapter。由于scratch和adapter在设计上都受smalltalk的影响，采纳<code>everything is message</code>的设计原则，所以<a href="https://scratch.mit.edu">MIT Scratch社区</a>里3500多万用户创建的超过1亿的项目将直接得到虫洞功能，在局域网内随意连接！延迟在毫秒级。足以构建实时游戏。</p>
+
+<h1 id="because-we-can">because we can</h1>
+
+<p>如果我们是谢耳朵，我们就要基于虫洞去制作视频聊天工具。复现《生活大爆炸》里的著名桥段，</p>
+
+<p>&ldquo;But why？&rdquo;(面对面在局域网内，为何需要视频聊天)</p>
+
+<p>&ldquo;because we can&rdquo;(基于ZeroMQ的虫洞每秒钟能处理2000万条消息啊)</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://github.com/warner/magic-wormhole">magic-wormhole</a></li>
+<li><a href="http://www.cs.ubbcluj.ro/~dadi/compnet/labs/lab3/udp-broadcast.html">UDP – Broadcast</a></li>
+<li><a href="https://www.quora.com/What-does-Alan-Kay-think-of-using-either-Squeak-or-Pharo-as-the-first-language-for-introducing-programming">What does Alan Kay think of using either Squeak or Pharo as the first language for introducing programming?</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-03-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">codelab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-cloud-var/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Scratch3技术分析之云变量 API(第7篇)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-rpi-mqtt-solution/">
+            <span class="next-text nav-default">基于树莓派的积木化编程解决方案</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

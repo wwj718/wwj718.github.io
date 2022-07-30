@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>GnuPG 使用笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="缘起 物联网安全 之前对密码学一直提不起兴趣，近期准备构建一个支持端对端加密的物联网项目(基于home-assistant)，在享受云带来便利的" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/e2ee/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="GnuPG 使用笔记" />
+<meta property="og:description" content="缘起 物联网安全 之前对密码学一直提不起兴趣，近期准备构建一个支持端对端加密的物联网项目(基于home-assistant)，在享受云带来便利的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/e2ee/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-09-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-09-08T00:00:00+00:00" />
+
+<meta itemprop="name" content="GnuPG 使用笔记">
+<meta itemprop="description" content="缘起 物联网安全 之前对密码学一直提不起兴趣，近期准备构建一个支持端对端加密的物联网项目(基于home-assistant)，在享受云带来便利的"><meta itemprop="datePublished" content="2019-09-08T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-09-08T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2391">
+<meta itemprop="keywords" content="tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GnuPG 使用笔记"/>
+<meta name="twitter:description" content="缘起 物联网安全 之前对密码学一直提不起兴趣，近期准备构建一个支持端对端加密的物联网项目(基于home-assistant)，在享受云带来便利的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">GnuPG 使用笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-09-08 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#物联网安全">物联网安全</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#过程">过程</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#下载gnupghttpsgnupgorg">下载<a href="https://gnupg.org/">GnuPG</a></a></li>
+        <li><a href="#校验软件安全性">校验软件安全性</a></li>
+        <li><a href="#生成密钥">生成密钥</a></li>
+        <li><a href="#公钥分发">公钥分发</a></li>
+        <li><a href="#加密文件">加密文件</a></li>
+        <li><a href="#使用什么工具发送文件">使用什么工具发送文件</a></li>
+        <li><a href="#我的公钥">我的公钥</a></li>
+        <li><a href="#文档">文档</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#中间人攻击mitm">中间人攻击(MITM)</a></li>
+        <li><a href="#本地安全">本地安全</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/danger_8030a828.png" alt=""></p>
+<h1 id="缘起">缘起</h1>
+<h3 id="物联网安全">物联网安全</h3>
+<p>之前对密码学一直提不起兴趣，近期准备构建一个支持端对端加密的物联网项目(基于<a href="https://www.home-assistant.io/">home-assistant</a>)，在享受<code>云</code>带来便利的同时，希望尽量避开偷窥者(多数是 AI)的视线, 目前几乎所有的物联网都是基于<a href="https://www.nabucasa.com/privacy/">令人沮丧的云模式</a>。周末花了一个早上阅读了端对端加密相关的东西，端对端加密的 Neverland 已上线。</p>
+<img src="/post/img/WechatIMG958.jpeg" width=300 />
+<p>由于最近关注端对端加密，读到很多有意思的东西，这个领域有很多有意思的人(多数是自由主义者)，此前一直怕麻烦没有使用 <a href="https://gnupg.org/">GnuPG</a>，一试之下，竟十分易用。</p>
+<p>斯诺登的这句话说得真好:</p>
+<blockquote>
+<p>Arguing that you don&rsquo;t care about the right to privacy because you have nothing to hide is no different from saying you don&rsquo;t care about free speech because you have nothing to say.</p>
+</blockquote>
+<p>下决心使用 GnuPG 倒不是因为斯诺登，主要是因为 Matthew D. Green 的一段话:</p>
+<blockquote>
+<p>如果我真的要把自己的性命托付给一个软件的话，我不会选那些华而不实的东西——我选 GnuPG，而且我大概会把它运行在一个与世隔绝的计算机上，再把计算机锁进地下室。</p>
+</blockquote>
+<p>我没有地下室，但<a href="https://www.raspberrypi.org/">树莓派</a>是绝佳的选择。</p>
+<p>周围有些朋友，关注个人隐私，好友@yuhao 就是其一，所以我像记录下使用<a href="https://gnupg.org/">GnuPG</a>的经验，为那些对个人隐私感兴趣的朋友， 也为我身边的好友而写。</p>
+<p>这篇文章当然不会有多少人感兴趣，甚至大多数人会觉得对隐私的关注是杞人忧天、自寻麻烦，我想斯诺登已经给出了很好的答复。</p>
+<p>《徒手攀岩》这部电影给了我这样一种信念，按照自己的信念去生活，无论它在别人眼里是否有意义。</p>
+<h1 id="关于gnupghttpsgnupgorg">关于<a href="https://gnupg.org/">GnuPG</a></h1>
+<p>维基百科对其介绍十分清晰:</p>
+<blockquote>
+<p>GNU Privacy Guard（GnuPG 或 GPG）是一个密码学软件，用于加密、签名通信内容及管理非对称密码学的密钥。GnuPG 是自由软件，遵循 IETF 订定的 OpenPGP 技术标准设计，并与 PGP 保持兼容。</p>
+</blockquote>
+<blockquote>
+<p>基本的 GnuPG 程序有一个命令行界面，仍然存在许多提供图形用户界面的前端。</p>
+</blockquote>
+<h3 id="过程">过程</h3>
+<blockquote>
+<p>GnuPG 使用用户自行生成的非对称密钥对来加密信息，由此产生的公钥可以同其他用户以各种方式交换，如密钥服务器。他们必须小心交换密钥，以防止得到伪造的密钥。</p>
+</blockquote>
+<h1 id="使用笔记">使用笔记</h1>
+<p>以下是我的使用笔记。</p>
+<h3 id="下载gnupghttpsgnupgorg">下载<a href="https://gnupg.org/">GnuPG</a></h3>
+<p><a href="https://gnupg.org/">GnuPG 官方</a>提供了<a href="https://gnupg.org/">下载连接</a>。</p>
+<p>既然你关注安全，就应该关注安全的每个环节，安全领域具有强烈的短板效应。所以首先包装你下载的 GnuPG 是可信任的，避免它本身被注入代码。</p>
+<p>在可能的情况下，尽量到 GnuPG 官方下载。下载之后校验一下。</p>
+<p>官方的<a href="https://gnupg.org/">下载连接</a>包含了不同操作系统的 GnuPG 版本，我日常在 MacOS 下工作，在此演示 MacOS 下的使用笔记，流程适用于其他系统。</p>
+<p>ps: 如果你对安全性要求极高，推荐使用<a href="https://www.raspberrypi.org/">树莓派</a>作为宿主机(或者使用<a href="https://tails.boum.org/">tails</a>), 它是开源的。任何的闭源代码都有风险。</p>
+<h3 id="校验软件安全性">校验软件安全性</h3>
+<p>这一步不是必须的，但很推荐这样做。</p>
+<p>我使用<a href="https://gpgtools.org/">gpgtools</a>作为客户端，从官网可以看出软件的 SHA256 是 8ee4b57d759abc166deb0694835564f065151cd1e548bdffe4295f8602609310</p>
+<p>下载好软件之后，本地校验 SHA256 的值:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">openssl dgst -sha256 GPG_Suite-2019.1_83.dmg
+</span></span><span class="line"><span class="cl">SHA256<span class="o">(</span>GPG_Suite-2019.1_83.dmg<span class="o">)=</span> 8ee4b57d759abc166deb0694835564f065151cd1e548bdffe4295f8602609310
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>验证通过，软件本身是安全可信的。</p>
+<p>如果你本地没有 openssl 的话，需要先安装。</p>
+<h3 id="生成密钥">生成密钥</h3>
+<p>安装好软件，首先生成密钥(同时生成公钥/私钥)，过程和平时创建一个账号没有区别。</p>
+<p><img src="/post/img/gpg_init_a90cc989.png" alt=""></p>
+<p>关于公钥和私钥，需要了解的知识不多，公钥用于加密，私钥用于解密。你要藏好私钥。公钥可以发给任何希望与你通信的人，只有你手头的私钥能用于解密信息。</p>
+<p>创建完密钥后，你就可以把公钥(public key)发给你的朋友，让他们与你安全地通信。</p>
+<h3 id="公钥分发">公钥分发</h3>
+<p>如何安全发送公钥呢？</p>
+<p>这和你对安全的要求有关，我直接对外公开我的公钥，公钥只是用于加密信息，对我而言，被其他人拿到是无所谓的（那只意味着ta可以给我发送私密消息），只有我自己的私钥可以解密。</p>
+<h3 id="加密文件">加密文件</h3>
+<p>对文件进行加密是很简单的，在 MacOS 里，右键选择加密就行</p>
+<img src="/post/img/gpg_encrypt_0e937e37.png" width=500>
+<p>解密也一样。</p>
+<img src="/post/img/gpg_decrypt_867565a0.png" width=500>
+<p>一般而言，你给朋友发送加密后的文件/文本，是使用 ta 的公钥，而不是用自己的公钥，所以你需要先导入 ta 的公钥, 然后在加密的过程中，软件会让你选择对应的加密公钥，操作过程很简单，跟着软件做就好了。</p>
+<h3 id="使用什么工具发送文件">使用什么工具发送文件</h3>
+<p>使用什么工具发送加密文件呢？</p>
+<p>由于你已经对文件做了加密，所以你可以选择任何工具来传输 ta，这些通道本身不安全是没关系的，所以使用 gmail、QQ、微信都无所谓。</p>
+<h3 id="我的公钥">我的公钥</h3>
+<p>通过指纹 0682A3B4568845EE，可以在 GPG Keychain Key server 上找到我的公钥，我们可以安全地通信了。</p>
+<p>我的 <a href="https://keys.openpgp.org/verify/b2x1kKG8uDYlJp0JVBogJghliERDRprr84HBm5SihiF">OpenPGP key</a>: D0F31D683FED7484B00B5E290682A3B4568845EE</p>
+<h3 id="文档">文档</h3>
+<p>本文没有说清楚的地方，可以参考:</p>
+<ul>
+<li><a href="https://gnupg.org/download/index.html">gnupg.org</a></li>
+<li><a href="https://gpgtools.org/">gpgtools</a></li>
+</ul>
+<h1 id="安全风险">安全风险</h1>
+<h3 id="中间人攻击mitm">中间人攻击(MITM)</h3>
+<p>维基百科上对中间人攻击的阐述很清晰</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">假设爱丽丝（Alice）希望与鲍伯（Bob）通信。同时，马洛里（Mallory）希望拦截窃会话以进行窃听并可能在某些时候传送给鲍伯一个虚假的消息。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">首先，爱丽丝会向Bob索取他的公钥。如果Bob将他的公钥发送给Alice，并且此时马洛里能够拦截到这个公钥，就可以实施中间人攻击。马洛里发送给爱丽丝一个伪造的消息，声称自己是鲍伯，并且附上了马洛里自己的公钥（而不是鲍伯的）。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">爱丽丝收到公钥后相信这个公钥是鲍伯的，于是爱丽丝将她的消息用马洛里的公钥（爱丽丝以为是鲍伯的）加密，并将加密后的消息回给鲍伯。马洛里再次截获爱丽丝回给鲍伯的消息，并使用马洛里自己的私钥对消息进行解密，如果马洛里愿意，她也可以对消息进行修改，然后马洛里使用鲍伯原先发给爱丽丝的公钥对消息再次加密。当鲍伯收到新加密后的消息时，他会相信这是从爱丽丝那里发来的消息。
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>示意图如下</p>
+<img src="/post/img/mitm_46c27095.png" width=400>
+<p>维基百科给出了防御策略：<a href="https://zh.wikipedia.org/wiki/%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB">中间人攻击</a>。</p>
+<h3 id="本地安全">本地安全</h3>
+<p>任何软件都无法避免你本地计算机的漏洞，如果你在本地运行不安全的软件，而它们窃取你的私钥，那么 GnuPG 就无法保证你的安全。</p>
+<p>如果你要求的安全等级比较高，就不要在本地安装闭源软件，请使用开源软件和系统(Linux)，最好是干净的树莓派。</p>
+<p>微信、QQ、360、Chrome、skype 之类的肯定是闭源软件，这不意味着它们一定会做坏事，我很愿意相信它们的善意。</p>
+<p>但如果你十分关心安全，那么请只相信数学和技术。你可以相信任何公司的闭源商业软件，这是个人自由，但应当清楚，对任何闭源软件的信任，本质上是一种信仰，是一种情感上的决策, 你要清楚，你的安全寄托在它们的道德感和善意之上。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%AB%AF%E5%88%B0%E7%AB%AF%E5%8A%A0%E5%AF%86">端到端加密</a></li>
+<li><a href="https://gnupg.org/">gnupg</a></li>
+<li><a href="https://zh.wikipedia.org/zh-hans/GnuPG">wikipedia GnuPG</a></li>
+<li><a href="https://gpgtools.org/">gpgtools</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB">中间人攻击</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-09-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/about-opensource/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">开源项目与开源社区</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/flavor/">
+            <span class="next-text nav-default">调味</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

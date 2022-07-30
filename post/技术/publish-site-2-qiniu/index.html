@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>将网站发布到七牛云 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="更新说明: 我已经发布为python包，使用pip安装即可,文档参考：wwj718/publish 年前写了一个脚本，将create-react" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/publish-site-2-qiniu/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="将网站发布到七牛云" />
+<meta property="og:description" content="更新说明: 我已经发布为python包，使用pip安装即可,文档参考：wwj718/publish 年前写了一个脚本，将create-react" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/publish-site-2-qiniu/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-02-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-02-06T00:00:00+00:00" />
+
+<meta itemprop="name" content="将网站发布到七牛云">
+<meta itemprop="description" content="更新说明: 我已经发布为python包，使用pip安装即可,文档参考：wwj718/publish 年前写了一个脚本，将create-react"><meta itemprop="datePublished" content="2017-02-06T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2017-02-06T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1038">
+<meta itemprop="keywords" content=" python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="将网站发布到七牛云"/>
+<meta name="twitter:description" content="更新说明: 我已经发布为python包，使用pip安装即可,文档参考：wwj718/publish 年前写了一个脚本，将create-react"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">将网站发布到七牛云</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-02-06 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <hr>
+<p>更新说明: 我已经发布为python包，使用pip安装即可,文档参考：<a href="https://github.com/wwj718/publish">wwj718/publish</a></p>
+<hr>
+<p>年前写了一个脚本，将<a href="https://github.com/facebookincubator/create-react-app">create-react-app</a> build出来的网站整体发布到七牛云上</p>
+<p>如此一来前端完全托管在云上，与后端的通信仅通过RESTful api完成，后端压力大大降低</p>
+<p>在技术层面，这个脚本本质上是将本地目录上传到七牛云上，同时在url中保留目录结构信息，通用性比较好，如果你想把本地项目发布出去，它可能帮的上忙，所以分享到博客上</p>
+<p>安装依赖(python2.7):</p>
+<p><code>pip install qiniu==7.1.1 path.py</code></p>
+<h1 id="脚本">脚本</h1>
+<p>你可以直接下载 <code>wget https://gist.githubusercontent.com/wwj718/7d287692086a8d3e320eed9e94c1e631/raw/7556743cd2ef765d3b3dcc5262e185dfae726a0a/upload2qiniu.py</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/env python</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># encoding: utf-8</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">os</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">qiniu</span> <span class="kn">import</span> <span class="n">Auth</span><span class="p">,</span> <span class="n">put_file</span><span class="p">,</span> <span class="n">etag</span><span class="p">,</span> <span class="n">urlsafe_base64_encode</span><span class="p">,</span><span class="n">BucketManager</span><span class="p">,</span><span class="n">CdnManager</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">qiniu.config</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">path</span> <span class="kn">import</span> <span class="n">path</span> <span class="c1"># 文档参考# https://pythontips.com/2014/01/23/python-101-writing-a-cleanup-script/</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#需要填写你的 Access Key 和 Secret Key</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#export QINIU_ACCESS_KEY=xxx </span>
+</span></span><span class="line"><span class="cl"><span class="n">access_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&#34;QINIU_ACCESS_KEY&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#export QINIU_SECRET_KEY=xxx </span>
+</span></span><span class="line"><span class="cl"><span class="n">secret_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&#34;QINIU_SECRET_KEY&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#要上传的空间</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#export QINIU_BUCKET=xxx </span>
+</span></span><span class="line"><span class="cl"><span class="n">bucket_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&#34;QINIU_BUCKET&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">bucket_domain</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&#34;QINIU_BUCKET_DOMAIN&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 构建鉴权对象</span>
+</span></span><span class="line"><span class="cl"><span class="n">q</span> <span class="o">=</span> <span class="n">Auth</span><span class="p">(</span><span class="n">access_key</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">cdn_manager</span> <span class="o">=</span> <span class="n">CdnManager</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#初始化BucketManager</span>
+</span></span><span class="line"><span class="cl"><span class="n">bucket</span> <span class="o">=</span> <span class="n">BucketManager</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">file2refresh</span><span class="o">=</span><span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">is_diff</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">localfile</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">    比较本地文件与云端文件是否一致
+</span></span></span><span class="line"><span class="cl"><span class="s1">    &#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ret</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#print(ret,info)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">hash</span> <span class="o">=</span> <span class="n">ret</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nb">hash</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">diff</span> <span class="o">=</span> <span class="n">ret</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">etag</span><span class="p">(</span><span class="n">localfile</span><span class="p">)</span> <span class="c1"># diff==False，说明文件相同，这个有点绕</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">diff</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">diff</span> <span class="o">=</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 不存在hash，说明还没上传过</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">True</span> <span class="c1"># 为True，说明文件对比结果为不一致</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="n">urls</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#https://github.com/qiniu/python-sdk/blob/master/examples/cdn_manager.py 列出所有上传文件，在七牛中刷新</span>
+</span></span><span class="line"><span class="cl">    <span class="n">refresh_url_result</span> <span class="o">=</span> <span class="n">cdn_manager</span><span class="o">.</span><span class="n">refresh_urls</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#print_result(refresh_url_result)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 上传整个目录到七牛，保存目录结构（在url中实现，本质上是通过命名）</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">localfile</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">    key 文件在七牛上的名字，和它的url有关 ，参考：http://qiniu-developer.u.qiniudn.com/docs/v6/api/overview/faq.html
+</span></span></span><span class="line"><span class="cl"><span class="s1">    localfile 本地文件路径
+</span></span></span><span class="line"><span class="cl"><span class="s1">    &#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 比对本地文件和云端文件，如果不同则上传</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">is_diff</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">localfile</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">token</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">upload_token</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ret</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">put_file</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">localfile</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#print(ret,info) # 打印出更新文件以便于在七牛中刷新 : https://portal.qiniu.com/refresh</span>
+</span></span><span class="line"><span class="cl">        <span class="n">url</span>  <span class="o">=</span> <span class="s1">&#39;http://</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bucket_domain</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;refresh url:&#34;</span><span class="p">,</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">file2refresh</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="c1">#全局</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#要上传的本地文件夹</span>
+</span></span><span class="line"><span class="cl"><span class="n">root_dir</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">d</span> <span class="o">=</span> <span class="n">path</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">walk</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">isfile</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#只上传文件</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#from IPython import embed;embed()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">abspath</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">abspath</span><span class="p">())</span><span class="o">+</span><span class="s2">&#34;/&#34;</span><span class="p">,</span><span class="s2">&#34;&#34;</span><span class="p">)</span> <span class="c1">#实际是相对路径</span>
+</span></span><span class="line"><span class="cl">        <span class="n">localfile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">upload</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">localfile</span><span class="p">)</span> <span class="c1"># 返回需要刷新的文件然后一次性刷新</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">file2refresh</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">refresh</span><span class="p">(</span><span class="n">file2refresh</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="使用">使用</h1>
+<p>首先你需要配置相关参数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">QINIU_ACCESS_KEY</span><span class="o">=</span>xxx 
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">QINIU_SECRET_KEY</span><span class="o">=</span>xxx 
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">QINIU_BUCKET</span><span class="o">=</span>xxx <span class="c1">#bucket name</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">QINIU_BUCKET_DOMAIN</span><span class="o">=</span>xxx
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>之后将目录网站整体上传（实际是上传整个文件夹）：python upload2qiniu.py SITE_DIR</p>
+<h1 id="说明">说明</h1>
+<p>对其中的两个函数做个说明：</p>
+<p><code>is_diff</code>：用于比对本地文件与云端对应文件，如果有修改则上传，否则不重复上传，这个函数目的是优化性能</p>
+<p><code>refresh</code>：这个函数用于刷新文件，这是七牛的缓存机制导致的，参考https://portal.qiniu.com/refresh，如果对七牛上同名(key)文件作更新，需要刷新缓存才能生效</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-02-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/"> python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%9E%B6%E6%9E%84/jupyter-notebook-architecture/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">jupyter notebook架构分析</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/linkedin-spider-note/">
+            <span class="next-text nav-default">LinkedIn爬虫笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

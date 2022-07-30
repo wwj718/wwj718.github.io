@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MicroBlocks 编程案例: ESP32 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="使用 smalltalk 编程，不需要掉头发和眼泪 &amp;ndash;Alan Kay ESP32 手头有几块 ESP32 板子（恰好都是ESP-WROOM-32 表面贴装模块） ESP32 是一系列低成本，低功耗的单片机微控制器" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/dynablocks-esp32/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MicroBlocks 编程案例: ESP32" />
+<meta property="og:description" content="使用 smalltalk 编程，不需要掉头发和眼泪 &ndash;Alan Kay ESP32 手头有几块 ESP32 板子（恰好都是ESP-WROOM-32 表面贴装模块） ESP32 是一系列低成本，低功耗的单片机微控制器" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/dynablocks-esp32/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-01-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-01-07T00:00:00+00:00" />
+
+<meta itemprop="name" content="MicroBlocks 编程案例: ESP32">
+<meta itemprop="description" content="使用 smalltalk 编程，不需要掉头发和眼泪 &ndash;Alan Kay ESP32 手头有几块 ESP32 板子（恰好都是ESP-WROOM-32 表面贴装模块） ESP32 是一系列低成本，低功耗的单片机微控制器"><meta itemprop="datePublished" content="2022-01-07T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-01-07T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1892">
+<meta itemprop="keywords" content="microblocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MicroBlocks 编程案例: ESP32"/>
+<meta name="twitter:description" content="使用 smalltalk 编程，不需要掉头发和眼泪 &ndash;Alan Kay ESP32 手头有几块 ESP32 板子（恰好都是ESP-WROOM-32 表面贴装模块） ESP32 是一系列低成本，低功耗的单片机微控制器"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MicroBlocks 编程案例: ESP32</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-01-07 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#esp32">ESP32</a></li>
+    <li><a href="#microblocks-支持-esp32">Microblocks 支持 ESP32</a></li>
+    <li><a href="#一些例子">一些例子</a>
+      <ul>
+        <li><a href="#bpi-bit">BPI-Bit</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#推荐板子">推荐板子</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>使用 smalltalk 编程，不需要掉头发和眼泪 &ndash;Alan Kay</p>
+</blockquote>
+<h2 id="esp32">ESP32</h2>
+<p>手头有几块 ESP32 板子（恰好都是<a href="https://en.wikipedia.org/wiki/ESP32">ESP-WROOM-32 表面贴装模块</a>）</p>
+<p><img src="/post/img/WechatIMG5263.jpeg" alt=""></p>
+<blockquote>
+<p>ESP32 是一系列低成本，低功耗的单片机微控制器，集成了 Wi-Fi(2.4G) 和双模蓝牙。 &ndash; <a href="https://en.wikipedia.org/wiki/ESP32">维基百科</a></p>
+</blockquote>
+<p>ESP32 在 maker 群体中广受欢迎，有庞大的生态(在 Github 搜索 ESP 试试)。它也深受硬件公司的欢迎，近年推出的编程或智能设备，如果它们带有蓝牙或 WIFI 功能，那么很有可能采用了 ESP32。</p>
+<h2 id="microblocks-支持-esp32">Microblocks 支持 ESP32</h2>
+<p>Microblocks 支持 ESP32, 我尤其关注 Microblocks 对 ESP32 WIFI 能力的利用 (目前还不支持蓝牙)，至于 I2C、SPI 等硬件领域主流协议，Microblocks 当然也都是支持的。</p>
+<p>一些有趣的用例是:</p>
+<ul>
+<li>接管市面上的 WIFI 智能家居设备(<a href="https://esphome.io/">esphome</a>梳理了一些内置 esp32 控制器的智能家居设备，Sonoff 等，价格便宜)</li>
+<li>使用 WebThings 库，构建兼容 <a href="https://iot.mozilla.org/wot/">wot 协议</a>的 Things (wifi)，继而允许自下而上地自定义和扩展<a href="https://codelab.club/blog/2020/04/29/%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/">可编程空间</a>。</li>
+<li>使用 HTTP/WebSocket server 库，构建简易灵活的 WIFI 设备，诸如我们在<a href="https://www.codelab.club/projects#%E8%B0%81%E5%85%88%E6%8B%94%E6%9E%AA">谁先拔枪</a>中的灯带装置(当时直接使用了淘宝上的 WIFI 驱动器)</li>
+</ul>
+<h2 id="一些例子">一些例子</h2>
+<p>分享几个我这几天折腾的东西。</p>
+<p>如果你对 microblocks 不熟悉，可通过<a href="https://microblocks.fun/learn">官网资料</a>学习。 中文资料推荐阅读 kwyjibo 的 <a href="https://microblocks.zhubai.love/">翻译文章</a>。</p>
+<p>ESP32 的使用文档: <a href="https://wiki.microblocks.fun/boards/ESP32">microblocks wiki ESP32</a></p>
+<h3 id="bpi-bit">BPI-Bit</h3>
+<p>BPI-Bit 是香蕉派推出的一款 STEAM 教育开发板, 采用 ESP32 作为主控模块。</p>
+<p>由于使用「掌控板」和 「m5stack」 的体验 <strong>非常糟心</strong> ，我这几天大多在使用 BPI-Bit 和淘宝上的廉价 ESP32 开发板做实验。</p>
+<p>虽然 microblocks 内置 ESP32 固件，适用于大多数 ESP32 板子，但由于每个板子的引脚布局与预定义功能(直接连到板子的传感器上)不尽相同，所以刷入固件后的下一件事，是弄清楚板子的引脚布局情况， 以 BPI-Bit 来说，可参考: <a href="https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/readme.md">bpi:bit 开源硬件 📓</a>, 大多数开源硬件，都会给出类似的说明。弄懂了引脚，我们就可以在 microblocks 里对其编程了。</p>
+<p>如果你按照 <a href="https://wiki.microblocks.fun/boards/ESP32">microblocks wiki ESP32</a> 操作，在使用一些 ESP32 板子时，可能会遇到无法烧录或无法连接的情况(可能是出于保护目的做的限制)，我的经验是，连接或刷入时，按住板子上的某个按键，然后松开, 或者拔下板子，刷新页面再试试。</p>
+<p>这是我在 microblocks 对 ESP32 编程的初体验:</p>
+<p><video width=80% src="https://adapter.codelab.club/video/9cbd58237c1443290a2fe955090e81.mp4" controls="controls"></video></p>
+<p>以上视频对应 microblocks 项目: <a href="/post/img/bpi-bit-demo.ubp">bpi-bit-demo.ubp</a></p>
+<p>值得注意的是，在 microblocks 编程时感受到的灵活性，这灵活性在于，即使是接入新的 esp32 板子(看起来是硬件层的工作，每种板子使用引脚的方式不尽相同)，也与普通用户工作在同一层，完全可以在图形化环境里做到，这种工作在目前主流的任何图形化环境里都是无法做到的，John Maloney 确实做到了他所宣称的&quot;物理计算新起点&quot;。</p>
+<p>虽然有煽情的嫌疑，我还是想象许多 smalltalker 那样感慨: 在 smalltalk 风格的环境里编程，真实太愉快了。</p>
+<p>正如 Alan Kay 说的那样:</p>
+<blockquote>
+<p>不需要掉头发和眼泪 &ndash;Alan Kay</p>
+</blockquote>
+<h4 id="webthings">webthings</h4>
+<p>使用 WebThings 库，可以构建兼容 <a href="https://iot.mozilla.org/wot/">wot 协议</a>的 web things (wifi)</p>
+<p>我们可以从官方内置的例子开始:</p>
+<p><img src="/post/img/1641547580832.jpg" alt=""></p>
+<p>这是我修改了官方例子 HelloLED.ubp 后的项目:</p>
+<p><video width=80% src="https://adapter.codelab.club/video/351aadab9a00b4814546b089071b04.mp4" controls="controls"></video></p>
+<p>以上视频对应 microblocks 项目: <a href="/post/img/HelloLED-esp32.ubp">bpi-bit-demo.ubp</a></p>
+<p>站在 webthings 的视角上，使用 microblocks WebThings 库构建出的东西充当 <a href="https://webthings.io/framework/">webthings server</a>, 我们既可以通过 webthings gateway(诸如英荔龙眼盒)与之交互，也可通过 <a href="https://iot.mozilla.org/wot/">WebThings api</a> 与之交互。</p>
+<p>视频中，使用 http client(<a href="https://github.com/httpie/httpie">httpie</a>, 如果你觉得不够快可使用 <a href="https://github.com/ducaale/xh">xh</a>) 与 <a href="https://iot.mozilla.org/wot/">webThings api</a> 交互:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">http PUT http://10.0.0.170/properties/on on:<span class="o">=</span><span class="nb">true</span> <span class="c1"># 打开</span>
+</span></span><span class="line"><span class="cl">http PUT http://10.0.0.170/properties/on on:<span class="o">=</span><span class="nb">false</span> <span class="c1"># 关闭</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>10.0.0.170</code> 是设备的 IP 地址，可在 microblocks 交互式地读出来，开发过程中，microblocks 相当于充当了硬件的“屏幕”！ 通过这个“屏幕”我们可以在代码运行的时候，实时交互式地看到变量内部状态, 极大提高可理解性. Bret Victor 在 <a href="https://www.youtube.com/watch?v=klTjiXjqHrQ">Seeing Spaces</a> 里提到 maker 们在构建复杂系统的真正挑战:</p>
+<blockquote>
+<p>The challenge is not building it but understanding it</p>
+</blockquote>
+<p>我们甚至可以交互式地打断 webthings server（http server 的一层包装）, 在请求/响应之间进行实时编程！一旦尝试过这个体验，你就不愿意回到以前的编程和调试方式了，这是 smalltalk 用户熟悉的体验，John Maloney 将这种流畅的体验带入到了硬件编程领域。别再闭着眼睛排列组合代码/积木啦！</p>
+<p><code>on:=true</code> 看起来有点怪，这是 httpie 描述数据的方式: <a href="https://httpie.io/docs/cli/non-string-json-fields">Non-string JSON fields</a>，其他 http client 不一定这样描述 json。</p>
+<p>CodeLab 可编程空间里有许多 web things，使用这种方式编程，允许用户自下而上地自定义和扩展<a href="https://codelab.club/blog/2020/04/29/%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/">可编程空间</a>。</p>
+<p>@hidaris 正在熟悉 microblocks，不久之后，英荔龙眼盒将支持这些 wifi things，进而使可编程空间拥有极高的可塑性。</p>
+<h4 id="与-scratch-交互">与 Scratch 交互</h4>
+<p>使用 CodeLab Adapter 接管 microblocks 构建出来的 web things，使其可以与 Adapter 生态的所有异构系统交互(Scratch/Python/AI 训练平台…)，用户可以以可理解的方式，同时工作在底层和应用层。甚至徒手构建完整且独一无二的可编程空间(从硬件设备到交互界面)，大多数想法来自 smalltalk 的设计原则</p>
+<p><video width=80% src="https://adapter.codelab.club/video/09e552a9ef596af9833e198997fb07.mp4" controls="controls"></video></p>
+<h4 id="可编程书包">可编程书包</h4>
+<p>最近公司在设计一款可编程书包，既然老是提到 microblocks 可以让用户构建产品级的东西，于是我准备做个原型，完全可行！</p>
+<p><video width=80% src="https://adapter.codelab.club/video/e364c79a8f58daee5db68ac83dcbfa.mp4" controls="controls"></video></p>
+<!--
+
+esptool.py --chip esp32 --port /dev/tty.usbserial-14320 -b 115200 erase_flash
+-->
+<!--esp-12k 不能使用usb，但采用了esp32-s2，有usb能力，硬件上没启用？-->
+<h2 id="faq">FAQ</h2>
+<h3 id="推荐板子">推荐板子</h3>
+<p>我目前比较喜欢淘宝上这一款: <a href="https://item.taobao.com/item.htm?spm=a1z09.2.0.0.4b2d2e8dOYRxKf&amp;id=544831023710&amp;_u=bmdi6ia2c56">ESP-32开发板WIFI+蓝牙 ESP-WROOM-32 ESP-32S</a></p>
+<p><img src="/post/img/1641878883706.jpg" alt=""></p>
+<p>做了简单测试，与 microblocks 兼容，John 似乎也是拿这个型号板子测试的。</p>
+<p>刷入固件前，按住boot，然后松开。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/ESP32">wikipedia ESP32</a></li>
+<li><a href="https://wiki.microblocks.fun/boards/supported">microblocks Supported Boards</a>
+<ul>
+<li><a href="https://wiki.microblocks.fun/boards/ESP32">ESP32</a></li>
+</ul>
+</li>
+<li><a href="https://wiki.microblocks.fun/community_projects/smart_home_webthings">Build a Private Smart Home</a></li>
+<li><a href="https://wiki.microblocks.fun/microblocks_webthings">MicroBlocks WebThings</a></li>
+<li><a href="https://wiki.banana-pi.org/BPI-Bit_STEAM_%E6%95%99%E8%82%B2%E5%BC%80%E5%8F%91%E6%9D%BF">BPI-Bit STEAM 教育开发板</a></li>
+<li><a href="https://github.com/BPI-STEAM/BPI-BIT-Hardware/blob/master/readme.md">bpi:bit 开源硬件 📓</a></li>
+<li><a href="https://mpython.readthedocs.io/zh/master/board/hardware.html">掌控板 硬件概述</a></li>
+<li><a href="https://iot.mozilla.org/wot/">Web Thing API</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-01-07
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microblocks/">microblocks</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/dynablocks-esp32-website/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">MicroBlocks 编程案例: 在 ESP32 里运行网站</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/browser-python/">
+            <span class="next-text nav-default">浏览器中的 Python</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

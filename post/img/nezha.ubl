@@ -1,0 +1,123 @@
+module nezha
+author unknown
+version 1 0 
+description ''
+variables _J1 _J2 _J3 _J4 _NEZHA_ADDR _APDS9960_ADDR test '_APDS9960 initalized' log rgb rgb2 rgb3 color color2 color3 '_nezha initalized' test_color 
+
+	spec ' ' '_APDS9960 setup' '_APDS9960 setup'
+	spec 'r' '_i2cread_color' '_i2cread_color _ _' 'auto auto' 0 0
+	spec ' ' 'set motors' 'set motor _ speed _' 'auto auto' 1 0
+	spec ' ' 'set servo' 'set servo _ angle _' 'auto auto' 1 90
+	spec 'r' 'APDS9960' 'APDS9960 hue'
+	spec 'r' '__rgbtohsl' '_rgbtohsl _ _ _' 'auto auto auto' 0 0 0
+	spec 'r' 'get color' 'get color _ name' 'auto' 0
+	spec ' ' 'nezha setup' '_nezha setup'
+
+to APDS9960 {  '_APDS9960 setup'
+  local 'APDS9960_STATUS' (hexToInt '93')
+  local 'APDS9960_CDATAL' (hexToInt '94')
+  local 'APDS9960_CDATAH' (hexToInt '95')
+  local 'APDS9960_RDATAL' (hexToInt '96')
+  local 'APDS9960_RDATAH' (hexToInt '97')
+  local 'APDS9960_GDATAL' (hexToInt '98')
+  local 'APDS9960_GDATAH' (hexToInt '99')
+  local 'APDS9960_BDATAL' (hexToInt '9a')
+  local 'APDS9960_BDATAH' (hexToInt '9b')
+  local 'tmp' (('_i2cread_color' _APDS9960_ADDR APDS9960_STATUS) & (hexToInt '1'))
+  repeatUntil (0 != tmp) {    waitMillis 1000
+    tmp = (('_i2cread_color' _APDS9960_ADDR APDS9960_STATUS) & 1)
+  }
+  local 'c' (('_i2cread_color' _APDS9960_ADDR APDS9960_CDATAL) + (('_i2cread_color' _APDS9960_ADDR APDS9960_CDATAH) * 256))
+  local 'r' (('_i2cread_color' _APDS9960_ADDR APDS9960_RDATAL) + (('_i2cread_color' _APDS9960_ADDR APDS9960_RDATAH) * 256))
+  local 'g' (('_i2cread_color' _APDS9960_ADDR APDS9960_GDATAL) + (('_i2cread_color' _APDS9960_ADDR APDS9960_GDATAH) * 256))
+  local 'b' (('_i2cread_color' _APDS9960_ADDR APDS9960_BDATAL) + (('_i2cread_color' _APDS9960_ADDR APDS9960_BDATAH) * 256))
+  local 'avg' (c / 3)
+  r = ((r * 255) / avg)
+  g = ((g * 255) / avg)
+  b = ((b * 255) / avg)
+  return ('__rgbtohsl' r g b)
+}
+
+to '_APDS9960 setup' {  if ((v '_APDS9960 initalized') == 0) {    comment '__initmodule'
+    _APDS9960_ADDR = (hexToInt '39')
+    local 'APDS9960_ATIME' (hexToInt '81')
+    local 'APDS9960_CONTROL' (hexToInt '8f')
+    local 'APDS9960_ENABLE' (hexToInt '80')
+    local 'APDS9960_GCONF4' (hexToInt 'ab')
+    local 'APDS9960_AICLEAR' (hexToInt 'e7')
+    '[sensors:i2cWrite]' _APDS9960_ADDR ('[data:asByteArray]' ('[data:makeList]' APDS9960_ATIME 252))
+    '[sensors:i2cWrite]' _APDS9960_ADDR ('[data:asByteArray]' ('[data:makeList]' APDS9960_CONTROL (hexToInt '03')))
+    '[sensors:i2cWrite]' _APDS9960_ADDR ('[data:asByteArray]' ('[data:makeList]' APDS9960_ENABLE (hexToInt '00')))
+    '[sensors:i2cWrite]' _APDS9960_ADDR ('[data:asByteArray]' ('[data:makeList]' APDS9960_GCONF4 (hexToInt '00')))
+    '[sensors:i2cWrite]' _APDS9960_ADDR ('[data:asByteArray]' ('[data:makeList]' APDS9960_AICLEAR (hexToInt '00')))
+    '[sensors:i2cWrite]' _APDS9960_ADDR ('[data:asByteArray]' ('[data:makeList]' APDS9960_ENABLE (hexToInt '01')))
+    comment '__colormode'
+    local 'tmp' (('_i2cread_color' _APDS9960_ADDR APDS9960_ENABLE) | (hexToInt '2'))
+    comment '__i2cwrite_color'
+    '[sensors:i2cWrite]' _APDS9960_ADDR ('[data:asByteArray]' ('[data:makeList]' APDS9960_ENABLE tmp))
+    '_APDS9960 initalized' = 1
+  }
+}
+
+to '__rgbtohsl' r g b {  local 'hue' 0
+  local 'R' ((r * 100) / 255)
+  local 'G' ((g * 100) / 255)
+  local 'B' ((b * 100) / 255)
+  local 'maxVal' (maximum R (maximum G B))
+  local 'minVal' (minimum R (minimum G B))
+  local 'delta' (maxVal - minVal)
+  if (delta <= 0) {    return 0
+  }
+  if (and (maxVal == R) (G >= B)) {    return ((60 * (((G - B) * 100) / delta)) / 100)
+  }
+  if (and (maxVal == R) (G < B)) {    return (((60 * (((G - B) * 100) / delta)) + (360 * 100)) / 100)
+  }
+  if (maxVal == G) {    return (((60 * (((B - R) * 100) / delta)) + (120 * 100)) / 100)
+  }
+  if (maxVal == B) {    return (((60 * (((R - G) * 100) / delta)) + (240 * 100)) / 100)
+  }
+}
+
+to '_i2cread_color' addr reg {  local 'tmp' (newList 1)
+  '[sensors:i2cWrite]' addr ('[data:asByteArray]' ('[data:makeList]' reg))
+  '[sensors:i2cRead]' addr tmp
+  return (at 1 tmp)
+}
+
+to 'get color' hue {  if (and (hue > 250) (hue < 360)) {return 'red'}
+  if (and (hue > 120) (hue < 180)) {return 'green'}
+  if (and (hue > 50) (hue < 110)) {return 'yellow'}
+  return 'No color'
+}
+
+to 'nezha setup' {  if ((v '_nezha initalized') == 0) {    _J1 = 8
+    _J2 = 12
+    _J3 = 14
+    _J4 = 16
+    _NEZHA_ADDR = (hexToInt '10')
+    '_nezha initalized' = 1
+  }
+}
+
+to 'set motors' motor speed {  'nezha setup'
+  comment 'motor (number): 1 2 3 4'
+  comment 'speed (number): -100-100'
+  if (or (motor < 1) (motor > 4)) {    motor = 1
+  }
+  if (or (speed < -100) (speed > 100)) {    speed = 0
+  }
+  if (speed < 0) {    '[sensors:i2cWrite]' _NEZHA_ADDR ('[data:asByteArray]' ('[data:makeList]' motor 2 (speed * -1) 0))
+  } else {    '[sensors:i2cWrite]' _NEZHA_ADDR ('[data:asByteArray]' ('[data:makeList]' motor 1 speed 0))
+  }
+}
+
+to 'set servo' servo angle {  'nezha setup'
+  comment 'servo (number): 1 2 3 4'
+  comment 'angle (number): 0-180'
+  if (or (servo < 1) (servo > 4)) {    servo = 1
+  }
+  if (or (angle < 0) (angle > 180)) {    servo = 0
+  }
+  '[sensors:i2cWrite]' _NEZHA_ADDR ('[data:asByteArray]' ('[data:makeList]' ((hexToInt '10') + (servo - 1)) angle 0 0))
+}
+

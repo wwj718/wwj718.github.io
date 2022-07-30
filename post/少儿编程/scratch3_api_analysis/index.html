@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch3.0技术分析之后端API(第0篇) - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="近期我们计划对Scratch3.0做一系列的技术分析，这是这个系列的开篇。 我们致力于实现以下目标： 理解Scratch3.0的架构设计 理解Sc" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_api_analysis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch3.0技术分析之后端API(第0篇)" />
+<meta property="og:description" content="近期我们计划对Scratch3.0做一系列的技术分析，这是这个系列的开篇。 我们致力于实现以下目标： 理解Scratch3.0的架构设计 理解Sc" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_api_analysis/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-01-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-01-06T00:00:00+00:00" />
+
+<meta itemprop="name" content="Scratch3.0技术分析之后端API(第0篇)">
+<meta itemprop="description" content="近期我们计划对Scratch3.0做一系列的技术分析，这是这个系列的开篇。 我们致力于实现以下目标： 理解Scratch3.0的架构设计 理解Sc"><meta itemprop="datePublished" content="2019-01-06T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-01-06T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3039">
+<meta itemprop="keywords" content="scratch," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch3.0技术分析之后端API(第0篇)"/>
+<meta name="twitter:description" content="近期我们计划对Scratch3.0做一系列的技术分析，这是这个系列的开篇。 我们致力于实现以下目标： 理解Scratch3.0的架构设计 理解Sc"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch3.0技术分析之后端API(第0篇)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-01-06 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/scratch_analyse_6179c869.png" alt=""></p>
+<p>近期我们计划对Scratch3.0做一系列的技术分析，这是这个系列的开篇。</p>
+<p>我们致力于实现以下目标：</p>
+<ul>
+<li>理解Scratch3.0的架构设计</li>
+<li>理解Scratch拥有强大兼容性的原因</li>
+<li>梳理Scratch3.0产品背后使用的一些设计原则
+<ul>
+<li>表现与实现的分离</li>
+<li>事件驱动</li>
+<li>面相对象</li>
+<li>everything is a message</li>
+</ul>
+</li>
+<li>按照Scratch一贯的设计原则，独立实现Scratch并未开源的部分。确保之后能随着Scratch一同升级，架构上保证向后兼容。</li>
+<li>顺着Scratch的思路，对Scratch作出改进。</li>
+</ul>
+<p>总而言之，我们希望通过这些分析，获得定制scratch的能力，但同时又能与上游的官方版本保持兼容。我们重视官方对Scratch的改进。与其说我们重视他们技术能力，不如说我们重视他们对教育和社区的深刻理解，这些是极为稀缺的，它不是技术问题，也不是资金问题。我们希望能随时将官方的改进merge回我们调整后的项目中。我们不希望做出硬分叉。</p>
+<h1 id="scratch30-正式发布">Scratch3.0 正式发布</h1>
+<p>Scratch3.0于2019.1.2如期而至。</p>
+<p>Scratch3.0的<a href="https://github.com/LLK/scratch-gui">GUI</a>和<a href="https://github.com/LLK/scratch-www">社区的前端</a>都已开源:<a href="https://github.com/LLK">LLK</a>。</p>
+<p>你可以<a href="https://scratch.mit.edu/">在线体验</a>一番.</p>
+<p>目前Scratch3.0团队没有透露社区后端和GUI的存储部分是否有开源计划(我们之后将这两块统称为后端)，我此前和Scratch3.0后端团队成员做过沟通，他提到Scratch3.0后端目前同时采用了新构建的REST API和之前遗留的Django server。他们陆续将一些基础服务从Django中迁出，转化为API对外提供服务。从我们之后的分析中可以知道，他们新的后端基于<a href="http://restify.com/">restify</a>。我想官方的技术选型主要出于<a href="http://restify.com/">restify</a>对REST的友好支持，以及<a href="http://restify.com/">restify</a>应对高负载的能力，毕竟Scratch社区有3000万用户。</p>
+<p>考虑到Scratch2.0的后端并未开源，3.0社区后端开源的概率估计也不大。个中原因可能是防止社区分裂。毕竟每家公司跑一个scratch社区挺奇怪的，它分裂了用户群。更何况，大多数的公司采取的教育策略，正是《终生幼儿园》所反对的。</p>
+<p>除了Scratch3.0的社区后端，Scratch3.0的其他部分，官方都有计划开源，包括desktop，终生幼儿园小组正在和MIT校方沟通推进这件事，这些信息在scratch团队日常的讨论中有提到。</p>
+<h1 id="为何做这个分析">为何做这个分析</h1>
+<p>Scratch3.0的社区与插件系统，将开放到什么程度？官方的计划是什么？目前scratch团队并没有给出明确说明.他们在FAQ中提到说这部分的工作还在进展中。</p>
+<p>我们(codelab.club)今年(2019)上半年有计划与scratch team碰个面，如果官方接受，我们希望将<a href="https://adapter.codelab.club/">codelab-adapter</a>集成到官方项目中。帮助Scratch3.0连接到更广阔的世界(education as life)，同时建立Scratch3.0与Python(或者任何其他语言)的无缝连接。如果官方没太大合作意愿，也不愿开放接入机制，我们将独立构建用户社区。我们仍鼓励用户使用scratch官方社区（如果网络顺畅），因为那里边有丰富而友好的的人群，海量的不可思议的创意项目，以及scratch团队令人称赞的运营方式。但对于那些官方不支持的创造，尤其是与生活相关的创造(education as life),我们将提供另一个社区来支持用户。我们的目标是让万物积木化，支持更广泛的创造。支持杜威提倡的</p>
+<blockquote>
+<p>education as life</p>
+</blockquote>
+<p>我们关注如何构建出兼容官方已有开放项目的后端，让用户保持一致的使用体验。同时也保证我们随时可以merge回官方的最新进展。我们另有一个野心是在我们的实现中加入<a href="https://www.w3.org/TR/activitypub/">activitypub</a>，让scratch的社区数据，轻松支持跨站共享和分布式存储。 codelab.club是一个非营利组织，这是我们希望支持落后地区的一个举措。让我们设想一种场景，在贫困山区，网络并不通畅，如何帮助那儿的孩子接入到社区中？他们如何了解社区最近创造出的有趣的项目(projects)？而peers和projects是scratch很核心的2个概念。有了<a href="https://www.w3.org/TR/activitypub/">activitypub</a>，我们在山区中可以使用树莓派跑一个scratch社区后端，孩子们可以在局域网内形成社区（一台树莓派即可，树莓派可以发射热点构建局域网）。当志愿者到来，开放出手机热点，<a href="https://www.w3.org/TR/activitypub/">activitypub</a>将为他们把外部世界的数据同步进来。很多的手机卡已经几乎免流量了。这件事没有想象的那么困难，即便在经济上也没有。</p>
+<p><a href="https://www.w3.org/TR/activitypub/">activitypub</a>可能起作用的场景当然远不止贫困山区。关于这块的可能性有空在谈。</p>
+<p>为了支持我们上边提到的所有目标。我们需要分析目前官方的后端API（其他开源的部分我们也将分析）。我们看到scratch为兼容性这块付出了巨大的努力，他们精心设计了数据的结构，他们花了很大精力来保持对旧版本的兼容，他们甚至希望兼容到1.4版本(十年前的项目！). Scratch团队始终不抛弃已有的用户和用户创作的项目，很难看到比scratch team更尊重用户作品的组织了，这是一群令人肃然起敬的教育者。</p>
+<h1 id="整理已有的scratch-api相关文档">整理已有的Scratch API相关文档</h1>
+<p>社区里目前有不少Scratch后端API相关的文档和项目。</p>
+<p>在此做个梳理。</p>
+<ul>
+<li><a href="https://en.scratch-wiki.info/wiki/Scratch_API_(2.0)">Scratch API（2.0）</a></li>
+<li><a href="https://en.scratch-wiki.info/wiki/Scratch_APIs">Scratch APIs</a></li>
+<li><a href="https://github.com/LLK/scratch-rest-api/wiki">LLK/scratch-rest-api/wiki</a></li>
+<li><a href="https://github.com/towerofnix/scratch-api-unofficial-docs">towerofnix/scratch-api-unofficial-docs</a></li>
+<li><a href="https://github.com/trumank/scratch-api">trumank/scratch-api</a></li>
+<li><a href="https://github.com/PolyEdge/scratchapi">PolyEdge/scratchapi</a></li>
+</ul>
+<p>这些项目是Scratch2.0的API，但Scratch3.0和2.0的API基本是相同的。主要原因我们前边有提到: 出于兼容性的考虑。</p>
+<p>我在完成这篇文章的途中，也会顺手给出scratch3.0的api文档，如果时间允许，我还将给出Python实现的Scratch client。</p>
+<p>此外，也可能顺手实现Python版本的<a href="https://github.com/LLK/scratch-parser">scratch-parser</a>，这个工具将来会成为我们为scratch用户制作画像的基础，由于Python社区的数据分析生态最成熟，所以我计划用Python来做。评估Scratch用户的学习效果，以及用户对知识的掌握情况，我认为目前是项目驱动的平台（如scratch）存在的痛点。我们希望这个项目支持所有Scratch平台，只要大家兼容官方的数据结构即可。这就是我们如此重视兼容性的原因，因为这样有助于打造通用的工具链。</p>
+<p>评估学习者的学习进展并不容易，我认为对程序的静态分析可能是突破口之一，所以我们需要重新实现<a href="https://github.com/LLK/scratch-parser">scratch-parser</a>。在静态分析的基础上，加上一些机器学习的算法和推荐系统，将来甚至可以做到，针对用户的学习情况和兴趣点，给他推荐可能感兴趣的人与项目。如此一来，线上平台就部分实现了我们希望在club中实现的东西：帮助用户去寻找和发现感兴趣的projects与peers。</p>
+<h1 id="工作计划">工作计划</h1>
+<p>我们的分析工作从<a href="https://scratch.mit.edu/projects/editor/">创作平台</a>开始。</p>
+<p>之后转向分析<a href="https://scratch.mit.edu/">社区</a>。</p>
+<p>我们相信这一系列的文章对于准备使用Scratch3.0作为公司基础项目的产品经理和系统架构师会有价值。</p>
+<h1 id="文章列表">文章列表</h1>
+<p>截止到2019.05.01这个系列的分析文章基本写完了,整理如下:</p>
+<ul>
+<li><a href="/Scratch3_api_analysis.html">Scratch3技术分析之后端API(第0篇)</a></li>
+<li><a href="/Scratch3_api_analysis_1.html">Scratch3技术分析之创作平台API(第1篇)</a></li>
+<li><a href="/Scratch3_asset_analysis_2.html">Scratch3技术分析之静态资源API(第2篇)</a></li>
+<li><a href="/Scratch3_project_homepage_analysis_3.html">Scratch3技术分析之项目主页API(第3篇)</a></li>
+<li><a href="/Scratch3_user_api_analysis_4.html">Scratch3技术分析之User API(第4篇)
+</a></li>
+<li><a href="/Scratch3_community_analysis_5.html">Scratch3技术分析之社区 API(第5篇)</a></li>
+<li><a href="/Scratch3_project_json_analysis_6.html">Scratch3技术分析之项目内部数据(第6篇）</a></li>
+<li><a href="/scratch3-cloud-var.html">Scratch3技术分析之云变量 API(第7篇)</a></li>
+<li><a href="/scratch3-studio.html">Scratch3技术分析之Studio API(第8篇)</a></li>
+<li><a href="/scratch3-backpack.html">Scratch3技术分析之backpack(书包) API(第9篇)</a></li>
+</ul>
+<!--
+Project
+    创作平台API
+        Project model/json
+    静态资源API
+        创作平台
+        其他的API   
+        缓存问题/过期
+    项目主页API
+        点赞/评论
+Studio
+
+User
+
+之后是关系(软的)
+
+补遗
+    用户程序的数据的表示(json)。
+-->
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-01-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_api_analysis_1/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Scratch3技术分析之创作平台API(第1篇)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/20181231/">
+            <span class="next-text nav-default">2018年的最后一天</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

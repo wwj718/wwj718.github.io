@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>理解RESTful架构 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="关于这个话题，读过最好的中文资料是阮一峰老师博客上的这篇文章 以下做些摘录，方便自己查看，想理解RESTful架构架构，建议翻阅上头的文章。 #" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/about-restful/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="理解RESTful架构" />
+<meta property="og:description" content="关于这个话题，读过最好的中文资料是阮一峰老师博客上的这篇文章 以下做些摘录，方便自己查看，想理解RESTful架构架构，建议翻阅上头的文章。 #" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/about-restful/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-08-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-08-28T00:00:00+00:00" />
+
+<meta itemprop="name" content="理解RESTful架构">
+<meta itemprop="description" content="关于这个话题，读过最好的中文资料是阮一峰老师博客上的这篇文章 以下做些摘录，方便自己查看，想理解RESTful架构架构，建议翻阅上头的文章。 #"><meta itemprop="datePublished" content="2014-08-28T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2014-08-28T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1319">
+<meta itemprop="keywords" content=" RESTful," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="理解RESTful架构"/>
+<meta name="twitter:description" content="关于这个话题，读过最好的中文资料是阮一峰老师博客上的这篇文章 以下做些摘录，方便自己查看，想理解RESTful架构架构，建议翻阅上头的文章。 #"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">理解RESTful架构</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-08-28 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>关于这个话题，读过最好的中文资料是阮一峰老师博客上的<a href="http://www.ruanyifeng.com/blog/2011/09/restful.html">这篇文章</a></p>
+<p>以下做些摘录，方便自己查看，想理解RESTful架构架构，建议翻阅上头的文章。</p>
+<hr>
+<p>#解决什么问题</p>
+<ul>
+<li>网站即软件</li>
+<li>这种&quot;互联网软件&quot;具有高延时（high latency）、高并发等特点。</li>
+<li>RESTful架构，就是目前最流行的一种互联网软件架构</li>
+</ul>
+<p>#顾名思义</p>
+<ul>
+<li>REST，即<code>Representational State Transfer</code>的缩写。阮一峰老师对这个词组的翻译是<code>表现层状态转化</code>。如果一个架构符合REST原则，就称它为RESTful架构。</li>
+<li>要理解RESTful架构，最好的方法就是去理解Representational State Transfer这个词组到底是什么意思，它的每一个词代表了什么涵义。</li>
+</ul>
+<p>#逐词分析
+##资源（Resources）</p>
+<ul>
+<li>REST的名称&quot;表现层状态转化&quot;中，省略了主语。&ldquo;表现层&quot;其实指的是&quot;资源&rdquo;（Resources）的&quot;表现层&quot;。</li>
+<li>所谓&quot;资源&quot;，就是网络上的一个实体，或者说是网络上的一个具体信息。</li>
+<li>&ldquo;资源&quot;是具体的实在。你可以用一个URI（统一资源定位符）指向它</li>
+<li>注：uri是定位关键，在后端视角来看（django-restful-framework），框架要把资源（数据)映射到uri（url）上</li>
+<li>注2：资源可能是分布式的，使用超链接来连接它们</li>
+</ul>
+<p>##表现层（Representation）</p>
+<ul>
+<li>&ldquo;资源&quot;是一种信息实体，它可以有多种外在表现形式。我们把&quot;资源&quot;具体呈现出来的形式，叫做它的&quot;表现层&rdquo;（Representation）。</li>
+<li>而URI应该只代表&quot;资源&quot;的位置。它的具体表现形式，应该在HTTP请求的头信息中用Accept和Content-Type字段指定，这两个字段才是对&quot;表现层&quot;的描述。</li>
+</ul>
+<p>##状态转化（State Transfer）</p>
+<ul>
+<li>访问一个网站，就代表了客户端和服务器的一个互动过程。在这个过程中，势必涉及到数据和状态的变化。</li>
+<li>互联网通信协议HTTP协议，是一个无状态协议。这意味着，所有的状态都保存在服务器端。客户端想要操作服务器，必须通过某种手段，让服务器端发生&quot;状态转化&rdquo;（State Transfer）。而这种转化是建立在表现层之上的，所以就是&quot;表现层状态转化&quot;。</li>
+<li>HTTP协议里面，四个表示操作方式的动词：GET、POST、PUT、DELETE。它们分别对应四种基本操作：GET用来获取资源，POST用来新建资源（也可以用于更新资源），PUT用来更新资源，DELETE用来删除资源。</li>
+</ul>
+<p>#综述</p>
+<ul>
+<li>每一个URI代表一种资源；</li>
+<li>客户端和服务器之间，传递这种资源的某种表现层；</li>
+<li>客户端通过四个HTTP动词，对服务器端资源进行操作，实现&quot;表现层状态转化&quot;。</li>
+</ul>
+<p>#误区</p>
+<ul>
+<li>最常见的一种设计错误，就是URI包含动词. &ldquo;资源&quot;表示一种实体，所以应该是名词，URI不应该有动词，动词应该放在HTTP协议中。</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-08-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/restful/"> RESTful</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/restful-api/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">RESTful Api设计</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/screen-and-tmux/">
+            <span class="next-text nav-default">tmux使用笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

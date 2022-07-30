@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>codelab-adapter增加REST API - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="Built By Developers, For Developers. 前言 codelab-adapter希望构建开发者生态。 所以我们关注开放性, 在这方面我们做了不少工作: scratch3-adapte" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-rest-api/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="codelab-adapter增加REST API" />
+<meta property="og:description" content="Built By Developers, For Developers. 前言 codelab-adapter希望构建开发者生态。 所以我们关注开放性, 在这方面我们做了不少工作: scratch3-adapte" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-rest-api/" />
+<meta property="article:published_time" content="2019-02-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-02-16T00:00:00+00:00" />
+<meta itemprop="name" content="codelab-adapter增加REST API">
+<meta itemprop="description" content="Built By Developers, For Developers. 前言 codelab-adapter希望构建开发者生态。 所以我们关注开放性, 在这方面我们做了不少工作: scratch3-adapte">
+
+
+<meta itemprop="datePublished" content="2019-02-16T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-02-16T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1449">
+
+
+
+<meta itemprop="keywords" content="codelab," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="codelab-adapter增加REST API"/>
+<meta name="twitter:description" content="Built By Developers, For Developers. 前言 codelab-adapter希望构建开发者生态。 所以我们关注开放性, 在这方面我们做了不少工作: scratch3-adapte"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">codelab-adapter增加REST API</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-16 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#rest-api">REST API</a>
+<ul>
+<li>
+<ul>
+<li><a href="#使用方式">使用方式</a></li>
+<li><a href="#注意消息的方向">注意消息的方向</a></li>
+<li><a href="#在网站中使用">在网站中使用</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/adapter-rest-api_8f7dac82.png" alt="" /></p>
+
+<blockquote>
+<p>Built By Developers, For Developers.</p>
+</blockquote>
+
+<h1 id="前言">前言</h1>
+
+<p>codelab-adapter希望构建开发者生态。</p>
+
+<p>所以我们关注开放性, 在这方面我们做了不少工作:</p>
+
+<ul>
+<li><a href="https://blog.just4fun.site/scratch3-adapter-open-plan.html">scratch3-adapter支持第三方平台</a></li>
+<li><a href="https://blog.just4fun.site/scratch3-adapter-web-extension-control.html">scratch3-adapter将支持在web页面启停插件</a></li>
+<li><a href="https://github.com/Scratch3Lab/codelab_adapter_extensions">Scratch3Lab/codelab_adapter_extensions</a></li>
+</ul>
+
+<p>增加REST API正是出于提高开放性的考虑，以适应更多使用场景。</p>
+
+<p>codelab相信一个好的工具，应该是灵活的，工具的作者无法穷尽使用场景，尤其当它是一个创造性工具的时候。如果我们我们宣称我们已经打造了一个完整的封闭生态，意味着这个工具支持的创造也十分有限。</p>
+
+<p>有黑客精神的开发者要问了: &ldquo;说了半天开放性，那你们源码究竟什么时候开源? 对于我们这些黑客来说，破解它虽不难吧，但你知道的，麻烦多在破解之后，读一堆注释不清晰的源码，不是什么愉快的经历，尤其是它还一直在迭代更新。如果codelab-adapter能主动公开源代码，并附以清晰的注释和文档，将更容易赢得我们尊重&rdquo;</p>
+
+<p>别急别急，我们也认同开源不是甩出一堆糟糕的源码，它需要清晰的注释、完整的文档，以及一群热情的开发者。就像<a href="https://github.com/django/django">Django</a>/<a href="https://github.com/keras-team/keras">Keras</a>/<a href="https://github.com/home-assistant/home-assistant">Home Assistant</a>这些社区所做的，而Scratch在开源这块做得并不理想。</p>
+
+<p>codelab-adapter目前迭代更新很快，在<a href="https://dynamicland.org">realktalk</a>协议发布之后,我们将迎来一次大更新，以实现该协议，因为<a href="https://dynamicland.org">dynamicland</a>试图打造的用以支持创造的环境，也正是codelab所追求的星辰大海。在这个里程碑之后，codelab-adapter将正式发布v1.0版本，此后codelab-adapter将趋于稳定，那时我们将开源所有的源代码。</p>
+
+<p>codelab是一个非营利组织，开放是我们追求的目标之一。</p>
+
+<h1 id="rest-api">REST API</h1>
+
+<p>REST API已经内置于<a href="https://codelab-adapter-docs.codelab.club/user_guide/install/">codelab-adapter最新版本</a>中。</p>
+
+<p>从<a href="https://codelab-adapter-docs.codelab.club/dev_guide/Architecture/">架构图</a>说起。从架构可以看出，codelab-adapter此前对外只提供一个服务: websocket服务, 意味着与codelab-adapter的所有通信，都需要构建websocket通道。</p>
+
+<p>如果开发者只是想从网页或本地应用给codelab-adapter发送一条信息，以控制硬件/IoT/AI，http请求有时候是更轻量和简易的选择。这是<a href="https://developers.home-assistant.io/docs/en/external_api_rest.html">Home Assistant</a>给我们的启发。</p>
+
+<p>于是我们构建了REST API。</p>
+
+<h3 id="使用方式">使用方式</h3>
+
+<p>由于codelab-adapter围绕消息设计，所以我们只要提供一个用以发送消息的API即可支持强大的交互。</p>
+
+<p>我们演示一个最简单的例子。</p>
+
+<p>运行codelab-adapter的extension_eim插件，观察来自外部的eim消息:<code>tail -f ~/codelab_adapter/info.log|grep extension_eim</code></p>
+
+<p>发送一条eim消息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">curl -X POST -H <span class="s2">&#34;Content-Type: application/json&#34;</span> <span class="se">\
+</span><span class="se"></span>    -d <span class="s1">&#39;{&#34;topic&#34;: &#34;eim&#34;,&#34;payload&#34;:&#34;hello world&#34;}&#39;</span> <span class="se">\
+</span><span class="se"></span>    https://codelab-adapter.codelab.club:12358/api/message</code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="/post/img/adapter-rest-api_8f7dac82.png" alt="" /></p>
+
+<p>当然你也可以使用任何编程语言(Python/Nodejs/Java/C++) 来发送http请求,展示一个Python的例子:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://codelab-adapter.codelab.club:12358/api/message&#34;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;topic&#34;</span><span class="p">:</span> <span class="s2">&#34;eim&#34;</span><span class="p">,</span><span class="s2">&#34;payload&#34;</span><span class="p">:</span><span class="s2">&#34;hello world&#34;</span><span class="p">}</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="/post/img/adapter-rest-api_d8d810e8.png" alt="" /></p>
+
+<h3 id="注意消息的方向">注意消息的方向</h3>
+
+<p>使用REST API，消息从<code>website(blockly/Scratch) / local app(Python/Nodejs/Java/C++)</code> 流向 <code>codelab-adapter</code></p>
+
+<h3 id="在网站中使用">在网站中使用</h3>
+
+<p>开发者可以使用Ajax与codelab-adapter交互！</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&#34;https://codelab-adapter.codelab.club:12358/api/message&#34;</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">&#34;POST&#34;</span><span class="p">,</span> <span class="nx">url</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">sendData</span> <span class="o">=</span> <span class="p">{</span><span class="nx">topic</span><span class="o">:</span> <span class="s2">&#34;eim&#34;</span><span class="p">,</span> <span class="nx">payload</span><span class="o">:</span> <span class="s2">&#34;hello&#34;</span><span class="p">};</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s1">&#39;content-type&#39;</span><span class="p">,</span> <span class="s1">&#39;application/json&#39;</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">sendData</span><span class="p">));</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p><img src="/post/img/adapter-rest-api_4ddf0ea0.png" alt="" /></p>
+
+<p>codelab-adapter的最新版本(0.7.0)已支持跨域访问REST API，开发者可以在web应用里同时使用websocket/Ajax与codelab-adapter交互！</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://developers.home-assistant.io/docs/en/external_api_rest.html">Home Assistant REST API</a></li>
+<li><a href="https://blog.just4fun.site/scratch3-adapter-open-plan.html">scratch3-adapter支持第三方平台</a></li>
+<li><a href="https://blog.just4fun.site/scratch3-adapter-web-extension-control.html">scratch3-adapter将支持在web页面启停插件</a></li>
+<li><a href="https://github.com/Scratch3Lab/codelab_adapter_extensions">Scratch3Lab/codelab_adapter_extensions</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-02-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">codelab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-love-raspberry-pi/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">codelab-adapter ❤️ Raspberry Pi</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/round-theater/">
+            <span class="next-text nav-default">浣溪沙·圆形剧场</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

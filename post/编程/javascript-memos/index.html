@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>JavaScript 备忘 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 表达式与运算符 在" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/javascript-memos/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="JavaScript 备忘" />
+<meta property="og:description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 表达式与运算符 在" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/javascript-memos/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-10-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-10-28T00:00:00+00:00" />
+
+<meta itemprop="name" content="JavaScript 备忘">
+<meta itemprop="description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 表达式与运算符 在"><meta itemprop="datePublished" content="2020-10-28T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-10-28T00:00:00+00:00" />
+<meta itemprop="wordCount" content="5640">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="JavaScript 备忘"/>
+<meta name="twitter:description" content="前言 近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。 表达式与运算符 在"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">JavaScript 备忘</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-10-28 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#表达式与运算符">表达式与运算符</a>
+      <ul>
+        <li><a href="#赋值">赋值</a></li>
+        <li><a href="#展开语法spread-syntax">展开语法(Spread syntax)</a></li>
+      </ul>
+    </li>
+    <li><a href="#处理数组">处理数组</a>
+      <ul>
+        <li><a href="#for-loops-array-reduce-and-method-chaininghttpswww30secondsofcodeorgblogscode-anatomy-chaining-reduce-for-loop"><a href="https://www.30secondsofcode.org/blog/s/code-anatomy-chaining-reduce-for-loop">For loops, array reduce and method chaining</a></a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#4-种数组相关的方法httpswww30secondsofcodeorgblogs4-javascript-array-methods"><a href="https://www.30secondsofcode.org/blog/s/4-javascript-array-methods">4 种数组相关的方法</a></a></li>
+        <li><a href="#将可迭代对象转换为数组httpswww30secondsofcodeorgblogsjavascript-iterable-to-array"><a href="https://www.30secondsofcode.org/blog/s/javascript-iterable-to-array">将可迭代对象转换为数组</a></a></li>
+        <li><a href="#forin-forof-and-foreachhttpswww30secondsofcodeorgblogsjavascript-for-in-for-of-foreach"><a href="https://www.30secondsofcode.org/blog/s/javascript-for-in-for-of-foreach">for&hellip;in, for&hellip;of and forEach</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#map-objecthttpswww30secondsofcodeorgjssmap-object"><a href="https://www.30secondsofcode.org/js/s/map-object">map-object</a></a></li>
+    <li><a href="#map-keyshttpswww30secondsofcodeorgjssmap-keys"><a href="https://www.30secondsofcode.org/js/s/map-keys">map-keys</a></a></li>
+    <li><a href="#reducehttpsdevelopermozillaorgzh-cndocswebjavascriptreferenceglobal_objectsarrayreduce"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">reduce</a></a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#使用getter和setter方法扩展原型">使用getter和setter方法扩展原型</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#了解-javascript-中的this关键字httpswww30secondsofcodeorgblogsjavascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解 JavaScript 中的&rsquo;this&rsquo;关键字</a></a>
+      <ul>
+        <li><a href="#对象上下文">对象上下文</a></li>
+        <li><a href="#箭头函数上下文">箭头函数上下文</a></li>
+        <li><a href="#事件处理程序上下文">事件处理程序上下文</a></li>
+        <li><a href="#binding-this">Binding this</a></li>
+        <li><a href="#class--thishttpsdevelopermozillaorgzh-cndocswebjavascriptreferenceclasses"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes">class &amp; this</a></a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#async">async</a></li>
+    <li><a href="#await">await</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#反射reflect">反射(Reflect)</a></li>
+    <li><a href="#代理proxy">代理（Proxy</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#函数参数">函数参数</a>
+      <ul>
+        <li><a href="#默认参数">默认参数</a></li>
+        <li><a href="#剩余参数">剩余参数</a></li>
+      </ul>
+    </li>
+    <li><a href="#arguments-对象httpsdevelopermozillaorgzh-cndocswebjavascriptguidefunctionse4bdbfe794a8_arguments_e5afb9e8b1a1"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Functions#%E4%BD%BF%E7%94%A8_arguments_%E5%AF%B9%E8%B1%A1">arguments 对象</a></a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#变量的作用域">变量的作用域</a></li>
+        <li><a href="#全局变量">全局变量</a></li>
+        <li><a href="#常量constants">常量(Constants)</a></li>
+        <li><a href="#utils">utils</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#创建">创建</a></li>
+    <li><a href="#使用正则表达式的方法">使用正则表达式的方法</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#export">export</a>
+      <ul>
+        <li><a href="#默认-export">默认 export</a></li>
+      </ul>
+    </li>
+    <li><a href="#import">import</a>
+      <ul>
+        <li><a href="#模块对象">模块对象</a></li>
+      </ul>
+    </li>
+    <li><a href="#es6-模块httpsdevelopermozillaorgzh-cndocswebjavascriptguidemodulesdynamic_module_loading"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules#Dynamic_module_loading">ES6 模块</a></a></li>
+    <li><a href="#systemjshttpsgithubcomsystemjssystemjs"><a href="https://github.com/systemjs/systemjs">systemjs</a></a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#sleep">sleep</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>近期在浏览器中使用 Smalltalk，由于其底层基于 JavaScript（ES6），近期抽空重新过了一下 JavaScript 的语法和特性。</p>
+<!--学习的方向：熟悉map/reduce/filter/find，函数式操作-->
+<h2 id="表达式与运算符">表达式与运算符</h2>
+<p>在函数调用/数组构造时, 将数组表达式语法层面展开；还可以在构造字面量对象时, 将对象表达式按key-value的方式展开。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">sum</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">z</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">+</span> <span class="nx">z</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sum</span><span class="p">(...</span><span class="nx">numbers</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// expected output: 6
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">arr1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">arr2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">arr3</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">arr1</span><span class="p">,</span> <span class="p">...</span><span class="nx">arr2</span><span class="p">];</span> <span class="c1">//[0, 1, 2, 3, 4, 5]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">obj1</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">foo</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="nx">x</span><span class="o">:</span> <span class="mi">42</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">obj2</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">foo</span><span class="o">:</span> <span class="s1">&#39;baz&#39;</span><span class="p">,</span> <span class="nx">y</span><span class="o">:</span> <span class="mi">13</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">mergedObj</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span><span class="nx">obj1</span><span class="p">,</span> <span class="p">...</span><span class="nx">obj2</span> <span class="p">};</span> <span class="c1">// {foo: &#34;baz&#34;, x: 42, y: 13}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="赋值">赋值</h3>
+<h4 id="解构赋值httpsdevelopermozillaorgzh-cndocswebjavascriptreferenceoperatorsdestructuring_assignment"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">解构赋值</a></h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">rest</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span> <span class="c1">// 10
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// 20
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="p">...</span><span class="nx">rest</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span> <span class="c1">// 10
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// 20
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">rest</span><span class="p">);</span> <span class="c1">// [30, 40, 50]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="p">({</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="p">}</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">20</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span> <span class="c1">// 10
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// 20
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Stage 4（已完成）提案中的特性
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">({</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="p">...</span><span class="nx">rest</span><span class="p">}</span> <span class="o">=</span> <span class="p">{</span><span class="nx">a</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span> <span class="nx">c</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nx">d</span><span class="o">:</span> <span class="mi">40</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span> <span class="c1">// 10
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// 20
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">rest</span><span class="p">);</span> <span class="c1">// {c: 30, d: 40}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="展开语法spread-syntax">展开语法(Spread syntax)</h3>
+<h2 id="处理数组">处理数组</h2>
+<h3 id="for-loops-array-reduce-and-method-chaininghttpswww30secondsofcodeorgblogscode-anatomy-chaining-reduce-for-loop"><a href="https://www.30secondsofcode.org/blog/s/code-anatomy-chaining-reduce-for-loop">For loops, array reduce and method chaining</a></h3>
+<p>For loops</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;foo.txt &#34;</span><span class="p">,</span> <span class="s2">&#34;.bar&#34;</span><span class="p">,</span> <span class="s2">&#34;   &#34;</span><span class="p">,</span> <span class="s2">&#34;baz.foo&#34;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">filePaths</span> <span class="o">=</span> <span class="nx">files</span>
+</span></span><span class="line"><span class="cl">	<span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">file</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">file</span><span class="p">.</span><span class="nx">trim</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nb">Boolean</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">fileName</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="sb">`~/cool_app/</span><span class="si">${</span><span class="nx">fileName</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// filePaths = [ &#39;~/cool_app/foo.txt&#39;, &#39;~/cool_app/.bar&#39;, &#39;~/cool_app/baz.foo&#39;]
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>函数式风格，易于阅读和扩展，但对迭代的控制较少，不能 return 跳过元素。</p>
+<h1 id="数组与对象">数组与对象</h1>
+<h3 id="4-种数组相关的方法httpswww30secondsofcodeorgblogs4-javascript-array-methods"><a href="https://www.30secondsofcode.org/blog/s/4-javascript-array-methods">4 种数组相关的方法</a></h3>
+<p>JavaScript 数组具有非常健壮的 API，提供了许多惊人的工具</p>
+<p><img src="/post/img/cdfsdfdsfsdf.png" alt=""></p>
+<p>map : 将提供的转换应用于原始数组的每个元素, 结果是一个数组的长度与原始数组相同</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="kr">double</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">arr</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kr">double</span><span class="p">);</span> <span class="c1">// [2, 4, 6]
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>filter: 使用过滤函数创建新数组，以仅保留 true 基于该函数返回的元素。结果是一个等于或小于原始数组长度的数组</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">isOdd</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">arr</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">isOdd</span><span class="p">);</span> <span class="c1">// [1, 3]
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>reduce: 根据 reduce 函数和初始值创建任何类型的单一输出值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">sum</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">arr</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">sum</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">// 6
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">increment</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">[...</span><span class="nx">x</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">x</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">y</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="nx">arr</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">increment</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="c1">// [0, 1, 3, 6]
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>reduce 相关参数与细节参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">Array.prototype.reduce()</a></p>
+<p>find: 返回匹配器函数返回的第一个元素 true。结果是原始数组中的单个元素。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">isOdd</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">arr</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">isOdd</span><span class="p">);</span> <span class="c1">// 1
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="将可迭代对象转换为数组httpswww30secondsofcodeorgblogsjavascript-iterable-to-array"><a href="https://www.30secondsofcode.org/blog/s/javascript-iterable-to-array">将可迭代对象转换为数组</a></h3>
+<p>使用<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax">spread operator</a></p>
+<p>String</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">name</span> <span class="o">=</span> <span class="s2">&#34;Zelda&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">letters</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">name</span><span class="p">];</span> <span class="c1">// &#39;Z&#39;, &#39;e&#39;, &#39;l&#39;, &#39;d&#39;, &#39;a&#39;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Set</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">values</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">uniqueValues</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">values</span><span class="p">];</span> <span class="c1">// [1, 2, 3, 4]
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>NodeList</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">nodes</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">childNodes</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">nodeArray</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">nodes</span><span class="p">];</span> <span class="c1">// [ &lt;!DOCTYPE html&gt;, html ]
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="forin-forof-and-foreachhttpswww30secondsofcodeorgblogsjavascript-for-in-for-of-foreach"><a href="https://www.30secondsofcode.org/blog/s/javascript-for-in-for-of-foreach">for&hellip;in, for&hellip;of and forEach</a></h3>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Loops_and_iteration#for...in_%E8%AF%AD%E5%8F%A5">MDN: for&hellip;of 语句</a>
+for&hellip;in 语句循环一个指定的变量来循环一个对象所有可枚举的属性。</p>
+<p>for&hellip;of 语句在可迭代对象（包括Array、Map、Set、arguments 等等）上创建了一个循环，对值的每一个独特属性调用一次迭代。</p>
+<p><code>for...in</code> 可用于数组字符串或普通对象，但不能用于 Map 或 Set 对象。(适合我)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">prop</span> <span class="k">in</span> <span class="p">[</span><span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="s2">&#34;b&#34;</span><span class="p">,</span> <span class="s2">&#34;c&#34;</span><span class="p">])</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span> <span class="c1">// 0, 1, 2 (array indexes)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">prop</span> <span class="k">in</span> <span class="s2">&#34;str&#34;</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span> <span class="c1">// 0, 1, 2 (string indexes)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">prop</span> <span class="k">in</span> <span class="p">{</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">c</span><span class="o">:</span> <span class="mi">3</span> <span class="p">})</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span> <span class="c1">// a, b, c (object property names)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">prop</span> <span class="k">in</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">([</span><span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="s2">&#34;b&#34;</span><span class="p">,</span> <span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="s2">&#34;d&#34;</span><span class="p">]))</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span> <span class="c1">// undefined (no enumerable properties)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>forEach()仅迭代数组，但它可以在迭代时访问每个元素的值和索引。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="p">[</span><span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="s2">&#34;b&#34;</span><span class="p">,</span> <span class="s2">&#34;c&#34;</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="c1">// a, b, c (array values)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="s2">&#34;b&#34;</span><span class="p">,</span> <span class="s2">&#34;c&#34;</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="c1">// 0, 1, 2 (array indexes)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>for...of</code> 可用于数组，字符串 Map 或 Set 对象，但不能用于普通对象。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">val</span> <span class="k">of</span> <span class="p">[</span><span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="s2">&#34;b&#34;</span><span class="p">,</span> <span class="s2">&#34;c&#34;</span><span class="p">])</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span> <span class="c1">// a, b, c (array values)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">val</span> <span class="k">of</span> <span class="s2">&#34;str&#34;</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span> <span class="c1">// s, t, r (string characters)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">val</span> <span class="k">of</span> <span class="p">{</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">c</span><span class="o">:</span> <span class="mi">3</span> <span class="p">})</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prop</span><span class="p">);</span> <span class="c1">// TypeError (not iterable)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">val</span> <span class="k">of</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">([</span><span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="s2">&#34;b&#34;</span><span class="p">,</span> <span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="s2">&#34;d&#34;</span><span class="p">]))</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span> <span class="c1">// a, b, d (Set values)
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="map-objecthttpswww30secondsofcodeorgjssmap-object"><a href="https://www.30secondsofcode.org/js/s/map-object">map-object</a></h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">mapObject</span> <span class="o">=</span> <span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span> <span class="p">=&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">arr</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">el</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">acc</span><span class="p">[</span><span class="nx">el</span><span class="p">]</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">(</span><span class="nx">el</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">arr</span><span class="p">);</span> <span class="c1">// 当前的fn只使用了一个参数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span> <span class="p">{});</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// EXAMPLES
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">mapObject</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">a</span><span class="p">);</span> <span class="c1">// { 1: 1, 2: 4, 3: 9 }
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="map-keyshttpswww30secondsofcodeorgjssmap-keys"><a href="https://www.30secondsofcode.org/js/s/map-keys">map-keys</a></h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">mapKeys</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span> <span class="p">=&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">obj</span><span class="p">).</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">k</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">acc</span><span class="p">[</span><span class="nx">fn</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">k</span><span class="p">],</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)]</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span> <span class="c1">//当前fn只用到2个参数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">return</span> <span class="nx">acc</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">},</span> <span class="p">{});</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 例子
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">mapKeys</span><span class="p">({</span> <span class="nx">a</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="mi">2</span> <span class="p">},</span> <span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">key</span> <span class="o">+</span> <span class="nx">val</span><span class="p">);</span> <span class="c1">// { a1: 1, b2: 2 }
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="reducehttpsdevelopermozillaorgzh-cndocswebjavascriptreferenceglobal_objectsarrayreduce"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">reduce</a></h2>
+<p>reduce() 方法对数组中的每个元素执行一个由您提供的 reducer 函数(升序执行)，将其结果汇总为单个返回值。</p>
+<p>reducer 函数接收 4 个参数:</p>
+<ul>
+<li>Accumulator (acc) (累计器)</li>
+<li>Current Value (cur) (当前值)</li>
+<li>Current Index (idx) (当前索引)</li>
+<li>Source Array (src) (源数组)</li>
+</ul>
+<p>arr.reduce(callback(accumulator, currentValue[, index[, array]])[, initialValue])</p>
+<p>参数细节参考原文。</p>
+<p>initialValue: 作为第一次调用 callback 函数时的第一个参数的值。 如果没有提供初始值，则将使用数组中的第一个元素。 在没有初始值的空数组上调用 reduce 将报错。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// 计算数组中每个元素出现的次数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;Alice&#34;</span><span class="p">,</span> <span class="s2">&#34;Bob&#34;</span><span class="p">,</span> <span class="s2">&#34;Tiff&#34;</span><span class="p">,</span> <span class="s2">&#34;Bruce&#34;</span><span class="p">,</span> <span class="s2">&#34;Alice&#34;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">countedNames</span> <span class="o">=</span> <span class="nx">names</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">allNames</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="nx">name</span> <span class="k">in</span> <span class="nx">allNames</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">allNames</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">allNames</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">allNames</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="p">{});</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// countedNames is:
+</span></span></span><span class="line"><span class="cl"><span class="c1">// { &#39;Alice&#39;: 2, &#39;Bob&#39;: 1, &#39;Tiff&#39;: 1, &#39;Bruce&#39;: 1 }
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="对象">对象</h1>
+<p>在javascript中，一个对象可以是一个单独的拥有属性和类型的实体。我们拿它和一个杯子做下类比。一个杯子是一个对象(物体)，拥有属性。杯子有颜色，图案，重量，由什么材质构成等等。同样，javascript对象也有属性来定义它的特征。</p>
+<h2 id="使用getter和setter方法扩展原型">使用getter和setter方法扩展原型</h2>
+<p>使用getter和setter方法扩展 Date原型，为预定义好的Date类添加一个year的属性。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="s2">&#34;year&#34;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getFullYear</span><span class="p">()</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">set</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">setFullYear</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">now</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">now</span><span class="p">.</span><span class="nx">year</span><span class="p">);</span> <span class="c1">// 2000
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">now</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="mi">2001</span><span class="p">;</span> <span class="c1">// 987617605170
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">now</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Wed Apr 18 11:13:25 GMT-0700 (Pacific Daylight Time) 2001
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="this">this</h1>
+<h2 id="了解-javascript-中的this关键字httpswww30secondsofcodeorgblogsjavascript-this"><a href="https://www.30secondsofcode.org/blog/s/javascript-this">了解 JavaScript 中的&rsquo;this&rsquo;关键字</a></h2>
+<!--this 关键字指向函数的执行上下文。-->
+<p>在JavaScript中，this关键字指的是当前正在执行代码的对象。简而言之，常见情况：</p>
+<ul>
+<li>默认情况下，this引用全局对象。</li>
+<li>在函数中，当不处于严格模式时，this指的是全局对象。</li>
+<li>在函数中，在严格模式下this为 undefined。</li>
+<li>在<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">箭头函数</a>中，this保留<a href="https://developer.mozilla.org/en-US/docs/Glossary/Scope">封闭词法上下文</a>中this的值this。</li>
+<li>在对象方法中，this指的是调用该方法的对象。</li>
+<li>在构造函数调用中，this绑定到正在构造的新对象。</li>
+<li>在事件处理程序中，this绑定到放置侦听器的元素。</li>
+</ul>
+<h3 id="对象上下文">对象上下文</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">f</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">myObj</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">obj</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">myObj</span><span class="p">.</span><span class="nx">foo</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">myObj</span><span class="p">.</span><span class="nx">f</span><span class="p">());</span> <span class="c1">// { foo: 1 }
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="箭头函数上下文">箭头函数上下文</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nb">window</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">// &lt;-- notice me?
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">function</span> <span class="nx">Person</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">this</span><span class="p">.</span><span class="nx">age</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span> <span class="c1">// &lt;-- notice me?
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="c1">// &lt;-- Arrow function executing in the &#34;p&#34; (an instance of Person) scope
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;this.age&#34;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">age</span><span class="p">);</span> <span class="c1">// yields &#34;42&#34; because the function executes on the Person scope
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="p">},</span> <span class="mi">100</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Person</span><span class="p">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="事件处理程序上下文">事件处理程序上下文</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">el</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;my-el&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">el</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span> <span class="o">===</span> <span class="nx">el</span><span class="p">);</span> <span class="c1">// true
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="binding-this">Binding this</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">foo</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">bind</span><span class="p">({</span><span class="nx">foo</span><span class="o">:</span> <span class="s1">&#39;hello&#39;</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">());</span> <span class="c1">// &#39;hello&#39;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="class--thishttpsdevelopermozillaorgzh-cndocswebjavascriptreferenceclasses"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Classes">class &amp; this</a></h3>
+<p>实例的属性必须定义在类的方法里.  ES6 类的方法内部如果含有this，它默认指向类的实例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">class</span> <span class="nx">Rectangle</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">constructor</span><span class="p">(</span><span class="nx">height</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span> <span class="p">{</span>    
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">height</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">width</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="promise">Promise</h1>
+<!--.then(successCallback, failureCallback);-->
+<p>Promise 很棒的一点就是链式调用（chaining）。</p>
+<p>参考:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises">使用 Promise</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise">JavaScript 标准内置对象Promise</a></li>
+</ul>
+<h1 id="prototypehttpsdevelopermozillaorgzh-cndocswebjavascriptinheritance_and_the_prototype_chain"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">prototype</a></h1>
+<p>Self语言基于 prototype</p>
+<p>在 ES2015/ES6 中引入了 class 关键字，但那只是语法糖，JavaScript 仍然是基于原型的</p>
+<p>JavaScript 对象是动态的属性“包”（指其自己的属性）。JavaScript 对象有一个指向一个原型对象的链。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">f</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">this</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   <span class="k">this</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="cm">/* 这么写也一样
+</span></span></span><span class="line"><span class="cl"><span class="cm">function f() {
+</span></span></span><span class="line"><span class="cl"><span class="cm">  this.a = 1;
+</span></span></span><span class="line"><span class="cl"><span class="cm">  this.b = 2;
+</span></span></span><span class="line"><span class="cl"><span class="cm">}
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">o</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">f</span><span class="p">();</span> <span class="c1">// {a: 1, b: 2}
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 在f函数的原型上定义属性
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">f</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">f</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 不要在 f 函数的原型上直接定义 f.prototype = {b:3,c:4};这样会直接打破原型链
+</span></span></span><span class="line"><span class="cl"><span class="c1">// o.[[Prototype]] 有属性 b 和 c
+</span></span></span><span class="line"><span class="cl"><span class="c1">//  (其实就是 o.__proto__ 或者 o.constructor.prototype)
+</span></span></span><span class="line"><span class="cl"><span class="c1">// o.[[Prototype]].[[Prototype]] 是 Object.prototype.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 最后o.[[Prototype]].[[Prototype]].[[Prototype]]是null
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 这就是原型链的末尾，即 null，
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 根据定义，null 就是没有 [[Prototype]]。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 综上，整个原型链如下: 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// {a:1, b:2} ---&gt; {b:3, c:4} ---&gt; Object.prototype---&gt; null
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">a</span><span class="p">);</span> <span class="c1">// 1
+</span></span></span><span class="line"><span class="cl"><span class="c1">// a是o的自身属性吗？是的，该属性的值为 1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// 2
+</span></span></span><span class="line"><span class="cl"><span class="c1">// b是o的自身属性吗？是的，该属性的值为 2
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 原型上也有一个&#39;b&#39;属性，但是它不会被访问到。
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 这种情况被称为&#34;属性遮蔽 (property shadowing)&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">c</span><span class="p">);</span> <span class="c1">// 4
+</span></span></span><span class="line"><span class="cl"><span class="c1">// c是o的自身属性吗？不是，那看看它的原型上有没有
+</span></span></span><span class="line"><span class="cl"><span class="c1">// c是o.[[Prototype]]的属性吗？是的，该属性的值为 4
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">d</span><span class="p">);</span> <span class="c1">// undefined
+</span></span></span><span class="line"><span class="cl"><span class="c1">// d 是 o 的自身属性吗？不是，那看看它的原型上有没有
+</span></span></span><span class="line"><span class="cl"><span class="c1">// d 是 o.[[Prototype]] 的属性吗？不是，那看看它的原型上有没有
+</span></span></span><span class="line"><span class="cl"><span class="c1">// o.[[Prototype]].[[Prototype]] 为 null，停止搜索
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 找不到 d 属性，返回 undefined
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>当继承的函数被调用时，this 指向的是当前继承的对象，而不是继承的函数所在的原型对象。</p>
+<h1 id="async-和-await">async 和 await</h1>
+<p>ECMAScript 2017 JavaScript版的一部分</p>
+<p>简单来说，它们是基基于promises的语法糖，使异步代码更易于编写和阅读。通过使用它们，异步代码看起来更像是老式同步代码</p>
+<h2 id="async">async</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">hello</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">&#34;Hello&#34;</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="nx">hello</span><span class="p">();</span> <span class="c1">// 调用该函数会返回一个 promise
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 异步函数表达式
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span> <span class="nx">hello</span> <span class="o">=</span> <span class="kr">async</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">&#34;Hello&#34;</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="nx">hello</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">hello</span> <span class="o">=</span> <span class="kr">async</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span> <span class="k">return</span> <span class="s2">&#34;Hello&#34;</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 要实际使用promise完成时返回的值，我们可以使用.then()块
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">hello</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">value</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>将 async 关键字加到函数申明中，可以告诉它们返回的是 promise，而不是直接返回值。此外，它避免了同步函数为支持使用 await 带来的任何潜在开销。</p>
+<h2 id="await">await</h2>
+<p>await 只在异步函数里面才起作用。它可以放在任何异步的，基于 promise 的函数之前。它会暂停代码在该行上，直到 promise 完成，然后返回结果值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">hello</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">greeting</span> <span class="o">=</span> <span class="kr">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s2">&#34;Hello&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">hello</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">alert</span><span class="p">);</span> <span class="c1">// 当前这行代码并不会阻塞上下文，它的内部是阻塞的，它自身被循环队列处理。
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>由于 async 关键字将函数转换为 promise，您可以使用 promise 和 await 的混合方式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">myFetch</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;coffee.jpg&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="kr">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">blob</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">myFetch</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="nx">blob</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">objectURL</span> <span class="o">=</span> <span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">image</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">image</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">objectURL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">image</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="闭包-closure">闭包 (Closure)</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%97%AD%E5%8C%85_(%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6)">wikipedia 闭包</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Closures">MDN Closures</a></li>
+</ul>
+<p>闭包在实现上是一个结构体，它存储了一个函数和一个关联的环境。环境里是若干对符号和值的对应关系.</p>
+<!--一个函数和对其周围状态的引用捆绑在一起，这样的组合就是闭包（closure）-->
+<p>闭包跟函数最大的不同在于，当捕捉闭包的时候，它的自由变量会在捕捉时被确定，这样即便脱离了捕捉时的上下文，它也能照常运行.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">makeFunc</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="s2">&#34;Mozilla&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">function</span> <span class="nx">displayName</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">alert</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">displayName</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">myFunc</span> <span class="o">=</span> <span class="nx">makeFunc</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nx">myFunc</span><span class="p">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在一些编程语言中，一个函数中的局部变量仅存在于此函数的执行期间。一旦 makeFunc() 执行完毕，你可能会认为 name 变量将不能再被访问。</p>
+<p>JavaScript 中情况显然与此不同。 displayName 的实例维持了一个对它的词法环境（变量 name 存在于其中）的引用。因此，当 myFunc 被调用时，变量 name 仍然可用，其值 Mozilla 就被传递到alert中。</p>
+<h1 id="元编程">元编程</h1>
+<h2 id="反射reflect">反射(Reflect)</h2>
+<p>反射（reflection）是指计算机程序在运行时（runtime）可以访问、检测和修改它本身状态或行为的一种能力。用比喻来说，反射就是程序在运行的时候能够“观察”并且修改自己的行为。</p>
+<p>Reflect 是一个内置的对象，它提供拦截 JavaScript 操作的方法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">duck</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Maurice&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">color</span><span class="o">:</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">greeting</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Quaaaack! My name is </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">Reflect</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">duck</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// true
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Reflect</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">duck</span><span class="p">,</span> <span class="s1">&#39;haircut&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// false
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="代理proxy">代理（Proxy</h2>
+<p>在 ECMAScript 6 中引入的 Proxy 对象可以拦截某些操作并实现自定义行为）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">handler</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">name</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">name</span> <span class="k">in</span> <span class="nx">target</span> <span class="o">?</span> <span class="nx">target</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">:</span> <span class="mi">42</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">p</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Proxy</span><span class="p">({},</span> <span class="nx">handler</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">p</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">a</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// 1, 42
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Proxy 对象定义了一个目标（这里是一个空对象）和一个实现了 get 陷阱的 handler 对象。这里，代理的对象在获取未定义的属性时不会返回 undefined，而是返回 42。</p>
+<h1 id="事件">事件</h1>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Learn/JavaScript/Building_blocks/Events">事件</a>
+是你正在编写的 <strong>系统</strong> 中发生的动作或事件，系统告诉你的是这些动作或事件，如果需要的话，你可以以某种方式对它们做出反应。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">btn</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">&#39;button&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">random</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span><span class="o">*</span><span class="p">(</span><span class="nx">number</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">btn</span><span class="p">.</span><span class="nx">onclick</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">rndCol</span> <span class="o">=</span> <span class="s1">&#39;rgb(&#39;</span> <span class="o">+</span> <span class="nx">random</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nx">random</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nx">random</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="nx">rndCol</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="tryexcept--error">try/except &amp; error</h1>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Control_flow_and_error_handling">流程控制与错误处理</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">doSomethingErrorProne</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">ourCodeMakesAMistake</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">throw</span> <span class="p">(</span><span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;The message&#39;</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">doSomethingToGetAJavascriptError</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">....</span>
+</span></span><span class="line"><span class="cl"><span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">doSomethingErrorProne</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span> <span class="c1">// logs &#39;Error&#39;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span> <span class="c1">// logs &#39;The message&#39; or a JavaScript error message)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//finally
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="函数">函数</h1>
+<h2 id="函数参数">函数参数</h2>
+<h3 id="默认参数">默认参数</h3>
+<p>从ECMAScript 6开始，有两个新的类型的参数：默认参数，剩余参数。</p>
+<p>在JavaScript中，函数参数的默认值是undefined。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">function multiply(a, b = 1) {
+</span></span><span class="line"><span class="cl">  return a*b;
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">multiply(5); // 5
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="剩余参数">剩余参数</h3>
+<p>剩余参数语法允许将不确定数量的参数表示为数组。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">multiply</span><span class="p">(</span><span class="nx">multiplier</span><span class="p">,</span> <span class="p">...</span><span class="nx">theArgs</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">theArgs</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">x</span> <span class="p">=&gt;</span> <span class="nx">multiplier</span> <span class="o">*</span> <span class="nx">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">multiply</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arr</span><span class="p">);</span> <span class="c1">// [2, 4, 6]
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="arguments-对象httpsdevelopermozillaorgzh-cndocswebjavascriptguidefunctionse4bdbfe794a8_arguments_e5afb9e8b1a1"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Functions#%E4%BD%BF%E7%94%A8_arguments_%E5%AF%B9%E8%B1%A1">arguments 对象</a></h2>
+<p>函数的实际参数会被保存在一个类似数组的arguments对象中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">myConcat</span><span class="p">(</span><span class="nx">separator</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span> <span class="c1">// 把值初始化成一个字符串，这样就可以用来保存字符串了！！
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="kd">var</span> <span class="nx">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">// iterate through arguments
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">result</span> <span class="o">+=</span> <span class="nx">arguments</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="nx">separator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// returns &#34;red, orange, blue, &#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">myConcat</span><span class="p">(</span><span class="s2">&#34;, &#34;</span><span class="p">,</span> <span class="s2">&#34;red&#34;</span><span class="p">,</span> <span class="s2">&#34;orange&#34;</span><span class="p">,</span> <span class="s2">&#34;blue&#34;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="变量">变量</h1>
+<h3 id="变量的作用域">变量的作用域</h3>
+<p>在函数之外声明的变量，叫做全局变量, 因为它可被 <strong>当前文档</strong> 中的任何其他代码所访问。</p>
+<p>ES 6 有 语句块 作用域；语句块中声明的变量将成为 <strong>语句块</strong> 所在函数（或全局作用域）的局部变量</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">if (true) {
+</span></span><span class="line"><span class="cl">  let y = 5;
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">console.log(y); // ReferenceError: y 没有被声明
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>let不像 var 一样，let不会在全局对象里新建一个属性。</p>
+<h4 id="语句块">语句块</h4>
+<p>语句块通常用于流程控制，如if，for，while等等。 该块由一对大括号界定</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="k">while</span> <span class="p">(</span><span class="nx">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">x</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//这里{ x++; }就是语句块。
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="nx">x</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// expected output: 2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// expected output: 1
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="全局变量">全局变量</h3>
+<p>全局变量是全局对象的属性。在网页中，（译注：缺省的）全局对象是 window ，所以你可以用形如 window.variable 的语法来设置和访问全局变量。</p>
+<h3 id="常量constants">常量(Constants)</h3>
+<p>用关键字 const 创建一个只读的常量</p>
+<p>常量的作用域规则与 let 块级作用域变量相同。</p>
+<h3 id="utils">utils</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="p">{</span><span class="nx">y</span><span class="o">:</span><span class="nx">z</span><span class="p">}}</span> <span class="o">=</span> <span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="p">{</span><span class="nx">y</span><span class="o">:</span><span class="mi">1</span><span class="p">}}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">z</span> <span class="c1">// 1
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="正则表达式">正则表达式</h1>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions">正则表达式</a>是用于匹配字符串中字符组合的模式。</p>
+<p>在 JavaScript中，正则表达式也是对象。这些模式被用于 RegExp 的 exec 和 test 方法, 以及 String 的 match、matchAll、replace、search 和 split 方法。</p>
+<h2 id="创建">创建</h2>
+<ul>
+<li>字面量: <code>var re = /ab+c/;</code></li>
+<li>构造函数: <code>var re = new RegExp(&quot;ab+c&quot;);</code></li>
+</ul>
+<h2 id="使用正则表达式的方法">使用正则表达式的方法</h2>
+<ul>
+<li>exec:	一个在字符串中执行查找匹配的RegExp方法，它返回一个数组（未匹配到则返回 null）。</li>
+<li>test:	一个在字符串中测试是否匹配的RegExp方法，它返回 true 或 false。</li>
+<li>match:	一个在字符串中执行查找匹配的String方法，它返回一个数组，在未匹配到时会返回 null。</li>
+<li>matchAll:	一个在字符串中执行查找所有匹配的String方法，它返回一个迭代器（iterator）。</li>
+<li>search:	一个在字符串中测试匹配的String方法，它返回匹配到的位置索引，或者在失败时返回-1。</li>
+<li>replace:	一个在字符串中执行查找匹配的String方法，并且使用替换字符串替换掉匹配到的子字符串。</li>
+<li>split:	一个使用正则表达式或者一个固定字符串分隔一个字符串，并将分隔后的子字符串存储到数组中的 String 方法。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">myRe</span> <span class="o">=</span> <span class="sr">/d(b+)d/g</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">myArray</span> <span class="o">=</span> <span class="nx">myRe</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="s2">&#34;cdbbdbsbz&#34;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="模块">模块</h1>
+<p>浏览器开始原生支持。</p>
+<p><code>&lt;script type=&quot;module&quot;&gt;</code> 属性用于指示引入的模块:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;module&#34;</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;main.mjs&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>只能在模块内部使用 import 和export 语句 ；不是普通脚本文件</p>
+<h2 id="export">export</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// 在模块文件的末尾使用一个export 语句
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">export</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">draw</span><span class="p">,</span> <span class="nx">reportArea</span><span class="p">,</span> <span class="nx">reportPerimeter</span> <span class="p">};</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="默认-export">默认 export</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// 注意，不要大括号。 import 也是
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">export</span> <span class="k">default</span> <span class="nx">randomSquare</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// import randomSquare from &#39;./modules/square.mjs&#39;; 等效于 import {default as randomSquare} from &#39;./modules/square.mjs&#39;;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="import">import</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">draw</span><span class="p">,</span> <span class="nx">reportArea</span><span class="p">,</span> <span class="nx">reportPerimeter</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;/js-examples/modules/basic-modules/modules/square.mjs&#39;</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="模块对象">模块对象</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">Module</span> <span class="nx">from</span> <span class="s1">&#39;/modules/module.mjs&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">Module</span><span class="p">.</span><span class="nx">function1</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Module</span><span class="p">.</span><span class="nx">function2</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="es6-模块httpsdevelopermozillaorgzh-cndocswebjavascriptguidemodulesdynamic_module_loading"><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Modules#Dynamic_module_loading">ES6 模块</a></h2>
+<p>最新的浏览器开始原生支持模块功能</p>
+<p>使用JavaScript 模块依赖于import和 export</p>
+<h2 id="systemjshttpsgithubcomsystemjssystemjs"><a href="https://github.com/systemjs/systemjs">systemjs</a></h2>
+<p>Dynamic ES module loader</p>
+<p>SystemJS允许编写和使用依赖于 ES6 导入和导出语句的模块化javacsript代码。</p>
+<h1 id="utils-1">utils</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">c</span> <span class="o">=</span> <span class="p">{</span><span class="nx">a</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">c</span> <span class="c1">// {a: 1}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="杂货铺">杂货铺</h1>
+<h3 id="sleep">sleep</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">sleep</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">resolve</span> <span class="p">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">ms</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">delayedFunc</span><span class="p">()</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="k">of</span> <span class="p">[...</span><span class="nb">Array</span><span class="p">(</span><span class="mi">30</span><span class="p">).</span><span class="nx">keys</span><span class="p">()]){</span>
+</span></span><span class="line"><span class="cl">	  <span class="kr">await</span> <span class="nx">sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// this.rotation = i; // 让object旋转起来
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">delayedFunc</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="感受">感受</h1>
+<p>我侧重使用函数式风格（map/reduce/filter）的表达方式，js 可真是有着 C 语法的 LISP</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://exploringjs.com/impatient-js/toc.html">JavaScript for impatient programmers</a></li>
+<li><a href="https://en.wikipedia.org/wiki/ECMAScript">ECMAScript</a></li>
+<li><a href="https://learnxinyminutes.com/docs/javascript/">Learn X in Y minutes Where X=javascript</a></li>
+<li><a href="https://turriate.com/articles/modern-javascript-everything-you-missed-over-10-years#const-let">Modern Javascript: Everything you missed over the last 10 years</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript">MDN JavaScript</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide">分类入口</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Equality_comparisons_and_sameness">相等性判断</a></li>
+<li><a href="https://javascript.info/">The Modern JavaScript Tutorial</a></li>
+<li><a href="https://github.com/javascript-tutorial/zh.javascript.info#readme">zh.javascript.info</a></li>
+<li><a href="https://github.com/30-seconds/30-seconds-of-code">30-seconds-of-code</a>
+<ul>
+<li><a href="https://www.30secondsofcode.org/js/t/array/p/1">30secondsofcode</a></li>
+</ul>
+</li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript">developer.mozilla.org JavaScript</a></li>
+<li><a href="https://github.com/getify/You-Dont-Know-JS">You-Dont-Know-JS</a></li>
+<li><a href="https://github.com/leonardomso/33-js-concepts">33-js-concepts</a></li>
+<li><a href="https://github.com/ryanmcdermott/clean-code-javascript">clean-code-javascript</a></li>
+<li><a href="https://github.com/airbnb/javascript">airbnb/JavaScript Style Guide</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-10-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/swimming-with-the-fish/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译]与鱼共游 -- Smalltalk中的编程体验</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/smalltalk-explore-notes/">
+            <span class="next-text nav-default">smalltalk 探索笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

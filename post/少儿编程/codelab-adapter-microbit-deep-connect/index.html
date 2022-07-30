@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>CodeLab Adapter 深度连接 micro:bit 生态 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 因为开放性和出色的基础工作，micro:bit 现在拥有无与伦比的生态。 上周参加了Maker Faire shenzhen，现场有各类新的 STEM 教育套件，" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-microbit-deep-connect/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="CodeLab Adapter 深度连接 micro:bit 生态" />
+<meta property="og:description" content="前言 因为开放性和出色的基础工作，micro:bit 现在拥有无与伦比的生态。 上周参加了Maker Faire shenzhen，现场有各类新的 STEM 教育套件，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-microbit-deep-connect/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-11-16T00:00:00+00:00" />
+
+<meta itemprop="name" content="CodeLab Adapter 深度连接 micro:bit 生态">
+<meta itemprop="description" content="前言 因为开放性和出色的基础工作，micro:bit 现在拥有无与伦比的生态。 上周参加了Maker Faire shenzhen，现场有各类新的 STEM 教育套件，"><meta itemprop="datePublished" content="2019-11-16T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-11-16T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3821">
+<meta itemprop="keywords" content="microbit,Scratch,Python,kit," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CodeLab Adapter 深度连接 micro:bit 生态"/>
+<meta name="twitter:description" content="前言 因为开放性和出色的基础工作，micro:bit 现在拥有无与伦比的生态。 上周参加了Maker Faire shenzhen，现场有各类新的 STEM 教育套件，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">CodeLab Adapter 深度连接 micro:bit 生态</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-16 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#scratch-社区的做法">Scratch 社区的做法</a>
+      <ul>
+        <li><a href="#scratch-link-的问题">Scratch Link 的问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#codelab-adapter-连接-microbit">CodeLab Adapter 连接 micro:bit</a>
+      <ul>
+        <li><a href="#think-bigger">Think Bigger</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#思路">思路</a>
+      <ul>
+        <li><a href="#技术层面">技术层面</a></li>
+      </ul>
+    </li>
+    <li><a href="#实现">实现</a></li>
+    <li><a href="#使用">使用</a>
+      <ul>
+        <li><a href="#接入">接入！</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/magic.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>因为开放性和出色的基础工作，micro:bit 现在拥有无与伦比的生态。</p>
+<p>上周参加了<a href="http://www.shenzhenmakerfaire.com/">Maker Faire shenzhen</a>，现场有各类新的 STEM 教育套件，大多数基于 micro:bit:  DIY 编程套件、类乐高编程套件、各类拓展板、麦克纳姆轮遥控车、可穿戴手表、循迹小车、平衡小车、机械臂&hellip;</p>
+<p>去淘宝上搜一搜，琳琅满目。</p>
+<p>时间回退到几年前，Maker Faire 上的编程/STEM 套件，几乎被 arduino 统治。去年，两者不相伯仲，而今年，micro:bit 生态已经明显胜出。micro:bit 似乎正处于 STEM 编程套件领域的中心。</p>
+<p>micro:bit在教育开源硬件/STEM 编程套件领域，与 RaspberryPi(树莓派)、Arduino 鼎足而三。</p>
+<p>生态的繁荣带来的一个显著现象是同质化严重，功能相似的拓展板(甚至电路结构都相似)、配色和尺寸完全一致的乐高兼容积木、除了 Logo 其他基本一样的编程平台&hellip;</p>
+<p>严重的同质化几乎可以视为一个领域蓬勃发展的标志，这点我们在 IoT 和 AI 领域也可以看出来。</p>
+<p>市场给出了明确的需求信息，各家公司纷纷涌入其中。这当然是一件好事。对于消费者而言，有更多选择，而不至于被一家公司绑架。对产商而言，喜忧参半吧，如果我是硬件产商，我会开心多一些，尽管竞争激烈，但市场信号明确，意味着只要在产品上打磨得足够好，便有机会。</p>
+<p>并非所有努力都有回报，许多时候不可抗力太多，市场需求当然算重要的一种不可抗力。这便是我说“开心多一些的原因”，乐于参与这种 努力就有回报 的竞争里。</p>
+<p>构建足够有 想象力/差异化 的编程平台/内容，又恰好属于我有些把握的领域。</p>
+<h1 id="与-microbit-建立连接">与 micro:bit 建立连接</h1>
+<h2 id="scratch-社区的做法">Scratch 社区的做法</h2>
+<p>Scratch 社区在发布 3.0 版本的时候，一个重要的工作就是兼容 micro:bit。Scratch 团队似乎也认为 micro:bit 未来会是最重要的教育开源硬件生态（至少是之一）。</p>
+<p>Scratch 团队采用的策略是构建一个<a href="https://github.com/LLK/scratch-link">Scratch-Link</a>，使用它将 Scratch 与外部设备连接(主要是乐高)), 然后为 micro:bit 构建一个兼容于 Scratch-Link的固件。</p>
+<p>Scratch 的做法是可以理解的，Scratch 的核心是交互式编程(Scratch 的许多设计理念来自 Smalltalk)，而不是灌入式编程，所以他们为树莓派写了固件，来服务于交互式编程。关于这点我在<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a>里做了详尽讨论。</p>
+<p>目前 scratch 开放了<a href="https://github.com/LLK/scratch-link">Scratch-Link 的源码</a>，但 micro:bit 的源码目前尚未开源。</p>
+<p>如果你对交互的细节感兴趣，可以阅读我的这篇分析文章: <a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-microbit-analysis/">分析 scratch3.0 与 micro:bit 的通信</a></p>
+<h3 id="scratch-link-的问题">Scratch Link 的问题</h3>
+<p>Scratch Link 目前存在一些问题：</p>
+<ul>
+<li>对系统环境有严格要求
+<ul>
+<li>Windows 10 version 1709+</li>
+<li>macOS 10.13+</li>
+<li>Bluetooth(4.0+)</li>
+</ul>
+</li>
+<li>不支持 Window7，许多学校/机构/家庭用户在使用 Windows7</li>
+<li>不支持 Linux, 无法支持许多学习者/教育机构使用的树莓派</li>
+<li>可扩展性不足, 只支持在 Scratch 中编写基于 BLE 的硬件拓展</li>
+<li>使用 C#和 Swift，需要维护 2 套代码</li>
+</ul>
+<p>因为存在这些问题，我对 Scratch Link 颇有微词，自行构建了<a href="https://adapter.codelab.club/">CodeLab Adapter</a>，我想把 Alan Kay 在构建 smalltlak 怀有的创见带到 Scratch 社区。为此，今年四月份还专门去了一趟 MIT Media Lab，与 Scratch 团队交流。</p>
+<p><a href="https://adapter.codelab.club/">CodeLab Adapter</a>早期的名字叫<code>scratch-adapter</code>，它最初的目的是提供一种更加灵活的方式来增强 Scratch，关于这部分的思考和交流，做了记录:</p>
+<ul>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-plugin-1/">为 Scratch3.0 设计的插件系统(上篇)</a></li>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-plugin-2/">为 Scratch3.0 设计的插件系统(下篇)</a></li>
+<li><a href="/post/%E9%9A%8F%E7%AC%94/usa-travel/">美国之行</a></li>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-recent-situation-03/#mit-media-lab">CodeLab 近况_03</a></li>
+</ul>
+<p>后来发现<a href="https://adapter.codelab.club/">CodeLab Adapter</a>并不限于增强 Scratch，它已经成为:</p>
+<blockquote>
+<p>致力于连接万物，无论是软件还是硬件，无论是 AI、开源硬件、现实世界的物体、还是虚拟世界的动画角色，在 CodeLab Adapter 的驱动下，皆可彼此互动。 目前，我们在 CodeLab Neverland 中使用 CodeLab Adapter。CodeLab Neverland 是一个由 CodeLab Adapter 驱动的可编程空间，空间里的所有事物皆可编程。</p>
+</blockquote>
+<p>于是便改了名字。</p>
+<p>目前我们为它构建了 <a href="https://adapter.codelab.club/dev_guide/system_command/">34+编程语言的交互例子</a>，Scratch 仅是其中的一门语言。</p>
+<h2 id="codelab-adapter-连接-microbit">CodeLab Adapter 连接 micro:bit</h2>
+<p>抛开前头的问题不说，Scratch Link 采用蓝牙与 micro:bit 通信，还存在一个稳定性的问题，蓝牙时常会断开，在一个教室中，有许多蓝牙设备时尤其如此(信道拥挤)。这让初学者提心吊胆，时常得担忧掉线问题，十分打断思路。</p>
+<p>于是 CodeLab Adapter 用户(他们服务于课堂)催着我们构建了基于 usb 版本的固件，功能与 Scratch micro:bit 类似，但稳定性要好很多，适合教学使用，这部分的源码我们都已经公开:</p>
+<ul>
+<li><a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v2/extension_usb_microbit.py">extension_usb_microbit.py</a></li>
+<li><a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/firmware/usbMicrobit_for_adapter.py">usbMicrobit_for_adapter.py</a></li>
+</ul>
+<p>相关文档在这儿: <a href="https://adapter.codelab.club/extension_guide/microbit/">micro:bit Tutorial</a>。</p>
+<p>这个插件一直在稳定使用，CodeLab 在做活动时使用它；一些公司在教育机构里使用它；有些学校在课堂上使用它。</p>
+<h3 id="think-bigger">Think Bigger</h3>
+<p>前头方案尽管兼容性、可扩展性和稳定性足够好，但依然有其局限性，我自己最不满意的是它并未与 micro:bit 生态做深度连接。只是通过开发者构建固件来建立连接。</p>
+<p>这会带来的一个问题是，我们在 Maker Faire shenzhen 上看到如此众多的厂商生产的丰富 microbit 拓展套件、琳瑯满目的传感器和执行器，他们都有各自的编程包(主要是 MakeCode extension)，如果不能无缝兼容到 CodeLab Adapter 中，多可惜。</p>
+<p>而一旦兼容之后，我们可以做些真正有想象力的事，孩子们在入门时使用简易的套件构建丰富的玩具，而他们一旦希望做更多探索，我们就可以把他们的玩具接入到真是世界中：他们可以在门口放一个橘子，将其用作门铃；将玩具套件里超声波积木接入到家庭安防系统中；使用红外玩具积木构建非接触时开关；通过连接一切，便可以利用玩具来解决真实的生活问题。模糊玩耍和实际发明之间的界限。</p>
+<blockquote>
+<p>Education as life.</p>
+</blockquote>
+<p>此外，这种深度的连接带来的另一个好处是，我们可以将 CodeLab Adapter 生态中的所有能力带给这些玩具，无论是脑电波、眼动仪还是 AI。</p>
+<h1 id="深度连接">深度连接</h1>
+<p>怎么做呢？</p>
+<h2 id="思路">思路</h2>
+<p>我们先想来梳理一下目标。</p>
+<p>我们希望:<code>与micro:bit生态中的所有厂商的所有拓展套件连接</code>。</p>
+<p>乍看起来是个无法完成的目标，micro:bit 生态中的许多拓展套件都还没有生产出来，而且我们也不知道它们来自哪个国家、哪家公司，怎么能知道可否建立连接？</p>
+<p>胡乱对未来下断言，是政客的伎俩，是情侣的冲动，却不是开发者的美德。</p>
+<p>我们接下来说说为何这个目标并非遥不可及。这其中的关键词是开放性、最佳实践、技术生态/社区。</p>
+<p>《大教堂与集市》中论述了开源社区与开放市场拥有极为相似的结构。这也是开源社区取得胜利的经济学原理。</p>
+<p>市场通过自由竞争，为资源找到最优配置方式，哈耶克在它的书里（《自由宪章》、通往奴役之路&hellip;）里不厌其烦地论述这点。</p>
+<blockquote>
+<p>那些因为发现了如何对变化作出适当反应从而成功的个人所确立的范例，一定会为其余的人所仿效 &ndash;《自由宪章》</p>
+</blockquote>
+<p>目前在 micro:bit 生态中获得成功的范例似乎已经为大家所领悟:</p>
+<ul>
+<li>开放</li>
+<li>兼容<a href="https://makecode.microbit.org/">MakeCode</a></li>
+<li>兼容<a href="https://python.microbit.org/">python</a></li>
+</ul>
+<p>我们在 Maker Faire shenzhen 上看到的<code>同质性</code>, 部分原因正来自对成功范例的模仿。目前的成功范例中，最大的共性就是支持<a href="https://makecode.microbit.org/">MakeCode</a>。</p>
+<p>因此，他们便有了相似的模式和约束条件。如此一来，我们就可以有把握地说，micro:bit 生态中无论是现在还是未来流行的套件，我们都可以兼容它。</p>
+<p>于是我们只需要对 MakeCode 和 python 做好兼容，几乎就能兼容整个 micro:bit 生态。</p>
+<p>有怀疑精神的读者要说了，未来有比 MakeCode 更好的的平台出现，怎么办呢，关于这点我们可以邮件里讨论，我自己目前是有答案了，我很有把握 CodeLab Adapter 能极快接入其中，因为其中有些模式我们现在是可以清楚看到的。</p>
+<h3 id="技术层面">技术层面</h3>
+<p>技术层面，思路很简单: 构建 gateway, 让两个彼此不相关的领域，彼此 talk(双向沟通)。我们此前也是这么桥接 mqtt 的: <a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v2/extension_mqtt_gateway.py">extension_mqtt_gateway.py</a>。</p>
+<p>因为 CodeLab Adapter 背后的哲学是<code>everything is a message</code>，所以构建这样的连接轻而易举。</p>
+<p>我们将一块 micro:bit 接入电脑，用作中转站(类似 usb dongle)，用于在 CodeLab Adapter 和任何 microbit 套件做中专站。这里的一个背景知识是，任何的 microbit 直接可以通过 radio(简易的无线连接) 方便地彼此通信。</p>
+<p>在这个思路中，获得的一个意外收获是: 能让任何电脑与 microbit 无线连接！即便没有蓝牙！</p>
+<h4 id="makecode">MakeCode</h4>
+<p>MakeCode 是微软构建的一个可视化编程平台，方便用来为 microbit 这类小设备编写固件。MakeCode 几乎是可视化编程领域的 IDE，它做了许多贴心而令人惊艳的工作。</p>
+<blockquote>
+<p>除了网站编辑器的熟悉功能外，您可以通过连接 USB 进行编程（无需拖放文件到 micro:bit 驱动器上），并可直接读取您的 micro:bit 序列数据，用于数据日志及其他有趣的实验！</p>
+</blockquote>
+<h2 id="实现">实现</h2>
+<p>我们先来实现 radio_microbit_adapter 固件，固件烧录进 micro:bit，将其用作 gateway。它的职责是桥接外部的 micro:bit 设备/套件和 CodeLab Adapter，该固件与 CodeLab Adapter radio extension 配合使用。</p>
+<p>以下是 radio_microbit_adapter 的部分代码:</p>
+<p><img src="/post/img/radio_microbit_adapter.png" alt=""></p>
+<p>CodeLab Adapter radio extension 的源码很简单，实际上是对我们先前的插件<a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v2/extension_usb_microbit.py">extension_usb_microbit.py</a>做的插件，我大约花了 5 分钟完成。</p>
+<h2 id="使用">使用</h2>
+<p>接下来我们来看看如何使用 radio_microbit_adapter 插件，来深度接入到 microbit 生态中的任何产品上。</p>
+<p>我们从淘宝上买一个套件，随便挑一个购买的人较多的、好看的、不要太贵的。</p>
+<p><img src="/post/img/dadabit.png" alt=""></p>
+<p>使用这个类乐高编程套件，我们可以构建各种东西，而且他们全都由 micro:bit 驱动!</p>
+<p><img src="/post/img/dadabit_demo.png" alt=""></p>
+<p>来搭一个<code>投石器</code>玩。</p>
+<p><img src="/post/img/catapult" alt="拼搭结果"></p>
+<p>先来看下投石器的程序，和大多数套件一样，该套件也使用 MakeCode 作为其编程工具。</p>
+<p><img src="/post/img/fire_microbit_origin.png" alt="投石器程序"></p>
+<h3 id="接入">接入！</h3>
+<p>接下来让我们将其接入 CodeLab Adapter。</p>
+<p>让我们在 MakeCode 中对投石器的驱动程序做一些微调：</p>
+<p><img src="/post/img/fire_microbit.png" alt="投石器程序"></p>
+<p>几乎没有什么变动！</p>
+<p>接入CodeLab Adapter之后，我们就可以与CodeLab Adapter生态中的所有事物互动啦!</p>
+<p><img src="https://adapter.codelab.club/img/adapter_party.jpeg" alt=""></p>
+<p>让我们写个程序，使用魔杖控制投石器:</p>
+<p><img src="/post/img/catapult_scratch.png" alt="投石器程序"></p>
+<p>来看看效果:</p>
+<p><video width=80% src="/post/img/wand_catapult_demo.mp4" controls="controls"></video></p>
+<p>让我们构思一个完整一些的场景:</p>
+<p>Fire！</p>
+<p><video width=80% src="/post/img/wand_catapult.mp4" controls="controls"></video></p>
+<!--
+# 剧场
+
+哈利波特 火影
+
+# 演示
+
+剧本
+todo 用户打开创作
+
+展示一个例子
+
+与 adapter 大家族交互
+
+拼出一个例子
+
+radio 是十分伟大的选虑
+被同化
+
+魔杖投石器，物理攻击
+哈利波特 7
+
+投石无效
+
+投放其他东西
+
+纸张写上
+
+任何套件
+
+过家家 假装
+我们假装的是多了去了
+考虑到意识形态，那我们差不多每天都在假装啊
+
+在这个叙事里，巨幕从天而降
+
+下一代的创造系统
+
+魔法屏障，血迹限界，之类的东西
+结界
+
+让我们假装它是一种血继限界
+
+火影忍者
+
+什么你还是觉得不够燃 🔥，让我们配上青鸟
+
+关灯
+
+闪烁
+
+幽灵，屏幕上
+
+配音 harry
+-->
+<h1 id="总结">总结</h1>
+<p>总结以下，通过深度连接 micro:bit 生态，我们能做什么，我想到以下三点:</p>
+<ol>
+<li>
+<p>为 micro:bit 社区引入 CodeLab Adapter 的所有能力: AI、IoT、开源硬件、脑电波、眼动仪&hellip;</p>
+</li>
+<li>
+<p>为 CodeLab Adapter 引入 micro:bit 生态里的无数内容和套件</p>
+</li>
+<li>
+<p>最后为 scratch 生态引入以上两者。</p>
+</li>
+</ol>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://adapter.codelab.club/extension_guide/microbit/">adapter micro:bit extension</a></li>
+<li><a href="https://microbit.org/zh-CN/code/">microbit.org</a></li>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-microbit-windows7/">Scratch3.0、micro:bit 与 Windows7</a></li>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-microbit-analysis/">分析 scratch3.0 与 micro:bit 的通信</a></li>
+<li><a href="https://github.com/LLK/scratch-link">Scratch-Link</a></li>
+<li><a href="https://github.com/Microsoft/pxt/issues/4796">Bluetooth UART Console feature</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microbit/">microbit</a>
+          <a href="/tags/scratch/">Scratch</a>
+          <a href="/tags/python/">Python</a>
+          <a href="/tags/kit/">kit</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%97%E8%AF%8D/cotton-candy/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">棉花糖</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/rpa-watchdog/">
+            <span class="next-text nav-default">自动化工作之watchdog</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

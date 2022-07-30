@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>python笔记之运算符重载 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="在此对常用的运算符重载做个小结。包括:__init__ , __str__(__repr__) , __call__ , __add__ 这部分知识属于面向对象部分。 ###关于运算符重载 以下是主要概念： 类可以截获" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/learning-python-4/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="python笔记之运算符重载" />
+<meta property="og:description" content="在此对常用的运算符重载做个小结。包括:__init__ , __str__(__repr__) , __call__ , __add__ 这部分知识属于面向对象部分。 ###关于运算符重载 以下是主要概念： 类可以截获" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/learning-python-4/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-01-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-01-09T00:00:00+00:00" />
+
+<meta itemprop="name" content="python笔记之运算符重载">
+<meta itemprop="description" content="在此对常用的运算符重载做个小结。包括:__init__ , __str__(__repr__) , __call__ , __add__ 这部分知识属于面向对象部分。 ###关于运算符重载 以下是主要概念： 类可以截获"><meta itemprop="datePublished" content="2014-01-09T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2014-01-09T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1293">
+<meta itemprop="keywords" content=" python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="python笔记之运算符重载"/>
+<meta name="twitter:description" content="在此对常用的运算符重载做个小结。包括:__init__ , __str__(__repr__) , __call__ , __add__ 这部分知识属于面向对象部分。 ###关于运算符重载 以下是主要概念： 类可以截获"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">python笔记之运算符重载</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-01-09 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>在此对常用的运算符重载做个小结。包括:<code>__init__</code> , <code>__str__</code>(<code>__repr__</code>) , <code>__call__</code> , <code>__add__</code></p>
+<p>这部分知识属于面向对象部分。</p>
+<p>###关于运算符重载
+以下是主要概念：</p>
+<ul>
+<li>类可以截获python运算符,可覆盖多数内置类型运算:如 加法，切片， 打印， 点号运算</li>
+<li>目的是让对象的用法和外观看起来更像内置类型</li>
+<li>运算符重载让对象与python内置对象模型更紧密结合（接口）,提供了一致性，以及与预期接口的兼容性</li>
+<li>以双下划线命名(<strong>X</strong>),是特殊钩子,用来拦截运算,定义了固定不变的映射关系</li>
+<li>运算符覆盖方法没有默认值，如果没有定义，又执行相应运算，会触发异常</li>
+</ul>
+<p>运算符重载的使用者主要是开发工具的人，而不是应用开发这者，不应该盲目使用,清晰优于隐晦</p>
+<p>举个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> 	<span class="nc">Myclass</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">=</span> <span class="n">value</span>
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="n">Myclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">other</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="n">Myclass</span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">)</span>	
+</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">.</span><span class="n">display</span><span class="p">()</span> 	<span class="c1">#&#39;abc&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="s1">&#39;xyz&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">.</span><span class="n">display</span><span class="p">()</span> 	<span class="c1">#&#39;abcxyz&#39;,注意__add__返回了新对象</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">*</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="n">a</span><span class="o">.</span><span class="n">display</span><span class="p">()</span> 	<span class="c1">#&#39;abcabcabc&#39; ,注意__mul__原地修实例</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#补充说明：__add__ , __mul__都是`二元运算`。以__add__(self.other)为例，当进行b = a + &#39;xyz&#39;时，a 赋值给self,&#39;xyz&#39;赋值给other,一般而言实例放在左边，如果实例在右边需要使用__radd__</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###更多细节</p>
+<p>####<strong>init</strong>
+每次从类产生实例时， python会在自动调用__init__方法(被称为构造器),这是最常用的运算符重载方法.<br>
+需要注意的地方是__init__常常用于调用超类的构造器，除非明确调用，否则超类构造器会被覆盖</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Super</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="o">...</span><span class="n">default</span> <span class="n">code</span><span class="o">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Sub</span><span class="p">(</span><span class="n">Super</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="n">Super</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="o">...</span><span class="n">custom</span> <span class="n">code</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>####<strong>repr__与__str__会返回对象的字符串表现形式
+当类的实例打印或转换为字符串时，<strong>repr</strong>(及其近亲__str</strong>)就会自动调用,这些方法可替对象定义更好的显示格式。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Myclass</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">value</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="s1">&#39;data is </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">x</span> <span class="o">=</span>  <span class="n">Myclass</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">x</span>		<span class="c1">#data is 0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>那么__repr__与__str__的区别是什么，简单地说__repr__更底层，如果没有__str__则调用__repr__（也就是__str__优先），那么可以利用__repr__更底层的特性为所有环境提供统一的字符串显示。为终端用户提供__str__,开发期间则显示__repr__.</p>
+<p>####<strong>call__拦截调用
+当实例被调用时，使用__call</strong>，这样可以让实例表现得像函数</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Myclass</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+</span></span><span class="line"><span class="cl">	<span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">other</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">x</span> <span class="o">=</span> <span class="n">Myclass</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1">#6</span>
+</span></span><span class="line"><span class="cl"><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1">#8</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这可能是python中保留状态信息的最好方式，<code>状态的记忆</code>是明确地使用属性赋值运算实现的。
+功能很像函数式编程里的闭包</p>
+<p>###其他</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#  __del__: 析构方法，与__init__相对</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __getattr__: 点号运算（获取属性），如：X.name</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __setattr__: 属性赋值运算， 如： X.name = &#39;wwj&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __getitem__: 索引运算 ， X[key],没有__item__时的for循环迭代器。否则__item__优先</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __setitem__: 索引赋值运算 , 如X[key] = value</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __iter__: 迭代环境  用于循环，测试，列表，映射</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __cmp__: 比较 ， 如：X == Y , X &gt; Y</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __lt__: 小于 。 如： X &lt; Y </span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __eq__: 等于</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __radd__: 左侧加法，如&#39;abc&#39; + X (对象在右侧)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  __iadd__: 实地（增强的）加法 ，如：X += Y</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-01-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/"> python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/learning-wsgi/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">wsgi学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/application-for-patent/">
+            <span class="next-text nav-default">申请一份自己的专利</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

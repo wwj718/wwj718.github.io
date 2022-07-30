@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>scratch3-adapter重构笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="近期在重构codelab-adapter,目前的最新版本是0.1.1, 我们计划在10月份发布0.2.0 这次重构带来的改变包括: 本地SSL安全" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-refactoring-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="scratch3-adapter重构笔记" />
+<meta property="og:description" content="近期在重构codelab-adapter,目前的最新版本是0.1.1, 我们计划在10月份发布0.2.0 这次重构带来的改变包括: 本地SSL安全" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-refactoring-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-09-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-09-16T00:00:00+00:00" />
+
+<meta itemprop="name" content="scratch3-adapter重构笔记">
+<meta itemprop="description" content="近期在重构codelab-adapter,目前的最新版本是0.1.1, 我们计划在10月份发布0.2.0 这次重构带来的改变包括: 本地SSL安全"><meta itemprop="datePublished" content="2018-09-16T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-09-16T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1972">
+<meta itemprop="keywords" content="scratch," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="scratch3-adapter重构笔记"/>
+<meta name="twitter:description" content="近期在重构codelab-adapter,目前的最新版本是0.1.1, 我们计划在10月份发布0.2.0 这次重构带来的改变包括: 本地SSL安全"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">scratch3-adapter重构笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-16 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#本地ssl安全证书">本地SSL安全证书</a></li>
+        <li><a href="#引入json-rpchttpsgithubcompavlov99json-rpc">引入<a href="https://github.com/pavlov99/json-rpc">json-rpc</a></a></li>
+        <li><a href="#scratch-linkhttpsscratchmitedumicrobit模式"><a href="https://scratch.mit.edu/microbit">Scratch Link</a>模式</a></li>
+        <li><a href="#允许在gui面板上启停插件">允许在GUI面板上启停插件</a></li>
+        <li><a href="#软件安装包">软件安装包</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/adapter_47fb79f2.png" alt=""></p>
+<p>近期在重构<a href="https://adapter.codelab.club/">codelab-adapter</a>,目前的最新版本是0.1.1, 我们计划在10月份发布0.2.0</p>
+<p>这次重构带来的改变包括:</p>
+<ul>
+<li>本地SSL安全证书</li>
+<li>引入<a href="https://github.com/pavlov99/json-rpc">json-rpc</a>，鼓励开发者使用json-rpc简化插件的开发</li>
+<li>引入<a href="https://scratch.mit.edu/microbit">Scratch Link</a>模式（目前scratch3-adapter在开发模式下允许切换为Scratch Link模式，与官方Scratch Link保持相同的架构，官方暂未开放Scratch Link，我做了逆向分析。）</li>
+<li>允许在GUI面板上启停插件</li>
+<li>发布不同平台的安装包(exe/dmg/Python package)
+<ul>
+<li>在跨平台软件分发这块，很多地方参考了<a href="https://github.com/mu-editor/mu">mu</a></li>
+</ul>
+</li>
+<li>在插件方面，添加了优必选alpha系列机器人的支持</li>
+</ul>
+<h1 id="缘起">缘起</h1>
+<p>近期使用官方七月底发布的<a href="https://scratch.mit.edu/microbit">Scratch Link</a>，我很喜欢这个软件，对它做了不少分析，<a href="https://scratch.mit.edu/microbit">Scratch Link</a>有许多聪明的设计，准备把这些好的主意移植到scratch3-adapter上。当然也有一些我们不喜欢的地方，我们准备做些有趣的探索和调整。</p>
+<h1 id="目标">目标</h1>
+<p>此次重构的主要目标是提升软件易用性，<a href="https://github.com/mu-editor/mu">mu</a>和<a href="https://scratch.mit.edu/microbit">Scratch Link</a>在易用性方面都做得非常好，这两个软件是我们主要的学习对象。</p>
+<h1 id="重大变更">重大变更</h1>
+<p>下边记录重构前后，发生的一些大的变更</p>
+<h3 id="本地ssl安全证书">本地SSL安全证书</h3>
+<p>我在<a href="/scratch3-plugin-2.html">为Scratch3.0设计的插件系统(下篇)</a>中描述了<a href="https://adapter.codelab.club/">codelab-adapter</a>的架构设计，其中提到:scratch3-adapter中包含了一个websocket-server</p>
+<p>逆向分析<a href="https://scratch.mit.edu/microbit">Scratch Link</a>可以看到，它内部也包含了一个websocket-server，使用的是<a href="https://github.com/Building42/Telegraph">Telegraph</a></p>
+<p>当我们从https网站访问本地websocket-server服务时，如果本地websocket-server服务没有采用SSL安全证书，会给用户增加操作步骤(需要用户确认继续访问)，体验不够友好，问题的描述和解决方案我都写在<a href="/localhost-https-ssl.html">本地https/wss服务与SSL安全证书</a></p>
+<h3 id="引入json-rpchttpsgithubcompavlov99json-rpc">引入<a href="https://github.com/pavlov99/json-rpc">json-rpc</a></h3>
+<p>scratch3-adapter受<a href="https://zh.wikipedia.org/wiki/%E6%A9%9F%E5%99%A8%E4%BA%BA%E4%BD%9C%E6%A5%AD%E7%B3%BB%E7%B5%B1">ROS</a>影响很深,ROS本质上是一个消息系统。</p>
+<p>我很喜欢Smalltalk的设计原则中的这条:</p>
+<blockquote>
+<p>计算应该被视为可通过发送消息来统一调用的对象的内在功能。</p>
+</blockquote>
+<p>Scratch的<a href="https://github.com/LLK/Scratch_1.4">第一个版本</a>由Smalltalk的方言Squeak写成，受Smalltalk影响极深。可以看到Scratch3.0依然保持着这条设计原则。</p>
+<p>我希望scratch3-adapter能延续Smalltalk的设计原则。所以消息会一直作为核心要素。</p>
+<p>我相信这条原则是scratch3-adapter达成它的目标<code>将万物积木化</code>的核心所在。</p>
+<p>但原始的消息对于大多开发者来说，可能过于原始了，所以我们决定学习<a href="https://scratch.mit.edu/microbit">Scratch Link</a>，在消息之上抽象出RPC，方便开发者写自定义的插件。当然这个特性是可选的，是否使用json-rpc由开发者自行决定。我原本计划在消息之上添加自定义协议，后来发现json-rpc就是我想要的，所以就不重造轮子了。</p>
+<h3 id="scratch-linkhttpsscratchmitedumicrobit模式"><a href="https://scratch.mit.edu/microbit">Scratch Link</a>模式</h3>
+<p><a href="https://scratch.mit.edu/microbit">Scratch Link</a>本身非常简单，我大约使用100代码实现了它的功能。这部分作为<a href="https://scratch.mit.edu/microbit">Scratch Link</a>模式，开发模式下可以启用，<a href="https://scratch.mit.edu/microbit">Scratch Link</a>模式很简单，不包含ZeroMQ，它的核心是<code>websocket-server</code> + <code>json-rpc</code>。</p>
+<p>我们来演示scratch3-adapter的<a href="https://scratch.mit.edu/microbit">Scratch Link</a>模式下，如何完美替代官方的Scratch Link。</p>
+<p>我们让scratch3-adapter模拟成Scratch Link，欺骗前端说它已经搜索到了micro:bit。实际上我们连电脑的蓝牙都没打开。</p>
+<img src="/post/img/adapter-link_2aa33dd6.png" width=800 />
+<p>接着让我们点击连接，再次成功骗过前端</p>
+<img src="/post/img/adapter-link_08a8898f.png" width=800 />
+<p>我比较坚持引入ZeroMQ，所以scratch3-adapter默认不采用Scratch Link模式,而将ZeroMQ作为架构的核心部分(默认模式)。对于异步任务、分布式组件、协同控制，ZeroMQ都能帮上大忙。ZeroMQ会让scratch3-adapter极为灵活，如果之后要引入复杂的机器人、AI、飞行器矩阵，ZeroMQ会让这些事变得简单。我希望提供一个强大、灵活而开放的架构。</p>
+<p>jupyter架构的核心元素之一便是ZeroMQ，jupyter如此健壮的原因之一便是ZeroMQ。我在<a href="/jupyter-notebook-architecture.html">jupyter notebook架构分析</a>做了讨论</p>
+<h3 id="允许在gui面板上启停插件">允许在GUI面板上启停插件</h3>
+<p>重写了插件管理系统，支持线程管理。于是可以在GUI面板上随意启停插件。而不必反复重启软件</p>
+<h3 id="软件安装包">软件安装包</h3>
+<p>为了让软件更加易于使用，我们决定提供各个平台的安装包,windows下为exe，macOS下为dmg，linux下可以选择python package或者打包好的软件。</p>
+<p>这部分主要学习了<a href="https://github.com/mu-editor/mu">mu-editor</a></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="/localhost-https-ssl.html">本地https/wss服务与SSL安全证书</a></li>
+<li><a href="/scratch3-microbit-analysis.html">分析scratch3.0与micro:bit的通信</a></li>
+<li><a href="https://adapter.codelab.club/">codelab-adapter docs</a></li>
+<li><a href="https://github.com/mu-editor/mu">mu</a>
+<ul>
+<li><a href="https://github.com/mu-editor/mu/blob/43bb9f8bb5af177fb5fac05e25bade16c14c758a/docs/packaging.rst">Packaging Mu</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-09-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/video-migration-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">视频迁移笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/await/">
+            <span class="next-text nav-default">有待</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

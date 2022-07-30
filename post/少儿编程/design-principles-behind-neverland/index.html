@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>CodeLab 可编程空间 背后的理念与设计原则 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content=" 但 自由 的真实含义，教育者尚未知悉。 &amp;ndash; 蒙台梭利(Montessori)
+" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/design-principles-behind-neverland/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="CodeLab 可编程空间 背后的理念与设计原则" />
+<meta property="og:description" content="
+
+但 自由 的真实含义，教育者尚未知悉。 &ndash; 蒙台梭利(Montessori)
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/design-principles-behind-neverland/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-04-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-04-29T00:00:00+00:00" />
+
+<meta itemprop="name" content="CodeLab 可编程空间 背后的理念与设计原则">
+<meta itemprop="description" content="
+
+但 自由 的真实含义，教育者尚未知悉。 &ndash; 蒙台梭利(Montessori)
+"><meta itemprop="datePublished" content="2020-04-29T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-04-29T00:00:00+00:00" />
+<meta itemprop="wordCount" content="7085">
+<meta itemprop="keywords" content="CodeLab," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CodeLab 可编程空间 背后的理念与设计原则"/>
+<meta name="twitter:description" content="
+
+但 自由 的真实含义，教育者尚未知悉。 &ndash; 蒙台梭利(Montessori)
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">CodeLab 可编程空间 背后的理念与设计原则</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-04-29 </span>
+        <div class="post-category">
+            <a href="/categories/codelab/"> CodeLab </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#教育即生活">教育即生活</a></li>
+        <li><a href="#在法国学法语">在法国学法语</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#可理解的空间">可理解的空间</a>
+      <ul>
+        <li><a href="#开放的连接能力">开放的连接能力</a></li>
+      </ul>
+    </li>
+    <li><a href="#可探索的空间">可探索的空间</a></li>
+    <li><a href="#可扩展的空间">可扩展的空间</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/WechatIMG1404.jpeg" alt=""></p>
+<blockquote>
+<p>但 <strong>自由</strong> 的真实含义，教育者尚未知悉。 &ndash; 蒙台梭利(Montessori)</p>
+</blockquote>
+<h1 id="前言">前言</h1>
+<blockquote>
+<p>如果我们让教师培训仅仅停留在技术层面，就好比是把他们留在识字水平上便撒手不管了。 &ndash; 蒙台梭利</p>
+</blockquote>
+<p>CodeLab 分享了构建<a href="/post/%E7%BC%96%E7%A8%8B/neverland-community/">社区版可编程空间的方案</a>。</p>
+<p>仅仅有技术方案是不够的，围绕技术方案，提供成册的使用说明、配套的教师用书，依然不够。</p>
+<p>让我们停下来，好好看看当下 Scratch 被滥用到何等缺乏想象力的境地，便会理解: 当新技术脱离了它的理念，运行在旧思维和旧传统中，只是徒有躯壳。</p>
+<p>如果我们要实施有意义的编程教育，需要理解这件事背后的理念和精神是什么。 这让我们联想到蒙台梭利的见解:</p>
+<blockquote>
+<p>什么样的人才能称作真正的科学家呢？当然，不是那种只懂得操作物理实验室里所有工具的人，也不是仅仅能在化学实验室中灵巧、安全地掌控所有化学反应的人，更不是生物实验室中明白如何制备标本以呈现到放大镜前面的人。助手的实验技能确实往往比科学大师本人更加熟练敏捷。这样的人我们才称之为科学家：他们将实验视作带领他们探寻生活的深刻真理、揭开事物神秘面纱的途径，并且在追求过程中，他们内心滋生出对神秘的大自然的爱意，激情四射以至于忘却了自身的想法。科学家不是聪明的工具操作者，而是大自然的礼拜者，他们带着可见的热情的标志，就像信仰命令的追随者一样。</p>
+</blockquote>
+<p>难道编程不该也是这样一种充满激情的探寻过程吗？</p>
+<p>构建一个服务于创造和教育的可编程空间，并不容易，甚至十分困难，但这正是 CodeLab 的目标之一。如果它是我们的目标，就不应该妥协或惧怕困难与现状。</p>
+<p>本文将阐述 CodeLab 可编程空间背后的理念，以及由此推演出的设计原则和架构思路。</p>
+<hr>
+<p>本文是对 Smalltalk 核心开发者 Daniel Ingalls 的 <a href="http://www.cs.virginia.edu/~evans/cs655/readings/smalltalk.html">Design Principles Behind Smalltalk</a>（我的翻译:<a href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a>)一文的致敬，采用与其相似的标题和文章结构。</p>
+<p><a href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a>以 Smalltalk 项目的目标和愿景为起点，逐步推演出其设计原则，思考之深刻，论述之有力，无不令人叹为观止。</p>
+<p>Daniel Ingalls 在论文里写到:</p>
+<blockquote>
+<p>这些原则本身却更为通用，被证明对评估其他系统和指导未来的工作都很有用。</p>
+</blockquote>
+<p>Smalltalk 对我们产生了深刻影响，其设计原则也成为我们的思考背景之一。所以，本文并不只是在形式上与<a href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a>相似，在诸多原则上也与其强烈共鸣。</p>
+<blockquote>
+<p>Smalltalk 项目的目标是为所有人的创新精神提供计算机支持。我们的工作源于这样一个愿景: 其中包括一个富有创造力的人和尽可能好的计算硬件。</p>
+</blockquote>
+<p>CodeLab 可编程空间 在目标上与 Smalltalk 完全重叠。 愿景则有不同, 我们作如下表述:</p>
+<blockquote>
+<p>CodeLab 可编程空间 的目标是为所有人的创新精神提供计算机支持。我们的工作源于这样一个愿景: 其中包括一个富有创造力的人和用以支持创造的整个现实空间。</p>
+</blockquote>
+<p>Smalltalk 专注于两个主要的研究领域：一种描述性语言（编程语言），它充当人类大脑模型与计算硬件模型之间的接口，以及一种交互式语言（用户界面）。充当人与计算机之间的通信系统。</p>
+<p>CodeLab 可编程空间 并不计划自行构建一门编程语言(虽然这事很有趣)，我们选择 Scratch/Smalltalk/Python (等 34+编程语言)作为与空间交互、为其编程的语言。</p>
+<p>其中，Scratch 比较特殊，它除了可以作为编程语言，也充当用户界面，所以 CodeLab 可编程空间对 Scratch 提供优先支持。我们一般建议用户先考虑 Scratch，当然，由于基于消息为整个空间构建驱动设施，所以可以方便地<a href="https://adapter.codelab.club/dev_guide/system_command/">使用任何编程语言为其编程</a>。</p>
+<h1 id="理念来源-为何是一个空间">理念来源: 为何是一个空间？</h1>
+<p>计算机过去是一个房间(世界上第一台电子计算机，占地 170 平方米)，在未来，它可能也是一个房间(参考<a href="/post/%E7%BC%96%E7%A8%8B/the-next-big-thing-is-a-room/">&lsquo;下一件大事&rsquo;是一个房间</a>)。</p>
+<p>我们相信 <a href="https://zh.wikipedia.org/zh-hans/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">Alan Kay</a> 的判断: <a href="http://worrydream.com/">Bret Victor</a> 正在 <a href="https://dynamicland.org/">Dynamicland</a> 里重塑计算机的未来。 置身于 Dynamicland 之后，这种信念就更加坚定，在 Dynamicland，计算机是人们所生活的环境，人们在其中学习、玩耍、交流以及协作。</p>
+<p>把编程和空间联系在一起的原因，除了<a href="https://dynamicland.org/">Dynamicland</a>，还有以下原因:</p>
+<h3 id="教育即生活">教育即生活</h3>
+<p>约翰·杜威在<a href="https://book.douban.com/subject/1664816/">《学校与社会》</a>里提倡<a href="https://baike.baidu.com/item/%E6%9D%9C%E5%A8%81%EF%BC%9A%E6%95%99%E8%82%B2%E5%8D%B3%E7%94%9F%E6%B4%BB">教育即生活</a>。</p>
+<p>杜威提出这样一个问题:</p>
+<blockquote>
+<p>如果你从儿童的冲动和兴趣出发，一切都是如此粗率，如此不规则，如此散乱，如此没有经过提炼、没有精神上的意义，他将怎样获得必要的训练、陶冶和知识呢?</p>
+</blockquote>
+<p>这个问题十分尖锐, 如果我们退怯或妥协了，或许会立马逃避到传统之中，逃避到按部就班的灌输式教育之中， 逃避到奖励、分数和惩罚系统之中, 并以它是不可避免的现状作为遁词。 就像蒙台梭利说的:</p>
+<blockquote>
+<p>在一般的教室里，老师们必须向学生的脑子里灌输事先预备好的材料。他们发现，为了顺利完成这项枯燥的任务，有必要约束学生，让他们一动不动，被迫集中精力。对于被迫做听众的人，老师必须迫使他们的身体和精神达到要求的那种状态，奖励和惩罚就是现成、有效的辅助手段。</p>
+</blockquote>
+<p>但杜威并没有退怯:</p>
+<blockquote>
+<p>如果除了激发和迁就儿童的这些冲动以外，我们就别无其他道路可走，这个问题问得就是有道理的。那样的话，我们要么压制这些冲动，要么迁就它们。但是如果我们有设备和材料的结构，在我们面前就开辟了另一条路径。我们可以指导儿童的活动，使它们沿着一定方向运行，把它们渐渐引导到这条道路逻辑上必然要达到的目标上。</p>
+</blockquote>
+<p>杜威进一步论述 <strong>教育即生活</strong> 的见解，如果我们能够把学习带到更广阔的现实中来，带到人们日常各类活动之中，教育将是一件充满乐趣和无限可能之事。</p>
+<p>我们生活在三维空间中，生活中的事件都发生在空间里。 在学校，这个空间可能是一个教室，在校外，它是你喜欢的俱乐部、图书馆、少年宫，回到家里，它是你的客厅或卧室。</p>
+<p>我们成长中的大多数时光都在这些空间里渡过。12 岁的生日 party、灵光闪现的时刻、恶作剧现场&hellip;也都发生在这些空间之中。</p>
+<p>当一个孩子在看完《哈利波特》，得知使用机器视觉可以将整个家庭编程为魔法世界，实施教育还会成为难事吗？孩子会缠着你教他这些魔法，而魔法， 混合了编程、AI、物联网&hellip; 所有这些知识，Ta 都将如饥似渴地汲取。</p>
+<p><video width=50% src="https://adapter.codelab.club/video/wand.mp4" controls="controls"></video></p>
+<p>当 Ta 想为心爱的宠物做一个自动开门器: 只为自家的宠物开门，而不让其他动物进入，Ta 还会觉得有监督学习和开源硬件是无聊乏味的吗？</p>
+<p>不会的，Ta 会深切赞同培根的那句名言:</p>
+<blockquote>
+<p>知识就是力量。</p>
+</blockquote>
+<p>知识帮助孩子们实现他们生活中的愿望，它和魔法有什么区别呢？唯一的区别或许是，你许愿的数量可不受神灯的限制。</p>
+<p>编程是一种强大的力量，它可以让我们的想法运行在我们生活的空间之中。</p>
+<p>这是约翰·杜威的<strong>教育即生活</strong>所导向的可编程空间。</p>
+<h3 id="在法国学法语">在法国学法语</h3>
+<p>法国的孩子，法语都说得很好，无论他们智力如何，阶层如何。</p>
+<p>在美国法语班学法语的孩子，普遍糟糕，无论他们如何用心完成作业。</p>
+<p>这是有关环境的讨论。</p>
+<p>Seymour Papert 在《Mindstorms: Children, Computers, and Powerful Ideas》对 land 一词做了有力论述，置身在法语的世界(land)里, 学习是一件愉快而自然的事情。</p>
+<p>作为一个数学家，他身体力行，为数学学习构建了一个大陆: LOGO &ndash; Seymour 的 数学大陆(mathland)。 LOGO 让人们置身其中，与数学对象打交道，学习数学成为一件直观而有趣的事情，这个项目影响了整整一代人，《Mindstorms》论述了很多惊人的成果。</p>
+<p>我向周围的朋友推荐 《Mindstorms》，许多人都没听过，若干朋友阅读后，跟我说 啊原来他是 LOGO 作者，最早爱上数学，就是因为在 LOGO 中的经历。</p>
+<p>我们是否可以为孩子构建一个编程的大陆？在这儿，目之所及，都可被编程？Ta 置身在一个可编程的空间中，在那儿呼吸、玩乐、协作和创造。</p>
+<p>如此一来，或许可以实现 Seymour Papert 的愿景:</p>
+<blockquote>
+<p>我们能够让计算机变得易于学习，让学习的过程变得自然。就像居住在法国学法语，而不是在美国的学校课堂里接受非自然的外语培训</p>
+</blockquote>
+<p>Seymour 的关于 land 的想法启发了许多人， Alan kay 受此启发，构建了 <a href="http://www.squeakland.org/">squeakland &ndash; Etoys</a>; Bret Victor 则受此启发构建了 Dynamicland; CodeLab 则构建了 Neverland &ndash; 我们的第一个可编程空间。</p>
+<p>Neverland 目前在广州，是<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/neverland-open-plan/">我们的办公室</a>。我们在其中办公，在其中编程，在其中玩乐，在其中做一些有趣的探索和创作。</p>
+<blockquote>
+<p>后来，他领着我飞到了永无乡(Neverland)，那儿还有仙子，还有海盗，还有印第安人，还有人鱼的礁湖；还有地下的家，还有那间小屋子。 &ndash; 《小飞侠彼得·潘》</p>
+</blockquote>
+<h1 id="设计原则">设计原则</h1>
+<blockquote>
+<p>CodeLab 可编程空间 的目标是为所有人的创新精神提供计算机支持。我们的工作源于这样一个愿景: 其中包括一个富有创造力的人和用以支持创造的整个现实空间。</p>
+</blockquote>
+<p>开篇提及的这个目标，要如何实现？</p>
+<p><strong>用以支持创造的整个现实空间</strong>应当如何构建？</p>
+<p>应该把这个问题抛给设计师吗？并叮嘱 Ta，门口的 Logo 要大气，往左移一些，往右移一些，还是改回原来的样子吧。</p>
+<p>还是说我们应该把问题抛给一个技术团队，因为这里既有软件、硬件、AI、IoT、编程语言、交互界面&hellip; 以及一大堆其他的技术流行词汇。甚至还得构建一个完整的“空间操作系统”。</p>
+<p>我们应该把这个问题抛给一个创客空间方案提供商吗？又或者找一个 AI/物联网实验室解决方案？</p>
+<blockquote>
+<p>这并不是本质性的差异，因为深度差别不可能单独存在于表面技术中，而是存在于人心之中。 &ndash; 蒙台梭利</p>
+</blockquote>
+<p>无论我们准备把问题抛给谁，准备采用哪家的图像识别、哪家的机器人、哪家的编程界面，我们都无法回避最根本的一个问题: 如何支持创造？</p>
+<p>它是一个综合问题。其中将包含空间设计、驱动软件、硬件/物联网设备、AI 服务、编程语言、人机交互 &hellip;</p>
+<p>这些问题需要站在教育视角去回答，无法偷懒，正如蒙台梭利在 20 世纪 对幼儿园做得改造，它不是一个装修或者配备桌椅的问题，它首先关于你的教育理念是什么？其次，关于由此推演的设计原则是什么？继而关于由此推演出的架构方案和实施方案。</p>
+<!--目前有两个项目依据这些原则去实施: CodeLab Nerverland 和龙眼创造乐园-->
+<h2 id="可理解的空间">可理解的空间</h2>
+<blockquote>
+<p>The challenge is not building it but understanding it &ndash; Bret Victor 《Seeing Spaces》</p>
+</blockquote>
+<p>和 Smalltalk 一样，我们从一个比技术更加社会化的原则开始:</p>
+<blockquote>
+<p>个人精通：如果一个系统要发挥创造精神，那么个体必须完全可以理解该系统。 &ndash; <a href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a></p>
+</blockquote>
+<p>为了让探索者能够发挥创造精神，个体应当能够理解整个可编程空间。</p>
+<p>可编程空间中的一切都可编程，空间里的设备可能来自不过国家，不同厂商。通常情况下，它们配备不同的编程工具，不同的编程语言，不同的编程风格&hellip; 对于学生而言，ta 需要不停适应各类不同风格的系统，多数的时间纯粹是一种浪费。</p>
+<p>Smalltalk 已经提醒我们:</p>
+<blockquote>
+<p>如果系统的一部分工作方式与所有其他部分不同，该部分将需要付出更多的努力来掌握。这样增加的负担可能会损害最终结果，并会阻碍将来在这方面的尝试。</p>
+</blockquote>
+<blockquote>
+<p>用户和系统某些部分之间存在的任何障碍， 最终都会成为创造性表达的障碍。</p>
+</blockquote>
+<p>良好的设计要求:</p>
+<blockquote>
+<p>系统应以最少的不可变零件组成；这些部分应尽可能通用；系统的所有部分都应聚拢在一个统一的框架中。</p>
+</blockquote>
+<p>驱动空间里所有设备的系统，应该具有某种 <strong>统一隐喻</strong>， 该隐喻可以统一应用于所有领域， 这是<strong>提高可理解性的核心</strong>。</p>
+<p>Smalltalk 的历史向我们表明，基于 <strong>消息/对象</strong> 隐喻的系统，是理想方案。</p>
+<p>在 <strong>消息/对象</strong> 隐喻中，心理图景是空间里不同的物体(small object)在彼此对话(talk)。</p>
+<p>这样的一个隐喻模型，我们可以使用任何编程语言来表达，目前 CodeLab 已经在 Scratch 和 Python 里都完成了这样的隐喻模型。</p>
+<h3 id="开放的连接能力">开放的连接能力</h3>
+<p><img src="https://adapter.codelab.club/img/adapter_party.jpeg" alt=""></p>
+<blockquote>
+<p>我们相信创意来自广泛的连接和分享。 &ndash; <a href="https://adapter.codelab.club/about/value/">CodeLab Adapter 的价值观</a></p>
+</blockquote>
+<p>有了 <strong>消息/对象</strong> 统一隐喻, 我们就可以着手将不同事物接入系统中，这些不同公司的产品，一旦接入的 <strong>消息/对象</strong> 系统(<a href="https://adapter.codelab.club/">CodeLab Adapter</a>是其具体实现之一), 我们便可以以一种统一的方式与它们沟通，去编程和创造，它可以支持任何编程语言和编程平台。 此外还将免费得到不同设备之间的<strong>互操作</strong>能力。</p>
+<p>CodeLab 已经展示了<a href="https://adapter.codelab.club/user_guide/gallery/">许多有趣的例子</a>:</p>
+<p><video width=50% src="https://adapter.codelab.club/video/tello_labo.mp4" controls="controls"></video></p>
+<p>这里并不要求设备在生产时，严格遵守某种规范，要求所有厂商遵循某种统一的规范是美好的幻想，在技术上极难实现，尤其是，当规范的提出者缺乏领域经验时, 他们甚至都不怎么编程。这种不合理的规范如果诉诸强力，实践起来将非常艰难，学习者也将深受其害，因为由此导致的系统非常蹩脚。</p>
+<p>要让这场复杂博弈变得可行，关键是 <strong>开放的连接能力</strong>。设备厂商的 SDK/开放 API 具体如何实现是无所谓的，交由各个厂商自行决定，设备的最佳交互方式，只有厂商自己最清楚，我们要接纳这样一个前提: 知识分散在不同企业中，去做一个全局的大而全的细致规划，不是太自负，就是太愚蠢，或者兼而有之。</p>
+<p>如果我们采用基于消息系统的架构，我们就可以很好兼容任何厂商的开放设备。</p>
+<p><img src="https://adapter.codelab.club/img/codelab-adapter_35cfa251.png" alt=""></p>
+<p>此外值得一提的是，可编程空间可以与商业产品共存，而不是只与开源硬件共存。由于采用了消息系统，所以我们只要求设备拥有开放接口，而不对其是否开源有要求。</p>
+<p>Bret Victor 在可理解性与开源的话题下，做过深入的讨论，正因为 Bret，我抛弃了开源原教旨主义。</p>
+<p>消息系统之所以适合作为基础架构的原因是消息支持晚绑定(late binding), 这也是 Smalltalk 和 LISP 的主要力量来源。</p>
+<p><a href="https://adapter.codelab.club/">CodeLab Adapter</a>是上述想法的一个实现，可以与任何的开放设备连接，也允许任何人/组织自行建立这种连接。</p>
+<p>拥有<strong>开放的连接能力</strong>的空间，就像一个生物，它会持续成长，它会越来越聪明和有趣。</p>
+<h2 id="可探索的空间">可探索的空间</h2>
+<blockquote>
+<p>理解世界的最好方式是动手构建它。</p>
+</blockquote>
+<p>建构主义是我们理念的来源之一。</p>
+<p>为了支持建构主义，这样的一个空间(环境)应该是可探索和可与之交互的。</p>
+<p>学习者对空间里的事物感到好奇的时候，应该能与之交互(<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a>)，Ta 在空间中与其说是学习，不如说在探险，知识正如精灵一般隐藏在眼前的事物背后。</p>
+<p>可探索性要求空间在物理上，应该尽可能 <strong>多元</strong> ，单调的光滑地板可不是探险的好地方。</p>
+<p>相比于有多个相同的功能分区(多个小组)，更好的空间布局是，每个区域里的事物是不同的，它们可以按照主题分类(AI / IoT / 开源硬件 / 视觉艺术)， 这样学习者在其中探索，不同的小组可能在做不同的事情。</p>
+<p>可探索性也要求空间尽可能是<strong>开放</strong>的， <strong>开放</strong>的空间允许学习者发生碰撞，他们可以走到其他小组去看看他们都在做些什么有趣的东西。正如在 Scratch 社区里，人们逛 <a href="https://scratch.mit.edu/explore/projects/all/popular">项目广场</a>。</p>
+<p>AI 小组的成果可能会被借用到隔壁开源硬件小组中， 他们最终可能将树莓派和图像识别整合到一起，构建一个自动宠物开门器。如果你是 Scratch 用户，会想到 <strong>remix</strong> 这个功能，人们在这样一个空间里，应该能够 remix 他们的项目和 idea，彼此协作与增强。</p>
+<p>所有这些，都依赖于我们前边提到的 <strong>开放连接能力</strong>，系统需要能够支持这些，它得是开放的，每个接入的设备/软件/AI 服务都应该能够互操作。</p>
+<p>开放空间里的更多潜在灵感碰撞，尚不可知，正是这种潜在的未知和可能性，我们才会相信，孩子随时都可能超越我们。在一个被详尽规划的系统里，详尽到每个实验的操作手册和操作流程, 这是培养操作员的体系, 在那儿，意外是难以产生的，创造和灵感有时只是意外的同义词。</p>
+<p>关于开放环境可能发生的更多惊喜， 参考《终生幼儿园》和《蒙台梭利早期教育法》。</p>
+<p><strong>开放</strong> 作为设计原则，当然也将影响空间的设计和布局，空间因尽可能得减少视觉障碍(CodeLab Neverland 整个空间没有任何阻隔，完全开阔，这个想法最初来自 @罗云 )。</p>
+<p>空间里的桌子应该尽可能轻巧，可挪动，而学习者所坐的椅子，则最好带有滑轮， 为开放协作提供土壤。</p>
+<h2 id="可扩展的空间">可扩展的空间</h2>
+<blockquote>
+<p>我们每个人在内心深处都怀有一个梦想:希望创造出一个鲜活的世界,一个宇宙。那些处在我们生活中心、受到过专业训练的架构师们,都怀有这样的渴望:在某一天,在某个地方,因为某种原因,我要创造出一个不可思议的、美丽的、夺人心魄的场所,在那里人们可以漫步,可以梦想,历经很多世纪生生不息。 ——Christopher Alexander</p>
+</blockquote>
+<p>为了支持创造， 可编程空间应当具有强大的<strong>可扩展性</strong>。</p>
+<p>如果足够诚实，就得承认，我们并不确切知道学习者的兴趣和热情在哪里，而且不知道随着他们的成长，空间如何随之一同成长。如果这个可编程空间是一间卧室，这个意义就更加重大，这意味这它将伴随它的主人许多年，它难以是一个功能确定的商品，理想情况下，它应该是极度灵活和可扩展的，它与房间的主人一起成长，最终这个空间便是它的主人一手构建的魔法世界。</p>
+<p>这正是可扩展性对于学习者的意义，Ta 可以将自己热爱的任何事物接入进来，任何的年龄段任何的点子。</p>
+<p>Ta 可以把<a href="https://adapter.codelab.club/user_guide/gallery/">玩具四驱车变得和动画片里一样智能</a></p>
+<p><video width=50% src="https://adapter.codelab.club/video/1539392124109888.mp4" controls="controls"></video></p>
+<p>它可以在学完 micro:bit 的第一堂课，使用 micro:bit 制作一根魔障，对空间里的一切施以魔法</p>
+<p><video width=50% src="https://adapter.codelab.club/video/wand_tello.mp4" controls="controls"></video></p>
+<p>当然，可扩展性也意味着空间的建设者 不需要一次性想清楚 空间的所有功能和搭配设备，因为我们在使用它之前，并不会深刻理解它，深刻理解发生在沉浸使用之后。可扩展性意味着空间的灵活性，它可以服务未来的教学场景，那些我们曾经不曾设想的场景。</p>
+<p>可扩展性依赖于前边提及的<strong>晚绑定</strong>、 <strong>连接能力</strong> 和 <strong>开放性</strong> ，</p>
+<p>由于可编程空间高度可扩展，于是人们便会构建出许许多多自己自豪的项目, 人们通常乐意分享它，就像一个手工艺人乐于分享 Ta 的手工艺品。</p>
+<p>空间里最好考虑有用于展示作品的地方，可以使用展示墙，贴上项目的设计图和程序打印图纸；可以使用展示柜摆放一些实物项目，这样一来它能给路过它的人以新的灵感，新的创意或许就此起步。</p>
+<h1 id="总结">总结</h1>
+<p>本文从 CodeLab 可编程空间的理念出发，推演出空间的设计原则和架构思路。</p>
+<p>为了<strong>支持创造</strong>和教育，空间应当具备:</p>
+<ul>
+<li>可理解性</li>
+<li>可探索性</li>
+<li>可扩展性</li>
+</ul>
+<p>为了实现这些特性，核心设计原则是<strong>开放</strong>。</p>
+<p>这些特性与空间的驱动系统高度相关，空间驱动系统应该具备<strong>开放的连接能力</strong>，理想方案是采用 <strong>消息/对象</strong>隐喻，使其支持<strong>晚绑定</strong>，从而获得<strong>开放连接能力</strong>。</p>
+<p>CodeLab Adapter 是由 CodeLab 按照以上讨论实现的空间驱动系统，满足以上约束。</p>
+<p>CodeLab Neverland 则是 CodeLab 实现的可编程空间。</p>
+<p>至于将 CodeLab 可编程空间落地到</p>
+<ul>
+<li>家庭</li>
+<li>俱乐部</li>
+<li>学校</li>
+</ul>
+<p>等其他场景中，其最佳实施方案是什么？本文未做讨论，但其原则已在本文之中。实施者可以据此去构建更详细的实施方案。</p>
+<h1 id="致谢">致谢</h1>
+<p>以下这些事物 是我们所有灵感的来源:</p>
+<ul>
+<li>Seymour Papert: 《Mindstorms》</li>
+<li>蒙台梭利:《蒙台梭利早期教育法》</li>
+<li>Bret Victor : Dynamicland</li>
+<li>Alan Kay/Daniel Ingalls : Smalltalk/Etoys/Lively</li>
+<li>Mitchel Resnick: 《终身幼儿园》/ Scratch</li>
+<li>约翰·杜威: 《学校与社会》</li>
+</ul>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/neverland-community/">社区版 Neverland</a></li>
+<li><a href="https://www.codelab.club/blog/codelab%E6%9A%97%E5%8F%B7%E4%B9%8B%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/">CodeLab 暗号之可编程空间</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/the-next-big-thing-is-a-room/">&lsquo;下一件大事&rsquo;是一个房间</a></li>
+<li><a href="http://worrydream.com/SeeingSpaces/">Seeing Spaces</a></li>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/interest-based-learning/">基于兴趣的学习面临的诘难</a></li>
+<li><a href="https://book.douban.com/subject/1664816/">《学校与社会》</a></li>
+<li>《蒙台梭利早期教育法》</li>
+<li>《Mindstorms》</li>
+<li>《终身幼儿园》</li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/is-gamification-programming-a-good-idea/">游戏化编程是个好主意吗？</a></li>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/neverland-open-plan/">CodeLab Neverland 开放计划</a></li>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-club-recent-situation/">CodeLab 近况_01</a></li>
+<li><a href="https://www.media.mit.edu/projects/mathland/overview/">Mathland: Play with math in mixed reality</a></li>
+<li><a href="https://www.codelab.club/about/">CodeLab 推荐的书单</a></li>
+</ul>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-04-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">CodeLab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-smart-home/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">积木化编程与智能家居</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-extension-best-practice-cozmo-case/">
+            <span class="next-text nav-default">Scratch 拓展最佳实践 -- 以 Cozmo 为例</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译]Croquet: 一个协作系统架构 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 Croquet – A Collaboration System Architecture 可能是 Croquet 话题下，最重要的一篇论文，Bret Victor将其收录在 worrydream refs。 另一份重要的材料是 《Croquet Programming 1.0B》。" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/croqueta-collaboration-system-architecture/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译]Croquet: 一个协作系统架构" />
+<meta property="og:description" content="前言 Croquet – A Collaboration System Architecture 可能是 Croquet 话题下，最重要的一篇论文，Bret Victor将其收录在 worrydream refs。 另一份重要的材料是 《Croquet Programming 1.0B》。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/croqueta-collaboration-system-architecture/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-10-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-10-13T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译]Croquet: 一个协作系统架构">
+<meta itemprop="description" content="前言 Croquet – A Collaboration System Architecture 可能是 Croquet 话题下，最重要的一篇论文，Bret Victor将其收录在 worrydream refs。 另一份重要的材料是 《Croquet Programming 1.0B》。"><meta itemprop="datePublished" content="2021-10-13T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-10-13T00:00:00+00:00" />
+<meta itemprop="wordCount" content="11380">
+<meta itemprop="keywords" content="Smalltalk,Metaverse," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译]Croquet: 一个协作系统架构"/>
+<meta name="twitter:description" content="前言 Croquet – A Collaboration System Architecture 可能是 Croquet 话题下，最重要的一篇论文，Bret Victor将其收录在 worrydream refs。 另一份重要的材料是 《Croquet Programming 1.0B》。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译]Croquet: 一个协作系统架构</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-10-13 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#论文作者">论文作者</a></li>
+    <li><a href="#摘要">摘要</a></li>
+    <li><a href="#关键字">关键字</a></li>
+    <li><a href="#介绍">介绍</a>
+      <ul>
+        <li><a href="#croquet是">Croquet是&hellip;</a></li>
+        <li><a href="#squeak是">Squeak是&hellip;</a></li>
+        <li><a href="#相关工作">相关工作</a></li>
+      </ul>
+    </li>
+    <li><a href="#croquet-架构">Croquet 架构</a>
+      <ul>
+        <li><a href="#teatime一个可扩展的实时多用户架构">TeaTime：一个可扩展的实时多用户架构</a></li>
+        <li><a href="#方法的要素">方法的要素</a></li>
+        <li><a href="#同步计算-vs-异步计算">同步计算 vs 异步计算？</a></li>
+      </ul>
+    </li>
+    <li><a href="#对这种方法的透视">对这种方法的透视</a></li>
+    <li><a href="#组件">组件</a>
+      <ul>
+        <li><a href="#渲染引擎">渲染引擎</a></li>
+        <li><a href="#事件管理器">事件管理器</a></li>
+      </ul>
+    </li>
+    <li><a href="#croquet-脚本">Croquet 脚本</a></li>
+    <li><a href="#用户界面">用户界面</a></li>
+    <li><a href="#空间spaces与传送门portals">空间(Spaces)与传送门(Portals)</a></li>
+    <li><a href="#进一步的工作">进一步的工作</a></li>
+    <li><a href="#结语">结语</a></li>
+    <li><a href="#致谢">致谢</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p><a href="http://worrydream.com/refs/Smith%20-%20Croquet%20-%20A%20Collaboration%20System%20Architecture.pdf">Croquet – A Collaboration System Architecture</a> 可能是 Croquet 话题下，最重要的一篇论文，Bret Victor将其收录在 <a href="http://worrydream.com/refs/">worrydream refs</a>。 另一份重要的材料是 《Croquet Programming 1.0B》。</p>
+<p>Croquet 是我目前看到最有想象力的 Metaverse(元宇宙) ，我觉得是唯一配得上这个词的项目。</p>
+<p>一座监狱，再怎么豪华美丽，要把它称之&quot;宇宙&quot;，恐怕都是不合适的，你在一个宇宙里可以干任何你想干的事情，而在监狱里则什么都干不了, 那儿几乎没有自由。 你甚至都不能随便 &ldquo;退出&rdquo;, 可真够 &ldquo;沉浸式&rdquo; 的。 用户被囚禁其中，虽然据说是被快乐地囚禁其中。<br>
+这正是今天我们使用 &ldquo;元宇宙&rdquo; 一词所描述的东西 : )</p>
+<blockquote>
+<p>Croquet 和 Dynamicland 是计算机两种更好的未来 &ndash; Alan Kay</p>
+</blockquote>
+<hr>
+<h2 id="论文作者">论文作者</h2>
+<p>David A. Smith, Alan Kay, Andreas Raab, David P. Reed</p>
+<h2 id="摘要">摘要</h2>
+<p>Croquet 是一个从头开始建立的计算机软件架构，重点关注用户/团队之间的深度协作。它是 Squeak 编程系统的一个扩展，完全开放、完全自由、高度便携。Croquet 是一个完整的开发和交付平台，用于进行真正的协作相关工作。用户环境和开发环境之间没有任何区别。</p>
+<p>Croquet 专注于三维共享空间内的互动，该空间用于基于上下文的协作，每个用户都可以看到所有其他人以及他们当前的焦点。这允许一个强制(compelling)共享体验。为了实现这一功能，我们开发了一个名为 TeaTime 的新型协作架构/协议。渲染架构是则建立在OpenGL之上。</p>
+<h2 id="关键字">关键字</h2>
+<p>Croquet, 协作, 用户界面, 3D 图形, Squeak, Smalltalk, TeaTime, OpenGL, 点对点.</p>
+<h2 id="介绍">介绍</h2>
+<p>建立Croquet是为了回答一个简单的问题: 假使我们要创建一个新的操作系统和用户界面，根据我们今天的知识，我们能走多远？我们会做出什么样的决定，而这些决定在二三十年前，也就是目前的操作系统刚刚诞生的时候，我们可能根本无法考虑的。</p>
+<p>在过去的几年里，可能性的景观已经发生了巨大的变化。毫无疑问，摩尔定律和互联网是两股主要力量，它们像大陆板块一样碰撞在一起，创造了巨大的可能性山脉。由于现有的操作系统都是在世界还相当平坦的时候创建的，它们在设计时并没有真正考虑到这些板块力量，因而无法抵达我们现在所能攀登的高度。</p>
+<p>这个问题最引人注目的是，在回答这个问题时，我们发现我们正在重新审视60年代和70年代早期所做的大部分工作，这些工作最终导致了当前一系列流行的系统架构。可以说，在现实中，这个问题在很久以前就被提出来了，而答案的力量已经成功地把我们往前带了四分之一个世纪。另一方面，当前的环境只是新瓶装旧酒，这些老旧的开发和设计方法，甚至在遥远的过去也已经严重过时，目前却换了层薄薄外皮依旧存在。人们的许多真正好的基础想法都被搁置了。</p>
+<p>这倒不是说过去的人们想到了一切。在过去的几十年里发生了很多事情，使得一些根本性的新方法在当时是无法考虑的。</p>
+<p>我们正在做一些假设:</p>
+<ul>
+<li>硬件很快&ndash;真他妈快，但除了启动 Windows 或者玩 Quake 游戏外，既没人关心这些也无法真正利用它。我们想利用这一力量来实现更丰富的体验。</li>
+<li>3D图形硬件很快，而且还越来越快。这对游戏来说是很好的，但我们想释放这种潜力，提升整个用户体验。</li>
+<li>晚绑定语言(Late bound languages)在功能和性能方面都经历了复兴。像 LISP 和 Smalltalk 这样极端晚绑定系统经常被批评为对许多应用来说太慢了，尤其对那些有严格实时要求的应用。这种情况已不复存在，正如 Croquet 所展示的，在这些平台上可以实现世界级(世界规模的场景)的性能。</li>
+<li>通信已经成为计算体验的核心部分，但它仍然是通过最狭窄的管道完成的(通过电子邮件等)。我们希望创造一个真正的协作环境，在这里，计算机不仅仅是一个独立的世界，而是许多人聚会的场所，在这里，思想可以被表达、探索和传递。</li>
+<li>代码只是另一种媒介类型，而且应该在系统之间同样可移植。晚绑定和基于组件的架构允许对行为进行有价值的封装，可以动态地共享和交换。</li>
+<li>系统应该作为任何平台之上的一个虚拟机。我们不是在创造另一个运行在 Windows 或 Macintosh 之上的应用程序，我们是在创造一个Croquet Machine，它具有高度的可移植性，并且恰好可以在 Windows、Macintosh、Linux 上位相同地(bit-identical)运行，并最终在自己的硬件上运行。只要有CPU和图形处理器的地方都可以运行。一旦虚拟机被移植，其他一切都会随之而来；甚至连错误都是一样的。大多数多平台系统的尝试都被证明是危险的近似（参考Java），而不是所需的位相同的、有&quot;数学保证&quot;的移植。</li>
+<li>系统中没有边界。我们正在创造一个环境，在那里任何东西都可以被创造；任何东西都可以被修改，所有这些都发生在三维世界中。没有单独的开发环境，没有用户环境。它们是相同的东西。我们甚至可以在世界(环境)运行的过程中与里头的其他人合作，改变和编写这些世界(环境)。</li>
+</ul>
+<img width=500 src="/post/img/Croquet-multi-user-environment.png" />
+<center>Croquet 多用户环境</center>
+<h3 id="croquet是">Croquet是&hellip;</h3>
+<p>Croquet是一个计算机软件架构，从一开始就专注于用户/团队之间的深度合作。</p>
+<p>Croquet是一个完全临时性的多用户网络。它在许多方面都与当前万维网相似，即任何用户都有能力创建和修改一个 &ldquo;家庭世界&rdquo;，并创建与其他世界的链接。除此之外，任何用户或用户组（假设有适当的共享权限）都可以访问网络上的其他世界并在其中工作。就像万维网的网页之间有链接一样，Croquet允许通过空间传送门在各个世界之间进行完全动态的连接。关键的区别在于，Croquet是一个完全动态的环境，所有东西都是协作对象，而且Croquet在任何时候都是完全可修改的。</p>
+<p>目前的计算机用户范式是基于一个完全封闭的、以个人为中心的系统。用户可以通过电子邮件或即时通讯进行非常低带宽的交流，但除了一些非常简单的文件共享功能外，用户在他的桌面上是相当孤独的。</p>
+<p>Croquet 从一开始就专注于高带宽协作。简单地说，Croquet 架构的基本构件是一个让系统中的每一个对象都能协作的系统。</p>
+<p>Croquet的协作架构是基于 复制版本对象(replicated versioned objects) 的概念，由嵌入通信协议的通用时间基(universal timebase)协调。该架构的这一部分被称为 TeaTime。</p>
+<p>可以把Croquet环境想象成一个高带宽的电话会议。一旦建立了连接，用户不仅可以与其他参与者进行语音交流，还可以交换文件、协同设计系统、进行复杂的模拟、制定复杂的项目计划、管理复杂的项目。</p>
+<p>Croquet 利用 OpenGL 作为其渲染/组件框架的基础，称为 TeaPot。该架构采用了一个半保留的模型(semi-retained model)，它使用了一个基于动态可组合对象的渲染层次结构(译者注: 类似morphic的渲染树模型)，但这些对象中的每一个都可以完全访问 OpenGL 库，并允许以几乎没有限制的方式扩展渲染引擎的能力。</p>
+<h3 id="squeak是">Squeak是&hellip;</h3>
+<p>Croquet 是建立在 Squeak 之上的，Squeak 是 Smalltalk 的一个现代方言，因此它是一个纯粹的面向对象系统。这使得在设计协议、架构时具有很高灵活性。</p>
+<p>Squeak 是一个21世纪的动态对象操作和创作环境，它源于20世纪70年代的 Xerox PARC Smalltalk 系统，在这个系统中，层叠窗口图形界面、桌面出版、媒体创作以及许多其他熟悉的软件系统被首次开创出来。Squeak 的几位作者是施乐公司的负责人，也是PARC许多发明的共同创造者。</p>
+<p>我们开发过程中的一个重要部分是 Squeak 能够在测试时，特别是在进行修改时保持系统的运行。Squeak允许即使是重大的改变也能以递增的方式进行，而且不超过一秒钟的时间就能生效。Squeak 的另一个关键特征是它的通用存储分配器和垃圾收集器，它不仅实时有效（因此在GC收集时可以播放动画和许多种类的动态媒体），而且允许安全地重塑对象。</p>
+<h3 id="相关工作">相关工作</h3>
+<p>Croquet 建立在前人的许多开创性工作之上。这些早期的工作中，有许多是目前流行的计算机窗口界面和可用性范式的最初构建模块。特别有趣的是，Croquet 项目的重点往往是这些早期努力中没有被主流计算所采纳的部分。</p>
+<p>Sutherland 在直接操作和建模图形对象实体(graphical object based entities)方面的工作，迈出了走向交互式人机用户体验的第一步。他为如何创造/操纵交互式环境建立了大量的基本方法，他的关注重点是创造一种能够从根本上提高人类能力的工具。</p>
+<p>他在 &ldquo;终极显示&rdquo;(Ultimate Display) 方面的进一步工作&ndash;第一个沉浸式三维体验，展示了三维互动环境的潜力，这种潜力至今仍未实现，它是一个完整的用户体验的基础，可以显示计算机数据并与之互动，为他所描述的 &ldquo;数学仙境&quot;创造了一个&quot;观察镜&rdquo;。他设想的系统将以三维形式表示数据，允许构建完全逼真的三维、计算机控制的虚拟世界。他在对潜力的描述中比这更进一步。他写道：&ldquo;最终的展示将是一个房间，在这个房间里，计算机可以控制物质的存在。在这样一个房间里展示的椅子将能够坐上去。在这样的房间里显示的手铐将是限制性的，而在这样的房间里显示的子弹将是致命的。通过适当的编程，这样的展示可以真正成为爱丽丝所进入的仙境。&rdquo;</p>
+<p>在 Alan Kay 的领导下，施乐 PARC 的努力推动了 Smalltalk 纯面向对象的开发环境和基于强大的位图显示的用户界面的发展。在某些方面，我们在这里所做的是将这个模型扩展到 3D，并增加一个新的强大的对象协作模型。</p>
+<p>Douglas Engelbart 在1968年通过视频首次展示了从鼠标到超文本、对象寻址和动态文件链接的一切，特别是涉及不同地点的两个人通过网络与音频/视频界面进行交流的共享屏幕协作，这个演示对本项目是一个重要的启发。这种在相距甚远的物理环境之间的丰富、深入的协作仍然没有得到好的实现。</p>
+<p>Croquet组件模型架构(component model architecture)类似于苹果公司开发的 OpenDoc 系统和 John Maloney 开发的 Squeak 2D Morphic 架构，这两个系统都是围绕可组合的 2D 对象/组件设计的。这些系统的主要思想是，组件必须处理的大部分环境交互已经在构成系统的基础类中存在了。程序员的任务只是覆盖对象的行为&ndash;它们如何呈现自己，以及它们如何响应来自周围组件和用户的 &ldquo;刺激&rdquo;(译者注: 想象一下生物学对象)。然后，程序员和最终用户可以 &ldquo;组合&rdquo; 这些智能块，形成一个有用的文档(document)或应用程序。</p>
+<p>Smith 在互动协作环境（ICE）方面的工作(一个多用户的共享组件环境)，以及后来的 Virtus OpenSpace 架构，都对后来的 Croquet 系统起到了重要的指导作用，从某种意义上说，Croquet 是这项工作的一个更完整的成果。</p>
+<p>Fisher 等人开发了一个强大的、完全沉浸式的三维工作环境。这个系统包括通过三维菜单和窗口文件与系统进行动态交互的能力，以及用户直接操纵他在世界中的位置和方向并与居住在其中的物体进行交互的能力。此外，系统可以与用户互动，就好像他只是居住在空间中的另一个物体一样。这方面最好的例子是用户可以踩着虚拟扶梯，然后进入另一个楼层。</p>
+<p>TeaTime 基于时间的协作协议/架构是直接基于 Reed 的早期工作。Jefferson 的工作与此相关，但不包括维护部分历史、管理复制对象或纳入两阶段提交(译者注: Squeak 里最新的 Croquet 实现基于3阶段提交)的想法。Miller 和 Dennis 的 Timewarp 协议扩展了Jefferson 的工作，支持 &ldquo;多版本&rdquo;，这是TeaTime的一个核心概念。Mirtich 采用了 timewarp 模型来实现一个图形仿真架构，用于维护复杂的物理建模状态。</p>
+<h2 id="croquet-架构">Croquet 架构</h2>
+<p>像任何复杂的系统一样，如果不描述它的各个部分和它们之间的相互关系，就不可能说明Croquet的架构。</p>
+<p>Croquet 被设计成一个点对点(P2P)的结构。这确保了系统设计的最大灵活性和最终可用性。所有的对象都是对称的，它们既可以作为同一消息的本地接收者，也可以作为远程接收者。没有任何中间步骤需要解释和转播这些消息。一个中央服务器可以用来建立初始连接。</p>
+<p>点对点的结构也符合 Croquet 的哲学根源，即作为一个宽带电话（或者更好，作为一个电话会议）。虽然中央服务器在电话连接中可能扮演一些角色，但其作用严格限制在重定向相关消息， 而不对消息做任何改变。任何从 Croquet 用户发出的消息都会到达并被所有其他用户使用，而不需要中间的解释。这带来一个好处，大大简化了安全数据传输(secure data transfer)。</p>
+<img width=500 src="/post/img/ab5c1f80ac088ad160cff8f26a4af264.png" />
+<center>图2：另一个用户正在将一个窗口拖到空中。</center>
+<p>在这个点对点的共享世界里，远程用户可以做任何你(在本地)能做的事情。环境作为一个单一的共享场所，每个居民(参与者)都可以操纵和修改。你有一个上下文(context)，可以看到并了解其他用户的兴趣所在，并进一步了解他们正在做什么。</p>
+<p>构成 Croquet 架构的关键部分是 TeaTime，它是组件对象间通信和世界/对象同步的基础，包括初始内容同步。</p>
+<p>Croquet 组件架构是对基础 TeaTime 类结构的扩展，以支持用户/系统与对象的交互，以及对象执行基于 TeaTime 的内部模拟和外部渲染的能力。</p>
+<p>我们开发了一个用户界面，允许用户在虚拟世界内创建和操纵对象，并轻松地穿行于虚拟世界。值得注意的是，即使是用户界面，也更多地是在空间中代表用户的对象的属性，这一点很容易被修改，以支持根本上不同的方法。</p>
+<p>Teapot 图形引擎是基于 OpenGL 的。该系统围绕着保留图形引擎管道(pipeline)的想法而建立，但开发者保留了在任何节点(nodes)上直接调用 OpenGL 库的能力。</p>
+<p>我们已经开发了一种脚本语言，它专注于对构成 Croquet 环境的对象进行极其高级的控制。这种脚本语言不仅对于系统的相对初级的用户来说是理想的，它的目的是用于几乎所有的高级控制和互动。它被设计成隐式协作，因此用户甚至不需要意识到所有的脚本行为都会导致对等网络的同步响应。</p>
+<h3 id="teatime一个可扩展的实时多用户架构">TeaTime：一个可扩展的实时多用户架构</h3>
+<p>TeaTime 是对象之间通信和同步的基础。它是为支持多用户应用而设计的，这些应用可以扩展到一个公共空间中的大量用户，并同时进行交互。这个架构中最直接可见的部分是用于定义和构建 子类化 Tea 对象(subclassed Tea objects)的类。一个Tea对象的作用是，发送到它的消息会被重定向到对等网络中自身的复制副本(在其他参与用户的机器上的)。Croquet 中所有有趣的对象都是由 TObject 的子类构造出来的。这个消息传递协议支持一个协调(coordinated)的 &ldquo;分布式两阶段提交&rdquo;，用来控制参与者的计算进程。</p>
+<p>在某种程度上，我们所开发的协议只是 Squeak 所采用的消息传递模型的扩展。这实际上是一个元协议，因为任何消息都可以动态地转发到整个用户组，同时保持适当的基于截止日期的调度。</p>
+<p>TeaTime 的设计允许大量的适应性调整(adaptability and resilience)，并能在一组异质资源上工作。TeaTime 不是提供高度具体的优化算法，而是一个抽象的框架，可以在一系列的实现中工作，随着时间的推移而发展和调整，无论是在一个应用中还是跨多个应用。这种方法是以Reed自70年代中期以来的工作为基础的。</p>
+<h3 id="方法的要素">方法的要素</h3>
+<ul>
+<li>嵌入在通信协议中的协调的通用时间基(coordinated universal timebase)。</li>
+<li>复制的，版本复制的 &ndash; 计算和结果分发。</li>
+<li>复制策略 &ndash; 将复制的机制与对象的行为语义分开。</li>
+<li>基于截止日期的调度，用失败和嵌套来扩展。</li>
+<li>一个协调的 &ldquo;分布式两阶段提交&rdquo;，用于控制多个站点的计算进程，以提供弹性、确定的结果，并适应可用资源。使用分布式集合。</li>
+<li>时间同步(Time-synchronized)的1/0。对实时设备的输入和输出与协调的(coordinated)世界时间相联系。</li>
+</ul>
+<h3 id="同步计算-vs-异步计算">同步计算 vs 异步计算？</h3>
+<p>关键问题是，我们希望能够提供一种连续的体验，协调多个地点的用户，以紧密协作的方式进行互动。期望所有用户都能在十几毫秒内看到其他用户的行动效果，这并非不合理的期待。</p>
+<p>因此，我们提出的方法是这样一个架构，就I/O同步层面而言是同步的，但同时允许计算策略的调整。</p>
+<p>I/O协调的关键思想是，输入和输出事件（对交互式设备）与全局通用时间同步，全局通用时间在参与计算的所有站点之间协调。</p>
+<p>同时，对象的行为就像存在于时间中的进程，每个对象的行为都由明确管理对象的时间性演变(temporal evolution)的方法来实现。在某种意义上，对象的内部状态被维护为有序的历史，并且操作是在 &ldquo;伪时间&rdquo;(pseudo-time) 的时刻里进行的，这些时刻根据I/O操作(操作的数据连接到对象上)进行适当排序。</p>
+<p>设备I/O在时间上也是有序的。I/O事件是实时存在的，并提供了实时和 &ldquo;伪时间&rdquo; 之间的协调，这是实现适当的用户界面行为所必需和足够的。为实时编程提供了一种适应性的方法，而不限于 &ldquo;实时编程&rdquo;。</p>
+<h2 id="对这种方法的透视">对这种方法的透视</h2>
+<p>网络虚拟环境实现的标准观点将系统描述为代表瞬时系统状态的一组状态变量。时间上的变化反映为对状态元素的一系列更新，而通信则用于分发更新后的状态值。这从本质上将进程(processing)与 &ldquo;静态&rdquo; 状态相分离， (&ldquo;静态&rdquo; 状态: 在没有外部进程读取和更新的情况下不会改变的状态)。该模型将进程与存储分开，并将一致性视为存储状态的一个属性。显示的信息是由存储状态的快照衍生出来的。</p>
+<p>我们的观点采用了 Alan Kay 的原始想法，即对象是具有行为的实体，消息会影响行为（状态变量在对象之外是不可见的，将行为的意义从内部状态表示中独立出来）。这使我们能够思考自成一体的对象，即使不受外部处理器的驱动，也有动态行为。从本质上讲，对象同时存在于空间和时间中。Croquet对象通过交换消息进行交互。Croquet的对象观很容易将 I/O 设备，甚至是系统外的真实世界的对象，以自然的方式纳入第一类对象(first class objects)，而将对象建模为仅是存储的抽象的做法，无法将这类东西作为正常对象来表示。 <!--wwj: ！！！--></p>
+<p>在 Croquet 中，计算时间(computational time)和实时时间是松散耦合的。执行对象动态行为的代码通常要比所代表的实时行为快得多，所以如果让一个对象自己去做这些事(译者注: 而不是在实时时间里被按时调用)，它每秒钟可以执行完很多秒的行为。Croquet系统的工作是协调对象的执行，使所有能产生可见效果的行为都能及时完成，以便通过系统接口传达这些效果。</p>
+<p>由于这是唯一的约束，Croquet 环境中的对象可以自由地实现各种各样的策略来计算它们自己的行为。这种针对对象的策略极大地减少了分布式并发活动之间的锁步协调(lock-step coordination)的需要。因为它们在对象的表述中保持着一些过去的历史，这种方法需要每个对象花费额外的存储开销。但是，显著提高的可扩展性和减少的延迟所带来的好处远远超过了额外的存储成本。</p>
+<p>TeaTime 的另一个关键理念是我们的复原能力和容错方法。大多数大规模的分布式虚拟环境都很难处理，因为在任何时候，一些元素可能会断开连接，而其他元素可能会被动态添加。我们在 Croquet 对象模型中认识到这个问题&ndash;每个对象都负责维护足够的信息，以便从系统中断中恢复。</p>
+<p>TeaTime的关键思想是，对象的状态通过分布式的两阶段提交协议进行演变。所有对象的行为都是相互影响的，首先计算所有彼此依赖的对象行为的完成情况，然后对这些行为进行原子式提交。如果这些行为没有及时完成，所有的(或有些)计算将由各个对象撤销。</p>
+<p>让一个对象对自己的行为负责的原则允许单个对象有各种各样的策略来实现适当的弹性和恢复力。在网络虚拟环境中，这些策略可以包括动态的自适应行为，可以应对异质硬件、延迟的巨大变化等等。开发应用(Applications)的程序员可以调整应用程序，以使用源自应用对象的独特要求的新策略，或者使用打包的库将这些策略嵌入到抽象类中，可以专门用于具体的实现。</p>
+<h2 id="组件">组件</h2>
+<p>我们用 &ldquo;组件&rdquo; 一词来描述Croquet 3D环境中的基本组成单位，TeaPot 相关的组件类是建立在 TObject 基类之上的。这些组件的基类是TFrame。TFrame的子类在 OpenGL 渲染层(rendering hierarchy)中充当框架，作为事件处理程序，并作为基于时间的模拟对象，如上文所述，作为TeaTime的一部分。</p>
+<h3 id="渲染引擎">渲染引擎</h3>
+<p>同时，提供了一个丰富的框架，可以用最少的努力来嵌入这些扩展。这使得新手图形程序员和3D艺术家，能够以最小的努力，轻松地创造出有趣的图形作品，同时也使得专家能够在不需要修改底层架构的情况下为系统增加基本的扩展。</p>
+<p>渲染框架包括一个转换矩阵，它定义了对象在三维空间中相对于其层次结构中的父对象的方向和位置，以及在全局空间中以该位置渲染自身的能力。当对象在层次结构中的位置达到时，会向其发送一条渲染信息。然后，该对象调用适当的 OpenGL 库函数来渲染自己。</p>
+<h3 id="事件管理器">事件管理器</h3>
+<p>一个事件处理程序可以响应用户事件，比如键盘和鼠标/指针事件。同样，这个接口可以由程序员进行扩展<!--oculus and control-->，但默认情况下，TCamera携带一个TPointer对象，跟踪当前鼠标位置下方的对象。TPointer是鼠标事件对象的一个3D类似物。指针不只是屏幕上的一个二维位置，而是包括矢量信息，在这种情况下，从摄像机到所选物体的全局和局部（对所选物体）发生帧变换(frame transforms)。</p>
+<p>键盘事件也被转发到当前选定的对象。这个模型允许我们将2D对象嵌入到场景中，其中包含的3D对象只是将 TPointer 矢量数据转换回2D对象表面的2D鼠标位置。</p>
+<h2 id="croquet-脚本">Croquet 脚本</h2>
+<p>我们开发脚本语言的目标是, 提供动态调整暴露在用户面前的复杂性的方法。例如，我们知道我们将有各种各样的用户，从孩子到图形设计师再到铁杆黑客。所有这些人都需要(对系统)不同程度的可访问性，关键问题是我们如何在他们能够处理的水平上给他们提供访问系统的途径。</p>
+<p>我们解决这个问题的方法是在概念上沿着不同的边界对系统进行 &ldquo;切片&rdquo;(slicing)。第一个 &ldquo;切片&rdquo; 是我们在 TFrame 层次中发现的&ndash;这个层次的用户可以访问 &ldquo;系统的内脏&rdquo;，能够在很低的水平上操纵 Croquet 对象。第二个是侧面的 &ldquo;切片&rdquo;，它有效地封装了框架的核心概念，并向脚本用户提供了一个简化的接口。在 &ldquo;修改框架&rdquo; 方面，大部分可以做的事情都是通过参数化发生的；框架的内在行为（如渲染或拾取(picking)）不能从这里触及。由于几乎没有任何系统的用户需要这样做，所以这里似乎是大多数脚本活动要发生的地方。第三个 &ldquo;切片&rdquo; 是提供一个更加简化的对象视图，有一个不同的用户界面用于脚本编写（类似 tile 的界面，如 Squeak 的 eToys 中的界面）。在这里，我们的目标是支持那些开始学习系统的用户，为他们提供操作方面的基本词汇和这些对象的核心属性。</p>
+<p>通过提供这些不同的方式来访问系统，我们能够在用户必须知道的时间和地点方面定义学习曲线。随着我们对系统探索的深入，我们能够向用户传授更多使系统运作的方面。我们意识到，许多用户不会 &ldquo;深入&rdquo; 到系统中去（比如说）操作核心的框架概念，但如果有需要，他们可以这样做。脚本系统提供了一个学习曲线，沿途有 &ldquo;中间的高原&rdquo;。</p>
+<h2 id="用户界面">用户界面</h2>
+<p>Croquet架构的一个关键部分是用户界面</p>
+<p>界面只是另一个对象的集合，可以很容易地被替换或增强。用户控制他在空间中的位置, 以及他如何操纵空间中的物体的方式, 是由一个相机对象控制的，这个对象很容易被替换。</p>
+<img width=500 src="/post/img/73465cab58b4a0b5b65a6f0adcc71abd.png" />
+<center>图3：用户通过向上或向下移动鼠标来向前和向后移动，通过向左或向右移动鼠标来进行旋转。</center>
+<p>在目前的系统中，要在世界中移动，只需点击并按住鼠标右键。你点击的位置与图中十字图标的相对情况决定了你的移动方式。你越靠近十字图标，你的移动速度就越慢。要向前移动，把光标移到十字图标的上面，然后点击。离中心的距离决定了你的前进速度。点击并保持在十字图标的正上方，你将非常缓慢地向前移动。在离十字图标很远的地方点击，你就会快速移动。</p>
+<p>如果你把鼠标移到十字图标的下面，你将向后移动。向右移动会使你向右旋转。同样，距离决定了速度（角速度，或你旋转的速度）。如果你在十字图标的正上方或正下方，你将在一条直线上移动，没有旋转。如果你直接移动到十字光标的左边或右边，你将围绕你的中心旋转，没有任何向前或向后的运动。如果你把光标放在十字图标的正上方和右侧，你将向前移动一点，向右旋转一点 &ndash; 所有这些都是同时进行的。这使你可以在一个圆圈中行走。</p>
+<p>物体可以被选择和操作，就像它们在二维空间那样。只需用鼠标左键点击并拖动。一个三维窗口可以被拖动，调整大小，甚至旋转&ndash;这取决于你在窗口的框架上选择的位置。额外的控制可以通过窗口顶部的3D按钮来实现。只需像在二维环境中那样点击和释放。</p>
+<img width=500 src="/post/img/36cc6fbf43277199af790aee7d855d7f.png" />
+<center>图4：一个开放的传送门。我们可以看到链接的空间，是一个多人游戏的入口。</center>
+<h2 id="空间spaces与传送门portals">空间(Spaces)与传送门(Portals)</h2>
+<p>简单地说，空间(Space)就是一个地方(place)。在 Croquet 中，空间是物体的容器，通常包括用户。空间的一个很好的例子是一个孩子的游戏室。他的所有玩具都是碰巧落在地板上(或被收起来)的物体。孩子可以随时进入房间玩耍，甚至可以拿起一个玩具带到外面去。在 Croquet 中，空间可以像房间一样，但也可以像景观，或虚拟会议室，或像任何大小的 3D 容器。</p>
+<p>如果你在一个空间放置一个传送门，在第二个空间放置第二个传送门，并将它们连接起来，那么你就可以从一个空间看到另一个空间。在前头孩子的房间的例子里，一个传送门只是通往走廊的门。把走廊看作另一个空间。当然，Croquet 的传送门和空间与现实世界的一个关键区别是实际位置与虚拟位置的概念。在现实世界中，走廊必须实际紧挨着孩子的游戏室，否则门根本就走不通 &ndash; 至少它不会通向大厅。在虚拟世界中，一个传送门可以连接任何两个空间，即使其中一个位于地球另一边的电脑上。物理位置无关紧要。连接都是虚拟的。让我们来考虑一下镜子。在 Croquet 里，镜子实际上是一个传送门，而这个传送门恰好与自己相连。换句话说，它实际上是一扇门，恰好可以开到它所离开的房间。</p>
+<img width=500 src="/post/img/c427f9c15f5fa3da7acc705bb75bcc8d.png" />
+<center>图5: 这里的传送门已经朝向用户旋转了。就像镜子一样，我们通过旋转其 "容器" 来获得进入游戏世界的稍微不同的视角</center>
+<p>Croquet 的一个关键特性是能够让传送门在一个空间中动态移动，同时允许通过传送门获得合适的视野。这有点奇怪，它是这样工作的：当你透过传送门窗口看时，你看到的东西部分由你相对于窗口的位置决定。如果你向左移动，你可以看到你右边的更多空间（反之亦然）。但是，如果你能拿起窗口并相对于你的位置移动它 &ndash; 而不是你相对于它的位置移动，完全相同的事情就会发生。这很像拿起一个盒子，通过它的一个洞看外边。你移动盒子就能看到不同的区域。</p>
+<p>传送门最棒的地方在于它允许用户从一个虚拟空间跳到另一个虚拟空间，只需走过传送门，就像孩子从他的游戏室走过门一样。Croquet 的不同之处在于，传送门可以通向虚拟世界的任何地方。反过来，包含在这些空间中的传送门本身也可以通向其他世界。这基本上复制了万维网的工作原理，因为这些传送门 &ldquo;链接&rdquo; 可以指向网络上的任何其他机器。</p>
+<h2 id="进一步的工作">进一步的工作</h2>
+<p>Croquet 将包括一个强大的IP电话功能，与我们的系统作为一个宽带电话的理念保持一致，以及一个即时通讯系统，它将作为拨号音和铃声 &ndash; 其他用户可以在这里表示他们对启动协作式会话的兴趣。</p>
+<p>一个名称空间和安全模型正在开发中。我们的早期的研究似乎表明，类似于 &ldquo;E&rdquo; 语言使用的能力模型(capabilities model)是正确的方向。</p>
+<p>在一个多维矩阵包上已经做了初步的工作。这项工作的重点是开发一个用于模拟和渲染的非常高性能的数学包。</p>
+<p>声音是任何沉浸式环境的一个重要部分。我们正在研究发展中的3D声音的行业标准。值得一提的是，OpenAL的工作似乎很有前途。</p>
+<h2 id="结语">结语</h2>
+<p>Croquet 的设计从一开始就着眼于 在一个强制(compelling)共享3D环境中实现大规模的点对点协作。我们开发了许多新技术来支持这个系统的强大部署和开发，包括TeaTime 通信/协作 架构/协议、TeaPot、基于 OpenGL 的半保留图形引擎、复刻了网页和网络链接模式的强大空间/传送门范式，以及一个脚本引擎，使新手用户能够使用 Croquet 开发强大的多用户应用程序。</p>
+<h2 id="致谢">致谢</h2>
+<p>感谢 Kim Rose, Michael Rueger, Bill Cole, Michael Moody, 当然还有 Squeak 核心团队的 Dan Ingalls, Ted Kaehler, Scott Wallace, Andreas Raab 和 John Maloney。Croquet 项目得到了 Hewlett Packard Corporation、Chris Cole 和 Applied Minds, Inc. 的慷慨支持。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-10-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          <a href="/tags/metaverse/">Metaverse</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/why-ar-will-win/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译]AR/VR 为何将获胜？它将如何获胜为何重要？</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/ledbag/">
+            <span class="next-text nav-default">可编程书包</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch3 技术分析之 backpack(书包) API(第 9 篇) - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="本文是Scratch3.0 技术分析之后端 API系列的第 9 篇。 backpack(书包) backpack(书包)是Scratch3 创作平台的组成" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-backpack/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch3 技术分析之 backpack(书包) API(第 9 篇)" />
+<meta property="og:description" content="本文是Scratch3.0 技术分析之后端 API系列的第 9 篇。 backpack(书包) backpack(书包)是Scratch3 创作平台的组成" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-backpack/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-05-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-05-01T00:00:00+00:00" />
+
+<meta itemprop="name" content="Scratch3 技术分析之 backpack(书包) API(第 9 篇)">
+<meta itemprop="description" content="本文是Scratch3.0 技术分析之后端 API系列的第 9 篇。 backpack(书包) backpack(书包)是Scratch3 创作平台的组成"><meta itemprop="datePublished" content="2019-05-01T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-05-01T00:00:00+00:00" />
+<meta itemprop="wordCount" content="567">
+<meta itemprop="keywords" content="scratch," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch3 技术分析之 backpack(书包) API(第 9 篇)"/>
+<meta name="twitter:description" content="本文是Scratch3.0 技术分析之后端 API系列的第 9 篇。 backpack(书包) backpack(书包)是Scratch3 创作平台的组成"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch3 技术分析之 backpack(书包) API(第 9 篇)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-05-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#get-backpack">Get backpack</a></li>
+        <li><a href="#添加-sprite-到书包">添加 Sprite 到书包</a></li>
+        <li><a href="#从书包拖动精灵到舞台">从书包拖动精灵到舞台</a></li>
+        <li><a href="#删除背包中的精灵">删除背包中的精灵</a></li>
+        <li><a href="#精灵与积木">精灵与积木</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/backpack_1af14c9d.png" alt=""></p>
+<p>本文是<a href="/Scratch3_api_analysis.html">Scratch3.0 技术分析之后端 API</a>系列的第 9 篇。</p>
+<h1 id="backpack书包">backpack(书包)</h1>
+<p>backpack(书包)是<a href="https://scratch.mit.edu/projects/editor/">Scratch3 创作平台</a>的组成部分。</p>
+<p><img src="/post/img/backpack_1af14c9d.png" alt=""></p>
+<p>backpack(书包)是这样一种工具: 用户可以把 Ta 常用的素材放置在书包里，需要的时候取出来，用于项目创作，可以看出，书包是非常恰当的比喻。可以往书包放置的东西包括积木、角色、舞台背景。 当我们把角色放置到背包中时，角色相关的程序也会被一并保存。</p>
+<h1 id="api-分析">API 分析</h1>
+<h3 id="get-backpack">Get backpack</h3>
+<p>GET <code>https://backpack.scratch.mit.edu/wwj718?limit=20&amp;offset=0</code></p>
+<p>response 为:</p>
+<p><img src="/post/img/response_5ec2fdd6.png" alt=""></p>
+<p>从 url 可以看出，backpack 与 username 有关，与 project id 无关。站在产品视角上我们可以这样描述: 每个用户有一个书包，用户在不同项目中，看到的是同一个书包。</p>
+<h3 id="添加-sprite-到书包">添加 Sprite 到书包</h3>
+<p>让我们将一个 Sprite(精灵)添加到书包中，精灵是一个箭头，并带有一个积木程序。</p>
+<p>发生的 url 请求为:</p>
+<p>POST <code>https://backpack.scratch.mit.edu/wwj718</code></p>
+<p>提交的数据为:</p>
+<p><img src="/post/img/backpack_sprite_0f19be2f.png" alt=""></p>
+<p>response 为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;sprite&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;mime&#34;</span><span class="p">:</span> <span class="s2">&#34;application/zip&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Arrow1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;body&#34;</span><span class="p">:</span> <span class="s2">&#34;0f4284bdddd95a9da7dc075419c8c09b.zip&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;thumbnail&#34;</span><span class="p">:</span> <span class="s2">&#34;4c464e3fe55b9f30ce9ad5d9ce727498.jpeg&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;5cea9b48-bfd0-45c2-b7de-f16625e183ae&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>同时在书包中生成了一个精灵缩略图:<code>https://backpack.scratch.mit.edu/4c464e3fe55b9f30ce9ad5d9ce727498.jpeg</code></p>
+<h3 id="从书包拖动精灵到舞台">从书包拖动精灵到舞台</h3>
+<p>以前头的箭头精灵为例</p>
+<p>GET <code>https://backpack.scratch.mit.edu/0f4284bdddd95a9da7dc075419c8c09b.zip</code></p>
+<h3 id="删除背包中的精灵">删除背包中的精灵</h3>
+<p>以前头的箭头精灵为例</p>
+<p>DELETE <code>https://backpack.scratch.mit.edu/wwj718/5cea9b48-bfd0-45c2-b7de-f16625e183ae</code></p>
+<p>response: <code>{&quot;ok&quot;:true}</code></p>
+<h3 id="精灵与积木">精灵与积木</h3>
+<p>书包中既可以容纳精灵又可以容纳积木，API完全相同。差异在于精灵和积木的序列化表示有不同，精灵存成zip数据，积木存为json数据。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-05-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/etoys-learning-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Etoys学习笔记: 与Scratch互操作</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-studio/">
+            <span class="next-text nav-default">Scratch3技术分析之Studio API(第8篇)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

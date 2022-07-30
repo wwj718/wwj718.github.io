@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Home Assistant 折腾笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 折腾Home Assistant过程的中做的笔记。 写作本文时基于的环境为: MacOS 10.13.5 Python 3.7.2 homeassistant==0.94.2 安装 有很多种安装方式可以安装Home Assistant" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/home-assistant-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Home Assistant 折腾笔记" />
+<meta property="og:description" content="前言 折腾Home Assistant过程的中做的笔记。 写作本文时基于的环境为: MacOS 10.13.5 Python 3.7.2 homeassistant==0.94.2 安装 有很多种安装方式可以安装Home Assistant" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/home-assistant-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-06-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-06-13T00:00:00+00:00" />
+
+<meta itemprop="name" content="Home Assistant 折腾笔记">
+<meta itemprop="description" content="前言 折腾Home Assistant过程的中做的笔记。 写作本文时基于的环境为: MacOS 10.13.5 Python 3.7.2 homeassistant==0.94.2 安装 有很多种安装方式可以安装Home Assistant"><meta itemprop="datePublished" content="2019-06-13T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-06-13T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2165">
+<meta itemprop="keywords" content="programming," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Home Assistant 折腾笔记"/>
+<meta name="twitter:description" content="前言 折腾Home Assistant过程的中做的笔记。 写作本文时基于的环境为: MacOS 10.13.5 Python 3.7.2 homeassistant==0.94.2 安装 有很多种安装方式可以安装Home Assistant"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Home Assistant 折腾笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-06-13 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#hassiohttpswwwhome-assistantiohassio"><a href="https://www.home-assistant.io/hassio/">Hass.io</a></a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#configurationyaml">configuration.yaml</a></li>
+        <li><a href="#数据库">数据库</a></li>
+        <li><a href="#storage">.storage</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#nabu-casahttpswwwnabucasacom"><a href="https://www.nabucasa.com/">Nabu Casa</a></a></li>
+        <li><a href="#开放生态">开放生态</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/ha_b7d0c3e3.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>折腾Home Assistant过程的中做的笔记。</p>
+<p>写作本文时基于的环境为:</p>
+<ul>
+<li>MacOS 10.13.5</li>
+<li>Python 3.7.2</li>
+<li>homeassistant==0.94.2</li>
+</ul>
+<h1 id="安装">安装</h1>
+<p>有很多种<a href="https://www.home-assistant.io/docs/installation/">安装方式</a>可以安装Home Assistant。</p>
+<p>对于开发调试而言，直接使用<a href="https://www.home-assistant.io/docs/installation/virtualenv/">pip安装</a>是最方便的(最新的版本建议用Python3.6以上来安装)</p>
+<p>如果计划将Home Assistant产品化，<a href="https://www.home-assistant.io/hassio/">Hass.io</a>可能是最佳方案。<a href="https://www.home-assistant.io/hassio/">Hass.io</a>利用docker、树莓派将Home Assistant打包进容器（当然也可以跑在其他linux发行版里），如此一来，升级、备份、管理、添加组件变得简单。</p>
+<h3 id="hassiohttpswwwhome-assistantiohassio"><a href="https://www.home-assistant.io/hassio/">Hass.io</a></h3>
+<p>Hass.io基于<a href="https://github.com/home-assistant/hassos">hassos</a>，而<a href="https://github.com/home-assistant/hassos">hassos</a>基于<a href="https://buildroot.org/">buildroot</a>,<a href="https://buildroot.org/">buildroot</a>允许你轻松构建裁剪版的嵌入式Linux。</p>
+<p>这一块依然有许多可以做的工作，诸如更好的远程管理（<a href="https://www.balena.io/">balena.io</a>提供了很好的思路和方案），更好的WiFi管理:<a href="https://github.com/balena-io/wifi-connect">wifi-connect</a>。对于home-assistant的产品化，Hass.io给出了绝佳的思路。</p>
+<h1 id="配置文件">配置文件</h1>
+<p>配置文件都在<code>~/.homeassistant</code>里，在<a href="/Home-Assistant-Yeelight.html">Home Assistant 与 Yeelight彩光灯泡的通信过程分析</a>一文里，我们分析了默认配置文件的生成过程。</p>
+<p>配置文件列表为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  .homeassistant tree -a -I &#39;deps&#39;
+</span></span><span class="line"><span class="cl">.
+</span></span><span class="line"><span class="cl">├── .HA_VERSION
+</span></span><span class="line"><span class="cl">├── .cloud
+</span></span><span class="line"><span class="cl">├── .storage
+</span></span><span class="line"><span class="cl">│   ├── auth
+</span></span><span class="line"><span class="cl">│   ├── auth_provider.homeassistant
+</span></span><span class="line"><span class="cl">│   ├── cloud
+</span></span><span class="line"><span class="cl">│   ├── core.area_registry
+</span></span><span class="line"><span class="cl">│   ├── core.config
+</span></span><span class="line"><span class="cl">│   ├── core.config_entries
+</span></span><span class="line"><span class="cl">│   ├── core.device_registry
+</span></span><span class="line"><span class="cl">│   ├── core.entity_registry
+</span></span><span class="line"><span class="cl">│   ├── core.restore_state
+</span></span><span class="line"><span class="cl">│   ├── frontend.user_data_7a04118ad289497dbaf068d2b098b016
+</span></span><span class="line"><span class="cl">│   ├── onboarding
+</span></span><span class="line"><span class="cl">│   └── person
+</span></span><span class="line"><span class="cl">├── automations.yaml
+</span></span><span class="line"><span class="cl">├── configuration.yaml
+</span></span><span class="line"><span class="cl">├── customize.yaml
+</span></span><span class="line"><span class="cl">├── groups.yaml
+</span></span><span class="line"><span class="cl">├── home-assistant.log
+</span></span><span class="line"><span class="cl">├── home-assistant_v2.db
+</span></span><span class="line"><span class="cl">├── home-assistant_v2.db-shm
+</span></span><span class="line"><span class="cl">├── home-assistant_v2.db-wal
+</span></span><span class="line"><span class="cl">├── scripts.yaml
+</span></span><span class="line"><span class="cl">├── secrets.yaml
+</span></span><span class="line"><span class="cl">└── tts
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">3 directories, 23 files
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到有两个隐藏目录: <code>.cloud</code>和<code>.storage</code>, 里头存储一些用户私有数据。</p>
+<h3 id="configurationyaml">configuration.yaml</h3>
+<p>是日常用到的配置文件, 相关文档参考<a href="https://www.home-assistant.io/docs/configuration/">Configuring Home Assistant</a></p>
+<p>如果你采用hass.io安装home-assistant，web页面将自带<a href="https://www.home-assistant.io/docs/ecosystem/hass-configurator/">hass-configurator</a>，允许你从web页面编辑configuration.yaml（以及<code>~/.homeassistant</code>里的所有文件）</p>
+<h3 id="数据库">数据库</h3>
+<p><code>home-assistant_v2.db</code>是sqlite数据库。可以使用DB Browser for SQLite打开。</p>
+<p><img src="/post/img/sqlite_ha_4e188671.png" alt="">, 可以看到这里头有四张表。</p>
+<p>其中<code>events</code>和<code>states</code>的表结构值得关注，这两张表的结构，很能反映home-assistant设计的领域原语。</p>
+<p><img src="/post/img/sqlite_ha_62e0fbf8.png" alt=""></p>
+<h3 id="storage">.storage</h3>
+<p><code>.storage</code>目录里有很多用户相关的信息，包括用户的登陆信息(用户名/密码,加密后存在<code>auth_provider.homeassistant</code>文件中)。这可能有些反直觉，home-assistant没有将这些信息放在数据库，而是放在一个隐藏目录里。</p>
+<h5 id="自定义设备entity名">自定义设备(entity)名</h5>
+<p>用户可以在web页面自定义设备名。</p>
+<p>这些信息存储在<code>.storage</code>目录下的<code>core.entity_registry</code>文件里。</p>
+<p>更新设备名称时，会触发一条websocket消息。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;config/entity_registry/update&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;entity_id&#34;</span><span class="p">:</span> <span class="s2">&#34;light.gateway_light_7c49eb179d9f&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;网关2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;new_entity_id&#34;</span><span class="p">:</span> <span class="s2">&#34;light.gateway_light_7c49eb179d9f&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="mi">29</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>handle消息的函数为<a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/components/config/entity_registry.py#L93">websocket_update_entity</a></p>
+<p>我们进一步跟踪HA是如何更新.storage文件的</p>
+<ul>
+<li><a href="https://github.com/home-assistant/home-assistant/blob/0.94.2//homeassistant/helpers/entity_registry.py#L279">async_schedule_save</a></li>
+<li><a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/helpers/storage.py#L47">Store</a></li>
+<li><a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/helpers/storage.py#L187">_write_data</a></li>
+<li><a href="https://github.com/home-assistant/home-assistant/blob/0.94.2///homeassistant/util/json.py#L43">save_json</a></li>
+</ul>
+<h5 id="及时生效">及时生效</h5>
+<p>基于文件的存储如何做到及时生效呢？</p>
+<p>在分析文件如何写入时，我们也看到异步读取配置文件的操作。</p>
+<h1 id="多用户">多用户</h1>
+<p>HA支持多用户，目前用户角色分为管理员和普通用户。这块的功能还在增强中。</p>
+<p>目前还没有为角色分配设备的管理机制。</p>
+<p>权限系统也尚未构建，对此有兴趣的朋友可以参考<a href="/understand-permission.html">理解权限系统</a>。</p>
+<h1 id="开发者工具">开发者工具</h1>
+<p>HA在web面板里为开发者提供了一组开发工具:</p>
+<ul>
+<li><code>/dev-service</code>:  服务</li>
+<li><code>/dev-state</code>: 状态</li>
+<li><code>/dev-event</code>: 事件</li>
+<li><code>/dev-template</code>: 模版</li>
+<li><code>/dev-mqtt</code>: MQTT</li>
+<li><code>/dev-info</code>: 信息</li>
+</ul>
+<h1 id="home-assistant-cloud">Home Assistant Cloud</h1>
+<p>Home Assistant Cloud提供安全的远程连接，允许你远程控制设备(在你外出的时候)，也允许Amazon Alexa and Google Assistant控制Home Assistant实例.</p>
+<p>目前该服务由Home Assistant的合作伙伴<a href="https://www.nabucasa.com/">Nabu Casa, Inc</a>提供。<a href="https://www.nabucasa.com/">Nabu Casa, Inc</a>由Home Assistant 和 Hass.io的联合创始人创建。</p>
+<h3 id="nabu-casahttpswwwnabucasacom"><a href="https://www.nabucasa.com/">Nabu Casa</a></h3>
+<blockquote>
+<p>The missing cloud piece for Home Assistant, by the founder of Home Assistant. Control your Home Assistant from anywhere. Fully encrypted.</p>
+</blockquote>
+<blockquote>
+<p>All data is fully encrypted between your device and your Home Assistant instance. No snooping.</p>
+</blockquote>
+<p><a href="https://www.nabucasa.com/">Nabu Casa</a>秉承Home Assistant的理念：<code>隐私优先</code>, 同时它也为用户带来远程控制的便利。鱼和熊掌可以兼得。</p>
+<p>我非常喜欢主页上的这段话</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Let&#39;s keep advertisers in the dark
+</span></span><span class="line"><span class="cl">We live in a world where cloud companies are constantly trying to collect more of our data. With Nabu Casa we&#39;re breaking this trend.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">We operate a cloud that won&#39;t store any of your data and processes commands locally. Your data stays local or with the companies you decide to share with.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如何做到这点呢，<a href="https://www.nabucasa.com/">Nabu Casa</a>在<a href="https://www.nabucasa.com/privacy/">privacy</a>里做了说明,策略就是: 开源!</p>
+<p>首先<a href="github.com/home-assistant/home-assistant">home-assistant</a>是开源的，此外nabucasa client是开源的:<a href="https://github.com/NabuCasa/hass-nabucasa/blob/dev/hass_nabucasa/iot.py">nabucasa</a>。</p>
+<p>对于hass_nabucasa的交互逻辑，可以从测试代码中学习:<a href="https://github.com/NabuCasa/hass-nabucasa/blob/dev/tests/test_cloud_api.py">test_cloud_api.py</a></p>
+<h5 id="我的cloud">我的cloud</h5>
+<p><img src="/post/img/ha_cloud_50621aa8.png" alt=""></p>
+<p>这是我接入Nabu Casa云端之后的HA cloud页面。</p>
+<p>当我打开<code>Remote Control</code>, 即可点击页面上的链接，进入远程控制页面，没有任何配置！与本地打开HA没有任何不同。</p>
+<p>有了公网可访问的入口，更多的webhook就可以在集成里打开了！</p>
+<h3 id="开放生态">开放生态</h3>
+<p>Home Assistant是个开放生态，其他厂商应该也可以提供Home Assistant Cloud服务。</p>
+<p>近期如果有时间，准备对其做个更细致的技术分析。目前来看，只要实现<a href="https://github.com/NabuCasa/hass-nabucasa/blob/dev/hass_nabucasa/iot.py">nabucasa</a>即可提供服务。</p>
+<h1 id="桌面应用">桌面应用</h1>
+<p>可以添加为chrome应用(在chrome设置中),之后像APP一样拖拽到桌面，对于交付很友好。</p>
+<p><img src="/post/img/chrome_ha_93c701d8.png" alt=""></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-06-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/programming/">programming</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/python-banyan-note-architecture/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Python Banyan学习笔记之架构设计</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/home-assistant-yeelight/">
+            <span class="next-text nav-default">Home Assistant 与 Yeelight彩光灯泡的通信过程分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Linda: 比 Actor 更好的并发模型 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="Think and work in the future, not the present or past &amp;ndash; Alan Key How? 前言 两个并行的进程可能会相互通信；一种语言的程序可能会使用通信机制与另一种语言的程序进行通信；一个用户程序可能" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/linda-intro/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Linda: 比 Actor 更好的并发模型" />
+<meta property="og:description" content="Think and work in the future, not the present or past &ndash; Alan Key How? 前言 两个并行的进程可能会相互通信；一种语言的程序可能会使用通信机制与另一种语言的程序进行通信；一个用户程序可能" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/linda-intro/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-11-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-11-27T00:00:00+00:00" />
+
+<meta itemprop="name" content="Linda: 比 Actor 更好的并发模型">
+<meta itemprop="description" content="Think and work in the future, not the present or past &ndash; Alan Key How? 前言 两个并行的进程可能会相互通信；一种语言的程序可能会使用通信机制与另一种语言的程序进行通信；一个用户程序可能"><meta itemprop="datePublished" content="2020-11-27T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-11-27T00:00:00+00:00" />
+<meta itemprop="wordCount" content="4299">
+<meta itemprop="keywords" content="essays," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Linda: 比 Actor 更好的并发模型"/>
+<meta name="twitter:description" content="Think and work in the future, not the present or past &ndash; Alan Key How? 前言 两个并行的进程可能会相互通信；一种语言的程序可能会使用通信机制与另一种语言的程序进行通信；一个用户程序可能"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Linda: 比 Actor 更好的并发模型</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-11-27 </span>
+        <div class="post-category">
+            <a href="/categories/essays/"> essays </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#面向对象">面向对象？</a>
+      <ul>
+        <li><a href="#基于-monitor-的多对象并发编程">基于 monitor 的多对象并发编程</a></li>
+        <li><a href="#actors-的问题">Actors 的问题</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#python-实现">Python 实现</a></li>
+    <li><a href="#站在-smalltalk-角度">站在 Smalltalk 角度</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/011233bf058d45eb2deb2b05e288f2bd.png" alt=""></p>
+<blockquote>
+<p>Think and work in the future, not the present or past &ndash; Alan Key <a href="https://internetat50.com/references/Kay_How.pdf">How?</a></p>
+</blockquote>
+<h1 id="前言">前言</h1>
+<blockquote>
+<p>两个并行的进程可能会相互通信；一种语言的程序可能会使用通信机制与另一种语言的程序进行通信；一个用户程序可能会与操作系统进行通信；一个程序通过写文件的方式与自己的某个未来版本进行通信。大多数系统将这些事情分类在不同的、不相关的机制下，但 Linda 的 tuple 模型以一致的方式处理它们</p>
+</blockquote>
+<p>Alan Kay(<a href="https://youtu.be/Tia2IxA8534">这篇访谈</a>) 和 Bret 都偏好 Linda。</p>
+<p>如果我们把计算机看作是对象之间(人、虚拟事物、现实事物、环境)彼此交流（talk）的环境（Dynamicland 是这样的环境，CodeLab Neverland 也是），那么 Linda 是更好地做这件事的出发点， 这是我关注 Linda 的原因.</p>
+<p>Dynamicland 背后是 Realtalk， Realtalk 可能在 Lua 之上实现了 Linda（目前尚无确切信息），这是一种新的操作系统。</p>
+<p>CodeLab Neverland 背后则是 CodeLab Adapter。我们目前计划在 CodeLab Adapter 的下个大版本（4.0）里实现 Linda，目前 CodeLab Adapter 本质上是个消息传递（message-pass）系统，基于 Pub/Sub（受 ROS 影响），我们将同步模型实现在 client 一侧（在异步之上实现的同步模型），异步是比同步典型/常见的模式（论文里提到），也是在这个意义上，我们相信 Adapter 基于 Pub/Sub 的模型，比 Smalltalk-80 的消息传递模型强大。</p>
+<hr>
+<p><a href="http://worrydream.com/refs/Carriero%20-%20Linda%20in%20Context.pdf">LINDA IN CONTEXT</a> 讨论了 相比于主流并发模型，Linda 更好的原因。</p>
+<p>文章将 Linda 和以下三种风格的并发模型做了对比:</p>
+<ul>
+<li>基于消息传递的并发面向对象编程</li>
+<li>并发逻辑编程</li>
+<li>函数式编程</li>
+</ul>
+<p>我目前只关注第一项: 基于消息传递的面向对象并发编程（这是个伪概念，下文会说到）。</p>
+<p>复述整篇论文意义不大，本文只摘录和讨论我关心的部分(view point)。</p>
+<p>本文可视为<a href="http://worrydream.com/refs/Carriero%20-%20Linda%20in%20Context.pdf">LINDA IN CONTEXT</a>这篇论文的阅读笔记，同时加了一些阅读其他材料所做的笔记以及我自己的观点。</p>
+<h1 id="linda-的想法">Linda 的想法</h1>
+<p>Linda 采用一种生成式通信(generative communication)风格。</p>
+<p>两个进程需要进行通信，它们不会交换消息或共享变量。相反，进程会生成新的数据对象（称为
+tuple（元组））（似乎受到 LISP 关于数据不可变观点的影响），并将其放入一个叫做 tuple 空间的区域。接收者进程可以访问 tuple，获取数据。</p>
+<p>在 Linda 模型中，通信和进程创建是同一操作的两面。要创建进程，就生成活的tuple（live tuple），计算完成后，将变成普通的、数据化的tuple。</p>
+<p>一个新的 tuple 被添加到元组空间（tuple space），任何感兴趣的进程都可以访问它（可以将其移除，也可以只是读取）。其次，数据以持久对象的形式存在，而不是转瞬即逝的消息。</p>
+<p>Linda 则提供了四个基本操作：</p>
+<ul>
+<li>eval 和 out 来创建新的数据对象</li>
+<li>in 和 rd 分别删除（读并删除）和读取（只读不删除）它们。</li>
+</ul>
+<p>Linda 不插手计算，所以它可以轻易与其他编程模型配合使用。</p>
+<h1 id="基于消息传递message-pass的并发">基于消息传递(message-pass)的并发</h1>
+<p>当前计算机领域最著名的并行编程技术是消息传递(message-pass)。</p>
+<p>这种编程模型包含以下操作:</p>
+<ul>
+<li>create-process</li>
+<li>send-message</li>
+<li>receive-message</li>
+</ul>
+<p>基于消息传递(message-pass)的并发模型有什么问题呢？</p>
+<!--但它和其他基于消息模型的并发模型一样，受到消息传递模式本身的限制。-->
+<!--我目前没有在 Erlang 中使用 Actor 的经验。所以讨论以 Smalltalk 中的 Actor 为主-->
+<p>这些问题包括：</p>
+<ol>
+<li>消息的瞬时性</li>
+<li>发送者与接受者的耦合</li>
+</ol>
+<p>第 1 个问题，消息是一种转瞬即逝的东西，这可能让许多编程场景变得复杂，为此，可能需要引入额外的很多系统支持，诸如存储之类，这些都可能让并发问题进一步复杂。</p>
+<p>第 2 个问题， 在消息传递系统中，一则消息必须 <strong>明确</strong> 地指向某个接收者。而且只有那个接收器可以读取它（除非程序使用了某种广播（broadcast）操作，有些消息系统提供，有些则不提供）。这导致了耦合，包括时间上的耦合（生命周期依赖）。在 Linda 中，发送方和接受方彼此不知道对方的存在（很像pub/sub风格）， 它支持非耦合的编程风格。</p>
+<h2 id="面向对象">面向对象？</h2>
+<p>有一个时髦的说法叫 <strong>基于消息传递的并发面向对象编程</strong>，Actor 多少也与此有关。</p>
+<p>首先，<a href="http://worrydream.com/refs/Carriero%20-%20Linda%20in%20Context.pdf">LINDA IN CONTEXT</a> 有力论述了面向对象与并发是无关的两个概念， 所以 <strong>基于消息传递的面向对象并发</strong> 这个词汇没什么意义。注意力放在 <strong>基于消息传递的并发</strong> 上即可。</p>
+<p>当我们谈论 <strong>基于消息传递的并发面向对象编程</strong> 时，多数时候说的是基于监视器（monitor）的多对象并发机制。</p>
+<h3 id="基于-monitor-的多对象并发编程">基于 monitor 的多对象并发编程</h3>
+<p>一个对象定义了可以被其他对象调用的方法。方法调用本质上是一种同步操作：过程调用会阻塞，直到返回一个结果。</p>
+<p>由于可能被多个对象并发调用，于是通过监控器（monitor）来确保资源每次只被一个对象操作（锁住它）。</p>
+<p>但是，并行程序中的进程通常不会关心他们的数据会发生什么，使用像 Linda 的 out 这样的异步操作比同步过程调用更有效率，在概念上也更贴切。使用 out，一个进程可以将一个结果转储到元组空间，然后去做其他事。(与 Pub 相似)</p>
+<!--Monitor 不像 Linda tuple 那样灵活。分布式结构的所有元素都必须存储在一个 Monitor 中。-->
+<p>可以将面向对象的语言与 Linda 结合起来。使用 out（对于被动对象）或 eval（主动对象）生成对象。所有与主动对象的通信都经过 tuple 空间。同样，对象本身并不在并行模型中。（正交）</p>
+<!--
+消息发送的过程是同步的，关于这点，可以在[smalltalk bluebook](http://stephane.ducasse.free.fr/FreeBooks/BlueBook/Bluebook.pdf)中看到。
+-->
+<!--
+使用monitor阻塞进程，直到monitor空闲，然后直到请求的事务被执行，结果可用。我们总是有可能将一个过程调用系统打上补丁，使其也支持某种形式的异步通信。但根据我们的经验，异步通信远比同步通信更常见。
+-->
+<h3 id="actors-的问题">Actors 的问题</h3>
+<p>在 基于消息传递的并发模型中， Actor 尤为著名。</p>
+<p>在 Actors 系统中，进程（称为 Actors）通过互相发送消息进行通信（称为 &ldquo;tasks&rdquo;）。一个进程可以通过生成一个或多个新进程来响应消息。这种系统很容易在 Linda 中表达出来。</p>
+<p>Actors 基本上是一个消息传递模型。 所以和其他基于消息模型的并发模型一样，受到消息传递模式本身的限制。</p>
+<p>Actors 模型似乎比 Linda 涵盖的编程模式更少，但方式更复杂。</p>
+<p>在 Actors 模型中，一个进程和一条消息是独立的结构；在 Linda 中，一个进程变成了一个元组（一体两面）</p>
+<p>Actors 消息包含三个独立的部分：</p>
+<ul>
+<li>标签</li>
+<li>目标</li>
+<li>通信（communication）</li>
+</ul>
+<p>元组只是一组字段，可以轻松包含:</p>
+<ul>
+<li>标签（即消息 id）</li>
+<li>目标（地址）</li>
+<li>通信（数据）。</li>
+</ul>
+<p>Actors 不支持关联寻址，也不允许将消息发送给尚未创建的进程。在 Linda 中，一个元组可以被未来才创建的进程所操作（持久性、时间跨越）。</p>
+<p>Actors 模型是由一个相当复杂的形式化框架支持的，Linda 则很简单。</p>
+<!--Linda 只关心程序的创建和组织。-->
+<!--
+同时性思维 是并发编程困难的原因
+mqtt也是这种系统, Linda只是发布订阅系统？-->
+<h1 id="dynamicland">Dynamicland</h1>
+<p>Dynamicland 背后的系统 &ndash; Realtalk， 似乎是在 Lua 之上实现了 Linda。</p>
+<p>目前社区中有一些 Lua 中的 Linda 实现，如<a href="https://web.archive.org/web/20130513094537/http://kotisivu.dnainternet.net/askok/bin/lanes/">Lua Lanes</a>。目前尚不清楚 Dynamicland 的具体做法。</p>
+<h1 id="我的计划">我的计划</h1>
+<p>为 CodeLab Adapter 下个版本引入 Linda 模型，使得协作可以更容易发生，包括以下几种协作:</p>
+<ul>
+<li>程序之间（程序对象被看作是递归的计算机）的协作
+<ul>
+<li>在可计算环境（房间就是计算机）中，人与人、人与程序之间的协作，程序是人的代理（agency），所以最终还是还原为 程序之间的协作。</li>
+</ul>
+</li>
+</ul>
+<p>CodeLab Adapter 的一个使用场景是用于构建 Neverland （一种受到 Dynamicland 启发的计算环境，将整个空间视为一个计算机）</p>
+<h2 id="python-实现">Python 实现</h2>
+<p>由于 CodeLab Adapter 目前是在 Python 实现的，所以我需要一个 Linda 模型的 Python 实现，目前社区里的实现都不理想</p>
+<ul>
+<li><a href="https://pypi.org/project/pylinda/">pypi pylinda</a></li>
+<li><a href="https://pypi.org/project/lindypy/">lindypy</a></li>
+<li><a href="https://github.com/apayne/pylinda">github pylinda</a></li>
+<li><a href="http://weblog.cs.uiowa.edu/~weblog/22C118f04/article/13.html">Linda in Python</a></li>
+</ul>
+<p>其中 <a href="http://weblog.cs.uiowa.edu/~weblog/22C118f04/article/13.html">Linda in Python</a> 尤为简单，可作为不错的脚手架。</p>
+<h2 id="站在-smalltalk-角度">站在 Smalltalk 角度</h2>
+<blockquote>
+<p>Cosmic metaphors really help imagination &ndash; Alan Key <a href="https://internetat50.com/references/Kay_How.pdf">How?</a></p>
+</blockquote>
+<p>我目前这样思考 Linda： Linda是一种信息/数据（不使用消息，因其转瞬即逝）存在的媒介（环境），进程/对象 之间经过这个媒介交流。 它和smalltalk的对象/消息隐喻（对象通过流动的消息交流）是不同的， 在smalltalk 里，对象之间是直接交流。在流动的消息这个观点上，Alan Kay会说:</p>
+<blockquote>
+<p>Synergy requires constant messaging（协同需要持续的消息传递）</p>
+</blockquote>
+<p>但Linda似乎并不接受这种见解。</p>
+<p>我对 Smalltalk 的理解是: 小物体之间彼此交互（<strong>small</strong> object , <strong>talk</strong> with each other）。 小物体（程序/对象）被看作计算机的递归，他们独立处理自身接收到的消息，并做出反应，听起来像一个小生物体（Alan Kay 有生物学背景）。</p>
+<p>Smalltalk环境里物体之间彼此独立，不耦合，系统拥有极高的灵活性和表达能力，每个 object 都根据从其他对象那里得来的消息（沿着这个隐喻，我们可以说消息流动的通道（诸如网络）充当了类似物理环境信息介质（空气、水）的角色）来决策。这不像计算机环境，像生物/物理环境。</p>
+<p>但目前 smalltalk 对于 object 之间如何交流的模型，却不如人意，它本质上是同步的，而且由于是消息系统，导致了耦合（前文有论述）。smalltalk 对象之间沟通的模型（send message）可以通过阅读<a href="http://stephane.ducasse.free.fr/FreeBooks/BlueBook/Bluebook.pdf">smalltalk bluebook</a>获知，更好的方式是基于异步实现。</p>
+<p>我想这是 Alan Kay 偏好 Linda 的原因，能够更好实现 <strong>晚绑定(late binding)</strong> ， 值得一提的是，晚绑定是 Alan Kay 设计系统时追求的特性，至于面向对象和消息，只是实现这个特性的策略，他们不是目的本身。</p>
+<p>我觉得 Linda 似乎受到 Smalltalk 传统的深远影响, <!--它背弃 smalltalk 基于同步消息的通信模型，采用异步通信的思路进一步走远，--> 将**晚绑定(late binding)**的目标进一步推进。</p>
+<!--但并未背弃 Smalltalk 背后的理念，-->这是一种更好的 **协作** 模型， 并发只是技术和时间层面的视角，相对于协作的概念，它也不太重要
+<h1 id="我的实现">我的实现</h1>
+<p>我目前在 Python 中，正基于 pub/sub 和 协程实现 Linda。</p>
+<!--
+# 　实现
+目前我对 Linda 的实现存在一些疑问。
+
+论文只描述了Linda模型对外提供的四个原语，对于它内部的实现并未讨论。
+
+谁想这样一种场景，在一个 Linda 实现的系统中，两辆小车在寻找停车位，此时并无停车位，于是它们同时阻塞在 in 语句（等待空车位元组），这属于资源竞争吗？它们似乎在想同时争夺元组资源，是我们对元组使用的方式不对吗？或许不该将空车位（资源）表达为元组？否则只是把资源竞争问题转移到元组中而已。还是说Linda的tuple操作（in/out）本身确实存在资源竞争问题，需要Linda的实现者自行解决，诸如锁定tuple（monior）或者采用协程自行维护tuple这个资源。
+
+这里我们似乎绕不开tuple本身是一种可能被并发操作的资源这个问题，我们是就近采用宿主语言内的并发模型来解决，还是说 Linda 有实现建议呢？
+
+我们应该将 tuple space 视为一种服务吗？当 client 操作tuple space时，tuple space与它们的交互是并发的吗？ client 的in操作是阻塞的，阻塞在 client 一侧实现吗，还是说client与tuple space的通信模型本身是同步的，阻塞也可以发生在tuple space一侧？
+
+Linda是否有更细致的实现规范？
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://worrydream.com/refs/Carriero%20-%20Linda%20in%20Context.pdf">LINDA IN CONTEXT</a>
+<ul>
+<li><a href="https://github.com/pSpaces/">pSpaces</a></li>
+<li><a href="https://github.com/apayne/pylinda">pylinda</a>
+<ul>
+<li><a href="https://wiki.c2.com/?PyLinda">wiki.c2.com PyLinda</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://en.wikipedia.org/wiki/Linda_(coordination_language)#Implementations">wikipedia Linda</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Actor">wikipedia Actor</a></li>
+<li><a href="https://tonyg.github.io/squeak-actors/">Squeak Actors</a></li>
+<li><a href="https://news.ycombinator.com/item?id=11808551">Relationship between OO and functional programming?</a>
+<ul>
+<li>通过描述匹配，以一般的发布（out）和描述（in）的方式做松散耦合。我还是很喜欢这个想法，并希望看到它能推进到对象之间真正可以 &ldquo;协商意义 &ldquo;的地步。</li>
+<li>普通的逻辑中，不包含时间。John McCarthy 通过给所有的 &ldquo;事实&rdquo; 添加一个额外的参数来解决这个问题，这个参数代表了一个事实为真时的 &ldquo;时间框架&rdquo;。这创造了一个简单的时间逻辑，将 &ldquo;事实集合 &ldquo;可视化为世界线（world-line）的堆叠 &ldquo;层&rdquo;。</li>
+<li>&ldquo;旧 &ldquo;值（来自于前一帧）</li>
+<li>同样值得关注的是数据库上的 &ldquo;原子事务&rdquo;。以一种非破坏性的方式创建的，没有竞赛条件。有一个版本的历史。</li>
+<li>刚刚计算出来的稳定状态是非常有用的。它永远不会再被改变&ndash;所以它代表了系统模拟的一个 &ldquo;版本&rdquo;</li>
+<li>&ldquo;稳定状态之间不存在时间&rdquo;：&ldquo;时钟 &ldquo;只有在每个新状态完成时才会前进。就程序而言，CPU本身并不充当时钟。它有一个内在的、干净的时间模型</li>
+<li>在命令式编程中允许竞争条件，然后试图使用可怕的信号符等来保护它们，这可能导致锁定。</li>
+<li>任何对对象之间的消息传递感兴趣的人，如果知道Lisp，就会被吸引到 &ldquo;apply&rdquo;，并注意到一种对象（一个lambda &ldquo;东西&rdquo;，它可能是一个闭包）被绑定到参数上（这有点像消息）。未评估的表达式可以作为参数传递，并在之后进行求值。这使得那些不雅的 &ldquo;特殊形式&rdquo;（如条件）可以被省去，它们可以被写成一种普通的懒惰函数。</li>
+<li>通过上面提到的时空建模，可以松开 &ldquo;eval-apply &ldquo;的 &ldquo;齿轮&rdquo;，通过安全消息传递得到时空层之间的功能关系。</li>
+<li>因为我一直喜欢用 &ldquo;模拟的视角 &ldquo;来看待计算，所以我认为 &ldquo;对象 &ldquo;和 &ldquo;函数 &ldquo;是相辅相成的思想，完全不冲突。</li>
+<li>对象就可以完成处理设计参数（包括保留历史记录等）所需的操作。</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-11-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/essays/">essays</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/alan-key-between-oo-fp/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译]Alan Kay 看待&#39;对象&#39;的几次观点转变</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/lisp-memos/">
+            <span class="next-text nav-default">LISP 备忘</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

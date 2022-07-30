@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak上实现 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这件事的关键代码我们在下边有列出。 本文试图在 JavaScript 之" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak上实现" />
+<meta property="og:description" content="前言 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这件事的关键代码我们在下边有列出。 本文试图在 JavaScript 之" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-11-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-11-17T00:00:00+00:00" />
+
+<meta itemprop="name" content="建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak上实现">
+<meta itemprop="description" content="前言 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这件事的关键代码我们在下边有列出。 本文试图在 JavaScript 之"><meta itemprop="datePublished" content="2020-11-17T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-11-17T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1925">
+<meta itemprop="keywords" content="essays," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak上实现"/>
+<meta name="twitter:description" content="前言 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这件事的关键代码我们在下边有列出。 本文试图在 JavaScript 之"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak上实现</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-11-17 </span>
+        <div class="post-category">
+            <a href="/categories/essays/"> essays </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。</p>
+<p>解决这件事的关键代码我们在下边有列出。</p>
+<p>本文试图在 JavaScript 之外的语言中也实现这种想法。它看起来只是一个简易的 RPC client（实现上，确实也是参考了<a href="https://github.com/LLK/scratch-vm/blob/acc2e6dba2e5a32668f0b26f0b2c4dfdecbe1023/src/util/jsonrpc.js">Scratch jsonrpc</a>），如果你想寻找 RPC 库，市面上有大把实现，本文不值一读。</p>
+<p>如果你也对消息感兴趣，对于按照自己的想法构建事物感兴趣，而不是沉迷于各类模式和技巧，那么可将本文视为海滩上的一粒鹅软石，它并不珍贵，也不精美，它只是希望引起你的兴趣：引起你对打磨它的那些潮水、沙粒、软石，甚至大海的兴趣。</p>
+<p>当然它也是我自己的一个临时 playground/workspace，作为编程技能的一个小练习，在 JavaScript/Python/Squeak 之间切换，以熟悉它们的异同点。</p>
+<p>请记住，我们的 view point 在消息上。在这种视角上，RPC 是利用消息的一种形式，如此一来，这种经典模式并不存在固态的结构，它只是对消息的一种看法。</p>
+<h1 id="思路">思路</h1>
+<p>思路是这样的，执行同步指令的时候，发送(pub)一个指令出去（在远端执行），接着返回一个 Promise，直到 Promise 完成之后，指令才往下执行，如此一来，就完成了同步的语义。</p>
+<p>那么如何知道 Promise 是否完成呢？</p>
+<p>将这些 Promise 采集在一起，每当收到(sub)远端发来的消息（有些消息是发出去的指令运行的结果），就去解决对应的 Promise。</p>
+<p>如何知道收到的消息与 Promise 的对应关系呢？</p>
+<p>使用 message id!</p>
+<h1 id="javascript">JavaScript</h1>
+<p>我们首先在 JavaScript(CodeLab Scratch) 里实现了 <code>建立在异步消息之上的同步指令</code></p>
+<p>我们构建了一个 js object: <code>this._promiseResolves = {}</code>, 用于存放指令 Promise 的 resolve。</p>
+<p>并且设置了一个超时时间，如果超过这个时间，Promise 还没有被解决，则打印错误日志。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl">    <span class="nx">get_reply_message</span><span class="p">(</span><span class="nx">messageID</span><span class="p">,</span> <span class="nx">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">this</span><span class="p">.</span><span class="nx">_promiseResolves</span><span class="p">[</span><span class="nx">messageID</span><span class="p">]</span> <span class="o">=</span> <span class="nx">resolve</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_promiseResolves</span><span class="p">[</span><span class="nx">messageID</span><span class="p">]){</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`timeout(</span><span class="si">${</span><span class="nx">timeout</span><span class="si">}</span><span class="sb">ms)`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span> <span class="nx">timeout</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在每次收到 Adapter 的消息的时候，都检查下是否有对应的 Promise，如果有，就解决它。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">message_id</span> <span class="o">!==</span> <span class="s2">&#34;undefined&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">this</span><span class="p">.</span><span class="nx">_promiseResolves</span><span class="p">[</span><span class="nx">message_id</span><span class="p">]</span> <span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">_promiseResolves</span><span class="p">[</span><span class="nx">message_id</span><span class="p">](</span><span class="nx">content</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">_promiseResolves</span><span class="p">[</span><span class="nx">message_id</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>完整的源码细节，参考:<a href="https://github.com/CodeLabClub/scratch3_eim/blob/v3/codelab_adapter_base.js#L291">codelab_adapter_base.js</a></p>
+<h1 id="python">Python</h1>
+<p>Promise 在 Python 里的对应物是 Future。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">asyncio</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">uuid</span>
+</span></span><span class="line"><span class="cl"><span class="n">_futureResolves</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">in_coming_message</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">    -&gt; message
+</span></span></span><span class="line"><span class="cl"><span class="s1">    msg
+</span></span></span><span class="line"><span class="cl"><span class="s1">        content
+</span></span></span><span class="line"><span class="cl"><span class="s1">        message_id
+</span></span></span><span class="line"><span class="cl"><span class="s1">    in a task
+</span></span></span><span class="line"><span class="cl"><span class="s1">    &#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">inCommingMessageId</span> <span class="o">=</span>  <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;message_id&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">future</span> <span class="o">=</span> <span class="n">_futureResolves</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">inCommingMessageId</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">future</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">future</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">msg</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">msg</span><span class="p">[</span><span class="s1">&#39;message_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">pub_cmd</span><span class="p">(</span><span class="n">message_id</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># message_id = uuid.uuid4().hex</span>
+</span></span><span class="line"><span class="cl">    <span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_futureResolves</span><span class="p">[</span><span class="n">message_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">future</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># todo timeout</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">await</span> <span class="n">future</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">mock_sub</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">    模拟sub接收消息
+</span></span></span><span class="line"><span class="cl"><span class="s1">    &#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">msg</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;reply&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">msg</span><span class="p">[</span><span class="s2">&#34;message_id&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+</span></span><span class="line"><span class="cl">        <span class="k">await</span> <span class="n">in_coming_message</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># loop = asyncio.get_running_loop()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">mock_sub</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">pub_cmd</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">pub_cmd</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">pub_cmd</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看出，要实现我们的目标: <code>建立在异步消息之上的同步指令</code>, 并不一定需要使用 <code>asyncio.Future</code>, 使用多线程应该也不难，进一步思考，似乎只要能够 <code>发送消息，之后根据收到的信号(消息)，解除阻塞</code> ，就能实现我们的目标。（实际上，是自己 DIY 了 Future/Promise）</p>
+<p>如果你打算自己在Python中实现 Future，可以参考 ROS 1.0 Python 工具箱。</p>
+<h1 id="squeak">Squeak</h1>
+<p>Squeak 对并发有很好的支持。（并发的关键是处理多个任务的能力，并行的关键是同时处理多个任务的能力，Squeak 对多核心的利用目前似乎还不好（并行））</p>
+<p>Squeak 支持多种并发模型:</p>
+<ul>
+<li><a href="https://wiki.squeak.org/squeak/382">Squeak Threading Model</a></li>
+<li><a href="https://tonyg.github.io/squeak-actors/">Squeak Actors</a></li>
+<li>Smalltalk 对象上都有堆栈操作方法。可以使用这些来实现协程. 此外，Squeak 简单地提供了 Generator 类</li>
+</ul>
+<p>我们在此使用<a href="https://tonyg.github.io/squeak-actors/">Squeak Actors</a>, 因其实现了 <a href="https://tonyg.github.io/squeak-actors/promises.html">Promise</a> 的概念， 这个库实现的Promises与 <a href="https://promisesaplus.com/">Promises/A+</a> 相似。</p>
+<p>值得注意的是在<a href="https://tonyg.github.io/squeak-actors/">Squeak Actors</a>中， 每个Actors都是 Smalltalk Process，而 Squeak 的Process也只是一个对象，可以在环境里随时与之交互！Squeak 在tools里还提供了 <code>Process Browser</code> ！</p>
+<!--
+```smalltalk
+q := SharedQueue2 new.
+pub_cmd := []
+[(Delay forSeconds: 5) wait. Beeper beep] fork
+```
+-->
+<p>我们暂不使用 Actors 编程模型，只使用它携带的原始 Promise</p>
+<p>先展示Promise的简单用法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">p</span> <span class="o">:=</span> <span class="nc">Promise</span> <span class="nb">new</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">[<span class="nc">Transcript</span> <span class="nf">show:</span> (<span class="nv">p</span> <span class="nf">wait</span>)] <span class="nf">fork</span>
+</span></span><span class="line"><span class="cl"><span class="nf">p</span> <span class="nf">resolveWith:</span> <span class="m">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><!--
+构建一个类 SyncCmdPromise pub_cmd _promiseResolves
+
+promise 不是process！
+-->
+<p>接下来，构建一个类来实现我们的想法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nc">Object</span> <span class="nf">subclass:</span> <span class="ss">#SyncCmdPromise</span>
+</span></span><span class="line"><span class="cl">              <span class="nf">instanceVariableNames:</span> <span class="s">&#39;promise_resolves&#39;</span>
+</span></span><span class="line"><span class="cl">              <span class="nf">classVariableNames:</span> <span class="s">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">              <span class="nf">poolDictionaries:</span> <span class="s">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">              <span class="nf">category:</span> <span class="s">&#39;mylab&#39;</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">&#34;以下是方法&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">initialize</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">promise_resolves</span> <span class="o">:=</span> <span class="nc">Dictionary</span> <span class="nb">new</span><span class="p">.</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">promise_resolves</span>
+</span></span><span class="line"><span class="cl">	<span class="o">^</span><span class="nv">promise_resolves</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">pub_cmd:</span> <span class="nv">cmd</span>
+</span></span><span class="line"><span class="cl">	<span class="c">&#34;to pub message: cmd&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">|</span> <span class="nv">uuid</span> <span class="nf">p</span> <span class="nf">|</span>
+</span></span><span class="line"><span class="cl">	<span class="c">&#34;uuid := UUID new asString.&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">uuid</span> <span class="o">:=</span> <span class="nv">cmd</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">p</span> <span class="o">:=</span> <span class="nc">Promise</span> <span class="nb">new</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">promise_resolves</span> <span class="nf">at:</span><span class="nv">uuid</span> <span class="nf">put:</span><span class="nv">p</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">	<span class="o">^</span><span class="nv">p</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>写一个方法，模拟接收消息，并 resolve promise</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nf">mock_sub:</span> <span class="nv">message_id_list</span>
+</span></span><span class="line"><span class="cl">	<span class="c">&#34;使用线程处理外部消息，目前做法草率，存在线程安全问题，线程间不要共享状态，只做简单通信，用于控制时序（采纳ZeroMQ的观点）&#34;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	[<span class="nv">message_id_list</span> <span class="nf">do:</span> [<span class="o">:</span><span class="nv">message_id</span> <span class="o">|</span> (<span class="nc">Delay</span> <span class="nf">forSeconds:</span> <span class="m">2</span>) <span class="nf">wait</span><span class="p">.</span>  (<span class="nv">promise_resolves</span> <span class="nf">includesKey:</span> <span class="nv">message_id</span>) <span class="nb">ifTrue:</span> [
+</span></span><span class="line"><span class="cl">		(<span class="nv">promise_resolves</span> <span class="nf">at:</span><span class="nv">message_id</span>) <span class="nf">resolveWith:</span> <span class="s">&#39;reply &#39;</span><span class="nf">,</span> <span class="nv">message_id</span>
+</span></span><span class="line"><span class="cl">		]<span class="p">.</span> 
+</span></span><span class="line"><span class="cl">	]<span class="p">.</span>] <span class="nf">fork</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="nc">Transcript</span> <span class="nf">show:</span> (<span class="bp">self</span> <span class="nf">pub_cmd:</span> <span class="s">&#39;cmd1&#39;</span>) <span class="nf">wait</span><span class="p">.</span><span class="nc">Beeper</span> <span class="nf">beep</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">	<span class="nc">Transcript</span> <span class="nf">show:</span> (<span class="bp">self</span> <span class="nf">pub_cmd:</span> <span class="s">&#39;cmd2&#39;</span>) <span class="nf">wait</span><span class="p">.</span><span class="nc">Beeper</span> <span class="nf">beep</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">	<span class="nc">Transcript</span> <span class="nf">show:</span> (<span class="bp">self</span> <span class="nf">pub_cmd:</span> <span class="s">&#39;cmd3&#39;</span>) <span class="nf">wait</span><span class="p">.</span><span class="nc">Beeper</span> <span class="nf">beep</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>完整测试它:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">s</span> <span class="o">:=</span> <span class="nc">SyncCmdPromise</span> <span class="nb">new</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">s</span> <span class="nf">mock_sub:</span> <span class="ss">#(</span><span class="s">&#39;cmd1&#39;</span> <span class="s">&#39;cmd2&#39;</span> <span class="s">&#39;cmd3&#39;</span><span class="ss">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/post/img/e5c81bacdc816e2ed9a8f62385d58300.png" alt=""></p>
+<!--
+Promise 仅意味着对 **未来之事的承诺**，它的实现方式是自由的，既可以在线程上实现（ROS 1.0 Python客户端），也可以在协程上实现(Python)
+-->
+<p>ps: 如果做实验时，UI 不小心被 wait 阻塞住了，可以按下 <a href="http://wiki.squeak.org/squeak/899">Interrupt Key</a> 打破 UI 阻塞。</p>
+<p>在不同系统上的规则为:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Macintosh</td>
+<td>Cmd-.</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>Alt-.</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>Alt-.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="总结">总结</h1>
+<p>在不同语言中实现上述想法的时候，我观察到 <code>消息</code>（异步） + <code>Promise/Future</code> 是一种非常强大的模式，灵活且简单。</p>
+<p><code>消息</code>（尤其是pub/sub模式）对并发提供了很好的支持（时序无关），而 <code>Promise/Future</code> 很适合描述时序相关的任务，它们彼此没有耦合，可以随意组合使用。</p>
+<p>这块我准备长期探索， 而 <a href="http://worrydream.com/refs/Kay%20-%20Software%20-%20Art,%20Engineering,%20Mathematics,%20or%20Science%3f.html">Squeak 的极端晚绑定是探索这些新想法的理想之地</a>。</p>
+<blockquote>
+<p>The Big Idea is Messaging. &ndash; Alan Kay</p>
+</blockquote>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/zh-hans/Future%E4%B8%8Epromise">Future 与 promise</a></li>
+<li><a href="https://github.com/LLK/scratch-vm/blob/acc2e6dba2e5a32668f0b26f0b2c4dfdecbe1023/src/util/jsonrpc.js">jsonrpc.js</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_eim/blob/v3/codelab_adapter_base.js#L291">codelab_adapter_base.js</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/python-asyncio-note/">Python 异步编程笔记</a></li>
+<li><a href="https://zh.wikipedia.org/zh-cn/%E5%B9%B6%E5%8F%91%E8%AE%A1%E7%AE%97">并发计算</a></li>
+<li><a href="https://tonyg.github.io/squeak-actors/">Squeak Actors</a>
+<ul>
+<li><a href="https://tonyg.github.io/squeak-actors/promises.html">Promise</a></li>
+</ul>
+</li>
+<li><a href="https://wiki.squeak.org/squeak/3135">Process</a></li>
+<li><a href="https://wiki.squeak.org/squeak/382">Squeak Threading Model</a></li>
+<li><a href="https://wiki.squeak.org/squeak/2130">Process Browser</a></li>
+<li><a href="https://wiki.squeak.org/squeak/543">Thread-safe</a></li>
+<li><a href="http://forum.world.st/Threads-safety-in-Pharo-td4957814.html">Threads safety in Pharo(dict)</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-11-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/essays/">essays</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/squeak-memos/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Squeak 备忘</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/lisp-smalltalk-users/">
+            <span class="next-text nav-default">lisp和smalltalk用户</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

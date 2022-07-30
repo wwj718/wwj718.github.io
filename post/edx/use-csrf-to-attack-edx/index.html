@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>利用CSRF漏洞对Open edX进行提权 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="这个世界上只有两种系统，一种是被黑过的系统，一种是被黑了也不知情的系统 今天一早@MT在群里发了一个漏洞报告Cross Site Request Forgery Bug in edX LMS 报告显示这" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/use-csrf-to-attack-edx/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="利用CSRF漏洞对Open edX进行提权" />
+<meta property="og:description" content="这个世界上只有两种系统，一种是被黑过的系统，一种是被黑了也不知情的系统 今天一早@MT在群里发了一个漏洞报告Cross Site Request Forgery Bug in edX LMS 报告显示这" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/use-csrf-to-attack-edx/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-06-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-06-20T00:00:00+00:00" />
+
+<meta itemprop="name" content="利用CSRF漏洞对Open edX进行提权">
+<meta itemprop="description" content="这个世界上只有两种系统，一种是被黑过的系统，一种是被黑了也不知情的系统 今天一早@MT在群里发了一个漏洞报告Cross Site Request Forgery Bug in edX LMS 报告显示这"><meta itemprop="datePublished" content="2016-06-20T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-06-20T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1382">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="利用CSRF漏洞对Open edX进行提权"/>
+<meta name="twitter:description" content="这个世界上只有两种系统，一种是被黑过的系统，一种是被黑了也不知情的系统 今天一早@MT在群里发了一个漏洞报告Cross Site Request Forgery Bug in edX LMS 报告显示这"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">利用CSRF漏洞对Open edX进行提权</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-06-20 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#背景知识csrf">背景知识：CSRF</a></li>
+        <li><a href="#攻击过程">攻击过程</a></li>
+        <li><a href="#漏洞分析">漏洞分析</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>这个世界上只有两种系统，一种是被黑过的系统，一种是被黑了也不知情的系统</p>
+</blockquote>
+<p>今天一早@MT在群里发了一个漏洞报告<a href="https://open.edx.org/announcements/cross-site-request-forgery-bug-edx-lms">Cross Site Request Forgery Bug in edX LMS</a></p>
+<p>报告显示这是一个高危漏洞，报告里说：</p>
+<blockquote>
+<p>In one specific case users could potentially escalate their privileges via an attack against staff or super users.</p>
+</blockquote>
+<p>起初我还没在意，我粗略看了一下针对这个漏洞的<a href="https://github.com/edx/edx-platform/commit/d54f79f5bf3e1af17063937df1abc0026843412d.patch">Patch</a>,并没发现报告中提到的<code>one specific case</code>，而后突然想到一个可能的攻击方法，动手一试，果然可行</p>
+<p>我试着对自己维护的线上系统进行提权攻击，让大家看到漏洞的严重性，以便给大家有动力去修复它</p>
+<p>最后会给出应对策略</p>
+<h1 id="攻击演示">攻击演示</h1>
+<p>首先这是一种CSRF攻击，</p>
+<h3 id="背景知识csrf">背景知识：CSRF</h3>
+<blockquote>
+<p>跨站请求伪造（英语：Cross-site request forgery），也被称为 one-click attack 或者 session riding，通常缩写为 CSRF 或者 XSRF， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。[1] 跟跨网站脚本（XSS）相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。</p>
+</blockquote>
+<h5 id="csrf攻击的细节">CSRF攻击的细节</h5>
+<blockquote>
+<p>跨站请求攻击，简单地说，是攻击者通过一些技术手段欺骗用户的浏览器去访问一个自己曾经认证过的网站并执行一些操作（如发邮件，发消息，甚至财产操作如转账和购买商品）。由于浏览器曾经认证过，所以被访问的网站会认为是真正的用户操作而去执行。这利用了web中用户身份验证的一个漏洞：简单的身份验证只能保证请求发自某个用户的浏览器，却不能保证请求本身是用户自愿发出的。</p>
+</blockquote>
+<p>有了以上两个对CSRF的了解（假设你也理解cookie的机制），我们就可以展开攻击了</p>
+<p>参考 ： <a href="https://zh.wikipedia.org/zh/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0">跨站请求伪造</a></p>
+<h3 id="攻击过程">攻击过程</h3>
+<h5 id="目标">目标</h5>
+<p>我对线上服务器进行提权攻击</p>
+<p>目标服务参数：Ubuntu12.04 64bit 运行Open edx dogwood</p>
+<h5 id="攻击细节">攻击细节</h5>
+<ul>
+<li>注册用户，选修课程</li>
+<li>给授课教师发送一份邮件，诱使被攻击者点击目标链接，如</li>
+</ul>
+<p><code>&lt;a href=&quot;http://MY_LMS/courses/course-v1:forum_test+forum_test+forum_test/bu/gao/su/ni?unique_student_identifier=wwj&amp;rolename=staff&amp;action=allow&quot;&gt;点我点我&lt;/a&gt;</code> （修改细节）</p>
+<p>至于如何鼓励被攻击者点击，这就是一个社会工程的问题了，不讨论</p>
+<p>这是最初的课程团队</p>
+<p><img src="http://wwj-test2-image-tmp.just4fun.site/csrf1.png" alt="原始课程团队"></p>
+<p>这是攻击邮件</p>
+<p><img src="http://wwj-test2-image-tmp.just4fun.site/csrf2.png" alt="攻击邮件"></p>
+<p>被攻击者点击链接后，用户wwj成功被提权为staff，有课程的所有权限！</p>
+<p>攻击成功之后的团队成员列表</p>
+<p><img src="http://wwj-test2-image-tmp.just4fun.site/csrf3.png" alt="攻击完成"></p>
+<p>成功提权，而后可以对课程做大多数的操作，包括添加学生，增删课程，增删学生，增删帖子等几乎针对课程的所有权限</p>
+<h3 id="漏洞分析">漏洞分析</h3>
+<p>漏洞成因，报告中有说明：</p>
+<blockquote>
+<p>Although the platform is already using Django’s Cross-Site Request Forgery (CSRF) middleware protection, some endpoints with side effects were found to be using GET methods</p>
+</blockquote>
+<p>这是一种设计失误，不应该用get做非幂等操作</p>
+<p>尤其是涉及权限操作的部分，应当放在csrf保护之下</p>
+<h1 id="策略">策略</h1>
+<p>报告里也提到了应对策略</p>
+<blockquote>
+<p>some endpoints with side effects were found to be using GET methods. The patch forces these endpoints to require POST, which also properly enables CSRF protection.</p>
+</blockquote>
+<p>具体而言可以为当前使用的版本打<a href="https://github.com/edx/edx-platform/commit/d54f79f5bf3e1af17063937df1abc0026843412d.patch">Patch</a></p>
+<p>关于如何使用打Patch可以参考这里<a href="https://ariejan.net/2009/10/26/how-to-create-and-apply-a-patch-with-git/">How to create and apply a patch with Git</a>，因为git apply 是一个事务性的操作，补丁要么都打上去，要么全部放弃，所以不要害怕有后遗症</p>
+<p>对于新安装的平台，采用新的代码就不存在这个问题了，目前的bug只在遗留系统存在</p>
+<p>考虑到CSRF攻击的模式，在漏洞修复之前，应该通知拥有课程管理权限的人员以及网站管理者不要点击未知邮件的链接/图片</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-06-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/vim-setting/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">我的vim/mavim/neovim配置</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/https-note/">
+            <span class="next-text nav-default">使用Let’s Encrypt(certbot)为你的网站生成免费的 SSL 证书</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

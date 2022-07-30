@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Dan Ingalls 与 Lively - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="最近的兴趣集中在 如何构建灵活、实时的编程环境, 为教育、创造和探索提供友好的支持 正在研究以下几个项目: Etoys Dynamicland Croquet Lively 本文主要对 Lively 相关资料做一番梳理，" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/dan-ingalls-and-lively/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Dan Ingalls 与 Lively" />
+<meta property="og:description" content="最近的兴趣集中在 如何构建灵活、实时的编程环境, 为教育、创造和探索提供友好的支持 正在研究以下几个项目: Etoys Dynamicland Croquet Lively 本文主要对 Lively 相关资料做一番梳理，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/dan-ingalls-and-lively/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-11-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-11-06T00:00:00+00:00" />
+
+<meta itemprop="name" content="Dan Ingalls 与 Lively">
+<meta itemprop="description" content="最近的兴趣集中在 如何构建灵活、实时的编程环境, 为教育、创造和探索提供友好的支持 正在研究以下几个项目: Etoys Dynamicland Croquet Lively 本文主要对 Lively 相关资料做一番梳理，"><meta itemprop="datePublished" content="2020-11-06T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-11-06T00:00:00+00:00" />
+<meta itemprop="wordCount" content="4094">
+<meta itemprop="keywords" content="programming," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Dan Ingalls 与 Lively"/>
+<meta name="twitter:description" content="最近的兴趣集中在 如何构建灵活、实时的编程环境, 为教育、创造和探索提供友好的支持 正在研究以下几个项目: Etoys Dynamicland Croquet Lively 本文主要对 Lively 相关资料做一番梳理，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Dan Ingalls 与 Lively</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-11-06 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#称其为lively的原因">称其为Lively的原因</a></li>
+    <li><a href="#正在进行的项目">正在进行的项目</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#目的">目的</a></li>
+    <li><a href="#演示">演示</a></li>
+    <li><a href="#特性">特性</a></li>
+    <li><a href="#架构">架构</a>
+      <ul>
+        <li><a href="#核心">核心</a></li>
+        <li><a href="#持久化和数据">持久化和数据</a></li>
+        <li><a href="#服务器和系统互操作">服务器和系统互操作</a></li>
+        <li><a href="#多用户和网络">多用户和网络</a></li>
+        <li><a href="#图形用户界面和工具">图形用户界面和工具</a></li>
+      </ul>
+    </li>
+    <li><a href="#体验lively-next">体验lively-next</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#体验">体验</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#观点">观点</a></li>
+    <li><a href="#连接-codelab-adapter-与-lively">连接 CodeLab Adapter 与 Lively</a>
+      <ul>
+        <li><a href="#livelypy--py-ide">lively.py &amp; py ide</a></li>
+        <li><a href="#demo">demo</a></li>
+        <li><a href="#未来">未来</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>最近的兴趣集中在 <code>如何构建灵活、实时的编程环境, 为教育、创造和探索提供友好的支持</code></p>
+<p>正在研究以下几个项目:</p>
+<ul>
+<li><a href="http://www.squeakland.org/">Etoys</a></li>
+<li><a href="https://dynamicland.org/">Dynamicland</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Croquet_Project">Croquet</a></li>
+<li><a href="https://lively-kernel.org/">Lively</a></li>
+</ul>
+<p>本文主要对 Lively 相关资料做一番梳理，做为备忘录。</p>
+<h1 id="dan-ingalls">Dan Ingalls</h1>
+<p>Dan Ingalls是五代Smalltalk环境的主要架构师、设计师和实现者, 也是Alan Kay在施乐(Xerox Palo Alto)的老搭档。</p>
+<p>Alan Kay在<a href="http://worrydream.com/EarlyHistoryOfSmalltalk/">《The Early History Of Smalltalk》</a>里提到:</p>
+<blockquote>
+<p>我们所有人都同意，在Smalltalk的大部分开发中，Daniel是核心人物…Daniel不仅仅是一个出色的实现者，随着Smalltalk进入到现实世界，Daniel逐渐承担越来越多设计师的职责，不仅是语言设计师，还包括用户界面设计师。</p>
+</blockquote>
+<p>Dan Ingalls的最新项目是<a href="https://lively-kernel.org/">Lively</a>。</p>
+<h1 id="lively">Lively</h1>
+<p>你可以通过<a href="https://lively-next.org/users/robert/welcome.html">这个PPT</a>获得对Lively的直观感受.</p>
+<p>PPT中提到的项目，你也可以亲手体验:</p>
+<ul>
+<li><a href="https://lively-web.org/users/robertkrahn/draggable-code.html">Draggable Code</a></li>
+<li><a href="https://lively-web.org/users/robertkrahn/2015-09-15_recording-debugger-demo.html">recording debugger demo</a></li>
+</ul>
+<p>更多例子参考: <a href="https://lively-next.org/projects.html">projects</a></p>
+<!--我的测试 https://lively-web.org/users/robertkrahn/mytest2020.html-->
+<h2 id="概述">概述</h2>
+<p>Lively是一种新的Web编程方法，使用MIT开源协议。目前该项目放在<a href="http://www.hpi.uni-potsdam.de/hirschfeld/">HPI软件构架小组</a>下。它为Web应用程序提供了完整的平台，包括动态图形，网络访问和开发工具。</p>
+<p><a href="https://en.wikipedia.org/wiki/Lively_Kernel">维基百科</a>将其概括为:</p>
+<blockquote>
+<p>Lively Kernel是一个JavaScript环境，该环境允许实时、交互式进行Web编程，或与Web浏览器内部的对象进行实时交互。</p>
+</blockquote>
+<blockquote>
+<p>Lively Kernel是一个图形合成和集成编程环境，它使用标准的浏览器图形（W3C Canvas或SVG）完全以JavaScript编写。因此，兼容任何浏览器，在加载网页后便开始运行。它能够编辑自己的代码和图形，并且通过其内置的<a href="https://en.wikipedia.org/wiki/WebDAV">WebDAV</a>支持，可以保存结果，甚至可以将其克隆到新的网页上。除了具有应用程序开发功能外，它还可以充当自己的集成开发环境（IDE），使整个系统能够自给自足，除了浏览器外没有其他依赖。</p>
+</blockquote>
+<h2 id="称其为lively的原因">称其为Lively的原因</h2>
+<ul>
+<li>只是网页。 无需安装。采用JavaScript编写，一旦浏览器加载了页面，它就会立即激活。</li>
+<li>它可以改变自己并创建新内容。 Lively Kernel包括一个允许其更改和创建新图形内容的基本图形编辑器，以及一个允许其更改和创建新应用程序的集成开发环境（IDE）。它带有一个图形和计算组件库，这些组件以及内核可以随时更改和扩展。</li>
+<li>它可以保存新的工件，甚至可以将自身克隆到新的Web页面上。该内核包括WebDAV支持，用于浏览和扩展远程文件系统，因此可以将其对象和&quot;世界&quot;（应用程序）保存为新的Web页面， 并保存到基于云的存储库中。</li>
+</ul>
+<h2 id="正在进行的项目">正在进行的项目</h2>
+<ul>
+<li><a href="https://lively-next.org/">lively.next</a>:一组软件包, 一起构成了功能强大的IDE和构建套件。lively.next软件包可以与其他系统结合使用，以将它们连接并<code>提升</code>到Lively宇宙中，从而使Lively成为控制和混搭中心。</li>
+<li><a href="https://www.youtube.com/watch?v=if72CFsF_SY">Pronto</a>: Pronto是对Lively用户体验的重新构想，使新用户可以更轻松地访问它。更容易在平板电脑和其他触摸设备上使用，为简单的对象构造提供更多的指导和更少的混乱选择。 它将提供更强大和具体的构造功能，例如复制，简单的物理方法和其他约束。（目前在旧的lively-next PartsBin中可以找到）</li>
+<li><a href="https://github.com/LivelyKernel/lively4-core">Lively-4</a>: Lively-4是我们在Hasso Plattner Institute的合作者的工作 ，位于德国波茨坦。它具有与网页DOM结构更紧密结合的体系结构。提供了与非Lively网页进行更紧密交互的可能性。</li>
+</ul>
+<p>我的兴趣主要在<a href="https://lively-next.org/">lively.next</a></p>
+<p>逐一做些记录</p>
+<h1 id="livelynext">lively.next</h1>
+<p><a href="https://lively-next.org/">lively.next主页</a> 的自我介绍是:</p>
+<blockquote>
+<p>一个个人编程工具包。它强调生动、直接和互动。</p>
+</blockquote>
+<h2 id="目的">目的</h2>
+<p>一个表达<a href="https://www.ted.com/talks/alan_kay_shares_a_powerful_idea_about_ideas#t-1110785">有力想法</a>的平台，much in the tradition of <a href="http://www.dougengelbart.org/firsts/dougs-1968-demo.html">original</a> <a href="http://worrydream.com/EarlyHistoryOfSmalltalk/">systems</a> <a href="https://www.youtube.com/watch?v=QQhVQ1UG6aM&amp;feature=youtu.be&amp;t=9s">and</a> <a href="https://en.wikipedia.org/wiki/HyperCard">tools</a> that defined the meaning of &ldquo;personal computing&rdquo; –-这就是Lively项目的目的。</p>
+<p>live.next系统构成了一个灵活的个人计算环境和构建工具包。我们希望这将是真正帮助我们思考、学习、做事和创造的媒介的垫脚石。</p>
+<h2 id="演示">演示</h2>
+<p><video width=80% src="https://lively-next.org/users/robert/lively-zine-2017-06/cpu-viz-2017.mp4" controls="controls"></video></p>
+<p><video width=80% src="https://lively-next.org/webpage/Draggable_Code_Prototype_shorter.mp4" controls="controls"></video></p>
+<h2 id="特性">特性</h2>
+<ul>
+<li>设计，开发，共享
+<ul>
+<li>具有深度编程功能的对象系统， 对象可被直接操纵。lively.next允许人们快速制作原型并分享想法。开发是实时，即时和有趣的。 <a href="https://gbracha.blogspot.com/2012/11/debug-mode-is-only-mode.html">调试模式是唯一模式</a>。</li>
+</ul>
+</li>
+<li>个人编程套件
+<ul>
+<li>可以自由地修改，存储和共享工作区和对象。这允许创建针对特定任务的定制环境。临时脚本很容易，可以自动执行重复性任务或创建特定于领域的工具。</li>
+</ul>
+</li>
+<li>连接，混搭，提升
+<ul>
+<li>是Web服务、JavaScript库、操作系统还是数据库；可以通过将外部系统的流程和数据与Lively丰富的编程功能结合起来，来构建混搭和系统集成。这将动态性较差的系统<code>提升</code>到实时编程领域。</li>
+</ul>
+</li>
+<li>全栈和模块化
+<ul>
+<li><a href="https://lively-next.org/architecture.html">lively.next的体系结构</a>包括客户端和服务器，以及形成交互式开发环境所需的各个部分，例如运行时元系统，对象图持久性，存储和资源抽象等。这些组件是模块化和可重用的，请参阅我们的<a href="https://github.com/LivelyKernel/">开源库</a></li>
+</ul>
+</li>
+<li>起源
+<ul>
+<li>Lively的外观可能不同于传统的编程系统，它是基于与40年前推出的Smalltalk系统相同的思想和机制。它的用户界面是Self的<a href="http://ftp.squeak.org/docs/Self-4.0-UI-Framework.pdf">Morphic</a>的变体。Lively项目的目标是发展那些功能强大的概念，并将它们与新颖的思想相结合，以减少编程的僵化和狭窄。与其他Smalltalk系统类似，Lively是使用它自己来建模和实现的，没有人为的边界限制探索和变更。</li>
+</ul>
+</li>
+<li>研究
+<ul>
+<li>Lively团队有兴趣探索新的编程抽象和范式。尽管当前的系统主要基于文本编程，但是我们正在积极开发更强大的抽象和工具，以弥合可视化和文本编程之间的鸿沟。可以在<a href="https://lively-next.org/projects.html">此处</a>找到过去原型的不完整列表。</li>
+</ul>
+</li>
+</ul>
+<h2 id="架构">架构</h2>
+<!--Smalltalk 社区以环境（整个系统）为文档，而不是额外维护一个文本文档。 -->
+<p><a href="https://lively-next.org/architecture.html">架构文档</a></p>
+<p>lively.next 是用 JavaScript 实现的，但也可以与其他语言和系统进行互操作。允许将其他应用程序混搭并“提升”到Lively编程领域。</p>
+<h3 id="核心">核心</h3>
+<h4 id="livelymodules">lively.modules</h4>
+<p><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.modules">lively.modules</a></p>
+<p>包和模块，lively.next的主干。它包含类似于Smalltalk的元接口，该接口允许Lively（或使用Lively packages 的程序）具有允许检查和修改的 runtime。</p>
+<h4 id="livelyast--livelysource-transform">lively.ast + lively.source-transform</h4>
+<p>JavaScript源码解析和转换工具。 这是为了对代码进行分析和 instrument，从而可以进行检查、评估和调试。 代码分析也被用于lively.next的IDE的各种工具中。</p>
+<h4 id="livelyvm">lively.vm</h4>
+<p>受控的代码执行，可以实现运行时系统的修改和扩展。lively.vm提供了一种方法，可以将作用域注入到正常的JS eval(求值) 和 instruments code中，以观察副作用和控制流程。</p>
+<h3 id="持久化和数据">持久化和数据</h3>
+<h4 id="livelyresources--livelystorage">lively.resources + lively.storage</h4>
+<p>对HTTP和文件系统资源的高级访问，很容易扩展到其他后端。</p>
+<p>浏览器和服务器端数据库，用于对象存储和版本管理。 基于CouchDB和PouchDB，提供同步和复制功能。</p>
+<h4 id="livelyserializer2">lively.serializer2</h4>
+<p>JavaScript object graphs 的序列化和反序列化，允许快照对象和 Lively 页面（世界）的状态。 wiki系统和PartsBin的基础。 提供插件系统，使其兼容库和其他数据源和对象类型。</p>
+<h4 id="livelypartsbin">lively.partsbin</h4>
+<p>共享和发布应用程序及其组件的对象库。</p>
+<p>ps: <code>PartsBin</code> 正在迁移到 <code>Master Components</code></p>
+<h3 id="服务器和系统互操作">服务器和系统互操作</h3>
+<h4 id="livelyshell">lively.shell</h4>
+<p><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.shell">lively.shell</a></p>
+<p>可用于远程运行和控制Unix / Linux / Windows上的操作系统进程。 还提供了通过lively.2lively消息系统发起交互的集成。</p>
+<h4 id="livelyserver">lively.server</h4>
+<p><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.shell">lively.server</a></p>
+<p>基于node.js的服务器，围绕着与客户端lively.next相同的灵活概念构建。 提供一个插件系统，可以用来轻松扩展服务器端功能。</p>
+<h3 id="多用户和网络">多用户和网络</h3>
+<h4 id="lively2lively">lively.2lively</h4>
+<p><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.2lively">lively.2lively</a></p>
+<p>lively.next系统之间的远程点对点消息发送机制。 它是围绕着一个简单的<strong>接收者-选择者-参数</strong>（receiver-selector-argument）语义构建的，它允许lively.next系统以比普通的<strong>客户端-服务器</strong>（client-server）交互更灵活的方式交换信息。</p>
+<h4 id="livelyuser">lively.user</h4>
+<p>用户认证和授权系统。 提供一个基于token的用户模型。 用户对象可供其他子系统使用，用于Wiki和PartsBin对象的授权。 可用于设计多用户交互系统</p>
+<h3 id="图形用户界面和工具">图形用户界面和工具</h3>
+<h4 id="livelymorphiclivelygraphics">lively.morphic+lively.graphics</h4>
+<p><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.morphic">lively.morphic</a> + <a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.graphics">lively.graphics</a></p>
+<p>丰富的、交互式的、可组合的图形用户界面，以Self的Morphic UI为蓝本。 提供了一个高于HTML / SVG / Canvas的抽象，但可以与本地Web内容集成，以创建混搭和系统集成。 使用ObjectEditor，图形对象可以直接被脚本化，这降低了典型编程任务的抽象性。</p>
+<h4 id="livelybindings">lively.bindings</h4>
+<p><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.bindings">lively.bindings</a>
+用于反应式数据绑定的数据流系统。与lively.morphic结合使用，它具有图形扩展，该图形扩展允许交互式连接对象，类似于可视数据流编程。</p>
+<p><a href="https://lively-next.org/tutorials/lively.bindings/index.html">文档</a></p>
+<h4 id="livelyide">lively.ide</h4>
+<p><a href="https://github.com/LivelyKernel/lively.next/tree/master/lively.ide">lively.ide</a>
+用于编程和调试JavaScript，HTML，CSS，shell的工具。也可以集成其他语言（请参见cloxp和LivelyR）</p>
+<h2 id="体验lively-next">体验lively-next</h2>
+<p><a href="https://lively-next.org/worlds/">点击这儿</a></p>
+<h1 id="lively-4">Lively-4</h1>
+<p><a href="https://github.com/LivelyKernel/lively4-core">Lively-4</a></p>
+<blockquote>
+<p>一个基于Web的探索性、自支持的开发环境</p>
+</blockquote>
+<h2 id="体验">体验</h2>
+<p><a href="https://lively-kernel.org/lively4/lively4-core/start.html">点击这儿</a></p>
+<h1 id="我的实验">我的实验</h1>
+<p>将Lively用做 Adapter 其中的一个前端。Lively提供了远超Scratch的灵活性，是绝佳的教育平台。</p>
+<img src="/post/img/WechatIMG1128.jpeg" width=350 />
+<!--
+我目前正在阅读[lively.next源码库](https://github.com/LivelyKernel/lively.next)和[lively4-core](https://github.com/CodeLabClub/lively4-core), 之后会将阅读时做的笔记和批注提交到仓库里。
+-->
+<h2 id="观点">观点</h2>
+<p>Lively 或许会颠覆整个网络生态，其原因在于</p>
+<ul>
+<li>提供 Smalltalk-like 的编程/探索环境</li>
+<li>使用 receiver-selector-argument 模型替代 client-server 模型</li>
+<li>兼容既有生态:
+<ul>
+<li><code>*nix</code>(Unix-like)生态</li>
+<li>web生态</li>
+</ul>
+</li>
+</ul>
+<p>我将 Lively 视为:</p>
+<ul>
+<li>网络上的 Smalltalk</li>
+<li>吸收了<code>*nix</code>异构体系兼容性的 Smalltalk</li>
+<li>一种更乐于与其他系统协作的Smalltalk（温和）</li>
+</ul>
+<h2 id="连接-codelab-adapter-与-lively">连接 CodeLab Adapter 与 Lively</h2>
+<p>目前的思路是在Lively中运行 Python workspace（将Python提升到smalltalk）。</p>
+<p>只要 lively 环境中存在 python repl，连接CodeLab Adapter 与 Lively就变得很简单，引入<a href="https://github.com/CodeLabClub/codelab_adapter_client_python">Adapter client</a>即可。</p>
+<h3 id="livelypy--py-ide">lively.py &amp; py ide</h3>
+<p>在本地运行 <a href="https://github.com/LivelyKernel/lively.py">lively.py</a>。</p>
+<p>之后在lively中打开python ide即可。</p>
+<p><img src="/post/img/56342577a4fce02834ed1fb025901eb6.png" alt=""></p>
+<h3 id="demo">demo</h3>
+<p><video width=80% src="https://adapter.codelab.club/video/12d30ae7cb52dcb0e894d7c9371da8.MP4" controls="controls"></video></p>
+<p><video width=80% src="https://adapter.codelab.club/video/1603782783858008.mp4" controls="controls"></video></p>
+<h3 id="未来">未来</h3>
+<p>未来计划基于 lively.2lively 或者 <a href="https://github.com/CodeLabClub/scratch3_eim">EIM</a> 协议构建新的 Python ide.</p>
+<p>ide object 非常简单:</p>
+<p><img src="/post/img/08c469772bdd14ddeaca5937478c3774.png" alt=""></p>
+<h1 id="一些问题和建议">一些问题和建议</h1>
+<p>lively4和live-next都在积极推进中，目前存在不少bug，诸如:</p>
+<ul>
+<li><a href="https://github.com/LivelyKernel/lively.next">lively.next源码库</a>正在快速更新，<code>PartsBin</code> 正在迁移到 <code>Master Components</code>
+<ul>
+<li>目前的安装问题已经解决， <a href="https://hub.docker.com/r/engagelively/lively-next">Docker 版本</a>也稳定可用。</li>
+</ul>
+</li>
+<li><a href="https://lively-next.org/doc/todo-list-tutorial.html">todo-list-tutorial</a> 拖拽checkbox到tex中有问题</li>
+<li>&hellip;</li>
+</ul>
+<p>目前建议从一些简单的项目开始探索，以下项目是非常好的起步方式。</p>
+<ul>
+<li><a href="https://lively-web.org/users/robertkrahn/draggable-code.html">Draggable Code</a></li>
+<li><a href="https://lively-next.org/worlds/cpu%20demo">cpu demo</a></li>
+<li><a href="https://lively-next.org/worlds/magic-card">magic-card</a></li>
+<li><a href="https://lively-next.org/worlds/how%20events%20are%20dispatched">how events are dispatched</a></li>
+</ul>
+<p>另一个建议是，适应类Smalltalk环境的最好方式是: 在那个世界中与事物去交互(talk)，不要太在意文本代码的细节。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://lively-next.org/users/robert/welcome.html">lively-next robert welcome</a>
+<ul>
+<li><a href="https://lively-web.org/users/robertkrahn/draggable-code.html">Draggable Code</a></li>
+<li>we can&rsquo;t not do this!</li>
+</ul>
+</li>
+<li><a href="https://lively-kernel.org/">Lively home</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Lively_Kernel">wikipedia Lively Kernel</a></li>
+<li><a href="https://harc.ycr.org/project/lively/">harc Lively</a></li>
+<li><a href="https://lively-next.org/">lively next</a>
+<ul>
+<li><a href="https://lively-next.org/architecture.html">architecture</a></li>
+<li><a href="https://lively-next.org/doc/todo-list-tutorial.html">todo-list-tutorial</a>: 拖拽checkbox到tex中有问题</li>
+<li><a href="https://lively-next.org/projects.html">projects</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/LivelyKernel">Lively github</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk背后的设计原则</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Dan_Ingalls">Dan Ingalls</a>
+<ul>
+<li><a href="https://web.archive.org/web/20070920090809/http://www.squeakland.org/community/biography/ingalls.html">squeakland ingalls</a></li>
+</ul>
+</li>
+<li><a href="https://ohmlang.github.io/pubs/live2016/">Language Hacking in a Live Programming Environment</a></li>
+<li><a href="http://ftp.squeak.org/docs/Self-4.0-UI-Framework.pdf">Morphic: The Self User Interface Framework</a></li>
+<li><a href="https://gbracha.blogspot.com/2012/11/debug-mode-is-only-mode.html">Debug Mode is the Only Mode</a>
+<ul>
+<li>关注时间旅行（time-travel debugging）的概念</li>
+</ul>
+</li>
+<li><a href="https://shonan.nii.ac.jp/seminars/147/">Self-supporting, Extensible Programming Languages and Environments for Exploratory, Live Software Development</a></li>
+<li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.137.2713&amp;rep=rep1&amp;type=pdf">Web Browser as an Application Platform: The Lively Kernel Experience</a></li>
+<li><a href="https://lively-kernel.org/development/media/LivelyKernel-TechnicalOverview.pdf">The Sun Labs Lively Kernel</a></li>
+<li><a href="http://worrydream.com/#!/LearnableProgramming">Learnable Programming</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-11-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/programming/">programming</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/learnable-particle-systems/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">可理解的粒子系统</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/smalltalk-guide/">
+            <span class="next-text nav-default">Smalltalk 入门导览</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

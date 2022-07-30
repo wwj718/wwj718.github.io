@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>为Open edX构建存储服务 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="汤山归来，两天不碰电脑，如小钗所言，变聪明许多，思维逐渐活跃 构建存储服务这个话题困扰了我很久，直到今天洗澡的时候才把这个问题的解决方案大纲理" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/built-data-storage-system/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="为Open edX构建存储服务" />
+<meta property="og:description" content="汤山归来，两天不碰电脑，如小钗所言，变聪明许多，思维逐渐活跃 构建存储服务这个话题困扰了我很久，直到今天洗澡的时候才把这个问题的解决方案大纲理" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/built-data-storage-system/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-02-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-02-28T00:00:00+00:00" />
+
+<meta itemprop="name" content="为Open edX构建存储服务">
+<meta itemprop="description" content="汤山归来，两天不碰电脑，如小钗所言，变聪明许多，思维逐渐活跃 构建存储服务这个话题困扰了我很久，直到今天洗澡的时候才把这个问题的解决方案大纲理"><meta itemprop="datePublished" content="2016-02-28T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-02-28T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2324">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="为Open edX构建存储服务"/>
+<meta name="twitter:description" content="汤山归来，两天不碰电脑，如小钗所言，变聪明许多，思维逐渐活跃 构建存储服务这个话题困扰了我很久，直到今天洗澡的时候才把这个问题的解决方案大纲理"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">为Open edX构建存储服务</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-02-28 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>汤山归来，两天不碰电脑，如小钗所言，变聪明许多，思维逐渐活跃</p>
+<p>构建存储服务这个话题困扰了我很久，直到今天洗澡的时候才把这个问题的解决方案大纲理清，与大家分析思路和方案</p>
+<p>#背景介绍</p>
+<p>###Open edX
+关于Open edX就不做过多介绍了，误入本文的小伙伴可以翻阅我此前的这篇译文:<a href="http://blog.just4fun.site/about-Open-edX.html">关于Open edX[译文]</a></p>
+<p>入坑已久的小伙伴，继续下翻好啦</p>
+<p>###存储服务
+这里谈论的存储服务，主要指为网站提供文件存储/分发功能的服务，包括js/css/img等静态文件，也包括用户上传的资源文件，诸如视频/图片和文档</p>
+<p>之所以称之为服务而不是系统，是因为我把它视为一个抽象存在，实际上在技术人员看来，它只是一套对接云平台的接口。是存储云平台与Open edX之间的一个胶水层</p>
+<p>出于七牛云完备的文档和对开发者的友好，我选择以七牛云为例来实现</p>
+<p>#Open edX中的文件存储需求
+我们进入主题，从需求说起。</p>
+<p>Open edX中的文件存储需求主要包括</p>
+<ul>
+<li>课程团队私有仓库（文件夹），用于存取：
+<ul>
+<li>课程相关的log，以便进一步做数据分析</li>
+<li>课程数据下载，诸如成绩单</li>
+</ul>
+</li>
+<li>课程资料</li>
+<li>课程视频（重点之一）</li>
+</ul>
+<p>其中涉及的技术点主要包括：</p>
+<ul>
+<li>文件权限控制</li>
+<li>文件操作（接口）
+<ul>
+<li>上传</li>
+<li>下载</li>
+<li>管理</li>
+</ul>
+</li>
+<li>CDN</li>
+<li>流量监测（方便优化）</li>
+<li>并发访问</li>
+</ul>
+<p>#思路
+###传统思路
+实际上以上是很典型的文件存储需求，传统的思路是自己构建一个存储服务就好啦，租上机房，买来服务器，拉好光纤，做好磁盘阵列，写一个web服务来对外提供存储服务。如果访问量大，继续做CDN之类的优化，折腾之极，而且效果不理想</p>
+<p>我们实际也这样做过,试着自行搭建管理系统（试过wagtail，seafile等），试着整合cas登录机制，都很折腾</p>
+<p>这样面临的问题包括但不限于：</p>
+<ul>
+<li>时间成本高</li>
+<li>经济成本高</li>
+<li>系统不够健壮</li>
+<li>扩展性差</li>
+</ul>
+<p>###基于云平台
+今天的开发者可能是有史以来最幸福的开发者。云的崛起，使大多的计算资源以云的形式存在，我们只需要抽象使用即可。</p>
+<p>付出经济的成本，我们就可轻松获得稳定、灵活的云服务，而把底层的复杂性屏蔽在外，开发者只需关注业务逻辑。</p>
+<p>当然，存储也不例外</p>
+<p>#技术细节
+此前困扰我的一个问题是，处于对权限的控制，我们是不是需要所有文件都经过后端，然后同步到云</p>
+<p>其实这个问题已经被云存储上考虑在内的，S3的解决方案最为完备，此后也被其他厂商跟进。但对此方案的论述似乎很少，或者这是架构的一个问题，本身就小众，关注者不多，我在网上一搜发现不少架构者有这种疑惑，但决绝方案比较晚近才比较完备</p>
+<p>当我们能够描述问题的时候，已经解决了大半，尤其是在网络时代，你遇到的问题，其实几乎都被别人遇到过，你要做的是弄清问题所在领域和问题描述。then google它或是github它</p>
+<blockquote>
+<p>seek, and you will find</p>
+</blockquote>
+<p>###编程模型
+<img src="http://developer.qiniu.com/docs/v6/api/overview/img/programming-model.png" alt="programming-model"></p>
+<p>一般的云存储上传流程是:<code>客户端（终端用户） =&gt; 业务服务器 =&gt; 云存储服务</code>,这样多了一次上传的流程，会有上传延时，而且有带宽的浪费。但七牛引入了客户端直传，将整个上传过程调整为：<code>客户端（终端用户） =&gt; 七牛 =&gt; 业务服务器</code></p>
+<p>文件上传成功以后，七牛的服务器使用回调功能，只需要将非常少的数据（比如Key）传给应用服务器，应用服务器进行保存即可。</p>
+<p>在七牛云存储中，整个上传流程大体分为这样几步：</p>
+<ul>
+<li>业务服务器颁发<code>上传凭证</code>给客户端（终端用户）</li>
+<li>客户端凭借 上传凭证 上传文件到七牛</li>
+<li>在七牛获得完整数据后，发起一个 HTTP 请求回调到业务服务器</li>
+<li>业务服务器保存相关信息，并返回一些信息给七牛</li>
+<li>七牛原封不动地将这些信息转发给客户端（终端用户）</li>
+</ul>
+<p>下载和其他操作也于此类似。更多细节请看文档</p>
+<p>由以上流程我们看到，这是一个灵活的机制，我们可以将自己的业务员逻辑轻松附在其上，诸如如果要控制用户级别的权限，那么只要在在后端将上传凭证和用户身份进行绑定即可。诸如此类</p>
+<p>###将模型用于Open edX
+后端层面，构建颁发凭证的rest 接口，利用凭证，我们可以做到用户或课程团队粒度的权限控制。</p>
+<p>前端层面，将上传资源的按钮绑定到新的函数上。主要需要修改的地方并不多：诸如studio视频组件，论坛的图片上传等</p>
+<p>你当然也可以实现功能更全面的资源管理，诸如实践课件资源库之类的功能，只需将云存储api作为积木，置于后端业务逻辑中即可</p>
+<p>#我的实现</p>
+<p>我会把我的实现放到我此前这个项目里<a href="https://github.com/wwj718/edx_siteapi">edx_siteapi</a>，欢迎围观，该项目的主要目的是对open edx进行拓展。</p>
+<p>主要是实现权限控制和授权的rest api</p>
+<p>###其他云平台</p>
+<ul>
+<li>又拍云</li>
+<li><a href="https://help.aliyun.com/document_detail/oss/product-documentation/intruduction.html?spm=5176.docoss/sdk/python-sdk/get-started.6.80.njJEJT">阿里云 对象存储oss</a>
+<ul>
+<li><a href="https://help.aliyun.com/document_detail/oss/sdk/python-sdk/get-started.html?spm=5176.docoss/product-documentation/intruduction.6.270.maUISb">python-sdk 快速入门</a></li>
+</ul>
+</li>
+</ul>
+<p>#FQA
+###流量监控的用途
+对于某个区域内高访问量的视频资源，采用区域内自行搭建视频服务器的方式可能比云服务廉价许多。但这依然不影响我们使用云存储。一般的云存储都有流量监控机制，当我们检测到某类文件流量高于临界值时，只需把它同步到自行搭建的本地服务器即可，后台修改地址即可，我们可以用编程的方式，为视频对象赋予一个use_local_file的开关（属性）即可</p>
+<p>这样在享受云平台廉价、敏捷的同时，也可以对特定文件做本地优化(出于成本考虑)</p>
+<p>之所以提到这点是因为公司前技术总监T老师构建了此前的视频解决方案，在特定情况下，要比云存储廉价。他说我遇见过最优秀的技术人员之一，尽管目前已经不再做技术，对问题的分解能力，交流与组织能力都令人叹服</p>
+<p>###跨域问题
+由于大多云存储网站都支持域名绑定，所以不错在跨域的问题，ajax可以照常使用。所以开发者感受不出文件服务是不是来自本地后端</p>
+<p>###定制化的CDN
+出于我们的具体需求，局域网内布有服务器。解决方案也简单，定制同步文件，而后匹配用户请求头，将静态资源重定向到坐在局域网服务器的ip即可，这个任务可以放在nginx那里处理</p>
+<p>#参考</p>
+<ul>
+<li><a href="http://developer.qiniu.com/docs/v6/api/overview/concepts.html">关键概念</a></li>
+<li><a href="http://developer.qiniu.com/docs/v6/api/overview/programming-model.html">编程模型</a></li>
+<li><a href="http://developer.qiniu.com/docs/v6/sdk/python-sdk.html">Python SDK 使用指南</a></li>
+<li><a href="http://developer.qiniu.com/docs/v6/sdk/javascript-sdk.html">JavaScript SDK 使用指南</a></li>
+<li><a href="http://developer.qiniu.com/docs/v6/api/reference/security/put-policy.html">上传策略（PutPolicy）</a></li>
+</ul>
+<p>#相关问题</p>
+<ul>
+<li><a href="https://segmentfault.com/q/1010000000611870">使用第三方存储，怎么不进行自己服务器中转就能进行权限控制？</a></li>
+<li><a href="https://segmentfault.com/q/1010000000611870">各种云储存都有一个问题</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-02-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/use-qingcloud-cli-contral-qingcloud/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用命令行操作青云</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/jupyter-summary/">
+            <span class="next-text nav-default">jupyter使用小结</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

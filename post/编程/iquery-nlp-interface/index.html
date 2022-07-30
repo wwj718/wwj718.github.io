@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>为命令行火车票查询器添加自然语言交互界面 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="ps：采用asciinema制作了演示视频: 项目地址 先上项目源码:ibot iquery @sl前段时间跟我说，有个python写的命令行或者票查询器(i" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/iquery-nlp-interface/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="为命令行火车票查询器添加自然语言交互界面" />
+<meta property="og:description" content="ps：采用asciinema制作了演示视频: 项目地址 先上项目源码:ibot iquery @sl前段时间跟我说，有个python写的命令行或者票查询器(i" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/iquery-nlp-interface/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-08-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-08-01T00:00:00+00:00" />
+
+<meta itemprop="name" content="为命令行火车票查询器添加自然语言交互界面">
+<meta itemprop="description" content="ps：采用asciinema制作了演示视频: 项目地址 先上项目源码:ibot iquery @sl前段时间跟我说，有个python写的命令行或者票查询器(i"><meta itemprop="datePublished" content="2016-08-01T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-08-01T00:00:00+00:00" />
+<meta itemprop="wordCount" content="530">
+<meta itemprop="keywords" content="dev-tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="为命令行火车票查询器添加自然语言交互界面"/>
+<meta name="twitter:description" content="ps：采用asciinema制作了演示视频: 项目地址 先上项目源码:ibot iquery @sl前段时间跟我说，有个python写的命令行或者票查询器(i"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">为命令行火车票查询器添加自然语言交互界面</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-08-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#iquery的安装和使用">iquery的安装和使用</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/ibot13761852.png" alt=""></p>
+<p>ps：采用<a href="https://github.com/asciinema/asciinema">asciinema</a>制作了<a href="https://asciinema.org/a/69utp9gpwal1y85lyv01kbhe2">演示视频</a>:</p>
+<p><a href="https://asciinema.org/a/69utp9gpwal1y85lyv01kbhe2"><img src="https://asciinema.org/a/69utp9gpwal1y85lyv01kbhe2.png" alt="asciicast"></a></p>
+<h1 id="项目地址">项目地址</h1>
+<p>先上项目源码:<a href="https://github.com/wwj718/ibot">ibot</a></p>
+<h1 id="iqueryhttpsgithubcomprotreamiquery"><a href="https://github.com/protream/iquery">iquery</a></h1>
+<p>@sl前段时间跟我说，有个python写的命令行或者票查询器(iquery)很有趣，于是我玩了下，觉得挺好玩的，工具本身写得也干净利落。后来发现它只支持python3，还一度想让修改它使它兼容python2。</p>
+<p>此后有了新主意:为它加一个自然语言交互界面，这样被围观时，比较拉风</p>
+<p>当然啦，对于热爱CLI的小伙伴来说，CLI几乎是最佳的交互方式了，给它添加自然语言交互界面，未免画蛇添竹。我个人是偏好CLI的，不过觉得自然语言交互界面的好处之一是能然普通用户更自然地与机器对话，甚至采用语音与机器对话</p>
+<h3 id="iquery的安装和使用">iquery的安装和使用</h3>
+<p>iquery作为命令行工具，写的是很棒的</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 安装</span>
+</span></span><span class="line"><span class="cl">pip3 install iquery
+</span></span><span class="line"><span class="cl">iquery 上海虹桥 北京 <span class="m">802</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>你将获得本年8月2号从上海虹桥到北京的火车票信息:</p>
+<p><img src="/post/img/iquerye2d84a70.png" alt=""></p>
+<p>当然你也可以指定火车的类型和输入完整的查询日期, 比如:</p>
+<p><code>iquery -dg 上海 北京 20160802</code></p>
+<h1 id="ibot">ibot</h1>
+<p>下边我们来看看如何使用ibot来查询火车票,<a href="">ibot</a>已经发布为python包，直接pip安装就行</p>
+<p>使用:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ibot 2016年8月十一号 南京到北京的车票
+</span></span><span class="line"><span class="cl">ibot 明天从南京到北京的车票
+</span></span><span class="line"><span class="cl">ibot 这周六从南京去北京出差，帮我看下车票
+</span></span><span class="line"><span class="cl">ibot 下周五离开南京去北京 查下车票
+</span></span><span class="line"><span class="cl">ibot 查一下上海去北京的车票，下周六
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/post/img/ibot13761852.png" alt=""></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-08-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%95%B0%E6%8D%AE/jobsvisualization/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default"> 可视化筛选你中意的工作</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/python-prompt-toolkit/">
+            <span class="next-text nav-default">[译]使用Python Prompt Toolkit构建强大的REPL</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

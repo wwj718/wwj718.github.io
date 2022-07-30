@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>enable Open edX REST APIs(work with mobile) - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="当时处理这部分的动机是将edx与微信对接 如果你在处理与edx API相关的工作，这篇文章可能对你也有帮助。好比你在编译edx移动端（andro" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/edx-api/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="enable Open edX REST APIs(work with mobile)" />
+<meta property="og:description" content="当时处理这部分的动机是将edx与微信对接 如果你在处理与edx API相关的工作，这篇文章可能对你也有帮助。好比你在编译edx移动端（andro" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/edx-api/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-06-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-06-30T00:00:00+00:00" />
+
+<meta itemprop="name" content="enable Open edX REST APIs(work with mobile)">
+<meta itemprop="description" content="当时处理这部分的动机是将edx与微信对接 如果你在处理与edx API相关的工作，这篇文章可能对你也有帮助。好比你在编译edx移动端（andro"><meta itemprop="datePublished" content="2015-06-30T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-06-30T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3093">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="enable Open edX REST APIs(work with mobile)"/>
+<meta name="twitter:description" content="当时处理这部分的动机是将edx与微信对接 如果你在处理与edx API相关的工作，这篇文章可能对你也有帮助。好比你在编译edx移动端（andro"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">enable Open edX REST APIs(work with mobile)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-06-30 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>当时处理这部分的动机是将edx与微信对接</p>
+<p>如果你在处理与edx API相关的工作，这篇文章可能对你也有帮助。好比你在编译edx移动端（android和iOS）, 这部分工作应该也是最主要的工作之一</p>
+<p>##思路
+我们首先简要做一下任务陈述：允许edx用户通过微信公众平台访问edX，登录以及请求相关的数据</p>
+<p>这里假设读者们已经基本了解了<a href="https://tools.ietf.org/html/draft-ietf-oauth-v2-31">OAuth2</a>,包括它的一些基本概念和通信流程，如果还不了解，请先阅读OAuth2相关的材料。</p>
+<p>在我们的任务中，我们先识别出OAuth中的参与实体，RO(resource owner)，RS (resource server)和Client，至于AS(authorization server)在edx中和RS可以认为一体。</p>
+<p>很显然我们的任务中，edx平台作为RS，而edx user是RO，而我们自己写的微信公众号后台便是Client。</p>
+<p>由于微信后端和平台拥有者是相同的，所以我就不采用redirect的方式了。而假设Client是受信任的。</p>
+<p>那么通信的流程是这样的，edx user在微信给微信公众号中给Client发送账号和密码，而后Client携带用户账号和密码去换取授权令牌(Access Token)，且存下授权令牌，如此一来，概念上，用户在微信中便已经保持登录edX的状态了。</p>
+<p>而后Client根据用户请求，携带Access Token去服务器请求资源返回给微信用户。</p>
+<p>这里不应当混淆的是，<code>使用微信账户登录edx</code>，和<code>在微信中以edx user身份访问edx</code>，是两个完全不同的过程，<code>使用微信账户登录edx</code>本质上是个第三方社交账号登录edx的问题，RS是微信，而edx user在微信中访问edx，RS是edX。</p>
+<p>好了，思路基本清晰了。</p>
+<p>##先前的经验
+之前写过一篇博客：<a href="http://wwj718.github.io/edx-mobile-api.html">让edx为手机端提供接口</a></p>
+<p>本打算按照之前的经验，却发现，采用TokenAuthentication的解决方案除了侵入性太强，不够优雅之外，安全性也得不到保证</p>
+<p><a href="http://edx.readthedocs.org/projects/edx-platform-api/en/latest/authentication.html?highlight=secure">EdX API Authentication</a>中有一句话，</p>
+<blockquote>
+<p>OAuth 2.0 is an open standard used by many systems that require secure user authentication</p>
+</blockquote>
+<p>我开始以为，secure只是个建议，稍后我们会发现，这是个强制要求。</p>
+<p>无论是OAuth2Authentication, SessionAuthentication还是TokenAuthentication，本质都是个认证问题，而认证过程在django中间件里实现，对关注业务逻辑的开发者而言是透明的，而edx的api使用的统一是OAuth2Authentication和SessionAuthentication。</p>
+<p>可选的路线只有一条，开始折腾OAuth2.</p>
+<p>##目标定位
+经过一番跟踪和分析，我们发现了<a href="https://github.com/edx/edx-oauth2-provider">edx/edx-oauth2-provider</a>和<a href="https://github.com/edx/django-oauth2-provider">django-oauth2-provider</a>与OAuth关系最大</p>
+<p>而他们的关系是<a href="https://github.com/edx/edx-oauth2-provider">edx/edx-oauth2-provider</a>依赖于<a href="https://github.com/edx/django-oauth2-provider">edx/django-oauth2-provider</a></p>
+<p>而<a href="https://github.com/edx/django-oauth2-provider">edx/django-oauth2-provider</a>fork自<a href="https://github.com/caffeinehit/django-oauth2-provider">caffeinehit/django-oauth2-provider</a></p>
+<p><a href="https://github.com/caffeinehit/django-oauth2-provider">caffeinehit/django-oauth2-provider</a>的<a href="https://django-oauth2-provider.readthedocs.org/en/latest/">文档</a>对我们很有助益，</p>
+<p>##实验
+定位到这两个关键库，其实接下来的工作就轻松多了。<br>
+首先做些试探性的实验。<br>
+先去<code>/edx/app/edxapp/lms.env.json</code>，在FEATURES里加上<code>&quot;ENABLE_OAUTH2_PROVIDER&quot;: true,</code>以及<code>&quot;ENABLE_MOBILE_REST_API&quot;:true,</code>,而后去admin里获取一个受信任的Client和Access Token，对应的地址分别是是<code>/admin/oauth2_provider/trustedclient/</code>和<code>/admin/oauth2/accesstoken/add/</code>,过期时间（Expires）可以设得远些，使其不易生效，你也通过设置<code>OAUTH_ID_TOKEN_EXPIRATION</code>来控制失效时间，这个数值衡量的是用户两次登录的时间间隔，好比你要求用户每七天需要登录一次。</p>
+<p>那么激动人心的时刻来啦,我们开始请求接口</p>
+<p><code>curl -k -H &quot;Authorization: Bearer Your_Access_Token” http://example.com/api/user/v1/accounts/wwj</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">{&#34;username&#34;: &#34;wwj&#34;, &#34;bio&#34;: null, &#34;requires_parental_consent&#34;: true, &#34;name&#34;: &#34;wwj&#34;, &#34;country&#34;: null, &#34;is_active&#34;: true, &#34;profile_image&#34;: {&#34;image_url_full&#34;: &#34;http://example.com/static/images/default-theme/default-profile_500.de2c6854f1eb.png&#34;, &#34;image_url_large&#34;: &#34;http://example.com/static/images/default-theme/default-profile_120.33ad4f755071.png&#34;, &#34;image_url_medium&#34;: &#34;http://example.com/static/images/default-theme/default-profile_50.5fb006f96a15.png&#34;, &#34;image_url_small&#34;: &#34;http://example.com/static/images/default-theme/default-profile_30.ae6a9ca9b390.png&#34;, &#34;has_image&#34;: false}, &#34;year_of_birth&#34;: null, &#34;level_of_education&#34;: null, &#34;goals&#34;: null, &#34;language_proficiencies&#34;: [], &#34;gender&#34;: null, &#34;mailing_address&#34;: null, &#34;email&#34;: &#34;wwj@example.com&#34;, &#34;date_joined&#34;: &#34;2015-05-13T09:42:45Z&#34;}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果你使用<a href="https://github.com/jakubroztocil/httpie">httpie</a>(推荐)，那么返回的内容将以更易于阅读的形式(缩进高亮)，返回给你.之后我们都只要httpie</p>
+<p><code>http http://example.com/api/user/v1/accounts/wwj   &quot;Authorization: Bearer 1a17079824f66bfa5116bd8780b5a119e603a79c&quot;</code> (实际上是header参数)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    &#34;bio&#34;: null,
+</span></span><span class="line"><span class="cl">    &#34;country&#34;: null,
+</span></span><span class="line"><span class="cl">    &#34;date_joined&#34;: &#34;2015-05-13T09:42:45Z&#34;,
+</span></span><span class="line"><span class="cl">    &#34;email&#34;: &#34;wwj@qq.com&#34;,
+</span></span><span class="line"><span class="cl">    &#34;gender&#34;: null,
+</span></span><span class="line"><span class="cl">    &#34;goals&#34;: null,
+</span></span><span class="line"><span class="cl">    &#34;is_active&#34;: true,
+</span></span><span class="line"><span class="cl">    &#34;language_proficiencies&#34;: [],
+</span></span><span class="line"><span class="cl">    &#34;level_of_education&#34;: null,
+</span></span><span class="line"><span class="cl">    &#34;mailing_address&#34;: null,
+</span></span><span class="line"><span class="cl">    &#34;name&#34;: &#34;wwj&#34;,
+</span></span><span class="line"><span class="cl">    &#34;profile_image&#34;: {
+</span></span><span class="line"><span class="cl">        &#34;has_image&#34;: false,
+</span></span><span class="line"><span class="cl">        &#34;image_url_full&#34;: &#34;http://example.com/static/images/default-theme/default-profile_500.de2c6854f1eb.png&#34;,
+</span></span><span class="line"><span class="cl">        &#34;image_url_large&#34;: &#34;http://example.com/static/images/default-theme/default-profile_120.33ad4f755071.png&#34;,
+</span></span><span class="line"><span class="cl">        &#34;image_url_medium&#34;: &#34;http://example.com/static/images/default-theme/default-profile_50.5fb006f96a15.png&#34;,
+</span></span><span class="line"><span class="cl">        &#34;image_url_small&#34;: &#34;http://example.com/static/images/default-theme/default-profile_30.ae6a9ca9b390.png&#34;
+</span></span><span class="line"><span class="cl">    },
+</span></span><span class="line"><span class="cl">    &#34;requires_parental_consent&#34;: true,
+</span></span><span class="line"><span class="cl">    &#34;username&#34;: &#34;wwj&#34;,
+</span></span><span class="line"><span class="cl">    &#34;year_of_birth&#34;: null
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>再演示一个使用requests的做法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;Authorization&#34;</span><span class="p">:</span> <span class="s2">&#34;bearer 1a17079824f66bfa5116bd8780b5a119e603a79c&#34;</span><span class="p">,</span> <span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;ChangeMeClient/0.1 by YourUsername&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;http://127.0.0.1/api/user/v1/accounts/wwj&#34;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>得到</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">{u&#39;bio&#39;: None,
+</span></span><span class="line"><span class="cl"> u&#39;country&#39;: None,
+</span></span><span class="line"><span class="cl"> u&#39;date_joined&#39;: u&#39;2015-05-13T09:42:45Z&#39;,
+</span></span><span class="line"><span class="cl"> u&#39;email&#39;: u&#39;wwj@qq.com&#39;,
+</span></span><span class="line"><span class="cl"> u&#39;gender&#39;: None,
+</span></span><span class="line"><span class="cl"> u&#39;goals&#39;: None,
+</span></span><span class="line"><span class="cl"> u&#39;is_active&#39;: True,
+</span></span><span class="line"><span class="cl"> u&#39;language_proficiencies&#39;: [],
+</span></span><span class="line"><span class="cl"> u&#39;level_of_education&#39;: None,
+</span></span><span class="line"><span class="cl"> u&#39;mailing_address&#39;: None,
+</span></span><span class="line"><span class="cl"> u&#39;name&#39;: u&#39;wwj&#39;,
+</span></span><span class="line"><span class="cl"> u&#39;profile_image&#39;: {u&#39;has_image&#39;: False,
+</span></span><span class="line"><span class="cl">  u&#39;image_url_full&#39;: u&#39;http://127.0.0.1/static/images/default-theme/default-profile_500.de2c6854f1eb.png&#39;,
+</span></span><span class="line"><span class="cl">  u&#39;image_url_large&#39;: u&#39;http://127.0.0.1/static/images/default-theme/default-profile_120.33ad4f755071.png&#39;,
+</span></span><span class="line"><span class="cl">  u&#39;image_url_medium&#39;: u&#39;http://127.0.0.1/static/images/default-theme/default-profile_50.5fb006f96a15.png&#39;,
+</span></span><span class="line"><span class="cl">  u&#39;image_url_small&#39;: u&#39;http://127.0.0.1/static/images/default-theme/default-profile_30.ae6a9ca9b390.png&#39;},
+</span></span><span class="line"><span class="cl"> u&#39;requires_parental_consent&#39;: True,
+</span></span><span class="line"><span class="cl"> u&#39;username&#39;: u&#39;wwj&#39;,
+</span></span><span class="line"><span class="cl"> u&#39;year_of_birth&#39;: None}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###下边演示请求Access Token的过程
+使用<code>requests</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests.auth</span>
+</span></span><span class="line"><span class="cl"><span class="n">client_auth</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="s1">&#39;dc107056a5335b3a7c74&#39;</span><span class="p">,</span> <span class="s1">&#39;4e3f1fad6e0583fc80d78541f2ca6cfad8a93bed&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">post_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;grant_type&#34;</span><span class="p">:</span> <span class="s2">&#34;password&#34;</span><span class="p">,</span> <span class="s2">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;wwj&#34;</span><span class="p">,</span> <span class="s2">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;wwjtest&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&#34;http://127.0.0.1/oauth2/access_token&#34;</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">client_auth</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">post_data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>得到<code>{u'error': u'invalid_request', u'error_description': u'A secure connection is required.'}</code></p>
+<p>网站需要使用https，nmap查看443端口是close状态。</p>
+<p>配置nginx。</p>
+<p>##启用https</p>
+<blockquote>
+<p>Remember that you should always use HTTPS for all your OAuth 2 requests otherwise you won’t be secured.</p>
+</blockquote>
+<p>OAuth2要求使用https。所以我们为edx做https支持</p>
+<p>###生成证书</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">cd /edx/app/nginx/
+</span></span><span class="line"><span class="cl">mkdir conf
+</span></span><span class="line"><span class="cl">chown -R 777 conf #好像不大好
+</span></span><span class="line"><span class="cl">cd conf
+</span></span><span class="line"><span class="cl">#创建服务器私钥，命令会让你输入一个口令
+</span></span><span class="line"><span class="cl">openssl genrsa -des3 -out server.key 1024
+</span></span><span class="line"><span class="cl">#创建签名请求的证书（CSR）
+</span></span><span class="line"><span class="cl">openssl req -new -key server.key -out server.csr
+</span></span><span class="line"><span class="cl">#在加载SSL支持的Nginx并使用上述私钥时除去必须的口令：
+</span></span><span class="line"><span class="cl">cp server.key server.key.org
+</span></span><span class="line"><span class="cl">openssl rsa -in server.key.org -out server.key
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###配置nginx
+<code>openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt</code></p>
+<p>在<code>/edx/app/nginx/sites-enabled</code>里，将lms复制为lms_https</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">sudo diff lms lms_https
+</span></span><span class="line"><span class="cl">1,3c1
+</span></span><span class="line"><span class="cl">&lt; upstream lms-backend {
+</span></span><span class="line"><span class="cl">&lt;             server 127.0.0.1:8000 fail_timeout=0;
+</span></span><span class="line"><span class="cl">&lt;     }server {
+</span></span><span class="line"><span class="cl">---
+</span></span><span class="line"><span class="cl">&gt; server {
+</span></span><span class="line"><span class="cl">12,13c10,13
+</span></span><span class="line"><span class="cl">&lt;
+</span></span><span class="line"><span class="cl">&lt;     listen 80 default;
+</span></span><span class="line"><span class="cl">---
+</span></span><span class="line"><span class="cl">&gt;     listen 443;
+</span></span><span class="line"><span class="cl">&gt;     ssl on;
+</span></span><span class="line"><span class="cl">&gt;     ssl_certificate /edx/app/nginx/conf/server.crt;
+</span></span><span class="line"><span class="cl">&gt;     ssl_certificate_key /edx/app/nginx/conf/server.key;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在<code>/edx/app/nginx/sites-enabled/lms</code>的server结尾里加上</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">  # Forward to HTTPS if we&#39;re an HTTP request...
+</span></span><span class="line"><span class="cl">  if ($http_x_forwarded_proto = &#34;http&#34;) {
+</span></span><span class="line"><span class="cl">    set $do_redirect &#34;true&#34;;
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  # Run our actual redirect...
+</span></span><span class="line"><span class="cl">  if ($do_redirect = &#34;true&#34;) {
+</span></span><span class="line"><span class="cl">    rewrite ^ https://$host$request_uri? permanent;
+</span></span><span class="line"><span class="cl">  }
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>重启nginx，https方面的设置就好了，你可以访问，https://example.com 啦</p>
+<p>##https下请求Access Token</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests.auth</span>
+</span></span><span class="line"><span class="cl"><span class="n">client_auth</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="s1">&#39;dc107056a5335b3a7c74&#39;</span><span class="p">,</span> <span class="s1">&#39;4e3f1fad6e0583fc80d78541f2ca6cfad8a93bed&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">post_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;grant_type&#34;</span><span class="p">:</span> <span class="s2">&#34;password&#34;</span><span class="p">,</span> <span class="s2">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;wwj&#34;</span><span class="p">,</span> <span class="s2">&#34;password&#34;</span><span class="p">:</span> <span class="s2">&#34;wwjtest&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&#34;https://127.0.0.1/oauth2/access_token&#34;</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">client_auth</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">post_data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>``</p>
+<p>ok</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">{u&#39;access_token&#39;: u&#39;e751c317435986b2a00425ed7a93a789fbcbeccd&#39;,
+</span></span><span class="line"><span class="cl"> u&#39;expires_in&#39;: 2591999,
+</span></span><span class="line"><span class="cl"> u&#39;scope&#39;: u&#39;&#39;,
+</span></span><span class="line"><span class="cl"> u&#39;token_type&#39;: u&#39;Bearer&#39;}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>#微信后端
+暂不方便公开源码</p>
+<p>#todo</p>
+<ul>
+<li>将mobile api相关的请求全部redirect倒https</li>
+<li>https证书相关</li>
+</ul>
+<hr>
+<p>#2015.07.15更新
+开发群里有小伙伴提到在用android客户端去访问服务器时，会出现这样的错误。javax.net.ssl.SSLPeerUnverifiedException: No peer certificate
+(文后评论中也有人提到)</p>
+<p>这是ssl证书的问题，我此前的做法是不验证。这只是绕过了问题，而没有解决它，在此正面解决它，分以下步骤：</p>
+<ul>
+<li>申请ssl证书，我用的是免费的startssl。可参考<a href="http://www.startssl.com/?app=42">www.startssl.com</a></li>
+<li>将申请来的证书加入到lms_https里:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">ssl on;
+</span></span><span class="line"><span class="cl">ssl_certificate /etc/nginx/conf/your-ssl-unified.crt;
+</span></span><span class="line"><span class="cl">ssl_certificate_key /etc/nginx/conf/your-ssl.key;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>sudo killall -HUP nginx</li>
+</ul>
+<hr>
+<p>#2015.09.23更新
+Cypress中的<code>/edx/app/nginx</code>目录有微调，移除了<code>/edx/app/nginx/sites-enabled</code>,所以我们需要把<code>/edx/app/nginx/sites-available/</code>中新建的文件软链接到<code>/etc/nginx/sites-enabled/</code>里</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-06-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/edx-analytics-pipeline-code-analysis/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">edx-analytics-pipeline源码解读</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/edx-data-analysis-on-docker/">
+            <span class="next-text nav-default">基于docker的edx数据分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

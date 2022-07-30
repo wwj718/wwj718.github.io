@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译]对管道(Pipes)的偏爱 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="原文链接:For the Love of Pipes 早上在hacker news上读到一篇短文，来自Jessie Frazelle的博客(Jessie Frazelle是Gi" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/for-the-love-of-pipes/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译]对管道(Pipes)的偏爱" />
+<meta property="og:description" content="原文链接:For the Love of Pipes 早上在hacker news上读到一篇短文，来自Jessie Frazelle的博客(Jessie Frazelle是Gi" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/for-the-love-of-pipes/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-01-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-01-23T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译]对管道(Pipes)的偏爱">
+<meta itemprop="description" content="原文链接:For the Love of Pipes 早上在hacker news上读到一篇短文，来自Jessie Frazelle的博客(Jessie Frazelle是Gi"><meta itemprop="datePublished" content="2019-01-23T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-01-23T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1340">
+<meta itemprop="keywords" content="unix," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译]对管道(Pipes)的偏爱"/>
+<meta name="twitter:description" content="原文链接:For the Love of Pipes 早上在hacker news上读到一篇短文，来自Jessie Frazelle的博客(Jessie Frazelle是Gi"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译]对管道(Pipes)的偏爱</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-01-23 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/pipe_0ece8dff.png" alt=""></p>
+<p>原文链接:<a href="https://blog.jessfraz.com/post/for-the-love-of-pipes/">For the Love of Pipes</a></p>
+<p>早上在hacker news上读到一篇短文，来自<a href="https://blog.jessfraz.com/post/">Jessie Frazelle的博客</a>(<a href="https://blog.jessfraz.com/post/">Jessie Frazelle</a>是Github团队成员).</p>
+<p>文章写得简短清晰，顺手翻译过来。</p>
+<h1 id="译文">译文</h1>
+<p>我最常用的shell命令是<code>|</code>。它被称为管道(pipe)。</p>
+<p>简而言之，<code>|</code>允许一个程序（左侧）的输出成为另一个程序的输入（右侧）。这是一种将两个命令连接在一起的方法。</p>
+<p>例如，如果我运行以下内容：</p>
+<p><code>echo &quot;hello&quot;</code></p>
+<p>输出为<code>hello</code></p>
+<p>但如果运行:</p>
+<p><code>echo &quot;hello&quot; | figlet</code></p>
+<p>figlet程序改变了hello中每个字母的外观，看起来像卡通风格。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">➜  scratch_backend git:(master) echo &#34;hello&#34; | figlet
+</span></span><span class="line"><span class="cl"> _          _ _
+</span></span><span class="line"><span class="cl">| |__   ___| | | ___
+</span></span><span class="line"><span class="cl">| &#39;_ \ / _ \ | |/ _ \
+</span></span><span class="line"><span class="cl">| | | |  __/ | | (_) |
+</span></span><span class="line"><span class="cl">|_| |_|\___|_|_|\___/
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这是一种非常直观的描述某些东西的方式。在我看来，这是一种优秀的软件设计。</p>
+<p>让我们回到管道的起源。</p>
+<p>根据<a href="http://doc.cat-v.org/unix/pipes/">doc.cat-v.org/unix/pipes/</a>，管道早在Unix之前<a href="http://doc.cat-v.org/unix/pipes/">就已存在</a>。管道可以追溯到1964年Doug McIlroy的这篇笔记：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            - 10 -
+</span></span><span class="line"><span class="cl">    Summary--what&#39;s most important.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">To put my strongest concerns into a nutshell:
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1. We should have some ways of coupling programs like
+</span></span><span class="line"><span class="cl">garden hose--screw in another segment when it becomes when
+</span></span><span class="line"><span class="cl">it becomes necessary to massage data in another way.
+</span></span><span class="line"><span class="cl">This is the way of IO also.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">2. Our loader should be able to do link-loading and
+</span></span><span class="line"><span class="cl">controlled establishment.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">3. Our library filing scheme should allow for rather
+</span></span><span class="line"><span class="cl">general indexing, responsibility, generations, data path
+</span></span><span class="line"><span class="cl">switching.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">4. It should be possible to get private system components
+</span></span><span class="line"><span class="cl">(all routines are system components) for buggering around with.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                                                M. D. McIlroy
+</span></span><span class="line"><span class="cl">                                                October 11, 1964 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Doug McIlroy将Unix哲学记录为：</p>
+<ol>
+<li>让每个程序做好一件事。如果要完成一个新任务，重新构建而不是通过添加新的“功能”使旧程序复杂化。</li>
+<li>期望每个程序的输出成为另一个尚未知的程序的输入。不要使用无关信息来污染输出。避免严格的柱状或二进制输入格式。别坚持使用互动输入。</li>
+<li>设计和构建软件，甚至是操作系统，要尽早尝试，最好在几周内完成。毫不犹豫地扔掉笨拙的部分并重建它们。</li>
+<li>使用工具让编程任务变轻松，即使你得先去构建这些工具，用完之后你还可能抛弃它。</li>
+</ol>
+<blockquote>
+<p>来自<a href="http://emulator.pdp-11.org.ru/misc/1978.07_-_Bell_System_Technical_Journal.pdf">贝尔系统技术期刊</a></p>
+</blockquote>
+<p>我喜欢Unix的是“做好一件事”和“期望每个程序的输出成为另一个程序的输入”的理念。这种理念建立在工具的使用上。这些工具可以单独使用，也可以组合在一起使用以完成工作。这与用于解决特定问题的大一统/一次性的专用程序形成鲜明对比。</p>
+<p>我们在上面看到的系统程序/命令:<code>echo</code> 默认将信息输出到终端。<code>cat</code>将“连接”（它的同名）文件并将结果打印到终端。在阅读<a href="http://harmful.cat-v.org/cat-v/unix_prog_design.pdf">Unix程序设计</a>时，我意识到将工具的输出打印到用户终端实际上​​是特例。</p>
+<blockquote>
+<p>“也许令人惊讶的是，在实践中，事实证明特例是该程序的主要用途。”</p>
+</blockquote>
+<p>当用户将<code>cat</code>的输出通过<code>|</code>重定向到其他程序时， <code>cat</code>变得比原作者想要的更为强大。在我看来，这是最精彩的设计模式之一。一方面，程序变得十分简单，做好一件事的原则让它们轻易制作。更有趣的是，通过与<code>|</code>操作符结合，程序成为更大规划中的一步。<code>cat</code>的原作者甚至不需要了解更大的计划。这就是<code>|</code>的美妙之处, 它可以通过将小而简单的程序组合在一起来解决问题.</p>
+<p>我喜欢这样的软件设计，它鼓励创造，认可简单的价值，并且不会将用户放在盒子里。管道是保持程序简单同时实现可扩展性的关键元素。一个简单的程序通过与<code>|</code>结合, 能力远远超出原作者梦寐以求的程度。</p>
+<p>希望本文可以帮助你学习一些东西，如果它没做到，只需要把它pipe到<code>/dev/null</code>。</p>
+<!--组合创造-->
+<h1 id="译者注">译者注</h1>
+<p>如果你对管道有更多兴趣，推荐阅读《Unix编程艺术》</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-01-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/unix/">unix</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/enhance-scratch3/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Scratch增强计划</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/asking-the-right-question-is-more-important-than-getting-the-right-answer/">
+            <span class="next-text nav-default">[译]提出正确的问题比得到正确答案更重要</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

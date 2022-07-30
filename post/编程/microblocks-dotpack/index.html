@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MicroBlocks 编程案例: dotPack - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="I also find it fun work in the constrained world of microcontrollers. :-) &amp;ndash; John Maloney 前言 dotPack 是英荔教育即将发布的一款可编程像素书包。 我之前在 可编程书包 提到： 可编程书包(led 矩阵屏)带来了完全不" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-dotpack/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MicroBlocks 编程案例: dotPack" />
+<meta property="og:description" content="I also find it fun work in the constrained world of microcontrollers. :-) &ndash; John Maloney 前言 dotPack 是英荔教育即将发布的一款可编程像素书包。 我之前在 可编程书包 提到： 可编程书包(led 矩阵屏)带来了完全不" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-dotpack/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-05-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-05-25T00:00:00+00:00" />
+
+<meta itemprop="name" content="MicroBlocks 编程案例: dotPack">
+<meta itemprop="description" content="I also find it fun work in the constrained world of microcontrollers. :-) &ndash; John Maloney 前言 dotPack 是英荔教育即将发布的一款可编程像素书包。 我之前在 可编程书包 提到： 可编程书包(led 矩阵屏)带来了完全不"><meta itemprop="datePublished" content="2022-05-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-05-25T00:00:00+00:00" />
+<meta itemprop="wordCount" content="5142">
+<meta itemprop="keywords" content="microblocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MicroBlocks 编程案例: dotPack"/>
+<meta name="twitter:description" content="I also find it fun work in the constrained world of microcontrollers. :-) &ndash; John Maloney 前言 dotPack 是英荔教育即将发布的一款可编程像素书包。 我之前在 可编程书包 提到： 可编程书包(led 矩阵屏)带来了完全不"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MicroBlocks 编程案例: dotPack</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-05-25 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#在-microblocks-中编程">在 MicroBlocks 中编程</a>
+      <ul>
+        <li><a href="#基本思路">基本思路</a></li>
+        <li><a href="#在-microblocks-虚拟机里编写图形基元">在 MicroBlocks 虚拟机里编写图形基元</a></li>
+        <li><a href="#雪崩snow-crash">雪崩(Snow Crash)</a></li>
+      </ul>
+    </li>
+    <li><a href="#在-microblocks-为-dotpack-编写固件">在 MicroBlocks 为 dotPack 编写固件</a>
+      <ul>
+        <li><a href="#思路">思路</a></li>
+        <li><a href="#设置背景颜色set_background">设置背景颜色(set_background)</a></li>
+        <li><a href="#显示图像">显示图像</a></li>
+        <li><a href="#显示动图动画">显示动图/动画</a></li>
+        <li><a href="#开机启动程序">开机启动程序</a></li>
+        <li><a href="#优化问题">优化问题</a></li>
+        <li><a href="#固件分享">固件分享</a></li>
+        <li><a href="#感受">感受</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/dotPack-homepage.png" alt=""></p>
+<blockquote>
+<p>I also find it fun work in the constrained world of microcontrollers. :-) &ndash; John Maloney</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p><a href="https://dotpack.fun/">dotPack</a> 是英荔教育即将发布的一款可编程像素书包。</p>
+<p>我之前在 <a href="/post/%E7%BC%96%E7%A8%8B/ledbag/">可编程书包</a> 提到：</p>
+<blockquote>
+<p>可编程书包(led 矩阵屏)带来了完全不同的学习体验:</p>
+</blockquote>
+<blockquote>
+<ol>
+<li>知识以可见的方式呈现出来，这极大提升了可理解性。 编程语言中的许多东西是一种逻辑结构，诸如 for/while/if 控制结构，当学习者使用这些抽象的语法结构时，它在矩阵屏幕上立刻变得清晰可见！于是你就可以对自己的想法进行 debug！</li>
+<li>可编程书包(led 矩阵)是一种鲜活的媒介，它呈现出图形，因而可以承载和表达个性化的想法，而像素风格使这事儿非常简单。这方面的特质有点像 Scratch 舞台。非常容易激发学习者的个性化表达。</li>
+<li>完成的作品可以背在肩上作为个性化饰品。</li>
+</ol>
+</blockquote>
+<p>当时, 我通过 hack 一款潮品背包来实现对 Python 编程学习的支持。</p>
+<p>dotPack 从一开始就为编程学习而设计, 因此许多方面都出色得多。</p>
+<p>我提前拿到了一个 dotPack 样品。尤其喜欢它的高自由度，于是决定深挖它的潜力。</p>
+<h2 id="在-microblocks-中编程">在 MicroBlocks 中编程</h2>
+<p>dotPack 官方固件支持 Python 和 Scratch 编程，官方主页和文档有清晰描述，我就不赘述了。</p>
+<p>本文将分享我近期如何在 MicroBlocks 中对 dotPack 进行编程。</p>
+<p>我还将分享一个在 MicroBlocks 中编写的产品级固件，它兼容英荔官方 <a href="https://github.com/longan-link/dotpack_pyclient">Python client 的主要 API</a> !</p>
+<h3 id="基本思路">基本思路</h3>
+<p>就可编程部分来说， dotPack 是一个由 ESP32 驱动的 16x16 NeoPixel 点阵屏。</p>
+<p>我最初打算通过刷入 MicroBlocks ESP32 固件来接管它，MicroBlocks 内置了 NeoPixel 驱动，感觉是个很棒的开始。</p>
+<p>但一番实验下来，遇到一些问题。</p>
+<ol>
+<li>使用 ESP32 驱动 NeoPixel 会遇到 &ldquo;毛刺&rdquo; 问题: 在大量的 NeoPixel led 中， 偶尔会有一两颗 led 的颜色异常。关于这个问题， <a href="https://bitbucket.org/john_maloney/smallvm/issues/259/neopixels-esp32">Neopixels ESP32</a> 有深入讨论。</li>
+<li>MicroBlocks 内置的 NeoPixel 库，简洁清晰，但缺少一些图形基元(Graphics Primitives), 尤其是与文字显示相关的基元。</li>
+</ol>
+<p>以下是一个与&quot;毛刺&quot;问题有关的一个例子, 从视频里可以看出，偶尔会有一些&quot;毛刺&quot;出现。</p>
+<p><video width="80%" src="https://adapter.codelab.club/video/1653468762327448.mp4" controls="controls"></video></p>
+<p>当时，为了解决这两个问题，我放弃了使用 MicroBlocks 内置的 NeoPixel 库，转而在 MicroBlocks ESP32 虚拟机层面做一些基础工作。由于之前构建<a href="/post/%E7%BC%96%E7%A8%8B/microblocks-mqtt-library/">MicroBlocks MQTT 库</a>时，有过在 MicroBlocks 虚拟机里工作的经验，这对我来说不难，它只需要一些 C/C++ 的知识。</p>
+<h3 id="在-microblocks-虚拟机里编写图形基元">在 MicroBlocks 虚拟机里编写图形基元</h3>
+<p>习惯在开始工作之前，逛逛开源社区, 看看有什么项目能帮助我起步，我视 Github 为金矿，运气好的话，时常能在里头挖到宝藏，因而减少的大量工作，有时是按“人月”来计算的！很快就发现了 <a href="https://github.com/adafruit">Adafruit</a> 开源的 <a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/neomatrix-library">NeoMatrix Library</a> , 这正是我寻找的宝藏！</p>
+<p><a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/neomatrix-library">NeoMatrix Library</a> 是对 <a href="https://learn.adafruit.com/adafruit-gfx-graphics-library">Adafruit GFX Graphics Library</a> 的简单包装，由于其老到而出色的 API ，驱动 NeoPixel 点阵屏成了举手之劳。</p>
+<p>很快就在 MicroBlocks 虚拟机里完成所需的图形基元。 通过包装这些图形基元，在 MicroBlocks 里构建出了 dotPack 库。</p>
+<p><img src="/post/img/dotpack-1.png" alt=""></p>
+<p>如此一来，前头提到的两个问题就都解决了！</p>
+<p>现在，在 MicroBlocks 中，我们有了一个体面的 dotPack 驱动库，它有丰富的基本图形基元、支持文字、稳定可靠、没有毛刺！</p>
+<p>只要加上想象力，我们就可以实现各种好玩的东西，可以在上边构建细胞自动机: <a href="https://zh.m.wikipedia.org/zh-sg/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8F">Conway&rsquo;s Game of Life</a>生命游戏, 以及其他各种很酷的像素艺术。</p>
+<p>如果你乐意，甚至可以在上边构建一个旋转的彩色 3D 立方体，只需涉猎一些数学和立体视觉相关知识，就可以在 MicroBlocks 里使用 dotPack 驱动库， 把脑海里的想法实现出来。</p>
+<p>我最喜欢在像素屏幕上做的事情之一是制作 &ldquo;雪崩&rdquo;。</p>
+<h3 id="雪崩snow-crash">雪崩(Snow Crash)</h3>
+<blockquote>
+<p>you want to try some Snow Crash? &ndash;《Snow Crash》</p>
+</blockquote>
+<p>&ldquo;雪崩&rdquo; 是 1992 年出版的赛博朋克小说<a href="https://book.douban.com/subject/3816895/">《雪崩》</a>里的一种病毒，这种病毒是元宇宙(Metaverse 这个词正是来自这本小说！)里的一种卡片，卡片上黑白像素胡乱闪烁，就像没有信号的老旧电视机，它能够经由视觉入侵黑客的大脑，因为黑客的大脑善于处理二进制信息 :-)</p>
+<p>让我们来看看小说里与雪崩相关的片段：</p>
+<blockquote>
+<p>你想试试“雪崩”吗？&hellip; 刚才这话听上去像毒贩在兜售毒品。在现实世界的酒吧里，这是寻常之事，但此地是元宇宙，谁也没办法在元宇宙里卖毒品，因为你不可能只瞅一眼那些妙药就体验到飘飘欲仙的感觉&hellip;问题在于，“雪崩”是个电脑术语，指一种系统故障。此类故障通常称为 bug，但“雪崩”却和普通 bug 不同。这种故障出自电脑的底层结构，会对控制显示器电子束的部件造成破坏，令电子束在屏幕上到处乱扫，把完美的像素栅格变成一片飞旋的暴风雪。</p>
+</blockquote>
+<p>让我们在 dotPack 上制作出“雪崩”的效果:</p>
+<p><video width="80%" src="https://adapter.codelab.club/video/1653470929942460.mp4" controls="controls"></video></p>
+<p>这儿是<a href="/post/img/snow_crash.ubp">相应程序</a></p>
+<p><img src="/post/img/snow_crash.png" alt=""></p>
+<p>很简单是不是！只需要一点点<code>随机数</code>配方, 加上操控像素的积木块，把他们搅拌在一起，嘭！&ldquo;雪崩&quot;出现了！</p>
+<h2 id="在-microblocks-为-dotpack-编写固件">在 MicroBlocks 为 dotPack 编写固件</h2>
+<blockquote>
+<p>固件(Firmware)是一类特定的计算机软件，它为设备的特定硬件提供低级控制&hellip; 可能包含设备的基本功能，并且可能为操作系统等更高级别的软件提供硬件抽象服务. 对于不太复杂的设备，固件可以充当设备的完整操作系统，执行所有控制、监控和数据操作功能。 &ndash; 维基百科</p>
+</blockquote>
+<p>接下来，我打算在为 dotPack 编写一个固件，使其拥有与英荔官方固件相似的能力，为客户端(无线连接)提供如下 API :</p>
+<ul>
+<li>支持细粒度的像素控制 (set_pixel)</li>
+<li>支持字符和滚动文本 (display_char、display_text)</li>
+<li>支持图像的上传、显示 (display_emoji、 display_char_zh 等大量 API 构建在这个 API 之上)</li>
+<li>支持动画的上传、显示 (Animation)</li>
+<li>支持开机启动程序 (图像或动画)</li>
+<li>&hellip;</li>
+</ul>
+<p>换句话说，我打算在 MicroBlocks 写一个商业产品级别的固件，这意味着我将关注性能和稳定性，由于 MicroBlocks 出色的可理解性，优化问题只是&quot;甜蜜的烦恼&rdquo;。</p>
+<p>由于 dotPack 的现有 <a href="https://github.com/longan-link/dotpack_pyclient">Python 客户端开源在 Github 上</a> ，我们的固件将根据这个 API 反过来编写其实现。</p>
+<h3 id="思路">思路</h3>
+<p>通过阅读 dotPack 的 <a href="https://github.com/longan-link/dotpack_pyclient">Python 客户端</a> 源码，可以了解到，dotPack 官方固件与其 Python 客户端采用蓝牙通信来交互。这是大多数教育产品采用的策略(从乐高到 toio 都如此)，对于教育产品来说，采用蓝牙通信有很多好处，尤其是考虑到课堂教学。总所周知，学校网络要么连接复杂，要么网速糟糕，通常兼而有之 :-)</p>
+<p>我在 MicroBlocks 构建的固件则采用 wifi/websocket 来通信，这要求有稳定的 wifi，对家庭用户和小型教育机构应该可行。不采用蓝牙的原因有 3 个:</p>
+<ul>
+<li>官方固件已经足够好了，而且未来还会持续改进，似乎没必要再做完全一样的东西。采用 wifi 将获得了更快的传输速度</li>
+<li>MicroBlocks 官方还没有官方的蓝牙库，虽然我为 MicroBlocks 制作第一个蓝牙库，但编译出的固件体积比原来大了一倍，这会导致烧录时间很长。</li>
+<li>websocket 比蓝牙技术栈简单</li>
+</ul>
+<p>我决定采用 wifi/websocket。</p>
+<p>一旦确定了通信机制，剩下的问题就简单了，我将其视为消息的发送与解释的问题。</p>
+<p>让我们采用 Alan Kay/Smalltalk 的面向对象风格(对象之间通信)来看待这个问题</p>
+<blockquote>
+<p>消息：应将计算视为对象的固有功能，可以通过发送消息统一调用它们。 &ndash; Dan Ingalls 《Smalltalk 背后的设计原则》</p>
+</blockquote>
+<p>具体思路是这样的，把 dotPack 视为一个(服务)对象，它通过解释它自己理解的消息来调用内部的功能（硬件的功能都包含在我们前头写的 dotPack 库中）。</p>
+<p>把 Python 客户端看作另一个对象，它通过给 dotPack 发送消息，请求对方去做一些事情。消息的通道则是 wifi/websocket，当然，我们将来可以轻松将其替换为任何通道，诸如蓝牙，或随便其他什么东西。</p>
+<p><img src="/post/img/dotpack-2.png" alt="websocket handle"></p>
+<p>让我们看一个具体 API 的实现: 设置背景颜色(set_background)</p>
+<h3 id="设置背景颜色set_background">设置背景颜色(set_background)</h3>
+<h4 id="python-客户端一侧">Python 客户端一侧:</h4>
+<p>当用户在 JupyterLab 中输入 <code>pack.set_background('blue')</code> 时，背后发生的事情实际上是通过 wifi/websocket 通道发送了 <code>setBackground,255</code>, 255 代表颜色值（我们将 RGB 编码为一个数字），更多细节可以查看源码（文末给出了链接）。</p>
+<h4 id="固件microblocks一侧">固件(MicroBlocks)一侧:</h4>
+<p>在固件一侧，则是对这个消息做出合理的解释。在此，这个合理的解释是将所有的像素变为蓝色。 如果固件做到了，我们就说它<strong>顺利服务了客户端的请求</strong>。以下是 MicroBlocks 中的具体代码。</p>
+<p><img src="/post/img/dotpack-3.png" alt=""></p>
+<p>有一处可能令大家困惑: <code>color+0</code>。<code>color+0</code> 会将字符串转强行转化为数字(类型转化)，之所以这样做，是因为消息以文本的形式传输。这个方案并不优雅，我已经把这个问题反馈给了 John，在 MicroBlocks 最新的版本中，他已经为数字和字符串之间的转化提供了体面的解决方案。</p>
+<p>值得注意的是，通信的 2 个对象之间传递的消息，并没有某种&quot;正确答案&quot;，它们之间如何传递消息，是由你决定的，只要语义清晰，没有分歧即可。它本质上是一个<strong>设计</strong>问题，重要的是你的想法是什么，并不存在某种最佳的算法技巧。</p>
+<p>不需要过早关注技巧，正如不应该过早优化。</p>
+<p>计算机教育的一大问题是，把太多时间用来磨练技巧，而没有让一个人去关心更宏大的东西，想法、愿景、理念之类的东西。如果你对大海、远方、冒险、神秘宝藏都没有兴趣，刻苦练习 20 种操舵的技巧又有什么乐趣呢？通常只会让你想赶紧远离这件苦差事。你不会理解路飞的乐趣，黑客的乐趣有时正如海贼的乐趣，冒险精神、对未知事物好奇和向往，比埋头练习技巧重要得多。当你拥有好奇心、兴趣和热情，未知的世界就开始向你敞开。</p>
+<h3 id="显示图像">显示图像</h3>
+<p>在 MicroBlocks 中编程的乐趣之一是: 你可以理解一切，进而在理解的基础上进一步创造出新东西。</p>
+<p>MicroBlocks 提供许多方式帮助你理解新事物，&ldquo;展开积木定义&rdquo; 是其中一种强大工具，你可以通过展开别人写的积木块，来理解事物的工作方式.</p>
+<p>我想让 dotPack 库支持图片显示，但我对图片在屏幕上的显示原理一无所知，于是我在 MicroBlocks 内置库里闲逛，看看是否有可以学习的库，我猜测 Graphics 分类里可能有我要的东西。果然！我找到一个 BMP 库，它可以用来显示 BMP 格式的图像。</p>
+<p>通过展开这个库里的积木的定义，我猜测只需要替换这个积木就能完成我想要的动作: 在 dotPack 的 NeoPixel 屏幕上展示 BMP 图像！</p>
+<p><img src="/post/img/dotpack-5.png" alt=""></p>
+<p>于是我将这个积木替换成:</p>
+<p><img src="/post/img/dotpack-6.png" alt=""></p>
+<p>就完成了所有工作！</p>
+<p>现在你可以在 BMP 图像文件(如<code>hello.bmp</code>) 通过 MicroMlocks 传到板子上(开启<code>显示高级积木</code>)</p>
+<p><img src="/post/img/dotpack-7.png" alt=""></p>
+<p>然后使用我们修改后的 BMP 积木显示图像了！</p>
+<h3 id="显示动图动画">显示动图/动画</h3>
+<p>在固件一侧，我们并没有直接支持 gif 动图格式，而是将动图看作一组 bmp 图像，既然有了处理 bmp 图像的积木，使用它构建动图是很容易的。</p>
+<p>这些只是实现的细节问题，在客户端一侧，用户可以使用 <a href="https://github.com/longan-link/dotpack_pyclient/blob/main/dotpack/ledbag.py#L442">Animation 类</a> 加载(load) gif 动图，这个类在内部会做好转化，然后将动图显示在书包上。在用户看起来，就好像 dotPack 已经支持了 gif 动图。</p>
+<p>如果你对实现的细节感兴趣，可以分别翻阅 Python 客户端的源码和固件的源码。</p>
+<hr>
+<p>其他 API 的实现基本一样。有一处需要注意，即 <strong>图像文件的上传</strong>，图像文件比一般消息大，为了加快速度，我选择传输字节(bytes), 具体细节，可以查看源码。</p>
+<h3 id="开机启动程序">开机启动程序</h3>
+<blockquote>
+<p>教育即生活 &ndash; 约翰·杜威</p>
+</blockquote>
+<p>dotPack 追随杜威的教育理念: 教育即生活。 dotPack 希望学习者的作品能够背在自己肩上，作为一种带有强烈个人风格的艺术作品。</p>
+<p>这反过来又给予学习者更强烈的学习动机: 探索和表达自己的风格，并将其融入到生活中。书包陪伴一个学习者的时间很长，它几乎贯穿整个学习生涯里。</p>
+<p>开机启动程序能够让编程的成果随时随地呈现。它允许用户指定 Ta 的任何作品作为开机启动项，无论是静态图片，还是我前头展示的“雪崩”这种动图。</p>
+<p>你可以背着“雪崩”到处走，像小说里的“乌鸦”(《雪崩》里的反派角色)那样，逮到一个看起来像阿弘(《雪崩》里的主角)一样的黑客，就问:</p>
+<blockquote>
+<p>you want to try some Snow Crash?</p>
+</blockquote>
+<hr>
+<p>大多数操作系统，都支持开机启动项，在硬件裸机中实现开机启动程序相当有趣和简单:</p>
+<p><img src="/post/img/dotpack-4.png" alt=""></p>
+<p>通过以上这些代码(蓝色的自定义积木可以展开成更多细节代码)，我们实现了:</p>
+<ul>
+<li>开机启动项</li>
+<li>开机时的简单的人机界面，提示用户 wifi 是否连接顺利</li>
+<li>还包含一个简单的内存优化策略。它能够避免 websocket 服务因内存不足而遗漏给客户端的反馈消息</li>
+</ul>
+<p>在 MicroBlocks 里似乎万事可为，重要的是你的想法，你现在可能会跃跃欲试，想在 MicroBlocks 里写一个更加体面的操作系统，事实上，John Maloney 使用 MicroBlocks 为树莓派做过一个操作系统。</p>
+<h3 id="优化问题">优化问题</h3>
+<blockquote>
+<p>过早优化是万恶之源 &ndash; Donald Knuth 《计算机编程艺术》</p>
+</blockquote>
+<p>在 MicroBlocks 中，你可以看到硬件里发生的一切事情，如果你能够理解一切，那么优化只微不足道的烦恼。</p>
+<h3 id="固件分享">固件分享</h3>
+<p>以下是我在 MicroBlocks 里为 dotPack 编写的固件: <a href="/post/img/dotPack.ubp">dotPack.ubp</a></p>
+<p>它可以配合使用<a href="https://github.com/longan-link/dotpack_pyclient">dotpack_pyclient</a> (版本<code>&gt;=0.3.0</code>)使用，这是<a href="https://github.com/longan-link/dotpack_pyclient/blob/main/examples/hello_Microblocks.ipynb">Jupyter notebook 例子</a></p>
+<h3 id="感受">感受</h3>
+<p>谈谈我在编写固件时的感受。</p>
+<p><video width="80%" src="https://adapter.codelab.club/video/1653468751285480.mp4" controls="controls"></video></p>
+<p>视频里，左边是 Python 客户端。当 Python 客户端与硬件设备交互时，我们可以实时调试，&ldquo;看到&quot;硬件内部所发生的事情，也可以在某个时间或交互截面里，仔细观察硬件内部任何细节。右边是 Microblocks 的界面，当客户端请求到来的时候，我们可以实时观察内存余量，以便优化，如 Alan Kay 所说，在这种活性系统里，因为一切变得可理解，优化不过是细枝末节的琐事。我在硬件方面只是门外汉，但这个调试过程中，甚至发现并报告了 MicroBlocks 中的一些 bug.</p>
+<p>这是系统对用户的增强。也正是个人计算社区一直努力的方向，在此感谢 John Maloney 在 MicroBlocks 上的出色工作！也感谢 dotPack 团队的努力！</p>
+<h1 id="后记">后记</h1>
+<p>在写这篇文章时(2022.05.25), 我重新测试了 ESP32 NeoPixel，John 最近似乎修复了 ESP32 NeoPixel 的毛刺问题！</p>
+<p>如果我在今天开始构建 dotPack 库, 我可能会从 MicroBlocks 内置的 NeoPixel 库开始，这意味着，我无需改写虚拟机，所有一切工作都可以在 MicroBlocks 中完成，相比在 C/C++里编程，当然是要愉快得多的编程体验！ 因为你可以实时调试并看见硬件中发生的一切事情。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://dotpack.fun/">dotPack</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/ledbag/">可编程书包</a></li>
+<li><a href="https://adapter.codelab.club/extension_guide/ledbag/">LedBag</a></li>
+<li><a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/neomatrix-library">NeoMatrix Library</a></li>
+<li><a href="https://learn.adafruit.com/adafruit-gfx-graphics-library">Adafruit GFX Graphics Library</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Firmware">Firmware</a></li>
+<li><a href="https://bitbucket.org/john_maloney/smallvm/issues/259/neopixels-esp32">Neopixels ESP32</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-mqtt-library/">MicroBlocks 编程案例: MQTT 库</a></li>
+<li><a href="https://github.com/longan-link/dotpack_pyclient">dotpack_pyclient</a></li>
+<li><a href="https://medium.com/sysf/bits-to-bitmaps-a-simple-walkthrough-of-bmp-image-format-765dc6857393">Bits to Bitmaps: A simple walkthrough of BMP Image Format</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-05-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microblocks/">microblocks</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/dotpack-snow-crash/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">在 dotPack 上制造「雪崩」的 N 种方法</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/motivation-and-personality/">
+            <span class="next-text nav-default">动机与人格</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

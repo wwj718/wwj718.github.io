@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>公共树莓派 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 他(Alan Kay)意识到显然只有那些沉浸在电脑技术和文化之中的人，就像他自己, 才会有满脑子的想法 &amp;ndash; 《时间机器:施乐帕克与计算机时代的黎" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/public-computer-rpi/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="公共树莓派" />
+<meta property="og:description" content="前言 他(Alan Kay)意识到显然只有那些沉浸在电脑技术和文化之中的人，就像他自己, 才会有满脑子的想法 &ndash; 《时间机器:施乐帕克与计算机时代的黎" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/public-computer-rpi/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-08-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-08-31T00:00:00+00:00" />
+
+<meta itemprop="name" content="公共树莓派">
+<meta itemprop="description" content="前言 他(Alan Kay)意识到显然只有那些沉浸在电脑技术和文化之中的人，就像他自己, 才会有满脑子的想法 &ndash; 《时间机器:施乐帕克与计算机时代的黎"><meta itemprop="datePublished" content="2021-08-31T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-08-31T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3363">
+<meta itemprop="keywords" content="Python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="公共树莓派"/>
+<meta name="twitter:description" content="前言 他(Alan Kay)意识到显然只有那些沉浸在电脑技术和文化之中的人，就像他自己, 才会有满脑子的想法 &ndash; 《时间机器:施乐帕克与计算机时代的黎"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">公共树莓派</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-08-31 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#内部的公共树莓派">内部的公共树莓派</a>
+      <ul>
+        <li><a href="#活的学习环境">活的学习环境</a></li>
+        <li><a href="#学习-python">学习 Python</a></li>
+      </ul>
+    </li>
+    <li><a href="#共享树莓派上的其他东西">共享树莓派上的其他东西</a></li>
+    <li><a href="#看待-公共树莓派-的视角">看待 公共树莓派 的视角</a></li>
+    <li><a href="#附录">附录</a></li>
+    <li><a href="#python-环境">Python 环境</a>
+      <ul>
+        <li><a href="#jupyterlab-协作环境">jupyterlab 协作环境</a></li>
+        <li><a href="#安装最新的-mu-editor">安装最新的 mu-editor</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p><img src="/post/img/094ae88092e44b9dd08e5af38f3b2033.png" alt=""></p>
+<blockquote>
+<p>他(Alan Kay)意识到显然只有那些沉浸在电脑技术和文化之中的人，就像他自己, 才会有满脑子的想法 &ndash; 《时间机器:施乐帕克与计算机时代的黎明》</p>
+</blockquote>
+<p>CodeLab 成员之前在每周五下午的讨论会里，多次被 <strong>公共计算空间</strong> 的概念吸引。</p>
+<p>这是一种混合了 <a href="https://theclubhousenetwork.org/">club(计算机俱乐部)</a> 和 Dynamicland/Neverland 的想法。</p>
+<p>想法的大致轮廓是在一个线下公共空间里，放置一些计算设备，参与者在这个环境里，用编程表达自己的想法，构建自己感兴趣的项目。大家的探索过程和成果都置于公共视野，想法和经验持续流动，彼此启发，就像 Scratch 线上社区。</p>
+<p>我们曾以多种方式探索过这个想法:</p>
+<ul>
+<li><a href="https://www.codelab.club/blog/2018/11/08/about-codelab-club/#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E6%88%91%E4%BB%AC%E5%87%86%E5%A4%87%E5%81%9A%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BA%8B">接下来我们准备做的一些事</a></li>
+<li><a href="https://www.codelab.club/blog/2021/07/16/scratch_workshop/">Scratch 编程工作坊</a></li>
+<li>可编程舞台</li>
+<li>Neverland 2.0</li>
+</ul>
+<p>这些探索都不够深入，并未形成 club。</p>
+<hr>
+<h2 id="内部的公共树莓派">内部的公共树莓派</h2>
+<p>近期 @ACE 和 @尚老师 重新提起这个话题。</p>
+<p>我想不如从内部开始。既然我们鼓励学习者在<strong>公共计算空间</strong>中学习，我们自己也应该在那里协作。</p>
+<p>最简单的公共计算空间仅使用一台树莓派即可构建（配置上屏幕、鼠标、键盘）。</p>
+<p><img src="/post/img/desk-dual-monitor-eab29316d622dcb49815c9f3190f7683.webp" alt=""></p>
+<p>我们希望在这样的环境里，学习可以更加自发地发生，知识处在有意义的情境(context)里。</p>
+<h3 id="活的学习环境">活的学习环境</h3>
+<p>我们希望团队成员的经验能流动起来，彼此启发，每个人的知识和经验能成为其他人起步的基石，而不是各自平行探索。</p>
+<p>知识和想法存在于公共计算空间里，而不是文档上。这是一个活的真实环境，不是死的文档（谁都不爱读）。</p>
+<p>大家将自己感兴趣的项目放在计算环境里，为了他人能理解并使用，需要一开始就<strong>写清楚使用文档</strong>，这一般是交付项目都需要做的，由于现在处在公共视野里，别人可能随时感兴趣，所以需要提前写清楚，如此一来，团队内部能更充分被检验这些东西是否清晰。如果这些项目成熟，则鼓励大家分享到Github上，那儿也是一个“公共空间”。</p>
+<p>以学习树莓派（Linux环境）来说， 光是掌握 Linux 日常使用，似乎就已经是令人生畏的，我该学习多少命令行指令合适呢？ 我需要记住这些命令行参数吗？</p>
+<p>有无穷无尽的知识需要学习，令人恐惧得无法前进。即使投入了大量时间，真正用到的时候又都记不得了。</p>
+<p>更好的方式是看看团队里有经验的人如何使用它（通常是非常真实的用例），在这样的上下文（context）里学习。遇到困难，能得到同伴的及时帮助。</p>
+<p>而“教学是最好的学习”，提供指导的同伴，也能更深入理解自己所掌握得东西，或者因此察觉到自己并为真正掌握。</p>
+<h4 id="以学习-linux-为例">以学习 Linux 为例</h4>
+<p>在一个公共树莓派里，对 Linux 感兴趣的人（我自己就是)，可能会动手把这台设备折腾得适合自己的习惯，他可能会:</p>
+<ul>
+<li>安装<a href="https://github.com/ohmyzsh/ohmyzsh">配置zsh</a>，使得命令行好用</li>
+<li>开启 SSH/VNC，支持远程控制</li>
+<li>安装 frp/ngrok, 用于内网穿透</li>
+<li>安装 tmux, 用于结对编程和后台任务</li>
+<li>安装 <a href="https://github.com/fabric/fabric">fabric</a>，放置一些常用自动化脚本</li>
+<li>&hellip;</li>
+</ul>
+<!--*  安装 [ajenti](https://github.com/ajenti/ajenti), 管理面板，方便新手使用-->
+<p>以上的这些配置对于实施真实的项目通常都是极有用的, 如果PBL课程仅仅关注编程技巧，而不顾及这些情境，课程的末尾可能会发现难以实施真实的项目。</p>
+<p>设想我构建了一个自动灌溉系统(智慧农业)，农田离我家可能是很远的，如果系统出了故障，当我需要进入系统进行调试时，我需要能够远程连入树莓派，此时 ngrok 和 SSH/VNC 是非常有用的。ngrok 能够穿透网络，允许我能在世界上的任何位置与目标计算机通话（即使它没有公网IP，设想它使用手机卡联网）。SSH/VNC则允许我登陆到机器内部。仿佛我就在现场。 这个场景（<strong>你不在现场，但需要访问它</strong>），在大多数真实项目中都有用，无论你制作的是自动化工厂还是智能家居项目。</p>
+<p>这些经验通过阅读 SSH/VNC/ngrok 文档，是极为无聊且难以掌握的，因为你不知道哪些参数有用，所以只好尽可能多学多记，但是很快你就都记不得了，最好的学习方式是看看熟悉它的同伴是怎么做的，去学习那些能够及时投入使用的技能，这是在复杂系统里存活下来的有用技巧。否则很容易从入门到放弃。</p>
+<p>当有人向我请教前头系统环境里的这些东西时，我是洋洋得意的，就像小时候有人向我请教玩具箱里的东西。不信，你试试向有经验的 Linux 爱好者请教他的系统配置就知道了！ 他们会跟你讲上一个下午，热情洋溢滔滔不绝，直到你妈妈喊你吃晚饭。</p>
+<p>如果担心自己的代码和配置被弄乱，可以通过 git 来管理。这又提供了学习git的真实动机！你不需要学习所有git技巧，学习你在当前项目里用得着的。</p>
+<p>在这样的环境里，学习有非常真实的情境和动机。这正式大多数围绕知识的学习所缺失的东西。</p>
+<p>团队成员在这样的公共计算空间里，分享自己折腾的东西，知识以鲜活的方式呈现出来，当他们被请求提供帮助的时候，也是充满热情的，因为这些是他们的作品！</p>
+<p>学习者在这样的环境里，很容易上手掌握如何使用 Linux，不知容易而且有趣，成员的经验很容易彼此共享，看看那些一起玩游戏的孩子就知道了。</p>
+<h3 id="学习-python">学习 Python</h3>
+<p>树莓派(Raspberry Pi) 的 派(Pi) 最初含义是 Python。 我们接下来聊聊这样的<strong>公共计算环境</strong>如何有助于 Python 的学习。</p>
+<p>拥有共同的上下文(context)，意味着大家有同样的视野(看到一样的东西)，无论这东西是知识还是错误。 这样我们就不需要分心在环境的差异上，入门时这种分心可能导致很大的注意力浪费。</p>
+<p>以我刚构建的这台<strong>公共树莓派</strong>为例， 我在里头做了以下工作。</p>
+<ul>
+<li>安装 jupyterlab，用于结对编程，解释项目代码</li>
+<li>安装 supervisor，用于开机自启和进程管理</li>
+<li>安装 flask，用于搭建网站以及对外提供开放API</li>
+<li>安装 requests，用于从网络上获取信息</li>
+<li>安装 gpiozero，以优雅的方式控制树莓派引脚，对海量硬件编程！ <!--可在非root模式运行，jupyterlab， ，命令行工具 pinout 查看引脚状态值， 图: https://gpiozero.readthedocs.io/en/stable/recipes.html#pin-numbering--></li>
+<li>安装 paho-mqtt, 用于物联网项目</li>
+<li>安装 codelab-adapter-client，用于与 CodeLab Adapter 通信</li>
+<li>安装 schedule，用于定时任务</li>
+<li>安装 ntfy/apprise，用于发送通知  <!--使用 BARK 发送通知--></li>
+<li>安装 sentry, 用于错误发现</li>
+<li>&hellip;</li>
+</ul>
+<p>这些都是我自己特别喜欢的 Python 第三方库，每一个都极为强大和通用。</p>
+<p>随便举一个例子，使用 flask 和 gpiozero ，你可以快速构建一个可以在网络上访问的智能农业装置（诸如使用gpiozero驱动一个水泵），如果你想让全球网络都能访问它，那么使用前边提到的的 ngrok 即可。如果你想使得这个装置更加稳定可靠，加上 sentry，你就能及时收到错误信息，诸如有黑客攻击你的设备！</p>
+<p>我使用他们做了大量真实项目，我将我之前折腾的案例，放在树莓派里，大家通过浏览和修改这些项目，很容易获得构建一个Python项目的真实技能。</p>
+<h2 id="共享树莓派上的其他东西">共享树莓派上的其他东西</h2>
+<p>我还在这个共享树莓派上放了许多其他东西，诸如为它配置了一个 microbit v2，新手可以从这儿入门，既可以在 Scratch 对它进行编程(microbit more), 也可以在 mu-editor 上使用它。</p>
+<p>同时我还很愿意介绍桌面上内置 pygame zero 的游戏（源码都可阅读！）:</p>
+<p><img src="/post/img/WechatIMG23.jpeg" alt=""></p>
+<p>此外，我在树莓派里使用 flask 运行了一个网站，介绍我们在树莓派里做的一些项目，鼓励大家通过修改这个网站，介绍自己的新项目。</p>
+<p>当然团队成员，也可以在网站里构建自己的个人主页，如果你想这样做，你就需要理解 flask 的路由(router)功能，需要构建自己的 html 页面，如果你掌握 CSS，页面会整得更加好看，要是你连 JavaScript 都学会了，你甚至可以在出页面上构建出弹来弹去的小框框来惹恼你的访客。 这些都提供了与自身相关、有意义的学习情境。</p>
+<p>如果有新手想加入自己的个人主页，一开始不知道在哪儿配置 flask router，我会让他与我结对编程，手把手引导他，我们远程连入jupyterlab，就可以结对编程， 一起来讨论每一行代码的用处。</p>
+<p>使用 ngrok，这个网站可以被全球访问！</p>
+<p>我们也鼓励团队里的黑客精神的小伙伴去攻击它！</p>
+<p>试试 Hydra 来暴力破解密码？来一波DDoS洪水攻击？</p>
+<p>此时，有些人可能开始构筑防御设施了:</p>
+<p>我们构建一个蜜罐(honeypot)来捕捉黑客如何？屏蔽掉这些危险的IP，你去加固一下防火墙吧； 构建软件的那谁，这份<a href="https://github.com/FallibleInc/security-guide-for-developers">安全清单</a>发你, 此外，<a href="https://github.com/Hack-with-Github/Awesome-Hacking">常见的入侵策略</a>也了解一下，知己知彼百战不殆。</p>
+<p>单是一个项目介绍网站，我们可以延伸出几乎无穷无尽的项目，而且其中的每一个都是真实有意义的。</p>
+<h2 id="看待-公共树莓派-的视角">看待 公共树莓派 的视角</h2>
+<p>一种视角是回顾计算机的早期历史，黑客们在共享计算机上工作，从彼此代码中学习(开放源代码的源头)，并改进它， 《黑客: 计算机革命的英雄》对此有许多讨论。</p>
+<p>另一种强有力的视角是把它看做土壤，想法的种子在里头孵化、生长。</p>
+<p>多元的生物圈更加健壮。</p>
+<p><img src="/post/img/12ffa6511531df87bb03458ed1ec83f2.png" alt=""></p>
+<h2 id="附录">附录</h2>
+<h2 id="python-环境">Python 环境</h2>
+<p>所有Python有关的环境，都使用虚拟环境:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt install python3-pip
+</span></span><span class="line"><span class="cl">sudo pip3 install virtualenv
+</span></span><span class="line"><span class="cl">virtualenv -p /usr/bin/python3 --system-site-packages ~/pyenv3
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="jupyterlab-协作环境">jupyterlab 协作环境</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">source</span> ~/pyenv3/bin/activate
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装 jupyterlab</span>
+</span></span><span class="line"><span class="cl">pip install jupyterlab
+</span></span><span class="line"><span class="cl"><span class="c1"># 在虚拟环境中安装最新 jupyterlab</span>
+</span></span><span class="line"><span class="cl">jupyter lab --collaborative --ip<span class="o">=</span><span class="s2">&#34;*&#34;</span> --ServerApp.token<span class="o">=</span>raspberry
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="安装最新的-mu-editor">安装最新的 mu-editor</h3>
+<p><a href="https://mu.readthedocs.io/en/latest/setup.html#raspberry-pi">Running Development Mu#raspberry-pi</a></p>
+<!--
+### 安装 ajenti 系统管理面板
+```bash
+sudo apt-get install build-essential python3-pip python3-dev python3-lxml libssl-dev python3-dbus python3-augeas python3-apt ntpdate
+sudo pip3 install setuptools pip wheel -U
+sudo pip3 install ajenti-panel ajenti.plugin.ace ajenti.plugin.augeas ajenti.plugin.auth-users ajenti.plugin.core ajenti.plugin.dashboard ajenti.plugin.datetime ajenti.plugin.filemanager ajenti.plugin.filesystem ajenti.plugin.network ajenti.plugin.notepad ajenti.plugin.packages ajenti.plugin.passwd ajenti.plugin.plugins ajenti.plugin.power ajenti.plugin.services ajenti.plugin.settings ajenti.plugin.terminal
+# 启动
+sudo ajenti-panel -v # 用户名: root, 密码: root密码
+```
+-->
+<!--
+### 树莓派测距
+```
+from gpiozero import DistanceSensor
+import requests
+import time
+
+sensor = DistanceSensor(23, 24)
+
+'''
+import pyttsx3
+engine = pyttsx3.init()
+engine.say('Sally sells seashells by the seashore.')
+engine.runAndWait()
+'''
+
+def notify():
+    # 推送消息（短信、email...）
+    print("抓住小偷")
+    requests.get("https://api.day.app/zekekyabwuteiczt/树莓派/发现小偷")
+    time.sleep(1)
+    
+while True:
+    print('Distance to nearest object is', sensor.distance, 'm')
+    if sensor.distance< 0.5:
+        notify()
+        break
+    time.sleep(0.5)
+```
+
+todo
+    构建GUI 展示项目
+    web ui
+    simplegui
+    命令行 rich
+
+FileZilla
+wormhole
+
+blueman
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li>Dynamicland</li>
+<li>OLPC</li>
+<li>the clubhouse network</li>
+<li><a href="https://github.com/jlevy/the-art-of-command-line/blob/master/README-zh.md">the-art-of-command-line</a></li>
+<li><a href="https://github.com/wwj718/awesome-python-in-education-zh">Python教育资源大全中文版</a></li>
+<li><a href="https://github.com/wwj718/awesome-raspberry-pi-zh">树莓派(Raspberry Pi)资源大全中文版</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-08-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/">Python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/public-computer-rpi-guardian/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">公共树莓派案例: 树莓派守护者!</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/recursion-problem/">
+            <span class="next-text nav-default">递归问题</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

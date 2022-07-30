@@ -1,0 +1,386 @@
+module main
+author unknown
+version 1 0 
+description ''
+
+	spec ' ' '生成一帧' '随机生成一帧'
+
+to '生成一帧' {
+  for i 16 {
+    for j 16 {
+      if ((random 1 2) == 1) {
+        setPixel i j (colorSwatch 255 255 255 255) false
+      } else {
+        setPixel i j (colorSwatch 0 0 0 255) false
+      }
+    }
+  }
+  update
+}
+
+script 133 38 {
+forever {
+  '生成一帧'
+  waitMillis 50
+}
+}
+
+script 128 146 {
+to '生成一帧' {}
+}
+
+
+module BMP4dotPack Output
+author 'José García Yeste'
+version 1 3 
+description 'Display BMP files on a dotPack screen.
+
+Files can be uploaded to the board using a variety of tools, including esptool, the Arduino IDE or PlatformIO. Search the web for "SPIFFS file upload" for details.
+
+If you want to stay 100% inside MicroBlocks, you can even set up a web server in MicroBlocks itself and, for example, send the file to the board with a multipart POST request.
+
+This library works with 16, 24 and 32 bpp BMP files
+'
+
+	spec ' ' 'drawBMPfile' 'display BMP file _' 'auto' ''
+	spec 'r' '_checkBMP' '_check BMP signature of file _' 'auto' ''
+	spec ' ' '_drawBMP from' '_draw BMP of file _ width _ height _ bpp _' 'auto auto auto auto' '' 0 0 24
+	spec 'r' '_readLineBMP' '_read BMPline of file _ width _ bpp _' 'auto auto auto' '' 0 24
+	spec ' ' '_ignoreBMP' '_ignore _ bytes of file _' 'auto auto' 0 ''
+	spec 'r' '_read int16 of BMP file' '_read int16 of file _' 'auto' ''
+	spec 'r' '_read int32 of BMP file' '_read int32 of file _' 'auto' ''
+
+to '_checkBMP' filename {
+  local 'signature' ''
+  local 'data' ('[file:readBytes]' 2 filename)
+  for i (size data) {
+    signature = ('[data:join]' signature ('[data:unicodeString]' (at i data)))
+  }
+  return (signature == 'BM')
+}
+
+to '_drawBMP from' filename width height bpp {
+  local 'y' (height - 1)
+  repeatUntil (y < 0) {
+    local 'line' ('_readLineBMP' filename width bpp)
+    for x (size line) {
+      setPixel x (y + 1) (at x line) false
+    }
+    y += -1
+  }
+  update
+}
+
+to '_ignoreBMP' bytes filename {
+  local 'buf' 0
+  repeatUntil (bytes == 0) {
+    if (bytes > 800) {
+      buf = ('[file:readBytes]' 800 filename)
+    } else {
+      buf = ('[file:readBytes]' bytes filename)
+    }
+    bytes = (bytes - (size buf))
+  }
+}
+
+to '_read int16 of BMP file' filename {
+  local 'data' ('[file:readBytes]' 2 filename)
+  return (((at 2 data) << 8) | (at 1 data))
+}
+
+to '_read int32 of BMP file' filename {
+  local 'data' ('[file:readBytes]' 4 filename)
+  return ((((at 4 data) << 24) | ((at 3 data) << 16)) | (((at 2 data) << 8) | (at 1 data)))
+}
+
+to '_readLineBMP' filename width bpp {
+  local 'result' ('[data:makeList]')
+  local 'i' (width * (bpp / 8))
+  local 'data' ('[data:newByteArray]' 0)
+  repeatUntil (i <= 0) {
+    data = ('[data:join]' data ('[file:readBytes]' (minimum 768 i) filename))
+    i += (0 - (minimum 768 i))
+  }
+  i = 1
+  repeatUntil (i >= (size data)) {
+    if (bpp == 16) {
+      '[data:addLast]' (((((at (i + 1) data) & 124) << 17) | (((((at (i + 1) data) & 3) << 3) | ((at i data) >> 5)) << 11)) | (((at i data) & 31) << 3)) result
+    } else {
+      '[data:addLast]' ((((at (i + 2) data) << 16) | ((at (i + 1) data) << 8)) | (at i data)) result
+    }
+    i += (bpp / 8)
+  }
+  local 'mod4' ((size data) % 4)
+  if (mod4 != 0) {
+    '_ignoreBMP' (4 - mod4) filename
+  }
+  return result
+}
+
+to drawBMPfile filename {
+  '[file:open]' filename
+  if ('_checkBMP' filename) {
+    '_ignoreBMP' 8 filename
+    local 'start' ('_read int32 of BMP file' filename)
+    '_ignoreBMP' 4 filename
+    local 'width' ('_read int32 of BMP file' filename)
+    local 'height' ('_read int32 of BMP file' filename)
+    '_ignoreBMP' 2 filename
+    local 'bpp' ('_read int16 of BMP file' filename)
+    '_ignoreBMP' (start - 30) filename
+    '_drawBMP from' filename width height bpp
+  }
+  '[file:close]' filename
+}
+
+
+module dotPack Output
+author '英荔教育'
+version 1 0 
+depends BMP4dotPack 
+choices size big small 
+description 'dotpack ( Eliteu Programable led matrix bag )'
+variables _stop_scrolling_text '_dotPack initialized' 
+
+	spec ' ' '_displayText' '_display text _ _ _ _ _ _' 'auto auto auto auto auto auto' 'hi' 0 0 65280 0 1
+	spec ' ' '_dotPackSetup' '_dotPack setup'
+	spec ' ' 'clearDisplay' 'clear display'
+	spec ' ' 'setBrightness' 'set brightness _' 'auto' '10'
+	spec ' ' 'setPixel' 'set pixel x _ y _ color _ : update _' 'auto auto color bool' 1 1 nil true
+	spec ' ' 'update' 'update'
+	spec ' ' 'setBackground' 'set background color _' 'color'
+	spec ' ' 'displayChar' 'display character _ color _ : size _' 'str color menu.size' 'A' nil 'big'
+	spec ' ' 'dotPackScrollText' 'scroll text _ color _ : pausing _ ms size _' 'str color auto menu.size' 'hello' nil 100 'big'
+	spec ' ' 'stopScrolling' 'stop scrolling'
+	spec ' ' 'drawLine' 'draw line x0 _ y0 _ x1 _ y1 _ color _' 'auto auto auto auto color' 1 1 8 8
+	spec ' ' 'drawTriangle' 'draw triangle x0 _ y0 _ x1 _ y1 _ x2 _ y2 _ color _ : fill _' 'auto auto auto auto auto auto color bool' 1 1 8 1 8 8 nil false
+	spec ' ' 'drawRect' 'draw rectangle x0 _ y0 _ w _ h _ color _ : fill _' 'auto auto auto auto color bool' 1 1 8 4 nil false
+	spec ' ' 'drawCircle' 'draw circle x0 _ y0 _ r _ color _ : fill _' 'auto auto auto color bool' 8 8 4 nil false
+	spec 'r' 'randomColor' 'random color'
+	spec 'r' 'color_rgb' 'color r _ g _ b _' 'auto auto auto' 255 0 0
+
+to '_displayText' text x0 y0 text_color bg_color size {
+  comment 'lock'
+  callCustomCommand '[display:dotPackDisplay]' ('[data:makeList]' text x0 y0 text_color bg_color size)
+  update
+}
+
+to '_dotPackSetup' {
+  if ((v '_dotPack initialized') == 0) {
+    '_dotPack initialized' = 1
+    _stop_scrolling_text = (booleanConstant true)
+    setBrightness 20
+  }
+}
+
+to clearDisplay {
+  setBackground (colorSwatch 0 0 0 255)
+}
+
+to color_rgb r g b {
+  comment ' (blue << 16) | (green << 8) | red;'
+  if (or (or (r < 0) (r > 255)) (or (or (g < 0) (g > 255)) (or (b < 0) (b > 255)))) {
+    sayIt 'r, g, b : 0-255'
+    return 0
+  }
+  return (((r << 16) | (g << 8)) | b)
+}
+
+to displayChar s color size {
+  local 'x0' 0
+  local 'y0' 0
+  local 'bg_color' 0
+  if ((pushArgCount) < 3) {
+    local '_size' 'big'
+  } else {
+    local '_size' size
+  }
+  if (_size == 'big') {
+    x0 = 3
+    y0 = 1
+    _size = 2
+  }
+  if (_size == 'small') {
+    x0 = 5
+    y0 = 4
+    _size = 1
+  }
+  if ((size s) == 0) {
+    comment 'clean'
+    clearDisplay
+  } else {
+    '_displayText' (at 1 s) x0 y0 color bg_color _size
+  }
+}
+
+to dotPackScrollText text color pausing size {
+  '_dotPackSetup'
+  if ((pushArgCount) < 4) {
+    local '_pausing' 100
+    local '_size' 'big'
+  } else {
+    local '_pausing' pausing
+    local '_size' size
+  }
+  local 'rows' 16
+  local 'column' 16
+  local 'size_pixels' 0
+  local 'bg_color' 0
+  local 'y0' 0
+  if (_size == 'small') {
+    _size = 1
+    y0 = 4
+    size_pixels = (5 + 1)
+  }
+  if (_size == 'big') {
+    _size = 2
+    y0 = 1
+    size_pixels = (10 + 3)
+  }
+  local 'i' rows
+  _stop_scrolling_text = (booleanConstant false)
+  repeat (((size text) * size_pixels) + rows) {
+    if (_stop_scrolling_text == (booleanConstant true)) {return 0}
+    '_displayText' text i y0 color bg_color _size
+    i += -1
+    waitMillis _pausing
+  }
+}
+
+to drawCircle x0 y0 r color fill {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x0 y0) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  if ((pushArgCount) < 5) {
+    local '_fill' (booleanConstant false)
+  } else {
+    local '_fill' fill
+  }
+  if _fill {
+    _fill = 1
+  } else {
+    _fill = 0
+  }
+  callCustomCommand '[display:dotPackDrawCircle]' ('[data:makeList]' (x0 - 1) (y0 - 1) r color _fill)
+  update
+}
+
+to drawLine x0 y0 x1 y1 color {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x0 y0 x1 y1) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  callCustomCommand '[display:dotPackDrawLine]' ('[data:makeList]' (x0 - 1) (y0 - 1) (x1 - 1) (y1 - 1) color)
+  update
+}
+
+to drawRect x0 y0 w h color fill {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x0 y0) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  if ((pushArgCount) < 6) {
+    local '_fill' (booleanConstant false)
+  } else {
+    local '_fill' fill
+  }
+  if _fill {
+    _fill = 1
+  } else {
+    _fill = 0
+  }
+  callCustomCommand '[display:dotPackDrawRect]' ('[data:makeList]' (x0 - 1) (y0 - 1) w h color _fill)
+  update
+}
+
+to drawTriangle x0 y0 x1 y1 x2 y2 color fill {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x0 y0 x1 y1 x2 y2) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  if ((pushArgCount) < 6) {
+    local '_fill' (booleanConstant false)
+  } else {
+    local '_fill' fill
+  }
+  if _fill {
+    _fill = 1
+  } else {
+    _fill = 0
+  }
+  callCustomCommand '[display:dotPackDrawTriangle]' ('[data:makeList]' (x0 - 1) (y0 - 1) (x1 - 1) (y1 - 1) (x2 - 1) (y2 - 1) color _fill)
+  update
+}
+
+to randomColor {
+  local 'n1' (random 100 200)
+  local 'n2' (random 0 100)
+  if (1 == (random 1 3)) {
+    return ((n1 << 16) | (n2 << 8))
+  } (1 == (random 1 2)) {
+    return ((n2 << 16) | n1)
+  } else {
+    return ((n1 << 8) | n2)
+  }
+}
+
+to setBackground color {
+  '_dotPackSetup'
+  callCustomCommand '[display:dotPackFillScreen]' ('[data:makeList]' color)
+  update
+}
+
+to setBrightness brightness {
+  comment '所有灯打开到最亮可能会导致重启，连接断开
+
+初始化的时候会设置初始亮度，被setup掉用'
+  if (brightness > 20) {
+    sayIt '亮度应当 <= 20'
+    return 0
+  }
+  callCustomCommand '[display:dotPackSetBrightness]' ('[data:makeList]' brightness)
+  update
+}
+
+to setPixel x y color update {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x y) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  if ((pushArgCount) < 4) {
+    local '_update' (booleanConstant true)
+  } else {
+    local '_update' update
+  }
+  callCustomCommand '[display:dotPackDrawPixel]' ('[data:makeList]' (x - 1) (y - 1) color)
+  if _update {
+    update
+  }
+}
+
+to stopScrolling {
+  _stop_scrolling_text = (booleanConstant true)
+  waitMillis 10
+  comment 'clean'
+}
+
+to update {
+  callCustomCommand '[display:dotPackShow]' ('[data:makeList]')
+}
+

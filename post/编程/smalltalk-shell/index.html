@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>命令行Smalltalk - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="命令行不是正途 正如维基百科提到的: Smalltalk和许多程序设计语言不同，它不仅仅是一门语言&amp;hellip;Smalltalk带有一个应用" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/smalltalk-shell/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="命令行Smalltalk" />
+<meta property="og:description" content="命令行不是正途 正如维基百科提到的: Smalltalk和许多程序设计语言不同，它不仅仅是一门语言&hellip;Smalltalk带有一个应用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/smalltalk-shell/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-11-28T00:00:00+00:00" />
+
+<meta itemprop="name" content="命令行Smalltalk">
+<meta itemprop="description" content="命令行不是正途 正如维基百科提到的: Smalltalk和许多程序设计语言不同，它不仅仅是一门语言&hellip;Smalltalk带有一个应用"><meta itemprop="datePublished" content="2019-11-28T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-11-28T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1177">
+<meta itemprop="keywords" content="Smalltalk,编程," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="命令行Smalltalk"/>
+<meta name="twitter:description" content="命令行不是正途 正如维基百科提到的: Smalltalk和许多程序设计语言不同，它不仅仅是一门语言&hellip;Smalltalk带有一个应用"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">命令行Smalltalk</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-28 </span>
+        <div class="post-category">
+            <a href="/categories/smalltalk/"> Smalltalk </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#命令行下的pharo">命令行下的Pharo</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#使用">使用</a></li>
+        <li><a href="#hello-world">hello world</a></li>
+        <li><a href="#tips">tips</a></li>
+        <li><a href="#todo">todo</a></li>
+        <li><a href="#结论">结论</a></li>
+      </ul>
+    </li>
+    <li><a href="#命令行下的squeak">命令行下的Squeak</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="命令行不是正途">命令行不是正途</h1>
+<p>正如维基百科提到的:</p>
+<blockquote>
+<p>Smalltalk和许多程序设计语言不同，它不仅仅是一门语言&hellip;Smalltalk带有一个应用开发环境（ADE）：由于Smalltalk的历史原因，它具有一个非常优秀的高度集成、开放的应用开发环境。</p>
+</blockquote>
+<p>Smalltall让语言、IDE、系统这些概念变得模糊，也正是这种特性，让其保持极高的开发效率。</p>
+<p>当然Smalltall的核心，并不在表层特性，而在其设计意图。</p>
+<blockquote>
+<p>for a research system, the intent matters most.  &ndash; <a href="http://worrydream.com/Engelbart/">A few words on Doug Engelbart</a></p>
+</blockquote>
+<p>如果希望深入Smalltalk，基于文本的命令行并不是正途。Alan Kay的生物学背景，让Smalltalk像一个生态系统。将Smalltalk视为一个环境而不是传统的文本语言，通常是更好的视角。</p>
+<hr>
+<p>我希望将Smalltalk带到日常工作中，由于历史的惯性，基于命令行的技术生态已经成熟，日常工作很难离开它。彻底弃用命令行工具是不现实的，linux工具箱有海量的效率工具。</p>
+<p>我目前的想法是，在Smalltalk环境中编写事务逻辑，之后在命令行中调用它。换句话说，我想将它用作脚本语言，替代日常使用的Python。</p>
+<p>也许更好的办法是，将Smalltalk视为工作环境，只在需要时调用系统命令。但Pharo目前稳定性/鲁棒性还不好，在macOS下时常会占用占用过多CPU，或者崩溃。</p>
+<h1 id="命令行下的smalltalk">命令行下的Smalltalk</h1>
+<p>乍看起来，<a href="https://en.wikipedia.org/wiki/GNU_Smalltalk">GNU Smalltalk</a>似乎正是我们需要的东西.</p>
+<blockquote>
+<p>与其他Smalltalk环境不同，GNU Smalltalk使用文本文件进行程序输入，并将内容解释为Smalltalk代码。这样，GNU Smalltalk更像是解释器，而不是传统的Smalltalk方式中的环境。</p>
+</blockquote>
+<p>但像我们前头论述的，命令行/文本并不是Smalltalk的正途。</p>
+<p>基于文本的环境当然有许多优点，但Smalltalk对其的诘难比今天的富文本阵营(ppt/word/excel)对其的诘难要深刻得多，(ppt/word/excel)对文本环境(Unix传统)的攻击，多数时候只是表明自己的无知。《Unix编程艺术》一书对文本环境做了很好的辩护，但我认为这种辩护并不能回避Smalltalk的攻击。</p>
+<p>加之对Alan Kay的崇敬，我偏向于使用Squeak和Pharo(Pharo是Squeak的后代)，而不是GNU Smalltalk。</p>
+<h2 id="命令行下的pharo">命令行下的Pharo</h2>
+<p>我们可以在命令行中使用Pharo。</p>
+<h3 id="安装">安装</h3>
+<p><code>wget -O- https://get.pharo.org/64 | bash</code></p>
+<h3 id="使用">使用</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">./pharo Pharo.image --help
+</span></span><span class="line"><span class="cl">./pharo Pharo.image st
+</span></span><span class="line"><span class="cl">    st                    Loads and executes .st source files
+</span></span><span class="line"><span class="cl">    eval                  Directly evaluates passed in one line scripts
+</span></span><span class="line"><span class="cl">./pharo Pharo.image eval --help
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="hello-world">hello world</h3>
+<p>hello.st</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-st" data-lang="st"><span class="line"><span class="cl"><span class="nc">Transcript</span> <span class="nf">show:</span> <span class="s">&#39;hello world&#39;</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行: <code>~/pharo ~/Pharo.image --quit st hello.st</code></p>
+<h3 id="tips">tips</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">alias pst=&#34;~/pharo ~/Pharo.image --quit st&#34;
+</span></span><span class="line"><span class="cl">alias pstui=&#34;~/pharo-ui ~/Pharo.image&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="todo">todo</h3>
+<ul>
+<li>接受输入输出(stdin/stdout)</li>
+<li><a href="https://github.com/cdlm/clap-st">命令行参数</a>
+<ul>
+<li>接受命令行参数: name 打印 hello <code>&lt;name&gt;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="结论">结论</h3>
+<p>类的继承很麻烦，尽可能不要做文本编程。 在Smalltlak环境编程，之后导出为st脚本。</p>
+<h2 id="命令行下的squeak">命令行下的Squeak</h2>
+<p><code>squeak -headless path/to/squeak.image /absolute/path/to/repl.st</code></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://get.pharo.org/64/">get.pharo.org</a></li>
+<li><a href="https://www.gnu.org/software/smalltalk/manual/gst.html">GNU Smalltalk</a></li>
+<li><a href="http://pharobooks.gforge.inria.fr/PharoByExampleTwo-Eng/latest/ZeroConf.pdf">Zero Configuration Scripts and Command-Line Handlers</a></li>
+<li><a href="https://github.com/pharo-open-documentation/pharo-wiki/blob/master/General/CoolSnippets.md">Pharo Cool Snippets</a></li>
+<li><a href="https://vineetreddy.wordpress.com/2017/06/21/clap-command-line-argument-parsing-in-pharo/">CLAP (COMMAND LINE ARGUMENT PARSING) IN PHARO</a></li>
+<li><a href="https://wiki.squeak.org/squeak/1914">squeak CommandShell</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          <a href="/tags/%E7%BC%96%E7%A8%8B/">编程</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/smalltalk-scratch/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Smalltalk与Scratch</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/on-bret-victor/">
+            <span class="next-text nav-default">远方景, 脚底沙</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

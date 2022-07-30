@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch3.0与物理引擎 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 由于@griffpatch的出色工作, 我们可以在Scratch3.0中使用box2d作为物理引擎。 大家可以在scratch3v3.cod" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-physics-engine/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch3.0与物理引擎" />
+<meta property="og:description" content="前言 由于@griffpatch的出色工作, 我们可以在Scratch3.0中使用box2d作为物理引擎。 大家可以在scratch3v3.cod" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-physics-engine/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-01-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-01-30T00:00:00+00:00" />
+
+<meta itemprop="name" content="Scratch3.0与物理引擎">
+<meta itemprop="description" content="前言 由于@griffpatch的出色工作, 我们可以在Scratch3.0中使用box2d作为物理引擎。 大家可以在scratch3v3.cod"><meta itemprop="datePublished" content="2019-01-30T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-01-30T00:00:00+00:00" />
+<meta itemprop="wordCount" content="663">
+<meta itemprop="keywords" content="scratch," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch3.0与物理引擎"/>
+<meta name="twitter:description" content="前言 由于@griffpatch的出色工作, 我们可以在Scratch3.0中使用box2d作为物理引擎。 大家可以在scratch3v3.cod"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch3.0与物理引擎</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-01-30 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/scratch-box2d_bf6c4630.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>由于@griffpatch的出色工作, 我们可以在Scratch3.0中使用<a href="https://box2d.org/">box2d</a>作为物理引擎。 大家可以在<a href="https://scratch3v3.codelab.club/">scratch3v3.codelab.club</a>体验它，选择box2d插件即可。</p>
+<p>来看个演示:</p>
+<p><video width=300 src="https://scratch3-files.just4fun.site/physics_leapmotion.mp4" controls="controls"></video></p>
+<p>这个演示结合了box2d插件和Leap Motion。</p>
+<h1 id="物理引擎">物理引擎</h1>
+<p>维基百科对<a href="https://zh.wikipedia.org/wiki/%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E">物理引擎</a>的解释非常清晰:</p>
+<blockquote>
+<p>物理引擎是一个计算机程序模拟牛顿力学模型，使用质量、速度、摩擦力和空气阻力等变量。可以用来预测这种不同情况下的效果。它主要用在计算物理学和电子游戏以及计算机动画当中。</p>
+</blockquote>
+<p>以大家熟悉的《塞尔达传说 旷野之息》为例，它拥有极高的自由度，物理引擎功不可没，这款游戏</p>
+<blockquote>
+<p>添加了名为“化学引擎”（Chemistry Engine）的游戏机制，允许游戏中的物体相互影响和引发类似现实世界中的交互反应；例如林克可以使用火把点燃草丛，而风可以使火蔓延到更广的地方，燃烧的草丛产生的热空气能让林克使用滑翔翼飞起来。这种元素之间的叠加会让玩家在探索游戏世界时有更多的选择、可能性和自由度。</p>
+</blockquote>
+<h1 id="box2dhttpsbox2dorg"><a href="https://box2d.org/">box2d</a></h1>
+<p>Box2D是一款免费的开源二维物理引擎。</p>
+<h1 id="为scratch30添加物理引擎的思路">为Scratch3.0添加物理引擎的思路</h1>
+<p>如果把运动看作时间序列上的位置变化，那么为Scratch3.0添加物理引擎就不困难。并不需要hack底层的东西，通过runtime，我们可以set和get到target的舞台位置数据，于是就可以创建一个extension来负责计算这些数据的变化，从而赋予target物理属性。</p>
+<h1 id="后话">后话</h1>
+<p>从Scratch的这个用例中，我们可以看到这个Scratch强大的可扩展性。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%89%A9%E7%90%86%E5%BC%95%E6%93%8E">物理引擎</a></li>
+<li><a href="https://zh.wikipedia.org/zh-hans/Box2D">Box2D</a></li>
+<li><a href="https://zh.wikipedia.org/zh-hans/%E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4_%E6%97%B7%E9%87%8E%E4%B9%8B%E6%81%AF">塞尔达传说 旷野之息</a></li>
+<li><a href="https://box2d.org/">box2d</a></li>
+<li><a href="https://github.com/kripken/box2d.js/">box2d.js</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-01-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-debug/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">codelab-adapter增加调试功能</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-with-blockly/">
+            <span class="next-text nav-default">scratch3-adapter ❤️ blockly</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

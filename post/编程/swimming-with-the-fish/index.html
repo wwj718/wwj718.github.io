@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译]与鱼共游 -- Smalltalk中的编程体验 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 原文见Swimming with the Fish。 这个英文标题让人想起「与狼共舞」（Dances with Wolves），于是我准备采用类似的结构 &amp;ndash; 与鱼共游，" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/swimming-with-the-fish/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译]与鱼共游 -- Smalltalk中的编程体验" />
+<meta property="og:description" content="前言 原文见Swimming with the Fish。 这个英文标题让人想起「与狼共舞」（Dances with Wolves），于是我准备采用类似的结构 &ndash; 与鱼共游，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/swimming-with-the-fish/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-10-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-10-31T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译]与鱼共游 -- Smalltalk中的编程体验">
+<meta itemprop="description" content="前言 原文见Swimming with the Fish。 这个英文标题让人想起「与狼共舞」（Dances with Wolves），于是我准备采用类似的结构 &ndash; 与鱼共游，"><meta itemprop="datePublished" content="2020-10-31T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-10-31T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1018">
+<meta itemprop="keywords" content="smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译]与鱼共游 -- Smalltalk中的编程体验"/>
+<meta name="twitter:description" content="前言 原文见Swimming with the Fish。 这个英文标题让人想起「与狼共舞」（Dances with Wolves），于是我准备采用类似的结构 &ndash; 与鱼共游，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译]与鱼共游 -- Smalltalk中的编程体验</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-10-31 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>原文见<a href="http://simberon.blogspot.com/2013/01/swimming-with-fish.html">Swimming with the Fish</a>。</p>
+<p>这个英文标题让人想起「与狼共舞」（Dances with Wolves），于是我准备采用类似的结构 &ndash; <strong>与鱼共游</strong>，巧的是，DeepL也是这样翻译的。</p>
+<h1 id="译文">译文</h1>
+<p>有时候，很难向使用过其他软件开发环境的人，解释在Smalltalk中编程是怎样的体验。 多年来，许多语言都试图接近Smalltalk的感觉，但无一成功。 下边我们试着通过故事描述我们的感受。</p>
+<p>想象你是一位海洋考古学家。 你系上新型潜水装备（配有不会产生任何气泡的循环呼吸器），纵身跃入水中。 当你环顾四周，看到了小鱼、鲨鱼、黄貂鱼、珊瑚礁和乌贼。 你游过珊瑚礁，发现你的目的地 &ndash; 一艘沉船。 你需要找出它沉没的原因。 你绕船转了一圈，看着船体，感受着木头的质感，最后进入桥楼（译者注: 船中部的上层建筑, 其顶层设有驾驶室、作为指挥、控制船舶航行的中心。） 你转动转轮，感觉不对&ndash;转轮自由转动，但没有感受到正常的阻力。 你打开桥楼地板上的舱门，游到下面去看看。问题就在这里！ 那里应该有一个齿轮。 那个齿轮使舵机的轴和舵相连接。你环顾四周，发现齿轮落在了附近。 它看起来没坏，可为什么会掉下来呢？ 它应该是由一个铰链固定的。 哦，铰链在那儿。 铰链断成了两截 ，所以船因为失去方向盘而搁浅。</p>
+<p>往北几英里处，另一位海洋考古学家正在探索另一艘类似的沉船。他坐在船上操作着他的遥控潜水艇，盯着显示器: 那是珊瑚礁 ，漂浮起来 ，向右转10度，前进 ，放慢速度 ，再前进,那是船。慢慢前进。他努力让镜头转向船体，他在船体周围导航潜艇。停在这儿。 屏幕上的物体太近，只能显示一两块甲板。仰视和俯视都很费劲。 他得从船上退下来。 这样的话，要看清整艘船，得花上几个小时。 我们到桥楼去吧。 往上，往上，往上，停 ，现在向右转，停在那里，那是桥楼的门，门是关着的，遥控潜水艇没有可以用来开门的装置 ，而且，这艘遥控潜水艇也进不去。 于是这位海洋考古学家将遥控潜水艇浮到水面，记录事故原因为: <code>操作失误</code>。</p>
+<p>作为一个Smalltalker(译者注: Smalltalk使用者)，你已经习惯了 <strong>与鱼共游</strong>。 你和你要探索的对象生活在同一个世界里。 你可以伸手触摸它们, 操纵它们，转动东西，看看感觉如何。你可以去任何地方，做任何事情。 你可以掀起引擎盖去弄清楚幕后的真相。</p>
+<p>在其他语言中，你在不同的环境中通过远程控制摆弄你的工具。 受限于工具的能力，你无法轻松地操纵环境中的事物。 你可以通过虚拟现实或更好的探头来逼近现场的感觉，但终究不会有 <strong>与鱼共游</strong> 的感觉。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-10-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/release-3-7/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">发布 CodeLab Adapter 3.7</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/javascript-memos/">
+            <span class="next-text nav-default">JavaScript 备忘</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

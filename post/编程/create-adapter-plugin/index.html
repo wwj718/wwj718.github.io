@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>如何开发一个 CodeLab Adapter 插件(最佳实践) - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="更新提醒(2021-03-18) 新的版本加入了与Scratch UI兼容的功能，相对于旧的版本要复杂些。 前言 开发一个 CodeLab Adapter 插件，往往会涉及两部分" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/create-adapter-plugin/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="如何开发一个 CodeLab Adapter 插件(最佳实践)" />
+<meta property="og:description" content="更新提醒(2021-03-18) 新的版本加入了与Scratch UI兼容的功能，相对于旧的版本要复杂些。 前言 开发一个 CodeLab Adapter 插件，往往会涉及两部分" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/create-adapter-plugin/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-03-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-03-18T00:00:00+00:00" />
+
+<meta itemprop="name" content="如何开发一个 CodeLab Adapter 插件(最佳实践)">
+<meta itemprop="description" content="更新提醒(2021-03-18) 新的版本加入了与Scratch UI兼容的功能，相对于旧的版本要复杂些。 前言 开发一个 CodeLab Adapter 插件，往往会涉及两部分"><meta itemprop="datePublished" content="2021-03-18T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-03-18T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2984">
+<meta itemprop="keywords" content="CodeLab," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="如何开发一个 CodeLab Adapter 插件(最佳实践)"/>
+<meta name="twitter:description" content="更新提醒(2021-03-18) 新的版本加入了与Scratch UI兼容的功能，相对于旧的版本要复杂些。 前言 开发一个 CodeLab Adapter 插件，往往会涉及两部分"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">如何开发一个 CodeLab Adapter 插件(最佳实践)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-03-18 </span>
+        <div class="post-category">
+            <a href="/categories/codelab/"> CodeLab </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#案例tello">案例（Tello）</a>
+      <ul>
+        <li><a href="#如何交互">如何交互？</a></li>
+        <li><a href="#构建-adapter-插件">构建 Adapter 插件</a></li>
+        <li><a href="#客户端">客户端</a></li>
+      </ul>
+    </li>
+    <li><a href="#发布-adapter-插件">发布 Adapter 插件</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#我手头没有-tello怎么更方便调试">我手头没有 Tello，怎么更方便调试</a></li>
+    <li><a href="#如何刷入自定义固件">如何刷入自定义固件</a></li>
+    <li><a href="#adatper-内置了哪些第三方库">Adatper 内置了哪些第三方库</a></li>
+    <li><a href="#如何引入新的-python-第三方库">如何引入新的 Python 第三方库</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="更新提醒2021-03-18">更新提醒(2021-03-18)</h1>
+<p>新的版本加入了与Scratch UI兼容的功能，相对于旧的版本要复杂些。</p>
+<h1 id="前言">前言</h1>
+<p>开发一个 CodeLab Adapter 插件，往往会涉及两部分的工作:</p>
+<ul>
+<li>在 CodeLab Adapter 里写一个Python插件</li>
+<li>在 Scratch里写一个 js 插件</li>
+</ul>
+<p>类似前后端的配合，只是他们通过消息通信，而不是 REST API。</p>
+<p>本文侧重讨论Python插件部分。</p>
+<p>CodeLab Adapter 自带一个消息系统，理论上，任何语言都可以与之通信，任何有开放接口的事物都可以接入其中。</p>
+<p>本文仅讨论如何在 Scratch 上构建客户端（Scratch Extension，基于 JavaScript），使其与 CodeLab Adapter 通信(收发消息)来扩展 Scratch 的能力。当然，你也可以在任何语言中做这件事。</p>
+<!--
+Scratch3 插件
+python 插件
+
+tello2
+
+microbit简化
+
+Cozmo
+
+将能力推往客户端
+-->
+<h1 id="思路">思路</h1>
+<p>一个 Adapter 插件（plugin）被视为 Adapter 系统的一个节点(Node), 通过这些节点去适配不同的外部硬件/软件，进而将其接入到系统中。</p>
+<p><img src="https://adapter.codelab.club/img/codelab-adapter_35cfa251.png" alt=""></p>
+<p>在系统中，流动的一切都是消息，所以由这些插件连接的事物(软件/硬件)可以彼此沟通（talk），系统得以持续生长。</p>
+<p>希望使用 Adapter 某个插件的能力时(如在 Scratch 中)，只需要发送消息与 Adapter 对话即可。</p>
+<h1 id="开始">开始</h1>
+<h2 id="案例tello">案例（Tello）</h2>
+<p>本文采用案例式教学。</p>
+<p>近期我们重写了 Adapter Tello 插件，本文将以此为例，介绍 <strong>开发一个 CodeLab Adapter 插件</strong> 的典型流程。</p>
+<p>该流程是完全通用的。</p>
+<h3 id="如何交互">如何交互？</h3>
+<p>首先考虑第一个问题：你想接入什么东西？与之交互的方式是什么？(Adapter 是一个利用消息<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">不停交互的系统</a>)</p>
+<p>如果你想接入的东西是硬件（如 Tello），那么与之通信的方式可能是调用它们的开放 SDK 。</p>
+<p>如果你想接入的东西是软件（如 <a href="https://adapter.codelab.club/extension_guide/teachable_machine/">Teachable Machine</a>），那么与之通信的方式可能是基于某些标准协议(如 http/websocket).</p>
+<p>如果你想接入的东西是一门编程语言的内核（如 Python），那么与之通信的方式可能是 <code>eval</code></p>
+<h4 id="寻找-sdk">寻找 SDK</h4>
+<p>在本文中，我们 <strong>想接入什么东西</strong> 是 Tello。 我们在 Github 上找到与之通信的 Python SDK: <a href="https://github.com/damiafuentes/DJITelloPy">DJITelloPy</a></p>
+<p>与 Tello 通信的方式是利用 socket， <a href="https://github.com/damiafuentes/DJITelloPy">DJITelloPy</a>封装了细节，使我们可以以面向对象的风格与之交互， 我们来一撇 SDK 的使用方式。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">djitellopy</span> <span class="kn">import</span> <span class="n">Tello</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tello</span> <span class="o">=</span> <span class="n">Tello</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tello</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">tello</span><span class="o">.</span><span class="n">takeoff</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tello</span><span class="o">.</span><span class="n">move_left</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">tello</span><span class="o">.</span><span class="n">rotate_counter_clockwise</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">tello</span><span class="o">.</span><span class="n">move_forward</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tello</span><span class="o">.</span><span class="n">land</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>语义清晰，非常简易。</p>
+<h3 id="构建-adapter-插件">构建 Adapter 插件</h3>
+<p>一个 Adapter 插件不是一个孤岛，它试图与其他事物交谈(talk), 对外部的请求做出回应。</p>
+<p>实现这件事的方式很多，软件工程有大量工作围绕这块: <strong>对请求作出回应，提供服务</strong>，我们会想到 RESTful API、RPC&hellip;</p>
+<p>Adapter 如果完成以上目标？ 我们采取的策略是: <strong>收发消息</strong>。我们把一切看作消息, 并且倾向于晚绑定(late binding)</p>
+<p>回到正题。我们先来快速浏览一下 Tello 插件的代码（不必弄懂它，稍后会讲解）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">json</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">codelab_adapter_client</span> <span class="kn">import</span> <span class="n">AdapterNode</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">codelab_adapter_client.thing</span> <span class="kn">import</span> <span class="n">AdapterThing</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">djitellopy</span> <span class="kn">import</span> <span class="n">Tello</span>  <span class="c1"># https://github.com/wwj718/DJITelloPy/archive/master.zip</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TelloProxy</span><span class="p">(</span><span class="n">AdapterThing</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">    该类的主要职责是实现与 Scratch UI 的兼容性
+</span></span></span><span class="line"><span class="cl"><span class="s1">    &#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_instance</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">thing_name</span><span class="o">=</span><span class="s2">&#34;Tello&#34;</span><span class="p">,</span> <span class="n">node_instance</span><span class="o">=</span><span class="n">node_instance</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 必须实现</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># scratch scan 会触发这个函数，返回值将进入 Scratch 扫描到的设备列表中。</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">thing</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">thing</span> <span class="o">=</span> <span class="n">Tello</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">thing</span><span class="o">.</span><span class="n">RESPONSE_TIMEOUT</span> <span class="o">=</span> <span class="n">timeout</span>
+</span></span><span class="line"><span class="cl">        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;self.thing: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">thing</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">thing</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>  <span class="c1"># 返回True有问题，如果没有飞机，就会except</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">[</span><span class="s2">&#34;192.168.10.1&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">node_instance</span><span class="o">.</span><span class="n">pub_notification</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&#34;ERROR&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 必须实现</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 用户在 scratch 界面点击连接时，会触发该函数</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">thing</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">thing</span> <span class="o">=</span> <span class="n">Tello</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">is_connected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thing</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>  <span class="c1"># 幂等操作 ，udp</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span> <span class="o">=</span> <span class="n">is_connected</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 必须实现</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># return self.thing.connect()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">pass</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 必须实现</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Scratch 断开连接</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thing</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">thing</span><span class="o">.</span><span class="n">clientSocket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">pass</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">thing</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Tello3Node</span><span class="p">(</span><span class="n">AdapterNode</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">NODE_ID</span> <span class="o">=</span> <span class="s2">&#34;eim/node_tello3&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">HELP_URL</span> <span class="o">=</span> <span class="s2">&#34;https://adapter.codelab.club/extension_guide/tello3/&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s2">&#34;tello 3.0&#34;</span>  <span class="c1"># list connect</span>
+</span></span><span class="line"><span class="cl">    <span class="n">VERSION</span> <span class="o">=</span> <span class="s2">&#34;3.0.0&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">tello</span> <span class="o">=</span> <span class="n">TelloProxy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">run_python_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">        此处定义了与外部系统（诸如Scratch）沟通的有效消息
+</span></span></span><span class="line"><span class="cl"><span class="s1">        list: Scratch 发现设备
+</span></span></span><span class="line"><span class="cl"><span class="s1">        connect: scratch 建立连接
+</span></span></span><span class="line"><span class="cl"><span class="s1">        disconnect: scratch 断开连接
+</span></span></span><span class="line"><span class="cl"><span class="s1">        tello: 可调用的对象，一般被scratch具体功能积木调用，消息是传递面向对象风格的Python代码，如 tello.takeoff()
+</span></span></span><span class="line"><span class="cl"><span class="s1">        &#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                <span class="n">code</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span><span class="s2">&#34;__builtins__&#34;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;tello&#34;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tello</span><span class="o">.</span><span class="n">thing</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;connect&#34;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tello</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;disconnect&#34;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tello</span><span class="o">.</span><span class="n">disconnect</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;list&#34;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tello</span><span class="o">.</span><span class="n">list</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output</span> <span class="o">=</span> <span class="n">e</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">output</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">extension_message_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">,</span> <span class="n">payload</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 必须实现</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 与当前插件有关的消息都流入该函数</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;code: </span><span class="si">{</span><span class="n">payload</span><span class="p">[</span><span class="s2">&#34;content&#34;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">python_code</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&#34;content&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_python_code</span><span class="p">(</span><span class="n">python_code</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">payload</span><span class="p">[</span><span class="s2">&#34;content&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+</span></span><span class="line"><span class="cl">        <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;payload&#34;</span><span class="p">:</span> <span class="n">payload</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 用于block进程，当收到进程停止消息（将切换self._running状态），则结束阻塞</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 必须实现</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 插件退出钩子，可以执行所需的资源清理（诸如释放设备）</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">tello</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">pass</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">terminate</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#  入口函数，启动插件时将以独立 Python 进程运行。</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">node</span> <span class="o">=</span> <span class="n">Tello3Node</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">node</span><span class="o">.</span><span class="n">receive_loop_as_thread</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">node</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">node</span><span class="o">.</span><span class="n">pub_notification</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&#34;ERROR&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">node</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>你可以使用 <a href="https://adapter.codelab.club/extension_guide/jupyterlab/">Adapter 内置的 JupyterLab</a> 浏览/修改 这些插件源码, 保存并重启插件之后，即刻生效（不需要重启 Adapter）</p>
+<p><img src="/post/img/feb2a3d0fffb174e45009560e05e32e2.png" alt=""></p>
+<p>我们来看看 tello 插件各部分代码的含义和功能是什么（主要关心 Tello3Node）</p>
+<p><img src="/post/img/feb2a3d0fffb174e45009560e05e32e2-note.png" alt=""></p>
+<p>可是，并没有见到跟 Tello 有关的业务逻辑啊？</p>
+<p>是的，这正是我们想法的核心部分: <code>晚绑定(late binding)</code>, 将功能描述不断后推，交给 client（甚至是用户）。</p>
+<p>Adapter Tello 插件看起来颇像一个 REPL，它解释(run_python_code)收到的消息(副作用是 tello 飞行器的行为), Tello 的行为将由输入的消息决定，消息携带语义。我们贪图便利，直接将 Python 代码视为消息(因其能很好携带语义)</p>
+<h3 id="客户端">客户端</h3>
+<p>接下来我们来构建一个客户端来使用 Adapter Tello 插件。</p>
+<p>前头提到，我们计划在 Scratch 里构建一个客户端，它是一个 Scratch Extension。</p>
+<h4 id="scratch-extension">Scratch Extension</h4>
+<p>如果你对构建 Scratch Extension 不熟悉，请参考: <a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/create-first-scratch3-extension/">创建你的第一个 Scratch3.0 Extension</a></p>
+<p>我们已经将 Scratch Tello 插件开放在这儿: <a href="https://github.com/CodeLabClub/scratch3_tello3">scratch3_tello3</a></p>
+<h5 id="如何交互talk">如何交互(talk)?</h5>
+<p>前头提到:</p>
+<blockquote>
+<p>一个 Adapter 插件不是一个孤岛，它试图与其他事物交谈(talk), 对外部的请求做出回应。</p>
+</blockquote>
+<p>Scratch Tello 插件（JavaScript）是如何与 Adapter 插件（Python）交互的呢？</p>
+<p>它们通过 websocket(socketio)沟通, 但你不需要在意和弄懂它们沟通的细节，我们已经构建了一个 <a href="https://github.com/CodeLabClub/scratch3_eim/blob/v3/codelab_adapter_base.js">Adapter js client</a>，抽象掉了 talk 的细节，让你可以基于它轻松在 js 里与 Adapter 交互。 (注意:你的开发环境里，需要有<a href="https://github.com/CodeLabClub/scratch3_eim">scratch3_eim</a>)</p>
+<h5 id="源码解读">源码解读</h5>
+<p>接下来，一起深入到源码里看看。</p>
+<p>我们通过阐述这两块积木，来看看引擎盖后发生的事情。</p>
+<p><img src="/post/img/ce07d13ba0fc32677474fa7a76693e0d.png" alt=""></p>
+<p>首先看看，当我们 <strong>起飞</strong> 积木运行的时候发生了什么:</p>
+<p><img src="/post/img/ef01b07d369d15db57a2c2f48b642735.png" alt=""></p>
+<p>实际上，当 Scratch 中， <strong>起飞</strong> 积木运行时，消息 <code>tello.takeoff()</code> 将发送到 Adapter Tello 插件，插件将解释这则消息&ndash; eval(执行)这段 Python 代码。</p>
+<p>接着我们来看看 <strong>设置速度</strong> 积木（带有参数）运行的时候发生了什么:</p>
+<p><img src="/post/img/219a985303170e825a0570d089c17972.png" alt=""></p>
+<p>可以看出，我们试图将参数拼凑到 Python 代码里。</p>
+<p><code>this.client.emit_with_messageid</code> 是与 Adapter 通信的关键，这部分也很简单，只是发送消息，如果你兴趣不大，不需要弄懂它, 将其视为模版代码，跟着既有的插件(我们开放了插件)填空即可。</p>
+<p>需要注意的是，发往插件的消息并不一定是 Python 代码，它只要携带语义就行。</p>
+<p><a href="https://github.com/CodeLabClub/scratch3_tello3/blob/main/index.js#L13">AdapterBaseClient</a> 类是与 Adapter 通信的唯一入口。 AdapterBaseClient在<a href="https://github.com/CodeLabClub/scratch3_tello3/blob/main/index.js#L152">初始化的时候</a>, 允许传入一些回调函数，获取来自Adapter一侧的消息。</p>
+<h2 id="发布-adapter-插件">发布 Adapter 插件</h2>
+<p>如果你构建了新的 Adapter 插件，欢迎提交到<a href="https://adapter.codelab.club/extension_guide/extension_market/">插件市场</a></p>
+<h1 id="调试">调试</h1>
+<p>为了方便开发 Adapter 插件，一些<a href="https://adapter.codelab.club/dev_guide/debug/">调试技巧</a>可能对你有用</p>
+<h1 id="进阶--进一步阅读">进阶 &amp;&amp; 进一步阅读</h1>
+<ul>
+<li><a href="https://github.com/CodeLabClub/scratch3_python_kernel">scratch3_python_kernel</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_usb_microbit">scratch3_usb_microbit</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_microbit_radio">scratch3_microbit_radio</a></li>
+<li><a href="https://adapter.codelab.club/project_tutorial/eim_pt/">Python 对象的连接器：EIM 插件</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_cozmo">scratch3_cozmo</a></li>
+<li><a href="https://codelab.club/blog/2020/04/26/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">Scratch 拓展最佳实践 &ndash; 以 Cozmo 为例</a></li>
+</ul>
+<h1 id="faq">FAQ</h1>
+<h2 id="我手头没有-tello怎么更方便调试">我手头没有 Tello，怎么更方便调试</h2>
+<p>你可以自定义一个一个Tello类替代 <code>from djitellopy import Tello</code>， 只需要实现js积木里调用的方法即可,诸如 <code>takeoff</code>， 这种方式有助于你理解沟通过程。</p>
+<p>当然，你也可以使用我们构建了一个模拟设备的例子:</p>
+<ul>
+<li>Adapter nodes: <a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/nodes_v3/node_thingDemo.py">node_thingDemo.py</a></li>
+<li>Scratch extension: <a href="https://github.com/CodeLabClub/scratch3_thingDemo">scratch3_thingDemo</a></li>
+</ul>
+<!--
+## 如何以 Scratch 的风格连接硬件？
+
+![](https://adapter.codelab.club/img/443ca8f702f12723b7794bdd5df4ddef.png)
+
+这部分主要是通过与 Scratch 的 runtime 交互实现的，更多细节参考以下两个Scratch 插件的 `scan` 函数
+
+参考:
+
+*  [scratch3_usb_microbit](https://github.com/CodeLabClub/scratch3_usb_microbit)
+*  [scratch3_microbit_radio](https://github.com/CodeLabClub/scratch3_microbit_radio)
+
+-->
+<h2 id="如何刷入自定义固件">如何刷入自定义固件</h2>
+<ul>
+<li><a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_usb_microbit.py#L7">from codelab_adapter.utils import list_microbit, flash_usb_microbit, flash_makecode_file</a></li>
+</ul>
+<h2 id="adatper-内置了哪些第三方库">Adatper 内置了哪些第三方库</h2>
+<p><a href="https://github.com/CodeLabClub/codelab_adapter_extensions/wiki">wiki</a></p>
+<h2 id="如何引入新的-python-第三方库">如何引入新的 Python 第三方库</h2>
+<p>Adapter 允许<a href="https://adapter.codelab.club/dev_guide/%E5%AE%9A%E5%88%B6%E4%B8%8E%E5%88%86%E5%8F%91/">再分发</a>, 把需要的第三方库放在相应目录下，再分发即可</p>
+<p>放在目录下即可，再分发</p>
+<p>更多 <a href="https://adapter.codelab.club/dev_guide/FAQ/">FAQ</a></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/create-first-scratch3-extension/">创建你的第一个 Scratch3.0 Extension</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_tello2">scratch3_tello2</a></li>
+<li><a href="https://github.com/codelabclub/scratch3_eim">scratch3_eim</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_python_kernel">scratch3_python_kernel</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_usb_microbit">scratch3_usb_microbit</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_microbit_radio">scratch3_microbit_radio</a></li>
+<li><a href="https://adapter.codelab.club/project_tutorial/eim_pt/">Python 对象的连接器：EIM 插件</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_cozmo">scratch3_cozmo</a></li>
+<li><a href="https://codelab.club/blog/2020/04/26/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">Scratch 拓展最佳实践 &ndash; 以 Cozmo 为例</a></li>
+<li><a href="https://github.com/LLK/scratch-vm/blob/acc2e6dba2e5a32668f0b26f0b2c4dfdecbe1023/src/util/jsonrpc.js">jsonrpc.js</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_eim/blob/v3/codelab_adapter_base.js#L291">codelab_adapter_base.js</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/">建立在异步消息之上的同步指令</a></li>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-03-18
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">CodeLab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/%E9%B8%A1%E9%B8%A3%E5%AF%BA/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">鸡鸣寺</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/the-conquest-of-happiness/">
+            <span class="next-text nav-default">幸福之路</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

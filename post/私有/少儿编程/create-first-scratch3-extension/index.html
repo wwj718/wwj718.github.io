@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>创建你的第一个Scratch3.0 Extension - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="我们近期刚写完Scratch3.0技术分析系列文章，接下来准备围绕Scratch3.0编辑器写一系列文章，这一系列的文章关注如何构建自己的E" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/create-first-scratch3-extension/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="创建你的第一个Scratch3.0 Extension" />
+<meta property="og:description" content="我们近期刚写完Scratch3.0技术分析系列文章，接下来准备围绕Scratch3.0编辑器写一系列文章，这一系列的文章关注如何构建自己的E" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/create-first-scratch3-extension/" />
+<meta property="article:published_time" content="2019-01-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-01-16T00:00:00+00:00" />
+<meta itemprop="name" content="创建你的第一个Scratch3.0 Extension">
+<meta itemprop="description" content="我们近期刚写完Scratch3.0技术分析系列文章，接下来准备围绕Scratch3.0编辑器写一系列文章，这一系列的文章关注如何构建自己的E">
+
+
+<meta itemprop="datePublished" content="2019-01-16T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-01-16T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1841">
+
+
+
+<meta itemprop="keywords" content="scratch," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="创建你的第一个Scratch3.0 Extension"/>
+<meta name="twitter:description" content="我们近期刚写完Scratch3.0技术分析系列文章，接下来准备围绕Scratch3.0编辑器写一系列文章，这一系列的文章关注如何构建自己的E"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">创建你的第一个Scratch3.0 Extension</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-01-16 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#说明">说明</a></li>
+<li><a href="#运行scratch-gui">运行scratch-gui</a>
+<ul>
+<li>
+<ul>
+<li><a href="#windows用户">windows用户</a></li>
+<li><a href="#开始">开始</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#运行scratch-vm">运行scratch-vm</a></li>
+<li><a href="#第一个scratch3-0-extension">第一个Scratch3.0 Extension</a>
+<ul>
+<li>
+<ul>
+<li><a href="#插件源码">插件源码</a></li>
+<li><a href="#配置">配置</a></li>
+<li><a href="#完成">完成</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#进阶">进阶</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/scratch-extension_27085782.png" alt="" /></p>
+
+<p>我们近期刚写完<a href="https://blog.just4fun.site/Scratch3_api_analysis.html">Scratch3.0技术分析</a>系列文章，接下来准备围绕Scratch3.0编辑器写一系列文章，这一系列的文章关注如何构建自己的Extension，如何接入<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>。</p>
+
+<p>此外，我们的<a href="https://github.com/Scratch3Lab/scratch3_eim">EIM的源码</a>已开放。</p>
+
+<p>对于你希望在自己的平台中接入<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>, 请阅读<a href="https://codelab-adapter-docs.codelab.club/user_guide/FAQ/#scratch3-adapter">scratch3-adapter可以支持其他编程平台吗？</a>。</p>
+
+<h1 id="说明">说明</h1>
+
+<p>文章更新于: 2019.01.20</p>
+
+<p>官方的<a href="https://github.com/LLK">源码仓库</a>一直在变化，我们希望即时更新到最新状态。如果你发现有任何部分不能工作，及时通知我:)</p>
+
+<p>项目的源码我们已经放到github: <a href="https://github.com/Scratch3Lab/scratch3_hello_world">Scratch3Lab/scratch3_hello_world</a></p>
+
+<h1 id="运行scratch-gui">运行scratch-gui</h1>
+
+<p>我的开发环境为MacOS 10.13.5，确保你在本地按照了git和nodejs。</p>
+
+<h3 id="windows用户">windows用户</h3>
+
+<p>有读者在邮件里反馈说，在Windows下遇到一些问题。我在Windows 10里做了测试，把注意事项补充进来。</p>
+
+<!--
+安装[chocolatey](https://chocolatey.org/install): 以管理员身份运行powershell:  `Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))`
+
+完成之后，就可以使用choco安装其他依赖，安装其他依赖:
+
+
+choco install git
+choco install nodejs
+
+-->
+
+<p>安装nodejs.</p>
+
+<p>使用<a href="http://cmder.net/">cmder</a>，而不是cmd。</p>
+
+<p><img src="/post/img/sscratch3-windows_521baf16.png" alt="" /></p>
+
+<h3 id="开始">开始</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">node -v <span class="c1"># v10.15.0. v11.7.0也没问题 , 推荐使用n来管理nodejs版本</span>
+npm install -g yarn
+npm install -g webpack
+npm install -g webpack-dev-server
+mkdir Scratch3 # 
+<span class="nb">cd</span> Scratch3
+git clone https://github.com/LLK/scratch-gui
+
+<span class="nb">cd</span> scratch-gui
+yarn install</code></pre></td></tr></table>
+</div>
+</div>
+<p>现在你就得到了一个可在本地运行Scratch3.0编辑器。</p>
+
+<p>运行<code>webpack-dev-server --https</code>，打开:<code>https://127.0.0.1:8601/</code></p>
+
+<p><img src="/post/img/scratch-extension_57c1dcb7.png" alt="" /></p>
+
+<p>我们统一采用https来运行scratch-gui，因为以后接入<a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter</a>需要使用https。</p>
+
+<h1 id="运行scratch-vm">运行scratch-vm</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> Scratch3
+git clone https://github.com/LLK/scratch-vm
+<span class="nb">cd</span> scratch-vm
+yarn install
+yarn link
+yarn add uglifyjs-webpack-plugin
+yarn run watch
+
+<span class="c1"># 新开一个shell</span>
+<span class="nb">cd</span> scratch-gui
+yarn link scratch-vm</code></pre></td></tr></table>
+</div>
+</div>
+<p>完成<code>yarn link scratch-vm</code>之后，scratch-gui就会采用我们开发环境里的scratch-vm，而不是默认的scratch-vm. 这样一来我们就可以定制scratch-vm了。</p>
+
+<p>scratch-vm是什么呢?</p>
+
+<blockquote>
+<p>Virtual Machine used to represent, run, and maintain the state of programs for Scratch 3.0.</p>
+</blockquote>
+
+<p>可见 Scratch 3.0由scratch-vm提供动力支持。你可以把它理解为运行scratch3.0积木代码的引擎/解释器。</p>
+
+<p>Scratch3.0 Extension便是在scratch-vm中写的。</p>
+
+<h1 id="第一个scratch3-0-extension">第一个Scratch3.0 Extension</h1>
+
+<p>先不解释过多的概念。</p>
+
+<p>Learning by using， 开始创建我们的第一个Scratch3.0 Extension。</p>
+
+<h3 id="插件源码">插件源码</h3>
+
+<p>在<code>scratch-vm/src/extensions</code>目录创建<code>scratch3_hello_world/index.js</code></p>
+
+<p>直接把hello world插件的代码贴上来，对照插件的实际功能和源码，应该能很快理解每一部分，语义还是非常清晰的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="k">const</span> <span class="nx">ArgumentType</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../../extension-support/argument-type&#39;</span><span class="p">);</span>
+<span class="k">const</span> <span class="nx">BlockType</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../../extension-support/block-type&#39;</span><span class="p">);</span>
+<span class="k">const</span> <span class="nx">formatMessage</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;format-message&#39;</span><span class="p">);</span>
+<span class="c1">// const MathUtil = require(&#39;../../util/math-util&#39;);
+</span><span class="c1"></span>
+<span class="cm">/**
+</span><span class="cm"> * Icon svg to be displayed at the left edge of each extension block, encoded as a data URI.
+</span><span class="cm"> * @type {string}
+</span><span class="cm"> */</span>
+<span class="c1">// eslint-disable-next-line max-len
+</span><span class="c1"></span><span class="k">const</span> <span class="nx">blockIconURI</span> <span class="o">=</span> <span class="s1">&#39;data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+cGVuLWljb248L3RpdGxlPjxnIHN0cm9rZT0iIzU3NUU3NSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik04Ljc1MyAzNC42MDJsLTQuMjUgMS43OCAxLjc4My00LjIzN2MxLjIxOC0yLjg5MiAyLjkwNy01LjQyMyA1LjAzLTcuNTM4TDMxLjA2NiA0LjkzYy44NDYtLjg0MiAyLjY1LS40MSA0LjAzMi45NjcgMS4zOCAxLjM3NSAxLjgxNiAzLjE3My45NyA0LjAxNUwxNi4zMTggMjkuNTljLTIuMTIzIDIuMTE2LTQuNjY0IDMuOC03LjU2NSA1LjAxMiIgZmlsbD0iI0ZGRiIvPjxwYXRoIGQ9Ik0yOS40MSA2LjExcy00LjQ1LTIuMzc4LTguMjAyIDUuNzcyYy0xLjczNCAzLjc2Ni00LjM1IDEuNTQ2LTQuMzUgMS41NDYiLz48cGF0aCBkPSJNMzYuNDIgOC44MjVjMCAuNDYzLS4xNC44NzMtLjQzMiAxLjE2NGwtOS4zMzUgOS4zYy4yODItLjI5LjQxLS42NjguNDEtMS4xMiAwLS44NzQtLjUwNy0xLjk2My0xLjQwNi0yLjg2OC0xLjM2Mi0xLjM1OC0zLjE0Ny0xLjgtNC4wMDItLjk5TDMwLjk5IDUuMDFjLjg0NC0uODQgMi42NS0uNDEgNC4wMzUuOTYuODk4LjkwNCAxLjM5NiAxLjk4MiAxLjM5NiAyLjg1NU0xMC41MTUgMzMuNzc0Yy0uNTczLjMwMi0xLjE1Ny41Ny0xLjc2NC44M0w0LjUgMzYuMzgybDEuNzg2LTQuMjM1Yy4yNTgtLjYwNC41My0xLjE4Ni44MzMtMS43NTcuNjkuMTgzIDEuNDQ4LjYyNSAyLjEwOCAxLjI4Mi42Ni42NTggMS4xMDIgMS40MTIgMS4yODcgMi4xMDIiIGZpbGw9IiM0Qzk3RkYiLz48cGF0aCBkPSJNMzYuNDk4IDguNzQ4YzAgLjQ2NC0uMTQuODc0LS40MzMgMS4xNjVsLTE5Ljc0MiAxOS42OGMtMi4xMyAyLjExLTQuNjczIDMuNzkzLTcuNTcyIDUuMDFMNC41IDM2LjM4bC45NzQtMi4zMTYgMS45MjUtLjgwOGMyLjg5OC0xLjIxOCA1LjQ0LTIuOSA3LjU3LTUuMDFsMTkuNzQzLTE5LjY4Yy4yOTItLjI5Mi40MzItLjcwMi40MzItMS4xNjUgMC0uNjQ2LS4yNy0xLjQtLjc4LTIuMTIyLjI1LjE3Mi41LjM3Ny43MzcuNjE0Ljg5OC45MDUgMS4zOTYgMS45ODMgMS4zOTYgMi44NTYiIGZpbGw9IiM1NzVFNzUiIG9wYWNpdHk9Ii4xNSIvPjxwYXRoIGQ9Ik0xOC40NSAxMi44M2MwIC41LS40MDQuOTA1LS45MDQuOTA1cy0uOTA1LS40MDUtLjkwNS0uOTA0YzAtLjUuNDA3LS45MDMuOTA2LS45MDMuNSAwIC45MDQuNDA0LjkwNC45MDR6IiBmaWxsPSIjNTc1RTc1Ii8+PC9nPjwvc3ZnPg==&#39;</span><span class="p">;</span>
+<span class="k">const</span> <span class="nx">menuIconURI</span> <span class="o">=</span> <span class="nx">blockIconURI</span><span class="p">;</span> 
+
+<span class="k">class</span> <span class="nx">Scratch3HelloBlocks</span> <span class="p">{</span>
+    <span class="nx">constructor</span> <span class="p">(</span><span class="nx">runtime</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/**
+</span><span class="cm">         * The runtime instantiating this block package.
+</span><span class="cm">         * @type {Runtime}
+</span><span class="cm">         */</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">runtime</span> <span class="o">=</span> <span class="nx">runtime</span><span class="p">;</span>
+    <span class="p">}</span>
+
+
+    <span class="cm">/**
+</span><span class="cm">     * The key to load &amp; store a target&#39;s pen-related state.
+</span><span class="cm">     * @type {string}
+</span><span class="cm">     */</span>
+    <span class="kr">static</span> <span class="nx">get</span> <span class="nx">STATE_KEY</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;Scratch.helloWorld&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @returns {object} metadata for this extension and its blocks.
+</span><span class="cm">     */</span>
+    <span class="nx">getInfo</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;helloWorld&#39;</span><span class="p">,</span>
+            <span class="nx">name</span><span class="o">:</span> <span class="nx">formatMessage</span><span class="p">({</span>
+                <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;helloWorld.categoryName&#39;</span><span class="p">,</span>
+                <span class="k">default</span><span class="o">:</span> <span class="s1">&#39;hello World&#39;</span><span class="p">,</span>
+                <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Label for the hello world extension category&#39;</span>
+            <span class="p">}),</span>
+            <span class="c1">// menuIconURI: menuIconURI,
+</span><span class="c1"></span>            <span class="nx">blockIconURI</span><span class="o">:</span> <span class="nx">blockIconURI</span><span class="p">,</span>
+            <span class="c1">// showStatusButton: true,
+</span><span class="c1"></span>            <span class="nx">blocks</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="nx">opcode</span><span class="o">:</span> <span class="s1">&#39;say&#39;</span><span class="p">,</span>
+                    <span class="nx">blockType</span><span class="o">:</span> <span class="nx">BlockType</span><span class="p">.</span><span class="nx">COMMAND</span><span class="p">,</span>
+                    <span class="nx">text</span><span class="o">:</span> <span class="nx">formatMessage</span><span class="p">({</span>
+                        <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;helloWorld.say&#39;</span><span class="p">,</span>
+                        <span class="k">default</span><span class="o">:</span> <span class="s1">&#39;say [TEXT]&#39;</span><span class="p">,</span>
+                        <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;say something&#39;</span>
+                    <span class="p">}),</span>
+                    <span class="nx">arguments</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="nx">TEXT</span><span class="o">:</span> <span class="p">{</span>
+                            <span class="nx">type</span><span class="o">:</span> <span class="nx">ArgumentType</span><span class="p">.</span><span class="nx">STRING</span><span class="p">,</span>
+                            <span class="nx">defaultValue</span><span class="o">:</span> <span class="nx">formatMessage</span><span class="p">({</span>
+                                <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;helloWorld.defaultTextToSay&#39;</span><span class="p">,</span>
+                                <span class="k">default</span><span class="o">:</span> <span class="s1">&#39;hello world&#39;</span><span class="p">,</span>
+                                <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;default text to say.&#39;</span>
+                            <span class="p">})</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="nx">menus</span><span class="o">:</span> <span class="p">{}</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+
+    <span class="nx">say</span> <span class="p">(</span><span class="nx">args</span><span class="p">,</span> <span class="nx">util</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">TEXT</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;SAY&#39;</span><span class="p">,</span> <span class="nx">util</span><span class="p">.</span><span class="nx">target</span><span class="p">,</span> <span class="s1">&#39;say&#39;</span><span class="p">,</span> <span class="nx">message</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">Scratch3HelloBlocks</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="配置">配置</h3>
+
+<p>为了将插件挂载到scratch-gui的插件区，我们需要做一些配置工作。</p>
+
+<p>编辑<code>scratch-vm/src/extension-support/extension-manager.js</code></p>
+
+<p>展示一下编辑前后的<code>git diff</code>信息:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+
+ const Scratch3MakeyMakeyBlocks = require(&#39;../extensions/scratch3_makeymakey&#39;);
+ const Scratch3GdxForBlocks = require(&#39;../extensions/scratch3_gdx_for&#39;);
++// hello world
++const Scratch3HelloWorldBlocks = require(&#39;../extensions/scratch3_hello_world&#39;);
+
+ const builtinExtensions = {
+     pen: Scratch3PenBlocks,
+@@ -30,7 +32,8 @@ const builtinExtensions = {
+     speech2text: Scratch3Speech2TextBlocks,
+     ev3: Scratch3Ev3Blocks,
+     makeymakey: Scratch3MakeyMakeyBlocks,
+-    gdxfor: Scratch3GdxForBlocks
++    gdxfor: Scratch3GdxForBlocks,
++    helloWorld: Scratch3HelloWorldBlocks
+ };
+
+ /**</pre></td></tr></table>
+</div>
+</div>
+<p>接着我们将插件的封面图和小图标放到<code>scratch-gui/src/lib/libraries/extensions/</code>目录里png图片尺寸推荐<code>600x372</code></p>
+
+<p>编辑<code>scratch-gui/src/lib/libraries/extensions/index.jsx</code></p>
+
+<p>展示一下编辑前后的<code>git diff</code>信息:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+
+ import makeymakeyInsetImage from &#39;./makeymakey-small.svg&#39;;
+
++import helloworldImage from &#39;./helloworld.png&#39;;
++import helloworldInsetImage from &#39;./helloworld-small.svg&#39;;
++
+ import microbitPeripheralImage from &#39;./peripheral-connection/microbit/microbit-illustration.svg&#39;;
+ import microbitMenuImage from &#39;./peripheral-connection/microbit/microbit-small.svg&#39;;
+ import ev3PeripheralImage from &#39;./peripheral-connection/ev3/ev3-hub-illustration.svg&#39;;
+@@ -233,5 +236,25 @@ export default [
+         ),
+         helpLink: &#39;https://scratch.mit.edu/wedo&#39;
+
+-    }
++    },
++    {
++        name: (
++            &lt;FormattedMessage
++                defaultMessage=&#34;hello world&#34;
++                description=&#34;Name for the &#39;hello world&#39; extension&#34;
++                id=&#34;gui.extension.helloworld.name&#34;
++            /&gt;
++        ),
++        extensionId: &#39;helloWorld&#39;,
++        iconURL: helloworldImage,
++        insetIconURL: helloworldInsetImage,
++        description: (
++            &lt;FormattedMessage
++                defaultMessage=&#34;hello world.&#34;
++                description=&#34;Description for the &#39;hello world&#39; extension&#34;
++                id=&#34;gui.extension.helloworld.description&#34;
++            /&gt;
++        ),
++        featured: true
++    },
+ ];</pre></td></tr></table>
+</div>
+</div>
+<h3 id="完成">完成</h3>
+
+<p><img src="/post/img/scratch-extension_27085782.png" alt="" /></p>
+
+<p>使用插件:</p>
+
+<p><img src="/post/img/scratch-extension_f1e97885.png" alt="" /></p>
+
+<h1 id="进阶">进阶</h1>
+
+<p>阅读已有的例子: <a href="https://github.com/LLK/scratch-vm/tree/develop/src/extensions">scratch-vm/src/extensions</a></p>
+
+<ul>
+<li><a href="https://github.com/Scratch3Lab/scratch3_eim">CodeLab EIM</a></li>
+<li><a href="/scratch3-adapter-open-plan">CodeLab Adapter支持第三方平台</a></li>
+</ul>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://github.com/LLK/scratch-gui">LLK/scratch-gui</a>
+
+<ul>
+<li><a href="https://github.com/LLK/scratch-gui/wiki/Getting-Started">Getting Started</a></li>
+<li><a href="https://github.com/LLK/scratch-gui/wiki/Publishing-to-GitHub-Pages">Publishing to GitHub Pages</a></li>
+<li><a href="https://github.com/LLK/scratch-gui/wiki/Localization">Localization</a></li>
+</ul></li>
+<li><a href="https://github.com/LLK/scratch-vm">LLK/scratch-vm</a>
+
+<ul>
+<li><a href="https://github.com/LLK/scratch-vm/wiki/Scratch-3.0-Extensions-Specification">Scratch 3.0 Extensions Specification</a></li>
+<li><a href="https://github.com/LLK/scratch-vm/tree/develop/src/extensions">scratch-vm/src/extensions</a></li>
+</ul></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-01-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/bluetooth-device-scratch3/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">蓝牙设备与Scratch3.0</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_project_json_analysis_6/">
+            <span class="next-text nav-default">Scratch3技术分析之项目内部数据(第6篇）</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

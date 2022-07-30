@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>blockly开发之使用python驱动浏览器中的turtle(2) - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="这篇文章我们将使用blockly来做一个完整的项目。 这篇教程涵盖以下内容： 从拼搭好的积木块中，生成(generate)python代码 自定义" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-dev-python-browser-turtle/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="blockly开发之使用python驱动浏览器中的turtle(2)" />
+<meta property="og:description" content="这篇文章我们将使用blockly来做一个完整的项目。 这篇教程涵盖以下内容： 从拼搭好的积木块中，生成(generate)python代码 自定义" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/blockly-dev-python-browser-turtle/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-02-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-02-25T00:00:00+00:00" />
+
+<meta itemprop="name" content="blockly开发之使用python驱动浏览器中的turtle(2)">
+<meta itemprop="description" content="这篇文章我们将使用blockly来做一个完整的项目。 这篇教程涵盖以下内容： 从拼搭好的积木块中，生成(generate)python代码 自定义"><meta itemprop="datePublished" content="2018-02-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-02-25T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2349">
+<meta itemprop="keywords" content="blockly," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="blockly开发之使用python驱动浏览器中的turtle(2)"/>
+<meta name="twitter:description" content="这篇文章我们将使用blockly来做一个完整的项目。 这篇教程涵盖以下内容： 从拼搭好的积木块中，生成(generate)python代码 自定义"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">blockly开发之使用python驱动浏览器中的turtle(2)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-02-25 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>这篇文章我们将使用blockly来做一个完整的项目。</p>
+<p>这篇教程涵盖以下内容：</p>
+<ul>
+<li>从拼搭好的积木块中，生成(generate)python代码</li>
+<li>自定义自己的积木块, 并生成对应python代码</li>
+<li>在浏览器中运行python代码</li>
+<li>整合以上部分，使用积木块驱动turtle</li>
+</ul>
+<h1 id="效果展示">效果展示</h1>
+<p><img src="/post/img/blockly_turtle.gif" alt=""></p>
+<p>生成的代码为:</p>
+<p><img src="/post/img/blockly7f8f7d33.png" alt=""></p>
+<h1 id="关于turtle">关于turtle</h1>
+<p>turtle是编程教学中的一个经典概念(另一个经典概念是<code>猫</code>(来自Scratch))，turtle最初由Papert在他的<a href="https://zh.wikipedia.org/zh-hans/Logo%E8%AF%AD%E8%A8%80">Logo语言</a>引入，Logo内置一套海龟绘图（Turtle Graphics）系统，通过向海龟发送命令，用户可以直观地学习程序的运行过程，关于这块的历史沿革，可以参考我之前的文章<a href="http://blog.just4fun.site/scratch.html">Scratch的前世今生</a></p>
+<h1 id="利用blockly-generate-python代码">利用blockly generate python代码</h1>
+<p>如何使用blockly generate代码，我们已经在<a href="http://blog.just4fun.site/blockly-dev-run-code.html">blockly开发之生成并运行js代码(1)</a>做了手把手教学。</p>
+<p>在<a href="http://blog.just4fun.site/blockly-dev-run-code.html">blockly开发之生成并运行js代码(1)</a>中，我们将积木块generate成js代码。blockly默认支持将积木块generate成以下6种代码:</p>
+<ul>
+<li>JavaScript</li>
+<li>Python</li>
+<li>PHP</li>
+<li>Lua</li>
+<li>Dart</li>
+<li>XML</li>
+</ul>
+<p>你可以在<a href="https://blockly-demo.appspot.com/static/demos/code/index.html">Code Editor</a>中体验</p>
+<p>本章的目标是generate出python代码，过程十分简洁，你只需要做2件事：</p>
+<ol>
+<li>引入<code>python_compressed.js</code></li>
+<li>generate出python代码:<code>var code = Blockly.Python.workspaceToCode(demoWorkspace);</code></li>
+</ol>
+<p>完整的代码参考:<a href="https://github.com/wwj718/blockly_dev/blob/master/src/blockly_3_1_generate_python/index.html">blockly_3_1_generate_python</a></p>
+<p>你要做的只有这些</p>
+<h1 id="自定义自己的积木块">自定义自己的积木块</h1>
+<p>blockly只提供了基础的积木块（基本的语言结构），你常常需要定义自己的积木块。</p>
+<p>自定义积木块时你实际在做两件事:</p>
+<ol>
+<li>定义积木的外观</li>
+<li>定义出当前积木对应的代码</li>
+</ol>
+<p>判断一袋狗粮好不好吃的一种方法是看制造者自己吃不吃，我们知道Python社区用Python实现了Python(pypi)。blockly社区中自定义积木外观的工具也是用blockly实现的: <a href="https://blockly-demo.appspot.com/static/demos/blockfactory/index.html">Blockly Developer Tools</a>，文档参考:<a href="https://developers.google.com/blockly/guides/create-custom-blocks/blockly-developer-tools">Blockly Developer Tools docs</a></p>
+<p><img src="/post/img/blockly2c0249f1.png" alt=""></p>
+<p>通过拖拽积木，你就能轻松定义出积木的外观。</p>
+<p>截图中有两处值得注意：</p>
+<p><a href="/post/img/blockly2af54b72.png"></a></p>
+<p>红色框中是你自定义积木外观的代码描述，有两种风格你可以选择（js/json），使用json风格你会得到一个好处:可以随时将json贴回Blockly Developer Tools，从而得到对应的积木。在你生成自定义积木的时候，建议取得分享链接，以便于日后对积木做调整。</p>
+<p>而绿色框中则是该积木generate出的代码，你可以选择目标语言,在此我选择Python</p>
+<p>在<a href="https://github.com/wwj718/blockly_dev/blob/master/src/blockly_3_2_custom_block_generate_python/index.html">blockly_3_2_custom_block_generate_python</a>中展示了一个完整的自定义积木，如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">//外观 使用js风格的描述
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Blockly</span><span class="p">.</span><span class="nx">Blocks</span><span class="p">.</span><span class="nx">draw_stamp</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">setColour</span><span class="p">(</span><span class="mi">160</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">appendDummyInput</span><span class="p">().</span><span class="nx">appendField</span><span class="p">(</span><span class="s2">&#34;stamp&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">setPreviousStatement</span><span class="p">(</span><span class="o">!</span><span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">setNextStatement</span><span class="p">(</span><span class="o">!</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//generate Python
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Blockly</span><span class="p">.</span><span class="nx">Python</span><span class="p">.</span><span class="nx">draw_stamp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Blockly</span><span class="p">.</span><span class="nx">Python</span><span class="p">.</span><span class="nx">definitions_</span><span class="p">.</span><span class="nx">import_turtle</span> <span class="o">=</span> <span class="s2">&#34;import turtle\nturtle=turtle.Turtle()&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s2">&#34;turtle.stamp()\n&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>关于自定义积木的话题很大，我们找机会专门讨论，在此就不展开</p>
+<h1 id="浏览器中运行python">浏览器中运行python</h1>
+<p>目前有好几个项目允许你在浏览器中运行python，其中最流行的解决方案是:<a href="https://github.com/skulpt/skulpt">skulpt</a>，也许也是目前最成熟的解决方案,好些大型项目都在用它,诸如:</p>
+<ul>
+<li><a href="https://www.tynker.com/">tynker</a></li>
+<li><a href="https://www.coursera.org/learn/interactive-python-1">coursera</a></li>
+<li><a href="https://trinket.io/">trinket</a></li>
+</ul>
+<p>浏览器无处不在，如果能在浏览器中直接运行python，不仅免去了新用户安装环境的麻烦，教学者还可以利用js的动态性，灵活地设计课程并与用户交互，很方便对用户做引导。skulpt的主要使用场景是教学，以上便是原因。</p>
+<p>skulpt使用js实现了python解释器(python2.x)，让python能运行在所有主流浏览器中，如此一来，你就可以轻松在pc/手机/ipad的浏览器中学习python</p>
+<p>skulpt是一个强大而灵活的项目，自带很多电池，且有很好的可扩展性(自定义模块)，如果你有兴趣，可以参考:<a href="http://www.skulpt.org/">skulpt官网</a></p>
+<p>turtle是skulpt自带的模块，你可以在<a href="http://interactivepython.org/runestone/static/thinkcspy/PythonTurtle/OurFirstTurtleProgram.html">Our First Turtle Program</a>体验它</p>
+<p>在浏览器中使用python驱动turtle，官方给出了示例源码:<a href="https://gist.githubusercontent.com/bnmnetp/4650616/raw/cea29122971db097c9ccb9fdfccd3c0c9bf81edf/simpleskulpt.html">simpleskulpt</a></p>
+<h1 id="整合">整合</h1>
+<p>经过上边的一圈探索，来看看我们现在能够做到哪些事:</p>
+<ul>
+<li>从拼搭好的积木块中，生成(generate)python代码</li>
+<li>自定义自己的积木块, 并生成对应python代码</li>
+<li>在浏览器中运行python代码</li>
+<li>使用python控制浏览器中turtle</li>
+</ul>
+<p>接下来，整合以上部分，使用blockly积木块来驱动turtle，最小原型参考:<a href="https://github.com/wwj718/blockly_dev/tree/master/src/blockly_4_run_python_in_browser_simple">blockly_4_run_python_in_browser_simple</a></p>
+<p>上边的最小原型修改自<a href="https://gist.githubusercontent.com/bnmnetp/4650616/raw/cea29122971db097c9ccb9fdfccd3c0c9bf81edf/simpleskulpt.html">simpleskulpt</a>。修改之处仅有: 把<code>var prog = document.getElementById(&quot;yourcode&quot;).value; </code>改为blockly生成的代码:<code>var prog = Blockly.Python.workspaceToCode(demoWorkspace);</code> , 如此干净整洁!</p>
+<p>这个例子中，我们可以看出blockly的灵活性，如我们在<a href="http://blog.just4fun.site/blockly-overview.html">blockly入门与介绍</a>中所言，blockly是个编辑器，只负责生成代码，至于代码之后用与干吗，它通通不关心。如此一来，就不产生耦合了。</p>
+<p>要了让blockly能做出丰富的东西，我们需要把turtle的所有操作原语全都暴露为积木块，这个工作我偷了个懒，直接抠了<a href="https://hourofpython.trinket.io/from-blocks-to-code-with-trinket#/blocks/dragging-and-dropping">trinket</a>的源码。完整的代码参考:<a href="https://github.com/wwj718/blockly_dev/tree/master/src/blockly_5_run_python_in_browser_turtle_finish">blockly_5_run_python_in_browser_turtle_finish</a>。积木部分参考:<a href="https://github.com/wwj718/blockly_dev/blob/master/src/blockly_5_run_python_in_browser_turtle_finish/my_blocks.js">my_blocks.js</a>（js代码中变量被压缩过，可读性不大好）</p>
+<p>如此一来我们就完成了整个项目.</p>
+<p>这个项目很有代表性，使用blockly制作一个application的步骤，我们在以上过程中都经历了</p>
+<p>这些步骤官方描述为:</p>
+<ul>
+<li>集成blockly编辑器</li>
+<li>定义你的app里的功能块（block）</li>
+<li>构建app的其余部分，blockly仅充当代码生成器，你需要决定这些用户生成的代码用于做什么，这也是你的app的核心功能所在</li>
+</ul>
+<p>关于最后一点，blockly官方说的很笼统，针对少儿编程这一领域，第三点往往可以拆解为几类典型问题。这方面我们之后有空再谈</p>
+<!--
+# 总结
+
+phaser/snap
+
+Blockly/Scratch 在少儿编程中的应用: 积累问题
+-->
+<h1 id="相关源码">相关源码</h1>
+<p>以下源码展示了渐进的学习过程:</p>
+<ul>
+<li><a href="https://github.com/wwj718/blockly_dev/tree/master/src/blockly_3_1_generate_python">blockly_3_1_generate_python</a></li>
+<li><a href="https://github.com/wwj718/blockly_dev/tree/master/src/blockly_3_2_custom_block_generate_python">blockly_3_2_custom_block_generate_python</a></li>
+<li><a href="https://github.com/wwj718/blockly_dev/tree/master/src/blockly_4_run_python_in_browser_simple">blockly_4_run_python_in_browser_simple</a></li>
+<li><a href="https://github.com/wwj718/blockly_dev/tree/master/src/blockly_5_run_python_in_browser_turtle_finish">blockly_5_run_python_in_browser_turtle_finish</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-02-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/blockly/">blockly</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/book-2016-2017/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">近两年读过的一些好书</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/newton/">
+            <span class="next-text nav-default">牛顿新传</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

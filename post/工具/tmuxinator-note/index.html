@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>tmuxinator: 轻松管理复杂tmux会话 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 近期围绕Scratch3.0和CodeLab Adapter两个项目写代码。 我不大用IDE，日常在shell里工作。下边说说我是怎么开始日" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/tmuxinator-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="tmuxinator: 轻松管理复杂tmux会话" />
+<meta property="og:description" content="前言 近期围绕Scratch3.0和CodeLab Adapter两个项目写代码。 我不大用IDE，日常在shell里工作。下边说说我是怎么开始日" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/tmuxinator-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-07-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-07-09T00:00:00+00:00" />
+
+<meta itemprop="name" content="tmuxinator: 轻松管理复杂tmux会话">
+<meta itemprop="description" content="前言 近期围绕Scratch3.0和CodeLab Adapter两个项目写代码。 我不大用IDE，日常在shell里工作。下边说说我是怎么开始日"><meta itemprop="datePublished" content="2019-07-09T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-07-09T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1123">
+<meta itemprop="keywords" content="tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="tmuxinator: 轻松管理复杂tmux会话"/>
+<meta name="twitter:description" content="前言 近期围绕Scratch3.0和CodeLab Adapter两个项目写代码。 我不大用IDE，日常在shell里工作。下边说说我是怎么开始日"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">tmuxinator: 轻松管理复杂tmux会话</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-07-09 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#scratch30">Scratch3.0</a></li>
+        <li><a href="#codelab-adapter">CodeLab Adapter</a></li>
+        <li><a href="#有什么不爽">有什么不爽</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#bash">bash</a></li>
+        <li><a href="#zsh">zsh</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#创建项目">创建项目</a></li>
+        <li><a href="#我的配置">我的配置</a></li>
+        <li><a href="#一些常用命令">一些常用命令</a></li>
+        <li><a href="#退出重进">退出&amp;重进</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/tmux_session_0aa2216e.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>近期围绕Scratch3.0和CodeLab Adapter两个项目写代码。</p>
+<p>我不大用IDE，日常在shell里工作。下边说说我是怎么开始日常工作的。</p>
+<h3 id="scratch30">Scratch3.0</h3>
+<p>当我开始Scratch3.0相关的开发工作时，一般要做以下工作</p>
+<ul>
+<li>进入scratch-gui工作目录，运行<code>webpack-dev-server --https</code></li>
+<li>进入scratch-vm目录运行<code>yarn watch</code></li>
+<li>进入scratch-vm/src/extensions目录编辑源码</li>
+<li>进入scratch-vm-extensions目录，准备提交插件代码</li>
+</ul>
+<p>开发中涉及的具体工作，参考<a href="/create-first-Scratch3-Extension.html">创建你的第一个Scratch3.0 Extension</a></p>
+<h3 id="codelab-adapter">CodeLab Adapter</h3>
+<p>当我开始CodeLab Adapter相关的开发工作时，一般要做以下工作:</p>
+<ul>
+<li>进入codelab_adapter core目录</li>
+<li>进入Python虚拟环境</li>
+<li>启动消息监控进程</li>
+<li>使用vscode打开当前目录</li>
+<li>进入GUI(pyqt/guizero/webgui)目录，切换到Python虚拟环境</li>
+<li>tail日志</li>
+</ul>
+<h3 id="有什么不爽">有什么不爽</h3>
+<p>每次准备进入上述两个项目的开发状态，都得鼓足勇气，屏息片刻想想需要打开哪些目录、它们路径各是什么、开几个terminal tab、各自的启动指令是什么&hellip; 聚精会神完成这些准备工作，还没进入正式工作，精力就消耗了一半。</p>
+<p>虽然上述准备工作的每一步都有自动化的策略，像makefile、fabric、tmux配置文件、alias &hellip; 但我一直期待一种简单清晰的方案。</p>
+<p><a href="https://github.com/tmuxinator/tmuxinator">tmuxinator</a>是我的救星。</p>
+<p>使用tmuxinator，可以轻松管理复杂tmux会话，为不同的项目定义不同的配置文件，即可一行命令完成所有启动/收尾工作！</p>
+<p>当然，前提是你对tmux已经熟悉。如果你对tmux不熟，也许值得花些时间，它是个效率神器。</p>
+<p>下边记录一下我的使用方式。 做些简单调整，你就可以做出适合自己工作习惯的配置。</p>
+<h1 id="环境">环境</h1>
+<p>记录下我的本地环境(你不必于此相同):</p>
+<ul>
+<li>MacOS 13.05</li>
+<li>tmux 2.7</li>
+<li>gem 2.7.6</li>
+</ul>
+<h1 id="安装-tmuxinatorhttpsgithubcomtmuxinatortmuxinatorinstallation"><a href="https://github.com/tmuxinator/tmuxinator#installation">安装 tmuxinator</a></h1>
+<p><code>sudo gem install tmuxinator</code></p>
+<h1 id="配置">配置</h1>
+<p>安装完tmuxinator，需要做些配置。</p>
+<p>创建<code>~/.bin</code>, 将<a href="https://github.com/tmuxinator/tmuxinator/tree/master/completion">completion</a>里与你当前的shell对应的文件下载到<code>~/.bin</code>。</p>
+<h3 id="bash">bash</h3>
+<p>将以下内容添加到<code>~/.bashrc</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">EDITOR</span><span class="o">=</span><span class="s1">&#39;vim&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> ~/.bin/tmuxinator.bash
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="zsh">zsh</h3>
+<p>将以下内容添加到<code>~/.zshrc</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">EDITOR</span><span class="o">=</span><span class="s1">&#39;vim&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> ~/.bin/tmuxinator.zsh
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="使用">使用</h1>
+<h3 id="创建项目">创建项目</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tmuxinator new YOUR_PROJECT <span class="c1"># scratch3/codelab_adapter</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>创建完成后,将进入默认配置文件里。</p>
+<h3 id="我的配置">我的配置</h3>
+<h4 id="heading"></h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">name: codelab_adapter
+</span></span><span class="line"><span class="cl">root: ~/
+</span></span><span class="line"><span class="cl">windows:
+</span></span><span class="line"><span class="cl">  - editor:
+</span></span><span class="line"><span class="cl">      root: /PATH/TO/codelab_adapter
+</span></span><span class="line"><span class="cl">      layout: tiled # main-vertical # main-vertical
+</span></span><span class="line"><span class="cl">      panes:
+</span></span><span class="line"><span class="cl">        - source venv3.6/bin/activate &amp;&amp; code .
+</span></span><span class="line"><span class="cl">        - source venv3.6/bin/activate &amp;&amp; codelab-monitor
+</span></span><span class="line"><span class="cl">        - cd /PATH/TO/adapter_qt &amp;&amp; source venv3.6/bin/activate &amp;&amp; echo &#34;to run it...&#34;
+</span></span><span class="line"><span class="cl">        - cd /PATH/TO/codelab_adapter_UI_guizero &amp;&amp; source venv3.6/bin/activate
+</span></span><span class="line"><span class="cl">  - logs: tail -f ~/codelab_adapter/info.log
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="scratch3">scratch3</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">name: scratch3
+</span></span><span class="line"><span class="cl">root: ~/
+</span></span><span class="line"><span class="cl">windows:
+</span></span><span class="line"><span class="cl">  - run_server:
+</span></span><span class="line"><span class="cl">      root: /PATH/TO/Scratch3
+</span></span><span class="line"><span class="cl">      layout: tiled # main-vertical # main-vertical
+</span></span><span class="line"><span class="cl">      panes:
+</span></span><span class="line"><span class="cl">        - cd scratch-gui &amp;&amp; webpack-dev-server --https
+</span></span><span class="line"><span class="cl">        - cd scratch-vm &amp;&amp; yarn watch
+</span></span><span class="line"><span class="cl">  - editor:
+</span></span><span class="line"><span class="cl">      layout: tiled # main-vertical # main-vertical
+</span></span><span class="line"><span class="cl">      panes:
+</span></span><span class="line"><span class="cl">        - cd /PATH/TO/scratch-vm-extensions 
+</span></span><span class="line"><span class="cl">        - cd /PATH/TO/scratch-vm/src/ &amp;&amp; code .
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>来看看运行效果:</p>
+<p><img src="/post/img/tmux_session_0aa2216e.png" alt=""></p>
+<p>完美！</p>
+<!--
+# 树莓派
+tmux -V // tmux 2.8
+sudo gem install tmuxinator
+
+
+### zigbee2mqtt
+
+tmuxinator new zigbee2mqtt
+
+tmuxinator edit zigbee2mqtt
+
+tmuxinator start zigbee2mqtt
+
+
+
+windows:
+  - zigbee2mqtt:
+      root: /opt/zigbee2mqtt/
+      layout: tiled # main-vertical # main-vertical
+      panes:
+        - npm start
+        - ls
+
+
+### hass
+tmuxinator new hass
+
+tmuxinator start hass
+
+cd ~/mylab/hass 
+source env_hass/bin/activate
+hass
+
+
+windows:
+  - editor:
+      root: ~/mylab/changxue/codelab_adapter
+      layout: tiled # main-vertical # main-vertical
+      panes:
+        - source venv3.6/bin/activate && code .
+        - source venv3.6/bin/activate && adapter-monitor
+        - cd ~/mylab/codelabclub/fbs_adapter/adapter_qt && source venv3.6/bin/activate && echo "run fbs run"
+        - echo "test..."
+
+-->
+<h3 id="一些常用命令">一些常用命令</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">tmuxinator new YOUR_PROJECT
+</span></span><span class="line"><span class="cl">tmuxinator edit YOUR_PROJECT
+</span></span><span class="line"><span class="cl">tmuxinator start YOUR_PROJECT
+</span></span><span class="line"><span class="cl">tmuxinator stop YOUR_PROJECT
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="退出重进">退出&amp;重进</h3>
+<p>当作普通的tmux会话即可。</p>
+<ul>
+<li>ctrl-b d</li>
+<li>tmux attach -t xxx</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-07-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/the-lion-king/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">狮子王</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/toio-introduction/">
+            <span class="next-text nav-default">toio: 她有轮子！</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

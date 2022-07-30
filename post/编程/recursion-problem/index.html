@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>递归问题 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="为了理解递归，必须首先理解递归。 前言 近期开始讲授两门编程入门课: 其一在汇景创造乐园, 关于 Python 入门。 其二在实务学堂，web 职业方向。 上周五晚上在" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/recursion-problem/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="递归问题" />
+<meta property="og:description" content="为了理解递归，必须首先理解递归。 前言 近期开始讲授两门编程入门课: 其一在汇景创造乐园, 关于 Python 入门。 其二在实务学堂，web 职业方向。 上周五晚上在" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/recursion-problem/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-08-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-08-30T00:00:00+00:00" />
+
+<meta itemprop="name" content="递归问题">
+<meta itemprop="description" content="为了理解递归，必须首先理解递归。 前言 近期开始讲授两门编程入门课: 其一在汇景创造乐园, 关于 Python 入门。 其二在实务学堂，web 职业方向。 上周五晚上在"><meta itemprop="datePublished" content="2021-08-30T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-08-30T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2175">
+<meta itemprop="keywords" content="Python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="递归问题"/>
+<meta name="twitter:description" content="为了理解递归，必须首先理解递归。 前言 近期开始讲授两门编程入门课: 其一在汇景创造乐园, 关于 Python 入门。 其二在实务学堂，web 职业方向。 上周五晚上在"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">递归问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-08-30 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#递归是一种信仰">递归是一种信仰</a></li>
+    <li><a href="#几道问题">几道问题</a>
+      <ul>
+        <li><a href="#问题-1">问题 1</a></li>
+        <li><a href="#思考方式">思考方式</a></li>
+        <li><a href="#其他练习题">其他练习题</a></li>
+      </ul>
+    </li>
+    <li><a href="#小结">小结</a></li>
+    <li><a href="#与递归有关的一些强有力观点powerful-ideas">与递归有关的一些强有力观点(Powerful Ideas)</a></li>
+    <li><a href="#附">附</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/Sierpinski_triangle.svg" alt=""></p>
+<blockquote>
+<p>为了理解递归，必须首先理解递归。</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p>近期开始讲授两门编程入门课:</p>
+<ul>
+<li>其一在汇景创造乐园, 关于 Python 入门。</li>
+<li>其二在实务学堂，web 职业方向。</li>
+</ul>
+<p>上周五晚上在汇景开始第一次授课。</p>
+<p>以下是我的围绕第一次课《编程是什么?》 制作的讲稿（Google Slides）:  <a href="https://docs.google.com/presentation/d/1izFfP0VBog4CMCJiE9MXaD56KPdd7uTy52uCXn8j0AU/edit?usp=sharing">编程是什么?</a></p>
+<p>课程的参与者中，@weiran 有编程经验（在编程比赛中拿过金奖）。之前与 @weiran 父亲认识，此次 @weiran 带着一些问题来听课，课后与我讨论了一些困扰他已久的递归问题， 觉得递归的概念难以理解。</p>
+<p>我给他分享了两份材料:</p>
+<ul>
+<li><a href="https://wizardforcel.gitbooks.io/sicp-py/content/">SICP Python 描述</a></li>
+<li>The Little Schemer</li>
+</ul>
+<blockquote>
+<p>递归，在数学与计算机科学中，是指在函数的定义中使用函数自身的方法。递归一词还较常用于描述以自相似方法重复事物的过程。 &ndash; 维基百科</p>
+</blockquote>
+<blockquote>
+<p>正式定义: 在数学和计算机科学中，递归指由一种（或多种）简单的基本情况定义的一类对象或方法，并规定其他所有情况都能被还原为其基本情况。  &ndash; 维基百科</p>
+</blockquote>
+<h2 id="递归是一种信仰">递归是一种信仰</h2>
+<blockquote>
+<p>LISP 是一门宗教， 递归是一种信仰</p>
+</blockquote>
+<p>我们先来看看《SICP Python描述》对递归的精彩讨论。</p>
+<blockquote>
+<p>将递归调用看做函数抽象叫做递归的“信仰飞跃”(leap of faith)。我们以函数自身来定义 函数，但是仅仅相信更简单的情况在验证函数正确性时会正常工作。 &ndash;《SICP Python 描述》</p>
+</blockquote>
+<p>这可能是关于如何把握递归，最精彩的描述之一。</p>
+<p>以阶乘的递归描述为例:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">fact</span><span class="p">(</span><span class="n">n</span><span class="p">):</span> 
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">n</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">fact</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个例子中我们 <strong>相信</strong>  <code>fact(n-1)</code> 会正确计算 <code>(n-1)!</code> ， 然后把 <code>fact(n-1)</code> 当作一个抽象函数(黑盒)即可，而不要试图展开去理解它！</p>
+<p>为了理解递归，你必须信任递归函数会完成它的目标。</p>
+<h2 id="几道问题">几道问题</h2>
+<blockquote>
+<p>语言并不是你学到的东西，而是你参与的东西。  &ndash; Arika Okrent</p>
+</blockquote>
+<p>我讨厌解题，就像讨厌写命题作文。</p>
+<p>编程是关于我想让计算机做什么，而不是我要掌握的技巧，除非那些技巧跟我想做的事情有关。</p>
+<p>所以 @weiran 给我发的几个递归题目，我没细看。相比于解几道递归题目，更重要的是理解递归想法本身的力量，而理解递归的力量，再在没有比 LISP 社区更为深刻的了，所以我跟他简单聊了LISP社区对递归的看法（受到Alan Kay、Paul Graham、SICP和LISP 1.5手册的影响），分享了一些资料。</p>
+<p>周末有空，把 @weiran 发给我的几个问题仔细看了下，似乎还挺好玩，一种脑筋急转弯的乐趣, 聊作消遣。</p>
+<h3 id="问题-1">问题 1</h3>
+<p>我们先以一道有答案的题目为例:</p>
+<p><img src="/post/img/WechatIMG6-0.jpeg" alt=""></p>
+<p>这题目看起来是要采集到所有的蓝色能量块/宝石。</p>
+<p>不知道这是什么编程平台，准备用 Python turtle 模拟它: 走路采集宝石和 turtle 走路画出某种路径图案(宝石在路径上)是等效问题。</p>
+<p>写了个简单模拟器（使用<a href="https://www.codelab.club/blog/2020/08/20/tools#mu-editor">Mu editor</a>）:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">turtle</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">t</span> <span class="o">=</span> <span class="n">turtle</span><span class="o">.</span><span class="n">Turtle</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">t</span><span class="o">.</span><span class="n">speed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 慢速移动</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ONE_STEP</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1"># 步长</span>
+</span></span><span class="line"><span class="cl">    <span class="n">t</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">ONE_STEP</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">turnRight</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">t</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">turnLeft</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">t</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>接下来， 我们来走出这个递归图案</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">recur</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 结束条件</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">a</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 前往第1个递归位置</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnRight</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnLeft</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 抵达第1个递归位置</span>
+</span></span><span class="line"><span class="cl">    <span class="n">recur</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># 画出下一个图案，相信这个函数会画出，别管它怎么画出</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 前往第2个递归位置</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnLeft</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnRight</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 抵达第2个递归位置</span>
+</span></span><span class="line"><span class="cl">    <span class="n">recur</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># 画出下一个图案</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 回到出始位置</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnLeft</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnRight</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">t</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="c1"># 初始朝向</span>
+</span></span><span class="line"><span class="cl"><span class="n">recur</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/post/img/d51270cc4c5c734e9b877ea67e1e2f5e.png" alt=""></p>
+<p>初次接触递归的小伙伴，可能会试图在每个 recur(recursion) 函数里展开 recur 函数，大脑内存一下就不够用了。</p>
+<h3 id="思考方式">思考方式</h3>
+<p>思考递归的关键是 <strong>相信</strong> 递归函数会完成它的目标。</p>
+<p>观察上边的结构。</p>
+<p><img src="/post/img/WechatIMG6-2.jpeg" alt=""></p>
+<p>我们发现上边蓝线标注的图案，反复出现（递归），我们把它下一次出现的位置(绿色星星)称为递归位置， 只需要关注子代的递归位置即可，别去管太远的后代。</p>
+<p>开始定义递归函数: recur(你可以把它叫做 <strong>画出蓝线图案</strong>， 接受一个参数: 走几步)，重点是 <strong>相信</strong> 递归函数会完成它的目标，然后，抽象地使用它（关注语义，而不是实现）。</p>
+<p>总结来说, 定义一个递归函数，在函数内做一下几件事:</p>
+<ul>
+<li>确定递归位置(当前题目有左右两个递归位置)</li>
+<li>依次前往递归位置（在每个递归位置，确认与初始状态（朝向）一致）</li>
+<li>调用递归函数，画出下一个递归图案（<strong>相信</strong> 递归函数会画出蓝线，只是参数不同）</li>
+<li>回到初始位置（确保姿态和初始状态一致）</li>
+<li>注意结束条件.</li>
+</ul>
+<hr>
+<p>在另一道题上试试我们的方法:</p>
+<p><img src="/post/img/8d6648ea5c6022e48f2c4d3f80aaf33c.png" alt=""></p>
+<p>首先我们观察到递归绘制的图形是:</p>
+<p><img src="/post/img/8d6648ea5c6022e48f2c4d3f80aaf33c-2.png" alt=""></p>
+<p>然后开始写代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">recur</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 结束条件</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">a</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 前往第1个递归位置</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 抵达第1个递归位置</span>
+</span></span><span class="line"><span class="cl">    <span class="n">recur</span><span class="p">(</span><span class="n">a</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 描述与下一个图形的关系</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 前往第2个递归位置</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnLeft</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 抵达第2个递归位置</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnRight</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">recur</span><span class="p">(</span><span class="n">a</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 回到出始位置和状态</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnLeft</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">step</span><span class="p">(</span><span class="o">-</span><span class="n">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">turnRight</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">t</span><span class="o">.</span><span class="n">right</span><span class="p">(</span><span class="mi">135</span><span class="p">)</span> <span class="c1"># 初始朝向</span>
+</span></span><span class="line"><span class="cl"><span class="n">recur</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/post/img/466c8d3261da8f7832ee254710a7392d.png" alt=""></p>
+<h3 id="其他练习题">其他练习题</h3>
+<p>大家有兴趣可以试试其他练习题:</p>
+<p><img src="/post/img/WechatIMG2.jpeg" alt=""></p>
+<p><img src="/post/img/WechatIMG3.jpeg" alt=""></p>
+<h2 id="小结">小结</h2>
+<p>通过以上这类递归题目: 在空间里走出目标路径(等效于绘制几何图形)，我们分享了思考递归的一些有力方式。</p>
+<p>递归的趣味和力量远不止如此。</p>
+<p>如果你只是把递归看作一种解题技巧，那么你会错失它的真正力量。</p>
+<p>试着把它看作看待/描述问题的方式，这是LISP社区一贯以来的视角。</p>
+<p>如果你想真正掌握递归的力量，你应该进入 LISP 社区的 context。</p>
+<p>如果你是 Python 用户，《SICP Python 描述》是很好的入口， 如果你愿意入门 LISP，试试《The Little Schemer》。</p>
+<blockquote>
+<p>一种不会影响你思考编程方式的语言是不值得学习的 &ndash; Alan Kay</p>
+</blockquote>
+<h2 id="与递归有关的一些强有力观点powerful-ideas">与递归有关的一些强有力观点(Powerful Ideas)</h2>
+<ul>
+<li>将代码看做递归数据结构 （LISP: S表达式）</li>
+<li>将对象看做递归的计算机 (Smalltalk: 对象负责计算)</li>
+</ul>
+<p>以上想法为这两门语言带来了晚绑定(late binding)的能力，是它们灵活性的根源之一。</p>
+<p>也为这两门语言带来了强大的元能力。</p>
+<h2 id="附">附</h2>
+<p>关于递归的性能问题以及改进方案， 《SICP Python 描述》 也有精彩讨论。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li>SICP</li>
+<li><a href="https://wizardforcel.gitbooks.io/sicp-py/content/">SICP Python阐述 中文版</a></li>
+<li><a href="https://docs.python.org/zh-cn/3/library/turtle.html">Python turtle</a></li>
+<li><a href="https://realpython.com/beginners-guide-python-turtle/">The Beginner&rsquo;s Guide to Python Turtle(realpython)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Recursion">Recursion</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Self-reference">Self reference</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-08-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/">Python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/public-computer-rpi/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">公共树莓派</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/minecraft/">
+            <span class="next-text nav-default">我的世界(Minecraft)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

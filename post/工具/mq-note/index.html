@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>消息队列中间件学习笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="#中间件（Middleware） 根据维基百科的说法 中间件（英语：Middleware）提供系统软件和应用软件之间连接的软件，以便于软件各部件" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/mq-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="消息队列中间件学习笔记" />
+<meta property="og:description" content="#中间件（Middleware） 根据维基百科的说法 中间件（英语：Middleware）提供系统软件和应用软件之间连接的软件，以便于软件各部件" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/mq-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-06-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-06-02T00:00:00+00:00" />
+
+<meta itemprop="name" content="消息队列中间件学习笔记">
+<meta itemprop="description" content="#中间件（Middleware） 根据维基百科的说法 中间件（英语：Middleware）提供系统软件和应用软件之间连接的软件，以便于软件各部件"><meta itemprop="datePublished" content="2016-06-02T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-06-02T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3074">
+<meta itemprop="keywords" content="技术," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="消息队列中间件学习笔记"/>
+<meta name="twitter:description" content="#中间件（Middleware） 根据维基百科的说法 中间件（英语：Middleware）提供系统软件和应用软件之间连接的软件，以便于软件各部件"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">消息队列中间件学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-06-02 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#实现">实现</a></li>
+        <li><a href="#优缺点">优缺点</a></li>
+        <li><a href="#优势">优势</a></li>
+        <li><a href="#三个基本模型">三个基本模型</a></li>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#rabbitmq-中文文档httprabbitmqmr-pingcom摘记"><a href="http://rabbitmq.mr-ping.com/">RabbitMQ 中文文档</a>摘记</a></li>
+        <li><a href="#参考-1">参考</a></li>
+        <li><a href="#选择">选择</a></li>
+        <li><a href="#rabbitmq-in-edx">RabbitMQ in edx</a></li>
+        <li><a href="#一些有用命令">一些有用命令</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>#中间件（Middleware）
+根据维基百科的说法</p>
+<ul>
+<li>
+<blockquote>
+<p>中间件（英语：Middleware）提供系统软件和应用软件之间连接的软件，以便于软件各部件之间的沟通，特别是应用软件对于系统软件的集中的逻辑，在现代信息技术应用框架如Web服务、面向服务的体系结构等中应用比较广泛。如数据库、Apache的Tomcat。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>中间件技术创建在对应用软件部分常用功能的抽象上，将常用且重要的过程调用、分布式组件、消息队列、事务、安全、连结器、商业流程、网络并发、HTTP服务器、Web Service等功能集于一身或者分别在不同品牌的不同产品中分别完成</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>一般认为在商业中间件及信息化市场主要存在微软阵营、Java阵营、开源阵营。阵营的区分主要体现在对下层操作系统的选择以及对上层组件标准的制订</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<p>我此前对中间件的理解是<code>对应用软件部分常用功能的抽象</code>，它运行在操作系统之上，对外提供一种常用而抽象的服务，典型代表有数据库、缓存、消息队列</p>
+<h1 id="消息队列message-queue">消息队列(Message queue)</h1>
+<p>我们同样引用维基百科</p>
+<blockquote>
+<p>消息队列（英语：Message queue）是一种进程间通信或同一进程的不同线程间的通信方式.消息队列提供了异步的通信协议，每一个贮列中的纪录包含详细说明的数据，包含发生的时间，输入设备的种类，以及特定的输入参数，也就是说：消息的发送者和接收者不需要同时与消息队列互交。消息会保存在队列中，直到接收者取回它。</p>
+</blockquote>
+<p>有了消息队列，事件可以异步地发生</p>
+<h3 id="实现">实现</h3>
+<blockquote>
+<p>消息队列常常保存在链表结构中。拥有权限的进程可以向消息队列中写入或读取消息</p>
+</blockquote>
+<h3 id="优缺点">优缺点</h3>
+<ul>
+<li>
+<blockquote>
+<p>很多情况下我们需要异步的通信协议。比如，一个进程通知另一个进程发生了一个事件，但不需要等待回应。但消息队列的异步特点，也造成了一个缺点，就是接收者必须轮询消息队列，才能收到最近的消息。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>和信号相比，消息队列能够传递更多的信息。与管道相比，消息队列提供了有格式的数据，这可以减少开发人员的工作量</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<p>#ZeroMQ</p>
+<p>###是什么</p>
+<blockquote>
+<p>所有网络交互所使用的API实际上是Berkeley套接字(BSD) 。这个源自1980年代早期的协议是TCP/IP协议的最原始实现。而且可以说，在当今各操作系统中，它是受到最广泛支持的API，也是这些操作系统的核心组件之一。人们对BSD套接字的了解较多的是点对点的连接。点对点连接需要显式地建立连接、销毁连接、选择协议（TCP/UDP）和处理错误等。一旦你解决了以上所有问题，你就进入应用协议层（如HTTP）的世界了，这里需要的是组帧、缓存和处理逻辑等。换言之，编写高性能网络协议的应用程序一点儿也不复杂。
+如果我们能对各种套接字类型、连接处理、帧、甚至路由的底层细节进行抽象，这不是件很好的事情吗？这正是ZeroMQ（ØMQ/ZMQ）网络库的由来：“它提供一些跨多种传输协议（如进程内通讯、IPC、TCP和广播）的套接字供你使用。你可使用多种方式实现N对N的套接字连接，譬如：扇出、发布订阅、任务分发以及请求响应。”</p>
+</blockquote>
+<blockquote>
+<p>它更像是一个底层的网络通讯库，在Socket API之上做了一层封装，将网络通讯、进程通讯和线程通讯抽象为统一的API接口</p>
+</blockquote>
+<blockquote>
+<p>这是个类似于Socket的一系列接口，他跟Socket的区别是：普通的socket是端到端的（1:1的关系），而ZMQ却是可以N：M 的关系，人们对BSD套接字的了解较多的是点对点的连接，点对点连接需要显式地建立连接、销毁连接、选择协议（TCP/UDP）和处理错误等，而ZMQ屏蔽了这些细节，让你的网络编程更为简单。ZMQ用于node与node间的通信，node可以是主机或者是进程。</p>
+</blockquote>
+<h3 id="优势">优势</h3>
+<ul>
+<li>TCP：ZeroMQ基于消息，消息模式，而非字节流。</li>
+<li>RPC：ZeroMQ完全是异步的，你可以随时增加/删除参与者。</li>
+<li>XMPP：ZeroMQ更简单、快速、更底层。Jabber可建在ØMQ之上。</li>
+<li>AMQP：完成相同的工作，ZeroMQ要快100倍，而且不需要代理（规范更简洁——少278页）</li>
+<li>IPC：ZeroMQ可以跨多个主机盒，而非单台机器。</li>
+<li>CORBA：ZeroMQ不会将复杂到恐怖的消息格式强加于你。</li>
+</ul>
+<h3 id="三个基本模型">三个基本模型</h3>
+<ul>
+<li>Request-Reply</li>
+<li>Publisher-Subscriber</li>
+<li>Parallel Pipeline</li>
+</ul>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="http://www.searchtb.com/2012/08/zeromq-primer.html">ZeroMQ的学习和研究</a></li>
+<li><a href="http://www.infoq.com/cn/news/2010/09/introduction-zero-mq">ØMQ(ZeroMQ)简介</a></li>
+<li><a href="http://blog.csdn.net/kent45/article/details/10397917">在python中引入zeromq消息中间件环境</a></li>
+<li><a href="https://github.com/anjuke/zguide-cn/blob/master/chapter1.md">ZMQ 指南</a></li>
+</ul>
+<hr>
+<h1 id="rabbitmq">RabbitMQ</h1>
+<p>RabbitMQ是实现AMQP（高级消息队列协议）的消息中间件的一种</p>
+<p>ZeroMQ 和 RabbitMQ 都支持一个开源的消息协议:<code>AMQP</code>。AMQP的一个优点是它是一个灵活和开放的协议.不过ZeroMQ不支持消息持久化和崩溃恢复，<code>RabbitMQ支持持久化</code>。如果RabbitMQ死掉了，消息并不会丢失，当队列重启，一切都会回来</p>
+<h3 id="faq">FAQ</h3>
+<ul>
+<li>如何保证消息被某个消费者取得：当从队列当中取出一个消息的时候，RabbitMQ需要应用显式地回馈说已经获取到了该消息。如果一段时间内不回馈，RabbitMQ会将该消息重新分配给另外一个绑定在该队列上的消费者。另一种情况是消费者断开连接，但是获取到的消息没有回馈，则RabbitMQ同样重新分配</li>
+<li><a href="http://stackoverflow.com/questions/14659335/rabbitmq-server-fails-to-start-after-hostname-has-changed-for-first-time">rabbitmq-server fails to start after hostname has changed for first time</a></li>
+</ul>
+<h3 id="rabbitmq-中文文档httprabbitmqmr-pingcom摘记"><a href="http://rabbitmq.mr-ping.com/">RabbitMQ 中文文档</a>摘记</h3>
+<ul>
+<li>可以做什么
+<ul>
+<li>消息系统允许软件、应用相互连接和扩展．这些应用可以相互链接起来组成一个更大的应用</li>
+<li>消息系统通过将消息的发送和接收分离来实现应用程序的异步和解偶</li>
+<li>或许你正在考虑进行数据投递，非阻塞操作或推送通知。或许你想要实现发布／订阅，异步处理，或者工作队列。所有这些都可以通过消息系统实现</li>
+<li>RabbitMQ附带了一个易于使用的可视化管理工具</li>
+</ul>
+</li>
+<li>安装
+<ul>
+<li>默认用户访问：guest：guest</li>
+</ul>
+</li>
+<li><a href="http://rabbitmq.mr-ping.com/AMQP/AMQP_0-9-1_Model_Explained.html">AMQP 0.9.1 模型解析</a>
+<ul>
+<li>消息代理（message brokers）从发布者（publishers）亦称生产者（producers）那儿接收消息，并根据既定的路由规则把接收到的消息发送给处理消息的消费者（consumers）。由于AMQP是一个网络协议，所以这个过程中的发布者，消费者，消息代理 可以存在于不同的设备上。</li>
+<li>AMQP 0-9-1 模型简介:消息（message）被发布者（publisher）发送给交换机（exchange），交换机常常被比喻成邮局或者邮箱。然后交换机将收到的消息根据路由规则分发给绑定的队列（queue）。最后AMQP代理会将消息投递给订阅了此队列的消费者，或者消费者按照需求自行获取。</li>
+<li>当“消息确认”被启用的时候，消息代理不会完全将消息从队列中删除，直到它收到来自消费者的确认回执（acknowledgement）</li>
+<li>消费者
+<ul>
+<li>将消息投递给应用 (&ldquo;push API&rdquo;)</li>
+<li>应用根据需要主动获取消息 (&ldquo;pull API&rdquo;)</li>
+</ul>
+</li>
+<li>AMQP连接通常是长连接</li>
+</ul>
+</li>
+<li>应用教程（python版）
+<ul>
+<li><a href="http://rabbitmq.mr-ping.com/tutorials_with_python/%5B1%5DHello_World.html">hello world</a>:使用pika库
+<ul>
+<li><a href="https://github.com/rabbitmq/rabbitmq-tutorials/blob/master/python/send.py">send.py 源码</a>、<a href="https://github.com/rabbitmq/rabbitmq-tutorials/blob/master/python/receive.py">receive.py源码</a></li>
+</ul>
+</li>
+<li>列出所有队列:sudo rabbitmqctl list_queues</li>
+<li><a href="http://rabbitmq.mr-ping.com/tutorials_with_python/%5B3%5DPublish_Subscribe.html">发布、订阅</a>：在我们的这个日志系统中，所有正在运行的接收方程序都会接受消息。我们用其中一个接收者（receiver）把日志写入硬盘中，另外一个接受者（receiver）把日志输出到屏幕上
+<ul>
+<li>交换器和队列之间的联系我们称之为绑定（binding）
+<ul>
+<li>列出所有绑定rabbitmqctl list_bindings</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://rabbitmq.mr-ping.com/tutorials_with_python/%5B6%5DRPC.html">远程过程调用</a>：用celery吧</li>
+</ul>
+</li>
+</ul>
+<h3 id="参考-1">参考</h3>
+<ul>
+<li><a href="http://rabbitmq.mr-ping.com/">RabbitMQ 中文文档</a></li>
+<li><a href="http://blog.ftofficer.com/2010/03/translation-rabbitmq-python-rabbits-and-warrens/">兔子和兔子窝</a></li>
+<li><a href="http://my.oschina.net/guol/blog/186432?fromerr=IGi2rm5U">Rabbitmq学习之路1-基本概念</a></li>
+</ul>
+<h3 id="选择">选择</h3>
+<p>仔细分析应用程序的需求就能让更加清楚哪种交互机制才是解决问题的最佳之选</p>
+<h3 id="rabbitmq-in-edx">RabbitMQ in edx</h3>
+<h4 id="configuration中的一些配置">configuration中的一些配置</h4>
+<p>详情参考<a href="https://github.com/edx/configuration/blob/named-release/dogwood.rc/playbooks/roles/rabbitmq/defaults/main.yml">rabbitmq/defaults/main.yml</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">EDXAPP_RABBIT_HOSTNAME: &#39;localhost&#39;
+</span></span><span class="line"><span class="cl">rabbitmq_port: 5672
+</span></span><span class="line"><span class="cl">rabbitmq_management_port: 15672
+</span></span><span class="line"><span class="cl">rabbitmq_ip: &#34;{{ ansible_default_ipv4.address }}&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">XQUEUE_RABBITMQ_HOSTNAME: &#39;localhost&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在edx中RabbitMQ被当做服务使用，基本是透明的</p>
+<h3 id="一些有用命令">一些有用命令</h3>
+<ul>
+<li>查看帮助：sudo rabbitmqctl -h</li>
+<li>列出所有用户
+<ul>
+<li>admin[administrator]、celery	[administrator]、edx	[administrator]</li>
+</ul>
+</li>
+<li>查看绑定：sudo rabbitmqctl list_bindings
+<ul>
+<li>参考:<a href="http://rabbitmq.mr-ping.com/tutorials_with_python/%5B3%5DPublish_Subscribe.html">发布/订阅</a></li>
+</ul>
+</li>
+<li>列出所有队列:sudo rabbitmqctl list_queues</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-06-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/notification-system-thinking-concept-and-implementation/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">notification system思路、概念与实现</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/django-cas-bug/">
+            <span class="next-text nav-default">django-cas可能引起的安全漏洞</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

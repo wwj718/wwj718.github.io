@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>关系型数据库小结 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="平时用ORM偏多，生疏了SQL，周末翻了一遍《SQL必知必会》，也整理了一下相关工具，做个记录 关系数据库（Relational databas" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/relational-database-summary/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="关系型数据库小结" />
+<meta property="og:description" content="平时用ORM偏多，生疏了SQL，周末翻了一遍《SQL必知必会》，也整理了一下相关工具，做个记录 关系数据库（Relational databas" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/relational-database-summary/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-05-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-05-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="关系型数据库小结">
+<meta itemprop="description" content="平时用ORM偏多，生疏了SQL，周末翻了一遍《SQL必知必会》，也整理了一下相关工具，做个记录 关系数据库（Relational databas"><meta itemprop="datePublished" content="2016-05-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-05-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1970">
+<meta itemprop="keywords" content="code," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="关系型数据库小结"/>
+<meta name="twitter:description" content="平时用ORM偏多，生疏了SQL，周末翻了一遍《SQL必知必会》，也整理了一下相关工具，做个记录 关系数据库（Relational databas"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">关系型数据库小结</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-05-03 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#查询">查询</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#连接已有数据库">连接已有数据库</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#理解">理解</a></li>
+        <li><a href="#通用技能">通用技能</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>平时用ORM偏多，生疏了SQL，周末翻了一遍《SQL必知必会》，也整理了一下相关工具，做个记录</p>
+<h1 id="关系数据库relational-database">关系数据库（Relational database）</h1>
+<p>按照维基百科说法</p>
+<blockquote>
+<p>表(关系Relation)是以行(属性Attribate)和列(值组Tuble)的形式组织起来的数据的集合。一个数据库包括一个或多个表 (关系Relation)。例如，可能有一个有关作者信息的名为authors的表(关系Relation)。每列(值组Tuble)都包含特定类型的信息，如作者的姓氏。每行(属性Attribate)都包含有关特定作者的所有信息：姓、名、住址等等。在关系型数据库当中一个表 (关系Relation)就是一个关系，一个关系数据库可以包含多个表(关系Relation)</p>
+</blockquote>
+<h1 id="安装">安装</h1>
+<p>开源的关系数据库中，PostgreSQL 与MySQL 最为流行。一般使用linux发行版的包管理器就能方便地安装，更多的安装方式可以参考官网</p>
+<h1 id="客户端">客户端</h1>
+<p>关系数据库中，我用MySQL和SQLite偏多，所以列出这两个数据库相关的工具</p>
+<ul>
+<li><a href="https://www.mysql.com/products/workbench/">MySQL Workbench</a></li>
+<li><a href="https://github.com/dbcli/mycli">mycli</a></li>
+<li><a href="http://mesasqlite.en.softonic.com/mac">MesaSQLite</a>，本地应用首选是sqlite</li>
+</ul>
+<p>当然更经常地，我偏好在jupyter里使用sqlalchemy来连接数据库</p>
+<h1 id="sql">SQL</h1>
+<p>《SQL必知必会》（第三版）里的代码:<a href="https://github.com/wwj718/teach-yourself-sql.git">teach-yourself-sql</a></p>
+<p>使用mycli连接数据库</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">mytest</span><span class="p">;</span><span class="w"> </span><span class="c1">--创建数据库
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">USE</span><span class="w"> </span><span class="n">mytest</span><span class="p">;</span><span class="w"> </span><span class="c1">--进入数据库
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysql -u root -D mytest   &lt; /tmp/teach-yourself-sql/create.txt  <span class="c1">#创建新表</span>
+</span></span><span class="line"><span class="cl">mysql -u root -D mytest   &lt; /tmp/teach-yourself-sql/populate.txt  <span class="c1"># 插入数据</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SHOW</span><span class="w"> </span><span class="n">TABLES</span><span class="p">;</span><span class="w">  </span><span class="c1">--查看表
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">Customers</span><span class="p">;</span><span class="w">  </span><span class="c1">--显示表结构
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">Customers</span><span class="w"> </span><span class="k">limit</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="c1">--查看数据 
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="查询">查询</h3>
+<p>使用pandas做实验，存为ipynb</p>
+<p><a href="https://github.com/wwj718/teach-yourself-sql/blob/master/SQL.ipynb">SQL.ipynb</a></p>
+<p>todo：用SQLAlchemy实现</p>
+<h1 id="sqlalchemy">SQLAlchemy</h1>
+<p>SQLAlchemy是Python社区中最广泛使用的ORM工具，底层而强大</p>
+<blockquote>
+<p>SQLAlchemy的理念是，SQL数据库的量级和性能重要于对象集合；而对象集合的抽象又重要于表和行</p>
+</blockquote>
+<h3 id="连接已有数据库">连接已有数据库</h3>
+<p>一般情况下我们已经有数据库了，那么如何将既有数据库和SQLAlchemy对接呢</p>
+<p>可以利用表的反射（Table Reflection）。把它们”导入”进来即可，这时得使用<code>autoload</code>参数。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">,</span> <span class="n">Table</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#使用mysql，需要安装mysql驱动</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#brew install mysql-connector-c（mac）</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#sudo apt-get install libmysqlclient-dev （ubuntu）</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#pip install MySQL-python</span>
+</span></span><span class="line"><span class="cl"><span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;mysql+mysqldb://root@edx_host/edxapp&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">metadata</span> <span class="o">=</span> <span class="n">MetaData</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">conn</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="c1">#连接成功</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s1">&#39;auth_user&#39;</span> <span class="ow">in</span> <span class="n">metadata</span><span class="o">.</span><span class="n">tables</span> <span class="c1">#true</span>
+</span></span><span class="line"><span class="cl"><span class="n">user_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="s1">&#39;auth_user&#39;</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">autoload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#metadata携带连接信息</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">user_table</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="c1">#打印出字段名</span>
+</span></span><span class="line"><span class="cl"><span class="n">ins</span> <span class="o">=</span> <span class="n">user_table</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">ins</span> <span class="c1">#查看编译的sql</span>
+</span></span><span class="line"><span class="cl"><span class="n">users</span><span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&#34;SELECT * FROM auth_user limit 5&#34;</span><span class="p">)</span> <span class="c1">#直接执行sql</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">s</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">user_table</span><span class="p">])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>参考：<a href="https://segmentfault.com/a/1190000004288061">SQLAlchemy入门（一）</a></li>
+</ul>
+<p>##基于SQLAlchemy的便利工具</p>
+<h4 id="datasethttpsgithubcompudodataset"><a href="https://github.com/pudo/dataset">dataset</a></h4>
+<blockquote>
+<p>In short, dataset makes reading and writing data in databases as simple as reading and writing JSON files.</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">db</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;mysql+mysqldb://root@edx_host/edxapp&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#print(db.tables)</span>
+</span></span><span class="line"><span class="cl"><span class="n">table</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;auth_user&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">table</span><span class="o">.</span><span class="n">columns</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#result = db.query</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 导出数据 dataset.freeze(result, format=&#39;json&#39;, filename=&#39;users.json&#39;)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>####<a href="https://github.com/kennethreitz/records">records</a></p>
+<blockquote>
+<p>SQL for Humans</p>
+</blockquote>
+<p>易于导出到xls或是json。records 使用了 tablib 可以导出为任何格式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">db</span> <span class="o">=</span> <span class="n">records</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="s1">&#39;mysql+mysqldb://root@edx_host/edxapp&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">rows</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;select * from auth_user limit 5&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">rows</span><span class="o">.</span><span class="n">dataset</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="peeweehttpsgithubcomcoleiferpeewee"><a href="https://github.com/coleifer/peewee">peewee</a></h1>
+<blockquote>
+<p>a small, expressive orm &ndash; supports postgresql, mysql and sqlite</p>
+</blockquote>
+<p>使用习惯和django orm很像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="p">:::</span><span class="n">python</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1"># http://docs.peewee-orm.com/en/latest/peewee/example.html
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">from</span><span class="w"> </span><span class="n">peewee</span><span class="w"> </span><span class="n">import</span><span class="w"> </span><span class="o">*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">import</span><span class="w"> </span><span class="kt">datetime</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">mysql_db</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">MySQLDatabase</span><span class="p">(</span><span class="s1">&#39;yunfan&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span><span class="w"> </span><span class="kp">charset</span><span class="o">=</span><span class="s1">&#39;utf8mb4&#39;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">#CREATE DATABASE `yunfan` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;  创建数据库使用utf-8 否则有编码问题
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">class</span><span class="w"> </span><span class="nf">QiniuStore</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">course_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">CharField</span><span class="p">(</span><span class="no">null</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">True</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">CharField</span><span class="p">(</span><span class="k">default</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">#key是关键字
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">    </span><span class="n">file_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">CharField</span><span class="p">(</span><span class="k">default</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">CharField</span><span class="p">(</span><span class="k">default</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">filesize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">CharField</span><span class="p">(</span><span class="k">default</span><span class="o">=</span><span class="s2">&#34;0&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">#endUser = Column(String(100),nullable=True)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">    </span><span class="n">create_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">DateTimeField</span><span class="p">(</span><span class="k">default</span><span class="o">=</span><span class="kt">datetime</span><span class="p">.</span><span class="kt">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">class</span><span class="w"> </span><span class="n">Meta</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">database</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mysql_db</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">order_by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;-create_time&#39;</span><span class="p">,)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">if</span><span class="w"> </span><span class="n">__name__</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&#34;__main__&#34;</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">mysql_db</span><span class="p">.</span><span class="nf">connect</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">mysql_db</span><span class="p">.</span><span class="nf">create_tables</span><span class="p">([</span><span class="n">QiniuStore</span><span class="p">])</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="pandas">pandas</h1>
+<p>pandas的DataFrame大多时候也用来容纳二维数据，像一张<code>表</code>,所以易于与数据库打交道</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#Pandas读取Mysql数据</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">MySQLdb</span>
+</span></span><span class="line"><span class="cl"><span class="n">mysql_cn</span><span class="o">=</span> <span class="n">MySQLdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span><span class="n">user</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">passwd</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="s1">&#39;edxapp&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#df = pd.read_sql(&#39;select * from auth_user limit 100;&#39;, con=mysql_cn)  </span>
+</span></span><span class="line"><span class="cl"><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s1">&#39;select * from auth_user limit 10;&#39;</span><span class="p">,</span> <span class="n">con</span><span class="o">=</span><span class="n">mysql_cn</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mysql_cn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Read SQL query into a DataFrame ,之后可以使用pandas的查询和绘图统计功能</p>
+<p>参考:</p>
+<ul>
+<li><a href="http://blog.csdn.net/u011715678/article/details/48497291">利用Python 的 Pandas进行数据分析</a></li>
+<li><a href="http://pandas.pydata.org/pandas-docs/stable/comparison_with_sql.html">comparison_with_sql</a>: pd与sql比较</li>
+</ul>
+<h1 id="心得">心得</h1>
+<ul>
+<li>数据库的重点是表，操作可以用python方法，为了查询的灵活，还是需要sql</li>
+<li>用好ORM的前提是了解关系数据库的概念和典型用例</li>
+</ul>
+<h3 id="理解">理解</h3>
+<p>数据库表是一个二维表，包含多行多列。把一个表的内容用Python的数据结构表示出来的话，可以用一个list表示多行，list的每一个元素是tuple，表示一行记录</p>
+<p>行，想象为二维数据(csv),外键是一种关系</p>
+<h3 id="通用技能">通用技能</h3>
+<ul>
+<li>多维数据的可视化 （降维）是一个常见的问题模式 。如何聚合，pandas部分</li>
+<li>帆船项目 帮助理解pandas如何用于web流
+<ul>
+<li>如何实时读取sql，这样一来oricle问题就解决了 可视化问题</li>
+<li>从真实数据学习数据图表化的原理  《网站分析》</li>
+</ul>
+</li>
+<li>投资技能 pandas -&gt; scikit-learn</li>
+<li>edx的log先导入数据库  保留关系 然后变为扁平化数据
+<ul>
+<li>将log导入数据库是为了获得强大的查询能力</li>
+</ul>
+</li>
+<li>对sql的使用场景要有所了解  适合作什么</li>
+</ul>
+<p>#参考</p>
+<ul>
+<li><a href="https://zh.wikipedia.org/zh/SQLAlchemy">SQLAlchemy 维基百科</a></li>
+<li><a href="http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/0014021031294178f993c85204e4d1b81ab032070641ce5000">使用SQLAlchemy</a></li>
+<li><a href="http://forta.com/books/0672336073/">SQL必知必会 源码</a></li>
+<li><a href="http://www.jianshu.com/p/e6bba189fcbd">SQLAlchemy 简单笔记</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-05-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/code/">code</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/open-edx-manage-command/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Open edX管理命令</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/vue-and-webpack-note/">
+            <span class="next-text nav-default">vuejs与webpack学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

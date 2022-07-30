@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch3技术分析之Studio API(第8篇) - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="本文是Scratch3.0技术分析之后端API系列的第8篇。 Studio Studio是Scratch社区的重要构成部分。 Studio在概念上颇似项目收" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-studio/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch3技术分析之Studio API(第8篇)" />
+<meta property="og:description" content="本文是Scratch3.0技术分析之后端API系列的第8篇。 Studio Studio是Scratch社区的重要构成部分。 Studio在概念上颇似项目收" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-studio/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-04-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-04-30T00:00:00+00:00" />
+
+<meta itemprop="name" content="Scratch3技术分析之Studio API(第8篇)">
+<meta itemprop="description" content="本文是Scratch3.0技术分析之后端API系列的第8篇。 Studio Studio是Scratch社区的重要构成部分。 Studio在概念上颇似项目收"><meta itemprop="datePublished" content="2019-04-30T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-04-30T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2012">
+<meta itemprop="keywords" content="scratch," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch3技术分析之Studio API(第8篇)"/>
+<meta name="twitter:description" content="本文是Scratch3.0技术分析之后端API系列的第8篇。 Studio Studio是Scratch社区的重要构成部分。 Studio在概念上颇似项目收"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch3技术分析之Studio API(第8篇)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-04-30 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#产品视角-不同之处">产品视角: 不同之处</a></li>
+        <li><a href="#一等公民">一等公民</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#创建studio">创建Studio</a></li>
+        <li><a href="#更新studio信息">更新Studio信息</a></li>
+        <li><a href="#往studio里增删项目">往Studio里增删项目</a></li>
+        <li><a href="#关注follow-studio">关注(Follow) Studio</a></li>
+        <li><a href="#邀请用户成为studio的curators">邀请用户成为Studio的curators</a></li>
+        <li><a href="#studio的评论">Studio的评论</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/scratch_studio_016347c9.png" alt=""></p>
+<p>本文是<a href="/Scratch3_api_analysis.html">Scratch3.0技术分析之后端API</a>系列的第8篇。</p>
+<h1 id="studio">Studio</h1>
+<p>Studio是Scratch社区的重要构成部分。</p>
+<p>Studio在概念上颇似<code>项目收纳盒</code>，用户可以将感兴趣的项目添加到<code>收纳盒</code>中。</p>
+<p>Scratch团队还未完成Studio API的重构。目前要创建Studio，须从<a href="https://scratch.mit.edu/mystuff/#galleries">旧网页</a>进入，url为:<code>https://scratch.mit.edu/mystuff/#galleries</code>, 从url可以看出<code>Studio</code>和<code>galleries</code>被scratch视为同义词。</p>
+<p>如果你用过<a href="https://www.zhihu.com/">知乎</a>或者<a href="https://juejin.im/timeline">掘金</a>。会发现<code>Studio</code>和<a href="https://www.zhihu.com/collection/19769203">收藏夹</a>颇为相似。</p>
+<p>之前在做<a href="https://www.paperweekly.site/">paperweekly</a>时，收藏夹部分参考了<a href="https://www.zhihu.com/">知乎</a>、<a href="https://juejin.im/timeline">掘金</a>和<a href="https://www.producthunt.com/">producthunt</a>。各家大同小异，核心概念都是<code>收纳盒/collections</code>。</p>
+<h3 id="产品视角-不同之处">产品视角: 不同之处</h3>
+<p>接下来说说Studio和<code>知乎收藏夹</code>的不同之处。</p>
+<p>Scratch推崇4P(Projects, Passion, Peers, Play)原则, 它们将理念贯彻到产品中。</p>
+<p><code>Studio</code>是<code>Projects</code>的收纳盒，用户兴趣各异，<code>Passion</code>各有不同。用户创建Studio一般从某种兴趣点出发。</p>
+<p>至此，<code>studios</code>和<code>知乎收藏夹</code>并没有什么差异。</p>
+<p>我们可以看看Scratch社区里受欢迎的<a href="https://scratch.mit.edu/explore/studios/all/popular">studios</a></p>
+<p><img src="/post/img/studio_popular_6a73ef34.png" alt=""></p>
+<p>由于社区里有兴趣相似的人，人们会对其他用户创建的<code>收纳盒</code>感兴趣，于是<code>收纳盒</code>应该支持<code>关注/follow</code>功能，在这点上，各家依旧没什么差别。</p>
+<p>对<code>Peers</code>的重视，是引起差异的原因。Scratch把社区用户视为潜在的<code>协作者/Peers</code>, 而知乎/掘金的收藏夹背后的逻辑则是把<code>关注者</code>视为<code>围观群众</code>。</p>
+<p>于是在产品定位和功能上就出现了根本差异。</p>
+<p>在Scratch中，用户可以为Studio添加curators:</p>
+<p><img src="/post/img/curators_bd372012.png" alt=""></p>
+<p>curators与Studio的创建者一样，可以一起维护这个Studio(本质上是个<a href="/understand-permission.html">权限系统</a>)，curators拥有往Studio里增删项目的权利。</p>
+<p>Studio甚至有个可选项<code>Allow anyone to add projects</code>:  将整个社区视为协作者。</p>
+<h3 id="一等公民">一等公民</h3>
+<p><img src="/post/img/studio_14b98e2c.png" alt=""></p>
+<p>Studio和Porject一样，都是Scratch的一等公民，我们可以看到Studio和Porject类似，有自己的title、缩略图(标注1)、简介(标注2)和评论(标注3)，此外还有活动日志(标注4)。</p>
+<h1 id="api分析">API分析</h1>
+<p>至此，我们基本上做完了产品层面的分析。</p>
+<p>接下来我们开始API层面的分析。</p>
+<!--
+API层面，暂时搁置，前头提到Scratch团队还未完成Studio API的重构。
+-->
+<h3 id="创建studio">创建Studio</h3>
+<p>让我们在<code>https://scratch.mit.edu/mystuff/</code>里<code>New Studio</code></p>
+<p>细节如下:</p>
+<p><img src="/post/img/studio_76730c7c.png" alt=""></p>
+<p>创建完成后，重定向到 <code>https://scratch.mit.edu/studios/8259659/</code>， 该页面目前并未API化，应该是Django模版渲染的。</p>
+<h3 id="更新studio信息">更新Studio信息</h3>
+<p>让我们将title更新为test2:</p>
+<p><img src="/post/img/studio_update_title_eafb7f16.png" alt=""></p>
+<p>采用的是PUT方法，以表单方式提交数据</p>
+<p>更新描述信息也相似。对应字段名为<code>description</code></p>
+<p>更新封面图片， 是用POST方式往<code>https://scratch.mit.edu/site-api/galleries/all/8259659/</code>提交图片，细节为:</p>
+<p><img src="/post/img/studio_img_ae0f17cd.png" alt=""></p>
+<p>提交之后，图片地址为:<code>//cdn2.scratch.mit.edu/get_image/gallery/8259659_200x118.png#1556595638951</code></p>
+<p>可以看出带了时间戳，应该是出于缓存更新目的。</p>
+<p>图片限制为: <code>Maximum file size is 512 KB and less than 500x500 pixels.</code></p>
+<h3 id="往studio里增删项目">往Studio里增删项目</h3>
+<p>这部分的功能已经迁移到Scratch新版网站中。</p>
+<p>将项目添加到Studio中时，发生的细节为:</p>
+<p><img src="/post/img/studio_add_project_3269984d.png" alt=""></p>
+<p>POST <code>https://api.scratch.mit.edu/studios/8259659/project/302042626</code></p>
+<p>response为<code>{&quot;actorId&quot;:18286387,&quot;projectId&quot;:&quot;302042626&quot;,&quot;datetimeCreated&quot;:&quot;2019-04-30 03:45:31&quot;,&quot;studioId&quot;:&quot;8259659&quot;}</code></p>
+<p>删除操作对应：DELETE <code>https://api.scratch.mit.edu/studios/8259659/project/302042626</code>， response为<code>[]</code></p>
+<h3 id="关注follow-studio">关注(Follow) Studio</h3>
+<p>PUT <code>https://scratch.mit.edu/site-api/users/bookmarkers/8259659/add/?usernames=wwj718</code></p>
+<p>response:<code>[{&quot;featured_project_label_name&quot;: &quot;Featured Project&quot;, &quot;featured_project_data&quot;: null, &quot;featured_project&quot;: null, &quot;thumbnail_url&quot;: &quot;//uploads.scratch.mit.edu/users/avatars/18286387.png&quot;, &quot;user&quot;: {&quot;username&quot;: &quot;wwj718&quot;, &quot;pk&quot;: 18286387}, &quot;featured_project_label_id&quot;: null, &quot;id&quot;: 17449452}]</code></p>
+<h3 id="邀请用户成为studio的curators">邀请用户成为Studio的curators</h3>
+<p>PUT <code>https://scratch.mit.edu/site-api/users/curators-in/8259659/invite_curator/?usernames=tonynsc</code></p>
+<p>response为: <code>{&quot;status&quot;: &quot;success&quot;, &quot;data&quot;: {&quot;user&quot;: &quot;tonynsc&quot;}}</code></p>
+<h3 id="studio的评论">Studio的评论</h3>
+<h4 id="顶级评论">顶级评论</h4>
+<p>POST <code>https://scratch.mit.edu/site-api/comments/gallery/8259659/add/</code></p>
+<p>以表单形式提交:<code>{&quot;content&quot;:&quot;test&quot;,&quot;parent_id&quot;:&quot;&quot;,&quot;commentee_id&quot;:&quot;&quot;}</code></p>
+<h4 id="回复评论">回复评论</h4>
+<p>POST <code>https://scratch.mit.edu/site-api/comments/gallery/8259659/add/</code></p>
+<p>以表单形式提交:<code>{&quot;content&quot;:&quot;test&quot;,&quot;parent_id&quot;:56665892,&quot;commentee_id&quot;:18286387}</code></p>
+<h1 id="后记">后记</h1>
+<p>目前Studio的API官方还在重构中，完成之后，我会同步更新这篇文章。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://github.com/LLK/scratch-www/issues/2722">Redesigns for &ldquo;Add to Studio&rdquo; modal</a></li>
+<li><a href="https://en.scratch-wiki.info/wiki/Curator_(studio)">Curator (studio)</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-04-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-backpack/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Scratch3 技术分析之 backpack(书包) API(第 9 篇)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/freedom-outside-daily-work/">
+            <span class="next-text nav-default">自由: 日常之外</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

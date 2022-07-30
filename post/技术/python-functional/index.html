@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>用函数式风格写python - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="##缘起 定制edx的过程中，需要自己去筛选处理不少数据，大多是直接从mongo中挖出。 大部分的工作都可以抽象描述成按条件筛选出一个数据集的子" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/python-functional/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="用函数式风格写python" />
+<meta property="og:description" content="##缘起 定制edx的过程中，需要自己去筛选处理不少数据，大多是直接从mongo中挖出。 大部分的工作都可以抽象描述成按条件筛选出一个数据集的子" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/python-functional/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-09-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-09-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="用函数式风格写python">
+<meta itemprop="description" content="##缘起 定制edx的过程中，需要自己去筛选处理不少数据，大多是直接从mongo中挖出。 大部分的工作都可以抽象描述成按条件筛选出一个数据集的子"><meta itemprop="datePublished" content="2014-09-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2014-09-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1888">
+<meta itemprop="keywords" content=" python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="用函数式风格写python"/>
+<meta name="twitter:description" content="##缘起 定制edx的过程中，需要自己去筛选处理不少数据，大多是直接从mongo中挖出。 大部分的工作都可以抽象描述成按条件筛选出一个数据集的子"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">用函数式风格写python</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-09-03 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading"></a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>##缘起
+定制edx的过程中，需要自己去筛选处理不少数据，大多是直接从mongo中挖出。 大部分的工作都可以抽象描述成按条件筛选出一个数据集的子集，数据集包括courses(课程对象集合),commentThread(论坛帖子)，comment（帖子评论）,courseInfo（课程公告），这些数据的结构都极其相似，都是类列表数据（跟操作list基本一样）， 恰好前段时间一直在关注函数式，也在学习Scheme，所以自然想到用函数式风格处理list是最方便的了。</p>
+<p>一试，果不其然。</p>
+<p>高阶函数提高了程序的模块性。比如使用一个高阶函数来实现排序，可以使得我们使用不同的条件(函数)来排序，这就将排序条件和排序过程清楚地划分开来。很容易写函数来实现插拔。</p>
+<p>具体使用中，比如筛选过程使用高阶函数(def course_filter)来写，之后的筛选条件都写成filter_by_xx形式:filter_by_name/filter_by_subject,清晰明了，提高代码复用性，也导致了良好的一致性，进而使可读性提高。</p>
+<p>使用函数风格来写函数，具体的 理念/原则 可以通过搜索函数式编程找到，其中一些比较关键的地方:</p>
+<ul>
+<li>函数是&quot;一等公民&quot;,使用高阶函数</li>
+<li>尽量不要产生&quot;副作用&quot;</li>
+<li>函数只是返回新的值，不修改变量.</li>
+<li>引用透明(确定性),任何时候只要参数相同，引用函数所得到的返回值总是相同的。</li>
+<li>函数应该像管道</li>
+<li>把函数当成变量来用，关注于描述问题而不是怎么实现，这样可以让代码更易读</li>
+</ul>
+<p>##函数式编程的几个技术
+其实在python中以下几个东西基本也可以用for(列表推导)来做，不过列表推导不是模块化的，倾向于一次性使用、</p>
+<p>###map</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#列表长度</span>
+</span></span><span class="line"><span class="cl"><span class="n">name_len</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="p">[</span><span class="s2">&#34;hao&#34;</span><span class="p">,</span> <span class="s2">&#34;chen&#34;</span><span class="p">,</span> <span class="s2">&#34;coolshell&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">name_len</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出 [3, 4, 9]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这样的代码是在描述要干什么，而不是怎么干</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#首字母大写</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">toUpper</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="n">upper_name</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">toUpper</span><span class="p">,</span> <span class="p">[</span><span class="s2">&#34;hao&#34;</span><span class="p">,</span> <span class="s2">&#34;chen&#34;</span><span class="p">,</span> <span class="s2">&#34;coolshell&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出 [&#39;HAO&#39;, &#39;CHEN&#39;, &#39;COOLSHELL&#39;]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#求一组数据的平方数</span>
+</span></span><span class="line"><span class="cl"><span class="n">squares</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">squares</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出 [0, 1, 4, 9, 16, 25, 36, 49, 64]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###reduce</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#求和 相当于：((((1+2)+3)+4)+5) ）</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出 15</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#数组中正数的平均值</span>
+</span></span><span class="line"><span class="cl"><span class="n">num</span> <span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">positive_num</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">average</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">,</span> <span class="n">positive_num</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span> <span class="n">positive_num</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#避免了变量倒来倒去逻辑</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#代码变成了在描述你要干什么，而不是怎么去干。</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###map函数的实现(js)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">var map = function (mappingFunction, list) {
+</span></span><span class="line"><span class="cl">  var result = [];
+</span></span><span class="line"><span class="cl">  forEach(list, function (item) {
+</span></span><span class="line"><span class="cl">    result.push(mappingFunction(item));
+</span></span><span class="line"><span class="cl">  });
+</span></span><span class="line"><span class="cl">  return result;
+</span></span><span class="line"><span class="cl">};
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###filter</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">nums</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">=</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">&gt;</span><span class="mi">5</span><span class="p">,</span> <span class="n">nums</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#[6,7]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#是否是成年人</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">is_adult</span><span class="p">(</span><span class="n">age</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">age</span><span class="o">&gt;=</span><span class="mi">18</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl"><span class="n">age_list</span><span class="o">=</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">19</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">b</span><span class="o">=</span><span class="nb">filter</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">age_list</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#[18,19]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以作为高阶函数的参数,模块化，可插拔</p>
+<p>##zip
+zip()是Python的一个内建函数，它接受一系列可迭代的对象作为参数，将对象中对应的元素打包成一个个tuple（元组），然后返回由这些tuples组成的list（列表）</p>
+<p>若传入参数的长度不等，则返回list的长度和参数中长度最短的对象相同。利用*号操作符，可以将list unzip（解压）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#[(1, 4), (2, 5), (3, 6)]</span>
+</span></span><span class="line"><span class="cl"><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#[(1, 4), (2, 5), (3, 6)]</span>
+</span></span><span class="line"><span class="cl"><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">zipped</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#[(1, 2, 3), (4, 5, 6)]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###sorted和groupby
+####sorted
+sorted([&hellip;],key = fuc)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">a</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span><span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#[1,2,3,4,5,6]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#reverse：注明升序还是降序，True--降序，False--升序（默认）</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#fuc 经常使用lambda</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>####groupby</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="s2">&#34;abbcdddef&#34;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">*</span><span class="mi">2</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">     <span class="nb">print</span> <span class="n">i</span><span class="p">,[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">j</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="n">aa</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">bb</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">cc</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">dd</span> <span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">ee</span> <span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">ff</span> <span class="p">[</span><span class="s1">&#39;f&#39;</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意先排序(sorted),groupby(&ldquo;abbca&rdquo;)中前后两个a不会连在一起。</p>
+<p>groupby(list,func)的返回值(i,j)，i是func的计算结果；j是一个迭代器，j的内容是经过func计算值相同的lst中的元素；</p>
+<p>本质是mapreduce  所以记不住全局,只有一个交换空间，所以必须相邻</p>
+<p>###pipeline
+pipeline 管道借鉴于Unix Shell的管道操作——把若干个命令串起来(他的设哲学就是KISS – 让每个功能就做一件事，并把这件事做到极致)，前面命令的输出成为后面命令的输入，如此完成一个流式计算。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#1）找出偶数。</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#2）乘以3</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#3）转成字符串返回</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">even_filter</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="n">nums</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">multiply_by_three</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">nums</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">convert_to_string</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;The Number: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">,</span>  <span class="n">nums</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">fns</span> <span class="o">=</span> <span class="p">[</span><span class="n">even_filter</span><span class="p">,</span><span class="n">multiply_by_three</span><span class="p">,</span><span class="n">convert_to_string</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">pipeline_func</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fns</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">(</span><span class="n">a</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                  <span class="n">fns</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                  <span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#reduce有两个列表时怎么处理？</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###高阶函数
+python中，高阶函数常常写作装饰器(Decorator)，可以参考之前的一篇<a href="http://wwj718.github.io/learning-python-decorator.html">文章</a></p>
+<p>如陈浩在博客中说的：我们不用太纠结是不是我们的程序就是OO，就是functional的，我们重要的品味其中的味道</p>
+<ul>
+<li>具体的使用 map filter groupby sorted (信息隐藏，对外True/False)</li>
+</ul>
+<h2 id="heading"></h2>
+<ul>
+<li><a href="https://github.com/kachayev/fn.py">fn.py</a> Functional programming in Python</li>
+<li><a href="https://github.com/JulienPalard/Pipe">Pipe</a></li>
+<li><a href="https://github.com/cyberdelia/django-pipeline">django-pipeline</a></li>
+<li><a href="https://github.com/kvalle/diy-lisp">diy-lisp</a></li>
+</ul>
+<p>##参考资料</p>
+<ul>
+<li><a href="http://coolshell.cn/articles/10822.html">函数式编程</a></li>
+<li><a href="http://coolshell.cn/articles/11265.html">Python修饰器的函数式编程</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2012/04/functional_programming.html">函数式编程初探</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-09-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/"> python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/learn-smalltalk/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Smalltalk学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/about-http/">
+            <span class="next-text nav-default">HTTP相关</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

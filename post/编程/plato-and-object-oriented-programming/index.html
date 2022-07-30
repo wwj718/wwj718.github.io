@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译]柏拉图与面向对象编程 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="他们(哲学家)的职业就是什么事也不做，但是要观察每一件事情；因此，他们常常能把相距遥远和极不相同的事物的力量连结在一起。 &amp;ndash; 亚当·斯密《国富论" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/plato-and-object-oriented-programming/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译]柏拉图与面向对象编程" />
+<meta property="og:description" content="他们(哲学家)的职业就是什么事也不做，但是要观察每一件事情；因此，他们常常能把相距遥远和极不相同的事物的力量连结在一起。 &ndash; 亚当·斯密《国富论" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/plato-and-object-oriented-programming/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-12-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-12-29T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译]柏拉图与面向对象编程">
+<meta itemprop="description" content="他们(哲学家)的职业就是什么事也不做，但是要观察每一件事情；因此，他们常常能把相距遥远和极不相同的事物的力量连结在一起。 &ndash; 亚当·斯密《国富论"><meta itemprop="datePublished" content="2018-12-29T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-12-29T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2289">
+<meta itemprop="keywords" content="code," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译]柏拉图与面向对象编程"/>
+<meta name="twitter:description" content="他们(哲学家)的职业就是什么事也不做，但是要观察每一件事情；因此，他们常常能把相距遥远和极不相同的事物的力量连结在一起。 &ndash; 亚当·斯密《国富论"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译]柏拉图与面向对象编程</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-12-29 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#形式论">形式论</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#传统方法">传统方法</a></li>
+        <li><a href="#面向对象编程oop">面向对象编程(OOP)</a></li>
+        <li><a href="#太阳底下无新事物">太阳底下无新事物</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/vp_3883727e.png" alt=""></p>
+<blockquote>
+<p>他们(哲学家)的职业就是什么事也不做，但是要观察每一件事情；因此，他们常常能把相距遥远和极不相同的事物的力量连结在一起。  &ndash; 亚当·斯密《国富论》</p>
+</blockquote>
+<h1 id="前言">前言</h1>
+<p>原文见<a href="https://www.richardfarrar.com/plato-and-object-oriented-programming/">Plato and Object Oriented Programming</a></p>
+<h1 id="译文">译文</h1>
+<p>面向对象编程代表了一种范式转变，转变自传统的模块化编程方法。今天的计算机科学家无疑是聪明的人，但面向对象编程的基础概念已存在近2500年，它们来自柏拉图的&rsquo;对话&rsquo;。</p>
+<p>柏拉图和软件架构师的思维方式似乎存在显着的相关性，即便他们年代相隔数千年。</p>
+<h1 id="古希腊哲学">古希腊哲学</h1>
+<p><a href="https://zh.wikipedia.org/zh/%E6%9F%8F%E6%8B%89%E5%9B%BE">柏拉图</a>出生在古希腊的雅典城，受教于<a href="https://zh.wikipedia.org/zh/%E8%8B%8F%E6%A0%BC%E6%8B%89%E5%BA%95">苏格拉底</a>（苏格拉底被认为是西方哲学之父）。柏拉图是古希腊哲学家中（也许是所有哲学家中）最著名的一位。他通过丰富的著作遗产对现代哲学产生了深远的影响，这些著作包括<a href="http://en.wikipedia.org/wiki/Plato#Plato.27s_Dialogues">35篇对话</a>和13份书简。</p>
+<p>柏拉图的著作涵盖众多哲学主题。在这些主题中，我们将他激进的<a href="https://zh.wikipedia.org/zh/%E5%BD%A2%E4%B8%8A%E5%AD%B8">形而上学</a>概念，与面向对象编程做个比较。从根本上说，柏拉图的<a href="http://en.wikipedia.org/wiki/Theory_of_Forms">形式(Forms)论</a>与面向对象编程OOP的基础概念相近。</p>
+<h2 id="形式论">形式论</h2>
+<p>纵观他的形而上学，柏拉图把形式（Forms）看作一种抽象表示，它是真实世界的物体/特征的模板(templates/patterns)。</p>
+<p>举例来说，为了解释<code>形式</code>的概念，柏拉图讨论了<code>美</code>的概念。一朵花是<code>美</code>的，一幅画也可以说是<code>美</code>的，但它们并不是<code>美</code>本身。柏拉图认为，真正的<code>美</code>的形式独立于拥有它的物体而存在，因此我们可能有一个完美的<code>美</code>的概念，但永远无法亲身体验它。</p>
+<p>按照柏拉图的说法，一朵花被称为分享<code>美</code>的形式。它是美丽的，但我们从未见过真正的<code>美</code>。这种花被认为是一个美的实例，从众多形式（其中一个就是<code>美</code>）中继承特质。</p>
+<p><code>美</code>的<code>形式</code>是不变的，而一朵花可能在一段时间内拥有<code>美</code>，但最终在它枯萎死亡时会失去它。作为抽象，形式独立于继承其品质的现实世界对象(或者实例)。<!--完全是推理式的 假设 猜想 概念和逻辑系统--></p>
+<h1 id="计算机编程">计算机编程</h1>
+<h3 id="传统方法">传统方法</h3>
+<p>计算机程序在本质上是有序的指令列表: 完成A，然后完成B等。这有点像跟着烹饪菜谱一步一步操作。</p>
+<p>随着计算机越来越先进，相关软件程序也变得更加冗长和复杂。通常，计算机需要一次又一次地运行相同的代码。因此，不应每次需要时都重写这段代码，而是将函数(functions)或过程(procedures)写成半隔离的代码片段，需要时就调用它们。这有助于软件以模块化的方式开发，各个模块负责某些计算过程。</p>
+<h3 id="面向对象编程oop">面向对象编程(OOP)</h3>
+<p>面向对象编程将模块带入了下个阶段，模块成为自包含的代码片段，它们被称作<code>类</code>(classes). <!--这只是实现 核心是概念 按照这种思考方式--></p>
+<p>一个<code>类</code>(Class)是一堆程序代码，用做创建对象(object)的模版, 正如柏拉图的形式(Forms)是真实事物的抽象哲学模板(templates)。这段代码或<code>类</code>不是对象(object)本身，而像柏拉图式的形式(Forms)，只是描述对象实际是怎样的以及具有什么属性的模板(templates)。与柏拉图完全相同概念，转换到一个不同的学科，中间相隔了2500年！</p>
+<p>与柏拉图的形式的分层系统相似，类或模板也可以被增强。通过创建扩展类，继承父类的所有属性，同时又可以添加它自己的额外属性。(译者注: 我认为柏拉图似乎没有想清楚不同形式之间的关系问题，他也没有阐述分层系统,对话中巴门尼德指出柏拉图形式的一些问题，柏拉图似乎没有重视。这点罗素在《西方哲学史》里有指出)</p>
+<!--柏拉图的类之间的关系 并没有讨论，是否有类的类
+柏拉图如果用它的形式论 去构建面向对象语言 类的集成会成为一个问题，他的辩论者以及指出这点 但被他忽略了。
+-->
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl"> 1: // Our template or perfect form of a chair
+</span></span><span class="line"><span class="cl"> 2: class Chair
+</span></span><span class="line"><span class="cl"> 3: {
+</span></span><span class="line"><span class="cl"> 4: // bits of code to define the chair goes in here
+</span></span><span class="line"><span class="cl"> 5: }
+</span></span><span class="line"><span class="cl"> 6:
+</span></span><span class="line"><span class="cl"> 7:
+</span></span><span class="line"><span class="cl"> 8: // New template for a type of chair inheriting properties from the perfect chair form
+</span></span><span class="line"><span class="cl"> 9: class OfficeChair extends Chair
+</span></span><span class="line"><span class="cl"> 10: {
+</span></span><span class="line"><span class="cl"> 11:     // bits of EXTRA code for the office chair goes in here 
+</span></span><span class="line"><span class="cl"> 12: }
+</span></span><span class="line"><span class="cl"> 13:
+</span></span><span class="line"><span class="cl"> 14:
+</span></span><span class="line"><span class="cl"> 15: // Create an actual object, or particular of the office chair
+</span></span><span class="line"><span class="cl"> 16: $objMyOfficeChair = new OfficeChair();
+</span></span><span class="line"><span class="cl"> 17:
+</span></span><span class="line"><span class="cl"> 18: // Create an another object, or particular of the office chair
+</span></span><span class="line"><span class="cl"> 19: $objMyOtherOfficeChair = new OfficeChair();
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这是一个极其简化的例子，从中可以看到类之于对象 与 柏拉图形式之于实例的类比。</p>
+<h3 id="太阳底下无新事物">太阳底下无新事物</h3>
+<p>虽然我们可能认为自己是行走在这个星球上最聪明的一代，但我们可能得谦卑一些，通常我们只是在用新瓶装旧酒。</p>
+<p>圣经 传道书1:9-10 里说：</p>
+<blockquote>
+<p>已有的事, 后必再有, 已行的事, 后必再行, 日光之下并无新事。</p>
+</blockquote>
+<p>艾萨克·牛顿向前人的灵感致敬道：</p>
+<blockquote>
+<p>如果说我看得比别人更远些，那是因为我站在巨人的肩膀上。</p>
+</blockquote>
+<h1 id="寻求灵感">寻求灵感</h1>
+<p>如果你正在努力思考问题的答案，或想找到一种新的做事方式，不如试着从经典中寻求灵感。</p>
+<p>通过研究历史<!--思想史-->，即使是不同学科中的历史，也可能让你遇到一些想法，这些想法可以迁移到你目前的专业领域，并带着你前往梦寐以求的地方。这个过程甚至被赋予了名字 &ndash; 思想的交叉施肥。</p>
+<p>下次你遇到问题时，会转向哪儿寻找灵感？柏拉图？亚里士多德？</p>
+<h1 id="译者注">译者注</h1>
+<p>在此列出巴门尼德指出的<code>形式/理念</code>所存在的问题，这些问题可能会以其他形式出现在面向对象编程中.</p>
+<blockquote>
+<p>（1）个体是分享全部的理念呢，还仅仅是分享其一部分呢？无论是哪一种观点，都可以有反驳的理由。如果是前者，那么一个事物就必须同时存在于许多地方；如果是后者，则理念既然是不可分割的，那么一个具有“小”的一部分的事物就要比“绝对的小”更加小，而这是荒谬的。（2）当一个个体分享一个理念的时候，个体和理念就是同样的；所以就必须另有一个既包含这个个体又包含原来的理念的理念。于是就必须再有一个理念包括这个个体和这两个理念，如此类推从至无穷。这样，每一个理念就不止是一个，而会变成为理念的一个无穷系列。（这和亚里士多德关于“第三个人”的论证是同样的。）（3）苏格拉底提示说，理念也许仅仅是思想；但是巴门尼德指出，思想必须是关于某种事物的。（4）由于以上第（2）条所举的理由，所以理念便不能与分享它们的个体相似。（5）如果有任何理念存在的话，它也一定不能被我们所认识，因为我们的知识不是绝对的。（6）如果神的知识是绝对的，他就不能认识我们，因此也就不能统治我们。  &ndash;《西方哲学史》 第十五章 理念论</p>
+</blockquote>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-12-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/code/">code</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/the-adventures-of-tom-sawyer/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">汤姆•索亚历险记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/blocks4edx/">
+            <span class="next-text nav-default">blocks for open edx</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>热力学熵与信息熵 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="贝尔实验室和MIT有很多人将香农和爱因斯坦相提并论，而其他人则认为这种对比是不公平的，对香农不公平 &amp;ndash; 威廉·庞德斯通 这两天晚上在看熵相关的知识" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/entropy/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="热力学熵与信息熵" />
+<meta property="og:description" content="贝尔实验室和MIT有很多人将香农和爱因斯坦相提并论，而其他人则认为这种对比是不公平的，对香农不公平 &ndash; 威廉·庞德斯通 这两天晚上在看熵相关的知识" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/entropy/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-08-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-08-23T00:00:00+00:00" />
+
+<meta itemprop="name" content="热力学熵与信息熵">
+<meta itemprop="description" content="贝尔实验室和MIT有很多人将香农和爱因斯坦相提并论，而其他人则认为这种对比是不公平的，对香农不公平 &ndash; 威廉·庞德斯通 这两天晚上在看熵相关的知识"><meta itemprop="datePublished" content="2016-08-23T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-08-23T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2730">
+<meta itemprop="keywords" content="data," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="热力学熵与信息熵"/>
+<meta name="twitter:description" content="贝尔实验室和MIT有很多人将香农和爱因斯坦相提并论，而其他人则认为这种对比是不公平的，对香农不公平 &ndash; 威廉·庞德斯通 这两天晚上在看熵相关的知识"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">热力学熵与信息熵</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-08-23 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE/"> 数据 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+        <li><a href="#数学表述">数学表述</a></li>
+        <li><a href="#熵的微观解释">熵的微观解释</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#定义">定义</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#麦克斯韦妖httpszhwikipediaorgwikie9baa6e5858be696afe99fa6e5a696"><a href="https://zh.wikipedia.org/wiki/%E9%BA%A6%E5%85%8B%E6%96%AF%E9%9F%A6%E5%A6%96">麦克斯韦妖</a></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>贝尔实验室和MIT有很多人将香农和爱因斯坦相提并论，而其他人则认为这种对比是不公平的，对香农不公平  &ndash; 威廉·庞德斯通</p>
+</blockquote>
+<p>这两天晚上在看<code>熵</code>相关的知识，觉得饶有趣味，做个笔记</p>
+<p>我大学本科学的是<code>热能与动力工程</code>，大多时间在与热力学打交道。出于对编程的喜爱，毕业后当了程序员。熵是我毕业前后都接触的概念，在热力学和信息论中都极其重要。</p>
+<h1 id="热力学熵">热力学熵</h1>
+<p>我们先说说热力学第二定律。</p>
+<p>热力学第二定律是热力学的四个基本定律之一（第零定律不大出名：若两个热力学系统均与第三个系统处于热平衡状态，此两个系统也必互相处于热平衡）</p>
+<p>热力学第二定律有多种表述，克劳修斯表述为：</p>
+<blockquote>
+<p>不可能把热量从低温物体传递到高温物体而不产生其他影响。</p>
+</blockquote>
+<p>这个表述我们在高中物理中应该就见过</p>
+<p>他重点描述了热量传递的不可逆性，如此一来，<a href="https://zh.wikipedia.org/wiki/%E6%B0%B8%E5%8A%A8%E6%9C%BA#.E7.AC.AC.E4.BA.8C.E7.B1.BB.E6.B0.B8.E5.8A.A8.E6.9C.BA">第二类永动机</a>梦想宣告破灭</p>
+<h4 id="插曲永动机">插曲：永动机</h4>
+<p>相信不少小时候喜欢折腾机械玩具的小伙伴，都有过永动机的梦想。小时候我设想过几类永动机，印象深刻的一个，是一年小学暑假，把碎了一半的磁铁用胶带粘到玩具小车A的车尾，而相斥的另一半粘到玩具小车B的车头，中间通过一个弹性绳子连接。不知哪来的信心，确信自己解决了人类能源的问题：小车B启动后，靠近小车A，由于磁性，把小车A往前推，之后小车A拉长弹性绳子，拉动小车B，小车B前进，如此周而复始。不需能源便能行驶</p>
+<p>做实验的时候，并不顺利，我发现它们往复几次就停下了，我将其归结为两者重量不合适、绳子的弹性以及初始推力大小的问题，我相信当满足某种比例时（当时模糊觉得是某种组合方式），它们就能永远运动下去，为了找到这个比例，每天下午无聊的时候，玩腻了小霸王游戏机，便拿出玩具车寻找这个合适的比例。</p>
+<h3 id="数学表述">数学表述</h3>
+<p>热力学第二定律的数学表述主要借助克劳修斯所引入的<code>熵</code>的概念，下边的式子描述了热力学系统中熵的增减:</p>
+<p>$$\Delta S = \frac{\Delta Q}{T}$$</p>
+<p>变量S被定义为<code>熵</code>，$\Delta Q$ 是系统热的变化，吸热为正，放热为负，T为系统的绝对温度。</p>
+<p>如果$\Delta Q = 0$，那么$\Delta S$ ≥ 0。意思是一个绝热系统的全部熵不会自动减少。这是热力学第二定律的另一种表述（熵增原理）</p>
+<p>你可能想到那个著名的担忧：如果没有新的能量源源不断流入我们的宇宙，由于熵只增不减，我们的宇宙终将走向无序和寂灭（热寂说）</p>
+<h4 id="插曲生命-负熵">插曲：生命-负熵</h4>
+<p>关于熵增与生命，凯文凯利在《失控》中有段精彩的感慨：</p>
+<blockquote>
+<p>宇宙中并存着两个趋势。一种是永远下行的趋势，这股力量初时炽热难当，然后嘶嘶作响归于冰冷的死寂。这就是令人沮丧的卡诺第二定律，所有规律中最残酷的法则：所有秩序都终归于混沌，所有火焰都将熄灭，所有变异都趋于平淡，所有结构都终将自行消亡</p>
+</blockquote>
+<blockquote>
+<p>第二种趋势与此平行，但产生与此相反的效果。它在热量消散前（因为热必会消散）将其转移，在无序中构建有序。它借助趋微之势，逆流而上。 这股上升之流利用其短暂的有序时光，尽可能抢夺消散的能量以建立一个平台，来为下一轮的有序作铺垫。它倾尽所有，无所保留，其秩序全部用来增强下一轮的复杂性、成长和有序。它以这种方式在混沌中孕育出反混沌，我们称之为生命</p>
+</blockquote>
+<p>ps：关于生命是否是负熵，反方的有力反驳是生命不是孤立系统，包括地球也不是</p>
+<h3 id="熵的微观解释">熵的微观解释</h3>
+<p>热力学第二定律在热力学范畴内是一条经验定律，随着统计力学的发展，这一定律才得到了解释，同时也使其意义更加深远，波及到物理学之外的许多领域</p>
+<p>玻尔兹曼发现单一系统中的熵跟构成热力学性质的微观状态数量相关。微观状态可以以每个组成的原子的位置及动量予以表达</p>
+<p>玻尔兹曼这样来定义熵：</p>
+<p>$$S = k(ln\Omega)$$</p>
+<p>其中k是玻尔兹曼常数，$\Omega$则为<code>该宏观状态中所包含之微观状态数量</code>。</p>
+<p>我们知道，熵可以作为混乱程度的度量，可此前无论在热力学第二的表述或是克劳修斯定义的熵中，我们都无从看到这点。</p>
+<p>只有在玻尔兹曼这里，熵才和系统的混乱程度联系起来，因为$\Omega$可以作为一个系统混乱程度的度量：作为有规律的系统，只有有限的几种构型，而混乱的系统可以有无限多个构型</p>
+<p>维基百科里的这个例子很好：</p>
+<p>设想有一组10个硬币，每一个硬币有两面，掷硬币时得到最有规律的状态是10个都是正面或10个都是反面，这两种状态都只有一种构型（排列）。反之，如果是最混乱的情况，有5个正面5个反面，排列构型可以有 ${\displaystyle C_{10}^{5}}$ = 252种</p>
+<p>在微观视角下，如何解释孤立系统熵增的必然性呢，毕竟，如果粒子数量和上边硬币一样多，在瓶子里乱窜，按概率来说。完全可能存在某个时段，熵减啊，诸如原本反向的例子碰壁后都同向了，如此一来$\Omega$减小，熵不是也减小了么。如果你对这个问题感到疑惑，可以参考<a href="https://www.zhihu.com/question/19753084">这个回答</a>。简单来说就是：<strong>熵增，这样一个在微观状态下完全由概率决定的事情，在宏观状态就成了必然</strong>，在分子数目足够多的时候，只有一种情况最常见最稳定，即所有气体分子均匀分布</p>
+<h1 id="信息熵">信息熵</h1>
+<p>1948年，香农这位不世出的天才，将热力学熵，引入到信息论</p>
+<p>在热力学中，熵可以作为混乱程度的度量度量。在信息论中，熵最好理解为不确定性的量度。两者的关联，放到后边论述</p>
+<p>在信息世界，熵越高，则能传输越多的信息，熵越低，则意味着传输的信息越少</p>
+<h3 id="定义">定义</h3>
+<p>$$\mathrm{H} (X)=-\sum <em>{{i}}{{\mathrm  {P}}(x</em>{i})\log <em>{b}{\mathrm  {P}}(x</em>{i})},$$</p>
+<p>b是对数所使用的底，通常是2,自然常数e，或是10，b为2时，熵的单位是bit</p>
+<h1 id="两者联系">两者联系</h1>
+<p>在传统热力学中，熵被定义为对系统的宏观测定，并没有涉及概率分布，而概率分布是信息熵的核心定义。</p>
+<p>香农在定义熵时，根据的是玻尔兹曼对熵的统计学定义，所以两者在形式上基本一致，基本意义也完全一样，都是『（拥有某种观测能力的观测者）描述一个系统所需的信息量』。（按<a href="https://www.zhihu.com/question/20992022">信息熵与热力学熵有什么区别和联系？</a>）</p>
+<p>描述一个系统所需的信息量（信息熵）与观测的精细程度相关，这个精细度存在物理极限，达到物理极限时，玻尔兹曼熵就是信息熵，系统的物理状态数就是这个系统包含的/携带的信息量的上限。就是说，当这个世界的信息量达到（或接近）这个世界本身的玻尔兹曼熵之后，就无法增长了</p>
+<h3 id="麦克斯韦妖httpszhwikipediaorgwikie9baa6e5858be696afe99fa6e5a696"><a href="https://zh.wikipedia.org/wiki/%E9%BA%A6%E5%85%8B%E6%96%AF%E9%9F%A6%E5%A6%96">麦克斯韦妖</a></h3>
+<p>麦克斯韦妖（Maxwell&rsquo;s demon），是在物理学中假想的妖，能探测并控制单个分子的运动。</p>
+<p>可以表述为：一个绝热容器被分成相等的两格，中间是由“妖”控制的一扇小“门”，容器中的空气分子作无规则热运动时会向门上撞击，“门”可以选择性的将速度较快的分子放入一格，而较慢的分子放入另一格，这样，其中的一格就会比另外一格温度高，可以利用此温差，驱动热机做功。</p>
+<p>这是第二类永动机的一个范例</p>
+<p>可以采用信息熵来消解这个问题：让小妖精行使职责本身——即便只是了解和储存每个分子最初的香农信息——就会给系统带来热力学熵的增加，因此总的来说，系统的熵的总量没有减少</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%86%B5">维基百科 熵(热力学)</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%86%B5_(%E4%BF%A1%E6%81%AF%E8%AE%BA)">维基百科 熵(信息论)</a></li>
+<li><a href="https://www.zhihu.com/question/19753084">「熵」是什么？ 怎样以简单易懂的方式向其他人解释？</a></li>
+<li><a href="https://www.zhihu.com/question/20992022">信息熵与热力学熵有什么区别和联系？</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%BA%A6%E5%85%8B%E6%96%AF%E9%9F%A6%E5%A6%96">麦克斯韦妖</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%83%AD%E5%8A%9B%E5%AD%A6%E7%AC%AC%E4%BA%8C%E5%AE%9A%E5%BE%8B">热力学第二定律</a></li>
+<li><a href="https://zh.wikipedia.org/zh/%E7%83%AD%E5%8A%9B%E5%AD%A6">热力学</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%83%AD%E5%AF%82">热寂</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%BB%9F%E8%AE%A1%E5%8A%9B%E5%AD%A6">统计力学</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-08-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/data/">data</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/edx-check-publish/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">为open-edx构建审核系统</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%95%B0%E6%8D%AE/keras-hello-world-pelican/">
+            <span class="next-text nav-default">[译]神经网络的&#39;Hello world&#39; --keras 入门</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

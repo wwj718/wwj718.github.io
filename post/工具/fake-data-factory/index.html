@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>伪数据工厂faker - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="睁眼说瞎话并不为程序员所擅长，大多码农都避之不及，可在编程过程中，出于测试或是临时提供接口的目的，我们总得制造伪数据。如果需要伪造人名，三个" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/fake-data-factory/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="伪数据工厂faker" />
+<meta property="og:description" content="睁眼说瞎话并不为程序员所擅长，大多码农都避之不及，可在编程过程中，出于测试或是临时提供接口的目的，我们总得制造伪数据。如果需要伪造人名，三个" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/fake-data-factory/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-11-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-11-23T00:00:00+00:00" />
+
+<meta itemprop="name" content="伪数据工厂faker">
+<meta itemprop="description" content="睁眼说瞎话并不为程序员所擅长，大多码农都避之不及，可在编程过程中，出于测试或是临时提供接口的目的，我们总得制造伪数据。如果需要伪造人名，三个"><meta itemprop="datePublished" content="2015-11-23T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-11-23T00:00:00+00:00" />
+<meta itemprop="wordCount" content="728">
+<meta itemprop="keywords" content="dev-tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="伪数据工厂faker"/>
+<meta name="twitter:description" content="睁眼说瞎话并不为程序员所擅长，大多码农都避之不及，可在编程过程中，出于测试或是临时提供接口的目的，我们总得制造伪数据。如果需要伪造人名，三个"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">伪数据工厂faker</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-11-23 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>睁眼说瞎话并不为程序员所擅长，大多码农都避之不及，可在编程过程中，出于测试或是临时提供接口的目的，我们总得制造伪数据。如果需要伪造人名，三个以内还好，张三李四王五，可超过10个的话，我不知道你是不是就要侵犯你好朋友的姓名权了</p>
+<p>而如果是</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Student</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">address</span><span class="p">,</span><span class="n">phone_number</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>你要怎么办呢？</p>
+<p>#faker闪亮登场
+##Install faker
+pip install fake-factory</p>
+<p>##Usage
+拿上边的问题来说，我们需要产生一组<code>(name,address,phone_number)</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">faker</span> <span class="kn">import</span> <span class="n">Factory</span>
+</span></span><span class="line"><span class="cl"><span class="n">fake</span> <span class="o">=</span> <span class="n">Factory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;zh_CN&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">):</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">address</span><span class="p">,</span><span class="n">phone_number</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">fake</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span><span class="n">fake</span><span class="o">.</span><span class="n">address</span><span class="p">(),</span><span class="n">fake</span><span class="o">.</span><span class="n">phone_number</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span> <span class="n">name</span><span class="p">,</span><span class="n">address</span><span class="p">,</span><span class="n">phone_number</span> <span class="c1">#Student(name,address,phone_number)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>输出为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">危莉 超市皇路u座 109784 18689765254
+</span></span><span class="line"><span class="cl">富东 琴市东街Q座 532875 15549156990
+</span></span><span class="line"><span class="cl">白宇 帆市闵街Y座 106094 14580766320
+</span></span><span class="line"><span class="cl">俞玉英 坤市督街k座 509819 13771875966
+</span></span><span class="line"><span class="cl">陆淑珍 娟市乐路X座 113166 15929147106
+</span></span><span class="line"><span class="cl">束红梅 磊市贲街h座 699061 15315800191
+</span></span><span class="line"><span class="cl">牧秀云 杰市滕街l座 315704 14564550529
+</span></span><span class="line"><span class="cl">游平 敏市牧街D座 152585 18580747599
+</span></span><span class="line"><span class="cl">万雷 桂花市屈路t座 423929 15649801854
+</span></span><span class="line"><span class="cl">司华 慧市索街b座 208656 13748193777
+</span></span><span class="line"><span class="cl">尹华 春梅市荀街d座 834796 13621273546
+</span></span><span class="line"><span class="cl">赖桂兰 丽丽市白街Z座 759194 18948910936
+</span></span><span class="line"><span class="cl">卜勇 秀珍市冷路r座 589146 15565418368
+</span></span><span class="line"><span class="cl">终婷婷 军市丁路v座 724209 14720124023
+</span></span><span class="line"><span class="cl">东芳 桂英市谭街Z座 570071 18558694020
+</span></span><span class="line"><span class="cl">羊红霞 丹市柴街q座 806049 13153710279
+</span></span><span class="line"><span class="cl">芮倩 琴市席街p座 291743 15030602445
+</span></span><span class="line"><span class="cl">阮淑珍 丽丽市滕路q座 911886 18900809224
+</span></span><span class="line"><span class="cl">丁芳 冬梅市佴路V座 424657 13332629139
+</span></span><span class="line"><span class="cl">车畅 玉珍市蓝路v座 549485 15826010349
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>你看睁眼说瞎话容易多了吧！</p>
+<hr>
+<p>例子过后，下边我们来正式介绍下faker</p>
+<p>#What</p>
+<blockquote>
+<p>Faker is a Python package that generates fake data for you. Whether you need to bootstrap your database, create good-looking XML documents, fill-in your persistence to stress test it, or anonymize data taken from a production service, Faker is for you.</p>
+</blockquote>
+<p>少量数据我们还可以自己瞎编，一旦数据变多，faker的好处就体现出来了，这对自动化很有好处</p>
+<p>#使用演示</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">fake</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># &#39;Lucy Cechtelar&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">fake</span><span class="o">.</span><span class="n">address</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># &#34;426 Jordy Lodge</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#  Cartwrightshire, SC 88120-6700&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">fake</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Sint velit eveniet. Rerum atque repellat voluptatem quia rerum. Numquam excepturi</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># beatae sint laudantium consequatur. Magni occaecati itaque sint et sit tempore. Nesciunt</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># amet quidem. Iusto deleniti cum autem ad quia aperiam.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># A consectetur quos aliquam. In iste aliquid et aut similique suscipit. Consequatur qui</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># quaerat iste minus hic expedita. Consequuntur error magni et laboriosam. Aut aspernatur</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># voluptatem sit aliquam. Dolores voluptatum est.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Aut molestias et maxime. Fugit autem facilis quos vero. Eius quibusdam possimus est.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Ea quaerat et quisquam. Deleniti sunt quam. Adipisci consequatur id in occaecati.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Et sint et. Ut ducimus quod nemo ab voluptatum.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>#中文本地化相关
+<a href="http://fake-factory.readthedocs.org/en/master/locales/zh_CN.html">locales/zh_CN</a></p>
+<p>#参考</p>
+<ul>
+<li><a href="https://github.com/joke2k/faker">joke2k/faker</a></li>
+<li><a href="http://fake-factory.readthedocs.org/en/master/index.html">fake-factory factory.readthedocs.org</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-11-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/celery-on-open-edx/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Celery在Open edX中的使用</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/document-factory-pandoc/">
+            <span class="next-text nav-default">文档格式转化神器pandoc</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

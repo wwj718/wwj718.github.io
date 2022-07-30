@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用PyOxidizer构建独立的Python应用程序 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 目录对python程序进行打包方式主要有5种: py2exe、py2app，pyinstaller，cx_Freeze，nuitka。本文" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/building-standalone-python-applications-with-pyoxidizer/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用PyOxidizer构建独立的Python应用程序" />
+<meta property="og:description" content="前言 目录对python程序进行打包方式主要有5种: py2exe、py2app，pyinstaller，cx_Freeze，nuitka。本文" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/building-standalone-python-applications-with-pyoxidizer/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-06-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-06-27T00:00:00+00:00" />
+
+<meta itemprop="name" content="使用PyOxidizer构建独立的Python应用程序">
+<meta itemprop="description" content="前言 目录对python程序进行打包方式主要有5种: py2exe、py2app，pyinstaller，cx_Freeze，nuitka。本文"><meta itemprop="datePublished" content="2019-06-27T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-06-27T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1250">
+<meta itemprop="keywords" content="python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用PyOxidizer构建独立的Python应用程序"/>
+<meta name="twitter:description" content="前言 目录对python程序进行打包方式主要有5种: py2exe、py2app，pyinstaller，cx_Freeze，nuitka。本文"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用PyOxidizer构建独立的Python应用程序</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-06-27 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#安装rust">安装Rust</a></li>
+        <li><a href="#安装pyoxidizer">安装PyOxidizer</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#创建项目">创建项目</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#自定义">自定义</a></li>
+        <li><a href="#打包第三方库">打包第三方库</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>目录对python程序进行打包方式主要有5种: py2exe、py2app，pyinstaller，cx_Freeze，nuitka。本文介绍一种新工具: PyOxidizer。</p>
+<p>本文是使用使用PyOxidizer构建独立的Python应用程序的一个笔记。</p>
+<p>基本按照<a href="https://pyoxidizer.readthedocs.io/en/latest/getting_started.html">官方教程</a>的引导。</p>
+<h1 id="pyoxidizer">PyOxidizer</h1>
+<p>PyOxidizer是<a href="https://github.com/indygreg">indygreg</a>开源了一个项目，用于构建独立的Python应用程序。文档在<a href="https://pyoxidizer.readthedocs.io/en/latest/getting_started.html">这儿</a></p>
+<p>有趣的是, PyOxidizer本身基于<a href="https://www.rust-lang.org/">Rust</a>, 个中原因<a href="https://github.com/indygreg">indygreg</a>在<a href="https://gregoryszorc.com/blog/2019/06/24/building-standalone-python-applications-with-pyoxidizer/">这篇文章</a>里做了阐述。</p>
+<h1 id="安装">安装</h1>
+<p>为了使用PyOxidizer，首先需要按照Rust环境。</p>
+<h3 id="安装rust">安装Rust</h3>
+<p>Rust版本要求: <code>1.33+</code>.</p>
+<p>可以按照<a href="https://www.rust-lang.org/">rust官方</a>官方的引导说明来安装。</p>
+<p>我在MacOS环境里工作，我准备使用<code>rustup</code>,方便将来管理Rust版本，安装过程非常简单: <code>brew install rustup</code></p>
+<p>如果你也使用rustup，安装好之后接下来运行:<code>rustup-init</code></p>
+<p>安装完成之后检查版本:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ rustc --version
+</span></span><span class="line"><span class="cl">rustc 1.35.0 (3c235d560 2019-05-20)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="安装pyoxidizer">安装PyOxidizer</h3>
+<p><code>cargo install pyoxidizer</code></p>
+<p>安装完成后，尝试运行它：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ~ pyoxidizer
+</span></span><span class="line"><span class="cl">PyOxidizer 0.1.2
+</span></span><span class="line"><span class="cl">Gregory Szorc &lt;gregory.szorc@gmail.com&gt;
+</span></span><span class="line"><span class="cl">Build and distribute Python applications
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">USAGE:
+</span></span><span class="line"><span class="cl">    pyoxidizer [SUBCOMMAND]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">FLAGS:
+</span></span><span class="line"><span class="cl">    -h, --help       Prints help information
+</span></span><span class="line"><span class="cl">    -V, --version    Prints version information
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">SUBCOMMANDS:
+</span></span><span class="line"><span class="cl">    add                             Add PyOxidizer to an existing Rust project. (EXPERIMENTAL)
+</span></span><span class="line"><span class="cl">    analyze                         Analyze a built binary
+</span></span><span class="line"><span class="cl">    build                           Build a PyOxidizer enabled project
+</span></span><span class="line"><span class="cl">    build-artifacts                 Process a PyOxidizer config file and build derived artifacts
+</span></span><span class="line"><span class="cl">    help                            Prints this message or the help of the given subcommand(s)
+</span></span><span class="line"><span class="cl">    init                            Create a new Rust project embedding Python.
+</span></span><span class="line"><span class="cl">    python-distribution-extract     Extract a Python distribution archive to a directory
+</span></span><span class="line"><span class="cl">    python-distribution-licenses    Show licenses for a given Python distribution
+</span></span><span class="line"><span class="cl">    run                             Build and run a PyOxidizer application
+</span></span><span class="line"><span class="cl">    run-build-script                Run functionality that a build script would perform
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="使用">使用</h1>
+<h3 id="创建项目">创建项目</h3>
+<p><code>pyoxidizer init pyapp</code></p>
+<p>该命令将创建一个支持嵌入Python的Rust项目。运行完命令，将打印相关信息及下一步该做什么的提示。</p>
+<p>根据提示信息，依次运行:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">cd</span> pyapp
+</span></span><span class="line"><span class="cl">pyoxidizer build <span class="c1"># 第一次运行会下载对应平台的Python解释器</span>
+</span></span><span class="line"><span class="cl">pyoxidizer run
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果一切顺利，<code>pyoxidizer run</code>将启动了一个Rust可执行文件，它启动了一个交互式Python调试器！尝试输入一些Python代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;hello, world&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">hello</span><span class="p">,</span> <span class="n">world</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="自定义python和打包行为">自定义Python和打包行为</h1>
+<h3 id="自定义">自定义</h3>
+<p>项目根目录里有一个自动生成的pyoxidizer.toml文件，该文件决定默认运行时行为。</p>
+<p>找到<code>[[embedded_python_run]]</code>部分, 这部分决定Python解释器启动时要执行的操作,调整为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[[embedded_python_run]]
+</span></span><span class="line"><span class="cl">mode = &#34;eval&#34;
+</span></span><span class="line"><span class="cl">code = &#34;import uuid; print(uuid.uuid4())&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在我们告诉解释器启动时运行:<code>eval(import uuid; print(uuid.uuid4())</code></p>
+<p><code>pyoxidizer run</code>输出的结果为: <code>4ef94bc0-4cbe-4404-9269-0690fec68094</code></p>
+<h3 id="打包第三方库">打包第三方库</h3>
+<p>接下来，让我们试着打包现有的Python应用程序！</p>
+<p>我们试着打包第三方库:<code>pyflakes</code></p>
+<p>编辑配置文件:<code>pyoxidizer.toml</code>,使得:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="p">[[</span><span class="nx">packaging_rule</span><span class="p">]]</span>
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="p">=</span> <span class="s">&#34;pip-install-simple&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">package</span> <span class="p">=</span> <span class="s">&#34;pyflakes==2.1.1&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以及</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[[embedded_python_run]]
+</span></span><span class="line"><span class="cl">mode = &#34;eval&#34;
+</span></span><span class="line"><span class="cl">code = &#34;from pyflakes.api import main; main()&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这将告诉PyOxidizer你要安装pyflakes的2.1.1版本。在构建时，会运行<code>pip install pyflakes==2.1.1</code>,并将它们添加到生成的二进制文件中。我们试试看：<code>pyoxidizer run -- --help</code></p>
+<p>新的pyoxidizer.toml文件应该类似于：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="err">#</span> <span class="nx">Multiple</span> <span class="p">[[</span><span class="nx">python_distribution</span><span class="p">]]</span> <span class="nx">sections</span> <span class="nx">elided</span> <span class="k">for</span> <span class="nx">brevity</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[[</span><span class="nx">build</span><span class="p">]]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">application_name</span> <span class="p">=</span> <span class="s">&#34;pyflakes&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[[</span><span class="nx">embedded_python_config</span><span class="p">]]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">raw_allocator</span> <span class="p">=</span> <span class="s">&#34;system&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[[</span><span class="nx">packaging_rule</span><span class="p">]]</span>
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="p">=</span> <span class="s">&#34;stdlib-extensions-policy&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">policy</span> <span class="p">=</span> <span class="s">&#34;all&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[[</span><span class="nx">packaging_rule</span><span class="p">]]</span>
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="p">=</span> <span class="s">&#34;stdlib&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">include_source</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[[</span><span class="nx">packaging_rule</span><span class="p">]]</span>
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="p">=</span> <span class="s">&#34;pip-install-simple&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">package</span> <span class="p">=</span> <span class="s">&#34;pyflakes==2.1.1&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[[</span><span class="nx">embedded_python_run</span><span class="p">]]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">mode</span> <span class="p">=</span> <span class="s">&#34;eval&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">code</span> <span class="p">=</span> <span class="s">&#34;from pyflakes.api import main; main()&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>成功为pyflakes制作了一个可执行文件！</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://gregoryszorc.com/blog/2019/06/24/building-standalone-python-applications-with-pyoxidizer/">Building Standalone Python Applications with PyOxidizer</a></li>
+<li><a href="https://pyoxidizer.readthedocs.io/en/latest/getting_started.html">pyoxidizer docs</a></li>
+<li><a href="https://github.com/indygreg/PyOxidizer">PyOxidizer</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-06-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/">python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/replit-play/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Play: 像学习Scratch那样学习Python</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/is-gamification-programming-a-good-idea/">
+            <span class="next-text nav-default">游戏化编程是个好主意吗？</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

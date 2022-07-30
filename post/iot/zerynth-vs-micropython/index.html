@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>zerynth与micropython - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 周末偶然了解到zerynth. 最初以为zerynth只是micropython的分支，搜了一堆资料后，发现并非如此。 本文将梳理zeryn" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/iot/zerynth-vs-micropython/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="zerynth与micropython" />
+<meta property="og:description" content="前言 周末偶然了解到zerynth. 最初以为zerynth只是micropython的分支，搜了一堆资料后，发现并非如此。 本文将梳理zeryn" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/iot/zerynth-vs-micropython/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-12-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-12-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="zerynth与micropython">
+<meta itemprop="description" content="前言 周末偶然了解到zerynth. 最初以为zerynth只是micropython的分支，搜了一堆资料后，发现并非如此。 本文将梳理zeryn"><meta itemprop="datePublished" content="2018-12-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-12-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1601">
+<meta itemprop="keywords" content="program," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="zerynth与micropython"/>
+<meta name="twitter:description" content="前言 周末偶然了解到zerynth. 最初以为zerynth只是micropython的分支，搜了一堆资料后，发现并非如此。 本文将梳理zeryn"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">zerynth与micropython</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-12-03 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#为nodemcu-v2编程">为NodeMCU v2编程</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/zerynth_f40b4269.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>周末偶然了解到<a href="https://www.zerynth.com/">zerynth</a>. 最初以为zerynth只是<a href="https://github.com/micropython/micropython">micropython</a>的分支，搜了一堆资料后，发现并非如此。</p>
+<p>本文将梳理zerynth与micropython的差异，并记录如何使用<a href="https://www.zerynth.com/zerynth-studio/">Zerynth Studio</a>为<a href="https://docs.zerynth.com/latest/official/board.zerynth.nodemcu2/docs/index.html">NodeMCU v2</a>编程。</p>
+<h1 id="比较">比较</h1>
+<p>硬件社区有不少人对zerynth与micropython之间的差异感兴趣，zerynth团队积极在此类问题下答复。按照<a href="https://webcache.googleusercontent.com/search?q=cache:XZCnuvATLhcJ:https://forum.pjrc.com/threads/37211-Zerynth-(formerly-Viper)-vs-MicroPython+&amp;cd=1&amp;hl=zh-CN&amp;ct=clnk&amp;gl=kr">zerynth联合创始人floyd的说法</a>:</p>
+<ul>
+<li>Zerynth是针对嵌入式环境优化的Python虚拟机的实现，在实时操作系统（ChibiOS和FreeRTOS）之上运行。因此，删除了一些Python功能，并添加了一些更适合嵌入式的功能。</li>
+<li>我们将虚拟机切换为闭源模型。所有其余的（IDE;工具链;云组件等）将在MIT或Apache许可下保持开源。</li>
+</ul>
+<!--
+Zerynth团队的Luigi回复是:
+
+*  Zerynth占用空间较小
+*  Zerynth具有用于多线程的RTOS 
+*  Zerynth有一个跨平台 IDE
+*  Zerynth支持C-Python编程
+*  Zerynth旨在成为嵌入式和iot的垂直技术栈
+-->
+<p>Giacomo在<a href="https://community.zerynth.com/t/zerynth-vs-micropython/817/2">Zerynth Vs Micropython</a>帖子中给出了更具体的回答:</p>
+<ul>
+<li>占用空间较小
+<ul>
+<li>Zerynth只需要60k-80kB的flash和3-5kB的RAM</li>
+<li>micropython则至少需要256k的flash和16k的RAM</li>
+</ul>
+</li>
+<li>Zerynth具有用于多线程的RTOS</li>
+<li>Zerynth支持C-Python编程</li>
+<li>Zerynth有一个基于命令行工具链的跨平台IDE
+<ul>
+<li>提供了一个易于使用的界面来编写和调试嵌入式Python。MicroPython没有官方IDE;</li>
+<li>Zerynth基于命令行工具链，方便开发者创建自动化任务。</li>
+</ul>
+</li>
+<li>Zerynth旨在成为嵌入式和物联网世界的完整中间件
+<ul>
+<li>Zerynth路线图包括开发模块以允许主要云服务提供商（Microsoft Azure，Amazon AWS，IBM Bluemix等）的设备管理和数据收集。也支持高级调试技术（Python断点，代码注释，操作码执行操作码，JTAG支持&hellip;&hellip;）
+最后，Giacomo提到Zerynth更专注在微型系统，可以将其视为Micro MicroPython。</li>
+</ul>
+</li>
+</ul>
+<p><code>Zerynth旨在成为嵌入式和物联网世界的完整中间件</code>很能代表Zerynth的目标，它们的主页上也主要强调这点，而micropython则致力于构建开源生态和基础设施。这是我的看法。</p>
+<h1 id="体验zerynth-studio">体验Zerynth Studio</h1>
+<p>我最初试着在Mac下开发调试，和大多情况一样，最终逃避到Ubuntu16.04。Mac不是开发硬件的好平台。坑多，我真是受够了。我不知道作为硬件黑客沃兹尼亚克是怎么看待如今的这个操作系统的。</p>
+<p><a href="https://www.zerynth.com/zerynth-studio/">下载Zerynth Studio</a>, 选择linux安装包，并下载离线数据包(国内网络你懂的)。具体安装方式在<a href="https://docs.zerynth.com/latest/official/core.zerynth.docs/installationguide/docs/index.html#start-zerynth-installation-and-agree-the-term-of-service">这里</a></p>
+<p>安装完成之后，就可以开始为NodeMCU v2编程了(Zerynth支持NodeMCU v2，我手头恰好有一块这个板子)。</p>
+<h3 id="为nodemcu-v2编程">为NodeMCU v2编程</h3>
+<img src="/post/img/nodemcu_b643d26f.png" width=400 />
+<p>NodeMCU是一个开源物联网平台，包括一个在ESP8266上运行的固件，带有Espressif Non-OS SDK，以及基于ESP-12模块的硬件。4MB flash，80MHz，大约50k可用RAM和Wifi收发器。</p>
+<p>淘宝上售价十几二十块钱。</p>
+<p>官方的<a href="https://docs.zerynth.com/latest/official/core.zerynth.docs/gettingstarted/docs/index.html">入门教程</a>比较完备，由于入门教程不是针对NodeMCU v2，所以你最好也顺带读一下<a href="https://docs.zerynth.com/latest/official/board.zerynth.nodemcu2/docs/index.html?highlight=nodemcu">NodeMCU v2
+</a>。</p>
+<p>跟着文档基本不会有什么问题.</p>
+<p>其中port的权限需要开启，文档里都有提及，我用了简单粗暴的方法: <code>sudo chmod 666 /dev/ttyUSB0</code>.</p>
+<img src="/post/img/zerynth_bf032e53.png" width=800 />
+<p>Uplink之后，点击<code>open console</code>按钮，就可以看到代码运行之后，输出的信息了:</p>
+<img src="/post/img/zerynth_a538b5c9.png" width=800 />
+<p>完成。</p>
+<h1 id="结论">结论</h1>
+<p>micropython目前对ble的支持不好，目前的进度是nrf52 port被micropython的分支CircuitPython 4.0支持，所以希望试试Zerynth，结果Zerynth中差别也不大，支持nrf52，不支持esp32。</p>
+<p>总的来说，Zerynth对我吸引力不大。我依然会选择micropython，选择开放的生态。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://wiki.python.org/moin/Zerynth">Zerynth is Python Embedded in Real-time</a></li>
+<li><a href="https://forum.pjrc.com/threads/37211-Zerynth-(formerly-Viper)-vs-MicroPython">Zerynth (formerly Viper) vs MicroPython</a></li>
+<li><a href="https://forum.micropython.org/viewtopic.php?t=2431">Comparison to Zerynth&rsquo;s Python for Embedded?</a></li>
+<li><a href="https://community.zerynth.com/t/zerynth-vs-micropython/817/2">Zerynth VSs Micropython</a></li>
+<li><a href="https://forum.micropython.org/viewtopic.php?f=2&amp;t=602&amp;p=4472&amp;hilit=viper#p3442">another python on micorcontrollers project</a></li>
+<li><a href="https://www.thingforward.io/techblog/2018-02-21-getting-started-with-python-on-embedded-and-zerynth.html">Getting started with Python on Embedded - and Zerynth</a></li>
+<li><a href="https://docs.zerynth.com/latest/official/board.zerynth.nodemcu2/docs/index.html#connect-register-virtualize-and-program">NodeMCU v2</a></li>
+<li><a href="https://docs.zerynth.com/latest/official/board.zerynth.nodemcu2/docs/index.html#connect-register-virtualize-and-program">Connect, Register, Virtualize and Program</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-12-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/program/">program</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/notes-from-dynamicland-programming-raspberry-pis/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">来自Dynamicland的笔记: 为树莓派(Raspberry Pi)编程</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/interesting-weekend/">
+            <span class="next-text nav-default">核聚变、方所与半宅空间</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

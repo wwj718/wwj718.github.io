@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>搭建私有文件存储服务 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="公司最近准备搭建私有文件存储服务，主要的需求点在团队协作，文件共享和权限控制，我又有机会冒充系统管理员啦。 一直对seafile很感兴趣，给L" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/build-seafile/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="搭建私有文件存储服务" />
+<meta property="og:description" content="公司最近准备搭建私有文件存储服务，主要的需求点在团队协作，文件共享和权限控制，我又有机会冒充系统管理员啦。 一直对seafile很感兴趣，给L" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/build-seafile/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-09-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-09-08T00:00:00+00:00" />
+
+<meta itemprop="name" content="搭建私有文件存储服务">
+<meta itemprop="description" content="公司最近准备搭建私有文件存储服务，主要的需求点在团队协作，文件共享和权限控制，我又有机会冒充系统管理员啦。 一直对seafile很感兴趣，给L"><meta itemprop="datePublished" content="2015-09-08T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-09-08T00:00:00+00:00" />
+<meta itemprop="wordCount" content="746">
+<meta itemprop="keywords" content="技术," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="搭建私有文件存储服务"/>
+<meta name="twitter:description" content="公司最近准备搭建私有文件存储服务，主要的需求点在团队协作，文件共享和权限控制，我又有机会冒充系统管理员啦。 一直对seafile很感兴趣，给L"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">搭建私有文件存储服务</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-09-08 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>公司最近准备搭建私有文件存储服务，主要的需求点在团队协作，文件共享和权限控制，我又有机会冒充系统管理员啦。</p>
+<p>一直对seafile很感兴趣，给L演示后，他也觉得不错，于是开始搭建。</p>
+<p>首选方案当然是用docker。一搜github找到它:<a href="https://github.com/JensErat/docker-seafile">docker-seafile</a></p>
+<p>剩下的就是细节啦。</p>
+<p>#安装seafile</p>
+<ul>
+<li>安装docker,参考<a href="http://wwj718.github.io/docker-edx-birch-1.html">我此前的文章</a></li>
+<li>docker run：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text  
+</span></span><span class="line"><span class="cl">  sudo docker run -t -i \
+</span></span><span class="line"><span class="cl">  -p 10001:10001 \
+</span></span><span class="line"><span class="cl">  -p 12001:12001 \
+</span></span><span class="line"><span class="cl">  -p 8001:8000 \
+</span></span><span class="line"><span class="cl">  -p 8080:8080 \
+</span></span><span class="line"><span class="cl">  -p 8082:8082 \
+</span></span><span class="line"><span class="cl">  -v /srv/seafile:/opt/seafile \
+</span></span><span class="line"><span class="cl">  jenserat/seafile -- /bin/bash
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>mkdir seafile&amp;cd seafile</code>，<code>git clone https://github.com/JensErat/docker-seafile.git</code></li>
+<li>在宿主机里 <code>cd docker-seafile</code>,<code>./download-seafile.sh</code> , <code>sudo cp . /srv/seafile -R</code></li>
+<li>进入容器：<code>/opt/seafile/seafile-server-4.3.2/setup-seafile.sh</code>,回答相应问题</li>
+<li><code>/opt/seafile/seafile-server-latest/seafile.sh start</code></li>
+<li><code>/opt/seafile/seafile-server-latest/seahub.sh start</code></li>
+<li>exit</li>
+</ul>
+<p>#运行seafile</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker run -d <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --name seafile <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -p 10001:10001 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -p 12001:12001 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -p 8001:8000 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -p 8080:8080 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -p 8082:8082 <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -v /srv/seafile:/opt/seafile <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  -e <span class="nv">autostart</span><span class="o">=</span><span class="nb">true</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  jenserat/seafile
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>#开机自启
+加上<code>--restart=no</code></p>
+<p>#使用
+访问ip:8001</p>
+<p>#重新配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">进入到容器中
+</span></span><span class="line"><span class="cl">rm -rf /opt/seafile/ccnet
+</span></span><span class="line"><span class="cl">rm -rf  /opt/seafile/seafile-data
+</span></span><span class="line"><span class="cl">/opt/seafile/seafile-server-4.3.2/setup-seafile.sh
+</span></span><span class="line"><span class="cl">/opt/seafile/seafile-server-latest/seafile.sh restart
+</span></span><span class="line"><span class="cl">/opt/seafile/seafile-server-latest/seahub.sh restart
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>#定制开发（将其作为文件服务）</p>
+<ul>
+<li>web api ： <a href="http://manual-cn.seafile.com/develop/web_api.html#file-share-link">http://manual-cn.seafile.com/develop/web_api.html#file-share-link</a></li>
+<li>python api : <a href="http://manual-cn.seafile.com/develop/python_api.html">http://manual-cn.seafile.com/develop/python_api.html</a></li>
+</ul>
+<p>#桌面端以及移动端下载
+<a href="https://www.seafile.com/download/">https://www.seafile.com/download/</a></p>
+<p>#接口调试
+试了下缩略图功能：<a href="http://manual-cn.seafile.com/develop/web_api.html#get-thumbnail-image">http://manual-cn.seafile.com/develop/web_api.html#get-thumbnail-image</a></p>
+<ul>
+<li>获取token：<code>curl -d &quot;username=MYUSERNAME&amp;password=MYPASSWORD&quot; http://MYSERVER/api2/auth-token/</code></li>
+<li>获取缩略图：<code>curl -H &quot;Authorization: Token MYTOKEN&quot;   http://MYSERVER/api2/repos/{repo_id}/thumbnail/?p=echarts5.jpeg&amp;size=123 &gt; thumbnail.png</code></li>
+</ul>
+<p>其中repo_id进入具体资料库，从url中可以看到</p>
+<p>#坑记录
+由于文件服务器搭建在内网，偶尔也有外部访问的需求（主要是文件分类之类的工作，技术负责人/规范制定者们得经常出门在外，这个需求还是挺常见的），所以使用ngrok映射出去，由于文件相关的服务在8082端口，而ngrok只映射web server服务，所以外部可以操作网站，却无法查看/上传/下载文件。这与需求不矛盾: )</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-09-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/build-ngrok-server/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">搭建ngrok服务（内网穿透）</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/process-control-system-supervisor/">
+            <span class="next-text nav-default">使用Supervisor来管理进程</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

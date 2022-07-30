@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>树莓派折腾笔记之系统安装与配置 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="最近我的树莓派被用于作原型机了 只好重新用新的板子重新配置 下载系统镜像 镜像下载地址,这里有许多可选镜像,我用的是raspbian 我之前是在wi" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/iot/raspberrypi-install-and-config/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="树莓派折腾笔记之系统安装与配置" />
+<meta property="og:description" content="最近我的树莓派被用于作原型机了 只好重新用新的板子重新配置 下载系统镜像 镜像下载地址,这里有许多可选镜像,我用的是raspbian 我之前是在wi" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/iot/raspberrypi-install-and-config/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-10-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-10-11T00:00:00+00:00" />
+
+<meta itemprop="name" content="树莓派折腾笔记之系统安装与配置">
+<meta itemprop="description" content="最近我的树莓派被用于作原型机了 只好重新用新的板子重新配置 下载系统镜像 镜像下载地址,这里有许多可选镜像,我用的是raspbian 我之前是在wi"><meta itemprop="datePublished" content="2016-10-11T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-10-11T00:00:00+00:00" />
+<meta itemprop="wordCount" content="5244">
+<meta itemprop="keywords" content="tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="树莓派折腾笔记之系统安装与配置"/>
+<meta name="twitter:description" content="最近我的树莓派被用于作原型机了 只好重新用新的板子重新配置 下载系统镜像 镜像下载地址,这里有许多可选镜像,我用的是raspbian 我之前是在wi"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">树莓派折腾笔记之系统安装与配置</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-10-11 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#新的sd卡">新的sd卡</a></li>
+        <li><a href="#重刷装有系统的sd卡">重刷装有系统的sd卡</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#expand-filesystem">#Expand Filesystem</a>
+      <ul>
+        <li><a href="#配置vnchttpszhwikipediaorgzhvnc">配置<a href="https://zh.wikipedia.org/zh/VNC">VNC</a></a></li>
+        <li><a href="#换国内源">换国内源</a></li>
+        <li><a href="#修改hostname">修改hostname</a></li>
+        <li><a href="#无线网络">无线网络</a></li>
+        <li><a href="#树莓派作为无线ap">树莓派作为无线AP</a></li>
+        <li><a href="#连接vpn">连接VPN</a></li>
+        <li><a href="#蓝牙">蓝牙</a></li>
+        <li><a href="#音频相关">音频相关</a></li>
+        <li><a href="#坑">坑</a></li>
+        <li><a href="#其它">其它</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#i2c">I2C</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#linux-dash">Linux Dash</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#motion">motion</a></li>
+        <li><a href="#在python中调用">在python中调用</a></li>
+        <li><a href="#机器视觉">机器视觉</a></li>
+        <li><a href="#netdata">netdata</a></li>
+        <li><a href="#supervisor">supervisor</a></li>
+        <li><a href="#gottyhttpsgithubcomyudaigotty"><a href="https://github.com/yudai/gotty">gotty</a></a></li>
+        <li><a href="#ajentihttpsgithubcomajentiajenti"><a href="https://github.com/ajenti/ajenti">Ajenti</a></a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#zip包mac下无法解压">zip包mac下无法解压</a></li>
+        <li><a href="#ssh端口拒绝">ssh端口拒绝</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#初始化配置ssh修改boot">初始化配置SSH(修改boot)</a></li>
+        <li><a href="#无屏幕和键盘配置树莓派wifi">无屏幕和键盘配置树莓派WiFi</a></li>
+        <li><a href="#vnc">vnc</a></li>
+        <li><a href="#使用vnc玩minecraft">使用vnc玩minecraft</a></li>
+        <li><a href="#remote-gpio">remote gpio</a></li>
+        <li><a href="#20180130更新">2018.01.30更新</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>最近我的树莓派被用于作原型机了</p>
+<p>只好重新用新的板子重新配置</p>
+<h1 id="下载系统镜像">下载系统镜像</h1>
+<p>镜像<a href="https://www.raspberrypi.org/downloads/">下载地址</a>,这里有许多可选镜像,我用的是<a href="https://www.raspberrypi.org/downloads/raspbian/">raspbian</a></p>
+<p>我之前是在windows下用win32diskimager往sd卡里刷系统的</p>
+<p>这次准备用dd(方便批量操作)，在mac下.参考这篇文章：<a href="https://github.com/ccforward/cc/issues/25">Mac下给SD卡安装树莓派Raspbian系统</a></p>
+<p>2018.1.28更新: 推荐使用: <a href="https://github.com/resin-io/etcher">etcher</a></p>
+<h1 id="安装系统">安装系统</h1>
+<p>这里我们讨论两种情况，新买的sd卡和已经安装过系统的sd卡（重刷）</p>
+<h3 id="新的sd卡">新的sd卡</h3>
+<p>一般新买的卡都已经格式化好了，这是最简单的情况,  按照<a href="https://github.com/ccforward/cc/issues/25">Mac下给SD卡安装树莓派Raspbian系统</a>的做法就行,微软下快速格式化可能会有问题(没有做分区)</p>
+<p>这里复述一下核心内容：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">df <span class="c1"># 查看当前已经挂载的卷</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 假设设备文件为：/dev/disk1s1 ,（ 通过查看设备名判断）</span>
+</span></span><span class="line"><span class="cl">diskutil unmount /dev/disk1s1 <span class="c1">#卸载</span>
+</span></span><span class="line"><span class="cl">diskutil list <span class="c1"># 确认设备  (通过存储大小)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 安装系统</span>
+</span></span><span class="line"><span class="cl">dd <span class="nv">bs</span><span class="o">=</span>4m <span class="k">if</span><span class="o">=</span>pi.img <span class="nv">of</span><span class="o">=</span>/dev/rdisk1 <span class="c1">#我的速度大概是17m/s</span>
+</span></span><span class="line"><span class="cl">diskutil unmountDisk /dev/disk1  <span class="c1">#卸载设备</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>至此，系统就刷好了</p>
+<h3 id="重刷装有系统的sd卡">重刷装有系统的sd卡</h3>
+<p>如果是重刷装有系统的sd卡,我们需要先把SD卡还原成初始状态：</p>
+<ul>
+<li>下载<a href="http://www.alexpage.de/download/usbit/bootsector.img">bootsector.img</a></li>
+<li>dd bs=4m if=./bootsector.img of=/dev/rdisk1 # 假设设备为disk1</li>
+</ul>
+<p>然后格式化sd卡(我把它格式化为MS-DOS(FAT))，至此你就可以把它当做新卡，用处理新卡的方式安装系统了</p>
+<h1 id="登录系统">登录系统</h1>
+<p>我只买了树莓派，没有买高清转接头之类的东西，没打算把树莓派连到屏幕。那么我们如何登录系统，进行操作呢</p>
+<p>首先使用网络连接树莓派网口，然后找个扫描ip的软件,我用的是fing（mac和iphone都有），手机/电脑只要和树莓派在同个网络里，就可以找到它（通过设备名） （ps: brew cask install fing）</p>
+<p>然后ssh登录即可，用户名和密码分别是：pi/raspberry （11-25版本可能需要先进用屏幕登录在raspi-config里开启ssh:<a href="https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/">A SECURITY UPDATE FOR RASPBIAN PIXEL</a>) 文章提到如果你想默认默认ssh只需要在sd卡/boot/里加上<code>ssh</code>文件就行，内容无所谓，可以为空</p>
+<p>树莓派3代自带无线网卡，我们把无线网卡连上wifi，之后就不需要，细节下文再说</p>
+<h1 id="配置">配置</h1>
+<p>输入<code>sudo raspi-config</code>开始设置，相关设置可以看说明</p>
+<h2 id="expand-filesystem">#Expand Filesystem</h2>
+<p>扩展 SD 卡上可用的空间, 否则你会觉得怎么可用空间这么小</p>
+<h3 id="配置vnchttpszhwikipediaorgzhvnc">配置<a href="https://zh.wikipedia.org/zh/VNC">VNC</a></h3>
+<p>VNC借由网络，可发送键盘与鼠标的动作及即时的屏幕画面</p>
+<p>VNC与操作系统无关，因此可跨平台使用</p>
+<p>我在mac下使用RealVNC</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt-get install tightvncserver <span class="c1"># 安装</span>
+</span></span><span class="line"><span class="cl">vncserver :1 <span class="c1"># 启用 ，之后在 vnc client里输入 ip:1即可进入图形界面</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># vncpasswd # 修改密码</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 使用这个更清晰</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>supervisor文件为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/etc/supervisord.conf.d/vncserver.conf
+</span></span><span class="line"><span class="cl">[program:vncserver]
+</span></span><span class="line"><span class="cl">user = pi  ; 用哪个用户启动
+</span></span><span class="line"><span class="cl">environment = HOME=&#34;/home/pi&#34;,USER=&#34;pi&#34;
+</span></span><span class="line"><span class="cl">directory =  /home/pi/mylab ; 程序的启动目录
+</span></span><span class="line"><span class="cl">command =  /usr/bin/vncserver :1
+</span></span><span class="line"><span class="cl">autostart = true     ; 在 supervisord 启动的时候也自动启动
+</span></span><span class="line"><span class="cl">startsecs = 5        ; 启动 5 秒后没有异常退出，就当作已经正常启动了
+</span></span><span class="line"><span class="cl">autorestart = false   ; 不需要自动重启
+</span></span><span class="line"><span class="cl">;startretries = 3     ; 启动失败自动重试次数，默认是 3
+</span></span><span class="line"><span class="cl">redirect_stderr = true  ; 把 stderr 重定向到 stdout，默认 false
+</span></span><span class="line"><span class="cl">stdout_logfile_maxbytes = 20MB  ; stdout 日志文件大小，默认 50MB
+</span></span><span class="line"><span class="cl">stdout_logfile_backups = 20     ; stdout 日志文件备份数
+</span></span><span class="line"><span class="cl">; stdout 日志文件，需要注意当指定目录不存在时无法正常启动，所以需要手动创建目录（supervisord 会自动创建日志文件）
+</span></span><span class="line"><span class="cl">stdout_logfile = /tmp/vncserver.log
+</span></span><span class="line"><span class="cl">;stopsignal = QUIT
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="换国内源">换国内源</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#sudo vi /etc/apt/sources.list ,使内容变为
+</span></span><span class="line"><span class="cl">deb http://mirrors.aliyun.com/raspbian/raspbian/ jessie main non-free contrib
+</span></span><span class="line"><span class="cl">deb-src http://mirrors.aliyun.com/raspbian/raspbian/ jessie main non-free contrib
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="修改hostname">修改hostname</h3>
+<p>sudo vim /etc/hostname</p>
+<h3 id="无线网络">无线网络</h3>
+<p>如果你直接在命令行里配置可以参考:<a href="http://www.jianshu.com/p/b42e8d3df449">树莓派 Raspberry Pi 设置无线上网</a></p>
+<p>修改配置文件:<code>/etc/network/interfaces</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">auto wlan0
+</span></span><span class="line"><span class="cl">iface wlan0 inet dhcp
+</span></span><span class="line"><span class="cl">wpa-conf /etc/wpa.conf
+</span></span><span class="line"><span class="cl">iface default inet dhcp
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>之后在<code>/etc/wpa.conf</code>里加上你的无线热点(可以添加多个)：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">network={
+</span></span><span class="line"><span class="cl">        ssid=&#34;xxx&#34;
+</span></span><span class="line"><span class="cl">        key_mgmt=WPA-PSK
+</span></span><span class="line"><span class="cl">        psk=&#34;xxx&#34;
+</span></span><span class="line"><span class="cl">        id_str=&#34;myiphone&#34;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>无线网卡的控制命令为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo ifup wlan0 <span class="c1">#启用</span>
+</span></span><span class="line"><span class="cl">sudo ifdown wlan0 <span class="c1">#关闭</span>
+</span></span><span class="line"><span class="cl">sudo service network-manager restart <span class="c1">#重启</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>更直观的配置方式可以使用VNC client进入图形环境里</p>
+<p>如果你外接了usb网卡,记得加驱动,诸如(<code>sudo apt-get install firmware-realtek</code>)</p>
+<p>如果有错，查看日志:<code>/var/log/syslog</code></p>
+<h3 id="树莓派作为无线ap">树莓派作为无线AP</h3>
+<p>使用<a href="https://github.com/oblique/create_ap">create_ap</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git clone https://github.com/oblique/create_ap
+</span></span><span class="line"><span class="cl">cd create_ap
+</span></span><span class="line"><span class="cl">sudo make install
+</span></span><span class="line"><span class="cl">#安装依赖
+</span></span><span class="line"><span class="cl">sudo apt-get install util-linux procps hostapd iproute2 iw haveged dnsmasq  #dnsmasq 是dns服务器
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo create_ap wlan0 eth0 wwjpi3 wwjpipass --no-virt # https://github.com/oblique/create_ap/issues/185
+</span></span><span class="line"><span class="cl"># 加到supervisor里 #/usr/bin/create_ap  wlan0 eth0 wwjpi3 wwjpipass --no-virt
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>树莓派的地址为：<code>192.168.12.1</code> , 路由器的地址为 <code>192.168.0.1</code></p>
+<p>进一步的发挥空间，我们可以把它当做一个钓鱼热点(已经运行了53端口DNS服务器)</p>
+<p><strong>注意</strong>：如果同时使用无线ap和普通wifi网卡，建议开机后再加入wifi网卡，然后ifup启用，否则可能导致热点无法开机启动</p>
+<h4 id="dhcp服务">DHCP服务</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo apt-get install dnsmasq
+</span></span><span class="line"><span class="cl"># vim /etc/dnsmasq.conf
+</span></span><span class="line"><span class="cl">interface=wlan0  #可能会影响wifi_ap
+</span></span><span class="line"><span class="cl">bind-interfaces
+</span></span><span class="line"><span class="cl">address=/#/192.168.12.1  #将对所有网站的访问重定向到本机
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo service dnsmasq restart
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="连接vpn">连接VPN</h3>
+<p>安装客户端: <code>sudo apt-get install pptp-linux</code></p>
+<p>使用root用户创建/etc/ppp/peers/vpn</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pty &#34;pptp XXX.XXX.XXX.XXX --nolaunchpppd&#34;
+</span></span><span class="line"><span class="cl">name 用户名
+</span></span><span class="line"><span class="cl">password 密码
+</span></span><span class="line"><span class="cl">remotename PPTP
+</span></span><span class="line"><span class="cl">require-mppe-128
+</span></span><span class="line"><span class="cl">require-mschap-v2
+</span></span><span class="line"><span class="cl">refuse-eap
+</span></span><span class="line"><span class="cl">refuse-pap
+</span></span><span class="line"><span class="cl">refuse-chap
+</span></span><span class="line"><span class="cl">refuse-mschap
+</span></span><span class="line"><span class="cl">noauth
+</span></span><span class="line"><span class="cl">persist
+</span></span><span class="line"><span class="cl">maxfail 0
+</span></span><span class="line"><span class="cl">defaultroute
+</span></span><span class="line"><span class="cl">replacedefaultroute
+</span></span><span class="line"><span class="cl">usepeerdns
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>启动/断开vpn:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pon vpn
+</span></span><span class="line"><span class="cl">poff vpn
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="蓝牙">蓝牙</h3>
+<p>树莓派3自带蓝牙</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/etc/init.d/bluetooth status <span class="c1"># 查看蓝牙状态</span>
+</span></span><span class="line"><span class="cl">sudo bluetoothctl <span class="c1">#进入蓝牙程序,替代了原来的bluez-simple-agent</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 之后按照步骤连接 </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 试一首歌</span>
+</span></span><span class="line"><span class="cl">apt-get install mpg123
+</span></span><span class="line"><span class="cl">mpg123 mp3_uri
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>蓝牙图形界不稳定，命令行的操作为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bluetoothctl
+</span></span><span class="line"><span class="cl">power on
+</span></span><span class="line"><span class="cl">scan on
+</span></span><span class="line"><span class="cl">agent on
+</span></span><span class="line"><span class="cl">pair #DD:8E:F1:CA:B8:9F #my bb8
+</span></span><span class="line"><span class="cl">trust DD:8E:F1:CA:B8:9F
+</span></span><span class="line"><span class="cl">connect DD:8E:F1:CA:B8:9F
+</span></span><span class="line"><span class="cl">quit
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>参考:</p>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/20713396">树莓派3 model:B 连接蓝牙设备</a></li>
+<li><a href="https://www.embbnux.com/2016/04/10/raspberry_pi_3_wifi_and_bluetooth_setting_on_console/">树莓派3命令行配置wifi无线连接和蓝牙连接</a>：rpi3蓝牙连音箱比较麻烦</li>
+</ul>
+<p>如果蓝牙连接好 却无法播放声音，可能是默认的声音输出是系统声卡，设置<code>PulseAudio Volume Control</code>，在设置里把bcm2835设置为off</p>
+<h3 id="音频相关">音频相关</h3>
+<ul>
+<li>play</li>
+<li>mplayer/mpg123</li>
+<li>sox 录音</li>
+<li>alsamixer 调节音量</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sox -d /tmp/recording.wav
+</span></span><span class="line"><span class="cl">play /tmp/recording.wav
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="坑">坑</h3>
+<p>使用蓝牙音箱时，尽量不要同时将树莓派作为作为热点，否则可能导致声音卡顿</p>
+<h4 id="pyaudio">PyAudio</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo apt-get install libportaudio0 libportaudio2 libportaudiocpp0 portaudio19-dev 
+</span></span><span class="line"><span class="cl">sudo pip install PyAudio
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="其它">其它</h3>
+<h4 id="我的编程环境">我的编程环境</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt-get install vim git tmux ack-grep lynx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 我的vim配置文件 </span>
+</span></span><span class="line"><span class="cl">wget https://raw.githubusercontent.com/wwj718/wwj718-vim/master/wwj718_vim_vimrc -O ~/.vimrc
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="jupyter-lab-开发环境">jupyter lab （开发环境）</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo pip install pip --upgrade -i http://pypi.douban.com/simple
+</span></span><span class="line"><span class="cl">sudo apt-get install python-dev
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># jupyter</span>
+</span></span><span class="line"><span class="cl">sudo pip install jupyter  -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+</span></span><span class="line"><span class="cl">sudo pip install jupyterlab  -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo jupyter serverextension <span class="nb">enable</span> --py jupyterlab --sys-prefix
+</span></span><span class="line"><span class="cl"><span class="c1"># jupyter lab --notebook-dir=&#34;.&#34; --no-browser --port 5000 --ip=0.0.0.0 </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># vim ~/.bashrc</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># alias jupyterlab=&#34;jupyter lab --notebook-dir=&#34;.&#34; --no-browser --port 8888 --ip=0.0.0.0&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># jupyter notebook --no-browser --port 5000 --ip=0.0.0.0 </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 属于jupyter作为开发环境</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>建议使用jupyterlab</p>
+<h4 id="zhttpsgithubcomrupaz"><a href="https://github.com/rupa/z">z</a></h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget https://raw.githubusercontent.com/rupa/z/master/z.sh -O ~/z.sh
+</span></span><span class="line"><span class="cl"><span class="c1"># 在.bashrc添加 ~/.bashrc</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> . ~/z.sh &gt; ~/.bashrc
+</span></span><span class="line"><span class="cl"><span class="c1"># souce ~/.bashrc</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="gpio相关">GPIO相关</h1>
+<h3 id="i2c">I2C</h3>
+<p>如果要用Adafruit_LED_Backpack,需要开启I2C</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt-get install python-smbus
+</span></span><span class="line"><span class="cl">sudo apt-get install i2c-tools
+</span></span><span class="line"><span class="cl">sudo raspi-config <span class="c1">#advanced options</span>
+</span></span><span class="line"><span class="cl">sudo vim  /etc/modules <span class="c1"># add i2c-bcm2708 and i2c-dev </span>
+</span></span><span class="line"><span class="cl"><span class="c1"># reboot</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># test</span>
+</span></span><span class="line"><span class="cl">sudo i2cdetect -y <span class="m">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="系统管理与监控">系统管理与监控</h1>
+<h3 id="linux-dash">Linux Dash</h3>
+<blockquote>
+<p>A beautiful web dashboard for Linux</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git clone https://github.com/afaqurk/linux-dash
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> linux-dash
+</span></span><span class="line"><span class="cl">sudo python https://github.com/afaqurk/linux-dash
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>默认80端口</p>
+<h1 id="摄像头">摄像头</h1>
+<p>我使用的是官方摄像头，连上后</p>
+<p>sudo raspi-config #Enable Camera</p>
+<p>查看是否正常:<code>ls /dev/video*</code>,如果有video0就正常,如果没有，则 <code>sudo modprobe bcm2835-v4l2</code> ,写入/etc/rc.local以保证开机运行</p>
+<p>###截个图</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo apt-get install fswebcam
+</span></span><span class="line"><span class="cl">fswebcam -r 1280x720 /tmp/image1.jpg
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="motion">motion</h3>
+<p>监控与动作捕捉（像素变化）</p>
+<p><code>sudo apt-get install motion</code></p>
+<p>配置:`sudo vim /etc/motion/motion.conf</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">daemon off #on则后台运行
+</span></span><span class="line"><span class="cl">stream_localhost off #可以局域网内访问，否则只能localhost访问
+</span></span><span class="line"><span class="cl">webcontrol_localhost off
+</span></span><span class="line"><span class="cl">quiet on
+</span></span><span class="line"><span class="cl">videodevice /dev/video0
+</span></span><span class="line"><span class="cl">framerate 2 #30 很流畅 但是时间快
+</span></span><span class="line"><span class="cl">stream_maxrate 1 #30 
+</span></span><span class="line"><span class="cl">auto_brightness off
+</span></span><span class="line"><span class="cl">#target_dir /home/pi/camera_data
+</span></span><span class="line"><span class="cl">ffmpeg_output_movies on #输出视频（变化）
+</span></span><span class="line"><span class="cl">output_pictures off #输出图片
+</span></span><span class="line"><span class="cl">width 640
+</span></span><span class="line"><span class="cl">height 480
+</span></span><span class="line"><span class="cl">threshold 500 #灵敏度,变化的像素，决定是否捕捉
+</span></span><span class="line"><span class="cl">max_movie_time 5  #拍摄时间
+</span></span><span class="line"><span class="cl">logfile /tmp/motion.log
+</span></span><span class="line"><span class="cl">#noise_level 60
+</span></span><span class="line"><span class="cl"># event
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行 ：<code>sudo motion</code></p>
+<p>访问：<code>ip:8081</code></p>
+<p>默认存储在/var/lib/motion</p>
+<h3 id="在python中调用">在python中调用</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">import pygame
+</span></span><span class="line"><span class="cl">import pygame.camera
+</span></span><span class="line"><span class="cl">from pygame.locals import *
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># initialize
+</span></span><span class="line"><span class="cl">pygame.init()
+</span></span><span class="line"><span class="cl">pygame.camera.init()
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># capture a image
+</span></span><span class="line"><span class="cl">camera = pygame.camera.Camera(&#34;/dev/video0&#34;, (640, 480))
+</span></span><span class="line"><span class="cl">camera.start()
+</span></span><span class="line"><span class="cl">image = camera.get_image()
+</span></span><span class="line"><span class="cl">pygame.image.save(image, &#34;image.jpg&#34;)
+</span></span><span class="line"><span class="cl">camera.stop()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>建议使用python3.6，pygame可直接使用pip安装</p>
+<p>使用pyenv文档参考: <a href="http://blog.just4fun.site/python2-python3.html">python多版本安装笔记</a></p>
+<p>记得先安装依赖</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+</span></span><span class="line"><span class="cl">libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+</span></span><span class="line"><span class="cl">xz-utils tk-dev
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="机器视觉">机器视觉</h3>
+<p><code>pip install opencv-python</code> 在树莓派上目前无法使用 <a href="https://github.com/skvark/opencv-python/issues/13">https://github.com/skvark/opencv-python/issues/13</a></p>
+<p>需要编译安装:<a href="https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/">Raspbian Stretch: Install OpenCV 3 + Python on your Raspberry Pi</a></p>
+<h3 id="netdata">netdata</h3>
+<blockquote>
+<p>Get control of your servers. Simple. Effective. Awesome</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">apt-get install zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl
+</span></span><span class="line"><span class="cl">git clone https://github.com/firehol/netdata.git --depth<span class="o">=</span><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> netdata
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># build it, install it, start it</span>
+</span></span><span class="line"><span class="cl">sudo ./netdata-installer.sh
+</span></span><span class="line"><span class="cl"><span class="c1"># 访问ip:19999</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>相关数据：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">   - the daemon     at /usr/sbin/netdata
+</span></span><span class="line"><span class="cl">   - config files   in /etc/netdata
+</span></span><span class="line"><span class="cl">   - web files      in /usr/share/netdata
+</span></span><span class="line"><span class="cl">   - plugins        in /usr/libexec/netdata
+</span></span><span class="line"><span class="cl">   - cache files    in /var/cache/netdata
+</span></span><span class="line"><span class="cl">   - db files       in /var/lib/netdata
+</span></span><span class="line"><span class="cl">   - log files      in /var/log/netdata
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>卸载:<code>sudo  ./netdata-uninstaller.sh</code></p>
+<p>如果要监控nginx，需要做些配置：<a href="https://github.com/firehol/netdata/tree/master/python.d#nginx">netdata nginx</a>，<a href="https://github.com/firehol/netdata/wiki/The-spectacles-of-a-web-server-log-file">The spectacles of a web server log file</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">编译nginx
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">--with-http_stub_status_module
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="supervisor">supervisor</h3>
+<blockquote>
+<p>Supervisor process control system for UNIX</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1">#切换到sudo用户</span>
+</span></span><span class="line"><span class="cl">pip install supervisor
+</span></span><span class="line"><span class="cl"><span class="c1">#echo_supervisord_conf &gt; /etc/supervisord.conf #默认用这个</span>
+</span></span><span class="line"><span class="cl">mkdir  /etc/supervisor
+</span></span><span class="line"><span class="cl">echo_supervisord_conf &gt; /etc/supervisor/supervisord.conf <span class="c1">#这个配置Ajenti才能管理</span>
+</span></span><span class="line"><span class="cl">mkdir /etc/supervisord.conf.d
+</span></span><span class="line"><span class="cl"><span class="c1"># 修改配置文件,include区段修改为 files = /etc/supervisord.conf.d/*.conf</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 开机自启 . 往/etc/rc.local加入/usr/local/bin/supervisord</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>supervisor的web管理端口为9001，需要开启</p>
+<p>添加新的进程配置，可以使用下边介绍的Ajenti来做, 配置信息会被直接写入：/etc/supervisor/supervisord.conf</p>
+<p>更多细节参考:<a href="http://blog.just4fun.site/process-control-system-supervisor.html">使用Supervisor来管理进程</a></p>
+<h4 id="demo">demo</h4>
+<p>/etc/supervisord.conf.d/socket_ipc.conf</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[program:socket_ipc]
+</span></span><span class="line"><span class="cl">user = root     ; 用哪个用户启动
+</span></span><span class="line"><span class="cl">directory =  /home/pi/mylab/raspberrypi_lab ; 程序的启动目录
+</span></span><span class="line"><span class="cl">command =  /usr/bin/python socket_ipc.py ;
+</span></span><span class="line"><span class="cl">autostart = true     ; 在 supervisord 启动的时候也自动启动
+</span></span><span class="line"><span class="cl">startsecs = 5        ; 启动 5 秒后没有异常退出，就当作已经正常启动了
+</span></span><span class="line"><span class="cl">autorestart = false   ; 不需要自动重启
+</span></span><span class="line"><span class="cl">;startretries = 3     ; 启动失败自动重试次数，默认是 3
+</span></span><span class="line"><span class="cl">redirect_stderr = true  ; 把 stderr 重定向到 stdout，默认 false
+</span></span><span class="line"><span class="cl">stdout_logfile_maxbytes = 20MB  ; stdout 日志文件大小，默认 50MB
+</span></span><span class="line"><span class="cl">stdout_logfile_backups = 20     ; stdout 日志文件备份数
+</span></span><span class="line"><span class="cl">; stdout 日志文件，需要注意当指定目录不存在时无法正常启动，所以需要手动创建目录（supervisord 会自动创建日志文件）
+</span></span><span class="line"><span class="cl">stdout_logfile = /tmp/socker_ipc.log
+</span></span><span class="line"><span class="cl">;stopsignal = QUIT
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="gottyhttpsgithubcomyudaigotty"><a href="https://github.com/yudai/gotty">gotty</a></h3>
+<p>gotty可以把terminal分享到web,默认端口是8080</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 下载https://github.com/yudai/gotty/releases ，我下的是gotty_linux_arm.tar.gz</span>
+</span></span><span class="line"><span class="cl">gotty -w vim <span class="c1">#把vim已编辑方式分享出来,分享vim就够了，vim可以切换到bash</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果我们把8080端口用ngrok分享出来（ngrok用supervisor管理），实际就是一个后门，用作开发调试十分方便</p>
+<h3 id="ajentihttpsgithubcomajentiajenti"><a href="https://github.com/ajenti/ajenti">Ajenti</a></h3>
+<p>Ajenti可以让你很简单地配置不同的常规服务程序，如Apache/nginx、Samba、BIND、Squid、MySQL、cron、防火墙等等</p>
+<p>十分适合非技术用户配置系统应用，可以看做服务器管理面板</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget http://repo.ajenti.org/debian/key -O- <span class="p">|</span> apt-key add -
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;deb http://repo.ajenti.org/debian main main debian&#34;</span> &gt;&gt; /etc/apt/sources.list
+</span></span><span class="line"><span class="cl">sudo apt-get install ajenti
+</span></span><span class="line"><span class="cl">sudo apt-get install build-essential python-pip python-dev python-lxml libffi-dev libssl-dev libjpeg-dev libpng-dev uuid-dev python-dbus
+</span></span><span class="line"><span class="cl"><span class="c1"># sudo easy_install -U pip #先升级,16.5.27的版本原始pip可能报错</span>
+</span></span><span class="line"><span class="cl">sudo pip install ajenti-panel ajenti.plugin.dashboard ajenti.plugin.settings ajenti.plugin.plugins
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>默认端口8000，默认登录信息为：<code>root:admin</code>，之后修改密码之类的都在控制面板里边做</p>
+<p>配置文件为:<code>/etc/ajenti/config.json</code></p>
+<p>默认开机自启</p>
+<p><img src="/post/img/ajenti69406213.png" alt=""></p>
+<h1 id="国内源安装nodejs">国内源安装nodejs</h1>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#注意编译非常慢
+</span></span><span class="line"><span class="cl">wget https://npm.taobao.org/mirrors/node/v6.9.1/node-v6.9.1.tar.gz
+</span></span><span class="line"><span class="cl">tar zxvf node-v6.9.1.tar.gz 
+</span></span><span class="line"><span class="cl">cd node-v6.9.1.tar.gz/ 
+</span></span><span class="line"><span class="cl">./configure 
+</span></span><span class="line"><span class="cl">sudo make install 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="坑-1">坑</h1>
+<p>09-23的版本坑多</p>
+<h3 id="zip包mac下无法解压">zip包mac下无法解压</h3>
+<p>在linux和window下都行</p>
+<h3 id="ssh端口拒绝">ssh端口拒绝</h3>
+<p>ip能ping通，ssh端口关闭，怀疑是ssh server没有开启</p>
+<p>nmap -p 22 xxx 测试关闭，fuck</p>
+<p>建议下载<a href="https://downloads.raspberrypi.org/raspbian/images/raspbian-2016-05-31/2016-05-27-raspbian-jessie.zip">5-27版本</a>,所有版本在这里：<a href="https://downloads.raspberrypi.org/">downloads.raspberrypi.org</a></p>
+<hr>
+<h1 id="2018110更新基于20171129版本">2018.1.10更新（基于2017.11.29版本）</h1>
+<h3 id="初始化配置ssh修改boot">初始化配置SSH(修改boot)</h3>
+<p>在 <code>boot</code> 分区新建一个文件，空白的即可，文件命名为 <code>ssh</code> . 默认用户名密码为:<code>pi:raspberry</code></p>
+<h3 id="无屏幕和键盘配置树莓派wifi">无屏幕和键盘配置树莓派WiFi</h3>
+<p>注意: 2017.11.29号的版本(Stretch)，无法使用.详情见<a href="https://www.raspberrypi.org/forums/viewtopic.php?f=28&amp;t=191061&amp;start=50">Raspbian Stretch: Wifi not starting on boot</a></p>
+<p>目前只使用于Stretch之前的版本(2019.11.07更新: 最新的Buster版本没有问题！)</p>
+<p>在树莓派的 <code>/boot</code> 目录下新建 <code>wpa_supplicant.conf</code> 文件，按照下面的参考格式填入内容并保存 <code>wpa_supplicant.conf</code> 文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">country=CN
+</span></span><span class="line"><span class="cl">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+</span></span><span class="line"><span class="cl">update_config=1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">network={
+</span></span><span class="line"><span class="cl">ssid=&#34;WiFi-A&#34;
+</span></span><span class="line"><span class="cl">psk=&#34;12345678&#34;
+</span></span><span class="line"><span class="cl">key_mgmt=WPA-PSK
+</span></span><span class="line"><span class="cl">priority=1
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>建议使用有线网线先进入系统，打开vnc，然后在桌面中使用图形化方式连接wifi(之后永久有效)</p>
+<p>2017.11.29版本中scratch2、node-red、minecrafe都正常！</p>
+<h3 id="vnc">vnc</h3>
+<p>关于vnc的参考这里:<a href="https://www.raspberrypi.org/documentation/remote-access/vnc/">VNC (VIRTUAL NETWORK COMPUTING)</a>,这篇文章关于配置minecraft部分无效</p>
+<p>默认用户名也是:<code>pi:raspberry</code></p>
+<h3 id="使用vnc玩minecraft">使用vnc玩minecraft</h3>
+<p>要使用vnc玩minecraft，参考<a href="https://support.realvnc.com/Knowledgebase/Article/View/541/0/how-do-i-enable-the-experimental-direct-capture-feature-from-the-command-line">How do I enable the experimental direct capture feature from the command line?</a></p>
+<p>在<code>/root/.vnc/config.d/vncserver-x11</code>添加</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">CaptureTech=raspi
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ExperimentalRaspiCapture=1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ServerPreferredEncoding=JPEG
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>重启vncserver:<code>sudo systemctl restart vncserver-x11-serviced</code></p>
+<p>如果你觉得清晰且慢，可以试试:<code>vncserver</code></p>
+<h4 id="novnc">noVNC</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git clone https://github.com/novnc/noVNC
+</span></span><span class="line"><span class="cl"># 安装好tightvncserver之后
+</span></span><span class="line"><span class="cl">./utils/launch.sh --vnc localhost:5901
+</span></span><span class="line"><span class="cl"># open: http://raspberrypi.local:6080/vnc.html?host=raspberrypi.local&amp;port=6080
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="http://raspberrypi.local:6080/vnc.html?host=raspberrypi.local&amp;port=6080">http://raspberrypi.local:6080/vnc.html?host=raspberrypi.local&amp;port=6080</a></p>
+<h3 id="remote-gpio">remote gpio</h3>
+<ul>
+<li><code>raspi-config</code>, enable Remote GPIO</li>
+</ul>
+<p>之后使用<a href="https://github.com/RPi-Distro/python-gpiozero">python-gpiozero</a>控制即可,文档参考:<a href="https://gpiozero.readthedocs.io/en/stable/remote_gpio.html">Configuring Remote GPIO</a>.之后你就可以在mac下使用python代码控制树莓派的gpio(<code>pip install gpiozero pigpio</code>)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">export GPIOZERO_PIN_FACTORY=pigpio
+</span></span><span class="line"><span class="cl">export PIGPIO_ADDR=10.10.100.183
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">from gpiozero import LED
+</span></span><span class="line"><span class="cl">from time import sleep
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">red = LED(17)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">while True:
+</span></span><span class="line"><span class="cl">    red.on()
+</span></span><span class="line"><span class="cl">    sleep(5)
+</span></span><span class="line"><span class="cl">    red.off()
+</span></span><span class="line"><span class="cl">    sleep(5)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以在scratch2中添加树莓派扩展，这样就可以在scratch2中利用remote gpio来与硬件交互</p>
+<h4 id="测试工具">测试工具</h4>
+<p>shell 下使用<code>gpio</code></p>
+<p>列出所有pin: <code>gpio readall</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># gpio用的mode是wPi，而gpiozero用的是BCM，所以pin17对应wpi的pin0
+</span></span><span class="line"><span class="cl">gpio mode 0 out
+</span></span><span class="line"><span class="cl">gpio read 0 # 0
+</span></span><span class="line"><span class="cl">gpio write 0 1
+</span></span><span class="line"><span class="cl">gpio read 0 # 1
+</span></span><span class="line"><span class="cl">gpio write 0 0
+</span></span><span class="line"><span class="cl">gpio read 0 # 0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="20180130更新">2018.01.30更新</h3>
+<p>pi zero w可以可以直接使用pi3的镜像。其中的异同参考:<a href="https://www.raspberrypi.org/forums/viewtopic.php?t=183954">SD Cards Images for Pi 3 and Pi Zero</a></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://www.shumeipai.net/thread-1263-1-1.html?_dsign=55be35fa">用镜像写入工具将安装过树莓派系统的SD卡还原卡</a></li>
+<li><a href="http://shumeipai.nxez.com/2017/09/13/raspberry-pi-network-configuration-before-boot.html">无屏幕和键盘配置树莓派WiFi和SSH</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-10-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/iot/raspberrypi-lirc/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">用树莓派给家用电器加上智能（红外篇）</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/stress-testing/">
+            <span class="next-text nav-default">web服务器压力测试一例</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

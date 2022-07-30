@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>嘿 Siri 关灯 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="引言 你在南方的艳阳里大雪纷飞,我在北方的寒夜里四季如春 马頔的这句歌词，道尽南方人过冬的艰辛。在没有暖气的南方，过冬基本靠抖腿和一身正气 我们以" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/rpi-siri-close-light/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="嘿 Siri 关灯" />
+<meta property="og:description" content="引言 你在南方的艳阳里大雪纷飞,我在北方的寒夜里四季如春 马頔的这句歌词，道尽南方人过冬的艰辛。在没有暖气的南方，过冬基本靠抖腿和一身正气 我们以" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/rpi-siri-close-light/" />
+<meta property="article:published_time" content="2016-12-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-12-24T00:00:00+00:00" />
+<meta itemprop="name" content="嘿 Siri 关灯">
+<meta itemprop="description" content="引言 你在南方的艳阳里大雪纷飞,我在北方的寒夜里四季如春 马頔的这句歌词，道尽南方人过冬的艰辛。在没有暖气的南方，过冬基本靠抖腿和一身正气 我们以">
+
+
+<meta itemprop="datePublished" content="2016-12-24T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-12-24T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2476">
+
+
+
+<meta itemprop="keywords" content="rpi," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="嘿 Siri 关灯"/>
+<meta name="twitter:description" content="引言 你在南方的艳阳里大雪纷飞,我在北方的寒夜里四季如春 马頔的这句歌词，道尽南方人过冬的艰辛。在没有暖气的南方，过冬基本靠抖腿和一身正气 我们以"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">嘿 Siri 关灯</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-12-24 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#引言">引言</a></li>
+<li><a href="#思路">思路</a></li>
+<li><a href="#准备工作">准备工作</a>
+<ul>
+<li>
+<ul>
+<li><a href="#硬件部分">硬件部分</a>
+<ul>
+<li><a href="#树莓派">树莓派</a></li>
+<li><a href="#舵机">舵机</a></li>
+<li><a href="#李老师">李老师</a></li>
+</ul></li>
+<li><a href="#组装硬件">组装硬件</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#软件部分">软件部分</a></li>
+<li><a href="#效果演示">效果演示</a></li>
+<li><a href="#自然语言">自然语言</a></li>
+<li><a href="#todo">todo</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/siri17469bd4.png" alt="" /></p>
+
+<h1 id="引言">引言</h1>
+
+<blockquote>
+<p>你在南方的艳阳里大雪纷飞,我在北方的寒夜里四季如春</p>
+</blockquote>
+
+<p>马頔的这句歌词，道尽南方人过冬的艰辛。在没有暖气的南方，过冬基本靠抖腿和一身正气</p>
+
+<p>我们以高中诗词鉴赏的套路来剖析下词作，&rdquo;你在南方的艳阳里大雪纷飞&rdquo;当然不是直白地描述一场太阳雪,艺术要有含蓄美。这句话实际上说的是&rdquo;你&rdquo;在南方灯如暖阳的房间里，忘穿秋裤，冻得像雪地里呆呆的兔子（由此可见这个灯是白炽灯而不是节能灯，节能灯如白月光而不似暖阳）</p>
+
+<p>如果你有兴趣深挖，会进一步坚定艳阳指的就是灯。小如洞穴的房间、灯与影子，不由让人想到柏拉图的洞穴理论，作者进而感慨现实世界的不真实性，于是有后边的&rdquo;穷极一生做不完一场梦&rdquo;</p>
+
+<p>至于如果题目问&rdquo;你&rdquo;指的是谁，你最好不要答前女友，其他随意，以免勾起阅卷老师伤感的回忆，给你个悲伤的分数</p>
+
+<p>在灯如暖阳床如霜的南方夜晚，你刚看完《汇编语言从入门到放弃》，准备起床关灯睡觉，却对被子依依不舍。这时你想：要是对着Siri说一声</p>
+
+<blockquote>
+<p>嘿siri，宝宝困了帮我关灯么么哒</p>
+</blockquote>
+
+<p>便可睡觉该是多美的场景</p>
+
+<p>又或者 圣诞夜你和你的小女朋友在被窝里讨论拉普拉斯变换或是傅里叶变换，可窗帘没拉，灯太亮影响发挥。</p>
+
+<blockquote>
+<p>嘿Siri关灯并闭上眼睛</p>
+</blockquote>
+
+<p>让我们撸起袖子来实现它</p>
+
+<h1 id="思路">思路</h1>
+
+<p>我不建议你给房间换一个智能灯泡，也不打算向你推销一套年底特价智能家居解决方案，我们延续之前的思路(<a href="http://blog.just4fun.site/raspberrypi-lirc.html">用树莓派给家用电器加上智能</a>)，尽量用非入侵的方式来解决问题，不去破坏和替换现有的设备</p>
+
+<p>于是我们就提出这样一个问题：如何在不改变现有灯泡特性、电路结构和开关特性的情况下，来关灯？</p>
+
+<p>能想到的方案似乎只有模拟人手的动作，以机械的方式来按下开关</p>
+
+<p>&ldquo;舵机&rdquo;就是我们的首选了</p>
+
+<p>剩下的就是如何躺在床上控制舵机来关灯，与硬件世界打交道，树莓派是我偏好的工具。树莓派控制舵机不成问题，至于如何用手机控制树莓派，我也在此前的文章中论述过</p>
+
+<p>不过本文将采用更酷的方式，你将无需编程，通过拖曳积木化的模块，就可以搭建出关灯机器人，然后通过siri控制这个机器人,如此一来你可以用自然语言的方式给siri发送关灯命令</p>
+
+<p>这个方案拓展开，我们几乎可以控制所有的按键式开关</p>
+
+<p>自然语言处理这部分Siri帮我们做了，之后有机会我们自己来实现，听起来有点像最近怒刷各种技术社区的<a href="https://m.toutiao.com/i6366879371965235714/?tt_from=weixin_moments&amp;utm_campaign=client_share&amp;app=news_article&amp;utm_source=weixin_moments&amp;iid=6814510930&amp;utm_medium=toutiao_android&amp;wxshare_count=2&amp;pbid=31547628651&amp;from=timeline&amp;isappinstalled=0">Jarvis</a> &ndash;扎尔伯格用人工智能控制家居的项目</p>
+
+<h1 id="准备工作">准备工作</h1>
+
+<h3 id="硬件部分">硬件部分</h3>
+
+<p>硬件部分包括：</p>
+
+<ul>
+<li>树莓派</li>
+<li>舵机</li>
+<li>长导线</li>
+<li>移动电源</li>
+</ul>
+
+<p><img src="/post/img/siri56e654b0.png" alt="" /></p>
+
+<p>组件不多，考虑到电灯开关的位置一般齐胸，而树莓派和移动电源(供电)放在地上，所以你需要三根长导线，而不是普通的杜邦线，和往常一样，长导线这种东西都是从万能的@李老师的万能的实验室里要来的,感谢@李老师一直以来的助攻</p>
+
+<p>下边我们对各个部分做个简单介绍：</p>
+
+<h4 id="树莓派">树莓派</h4>
+
+<p>关于树莓派，可以参考我此前的文章:<a href="http://blog.just4fun.site/raspberrypi-install-and-config.html">树莓派折腾笔记之系统安装与配置</a>.入门新手会遇到的问题我基本都列出了</p>
+
+<p>我也翻译了一份<a href="https://github.com/wwj718/awesome-raspberry-pi-zh">树莓派(Raspberry Pi)资源大全中文版</a></p>
+
+<p>供大家玩耍时参考</p>
+
+<h4 id="舵机">舵机</h4>
+
+<p>我买的是淘宝上的SG90 9g舵机，价格6块多,关于舵机的控制原理比较麻烦，李老师跟我描述过，我听个大概，不过不影响，去网上抄段程序修修改改，封装为黑盒函数基本能用，有空在细看这块</p>
+
+<p>简单介绍下舵机上的几根线:</p>
+
+<ul>
+<li>红色：电压</li>
+<li>粽色：地线</li>
+<li>橙色：信号线</li>
+</ul>
+
+<p>我把信号线接到18号引脚(BCM) ，查看gpio图：<code>gpio readall</code></p>
+
+<h4 id="李老师">李老师</h4>
+
+<p>顺便也介绍些李老师.</p>
+
+<ol>
+<li><p>李老师其实不是我的老师,我毕业后才认识他，我从李老师这边学到很多硬件知识，从传道解惑的角度来说，李老师确是我的老师</p></li>
+
+<li><p>李老师南大博士毕业后，在大学执教，他博士阶段读的是图像识别，但他是个彻头彻尾的硬件黑客</p></li>
+
+<li><p>李老师的实验室黑科技齐全，哆啦A梦口袋一般，有求必应</p></li>
+
+<li><p>李老师常说的话有这样一种模式：&rdquo;没事没事，xx功能的电子设备买不到也没事，我们自己画，等印刷完，你过来取&rdquo;. 我们有个有趣的项目，硬件部分都是李老师画的</p></li>
+
+<li><p>迄今 只有一次例外: 有一回李老师在论述分布式节点的连接策略时，我有点开小差，状态类似&rdquo;一人虽听之 一心以为有鸿鹄将至 思援弓缴而射之&rdquo;. 我突然想要一个无线开关来控制我那不够智能的油汀，以便于用树莓派控制它。而李老师也和往常一样，一边论述一边离题，岔到其他他感兴趣的话题:这回是关于如何把无线模块画得更小，当他兴致勃勃地分享这个灵光一现时，我不合时宜地提出说我想要一个无线开关，能不能用继电器、开关外壳和无线模块，外加画个板子集成它们，李老师以一种给你糖吃别打岔的样子，说这个淘宝上有卖的，app都自带的，你去买一个，抓包hack它就能编程了。于是李老师继续谈论他画板子的布线方案</p></li>
+
+<li><p>李老师实验室的四轴飞行器，除了飞行器是自己做的，遥控手柄也是自己画的</p></li>
+</ol>
+
+<p>大家感受一下</p>
+
+<p><img src="/post/img/lilaoshi397d1e4f.png" alt="" /></p>
+
+<p>让我们想到那句感人的话</p>
+
+<blockquote>
+<p>情之所钟，虽丑不嫌</p>
+</blockquote>
+
+<p>感觉哪里不对 ……</p>
+
+<h3 id="组装硬件">组装硬件</h3>
+
+<p>硬件部分的组装很容易，直接上效果图</p>
+
+<p><img src="/post/img/siri4cc6a938.png" alt="" /></p>
+
+<p>接下来让我们用双面胶把舵机贴到开关边上，舵机转动即可关灯</p>
+
+<h1 id="软件部分">软件部分</h1>
+
+<p>按照一般的套路，此处应该从舵机的驱动程序写起，加上通讯模块，接着写一些胶水程序黏合它们，组成实现完整的功能</p>
+
+<p>软件部分如开篇所说，这次我想试试不通过编程的方式来完成这个工作. 仅仅通过拖拽功能模块，我们就能拼出功能的机器人,这样可以让更多的人参与进来(当然包括哪些在玩王者荣耀的小学生)</p>
+
+<p>我已经完成了积木式的控制平台,硬件驱动全部封装为积木块(让每个人实现一次硬件驱动未免无聊)，拖曳即可，支持几乎完备的编程要素，可以实现丰富的功能</p>
+
+<p>我们来拖曳模块完成任务，Siri的请求本身被我封装为模块</p>
+
+<p><img src="/post/img/siri.gif" alt="" /></p>
+
+<p>完成后，程序为:</p>
+
+<p><img src="/post/img/siri15bab0b4.png" alt="" /></p>
+
+<p>至于对原理有兴趣的geek小伙伴，在之后的文章里，我们再来讲解细节实现,实际hack了Siri</p>
+
+<h1 id="效果演示">效果演示</h1>
+
+<p>点击&rdquo;运行程序&rdquo;，程序就会在树莓派中运行（开机自启）,我们做个演示</p>
+
+<video src="http://ocfy0072v.bkt.clouddn.com/siri-%E5%85%B3%E7%81%AF-1.mp4" controls="controls"></video>
+
+<h1 id="自然语言">自然语言</h1>
+
+<p>因为Siri本身具有处理自然语言的能力，我们可以用许多说法来关灯</p>
+
+<p><img src="/post/img/siri05dcb491.png" alt="" /></p>
+
+<h1 id="todo">todo</h1>
+
+<p>当前的自然语言处理(NLU)用得到了Siri，下一个版本想试试<a href="http://www.yige.ai/">yige.ai</a>,然后把它植入到微信中，这样可以跨平台使用它</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-12-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/rpi/">rpi</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/iot/openbot-natural-language-parser/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">openbot之自然语言解析器</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%95%B0%E6%8D%AE/orange-startup/">
+            <span class="next-text nav-default"> 易上手的数据挖掘、可视化与机器学习工具:Orange介绍</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

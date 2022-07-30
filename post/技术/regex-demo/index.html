@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>正则表达式一例 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前些日子读《精通正则表达式》读的起劲，每天早起读个把小时，兴趣盎然。 正愁没实战场景，只每天在Vim里用用，颇为寂寞。 前几天室友要处理一批类歌" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/regex-demo/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="正则表达式一例" />
+<meta property="og:description" content="前些日子读《精通正则表达式》读的起劲，每天早起读个把小时，兴趣盎然。 正愁没实战场景，只每天在Vim里用用，颇为寂寞。 前几天室友要处理一批类歌" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/regex-demo/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-05-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-05-20T00:00:00+00:00" />
+
+<meta itemprop="name" content="正则表达式一例">
+<meta itemprop="description" content="前些日子读《精通正则表达式》读的起劲，每天早起读个把小时，兴趣盎然。 正愁没实战场景，只每天在Vim里用用，颇为寂寞。 前几天室友要处理一批类歌"><meta itemprop="datePublished" content="2015-05-20T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-05-20T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1726">
+<meta itemprop="keywords" content=" regex," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="正则表达式一例"/>
+<meta name="twitter:description" content="前些日子读《精通正则表达式》读的起劲，每天早起读个把小时，兴趣盎然。 正愁没实战场景，只每天在Vim里用用，颇为寂寞。 前几天室友要处理一批类歌"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">正则表达式一例</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-05-20 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>前些日子读《精通正则表达式》读的起劲，每天早起读个把小时，兴趣盎然。</p>
+<p>正愁没实战场景，只每天在Vim里用用，颇为寂寞。</p>
+<p>前几天室友要处理一批类歌词文件（英文朗读？），需要清理其中的部分内容，手动操作很是繁琐，让我试着用代码帮着处理下。啊，这不正是使用正则的绝佳场所么</p>
+<p>#待处理文本</p>
+<p>文本是这样的</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">TPO_2102_L01
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">0	2.16	Listen to part of lecture in the history of science class.
+</span></span><span class="line"><span class="cl">2.16	11.2	OK, we&#39;ve been talking about how throughout the history.		好的,我们已经讨论过历史的发展.
+</span></span><span class="line"><span class="cl">11.2	14.8	It was often difficult for people to give up ideas which have long been taken for granted as scientific truths, even if those ideas were false.		人们放弃一种已经被认定是科学的事实的念头非常困难,即使那个念头是不对的.
+</span></span><span class="line"><span class="cl">14.8	24.32	In astronomy, for example, the distinction between the solar system and the universe wasn&#39;t clear until modern times.		拿天文学来举个例子,人们直到近代才将太阳系和宇宙的概念弄清楚. (第一题what&#39;s the purpose of the lecture?)
+</span></span><span class="line"><span class="cl">24.32	32.04	The ancient Greeks believed that what we called the solar system was in fact the entire universe, and that the universe was geocentric.		古希腊认为宇宙就是我们现在所说的太阳系,而整个宇宙中,地球就是宇宙的中心.
+</span></span><span class="line"><span class="cl">32.04	43.0	Geocentric means Earth-centric, so the geocentric view holds that the Sun, the planets, and the stars, all revolve around the Earth which is stationary.
+</span></span><span class="line"><span class="cl">43.0	54.72	Of course, we now know that the planets including Earth revolve around the Sun, and that solar system is only a tiny part of the universe.		当然了,我们现在是知道所有的星球都围绕着太阳转,地球也是星球,而且太阳系只是宇宙的一小部分.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">......
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>#需求
+某路径下有若干txt文件,清理掉文件中的中文，夹杂在中文中数字/英文/标点也一并清除</p>
+<p>#正则的视角
+在正则的视角下的解决方案，大约是这样的，对于每个文件，从每一行的第一个中文字符，一直清除到行尾 （以行为基本单位）</p>
+<p>#解决方案（Python版）
+直接上代码啦，当当当当</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/env python3</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># encoding: utf-8</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">filter_filetype</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">filetype</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">filetype</span> <span class="o">=</span> <span class="n">filetype</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">))]</span> <span class="c1">#Get all regular files</span>
+</span></span><span class="line"><span class="cl">    <span class="n">filter_filename_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">filetype</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">filter_filename_list</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">clean_zh</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">zh_to_endline</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&#34;[\u4e00-\u9fa5].*&#34;</span><span class="p">,</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span> <span class="c1">#匹配从中文开始到行尾,多行模式</span>
+</span></span><span class="line"><span class="cl">    <span class="n">filename_split</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">output_filename</span> <span class="o">=</span> <span class="n">filename_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s2">&#34;_output.&#34;</span><span class="o">+</span><span class="n">filename_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">output_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_filename</span><span class="p">,</span><span class="s2">&#34;w&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s2">&#34;r+&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_file</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">clean_content</span> <span class="o">=</span> <span class="n">zh_to_endline</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&#34;&#34;</span><span class="p">,</span><span class="n">input_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">#clean_line = zh_to_endline.sub(&#34;&#34;,line) #返回替换完的行，如果没有替换则原文返回</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">clean_content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">#input_file.seek(0) #移到文件头，覆盖掉</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">#input_file.write(clean_content)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">output_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#传递命令行参数 path</span>
+</span></span><span class="line"><span class="cl">    <span class="n">filetype</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c1">#传递命令行参数 filetype</span>
+</span></span><span class="line"><span class="cl">    <span class="n">filter_filename_list</span> <span class="o">=</span> <span class="n">filter_filetype</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">filetype</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filter_filename_list</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">clean_zh</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">filename</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上代码保存在clean_zh.py中</p>
+<p>使用：<code>python3 clean_zh.py PATH txt</code> 。</p>
+<p>使用python3运行，python2对unicode的支持不好</p>
+<p>函数写的很不纯，之后重构一下</p>
+<p>关于Python字符串的搜索和替换可以参考<a href="http://python3-cookbook.readthedocs.org/zh_CN/latest/c02/p05_search_and_replace_text.html">这里</a></p>
+<p>#todo
+发现这是个很棒的Code Kata（通过实际的编程练习来提升敏捷开发的技能）<br>
+于是决定写下其他语言的实现版本作为练习</p>
+<p>涉及的知识点：</p>
+<ul>
+<li>正则表达式</li>
+<li>字符串(unicode)</li>
+<li>文件和目录</li>
+<li>函数(参数)</li>
+<li>命令行参数</li>
+</ul>
+<p>###Ruby</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/env ruby</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#encoding=UTF-8</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">filter_filetype</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">filetype</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">filetype</span> <span class="o">=</span> <span class="n">filetype</span><span class="o">.</span><span class="n">downcase</span>
+</span></span><span class="line"><span class="cl">  <span class="n">filenames</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">.</span><span class="n">entries</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">filter_filename_list</span> <span class="o">=</span> <span class="n">filenames</span><span class="o">.</span><span class="n">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">filename</span><span class="o">|</span> <span class="n">filename</span><span class="o">.</span><span class="n">end_with?filetype</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">filter_filename_list</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">clean_zh</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">zh_to_endline</span> <span class="o">=</span> <span class="sr">/[\u4e00-\u9fa5].*/</span> <span class="c1">#匹配从中文开始到行尾</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">#clean_content = str.sub(zh_to_endline, &#34;&#34;)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">filename_split</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">output_filename</span> <span class="o">=</span> <span class="n">filename_split</span><span class="o">[</span><span class="mi">0</span><span class="o">]+</span><span class="s2">&#34;_output.&#34;</span><span class="o">+</span><span class="n">filename_split</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">  <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#file.each_line{|line| puts line.sub(zh_to_endline,&#34;&#34;)}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">contents</span> <span class="o">=</span>  <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#clean_content = contents.sub(zh_to_endline,&#34;&#34;)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">clean_content</span> <span class="o">=</span> <span class="n">contents</span><span class="o">.</span><span class="n">gsub</span><span class="p">(</span><span class="n">zh_to_endline</span><span class="p">,</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">output_filename</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">output_filename</span><span class="p">,</span><span class="s2">&#34;w&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">output_filename</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">clean_content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">output_filename</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#puts clean_content</span>
+</span></span><span class="line"><span class="cl">  <span class="k">end</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="bp">__FILE__</span> <span class="o">==</span> <span class="vg">$0</span>
+</span></span><span class="line"><span class="cl">  <span class="n">path</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">  <span class="n">filetype</span> <span class="o">=</span> <span class="no">ARGV</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">  <span class="n">filter_filename_list</span> <span class="o">=</span> <span class="n">filter_filetype</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">filetype</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">filter_filename_list</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">filename</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">    <span class="n">clean_zh</span><span class="p">(</span><span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="n">filename</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">  <span class="k">end</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用 <code>ruby clean_zh.rb PATH txt</code></p>
+<p>Ruby写起来似乎比Python还惬意~</p>
+<p>###Golang</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-golang" data-lang="golang"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;io/ioutil&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;os&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//&#34;path&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="s">&#34;path/filepath&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;regexp&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;strings&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">clean_zh</span><span class="p">(</span><span class="nx">filename</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//pattern := &#34;(?i)[\u4e00-\u9fa5].*&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">pattern</span> <span class="o">:=</span> <span class="s">&#34;(?i)[\u4e00-\u9fa5].*&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">reg</span> <span class="o">:=</span> <span class="nx">regexp</span><span class="p">.</span><span class="nf">MustCompile</span><span class="p">(</span><span class="nx">pattern</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">contents</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">ioutil</span><span class="p">.</span><span class="nf">ReadFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">clean_content</span> <span class="o">:=</span> <span class="nx">reg</span><span class="p">.</span><span class="nf">ReplaceAllString</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">contents</span><span class="p">),</span> <span class="s">&#34;&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//println(string(contents))
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">//println(contents)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">filename_split</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span> <span class="s">&#34;.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">output_filename</span> <span class="o">:=</span> <span class="nx">filename_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#34;_output.&#34;</span> <span class="o">+</span> <span class="nx">filename_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="nx">output_filename</span> <span class="o">+</span> <span class="s">&#34;\n&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="nx">filename</span> <span class="o">+</span> <span class="s">&#34;\n&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nx">ioutil</span><span class="p">.</span><span class="nf">WriteFile</span><span class="p">(</span><span class="nx">output_filename</span><span class="p">,</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">clean_content</span><span class="p">),</span> <span class="mo">0644</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">getpath</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">filetype</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">files</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">filepath</span><span class="p">.</span><span class="nf">Glob</span><span class="p">(</span><span class="nx">getpath</span> <span class="o">+</span> <span class="s">&#34;/*&#34;</span><span class="p">)</span> <span class="c1">// contains a list of all files in the path
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">//fmt.Printf(&#34;%s\n&#34;, files)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">filename</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">files</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">//i是索引，c是值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="nx">filename_split</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Split</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span> <span class="s">&#34;.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="nx">filename_split</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">filename_split</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nx">filetype</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="nx">filename</span> <span class="o">+</span> <span class="s">&#34;\n&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                        <span class="nf">clean_zh</span><span class="p">(</span><span class="nx">filename</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用 <code>go run clean_zh.go PATH txt</code></p>
+<p>Golang的语法糖好少！想使用Slices来收集过滤完的filename</p>
+<p>###Nodejs</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">//use =G to formet js with javascript.vim
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">is_filetype</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">array</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nx">filetype</span><span class="p">)</span> <span class="c1">// 使用全局变量？之后使用闭包替换吧
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">clean_zh</span><span class="p">(</span><span class="nx">filename</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">filename_split</span> <span class="o">=</span> <span class="nx">filename</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">output_filename</span> <span class="o">=</span> <span class="nx">filename_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s2">&#34;_output.&#34;</span><span class="o">+</span><span class="nx">filename_split</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kd">var</span> <span class="nx">reg</span> <span class="o">=</span> <span class="sr">/[\u4e00-\u9fa5].*/g</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">reg</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">output_filename</span><span class="p">,</span><span class="nx">res</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span><span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">);});</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">filetype</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">filenames</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readdirSync</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span> <span class="c1">//等待io的返回，需要使用同步方法
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">var</span> <span class="nx">filter_filenames</span> <span class="o">=</span> <span class="nx">filenames</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">is_filetype</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">filter_filenames</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">clean_zh</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用：<code>node clean_zh.js PATH txt</code></p>
+<p>js注意回调。回调之外想要控制顺序的话，用同步函数吧</p>
+<p>###Coffeescript
+waiting</p>
+<p>###Bash</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">#cd /tmp  使之成为当前工作目录</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">path</span><span class="o">=</span><span class="nv">$1</span> <span class="c1">#不能有空格 </span>
+</span></span><span class="line"><span class="cl"><span class="nv">filetype</span><span class="o">=</span><span class="nv">$2</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> <span class="nv">$path</span>
+</span></span><span class="line"><span class="cl"><span class="nv">filenames</span><span class="o">=</span><span class="sb">`</span>ls<span class="sb">`</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#echo $filenames</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> filename in <span class="nv">$filenames</span>
+</span></span><span class="line"><span class="cl"><span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> <span class="se">\&#34;</span><span class="nv">$filename</span><span class="se">\&#34;</span> <span class="o">=</span>~ .*txt <span class="o">]]</span><span class="p">;</span><span class="k">then</span> <span class="c1">#注意空格</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#如何把$filename变为字符串</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">echo</span> <span class="s2">&#34;import re;zh_to_endline = re.compile(r\&#34;[\u4e00-\u9fa5].*\&#34;);file = open(\&#34;</span><span class="nv">$filename</span><span class="s2">\&#34;);clean_content = zh_to_endline.sub(\&#34;\&#34;,file.read());print(clean_content);&#34;</span> <span class="p">|</span> python3 &gt;&gt; <span class="s2">&#34;output_</span><span class="nv">$filename</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#echo $filename</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用<code>sh clean_zh PATH txt</code></p>
+<p>原先想用sed的，发现它好像根本不支持unicode？？耍赖把文本处理的工作丢给Python了。</p>
+<p>bash真是dirty and quick</p>
+<p>###Scheme</p>
+<p>###Haskell</p>
+<p>###Prolog</p>
+<p>###Lua</p>
+<p>###Clojure</p>
+<p>###Scala</p>
+<p>###Perl</p>
+<p>###Racket</p>
+<p>###C<code>#</code></p>
+<p>###C</p>
+<p>###Java</p>
+<p>###PHP</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-05-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/regex/"> regex</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/use-ipython-notebook/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用IPython Notebook来学习编程</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/search-skill/">
+            <span class="next-text nav-default">搜索技巧小结</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

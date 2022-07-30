@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>三门问题的程序模拟 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="衡量一种理论的科学地位的标准是它的可证伪性或可检验性。 &amp;ndash; 卡尔·波普尔 前言 昨天在北京，和CodeLab的两个志愿者沟通完之后，一看时间，距离飞" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/monty-hall-problem-programming/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="三门问题的程序模拟" />
+<meta property="og:description" content="衡量一种理论的科学地位的标准是它的可证伪性或可检验性。 &ndash; 卡尔·波普尔 前言 昨天在北京，和CodeLab的两个志愿者沟通完之后，一看时间，距离飞" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/monty-hall-problem-programming/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-03-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-03-23T00:00:00+00:00" />
+
+<meta itemprop="name" content="三门问题的程序模拟">
+<meta itemprop="description" content="衡量一种理论的科学地位的标准是它的可证伪性或可检验性。 &ndash; 卡尔·波普尔 前言 昨天在北京，和CodeLab的两个志愿者沟通完之后，一看时间，距离飞"><meta itemprop="datePublished" content="2019-03-23T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-03-23T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3124">
+<meta itemprop="keywords" content="coding," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="三门问题的程序模拟"/>
+<meta name="twitter:description" content="衡量一种理论的科学地位的标准是它的可证伪性或可检验性。 &ndash; 卡尔·波普尔 前言 昨天在北京，和CodeLab的两个志愿者沟通完之后，一看时间，距离飞"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">三门问题的程序模拟</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-23 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#随机数">随机数</a></li>
+        <li><a href="#主持人的决策">主持人的决策</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>衡量一种理论的科学地位的标准是它的可证伪性或可检验性。  &ndash; 卡尔·波普尔</p>
+</blockquote>
+<p><img src="/post/img/Monty_Hall_problem_4e9dcde0.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>昨天在北京，和CodeLab的两个志愿者沟通完之后，一看时间，距离飞机起飞还早。看了下地图，发现当前位置离北大不远，于是准备过去找@yuhao喝个下午茶，扯扯近况吐吐槽。</p>
+<p>后来接到@zichun信息说，系统的网络问题解决了，问是否有时间去实验室一趟，于是我就往北邮去了，跟@yuhao没碰上面。</p>
+<p>想起来上次和@yuhao在南京碰面，夜里找遍南京的角落，也没找到好吃的馄炖店(@yuhao是南京人，是南京几家馄炖店的铁粉)。找夜宵的路上聊了很多有趣的话题，其中一个是<code>三门问题</code>。我记得我们当时观念分歧，谁也说服不了谁，最终沦为观念之争，因为没法做一万次实验来检验它。于是我上飞机前发信息给@yuhao说，还记得上次在南京吃夜宵聊的门后有羊的概率问题吗？我想到检验这个问题的方法了。</p>
+<p>在飞行途中，写了个简单的程序来模拟这个游戏。源码稍后放出，我们从问题说起。</p>
+<h1 id="三门问题">三门问题</h1>
+<p>我最早听到<code>三门问题</code>好像是在概率论课上，我挺喜欢这门课的，觉得概率论有时触及世界观，关于你如何看待外部物理世界。</p>
+<p><code>三门问题</code>又叫<code>Monty Hall problem</code>，来自于美国的一档电视节目:<a href="https://en.wikipedia.org/wiki/Let%27s_Make_a_Deal">Let&rsquo;s Make a Deal</a>, 由于<a href="https://en.wikipedia.org/wiki/Monty_Hall">Monty Hall</a>是节目的主持人，于是这个问题得名<code>Monty Hall problem</code>。</p>
+<p>这个问题最初是由<a href="https://en.wikipedia.org/wiki/Steve_Selvin">Steve Selvin</a>在1975年给美国统计学家的一封信中提出的。</p>
+<p><code>三门问题</code>可以表述为:</p>
+<blockquote>
+<p>假设你正在参加一档游戏节目，有三个门供你选择: 一扇门后面是一辆汽车; 其他两扇门的后边是山羊。你的目标是选中汽车。你选择了其中一扇门，比如说1号门。主持人知道三扇门的后边分别是什么。于是他打开了另一扇门(比如3号门)，你看到那里有一只山羊。接着主持人对你说：&ldquo;你要换选2号门吗？&rdquo;</p>
+</blockquote>
+<p>那么问题来了，换一扇门对你有利吗？</p>
+<h1 id="观念之争">观念之争</h1>
+<p>对这个问题，有3种意见在人群中比较典型。</p>
+<p>意见一认为<code>换不换无所谓</code>，胜率都是<code>1/3</code>，在游戏开始，每个选项胜率是<code>1/3</code>。主持人排除余下两个选项中的一个错误选项之后，物理世界中没有任何事物发生变化，和初始状态完全相同。所以胜率还是<code>1/3</code>。 无论如何，剩下的两个选项中，肯定有一个是错的，主持人只是帮你指出来，这又没改变什么。</p>
+<p>意义二认为<code>应该换2号门</code>。意见二认为在游戏开始时，所做出的选择胜率为<code>1/3</code>。换了2号门之后，等同于一开始同时选择了3号门和2号门，所以胜率变为<code>2/3</code>。</p>
+<p>意见三也认为<code>换不换无所谓</code>，但意见三认为，换不换的胜率都是<code>1/2</code>，而不是<code>1/3</code>, 因为主持人帮你排除了一个错误选项，于是问题被重置，成为2选一的问题。</p>
+<!--指出一个必然的事实-->
+<p>在南京聊到这个问题时，@yuhao持意见三，我持意见二。</p>
+<h1 id="争论背后">争论背后</h1>
+<p>相较于正确答案是什么，答案所依赖的思考逻辑更有意思。它取决于我们如何看待<code>信息</code>。</p>
+<p>这个问题触及信息与现实的关系。</p>
+<h1 id="程序模拟">程序模拟</h1>
+<p>我来给出程序模拟，看看检验的结果如何。思路是通过多次实验，计算频率来估计概率。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">import random
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">user1 = &#34;yuhao&#34;  # 坚定不移, 打死不换答案，反正都胜率一样
+</span></span><span class="line"><span class="cl">user2 = &#34;wenjie&#34;  # 摇摆不定, 看到有新的补充信息，就动摇了，还是换吧
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def make_a_choice(user):
+</span></span><span class="line"><span class="cl">    choices = [&#34;car&#34;, &#34;goat&#34;, &#34;goat&#34;]
+</span></span><span class="line"><span class="cl">    # 参与者随机作出一个选择
+</span></span><span class="line"><span class="cl">    user_choice = random.choice(choices)
+</span></span><span class="line"><span class="cl">    choices.remove(user_choice)
+</span></span><span class="line"><span class="cl">    # choices此时为剩余的两个选项
+</span></span><span class="line"><span class="cl">    assert len(choices) == 2
+</span></span><span class="line"><span class="cl">    if user == user1:
+</span></span><span class="line"><span class="cl">        # 第一类用户， 不换答案
+</span></span><span class="line"><span class="cl">        pass
+</span></span><span class="line"><span class="cl">    if user == user2:
+</span></span><span class="line"><span class="cl">        # 第二类用户, 换答案
+</span></span><span class="line"><span class="cl">        &#39;&#39;&#39;
+</span></span><span class="line"><span class="cl">        # 模拟主持人的认知过程，掀开门看下是啥，直到看到是羊才展示
+</span></span><span class="line"><span class="cl">        while True:
+</span></span><span class="line"><span class="cl">            remove_choice = random.choice(choices)
+</span></span><span class="line"><span class="cl">            if remove_choice == &#34;goat&#34;:
+</span></span><span class="line"><span class="cl">                remove_choice = choices.remove(remove_choice)
+</span></span><span class="line"><span class="cl">                break
+</span></span><span class="line"><span class="cl">        &#39;&#39;&#39;
+</span></span><span class="line"><span class="cl">        if choices[0] == &#39;goat&#39;:
+</span></span><span class="line"><span class="cl">            choices.remove(choices[0])
+</span></span><span class="line"><span class="cl">        else:
+</span></span><span class="line"><span class="cl">            choices.remove(choices[1])
+</span></span><span class="line"><span class="cl">        # 主持人排除完错误选项之后，只余下一个选项
+</span></span><span class="line"><span class="cl">        assert len(choices) == 1
+</span></span><span class="line"><span class="cl">        # 参与者选择换选项
+</span></span><span class="line"><span class="cl">        user_choice = choices[0]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    if user_choice == &#34;car&#34;:
+</span></span><span class="line"><span class="cl">        is_car = True
+</span></span><span class="line"><span class="cl">    else:
+</span></span><span class="line"><span class="cl">        is_car = False
+</span></span><span class="line"><span class="cl">    return is_car
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def game(user, times):
+</span></span><span class="line"><span class="cl">    score = 0 # 得分
+</span></span><span class="line"><span class="cl">    for i in range(times):
+</span></span><span class="line"><span class="cl">        is_car = make_a_choice(user) # 反复进行多个回合，重复实验
+</span></span><span class="line"><span class="cl">        if is_car:
+</span></span><span class="line"><span class="cl">            score += 1
+</span></span><span class="line"><span class="cl">    return score
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">if __name__ == &#34;__main__&#34;:
+</span></span><span class="line"><span class="cl">    times = 100000
+</span></span><span class="line"><span class="cl">    for user in [user1, user2]:
+</span></span><span class="line"><span class="cl">        print(f&#34;game start, user: {user}&#34;)
+</span></span><span class="line"><span class="cl">        score = game(user=user, times=times)
+</span></span><span class="line"><span class="cl">        frequency = score / times
+</span></span><span class="line"><span class="cl">        print(&#34;game end&#34;)
+</span></span><span class="line"><span class="cl">        print(f&#34;user: {user}, times:{times}, score: {score}, score/times: {frequency}&#34;)
+</span></span><span class="line"><span class="cl">        print(&#34;#&#34;*20)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>程序非常简单。</p>
+<p>运行的结果为:</p>
+<p><img src="/post/img/Monty_Hall_problem_fe09407f.png" alt=""></p>
+<p>我总共做了4组实验，每组包含有100000次(10万次)模拟游戏。</p>
+<p>结论是: 选择换选项的胜率稳定在<code>2/3</code>, 选择不换的胜率稳定在<code>1/3</code>。尽管每次实验，略有差异，但在统计上基本稳定。</p>
+<p>程序中有没有可以质疑的地方呢？我觉得是有的。</p>
+<h1 id="猜想与反驳">猜想与反驳</h1>
+<h3 id="随机数">随机数</h3>
+<p>我们知道计算机的随机数并不是真的随机，是不是计算机产生随机数的机制有偏见，如果产生随机数的机制依据了统计学公式，那么产生的随机数一定满足统计学规律。</p>
+<p>我们来试着排除这个影响。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;car&#34;</span><span class="p">,</span> <span class="s2">&#34;goat&#34;</span><span class="p">,</span> <span class="s2">&#34;goat&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">user_choice</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这两行模拟了参与者的随机决策。怀疑论者会问，我们怎么知道<code>random.choice(choices)</code>在选择的时候，不会与&quot;car&quot;在choices中的位置相关，毕竟我们不知道这里随机背后规则是什么。通过调整&quot;car&quot;的次序可以回答这个问题，位置对结果没有影响。</p>
+<p>怀疑论者会继续问，我们怎么知道<code>random.choice</code>会不会偏好更长的字符串。这个问题其实也很容易做实验解决。</p>
+<p>怀疑论者常常能把我们带到远处。更有趣的问法是，我们知道计算机的随机数并不是随机产生的，所以它的统计学规律内在于它的产生机制中。我们会类比说，现实世界之所以出现稳定的统计规律，这种现象是不是揭示了宇宙里有某种硬编码的规则。</p>
+<p>统计规律的背后是空无一物还是有所支撑，这个问题完全变成形而上学问题了，多说无益。</p>
+<h3 id="主持人的决策">主持人的决策</h3>
+<p>代码里还有一处值得关注。</p>
+<p>主持人是如何帮我们排除一个错误选项的呢？</p>
+<p>如果我们采用日常语言来描述<code>主持人帮我们排除一个错误选项</code>这件事，我们会错过一个有趣的细节，这个细节我是在编程中才发现的。</p>
+<p><code>主持人帮我们排除一个错误选项</code>听起来不需要被特别关注，因为主持人知道什么是错误选项啊，所以他指出来就好了啊。当我们用日常语言表述这句话时，不会在此发生停留，因为它如此<code>自明</code>。</p>
+<p>当我们需要在程序中模拟主持人排除错误选项时，代码逼着我们使用明确的逻辑规则来描述。我给出了两个方案都能做到<code>排除一个错误选项</code>，但注意它们是有区别的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">        <span class="c1"># 模拟主持人的认知过程，掀开门看下是啥，直到看到是羊才向选手展示</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">remove_choice</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">remove_choice</span> <span class="o">==</span> <span class="s2">&#34;goat&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">choices</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">remove_choice</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="k">break</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个方案让主持人随机打开一个门，当看到山羊就指出来。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;goat&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">choices</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">choices</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">choices</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个方案似乎是有序的，主持人从左到右，或从右到左开门，查看物体是不是山羊。</p>
+<p>从代码中你会近距离注意到，主持人的认知和操作过程。我们看到主持人为了找出山羊在哪里，他<code>认真检查了选项</code>，有时候<code>检查了2个选项</code>, 自然语言中我们很难注意到这点。如果你在编程的时候，把主持人想象成选手，你发现<code>他有两次机会做选择</code>! 所以我们当然采用主持人的选项！</p>
+<h1 id="后话">后话</h1>
+<p>@yuhao是凝固态物理博士，对量子力学了解很多，之前送了我一本书叫《不同的宇宙》，这本书机智幽默，<a href="https://zh.wikipedia.org/zh-cn/%E7%BE%85%E4%BC%AF%E7%89%B9%C2%B7%E5%8B%9E%E5%A4%AB%E6%9E%97">罗伯特·劳克林</a>在书里讨论物理学中还原论和涌现理论的分歧，也讨论一些有趣的量子力学问题，我非常喜欢这门书，它在带着我们思考，而不是罗列定律。</p>
+<p>我有个奇怪的感觉，概率论的有效性可能揭示出物理世界的某种逻辑结构，这个结构受信息的影响，而不只是受物质和能量的影响。</p>
+<p>但概率论只是<code>指出</code>，而没有作出解释。</p>
+<p>为什么是这组而不是另一组统计规律？为何是这一簇而不是另一簇物理规律？</p>
+<p>物理世界是不是一种模拟？</p>
+<p>@yuhao说别纠结这个，它既不可证实也不可证伪，只会带来观念之争。</p>
+<p>我并不纠结，但我饶有兴致。我不害怕它是模拟，柏拉图、卢梭、黑格尔才害怕，因为现实一旦是模拟，他们那些残酷又严肃的理论就显得极为可笑, 他们把意义建立在个人之外,他们把意义建立在强权之上。</p>
+<p>我们拥抱所爱之人，热爱自由和平等，对他人的苦难感同身受，这些不会因为这个世界是模拟而有损于生命的意义。</p>
+<p>但物理世界如果是模拟，这是多大的乐趣啊，我们就可能hack它。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Monty_Hall_problem">Monty Hall problem</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Monty_Hall">Monty Hall</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Let%27s_Make_a_Deal">Let&rsquo;s Make a Deal</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Steve_Selvin">Steve Selvin</a></li>
+<li><a href="https://mathigon.org/course/probability/monty-hall">mathigon Monty Hall</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-03-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/coding/">coding</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/usa-travel/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">美国之行</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/from-python-to-pharo/">
+            <span class="next-text nav-default">从Python转向Pharo</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

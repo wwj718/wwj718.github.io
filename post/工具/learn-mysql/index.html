@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>mysql学习笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="edx生产环境使用了mongo/mysql数据库。 edx中这两个数据库都用来干嘛呢，看这里 mysql/RDS for user-data and MongoDB for courseware content and discussion forums 既然总结了mongo，也顺便" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/learn-mysql/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="mysql学习笔记" />
+<meta property="og:description" content="edx生产环境使用了mongo/mysql数据库。 edx中这两个数据库都用来干嘛呢，看这里 mysql/RDS for user-data and MongoDB for courseware content and discussion forums 既然总结了mongo，也顺便" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/learn-mysql/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-07-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-07-19T00:00:00+00:00" />
+
+<meta itemprop="name" content="mysql学习笔记">
+<meta itemprop="description" content="edx生产环境使用了mongo/mysql数据库。 edx中这两个数据库都用来干嘛呢，看这里 mysql/RDS for user-data and MongoDB for courseware content and discussion forums 既然总结了mongo，也顺便"><meta itemprop="datePublished" content="2014-07-19T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2014-07-19T00:00:00+00:00" />
+<meta itemprop="wordCount" content="942">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="mysql学习笔记"/>
+<meta name="twitter:description" content="edx生产环境使用了mongo/mysql数据库。 edx中这两个数据库都用来干嘛呢，看这里 mysql/RDS for user-data and MongoDB for courseware content and discussion forums 既然总结了mongo，也顺便"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">mysql学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-07-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#卸载可能是为了重装">卸载（可能是为了重装）</a></li>
+    <li><a href="#管理">管理</a>
+      <ul>
+        <li><a href="#权限管理">权限管理</a></li>
+        <li><a href="#创建数据库">创建数据库</a></li>
+        <li><a href="#删除关联表">删除关联表</a></li>
+        <li><a href="#重设root-密码">重设root 密码</a></li>
+      </ul>
+    </li>
+    <li><a href="#数据">数据</a></li>
+    <li><a href="#docker">docker</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>edx生产环境使用了mongo/mysql数据库。</p>
+<p>edx中这两个数据库都用来干嘛呢，看<a href="https://github.com/edx/edx-platform/wiki/Frequently-Asked-Questions#are-the-cms-and-lms-supposed-to-use-the-same-database-or-separate-ones-when-in-production">这里</a></p>
+<blockquote>
+<p>mysql/RDS for user-data and MongoDB for courseware content and discussion forums</p>
+</blockquote>
+<p>既然总结了mongo，也顺便对mysql做个总结。</p>
+<p>##mysql安装
+<code>sudo apt-get install mysql-server</code></p>
+<p>一路回车，root密码为空</p>
+<h2 id="卸载可能是为了重装">卸载（可能是为了重装）</h2>
+<p>sudo apt-get purge mysql-server mysql-client mysql-common mysql-client mysql-server</p>
+<h2 id="管理">管理</h2>
+<h3 id="权限管理">权限管理</h3>
+<ul>
+<li>CREATE USER username IDENTIFIED BY &lsquo;password&rsquo;; //之后要使用GRANT分配权限，否则登录会错误，所以一般用下边的指令</li>
+<li>GRANT ALL PRIVILEGES ON wordpress.* TO &lsquo;username&rsquo;@&rsquo;localhost&rsquo; IDENTIFIED BY &lsquo;password&rsquo;; //创建并赋予用户在wordpress数据库中的所有权限</li>
+<li>GRANT ALL PRIVILEGES ON wordpress.* TO &lsquo;username&rsquo;@&rsquo;%&rsquo; IDENTIFIED BY &lsquo;password&rsquo;; //任意ip，注意需要把/etc/mysql/my.cnf的bind-address 注释</li>
+<li>GRANT SELECT, UPDATE ON wordpress.* TO &lsquo;username&rsquo;@&rsquo;localhost&rsquo; IDENTIFIED BY &lsquo;password&rsquo;; //只能执行 select 和 update 命令</li>
+<li>GRANT Select ON <em>.</em> TO <a href="mailto:reader@192.168.1.123">reader@192.168.1.123</a>  IDENTIFIED BY &ldquo;123456&rdquo; //创建用户reader，只能从192.168.1.123访问，权限为所有数据库只读</li>
+<li>REVOKE ALL PRIVILEGES ON <em>.</em> FROM &lsquo;username&rsquo;@&rsquo;localhost&rsquo;; //回收所有权限</li>
+<li>查看所有用户：select host,user,password from mysql.user;</li>
+<li>删除用户：drop user &lsquo;jack&rsquo;@&rsquo;localhost&rsquo;;</li>
+</ul>
+<p>权限相关的细节参考<a href="https://libuchao.com/2013/04/06/mysql-user-and-privilege">MySQL 用户管理及权限管理</a> 、<a href="http://www.cnblogs.com/cnblogsfans/archive/2009/09/21/1570942.html">Mysql初始化root密码和允许远程访问</a></p>
+<h3 id="创建数据库">创建数据库</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">mytest</span><span class="p">;</span><span class="w"> </span><span class="c1">--创建数据库
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">USE</span><span class="w"> </span><span class="n">mytest</span><span class="p">;</span><span class="w"> </span><span class="c1">--进入数据库
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="删除关联表">删除关联表</h3>
+<p>暂时弃用检查： <code>SET FOREIGN_KEY_CHECKS=0;</code>,完成之后 <code>SET FOREIGN_KEY_CHECKS=1;</code></p>
+<h3 id="重设root-密码">重设root 密码</h3>
+<p>以安全模式启动mysql，这样不需要密码可以直接以root身份登录，然后重设密码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">sudo service mysql stop 
+</span></span><span class="line"><span class="cl">sudo mysqld_safe --skip-grant-tables --skip-networking &amp;
+</span></span><span class="line"><span class="cl">mysql -u root  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">mysql&gt; use mysql;  
+</span></span><span class="line"><span class="cl">mysql&gt; update user set password=PASSWORD(&#34;mynewpassword&#34;) where User=&#39;root&#39;;  
+</span></span><span class="line"><span class="cl">mysql&gt; flush privileges;  
+</span></span><span class="line"><span class="cl">mysql &gt; quit  
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo service mysql restart 
+</span></span><span class="line"><span class="cl">mysql -u root -pmynewpassword  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以直接修改<code>/etc/mysql/debian.cnf</code></p>
+<p>##数据备份
+参考<a href="http://blog.just4fun.site/edx-data-migrate.html">edx数据迁移</a></p>
+<p>##gui工具
+MySQLWorkbench</p>
+<h2 id="数据">数据</h2>
+<p>MYSQL默认的数据文件存储目录为/var/lib/mysql，在docker中可能这个信息有用（-v）</p>
+<h2 id="docker">docker</h2>
+<ul>
+<li><a href="https://github.com/docker-library/mysql">docker-library/mysql</a></li>
+<li><a href="https://hub.docker.com/_/mysql/">the Docker Hub page</a></li>
+<li><a href="https://github.com/docker-library/docs/tree/master/mysql">docker-library/docs/mysql</a></li>
+</ul>
+<h4 id="run-it">run it</h4>
+<p>docker run &ndash;name some-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:tag</p>
+<ul>
+<li><code>some-mysql</code> is the name you want to assign to your container</li>
+<li><code>my-secret-pw</code> is the password to be set for the MySQL <code>root</code> user</li>
+<li><code>tag</code> is the tag specifying the MySQL version you want tags.</li>
+</ul>
+<h4 id="既有数据问题">既有数据问题</h4>
+<ul>
+<li>采用同版本mysql</li>
+<li>挂载/var/lib/mysql和/etc/mysql/conf.d，是否可能完全一样，换句话说这两个是文件，直接复制是否可用，相同的操作系统的话</li>
+<li>做个试验，设立新的用户，然后migrate，或者重跑ansible playbook</li>
+</ul>
+<p>##参考资料</p>
+<ul>
+<li><a href="http://user.frdm.info/ckhung/b/sa/mysql.php">mysql逃兵筆記</a></li>
+<li><a href="http://www.cnblogs.com/wuhou/archive/2008/09/28/1301071.html">Ubuntu安装配置Mysql</a></li>
+<li><a href="http://www.cnblogs.com/hateislove214/archive/2010/11/05/1869889.html">MYSQL常用命令</a></li>
+<li><a href="http://www.cnblogs.com/mr-wid/archive/2013/05/09/3068229.html">21分钟 MySQL 入门教程</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-07-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/learn-mongo/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">mongo学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/github-edx/">
+            <span class="next-text nav-default">利用github来深入源码</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

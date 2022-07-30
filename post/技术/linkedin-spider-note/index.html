@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>LinkedIn爬虫笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="需求 朋友在国外留学，老板让完成一个任务: 登录LinkedIn后搜索pr关键词， 对结果做简单分析、筛选和分类，将目标信息手动摘录到Google" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/linkedin-spider-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="LinkedIn爬虫笔记" />
+<meta property="og:description" content="需求 朋友在国外留学，老板让完成一个任务: 登录LinkedIn后搜索pr关键词， 对结果做简单分析、筛选和分类，将目标信息手动摘录到Google" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/linkedin-spider-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-02-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-02-01T00:00:00+00:00" />
+
+<meta itemprop="name" content="LinkedIn爬虫笔记">
+<meta itemprop="description" content="需求 朋友在国外留学，老板让完成一个任务: 登录LinkedIn后搜索pr关键词， 对结果做简单分析、筛选和分类，将目标信息手动摘录到Google"><meta itemprop="datePublished" content="2017-02-01T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2017-02-01T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2161">
+<meta itemprop="keywords" content=" python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="LinkedIn爬虫笔记"/>
+<meta name="twitter:description" content="需求 朋友在国外留学，老板让完成一个任务: 登录LinkedIn后搜索pr关键词， 对结果做简单分析、筛选和分类，将目标信息手动摘录到Google"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">LinkedIn爬虫笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-02-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#登录">登录</a></li>
+        <li><a href="#ajax">ajax</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#安装依赖">安装依赖</a></li>
+        <li><a href="#先跑起来">先跑起来</a></li>
+        <li><a href="#存储数据">存储数据</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/linkedin132b8af8.png" alt=""></p>
+<h1 id="需求">需求</h1>
+<p>朋友在国外留学，老板让完成一个任务: 登录LinkedIn后搜索pr关键词， 对结果做简单分析、筛选和分类，将目标信息手动摘录到Google Drive ,以便作进一步沟通，发展为client。朋友打电话抱怨说，工作量可怕，至少需要淹没一周的时间(从图中可以看到有465,276条匹配结果)。聊完，我觉得是个典型的信息采集工作，可以用爬虫完成</p>
+<h1 id="需求描述">需求描述</h1>
+<p>我让朋友将手动操作写成伪代码，用if else写出操作逻辑，这样能避免反复沟通成本，最理想的情况是当面做演示，传送门发明之前只好作罢。</p>
+<p>朋友之前有简单入门过编程，将任务表达得十分清晰</p>
+<p>此处涉及隐私，操作文档就不放出了，是典型的网页信息采集任务（外加一些定制化的筛选和分类逻辑）</p>
+<h1 id="思路">思路</h1>
+<p>最初想走捷径，直接调用api来取数据，在github里搜索一圈，试图找到好用LinkedIn api，逛了一圈，发现LinkedIn的库都是基于oauth2与LinkedIn通信（诸如<a href="https://github.com/ozgur/python-linkedin">python-linkedin</a>），需要申请为开发者，操作挺繁琐，而且获得的数据也不够丰富</p>
+<p>于是回退到用爬虫解决这个问题（网页所见即所得）</p>
+<h1 id="技术问题">技术问题</h1>
+<p>初步尝试后，发现存在两个需要处理的问题</p>
+<h3 id="登录">登录</h3>
+<p>要在LinkedIn的搜索前头的<code>pr</code>，需要先登录。</p>
+<p>尽管我们通过在浏览器搜索pr，知道实际对应的url是:<code>http://www.linkedin.com/search/results/index/?keywords=pr&amp;origin=GLOBAL_SEARCH_HEADER</code> 。但未登录会报404</p>
+<p>简易的解决方案是模拟登陆，用requests的Session维持登录状态即可，文档见<a href="http://docs.python-requests.org/zh_CN/latest/user/advanced.html">高级用法</a></p>
+<p>如何模拟登录，还需需要分析下提交参数的，如果连分析都懒，google呀！这么常见的问题，赌五毛钱肯定有人遇到过！</p>
+<p>果不其然：<a href="http://stackoverflow.com/questions/18907503/logging-in-to-linkedin-with-python-requests-sessions">Logging in to LinkedIn with python requests sessions</a></p>
+<p>于是我们我们便解决了登录问题(linkedin_spider.py):</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">client</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">HOMEPAGE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://www.linkedin.com&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">LOGIN_URL</span> <span class="o">=</span> <span class="s1">&#39;https://www.linkedin.com/uas/login-submit&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">html</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">HOMEPAGE_URL</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">csrf</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&#34;loginCsrfParam-login&#34;</span><span class="p">)[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">login_information</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;session_key&#39;</span><span class="p">:</span><span class="s1">&#39;username&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;session_password&#39;</span><span class="p">:</span><span class="s1">&#39;password&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;loginCsrfParam&#39;</span><span class="p">:</span> <span class="n">csrf</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">LOGIN_URL</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">login_information</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">search_url</span> <span class="o">=</span> <span class="s2">&#34;http://www.linkedin.com/search/results/index/?keywords=pr&amp;origin=GLOBAL_SEARCH_HEADER&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;search_url&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="c1"># 200</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="ajax">ajax</h3>
+<p>我们查看页面内容（<code>print(response.content)</code>）发现，搜索pr，linkedin的页面是通过ajax异步加载出的</p>
+<p>我们运行js之后，才能拿到页面内容，我们可以使用phantomjs，这个问题我在之前爬京东时候记录过：<a href="http://blog.just4fun.site/pyspider-demo.html">用pyspider写的爬虫几例</a>，pyspider集成了phantomjs</p>
+<p>phantomjs实际上作为一个服务运行，你可以理解成一个管道，输入网页源码，输入解析完的对象</p>
+<p>当然你也可以使用Selenium</p>
+<h1 id="策略">策略</h1>
+<p>所以要完成我们的爬虫任务需要将以上两个问题的解决方案结合在一起，方法很多</p>
+<ul>
+<li>直接使用Selenium驱动chrome（可能最简易）</li>
+<li>在pyspider中模拟登陆（pyspider已经和phantomjs集成）</li>
+<li>将phantomjs与我们前头的代码整合，phantomjs作为服务即可，原理可以看pyspider中相关源码，也可以看这个项目：<a href="https://github.com/2shou/PhantomjsFetcher">PhantomjsFetcher</a></li>
+</ul>
+<p>至于如何写入Google Drive ，这倒是个简易的任务，诸如你可以先将采集的信息存为CSV，然后导入Google Drive即可</p>
+<p>或者使用相关库来操作Google Drive，诸如:<a href="https://github.com/googledrive/PyDrive">googledrive/PyDrive</a></p>
+<h1 id="动手">动手</h1>
+<p>最终我选择Selenium驱动chrome的方案（通过），重要的原因之一是，朋友的需求中有一点非这么做不可：需要使用chrome插件<code>hunter</code>来获取LinkedIn用户的邮箱(如果缺失的话)</p>
+<p>google出来的Selenium资料基本是在window下的使用经验。在mac下的资料不错，踩的坑不少，记录一下</p>
+<p>前头提到我们遇到两个问题：登陆和ajax，使用Selenium的话，这两个问题似乎都不存在，然后坑在后边</p>
+<h3 id="安装依赖">安装依赖</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">brew install chromedriver
+</span></span><span class="line"><span class="cl">pip install selenium #selenium==2.52.0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="先跑起来">先跑起来</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">from selenium import webdriver
+</span></span><span class="line"><span class="cl">driver = webdriver.Chrome() 
+</span></span><span class="line"><span class="cl">url = &#34;https://www.zhihu.com&#34;
+</span></span><span class="line"><span class="cl">driver.get(url)
+</span></span><span class="line"><span class="cl">print(driver.title)
+</span></span><span class="line"><span class="cl">driver.save_screenshot(&#39;/tmp/test.png&#39;) #截个图
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>很快我们就遇到问题。在默认情况下，每次的数据目录都是临时的，于是我们的浏览器每次都是崭新的，既没有插件，也没有任何历史记录，就算你登陆过LinkedIn，下次运行脚本也啥都没了</p>
+<p>一番搜索，我们发现需要使用user-data-dir来指定用户数据目录，好让webdriver驱动的浏览器能和我们日常使用的一样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#!/usr/bin/env python
+</span></span><span class="line"><span class="cl"># encoding: utf-8
+</span></span><span class="line"><span class="cl">from selenium import webdriver
+</span></span><span class="line"><span class="cl">options = webdriver.ChromeOptions()
+</span></span><span class="line"><span class="cl">options.add_argument(&#34;--user-data-dir=/Users/wwj/Library/Application Support/Google/Chrome&#34;); # mac下 各种插件可用
+</span></span><span class="line"><span class="cl">driver = webdriver.Chrome(executable_path=&#39;/usr/local/bin/chromedriver&#39;,chrome_options=options)
+</span></span><span class="line"><span class="cl">#url = &#34;https://www.linkedin.com/feed/&#34; #在浏览器里登陆过
+</span></span><span class="line"><span class="cl">url = &#34;https://www.linkedin.com/search/results/index/?keywords=pr&amp;origin=GLOBAL_SEARCH_HEADER&#34; #在浏览器里登陆过
+</span></span><span class="line"><span class="cl">driver.get(url)
+</span></span><span class="line"><span class="cl">#element = driver.find_element_by_xpath(&#39;&#39;)
+</span></span><span class="line"><span class="cl">driver.save_screenshot(&#39;/tmp/test.png&#39;) #等待时间
+</span></span><span class="line"><span class="cl">#data = element.text
+</span></span><span class="line"><span class="cl">#print(data)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们又发现了一个问题，ajax的渲染</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#!/usr/bin/env python
+</span></span><span class="line"><span class="cl"># encoding: utf-8
+</span></span><span class="line"><span class="cl">from selenium import webdriver
+</span></span><span class="line"><span class="cl">from selenium.webdriver.support.ui import WebDriverWait
+</span></span><span class="line"><span class="cl">from selenium.webdriver.common.by import By
+</span></span><span class="line"><span class="cl">from selenium.webdriver.support import expected_conditions as EC
+</span></span><span class="line"><span class="cl">options = webdriver.ChromeOptions()
+</span></span><span class="line"><span class="cl">options.add_argument(&#34;--user-data-dir=/Users/wwj/Library/Application Support/Google/Chrome&#34;); # mac下 各种插件可用
+</span></span><span class="line"><span class="cl">driver = webdriver.Chrome(executable_path=&#39;/usr/local/bin/chromedriver&#39;,chrome_options=options)
+</span></span><span class="line"><span class="cl">url = &#34;https://www.linkedin.com/search/results/index/?keywords=pr&amp;origin=GLOBAL_SEARCH_HEADER&#34; #在浏览器里登陆过
+</span></span><span class="line"><span class="cl">driver.get(url)
+</span></span><span class="line"><span class="cl">#element = driver.find_element_by_xpath(&#39;&#39;)
+</span></span><span class="line"><span class="cl">#driver.implicitly_wait(10)
+</span></span><span class="line"><span class="cl">wait = WebDriverWait(driver, 10)
+</span></span><span class="line"><span class="cl">element = wait.until(EC.presence_of_element_located((By.CLASS_NAME,&#39;search-results__title-and-total-wrapper&#39;)))#如果发现就继续往下走，所以这可以视为一种阻塞操作，文档不足，使用ipython探索，诸如By.CLASS_NAME
+</span></span><span class="line"><span class="cl"># 获取页面的数据 存入
+</span></span><span class="line"><span class="cl">driver.save_screenshot(&#39;/tmp/test.png&#39;)
+</span></span><span class="line"><span class="cl">driver.quit()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="存储数据">存储数据</h3>
+<p>开发的时候使用peewee存储，方便去重之类，之后导出为csv或是其他</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-02-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/"> python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/publish-site-2-qiniu/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">将网站发布到七牛云</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/team-manage-note/">
+            <span class="next-text nav-default">团队管理笔记_00</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

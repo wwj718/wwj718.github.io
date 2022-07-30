@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MQTT topic与payload的设计讨论 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 前段时间吐槽说: 最近在重写CodeLab Adapter(为2.0版本设计新的架构)，希望成为智能/可编程空间的通用hub，也试着通过更开" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/mqtt-topic-payload-design/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MQTT topic与payload的设计讨论" />
+<meta property="og:description" content="前言 前段时间吐槽说: 最近在重写CodeLab Adapter(为2.0版本设计新的架构)，希望成为智能/可编程空间的通用hub，也试着通过更开" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/mqtt-topic-payload-design/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-07-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-07-01T00:00:00+00:00" />
+
+<meta itemprop="name" content="MQTT topic与payload的设计讨论">
+<meta itemprop="description" content="前言 前段时间吐槽说: 最近在重写CodeLab Adapter(为2.0版本设计新的架构)，希望成为智能/可编程空间的通用hub，也试着通过更开"><meta itemprop="datePublished" content="2019-07-01T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-07-01T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3950">
+<meta itemprop="keywords" content="iot," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MQTT topic与payload的设计讨论"/>
+<meta name="twitter:description" content="前言 前段时间吐槽说: 最近在重写CodeLab Adapter(为2.0版本设计新的架构)，希望成为智能/可编程空间的通用hub，也试着通过更开"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MQTT topic与payload的设计讨论</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-07-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#消息设计的难题">消息设计的难题</a></li>
+        <li><a href="#问题举例">问题举例</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#steve的博客">Steve的博客</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#例子-智能家居传感器">例子: 智能家居传感器</a></li>
+        <li><a href="#topic命名方案">topic命名方案</a></li>
+        <li><a href="#不同的影响">不同的影响</a></li>
+        <li><a href="#建议">建议</a></li>
+        <li><a href="#打包topic数据">打包Topic数据</a></li>
+        <li><a href="#加密">加密</a></li>
+        <li><a href="#homie公约">Homie公约</a></li>
+        <li><a href="#公共topic">公共topic</a></li>
+        <li><a href="#命名方案示例">命名方案示例</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/design_879515f7.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>前段时间吐槽说:</p>
+<blockquote>
+<p>最近在重写CodeLab Adapter(为2.0版本设计新的架构)，希望成为智能/可编程空间的通用hub，也试着通过更开放的架构设计，允许任何AI系统作为可插拔组件随时接入系统。 &ldquo;everything is a message&quot;几乎可以断定是此类系统的最佳设计原则(Smalltalk 和Dynamicland都基于消息)，由于问题域比较独特(支持最终用户编程的开放生态)，可供参考的资料很少，翻了一圈物联网领域的相关协议，发现落地的协议里对名词和动词的使用、命名空间的使用，一片嘈杂(症状就是今天这类系统兼容性非常糟糕)，困难都不在硬的技术问题上，而出现在语义上，以及领域词汇的组织形式上，这类问题强迫技术人员用词汇去描述现实世界。可以看出，如果不出现一个维特根斯坦，消息系统永远会混乱下去，它太过于灵活而让人无所适从了。<br>
+《SICP》序言里有一段很有意思的表述：“计算机科学并不是一门科学，而且其重要性和计算机也并无太大的关系。计算机革命是有关我们如何去思考的方式以及我们如何去表达自己的思考的一个革命”。    第一次读这段话的时候，觉得这不是装x吗，说得跟玄学似的。设计消息系统的时候，由于消息可以构建出任何语义，于是设计者就被抛到空无一物的境地，这时候就像《SICP》表述的：被迫去表达自己所理解的那个目前还不存在的逻辑系统。而这件事本质上与计算机并没有什么关系。</p>
+</blockquote>
+<hr>
+<p>本文关注MQTT topic与payload的设计相关问题。</p>
+<p>对任何使用topic/payload的消息系统(基于发布/订阅模式)而言，消息结构的设计都是极为重要的。尽管我们可以选择任何一个消息协议来关注，但我偏向选择MQTT来讨论。之所以选择MQTT协议来讨论，是因为物联网领域高速发展，有许多基于MQTT的优秀的开源项目/落地项目。它们实际运行在现实世界里，已经经过多次迭代，优化后的消息结构，已经是比较好的应对现实问题的模型。</p>
+<p>在此并不讨论MQTT协议本身，而倾向于关注具体行业里的应用所对应的消息结构的设计。</p>
+<h3 id="消息设计的难题">消息设计的难题</h3>
+<p>MQTT(Message Queuing Telemetry Transport)是基于发布/订阅(sub/pub)范式的消息协议。</p>
+<p>MQTT 客户端(client)可以订阅(sub)自己关注的topic，之后将接收到属于这个topic的消息，消息内容为payload。</p>
+<p>听起来很简单啊。topic是消息的主题(title)，订阅者选择自己感兴趣的主题进行订阅，payload是消息体(body), 订阅者收到感兴趣的消息后，查看payload可以得知细节信息。</p>
+<p>困难在于，这近乎是一个万能的结构，一张可以绘制任何图案的白纸。近乎无限的自由度带来的困难就是你需要利用topic/payload这两块积木，设计出合理的消息结构，用作解决领域问题的模型。大多数的技术工作要比这个简单，它们要求你在一个既定框架里工作，只要好好填空就行了。</p>
+<p>与此类似的困境，在web领域也有: REST API的设计问题, 关于如何使用动词和名词，关于POST json数据的结构设计。技术人员在此被迫面对设计问题，这些恰恰是我们不擅长的。</p>
+<p>REST API已经有了很多好的最佳实践，来自许多优秀的落地项目(Github API/heroku API/&hellip;), 但在MQTT许多领域(诸如智能家居)，依然一片混乱。而且相关的讨论也远不如REST API多。</p>
+<h3 id="问题举例">问题举例</h3>
+<p><a href="https://iot.stackexchange.com/questions/3293/mqtt-multiple-topics-vs-bigger-payload">MQTT multiple topics vs. bigger payload</a>这个问题试图询问 mqtt消息 topic和payload设计的最佳实践。</p>
+<p>提问者对此表示疑惑: 在topic中尽可能多携带信息好呢？还是在payload里尽可能多携带信息好？以下两种结构携带的信息是一样的，但结构全然不同。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">plant1/machineA/sensorX/temperature/value 20
+</span></span><span class="line"><span class="cl">plant1/machineA/sensorX/temperature/unit C
+</span></span><span class="line"><span class="cl">plant1/machineA/sensorX/temperature/timestamp 2018-08-01T12:00:30.123Z
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>与</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">plant1/machineA/
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">  [&#34;sensorX&#34;: {
+</span></span><span class="line"><span class="cl">   &#34;value&#34;: 20,
+</span></span><span class="line"><span class="cl">   &#34;unit&#34;: &#34;C&#34;,
+</span></span><span class="line"><span class="cl">   &#34;timestamp&#34;: &#34;2018-08-01T12:00:30.123Z&#34;
+</span></span><span class="line"><span class="cl">  }]
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当然还有更多组合的可能性， 但是有一般的方法吗？</p>
+<h1 id="更多讨论">更多讨论</h1>
+<p>我对这个问题也感到疑惑，试着去寻找最佳实践，结果读到的东西越来越多，疑惑却并不减少。所以本文更多是呈现出问题和疑惑所在，也试着梳理一些优质讨论，给出参考资料。</p>
+<h3 id="steve的博客">Steve的博客</h3>
+<p><a href="http://www.steves-internet-guide.com/">Steve</a>围绕物联网写了很多优质文章。他的博客里写过几篇精彩的文章，来讨论topic与payload相关话题。这些理性的讨论让我对这个问题有了更清晰的认识，我将其视为入门引导:</p>
+<!--*  [理解 MQTT Topics](http://www.steves-internet-guide.com/understanding-mqtt-topics/)-->
+<p>下边来梳理下<a href="http://www.steves-internet-guide.com/mqtt-topic-payload-design-notes/">MQTT Topic 与 Payload设计笔记</a>里的精彩讨论:</p>
+<h1 id="mqtt-topic-与-payload设计笔记httpwwwsteves-internet-guidecommqtt-topic-payload-design-notes"><a href="http://www.steves-internet-guide.com/mqtt-topic-payload-design-notes/">MQTT Topic 与 Payload设计笔记</a></h1>
+<p>MQTT网络由传感器之类的设备构成。它们可以:</p>
+<ol>
+<li>主动发送数据</li>
+<li>响应请求</li>
+<li>接受指令</li>
+</ol>
+<p>将简单的灯开关作为示例设备，那么至少它需要：</p>
+<ol>
+<li>发布它的当前状态: 打开 或 关闭。</li>
+<li>响应命令(更改状态)。</li>
+</ol>
+<p>可以使用topic和payload来实现上述目标。</p>
+<p>topic很灵活, 有很多可能，例如:</p>
+<ul>
+<li>sensor1 – Topic 仅包含传感器名称</li>
+<li>sensor1/status - Topic同时包含传感器名称和有关数据类型的信息，例如状态信息。</li>
+</ul>
+<p>下边以电灯开关为例来具体说明。</p>
+<p>电灯可以将它的状态信息发布到<code>light-switch/status</code> topic 或者 <code>light-switch</code> topic.</p>
+<p>当我们选择<code>sensor1/status</code>风格时，payload为ON 或者 OFF.</p>
+<p>在这种风格下，它接受<code>light-switch/set</code> topic的控制消息，payload也为ON 或者 OFF.</p>
+<p>我们也可以采用另一种风格:<code>sensor1</code>，在payload中放置额外的信息。我们使用<code>light-switch</code>作为topic，</p>
+<p>payload 为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{&#34;status&#34;:&#34;ON&#34;} or {&#34;status&#34;:&#34;OFF&#34;}  – Data
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">{&#34;set&#34;:&#34;ON&#34;} or {&#34;set&#34;:&#34;OFF&#34;}   – Commands
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>需要注意的重要一点是，你始终可以选择在topic或payload中放置信息(故而你也被迫去做设计决策)。</p>
+<h3 id="例子-智能家居传感器">例子: 智能家居传感器</h3>
+<p>想象屋子里有10个设备:例如温湿度传感器、电灯开关、门锁等</p>
+<p>可以采用的topic风格如:</p>
+<p>house/sensor1, house/sensor2 &hellip;   house/sensor10</p>
+<p>如果传感器仅发布单个值(ON/OFF,Open/Closed,Temperature等)，那么我们的payload可能只包含该值。</p>
+<p>因此，房间里电灯开关将发布:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">topic – house/living-room-light
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">payload - ON or OFF
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们还可以选择发布简单的topic，并将传感器ID包含在payload中，如下所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">topic – house
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">payload – {&#34;living-room-light&#34;:&#34;ON&#34;} or {&#34;living-room-light&#34;:&#34;OFF&#34;}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>如何控制电灯开关</strong>？电灯开关需要接收命令。创建一个主题来接收命令。可以使用以下topic结构：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">topic - house/living-room-light/cmd
+</span></span><span class="line"><span class="cl">payload - {&#34;SET&#34;:&#34;ON&#34;} or {&#34;SET&#34;:&#34;OFF&#34;}`
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以是</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">topic – house 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">payload - {&#34;living-room-light&#34;:{&#34;SET&#34;:&#34;ON&#34;}} or  {&#34;living-room-light&#34;:{&#34;SET&#34;:&#34;OFF&#34;}}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="topic命名方案">topic命名方案</h3>
+<p>考虑信息放在哪儿时，</p>
+<ol>
+<li>在topic中输入尽可能多的信息</li>
+<li>在payload中添加尽可能多的信息</li>
+</ol>
+<p>topic的结构可以包括:</p>
+<ol>
+<li>topic 分组设备. - 可选</li>
+<li>传感器名称 – 可选</li>
+<li>功能，例如status，set，get，cmd - 可选</li>
+</ol>
+<p>payload可以包括:</p>
+<ol>
+<li>Payload 数据</li>
+<li>Sensor ID - 可选</li>
+<li>功能，例如status，set，get，cmd – 可选</li>
+</ol>
+<p>需要注意的是，目前没有标准的topic命名方案或消息格式， 也不存在正确或错误的方式。</p>
+<p>Github上有一个很有用的<a href="https://github.com/mqtt-smarthome/mqtt-smarthome/blob/master/Architecture.md">提议</a>，推荐阅读。</p>
+<h3 id="不同的影响">不同的影响</h3>
+<p>尽管你可以按照自己的喜好设计topic，应当注意的事，不同的设计会到来不同的影响，除了影响语义的清晰性，也可能影响系统性能。</p>
+<p>回到前头屋子里有10个传感器的例子。</p>
+<p>在风格<code>house/sensor01... house/sensor1</code>中，<code>house/sensor01</code>消息只发给sensor01（只有一个订阅者），</p>
+<p>在风格<code>house</code>中，10个传感器都订阅它， payload为`{&ldquo;sensor01&rdquo;:&ldquo;on&rdquo;}的消息将发给10个传感器。每个传感器都需要检查消息以查看它是否适合自己。</p>
+<p>因此steve提出以下建议：</p>
+<h3 id="建议">建议</h3>
+<ul>
+<li>为单个设备或一小组设备使用相同的topic。</li>
+<li>为data和commands使用单独的topic。</li>
+<li>消息payload中的数据应该是特定于设备的。</li>
+<li>消息payload中与设备的多个属性相关的数据是JSON编码的。</li>
+</ul>
+<h3 id="打包topic数据">打包Topic数据</h3>
+<p>有时我们需要选择是在多个topic上发布，还是将数据打包放在单个topic上。正如开头那个问题里问的。</p>
+<p>看个例子</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Test/AppSpin/read false
+</span></span><span class="line"><span class="cl">Test/Position3/read false
+</span></span><span class="line"><span class="cl">Test/TankEmpty/read true
+</span></span><span class="line"><span class="cl">Test/AppOpen/read false
+</span></span><span class="line"><span class="cl">Test/Position7/read false
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>等效于单个topic下的:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{AppSpin_read:False,Position3/read:False,TankEmpty_read:True,AppOpen_read:False, Position7_read:False}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>steve根据打包数据对网络流量进行了一些测试，参考<a href="http://www.steves-internet-guide.com/mqtt-sensors-traffic-observations/">MQTT传感器和网络流量观测</a>。</p>
+<p>应该注意，当前的<a href="http://www.steves-internet-guide.com/iot-mqtt-dashboards/">IOT / MQTT仪表板</a>通常将数据作为JSON编码数据获取，并且很可能成为标准数据。</p>
+<p>请参考<a href="https://youtu.be/92lxSd7ejeY">使用Python发布和接收JSON数据</a>的视频。</p>
+<h3 id="加密">加密</h3>
+<p>使用简易topic的一个优点是可以容易地加密paylaod数据，这将保护topic信息，因为它不是公共的。请参阅<a href="http://www.steves-internet-guide.com/encrypting-the-mqtt-payload-python-example/">加密payload</a></p>
+<h3 id="homie公约">Homie公约</h3>
+<p>这是一个<a href="https://github.com/homieiot/convention">Github提议</a>，试图标准化MQTT设备，使他们在MQTT网络上可被发现。</p>
+<p>它包含设备在连接到MQTT代理时应发布的数据的详细描述。</p>
+<p>本文档应作为设计的良好指南。</p>
+<h3 id="公共topic">公共topic</h3>
+<p>目前，MQTT实现主要是私有的，topic命名方案由实现团队选择。</p>
+<p>在未来，MQTT可能会部署在公共环境中，例如：</p>
+<ul>
+<li>发布交通信息和更新</li>
+<li>机场，火车站等交通工具的到达和离开信息</li>
+<li>商店里的信标</li>
+</ul>
+<p>在这些情况下，需要在命名约定上使用某种规范，以便人们去订阅相关信息。目前尚没有提案。</p>
+<h3 id="命名方案示例">命名方案示例</h3>
+<p>Owntracks是一款报告地理位置的手机应用程序，topic层次的设计在<a href="http://owntracks.org/booklet/guide/topics/">这里</a>，消息格式的设计在<a href="http://owntracks.org/booklet/tech/json/#_typecmd">这儿</a></p>
+<!--
+对MQTT本身不做太多讨论。
+
+MQTT协议本身的简单清晰的，但消息内容的设计却并不简单。
+
+它是领域相关的问题。
+
+在正式讨论前对MQTT做个简单说明。
+-->
+<!--
+# MQTT
+
+>  MQTT(Message Queuing Telemetry Transport)是基于发布/订阅范式的消息协议。它工作在 TCP/IP协议族上，是为硬件性能低下的远程设备以及网络状况糟糕的情况下而设计的发布/订阅型消息协议，为此，它需要一个消息中间件。
+
+MQTT是物联网领域主要协议之一。
+
+### 现实世界的应用程序
+*  [Facebook Messenger](https://zh.wikipedia.org/wiki/Facebook_Messenger)
+*  Amazon Iot 
+*  OpenStack 上游基础设施服务通过 MQTT 统一消息总线和作为 MQTT 中间件的 Mosquitto
+*  Adafruit IO
+*  Microsoft Azure Iot Hub
+*  Node-RED
+*  Home Assistant 支持 MQTT，并为 MQTT 中间件提供了四个选项
+-->
+<h1 id="todo">todo</h1>
+<p>进一步需要做的工作包括:</p>
+<ul>
+<li>梳理相关的讨论和提案</li>
+<li>阅读已有的优秀项目的设计
+<ul>
+<li><a href="https://home-assistant.io">Home Assistant</a></li>
+</ul>
+</li>
+<li>研究一个成熟的产品/生态
+<ul>
+<li>米家</li>
+<li>homekit</li>
+<li>飞比</li>
+</ul>
+</li>
+</ul>
+<!--
+# [Understanding MQTT Topics](http://www.steves-internet-guide.com/understanding-mqtt-topics/)
+MQTT主题是一种允许MQTT客户端共享信息的寻址形式。
+
+MQTT主题的结构类似于文件系统中的文件夹和文件，使用正斜杠（/）作为分隔符。s
+
+主题名称是：
+
+区分大小写
+使用UTF-8字符串。
+必须至少包含一个有效字符。
+
+除$ SYS主题外，没有默认或标准主题结构。
+
+That is there are no topics created on a broker by default, except for the $SYS topic.
+
+所有主题均由订阅或发布客户端创建，并且不是永久性的。
+
+A topic only exists if a client has subscribed to it, or a broker has a retained or last will messages stored for that topic.
+
+### The $SYS topic
+这是一个保留主题，大多数MQTT代理使用它来发布有关代理的信息。
+
+它们是MQTT客户端的只读主题。没有为这个主题结构没有标准，但有一个准则[在这里](https://github.com/mqtt/mqtt.github.io/wiki/SYS-Topics)，大多数券商的实现似乎遵循。
+
+
+### Subscribing
+Subscribing to topic house/#
+
+Covers
+
+house/room1/main-light
+house/room1/alarm
+house/garage/main-light
+house/main-door
+etc
+Subscribing to topic house/+/main-light
+
+covers
+
+house/room1/main-light
+house/room2/main-light
+house/garage/main-light
+
+客户端只能发布到单个主题。也就是说，不允许在发布时使用通配符。
+
+要将消息发布到两个主题，您需要两次发布消息
+
+### faq
+问：如何订阅所有主题？
+
+A-订阅＃
+
+问：我应该用/启动我的Topic层次结构。
+
+A-没有必要，只是为结构增加了另一个层次。
+
+问：我可以获得经纪人所有主题的列表吗？
+
+A-除非您订阅所有主题并进行扫描。
+
+问：我可以告诉谁订阅了某个主题吗？
+
+A - 不
+
+问：我如何发现主题？
+
+A-除了列出所有主题之外，目前没有相关的机制。
+
+# 思路
+这是经验主义适合的场景
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/MQTT">MQTT</a></li>
+<li><a href="http://mqtt.org/">mqtt.org</a>: mqtt 5.0
+<ul>
+<li>mosquitto代理支持MQTT v5</li>
+</ul>
+</li>
+<li><a href="http://www.steves-internet-guide.com/mqtt-sn/">mqtt-sn</a></li>
+<li><a href="https://mcxiaoke.gitbooks.io/mqtt-cn/content/">MQTT协议中文版</a></li>
+<li><a href="http://www.steves-internet-guide.com/mqtt-topic-payload-design-notes/">MQTT Topic and Payload Design Notes</a>
+<ul>
+<li><a href="https://github.com/homieiot/convention">homieiot/convention</a>
+<ul>
+<li><a href="https://homieiot.github.io/">homieiot.github.io</a></li>
+</ul>
+</li>
+<li><a href="https://owntracks.org/booklet/tech/json/#_typecmd">owntracks</a>: Naming Scheme Examples</li>
+<li><a href="https://github.com/mqtt-smarthome/mqtt-smarthome/blob/master/Architecture.md">mqtt-smarthome/mqtt-smarthome</a>
+<ul>
+<li><a href="https://github.com/mqtt-smarthome/mqtt-smarthome/blob/master/Software.md">Software</a>
+<ul>
+<li><a href="https://github.com/svrooij/node-xiaomi2mqtt">node-xiaomi2mqtt</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="http://www.steves-internet-guide.com/understanding-mqtt-topics/">Understanding MQTT Topics</a>
+<ul>
+<li><a href="https://github.com/mqtt/mqtt.github.io/wiki/SYS-Topics">SYS-Topics</a></li>
+<li><a href="https://tinkerman.cat/post/mqtt-topic-naming-convention">MQTT topic naming convention</a></li>
+</ul>
+</li>
+<li><a href="https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/">MQTT Essentials Part 5: MQTT Topics &amp; Best Practices</a></li>
+<li><a href="https://d1.awsstatic.com/whitepapers/Designing_MQTT_Topics_for_AWS_IoT_Core.pdf">Designing MQTT Topics for AWS IoT Core</a></li>
+<li><a href="https://iot.stackexchange.com/questions/3293/mqtt-multiple-topics-vs-bigger-payload">MQTT multiple topics vs. bigger payload</a></li>
+<li><a href="https://morphuslabs.com/hacking-the-iot-with-mqtt-8edaf0d07b9b">Hacking the IoT with MQTT</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-07-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/iot/">iot</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/of-human-bondage/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">人生的枷锁</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/hass-browser_mod/">
+            <span class="next-text nav-default">hass-browser_mod: 将浏览器变为可控制的实体</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>部署edx release-2014-09-17 - 某行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="在新的服务器上部署edX(version=release-2014-09-17)成功，过程还是挺折腾的，做个笔记。 竹轩同学整理了2014年8" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/edx/edx-install-release-2014-09-17/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="部署edx release-2014-09-17" />
+<meta property="og:description" content="在新的服务器上部署edX(version=release-2014-09-17)成功，过程还是挺折腾的，做个笔记。 竹轩同学整理了2014年8" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/edx/edx-install-release-2014-09-17/" />
+<meta property="article:published_time" content="2014-09-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-09-26T00:00:00+00:00" />
+<meta itemprop="name" content="部署edx release-2014-09-17">
+<meta itemprop="description" content="在新的服务器上部署edX(version=release-2014-09-17)成功，过程还是挺折腾的，做个笔记。 竹轩同学整理了2014年8">
+
+
+<meta itemprop="datePublished" content="2014-09-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-09-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1613">
+
+
+
+<meta itemprop="keywords" content="edx," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="部署edx release-2014-09-17"/>
+<meta name="twitter:description" content="在新的服务器上部署edX(version=release-2014-09-17)成功，过程还是挺折腾的，做个笔记。 竹轩同学整理了2014年8"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/join-us/">
+        <li class="mobile-menu-item">Join-Us</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/join-us/">Join-Us</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">部署edx release-2014-09-17</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-09-26 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      <p>在新的服务器上部署edX(version=release-2014-09-17)成功，过程还是挺折腾的，做个笔记。</p>
+
+<p><a href="http://www.idefs.com/share-open-share-2014-9-18-edx-ova-template-by-edustack.html">竹轩</a>同学整理了2014年8月12日以来(到14.9.18)edx上更新的内容,更新内容很多，许多新的特性还是很实用的，也修复了不少bug，这也会我决定使用新版本的原因</p>
+
+<p>#部署经过
+<a href="https://github.com/edx/configuration/wiki/edX-Ubuntu-12.04-64-bit-Installation">官方教程</a>，新旧版本都适用。主要的安装步骤里边都有。我采用了Manual installation，分步安装，其实就是把一步安装脚本拆开来</p>
+
+<p>###换源
+我的ubuntu版本是12.04.5，默认apt源是国内的，会找不到依赖包，所以我们先换源。欧洲源好像还不行（也有部分软件包无法拉下来），所以后来我采用美国的源。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+#备份
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.bat
+#添加us的源
+sudo vim /etc/apt/sources.list，加入以下内容
+
+###### Ubuntu Main Repos
+deb http://us.archive.ubuntu.com/ubuntu/ precise main restricted universe multiverse 
+deb-src http://us.archive.ubuntu.com/ubuntu/ precise main restricted universe multiverse 
+
+###### Ubuntu Update Repos
+deb http://us.archive.ubuntu.com/ubuntu/ precise-security main restricted universe multiverse 
+deb http://us.archive.ubuntu.com/ubuntu/ precise-updates main restricted universe multiverse 
+deb http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse 
+deb-src http://us.archive.ubuntu.com/ubuntu/ precise-security main restricted universe multiverse 
+deb-src http://us.archive.ubuntu.com/ubuntu/ precise-updates main restricted universe multiverse 
+deb-src http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse 
+
+###### Ubuntu Partner Repo
+deb http://archive.canonical.com/ubuntu precise partner
+deb-src http://archive.canonical.com/ubuntu precise partner
+
+###### Ubuntu Extras Repo
+deb http://extras.ubuntu.com/ubuntu precise main
+deb-src http://extras.ubuntu.com/ubuntu precise main</pre></td></tr></table>
+</div>
+</div>
+<p>deb <a href="http://extras.ubuntu.com/ubuntu">http://extras.ubuntu.com/ubuntu</a> precise main，可能会说你缺少密钥，无视它</p>
+
+<p>sudo apt-get upgrade 之后，记得看下ssh配置文件(/etc/ssh/sshd_config)，确定允许认证登录: PasswordAuthentication yes</p>
+
+<p>之后再重启</p>
+
+<p>###部署
+下面我们就按照官方教程部署<a href="https://github.com/edx/configuration/wiki/edX-Ubuntu-12.04-64-bit-Installation">edX-Ubuntu-12.04-64-bit-Installation</a></p>
+
+<p>如果完全按照官方教程走，那么安装的edx版本是master（生产环境尽量不要安装master版本），也就是最新的，作为第一个吃螃蟹的人，遇到问题挺不好解决的。所以最好是安装某个版本，自己或别人部署成功过的。</p>
+
+<p>要做到这点，就在安装的时候指定版本，像下面这样</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+cd /var/tmp/configuration/playbooks &amp;&amp; sudo ansible-playbook -c local ./edx_sandbox.yml -i &#34;localhost,&#34;  -e edx_platform_version=release-2014-09-17</pre></td></tr></table>
+</div>
+</div>
+<p>以上是我用的，edx-platform版本是release-2014-09-17</p>
+
+<p>之后的安装过程遇到的错误，其实大同小异，无非网络问题(推荐使用<a href="http://wwj718.github.io/use-sshuttle.html">sshuttle</a>)，兼容（依赖）问题，如果再哪一步断了(一般都会中断，很少有一次成功),可以停下来解决完问题再继续.</p>
+
+<p>当遇到的是国外网络无法连接问题，使用sshuttle就好</p>
+
+<p>需要注意的是使用sshuttle的时候，服务器ip就被隐藏了，你一旦退出ssh连接就无法再连上。解决方案也是有的。使用ngrok映射出ssh端口，可以参考我的<a href="http://wwj718.github.io/use-ngrok.html">这篇文章</a>，目前不清楚原因，偶然发现的，也许还算原创^_^</p>
+
+<p>当遇到系统依赖问题。诸如 TASK: [edxapp | install python base-requirements］报错说无法找到依赖包(比如使用了豆瓣源)，就手动切换到edxapp用户，source到edxapp_environment，至于edxapp_environment在那个，可查看playbooks/roles/edxapp里的相关参数，或是直接这样 /edx/app/edxapp/venvs/edxapp/bin/pip  安装好依赖再从这个task执行就好</p>
+
+<p>####从某个task继续执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">:::text
+cd /var/tmp/configuration/playbooks &amp;&amp; sudo ansible-playbook -c local ./edx_sandbox.yml -i &#34;localhost,&#34;  -e edx_platform_version=release-2014-09-17 --start-at-task=&#34;TASK_NAME&#34;</pre></td></tr></table>
+</div>
+</div>
+<p>这里需要注意的是，有些步骤有前后依赖问题，诸如前面步骤设置了运行所需参数，所以有时可能要倒退几个task开始，如何寻找之前的task，查看/var/tmp/configuration/playbooks/roles/&hellip;</p>
+
+<p>暂时写到这里，新版本的汉化和主题可能也有些变更，之后再写</p>
+
+<p>#附
+##1
+竹轩同学提到的<a href="http://www.idefs.com/share-open-share-2014-9-18-edx-ova-template-by-edustack.html">近期部署可能遇到的问题@2014.9.18</a>，我在ubuntu上直接部署没有遇到。不过之前在安装devstack时遇到了。</p>
+
+<p>后来我的devstack又部署了之前用的release-2014-07-02</p>
+
+<p>##2
+python换源</p>
+
+<p>如果觉得国外python源太慢，可以换用国内的，我用的是豆瓣</p>
+
+<p>vim /var/tmp/configuration/playbooks/roles/common/defaults/main.yml</p>
+
+<p><code>COMMON_PYPI_MIRROR_URL: 'http://pypi.douban.com/simple</code></p>
+
+<p>使用豆瓣源时，速度很快，不过在edxapp(user_role)安装/edx/app/edxapp/edx-platform/requirements/edx/base.txt的时候找不到dogapi==1.2.1。我是停下来手动装好了</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-09-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/osx-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default"> OS X使用笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/front-interesting/">
+            <span class="next-text nav-default">有趣的前端项目收集</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://blog.just4fun.site/post/%E9%9A%8F%E7%AC%94/join-us/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://blog.just4fun.site/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="http://www.beian.miit.gov.cn">苏ICP备18043473号</a></span>
+  <span class="division">|</span>
+  <span>枕戈待白昼</span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

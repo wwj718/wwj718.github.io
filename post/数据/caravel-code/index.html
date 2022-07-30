@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> caravel系列之架构与源码浅析 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="如果你打算改造和定制caravel，这篇文章可能对你有帮助 外围观察 上边的这张图列出了caravel用到的部分技术（由Wappalyzer分析" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/caravel-code/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content=" caravel系列之架构与源码浅析" />
+<meta property="og:description" content="如果你打算改造和定制caravel，这篇文章可能对你有帮助 外围观察 上边的这张图列出了caravel用到的部分技术（由Wappalyzer分析" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/caravel-code/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-07-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-07-27T00:00:00+00:00" />
+
+<meta itemprop="name" content=" caravel系列之架构与源码浅析">
+<meta itemprop="description" content="如果你打算改造和定制caravel，这篇文章可能对你有帮助 外围观察 上边的这张图列出了caravel用到的部分技术（由Wappalyzer分析"><meta itemprop="datePublished" content="2016-07-27T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-07-27T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2257">
+<meta itemprop="keywords" content="data," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=" caravel系列之架构与源码浅析"/>
+<meta name="twitter:description" content="如果你打算改造和定制caravel，这篇文章可能对你有帮助 外围观察 上边的这张图列出了caravel用到的部分技术（由Wappalyzer分析"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title"> caravel系列之架构与源码浅析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-07-27 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE/"> 数据 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#后端">后端</a></li>
+        <li><a href="#前端">前端</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#后端依赖">后端依赖</a></li>
+        <li><a href="#flask-appbuilderhttpsgithubcomdpgasparflask-appbuilder"><a href="https://github.com/dpgaspar/Flask-AppBuilder">flask-appbuilder</a></a></li>
+        <li><a href="#pandashttpsgithubcompydatapandas"><a href="https://github.com/pydata/pandas">pandas</a></a></li>
+        <li><a href="#sqlalchemyhttpsgithubcomzzzeeksqlalchemy"><a href="https://github.com/zzzeek/sqlalchemy">sqlalchemy</a></a></li>
+        <li><a href="#前端依赖">前端依赖</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#启动参数">启动参数</a></li>
+        <li><a href="#web服务">web服务</a></li>
+        <li><a href="#caravelapp">caravel:app</a></li>
+        <li><a href="#caravel-api">caravel api</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/caravel_Architecture4aacdce6.png" alt=""></p>
+<p>如果你打算改造和定制caravel，这篇文章可能对你有帮助</p>
+<h1 id="外围观察">外围观察</h1>
+<p>上边的这张图列出了caravel用到的部分技术（由Wappalyzer分析得出）</p>
+<p>包括：</p>
+<h3 id="后端">后端</h3>
+<p>采用python的Flask框架（当前版本是Flask 0.11.10，caravel版本是0.10.0)</p>
+<h3 id="前端">前端</h3>
+<ul>
+<li>React</li>
+<li>Bootstrap</li>
+<li>D3</li>
+<li>NVD3</li>
+<li>jQuery</li>
+</ul>
+<p>技术栈的细节可以通过翻阅<a href="https://github.com/airbnb/caravel">源码库</a>得到</p>
+<h1 id="走近源码库">走近源码库</h1>
+<p><img src="/post/img/caravel_github6c3f2fb2.png" alt=""></p>
+<p>查阅caravel的项目页我们可以知道其技术栈构成，python和javascript分别支撑前后端,python占据大半代码量</p>
+<h3 id="后端依赖">后端依赖</h3>
+<p>查阅源码库中的<a href="https://github.com/airbnb/caravel/blob/0.10.0/setup.py">setup.py</a>，我们可以知道项目依赖</p>
+<ul>
+<li>&lsquo;cryptography==1.4&rsquo;,</li>
+<li>&lsquo;flask-appbuilder==1.8.1&rsquo;,</li>
+<li>&lsquo;flask-cache==0.13.1&rsquo;,</li>
+<li>&lsquo;flask-migrate==1.5.1&rsquo;,</li>
+<li>&lsquo;flask-script==2.0.5&rsquo;,</li>
+<li>&lsquo;flask-testing==0.5.0&rsquo;,</li>
+<li>&lsquo;flask-sqlalchemy==2.0&rsquo;,</li>
+<li>&lsquo;humanize==0.5.1&rsquo;,</li>
+<li>&lsquo;gunicorn==19.6.0&rsquo;,</li>
+<li>&lsquo;markdown==2.6.6&rsquo;,</li>
+<li>&lsquo;pandas==0.18.1&rsquo;,</li>
+<li>&lsquo;parsedatetime==2.0.0&rsquo;,</li>
+<li>&lsquo;pydruid==0.3.0&rsquo;,</li>
+<li>&lsquo;python-dateutil==2.5.3&rsquo;,</li>
+<li>&lsquo;requests==2.10.0&rsquo;,</li>
+<li>&lsquo;simplejson==3.8.2&rsquo;,</li>
+<li>&lsquo;six==1.10.0&rsquo;,</li>
+<li>&lsquo;sqlalchemy==1.0.13&rsquo;,</li>
+<li>&lsquo;sqlalchemy-utils==0.32.7&rsquo;,</li>
+<li>&lsquo;sqlparse==0.1.19&rsquo;,</li>
+<li>&lsquo;werkzeug==0.11.10&rsquo;,</li>
+</ul>
+<p>我们忽视工具型的库，对核心库做个简要介绍</p>
+<h3 id="flask-appbuilderhttpsgithubcomdpgasparflask-appbuilder"><a href="https://github.com/dpgaspar/Flask-AppBuilder">flask-appbuilder</a></h3>
+<blockquote>
+<p>Simple and rapid application development framework, built on top of Flask. Includes detailed security, auto CRUD generation for your models, google charts and much more.</p>
+</blockquote>
+<p>flask-appbuilder是caravel的项目骨架，如果想定制深度caravel，建议认真读完flask-appbuilder的<a href="http://flask-appbuilder.readthedocs.io/">文档</a></p>
+<p>更多介绍可以参考<a href="http://flaskappbuilder.pythonanywhere.com/">flaskappbuilder.pythonanywhere.com/</a>或者<a href="http://flask-appbuilder.readthedocs.io/en/latest/intro.html">Introduction</a></p>
+<p>一些简单的案例可以参考这里<a href="https://github.com/dpgaspar/Flask-AppBuilder/tree/master/examples">examples</a>和<a href="https://github.com/dpgaspar/Flask-AppBuilder-Skeleton">Flask-AppBuilder-Skeleton</a></p>
+<p>flask-appbuilder给我感觉像是把flask的工具链做了整合，使其功能全面（通往django之路？）</p>
+<!--
+专门写一篇文章介绍flask-appbuilder
+所有指令：http://flask-appbuilder.readthedocs.io/en/latest/fabmanager.html
+fabmanager list-users --app caravel
+babel-compile   翻译
+http://flask-appbuilder.readthedocs.io/en/latest/quickhowto.html 和django admin很像！ 由此可知每个仅仅是数据表，可以被复制重用！！
+-->
+<h3 id="pandashttpsgithubcompydatapandas"><a href="https://github.com/pydata/pandas">pandas</a></h3>
+<p>关于pandas的介绍我们引<a href="http://cloga.info/python/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/2013/09/17/pandas_intro/">这篇文章</a>：</p>
+<blockquote>
+<p>Pandas是python的一个数据分析包，最初由AQR Capital Management于2008年4月开发，并于2009年底开源出来，目前由专注于Python数据包开发的PyData开发team继续开发和维护，属于PyData项目的一部分。Pandas最初被作为金融数据分析工具而开发出来，因此，pandas为时间序列分析提供了很好的支持。 Pandas的名称来自于面板数据（panel data）和python数据分析（data analysis）。panel data是经济学中关于多维数据集的一个术语，在Pandas中也提供了panel的数据类型</p>
+</blockquote>
+<h3 id="sqlalchemyhttpsgithubcomzzzeeksqlalchemy"><a href="https://github.com/zzzeek/sqlalchemy">sqlalchemy</a></h3>
+<p>SQLAlchemy是Python社区中最广泛使用的ORM工具，底层而强大</p>
+<blockquote>
+<p>SQLAlchemy的理念是，SQL数据库的量级和性能重要于对象集合；而对象集合的抽象又重要于表和行</p>
+</blockquote>
+<p>关于sqlalchemy的更多细节，可以参考我的<a href="http://blog.just4fun.site/relational-database-summary.html">这篇文章</a></p>
+<h3 id="前端依赖">前端依赖</h3>
+<ul>
+<li>&ldquo;autobind-decorator&rdquo;: &ldquo;^1.3.3&rdquo;,</li>
+<li>&ldquo;babel-loader&rdquo;: &ldquo;^6.2.1&rdquo;,</li>
+<li>&ldquo;babel-polyfill&rdquo;: &ldquo;^6.3.14&rdquo;,</li>
+<li>&ldquo;babel-preset-es2015&rdquo;: &ldquo;^6.3.13&rdquo;,</li>
+<li>&ldquo;babel-preset-react&rdquo;: &ldquo;^6.3.13&rdquo;,</li>
+<li>&ldquo;bootstrap&rdquo;: &ldquo;^3.3.6&rdquo;,</li>
+<li>&ldquo;bootstrap-datepicker&rdquo;: &ldquo;^1.6.0&rdquo;,</li>
+<li>&ldquo;bootstrap-toggle&rdquo;: &ldquo;^2.2.1&rdquo;,</li>
+<li>&ldquo;brace&rdquo;: &ldquo;^0.7.0&rdquo;,</li>
+<li>&ldquo;brfs&rdquo;: &ldquo;^1.4.3&rdquo;,</li>
+<li>&ldquo;cal-heatmap&rdquo;: &ldquo;3.5.4&rdquo;,</li>
+<li>&ldquo;css-loader&rdquo;: &ldquo;^0.23.1&rdquo;,</li>
+<li>&ldquo;d3&rdquo;: &ldquo;^3.5.14&rdquo;,</li>
+<li>&ldquo;d3-cloud&rdquo;: &ldquo;^1.2.1&rdquo;,</li>
+<li>&ldquo;d3-sankey&rdquo;: &ldquo;^0.2.1&rdquo;,</li>
+<li>&ldquo;d3-tip&rdquo;: &ldquo;^0.6.7&rdquo;,</li>
+<li>&ldquo;datamaps&rdquo;: &ldquo;^0.4.4&rdquo;,</li>
+<li>&ldquo;datatables-bootstrap3-plugin&rdquo;: &ldquo;^0.4.0&rdquo;,</li>
+<li>&ldquo;datatables.net-bs&rdquo;: &ldquo;^1.10.11&rdquo;,</li>
+<li>&ldquo;exports-loader&rdquo;: &ldquo;^0.6.3&rdquo;,</li>
+<li>&ldquo;font-awesome&rdquo;: &ldquo;^4.5.0&rdquo;,</li>
+<li>&ldquo;gridster&rdquo;: &ldquo;^0.5.6&rdquo;,</li>
+<li>&ldquo;imports-loader&rdquo;: &ldquo;^0.6.5&rdquo;,</li>
+<li>&ldquo;jquery&rdquo;: &ldquo;^2.2.1&rdquo;,</li>
+<li>&ldquo;jquery-ui&rdquo;: &ldquo;^1.10.5&rdquo;,</li>
+<li>&ldquo;json-loader&rdquo;: &ldquo;^0.5.4&rdquo;,</li>
+<li>&ldquo;less&rdquo;: &ldquo;^2.6.1&rdquo;,</li>
+<li>&ldquo;less-loader&rdquo;: &ldquo;^2.2.2&rdquo;,</li>
+<li>&ldquo;mapbox-gl&rdquo;: &ldquo;^0.20.0&rdquo;,</li>
+<li>&ldquo;mustache&rdquo;: &ldquo;^2.2.1&rdquo;,</li>
+<li>&ldquo;nvd3&rdquo;: &ldquo;1.8.3&rdquo;,</li>
+<li>&ldquo;react&rdquo;: &ldquo;^0.14.7&rdquo;,</li>
+<li>&ldquo;react-bootstrap&rdquo;: &ldquo;^0.28.3&rdquo;,</li>
+<li>&ldquo;react-dom&rdquo;: &ldquo;^0.14.7&rdquo;,</li>
+<li>&ldquo;react-grid-layout&rdquo;: &ldquo;^0.12.3&rdquo;,</li>
+<li>&ldquo;react-map-gl&rdquo;: &ldquo;^1.0.0-beta-10&rdquo;,</li>
+<li>&ldquo;react-resizable&rdquo;: &ldquo;^1.3.3&rdquo;,</li>
+<li>&ldquo;select2&rdquo;: &ldquo;3.5&rdquo;,</li>
+<li>&ldquo;select2-bootstrap-css&rdquo;: &ldquo;^1.4.6&rdquo;,</li>
+<li>&ldquo;style-loader&rdquo;: &ldquo;^0.13.0&rdquo;,</li>
+<li>&ldquo;supercluster&rdquo;: &ldquo;Pending PR at <a href="https://github.com/mapbox/supercluster/pull/12%22">https://github.com/mapbox/supercluster/pull/12&quot;</a>,</li>
+<li>&ldquo;supercluster&rdquo;: &ldquo;<a href="https://github.com/georgeke/supercluster/tarball/ac3492737e7ce98e07af679623aad452373bbc40%22">https://github.com/georgeke/supercluster/tarball/ac3492737e7ce98e07af679623aad452373bbc40&quot;</a>,</li>
+<li>&ldquo;topojson&rdquo;: &ldquo;^1.6.22&rdquo;,</li>
+<li>&ldquo;transform-loader&rdquo;: &ldquo;^0.2.3&rdquo;,</li>
+<li>&ldquo;viewport-mercator-project&rdquo;: &ldquo;^2.1.0&rdquo;,</li>
+<li>&ldquo;webpack&rdquo;: &ldquo;^1.12.12&rdquo;,</li>
+<li>&ldquo;webworkify-webpack&rdquo;: &ldquo;1.0.6&rdquo;</li>
+</ul>
+<h1 id="源码分析后端">源码分析（后端）</h1>
+<p>caravel提供命令行工具<code>caravel</code>,项目的创建，demo的加载都由改指令负责，例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># Create default roles and permissions
+</span></span><span class="line"><span class="cl">caravel init
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Load some data to play with
+</span></span><span class="line"><span class="cl">caravel load_examples
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Start the web server on port 8088
+</span></span><span class="line"><span class="cl">caravel runserver -p 8088
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们知道<a href="https://github.com/airbnb/caravel/blob/master/setup.py">setup.py</a>里的scripts将被注册为命令行工具（参考<a href="https://docs.python.org/2.7/distutils/setupscript.html#installing-scripts"> Installing Scripts</a>），<code>caravel</code>便是注册自这里</p>
+<p>从源码中我们看到<code>scripts=['caravel/bin/caravel']</code>,按图索骥找到入口：<a href="https://github.com/airbnb/caravel/blob/0.10.0/caravel/bin/caravel">caravel</a></p>
+<h3 id="启动参数">启动参数</h3>
+<p>从中我们连接到caravel（caravel runserver）服务跑起来时各个参数的意义</p>
+<ul>
+<li>-d : 以debug模式启动 //官方教程里启动caravel服务的指令为 caravel runserver -d ，即默认为调试模式,</li>
+<li>-p : 指定端口</li>
+<li>-w : 指定gunicorn的worker数量 // gunicorn是一个Python WSGI UNIX的HTTP服务器</li>
+<li>-t : 指定gunicorn服务过期时间</li>
+</ul>
+<p>当我们用-d参数运行caravel runserver时，我们并未将wsgi app跑在gunicorn，如果是生产使用，应该去掉-d</p>
+<p>如果我们有兴趣跟踪或定制caravel init(创建默认角色和权限)和caravel load_example的执行流程，跟踪相应函数即可</p>
+<h3 id="web服务">web服务</h3>
+<p>由<code>caravel runserver</code>跑起来的web服务的相关信息：</p>
+<ul>
+<li>由gunicorn运行wsgi application</li>
+<li>wsgi application为caravel:app</li>
+</ul>
+<p>接下来我们开始分析<code>caravel:app</code>，这是整个项目的核心所在</p>
+<h3 id="caravelapp">caravel:app</h3>
+<p>由python模块相关的知识（建议参考《learning python》），我们知道<code>from caravel import app</code>中，当caravel是目录是，app来自<a href="https://github.com/airbnb/caravel/blob/0.10.0/caravel/__init__.py">caravel/<strong>init</strong>.py</a></p>
+<p>这实际上是Flask-AppBuilder常见的项目组织形式 ，可以参考这个简要的<a href="https://github.com/dpgaspar/Flask-AppBuilder/tree/master/examples/quickhowto">例子</a>,相关解释看<a href="http://flask-appbuilder.readthedocs.io/en/latest/quickminimal.html">这篇文档</a></p>
+<p>要想了解caravel的项目骨架，必须通读一遍<a href="http://flask-appbuilder.readthedocs.io/en/latest/index.html">flask-appbuilder的文档</a></p>
+<p>通过阅读flask-appbuilder的文档，我们了解到caravel实际是Flask-AppBuilder的一个具体应用（app），所以我们可以用fabmanager来控制caravel，诸如</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Create an admin user</span>
+</span></span><span class="line"><span class="cl">fabmanager create-admin --app caravel
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">fabmanager list-users --app caravel
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">fabmanager list-views --app caravel
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="caravel-api">caravel api</h3>
+<p>通过阅读<a href="http://flask-appbuilder.readthedocs.io/en/latest/quickhowto.html">Model Views (Quick How to)</a>,我们了解了caravel的项目骨架和model相关的知识，和django十分相似，包括管理CURD机制也和django admin极其相似，django admin的确是个耀眼的设计，被借鉴倒是不奇怪。</p>
+<p>这篇文章还提到ModelView最终会暴露出 REST API，而且带有权限验证，方面你做各种粒度的控制 ！ 这个设计比django admin还漂亮，惊为天人</p>
+<p>相关细节参考<a href="http://flask-appbuilder.readthedocs.io/en/latest/quickhowto.html#exposed-methods">Exposed methods</a></p>
+<p>我们到caravel中一试，完全可用:</p>
+<p><img src="/post/img/caravel_api7b396d27.png" alt=""></p>
+<h1 id="后记">后记</h1>
+<p>目前这个分析更侧重项目结构的源码分析，还不涉及数据分析部分的分析，限于时间有限，数据部分，下回分解</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-07-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/data/">data</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/mpv_gui/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">为mpv写一个简单的图形界面</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%95%B0%E6%8D%AE/caravel-startup-and-install/">
+            <span class="next-text nav-default"> caravel系列之安装与入门</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

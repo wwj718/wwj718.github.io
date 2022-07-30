@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>lisp学习笔记1 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="对lisp关注久矣。 想不关注也难啊，阅读大神们的博客，Lisp，vi，emacs几乎都是高频词汇，360无死角地冲击你。 真正开始学习它是近期" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E9%9A%8F%E7%AC%94/learnning-lisp-1/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="lisp学习笔记1" />
+<meta property="og:description" content="对lisp关注久矣。 想不关注也难啊，阅读大神们的博客，Lisp，vi，emacs几乎都是高频词汇，360无死角地冲击你。 真正开始学习它是近期" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E9%9A%8F%E7%AC%94/learnning-lisp-1/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-02-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-02-23T00:00:00+00:00" />
+
+<meta itemprop="name" content="lisp学习笔记1">
+<meta itemprop="description" content="对lisp关注久矣。 想不关注也难啊，阅读大神们的博客，Lisp，vi，emacs几乎都是高频词汇，360无死角地冲击你。 真正开始学习它是近期"><meta itemprop="datePublished" content="2014-02-23T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2014-02-23T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1048">
+<meta itemprop="keywords" content=" lisp," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="lisp学习笔记1"/>
+<meta name="twitter:description" content="对lisp关注久矣。 想不关注也难啊，阅读大神们的博客，Lisp，vi，emacs几乎都是高频词汇，360无死角地冲击你。 真正开始学习它是近期"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">lisp学习笔记1</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-02-23 </span>
+        <div class="post-category">
+            <a href="/categories/%E9%9A%8F%E7%AC%94/"> 随笔 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>对lisp关注久矣。<br>
+想不关注也难啊，阅读大神们的博客，Lisp，vi，emacs几乎都是高频词汇，360无死角地冲击你。<br>
+真正开始学习它是近期的事。算是慕名而来吧。尤其是在看了《黑客与画家》之后，更是迫不及待地在ubuntu里装上了clisp.
+敲了第一行Lisp代码：</p>
+<pre><code>(+ 1 2)
+</code></pre>
+<p>Lisp的学习资料确实比较匮乏（国内而言），后来在图书馆看到《Clojure编程》(Lisp的方言之一)，才算是找到了较为系统的入门教材。于是饶有兴致地翻了起来，虽然之前也看过大神们对Lisp的赞叹，比如《黑客与画家》的作者paul graham，可当亲自阅读Clojure写出的代码时还是会为这种清晰而强大表达能力惊叹。怎么可以如此优美地书写！<br>
+列表和函数是如此精巧而强大的东西。虽说在写python时也见识过列表的威力，却不知道它原来还能这样用！<br>
+虽说也写过不少函数，却丝毫不是函数式编程的风格。颇有‘我以前写的都是什么啊’的感受。<br>
+之前就曾读过“学习Lisp对你的其他语言有有莫大帮助”，如今信矣。<br>
+虽说至今也未在项目中使用Lisp,可函数式的风格已经帮助到我解决实际问题了&ndash;写出更利于维护的函数。
+学习Lisp时日尚浅，不敢谈心得，恐见笑于大方之家，只分享下学习时的感受，也欢迎大牛们的指教。</p>
+<p>下面列出我所了解的Lisp，以及我所喜欢的一些特性，参考的文章（博客）在文后列出</p>
+<ul>
+<li>Lisp 是一门关于<code>列表</code>的语言。Lisp 中的一切内容（从数据到组成应用程序的代码）都是列表.每个列表都由一些原子和列表组成。数字就是原子。键入一个数字仅仅会返回该数字作为结果.</li>
+<li>操纵列表的有两类函数：<code>构造函数</code>和<code>选择函数</code>。构造函数构建列表，选择函数分解列表。first 和 rest 是核心选择函数。first 选择函数返回列表的第一个原子，rest 选择函数返回除第一个原子外的整个列表</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-lisp" data-lang="lisp"><span class="line"><span class="cl"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">first</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">lions</span> <span class="nv">tigers</span> <span class="nv">bears</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nv">LIONS</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>如果希望构建列表而不是将其分开，就需要构造函数。构造函数构建新元素：即列表</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-lisp" data-lang="lisp"><span class="line"><span class="cl"><span class="nf">&gt;</span> <span class="p">(</span><span class="nc">cons</span> <span class="ss">&#39;lions</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">tigers</span> <span class="nv">bears</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">(</span><span class="nv">LIONS</span> <span class="nv">TIGERS</span> <span class="nv">BEARS</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>要获取列表的第二或第三个元素，应该获取 rest 中的 first，或 rest 中的 rest 中的 first</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt;(first (rest &#39;(1 2 3)))
+</span></span><span class="line"><span class="cl">2
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&gt;(first (rest (rest &#39;(1 2 3))))
+</span></span><span class="line"><span class="cl">3
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在如此简单的原语之上构建一门简洁优美的语言，其中的原理让一些程序员激动不已。这些由列表构建的简单指令构成了递归、高阶函数，甚至是闭包和 continuation 之类高级抽象的基础</p>
+<ul>
+<li>下面回顾一下到目前为止看到的内容：
+Lisp 使用列表和原子来表示数据和程序。<br>
+对列表求值时将第一个元素看作列表函数，将其他元素看作函数参数。<br>
+Lisp 条件语句将 true/false 表达式和代码一起使用。</li>
+</ul>
+<p>waiting</p>
+<p>参考资料：</p>
+<ul>
+<li><a href="http://www.ibm.com/developerworks/cn/java/j-cb02067.html">跨越边界: Lisp 之美</a></li>
+<li><a href="#">Clojure编程</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-02-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/lisp/"> lisp</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/book-the-intelligent-investor/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">聪明的投资者</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/learning-wsgi/">
+            <span class="next-text nav-default">wsgi学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

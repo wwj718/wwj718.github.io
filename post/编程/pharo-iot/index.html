@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Pharo IoT - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 IoT 近期写了几篇IoT相关的文章: 使用Blynk打造一款物联网产品 CodeLab ❤️ IoT 物联网相关开源项目整理 物联网、开源硬件与开源社区 因为沉迷于Pha" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/pharo-iot/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Pharo IoT" />
+<meta property="og:description" content="前言 IoT 近期写了几篇IoT相关的文章: 使用Blynk打造一款物联网产品 CodeLab ❤️ IoT 物联网相关开源项目整理 物联网、开源硬件与开源社区 因为沉迷于Pha" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/pharo-iot/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-06-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-06-07T00:00:00+00:00" />
+
+<meta itemprop="name" content="Pharo IoT">
+<meta itemprop="description" content="前言 IoT 近期写了几篇IoT相关的文章: 使用Blynk打造一款物联网产品 CodeLab ❤️ IoT 物联网相关开源项目整理 物联网、开源硬件与开源社区 因为沉迷于Pha"><meta itemprop="datePublished" content="2019-06-07T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-06-07T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1670">
+<meta itemprop="keywords" content="smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Pharo IoT"/>
+<meta name="twitter:description" content="前言 IoT 近期写了几篇IoT相关的文章: 使用Blynk打造一款物联网产品 CodeLab ❤️ IoT 物联网相关开源项目整理 物联网、开源硬件与开源社区 因为沉迷于Pha"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Pharo IoT</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-06-07 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#iot">IoT</a></li>
+        <li><a href="#空间操作系统">空间操作系统</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#pharothingshttpsgithubcompharo-iotpharothings"><a href="https://github.com/pharo-iot/PharoThings">PharoThings</a></a></li>
+        <li><a href="#树莓派环境搭建">树莓派环境搭建</a></li>
+        <li><a href="#本地环境">本地环境</a></li>
+        <li><a href="#连接到树莓派">连接到树莓派</a></li>
+        <li><a href="#远程树莓派gpio面板">远程树莓派GPIO面板</a></li>
+        <li><a href="#更多用法">更多用法</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/pharo_iot_a27b3247.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<h3 id="iot">IoT</h3>
+<p>近期写了几篇IoT相关的文章:</p>
+<ul>
+<li><a href="/blynk-note.html">使用Blynk打造一款物联网产品</a></li>
+<li><a href="/codelab-love-iot.html">CodeLab ❤️ IoT</a></li>
+<li><a href="/iot-open-source-projects.html">物联网相关开源项目整理</a></li>
+<li><a href="/iot-open-source-hardware-community.html">物联网、开源硬件与开源社区</a></li>
+</ul>
+<p>因为沉迷于Pharo提供的<a href="/Pharo-http-websocket-mqtt.html">沉浸式、可探索的编程体验</a>，决定将IoT相关的探索性工作放在Pharo上来做。</p>
+<h3 id="空间操作系统">空间操作系统</h3>
+<p>「空间操作系统」是我随口杜撰的一个名词，我最近对这个概念感兴趣，它的背景是这样的:</p>
+<p>CodeLab Adapter目前已经用于驱动Neverland整个空间，最近在考虑如何扩展这个逻辑模型，用以驱动一个小区或者一座城市。设备的连接并不是大问题，最坏方式可以硬整合(像目前大多数公司在做的)。但复杂性并不在通信，而在于如何驯服业务增长带来的复杂度，UNIX之前的系统都是被不断增长的复杂度压垮的，如何保证系统的未来可生长，《unix编程艺术》论述了很多设计原则，组件之间的开放和协作是核心机制。最近在学习Smalltalk，隐约觉得Smalltalk的设计十分适合驱动大型复杂系统(一些军事模拟系统和金融系统是Smalltalk 驱动的)，于是去Quora上阅读Alan Kay近期的思考。正巧看到<a href="https://www.quora.com/How-can-I-help-develop-a-wiki-Pharo-Many-people-using-and-editing-the-same-Pharo-environment-image-in-real-time">他在讨论城市的复杂性问题，以及如何在软件层面驯服它</a>。</p>
+<p>Alan Kay提到:</p>
+<blockquote>
+<p>The methods used to invent Smalltalk (Pharo is a version of Smalltalk) at Xerox Parc will work well for creating What Is Actually Needed (WIAN). I have outlined some of the first steps above …</p>
+</blockquote>
+<p>我相信Smalltalk提供了绝佳的环境去探索「空间操作系统」。</p>
+<h1 id="pharo-iothttpsgithubcompharo-iot"><a href="https://github.com/pharo-iot">pharo-iot</a></h1>
+<p>搜索Pharo和IoT，很容易发现<a href="https://github.com/pharo-iot">pharo-iot</a>，以及该组织开源的<a href="https://github.com/pharo-iot/PharoThings">PharoThings</a>。</p>
+<p>于是我决定从这里起步。 以下是我的学习和使用笔记。</p>
+<h3 id="pharothingshttpsgithubcompharo-iotpharothings"><a href="https://github.com/pharo-iot/PharoThings">PharoThings</a></h3>
+<p><a href="https://github.com/pharo-iot/PharoThings">PharoThings</a>是什么东西? 它是基于Pharo的IoT编程环境，拥有Pharo的沉浸式、可探索的编程体验。</p>
+<p><a href="https://github.com/pharo-iot/PharoThings">PharoThings</a>基于<a href="https://github.com/pharo-ide/TelePharo">TelePharo</a>构建，<a href="https://github.com/pharo-ide/TelePharo">TelePharo</a>又是个啥？这是一个用于管理和开发远程Pharo镜像(image)的工具。</p>
+<p><a href="https://github.com/pharo-iot/PharoThings">PharoThings</a>目前可用于驱动树莓派（由<a href="http://wiringpi.com/">WiringPi library</a>驱动)，未来计划支持Arduino(由<a href="https://github.com/firmata/arduino">Firmata</a>驱动)和Beaglebone。</p>
+<p>尽管可以按照<a href="https://github.com/pharo-iot/PharoThings">PharoThings</a> readme来使用它，但我更喜欢<a href="https://github-production-release-asset-2e65be.s3.amazonaws.com/148993125/76d79a80-879c-11e9-94fa-63a6576f7c9e?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190607%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20190607T065244Z&amp;X-Amz-Expires=300&amp;X-Amz-Signature=67797e57301d28e53b2a3dd82f40c512254cd7b5a1a5933eeb4bdc2e441aea2b&amp;X-Amz-SignedHeaders=host&amp;actor_id=3153878&amp;response-content-disposition=attachment%3B%20filename%3DAPharoThingsTutorial-wip.pdf&amp;response-content-type=application%2Foctet-stream">这本小册子: A PharoThings Tutorial</a>。</p>
+<p>我基本遵照<a href="https://github-production-release-asset-2e65be.s3.amazonaws.com/148993125/76d79a80-879c-11e9-94fa-63a6576f7c9e?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190607%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20190607T065244Z&amp;X-Amz-Expires=300&amp;X-Amz-Signature=67797e57301d28e53b2a3dd82f40c512254cd7b5a1a5933eeb4bdc2e441aea2b&amp;X-Amz-SignedHeaders=host&amp;actor_id=3153878&amp;response-content-disposition=attachment%3B%20filename%3DAPharoThingsTutorial-wip.pdf&amp;response-content-type=application%2Foctet-stream">A PharoThings Tutorial</a>的引导来开发，以下是使用记录。</p>
+<h3 id="树莓派环境搭建">树莓派环境搭建</h3>
+<p>我目前在树莓派3B+上运行<code>Raspbian</code>(Stretch)。</p>
+<p>首先安装<a href="http://wiringpi.com/">WiringPi library</a>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cd /tmp
+</span></span><span class="line"><span class="cl">wget https://unicorn.drogon.net/wiringpi-2.46-1.deb
+</span></span><span class="line"><span class="cl">sudo dpkg -i wiringpi-2.46-1.deb
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>检查按照是否成功:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">gpio -v
+</span></span><span class="line"><span class="cl">gpio readall
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>接下来下载Pharo和所需image: <code>wget -O - get.pharoiot.org/server | bash</code></p>
+<p>操作很简单，实际上是在下载一个压缩包:<a href="http://get.pharoiot.org/server.zip">server.zip</a></p>
+<p>解压之后运行即可:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cd pharoiot-server
+</span></span><span class="line"><span class="cl">./pharo-server
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>成功运行后可以看到:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pi@raspberrypi:~/mylab/pharo/pharoiot-server $ ./pharo-server
+</span></span><span class="line"><span class="cl">&#39;a TlpRemoteUIManager is registered on port 40423&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="本地环境">本地环境</h3>
+<p>我的本地环境是MacOS。 但Pharo是跨平台的，所以各个平台下应该都没问题。</p>
+<p>首先下载:<a href="http://get.pharoiot.org/multi.zip">multi.zip</a></p>
+<p>解压之后可以看到里边的文件:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  pharoiot-multi ls -l
+</span></span><span class="line"><span class="cl">total 299528
+</span></span><span class="line"><span class="cl">-rw-rw-r--@ 1 wuwenjie  staff  34321732  3 29 00:43 Pharo7.0-32bit-890f474.sources
+</span></span><span class="line"><span class="cl">-rw-rw-r--@ 1 wuwenjie  staff   1535210  6  7 12:46 PharoThings32.changes
+</span></span><span class="line"><span class="cl">-rw-rw-r--@ 1 wuwenjie  staff  49325464  5 12 18:42 PharoThings32.image
+</span></span><span class="line"><span class="cl">-rw-rw-r--@ 1 wuwenjie  staff   1523385  3 29 00:43 PharoThings64.changes
+</span></span><span class="line"><span class="cl">-rw-rw-r--@ 1 wuwenjie  staff  66628472  3 29 00:43 PharoThings64.image
+</span></span><span class="line"><span class="cl">-rwxrwxr-x@ 1 wuwenjie  staff      1933  3 29 00:43 pharo
+</span></span><span class="line"><span class="cl">drwxr-xr-x  4 wuwenjie  staff       128  6  7 12:40 pharo-local
+</span></span><span class="line"><span class="cl">-rwxrwxr-x@ 1 wuwenjie  staff      2049  3 29 00:43 pharo-server
+</span></span><span class="line"><span class="cl">-rwxrwxr-x@ 1 wuwenjie  staff      1853  3 29 00:43 pharo-ui
+</span></span><span class="line"><span class="cl">-rw-rw-r--@ 1 wuwenjie  staff        60  3 29 00:43 pharo.bat
+</span></span><span class="line"><span class="cl">drwxrwxr-x@ 7 wuwenjie  staff       224  6  7 12:39 vm
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Linux, Mac用户双击 <code>pharo-ui</code>， Windows用户双击<code>pharo.bat</code>.</p>
+<p><img src="/post/img/pharo_iot_mac_e7081257.png" alt=""></p>
+<p>可以看到，image目前使用的Pharo版本为<code>7.0.2</code>，几乎是最新的。</p>
+<h3 id="连接到树莓派">连接到树莓派</h3>
+<p>既可以使用hostname连接也可以使用IP连接</p>
+<p><strong>使用hostname连接</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">ip</span> <span class="o">:=</span> <span class="nc">NetNameResolver</span> <span class="nf">addressForName:</span> <span class="s">&#39;rpi.codelab.club&#39;</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">remotePharo</span> <span class="o">:=</span> <span class="nc">TlpRemoteIDE</span> <span class="nf">connectTo:</span> (<span class="nc">TCPAddress</span> <span class="nf">ip:</span> <span class="nv">ip</span> <span class="nf">port:</span>
+</span></span><span class="line"><span class="cl"><span class="m">40423</span>)<span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>使用IP连接</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">remotePharo</span> <span class="o">:=</span> <span class="nc">TlpRemoteIDE</span> <span class="nf">connectTo:</span> (<span class="nc">TCPAddress</span> <span class="nf">ip:</span> <span class="err">#</span>[<span class="m">192</span> <span class="nf">168</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">200</span>] <span class="nf">port:</span> <span class="m">40423</span>)<span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果没有报错就可以随意使用:</p>
+<ul>
+<li>Remote Playground</li>
+<li>Remote System Browser</li>
+<li>Remote Proxcess Browser</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">remotePharo</span> <span class="nf">openPlayground</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">remotePharo</span> <span class="nf">openBrowser</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">remotePharo</span> <span class="nf">openProcessBrowser</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="远程树莓派gpio面板">远程树莓派GPIO面板</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">remoteBoard</span> <span class="o">:=</span> <span class="nv">remotePharo</span> <span class="nf">evaluate:</span> [ <span class="nc">RpiBoard3B</span> <span class="nf">current</span>]<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">remoteBoard</span> <span class="nf">inspect</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/post/img/pharo_iot_mac_90b99cb7.png" alt=""></p>
+<p>我们在Pharo中将7号引脚设为关闭状态：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">led1</span> <span class="o">:=</span> <span class="nv">gpio7</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">led1</span> <span class="nf">beDigitalOutput</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">led1</span> <span class="nf">value:</span> <span class="m">0</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从shell中可以看到生效了。</p>
+<p><img src="/post/img/pharo_iot_a27b3247.png" alt=""></p>
+<p>在shell中将7号引脚设为开启状态: <code>gpio write 7 1</code></p>
+<p>可以看到Pharo里的远程树莓派GPIO面板发生相应变化。</p>
+<p><img src="/post/img/pharo_iot_cdf56c7e.png" alt=""></p>
+<p>你可以点击指示状态的圆点切换其状态！</p>
+<p><img src="/post/img/pharo_iot_1006c808.png" alt=""></p>
+<h3 id="更多用法">更多用法</h3>
+<p>参考<a href="https://github-production-release-asset-2e65be.s3.amazonaws.com/148993125/76d79a80-879c-11e9-94fa-63a6576f7c9e?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190607%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20190607T065244Z&amp;X-Amz-Expires=300&amp;X-Amz-Signature=67797e57301d28e53b2a3dd82f40c512254cd7b5a1a5933eeb4bdc2e441aea2b&amp;X-Amz-SignedHeaders=host&amp;actor_id=3153878&amp;response-content-disposition=attachment%3B%20filename%3DAPharoThingsTutorial-wip.pdf&amp;response-content-type=application%2Foctet-stream">A PharoThings Tutorial</a></p>
+<p>当然也鼓励在Pharo中自由探索。在Pharo中的旅程常有意外收获。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://www.slideshare.net/esug/pharothings-a-live-programming-iotplatform">PharoThings: a live programming IoT-platform</a></li>
+<li><a href="https://github.com/pharo-ide/TelePharo">TelePharo</a></li>
+<li><a href="https://github.com/pharo-iot/PharoThings">PharoThings</a></li>
+<li><a href="http://pharo.allexoliveira.com.br/scenario-01/">Demonstration of a dynamic update on a remote device running PharoThings</a></li>
+<li><a href="https://medium.com/concerning-pharo/pharo-pi-9eef257b6a21">Working with Pharo on the Raspberry Pi</a></li>
+<li><a href="http://www.pharoiot.org/">http://www.pharoiot.org/</a></li>
+<li><a href="https://github-production-release-asset-2e65be.s3.amazonaws.com/148993125/76d79a80-879c-11e9-94fa-63a6576f7c9e?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20190607%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20190607T040919Z&amp;X-Amz-Expires=300&amp;X-Amz-Signature=28694fb2de6581c5a4554dd1803dcad259645719c67a23b0d2b2f3e9ce47ae03&amp;X-Amz-SignedHeaders=host&amp;actor_id=3153878&amp;response-content-disposition=attachment%3B%20filename%3DAPharoThingsTutorial-wip.pdf&amp;response-content-type=application%2Foctet-stream">APharoThingsTutorial-wip</a></li>
+<li><a href="http://get.pharoiot.org/">Pharo IoT Installation Guide</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-06-07
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/socket-learn-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Socket学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/pharo-http-websocket-mqtt/">
+            <span class="next-text nav-default">Pharo使用笔记之http、websocket与mqtt</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

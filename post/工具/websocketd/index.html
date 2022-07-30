@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>websocketd:一个小而美的管道工具 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="do one thing and do it well 以*nix哲学来看，websocketd是个优雅的工具,小而美，作为管道，有强大的可组合性 简介 Turn any program that uses STDIN/STDOUT into a WebSocket server. Like inetd, but for WebSockets. w" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/websocketd/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="websocketd:一个小而美的管道工具" />
+<meta property="og:description" content="do one thing and do it well 以*nix哲学来看，websocketd是个优雅的工具,小而美，作为管道，有强大的可组合性 简介 Turn any program that uses STDIN/STDOUT into a WebSocket server. Like inetd, but for WebSockets. w" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/websocketd/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-03-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-03-31T00:00:00+00:00" />
+
+<meta itemprop="name" content="websocketd:一个小而美的管道工具">
+<meta itemprop="description" content="do one thing and do it well 以*nix哲学来看，websocketd是个优雅的工具,小而美，作为管道，有强大的可组合性 简介 Turn any program that uses STDIN/STDOUT into a WebSocket server. Like inetd, but for WebSockets. w"><meta itemprop="datePublished" content="2017-03-31T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2017-03-31T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1395">
+<meta itemprop="keywords" content="dev-tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="websocketd:一个小而美的管道工具"/>
+<meta name="twitter:description" content="do one thing and do it well 以*nix哲学来看，websocketd是个优雅的工具,小而美，作为管道，有强大的可组合性 简介 Turn any program that uses STDIN/STDOUT into a WebSocket server. Like inetd, but for WebSockets. w"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">websocketd:一个小而美的管道工具</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-03-31 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#与python结合">与python结合</a>
+      <ul>
+        <li><a href="#一个可交互的例子">一个可交互的例子</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/websocketdef12b5f8.png" alt=""></p>
+<blockquote>
+<p>do one thing and do it well</p>
+</blockquote>
+<p>以*nix哲学来看，websocketd是个优雅的工具,小而美，作为管道，有强大的可组合性</p>
+<h1 id="简介">简介</h1>
+<blockquote>
+<p>Turn any program that uses STDIN/STDOUT into a WebSocket server. Like inetd, but for WebSockets.</p>
+</blockquote>
+<p><a href="http://websocketd.com/">websocketd</a>是个命令行工具，他能轻易地包装其他命令行，使其能够通过websocket来访问</p>
+<p>以上就是它做的所有事情了，简单的几乎不需要学习成本，就像<code>ls/cat/netcat</code>这些你熟悉的工具一样</p>
+<h1 id="上手">上手</h1>
+<p>###安装
+如果你是mac用户，直接使用brew安装就行:<code>brew install websocketd</code>,如果你是其他操作系统用户，点击<a href="https://github.com/joewalnes/websocketd/wiki/Download-and-install">Download and install</a></p>
+<p>###使用
+官方给出了一个非常简单的例子</p>
+<p>创建一个count.sh文件，内容为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">for</span> <span class="o">((</span><span class="nv">COUNT</span> <span class="o">=</span> 1<span class="p">;</span> COUNT &lt;<span class="o">=</span> 10<span class="p">;</span> COUNT++<span class="o">))</span><span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="nv">$COUNT</span>
+</span></span><span class="line"><span class="cl">    sleep <span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使其可执行:<code>chmod +x count.sh</code></p>
+<p>我们先在本地运行试试:<code>./count.sh</code>，输出结果为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1
+</span></span><span class="line"><span class="cl">2
+</span></span><span class="line"><span class="cl">3
+</span></span><span class="line"><span class="cl">4
+</span></span><span class="line"><span class="cl">5
+</span></span><span class="line"><span class="cl">6
+</span></span><span class="line"><span class="cl">7
+</span></span><span class="line"><span class="cl">8
+</span></span><span class="line"><span class="cl">9
+</span></span><span class="line"><span class="cl">10
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>接下来我们将其转为一个websocket服务: <code>websocketd --port=8080 ./count.sh</code></p>
+<p>现在我们就可以在网页上看结果了</p>
+<p>count.html:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>websocketd test<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">pre</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;log&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">pre</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// helper function: log message to screen
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">function</span> <span class="nx">log</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">).</span><span class="nx">textContent</span> <span class="o">+=</span> <span class="nx">msg</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// setup websocket with callbacks
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">var</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://localhost:8080/&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ws</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">log</span><span class="p">(</span><span class="s1">&#39;CONNECT&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">ws</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">log</span><span class="p">(</span><span class="s1">&#39;DISCONNECT&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">log</span><span class="p">(</span><span class="s1">&#39;MESSAGE: &#39;</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>直接用浏览器打开这个本地页面就行！(wesocket可以跨域)</p>
+<p><img src="/post/img/websocketdd04a2560.png" alt=""></p>
+<p>非常简单！</p>
+<h1 id="与特定编程语言结合">与特定编程语言结合</h1>
+<p>websocketd可以与各种语言编写的程序结合,官方源码库的<a href="https://github.com/joewalnes/websocketd/tree/master/examples">example</a>里就给出了很多:</p>
+<ul>
+<li>bash</li>
+<li>c#</li>
+<li>cgi-bin</li>
+<li>f#</li>
+<li>haskell</li>
+<li>html</li>
+<li>java</li>
+<li>nodejs</li>
+<li>perl</li>
+<li>php</li>
+<li>python</li>
+<li>ruby</li>
+<li>swift</li>
+<li>windows-jscript</li>
+<li>windows-vbscript</li>
+</ul>
+<p>总有一款适合你</p>
+<p>如果你的语言笔记小众,只要你的程序和shell脚本的输入/输出模式一样，就没问题</p>
+<h2 id="与python结合">与python结合</h2>
+<p>我日常主要用python，所以列出与python的整合例子</p>
+<p>同样来自官方的例子:<a href="https://github.com/joewalnes/websocketd/blob/master/examples/python/count.py">count.py</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/env python</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># encoding: utf-8</span>
+</span></span><span class="line"><span class="cl">  <span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl">  <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stdout</span>
+</span></span><span class="line"><span class="cl">  <span class="n">i</span><span class="o">=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">  <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">      <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使其可执行：<code>chmod +x count.py</code></p>
+<p>运行:<code>websocketd --port=8080 ./count.py</code></p>
+<p>你讲看到和上边一样的结果</p>
+<p>上边的源码有一处值得留意:<code>stdout.flush()</code>,有兴趣的同学可以参考<a href="http://stackoverflow.com/questions/10019456/usage-of-sys-stdout-flush-method">Usage of sys.stdout.flush() method</a></p>
+<h3 id="一个可交互的例子">一个可交互的例子</h3>
+<p>前头的例子都是单向的数据流，我们来看看一个交互性更强的例子(<a href="https://github.com/joewalnes/websocketd/blob/master/examples/python/greeter.py">greeter.py</a>)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># For each line FOO received on STDIN, respond with &#34;Hello FOO!&#34;.</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">line</span> <span class="o">=</span> <span class="n">stdin</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello </span><span class="si">%s</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="n">line</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span> <span class="c1"># Remember to flush</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行它:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">chmod +x count.py
+</span></span><span class="line"><span class="cl">websocketd --port<span class="o">=</span><span class="m">8080</span> ./greeter.py
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>对应的前端为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>websocketd test<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">pre</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;log&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">pre</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// helper function: log message to screen
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">function</span> <span class="nx">log</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">).</span><span class="nx">textContent</span> <span class="o">+=</span> <span class="nx">msg</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// setup websocket with callbacks
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kd">var</span> <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s1">&#39;ws://localhost:8080/&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">ws</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">log</span><span class="p">(</span><span class="s1">&#39;CONNECT&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="c1">// input
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s2">&#34;wwj&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">ws</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">log</span><span class="p">(</span><span class="s1">&#39;DISCONNECT&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">ws</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">log</span><span class="p">(</span><span class="s1">&#39;MESSAGE: &#39;</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>打开页面，我们看到:</p>
+<p><img src="/post/img/websocketde0ec4001.png" alt=""></p>
+<p>Awesome!</p>
+<h4 id="交互调试">交互调试</h4>
+<p>调试带有交互功能的程序，手写js比较不方便，官方也给出了<a href="https://github.com/joewalnes/websocketd/wiki/Developer-console">调试模式</a></p>
+<p>以上边的例子为例:<code>websocketd --port=8000 --dir=./ --devconsole</code></p>
+<p>打开：<code>http://localhost:8000/greeter.py</code></p>
+<p><img src="/post/img/websocketdef12b5f8.png" alt=""></p>
+<h1 id="一些特性">一些特性</h1>
+<p>关于websocketd的特性介绍你可以看它的<a href="http://websocketd.com/">主页</a></p>
+<p>我这里对我发现的特性做个笔记:</p>
+<ul>
+<li>支持多client连接，每个client连接后，都将看到<code>count.sh</code>从头开始运行的过程数据(应该是独立的,每来一个请求，被包装的脚本从头运行?)</li>
+</ul>
+<h1 id="与其他工具组合">与其他工具组合</h1>
+<p>同*nix的其他管道工具一样，组合的可能性取决于你的想象力，在此列出我觉得有用的组合:</p>
+<ul>
+<li>与<a href="https://github.com/inconshreveable/ngrok">ngrok</a>组合，将websocket服务暴露到公网(当然你也可以用nginx反向代理)</li>
+<li><a href="https://github.com/rowanthorpe/ws-repl">ws-repl</a>,这个项目将websocketd与各种REPL对接(ps，这类需求我更推荐<a href="https://github.com/yudai/gotty">gotty</a>)</li>
+</ul>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://github.com/joewalnes/websocketd">websocketd</a>源码</li>
+<li><a href="http://websocketd.com/">websocketd主页</a></li>
+<li><a href="https://github.com/joewalnes/websocketd/wiki">websocket wiki</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-03-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/iot/ipc_on_blockly4pi/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">进程间通信一例</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%9E%B6%E6%9E%84/jupyter-notebook-architecture-hack/">
+            <span class="next-text nav-default">对jupyter notebook的分析、扩展与hack</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

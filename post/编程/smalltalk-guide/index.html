@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Smalltalk 入门导览 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="我最近从 Pharo 切到 Squeak，它们都是 Smalltalk 的现代实现。Pharo 派生自 Squeak。 有几位 Smalltalk-80 的实现者(他们之前在施乐实验室创造了 Smalltal" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/smalltalk-guide/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Smalltalk 入门导览" />
+<meta property="og:description" content="我最近从 Pharo 切到 Squeak，它们都是 Smalltalk 的现代实现。Pharo 派生自 Squeak。 有几位 Smalltalk-80 的实现者(他们之前在施乐实验室创造了 Smalltal" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/smalltalk-guide/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-11-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-11-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="Smalltalk 入门导览">
+<meta itemprop="description" content="我最近从 Pharo 切到 Squeak，它们都是 Smalltalk 的现代实现。Pharo 派生自 Squeak。 有几位 Smalltalk-80 的实现者(他们之前在施乐实验室创造了 Smalltal"><meta itemprop="datePublished" content="2020-11-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-11-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2212">
+<meta itemprop="keywords" content="smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Smalltalk 入门导览"/>
+<meta name="twitter:description" content="我最近从 Pharo 切到 Squeak，它们都是 Smalltalk 的现代实现。Pharo 派生自 Squeak。 有几位 Smalltalk-80 的实现者(他们之前在施乐实验室创造了 Smalltal"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Smalltalk 入门导览</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-11-03 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/1560bff836c97097af6a536eda77903f.png" alt=""></p>
+<p>我最近从 <a href="/post/%E7%BC%96%E7%A8%8B/from-python-to-pharo/">Pharo</a> 切到 <a href="https://squeak.org/">Squeak</a>，它们都是 <a href="https://zh.wikipedia.org/zh-hans/Smalltalk">Smalltalk</a> 的现代实现。Pharo 派生自 Squeak。</p>
+<p>有几位 Smalltalk-80 的实现者(他们之前在施乐实验室创造了 Smalltalk)都参与到了 Squeak 中，包括 <a href="https://zh.wikipedia.org/zh-hans/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">Alan Kay</a> 和 <a href="https://en.wikipedia.org/wiki/Dan_Ingalls">Daniel Ingall</a>，这个项目依然在持续演进，他们抱有跟今天计算机整个领域不同的愿景。</p>
+<h1 id="入门材料">入门材料</h1>
+<p>关于 Smalltalk ，我读过的最好入门资料是 <a href="https://archive.org/details/byte-magazine-1981-08/page/n3/mode/2up">《Byte Magazine Volume 06 Number 08 - Smalltalk》</a>: 其中有两篇文章尤其适合入门者:</p>
+<ul>
+<li>introducing the Smalltalk-80 System（author Adele Goldberg）</li>
+<li>The Smalltalk-80 System（author the Xerox Learning Research Group）</li>
+</ul>
+<p>这份特刊对我影响很大，它是我进入 Smalltalk 世界的入口。尽管之前也花了不少时间在 Smalltalk 上，但来自 Smalltalk 设计团队成员写的这些文章，让我真正进入 Smalltalk 的精神世界。</p>
+<p>进入 Smalltalk 世界对我来说，是被启蒙的时刻, 此处沿用康德关于启蒙的看法：</p>
+<blockquote>
+<p>启蒙运动是使人从自愿接受监护的状态中解放出来……在这种状态下人不依赖外在指导就不能运用自己的才智。这样一种我称之为“自愿接受”监护的状态，并不是由于缺乏才智，而是由于缺乏在没有领导帮助的情况下运用自己才智的勇气和决断。</p>
+</blockquote>
+<h1 id="环境">环境</h1>
+<p>Smalltalk 是一个环境，进入这个环境时，最好放下你过去所受的教育中关于<code>操作系统</code>、<code>语言</code>、<code>用户界面</code>以及<code>编程</code>的看法。大胆地在环境中玩耍，<a href="/post/%E7%BC%96%E7%A8%8B/swimming-with-the-fish/">与环境中感兴趣的物体交互</a>，随时可以进入到它内部去看看。</p>
+<h1 id="学习">“学习”</h1>
+<blockquote>
+<p>我不能创造的东西，我就不了解。 &ndash; 理查德·费曼</p>
+</blockquote>
+<p>别急着”学会“Squeak，Squeak 不是一种可以&quot;学会&quot;的事物。 如果“学会”的含义是指学会“语法”，那么 Squeak 可能比你学过的任何语言都要简单（读完《The Smalltalk-80 System》即可）。</p>
+<p>但 Squeak 是“学不会”的，编程不是通过学会语法来掌握的东西，正如写作不是关于掌握拼写和造句规则的东西。只有乏味的教科书和考试才满足于这种目标，可悲的是，通常它们连这点也做不好。</p>
+<p>在系统中与那些活生生的小物体(small object)一起玩耍吧(talk)，如果你不知道玩什么，<a href="http://www.squeakland.org/">Etoys</a>是很好的起步。可以先下载 Etoys 玩一玩，也可以在 Squeak 里创建 Etoys 对象。</p>
+<p><img src="/post/img/f2993f237d9c1a5c9c1df863abc00231.png" alt=""></p>
+<h1 id="教育">教育</h1>
+<blockquote>
+<p>首要之务是不可伤害 &ndash; 希波克拉底</p>
+</blockquote>
+<p>如果你对编程教育感兴趣，Smalltalk 特刊里的 <a href="https://archive.org/details/byte-magazine-1981-08/page/n3/mode/2up">《Is the Smalltalk-80 System for Children?》</a>极有启发性，它是那种典型的 <code>the better old thing</code>。在 40 年前就想清楚了 Scratch 的精神内核和身体形式。直到今天，Scratch 的支持者和反对者们的争论焦点， 还围绕积木语法和文本语法这类幼稚话题。至于围绕文本的编程教育，则比前者还要更糟，而且有一种奇怪的鄙视链，越反人类则越骄傲，因为它“更难”，在脑经急转弯风格的考核里洋洋自得。 在此，我们想起 Dijkstra 的倡议：某些编程教育会使心灵瘫痪，因此，其教学应被视为刑事犯罪。</p>
+<p>Scratch 的重要性在于直观的表达能力（媒介），积木只是微不足道的一种技术手段。其背后的重要想法是把计算机看作个人动态媒介(<a href="http://www.newmediareader.com/book_samples/nmr-26-kay.pdf">Personal Dynamic Media</a>)。</p>
+<h1 id="理念">理念</h1>
+<p>如果你对 Smalltalk 背后的理念和设计原则感兴趣, <a href="https://archive.org/details/byte-magazine-1981-08/page/n495/mode/2up">Design Principles Behind Smalltalk</a>可能是最好的入口， 我写过一篇<a href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">译文</a></p>
+<p>这篇文章也适合架构和人机交互的爱好者。</p>
+<p>这些思想(建构主义)的全景在Seymour Parpet的<a href="http://worrydream.com/refs/Papert%20-%20Mindstorms%201st%20ed.pdf">《Mindstorms》</a>里做了更为清晰的阐述。</p>
+<h1 id="实现">实现</h1>
+<p>如果你是一位编程语言设计者，可能对 Smalltalk 的实现细节感兴趣(Ruby 作者就深受 Smalltalk 影响)</p>
+<p>我目前通过阅读<a href="http://stephane.ducasse.free.fr/FreeBooks/BlueBook/Bluebook.pdf">《Smalltalk Bluebook》</a>了解这些，更好的材料可能是这本书的删减版:<a href="https://wiki.squeak.org/squeak/692">Purple Book</a></p>
+<p>紫皮书减去了蓝皮书的第四部分，而第四部是关于 Smalltalk-80 的实现，这部分只是 Smalltalk 不同实现的细节问题, 包括:</p>
+<ul>
+<li>The Compiler</li>
+<li>The Interpreter</li>
+<li>The Object Memory</li>
+<li>The Hardware</li>
+</ul>
+<p>阅读 Smalltalk 实现细节的最好方法是在 Smalltalk 环境中去阅读，使用 Smalltalk 环境提供的 Halo、Browser、Inspector&hellip;这些强大工具去阅读，通过与对象的交互去深入理解系统，而不是在纸面上阅读源码，在大脑里构建堆栈。</p>
+<p><img src="/post/img/f237429c5fbe89c50726c33149432908.png" alt=""></p>
+<h1 id="文艺复兴">文艺复兴</h1>
+<blockquote>
+<p>有两种东西，我对它们的思考越是深沉和持久，它们在我心灵中唤起的惊奇和敬畏就会日新月异，不断增长，这就是我头上的星空和心中的道德定律。 &ndash; 康德的墓碑</p>
+</blockquote>
+<p>Smalltalk 的深刻洞见主要关于人与计算机的关系，人是表达的主体，计算机是一种足够灵活的媒介，编程则是一种表达想法的方式。</p>
+<p>在 Smalltalk 的思想传统中，计算机是一种是表达思想的工具，这种表达需要足够灵活的媒介，这种媒介在今天恰巧是一种能够快速运行指令的机器。</p>
+<p>今天人们把心思都放在改进这种指令机器上, 人们并不关心思想和表达的自由，甚至，总是走向它的反面。</p>
+<p>Smalltalk 希望人们关注思想，重要的变革总是关于思想的。在过去，这些思考者是柏拉图、牛顿、休谟、康德、洛克、维特根斯坦、波普尔、爱因斯坦&hellip;</p>
+<p>Alan Kay 、Bret Victor 肯定也是其中的一员，人们似乎还没意识到他们主要是一位哲学家，只是恰巧使用计算机来书写。</p>
+<p>这些想法在今天依然没有熄灭。Bret Victor 试图在 Dynamicland 中复兴它，今年年底它将离开实验室。 Daniel Ingall 则花了十多年时间，将它带入了<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/smalltalk-explore-notes/">网络世界</a>（我正在尝试Daniel Ingall项目的最新版本（目前bug很多），前头是目前在做的一些小实验）</p>
+<p>新的变革并不总是轰轰烈烈，当康德写就他那些关于宇宙、星辰、灵魂、律法的作品时，终生都没有踏出他的小镇。而Bret Victor、Daniel Ingall 以及 Smalltalk 的其他后继者们，直到今天，也依然默默地工作在他们的那片&quot;故乡&quot;。</p>
+<p>下一位说出</p>
+<blockquote>
+<p>我看见了未来（1979 年乔布斯看到 smalltalk 的 GUI 演示时作如上感慨）</p>
+</blockquote>
+<p>的人或许正冒着风雨骑着自行车前来(<code>计算机是我思想的自行车</code>&ndash;乔布斯)。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://squeak.org/documentation/terse_guide/">Squeak terse_guide</a></li>
+<li><a href="http://wiki.squeak.org/">Squeak wiki</a></li>
+<li><a href="http://web.cecs.pdx.edu/~harry/musings/SmalltalkOverview.html">Smalltalk Overview</a>: 适合有过主流编程语言经验的程序员</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-11-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/dan-ingalls-and-lively/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Dan Ingalls 与 Lively</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/release-3-7/">
+            <span class="next-text nav-default">发布 CodeLab Adapter 3.7</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,293 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables _np_pixels _useWiFi on request 
+
+script 71 71 {
+whenBroadcastReceived 'start_web_server'
+forever {  request = ('[net:httpServerGetRequest]')
+  sayIt ('path of request' request)
+  if (('path of request' request) == '/lighton') {    neoPixelSetAllToColor (colorSwatch 255 249 249 255)
+  }
+  if (('path of request' request) == '/lightoff') {    clearNeoPixels
+  }
+  if (('path of request' request) == '/fanson') {    digitalWriteOp 25 true
+  }
+  if (('path of request' request) == '/fansoff') {    digitalWriteOp 25 false
+  }
+  if (('path of request' request) == '/codelab') {    '[net:respondToHttpRequest]' '200 OK' '<iframe src="https://www.codelab.club" width="100%" height="100%"> </iframe>'
+  } else {    '[net:respondToHttpRequest]' '200 OK' '<meta charset="UTF-8">
+## path
+* light
+    *  [on](/lighton)
+    *  [off](/lightoff)
+* fans
+    *  [on](/fanson)
+    *  [off](/fansoff)
+* [codelab](/codelab)
+<style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js"></script>
+<script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>' 'Content-Type: text/html' false
+  }
+}
+}
+
+script 489 79 {
+whenStarted
+neoPixelAttach 4 5
+neoPixelSetAllToColor (colorSwatch 35 190 30 255)
+'wifi connect to' 'Elite_1006' 'xxx' 3
+if ((getIPAddress) != '0.0.0.0') {  neoPixelSetAllToColor (colorSwatch 29 35 190 255)
+  sendBroadcast 'start_web_server'
+} else {  neoPixelSetAllToColor (colorSwatch 190 14 33 255)
+}
+}
+
+script 497 349 {
+comment 'How this works...'
+sayIt (getIPAddress)
+}
+
+script 503 450 ('[net:httpServerGetRequest]')
+
+script 503 510 {
+'[net:respondToHttpRequest]' '200 OK' 'hello esp32'
+}
+
+
+module 'HTTP server' Comm
+author MicroBlocks
+version 1 3 
+depends WiFi 
+tags http network 
+description 'Create an HTTP server in MicroBlocks. You can use this library to allow remote control for your Wifi-enabled board.'
+
+	spec 'r' '[net:httpServerGetRequest]' 'HTTP server request : binary data _ : port _' 'bool num' false 8080
+	spec 'r' 'request method' 'method of request _' 'str' ''
+	spec 'r' 'path of request' 'path of request _' 'str' ''
+	spec 'r' 'headers of request' 'headers of request _' 'str' ''
+	spec 'r' 'body of request' 'body of request _' 'str' ''
+	spec 'r' 'content length of request' 'content length of request _' 'str' ''
+	spec ' ' '[net:respondToHttpRequest]' 'respond _ to HTTP request : with body _ : and headers _ : keepAlive _' 'str str str bool' '200 OK' 'Welcome to the MicroBlocks HTTP server' 'Content-Type: text/plain' false
+	spec 'r' '_endOfHeaders' '_end of headers _' 'str'
+	spec 'r' '_toString' '_toString _' 'auto' 'abc'
+
+to '_endOfHeaders' request {  return ('[data:find]' ('[data:unicodeString]' ('[data:makeList]' 13 10 13 10)) request)
+}
+
+to '_toString' aStringOrByteArray {  comment 'If argument is a byte array, convert it to a string. '
+  if (not (isType aStringOrByteArray 'string')) {    aStringOrByteArray = ('[data:join]' '' aStringOrByteArray)
+  }
+  return aStringOrByteArray
+}
+
+to 'body of request' request {  i = ('_endOfHeaders' request)
+  if (i < 0) {    return ''
+  }
+  return ('[data:copyFromTo]' request (i + 4))
+}
+
+to 'content length of request' request {  local 'i' ('_endOfHeaders' request)
+  if (i < 0) {    return 0
+  }
+  local 'j' ('[data:find]' 'Content-Length: ' request)
+  if (j < 0) {    comment 'Try alternate capitalization'
+    j = ('[data:find]' 'Content-length: ' request)
+  }
+  if (or (j < 0) (j > i)) {    return 0
+  }
+  j += 16
+  local 'k' ('[data:find]' ('[data:unicodeString]' 13) request j)
+  return (('[data:copyFromTo]' request j (k - 1)) + 0)
+}
+
+to 'headers of request' request {  i = ('_endOfHeaders' request)
+  if (i < 0) {    return ''
+  }
+  return ('_toString' ('[data:copyFromTo]' request 1 (i - 1)))
+}
+
+to 'path of request' request {  return ('_toString' ('[data:copyFromTo]' request (('[data:find]' ' ' request) + 1) (('[data:find]' ' HTTP' request) - 1)))
+}
+
+to 'request method' request {  return ('_toString' ('[data:copyFromTo]' request 1 (('[data:find]' ' ' request) - 1)))
+}
+
+
+module NeoPixel Output
+author MicroBlocks
+version 1 2 
+tags led strip rgb string ws2812 
+description 'Control NeoPixel (WS2812) RGB LED strips.
+'
+variables _np_pixels 
+
+	spec ' ' 'neoPixelAttach' 'attach _ LED NeoPixel strip to pin _ : has white _' 'num auto bool' 10 '' false
+	spec ' ' 'setNeoPixelColors10' 'set NeoPixels _ _ _ _ _ _ _ _ _ _' 'color color color color color color color color color color'
+	spec ' ' 'clearNeoPixels' 'clear NeoPixels'
+	spec ' ' 'neoPixelSetAllToColor' 'set all NeoPixels color _' 'color'
+	spec ' ' 'setNeoPixelColor' 'set NeoPixel _ color _' 'num color' 1
+	spec ' ' 'rotateNeoPixelsBy' 'rotate NeoPixels by _' 'auto' 1
+	spec 'r' 'colorFromRGB' 'color r _ g _ b _ (0-255)' 'num num num' 0 100 100
+	spec 'r' 'randomColor' 'random color'
+	spec ' ' '_NeoPixel_ensureInitialized' '_NeoPixel_ensureInitialized'
+	spec ' ' '_NeoPixel_rotate' '_NeoPixel_rotate_left _' 'bool' true
+	spec ' ' '_NeoPixel_update' '_NeoPixel_update'
+
+to '_NeoPixel_ensureInitialized' {  if (_np_pixels == 0) {if ((boardType) == 'M5Atom-Matrix') {    neoPixelAttach 25 '' false
+  } ((boardType) == 'D1-Mini') {    comment 'D1 mini kit'
+    neoPixelAttach 7 15 false
+  } else {    neoPixelAttach 10 '' false
+  }}
+}
+
+to '_NeoPixel_rotate' left {  '_NeoPixel_ensureInitialized'
+  local 'length' (size _np_pixels)
+  if left {    local 'first' (at 1 _np_pixels)
+    for i (length - 1) {      atPut i _np_pixels (at (i + 1) _np_pixels)
+    }
+    atPut length _np_pixels first
+  } else {    local 'last' (at length _np_pixels)
+    for i (length - 1) {      atPut ((length - i) + 1) _np_pixels (at (length - i) _np_pixels)
+    }
+    atPut 1 _np_pixels last
+  }
+}
+
+to '_NeoPixel_update' {  '[display:neoPixelSend]' _np_pixels
+  waitMicros 100
+}
+
+to clearNeoPixels {  '_NeoPixel_ensureInitialized'
+  fillList _np_pixels 0
+  '_NeoPixel_update'
+}
+
+to colorFromRGB r g b {  r = (maximum 0 (minimum r 255))
+  g = (maximum 0 (minimum g 255))
+  b = (maximum 0 (minimum b 255))
+  return (((r << 16) | (g << 8)) | b)
+}
+
+to neoPixelAttach number pinNumber optionalHasWhite {  hasWhite = false
+  if ((pushArgCount) > 2) {    hasWhite = optionalHasWhite
+  }
+  if (or (_np_pixels == 0) (number != (size _np_pixels))) {    _np_pixels = (newList number)
+  }
+  fillList _np_pixels 0
+  '[display:neoPixelSetPin]' pinNumber hasWhite
+}
+
+to neoPixelSetAllToColor color {  '_NeoPixel_ensureInitialized'
+  fillList _np_pixels color
+  '_NeoPixel_update'
+}
+
+to randomColor {  local 'n1' (random 100 200)
+  local 'n2' (random 0 100)
+  if (1 == (random 1 3)) {    return ((n1 << 16) | (n2 << 8))
+  } (1 == (random 1 2)) {    return ((n2 << 16) | n1)
+  } else {    return ((n1 << 8) | n2)
+  }
+}
+
+to rotateNeoPixelsBy n {  '_NeoPixel_ensureInitialized'
+  repeat (absoluteValue n) {    '_NeoPixel_rotate' (n > 0)
+  }
+  '_NeoPixel_update'
+}
+
+to setNeoPixelColor i color {  '_NeoPixel_ensureInitialized'
+  if (and (1 <= i) (i <= (size _np_pixels))) {    atPut i _np_pixels color
+    '_NeoPixel_update'
+  }
+}
+
+to setNeoPixelColors10 c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 {  '_NeoPixel_ensureInitialized'
+  if ((size _np_pixels) >= 1) {    atPut 1 _np_pixels c1
+  }
+  if ((size _np_pixels) >= 2) {    atPut 2 _np_pixels c2
+  }
+  if ((size _np_pixels) >= 3) {    atPut 3 _np_pixels c3
+  }
+  if ((size _np_pixels) >= 4) {    atPut 4 _np_pixels c4
+  }
+  if ((size _np_pixels) >= 5) {    atPut 5 _np_pixels c5
+  }
+  if ((size _np_pixels) >= 6) {    atPut 6 _np_pixels c6
+  }
+  if ((size _np_pixels) >= 7) {    atPut 7 _np_pixels c7
+  }
+  if ((size _np_pixels) >= 8) {    atPut 8 _np_pixels c8
+  }
+  if ((size _np_pixels) >= 9) {    atPut 9 _np_pixels c9
+  }
+  if ((size _np_pixels) >= 10) {    atPut 10 _np_pixels c10
+  }
+  '_NeoPixel_update'
+}
+
+
+module WiFi Comm
+author MicroBlocks
+version 1 3 
+tags communication network 
+description 'Connect to a WiFi network. To be used in conjunction with other network libraries, such as HTTP client, HTTP server or Web Thing.
+'
+
+	spec ' ' 'wifi connect to' 'wifi connect to _ password _ try _ times : IP _ gateway _ subnet _' 'str str num str str str' 'Network_Name' '' 3 '192.168.1.42' '192.168.1.1' '255.255.255.0'
+	spec ' ' 'wifiCreateHotspot' 'wifi create hotspot _ password _' 'str str' 'Network_Name' 'Network_Password'
+	spec 'r' 'getIPAddress' 'IP address'
+	spec 'r' '[net:myMAC]' 'MAC address'
+
+to getIPAddress {  return ('[net:myIPAddress]')
+}
+
+to 'wifi connect to' ssid password tries fixedIP gatewayIP subnetIP {  local 'ip' fixedIP
+  local 'gateway' gatewayIP
+  local 'subnet' subnetIP
+  if (not ('[net:hasWiFi]')) {    return
+  }
+  if ((pushArgCount) < 3) {    ip = ''
+    gateway = ''
+    subnet = ''
+  }
+  '[net:stopWiFi]'
+  repeatUntil (or ('Connected' == ('[net:wifiStatus]')) (tries < 1)) {    '[net:startWiFi]' ssid password false ip gateway subnet
+    repeatUntil ('Trying...' != ('[net:wifiStatus]')) {      comment 'Slow blink while connecting'
+      setUserLED true
+      waitMillis 500
+      setUserLED false
+      waitMillis 500
+    }
+    tries += -1
+  }
+  repeat 8 {    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  waitMillis 1000
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+to wifiCreateHotspot ssid password {  if (not ('[net:hasWiFi]')) {return}
+  '[net:startWiFi]' ssid password true
+  repeatUntil ('Connected' == ('[net:wifiStatus]')) {    comment 'Slow blink while connecting'
+    setUserLED true
+    waitMillis 500
+    setUserLED false
+    waitMillis 500
+  }
+  repeat 8 {    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  waitMillis 1000
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+

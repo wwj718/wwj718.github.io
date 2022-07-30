@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>文档格式转化神器pandoc - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="作为一个工具控，喜欢被别人安利有趣的东西，我就很喜欢@XD小伙伴时不时的分享，遇到喜欢的东西也不能藏过夜，想快快安利给大家 pandoc的惊艳" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/document-factory-pandoc/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="文档格式转化神器pandoc" />
+<meta property="og:description" content="作为一个工具控，喜欢被别人安利有趣的东西，我就很喜欢@XD小伙伴时不时的分享，遇到喜欢的东西也不能藏过夜，想快快安利给大家 pandoc的惊艳" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/document-factory-pandoc/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-11-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-11-23T00:00:00+00:00" />
+
+<meta itemprop="name" content="文档格式转化神器pandoc">
+<meta itemprop="description" content="作为一个工具控，喜欢被别人安利有趣的东西，我就很喜欢@XD小伙伴时不时的分享，遇到喜欢的东西也不能藏过夜，想快快安利给大家 pandoc的惊艳"><meta itemprop="datePublished" content="2015-11-23T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-11-23T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1240">
+<meta itemprop="keywords" content="dev-tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="文档格式转化神器pandoc"/>
+<meta name="twitter:description" content="作为一个工具控，喜欢被别人安利有趣的东西，我就很喜欢@XD小伙伴时不时的分享，遇到喜欢的东西也不能藏过夜，想快快安利给大家 pandoc的惊艳"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">文档格式转化神器pandoc</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-11-23 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>作为一个工具控，喜欢被别人安利有趣的东西，我就很喜欢@XD小伙伴时不时的分享，遇到喜欢的东西也不能藏过夜，想快快安利给大家</p>
+<p><a href="https://github.com/jgm/pandoc">pandoc</a>的惊艳是那种 风陵渡口，人间初见误终身。</p>
+<p>#缘起
+最近要给公司提供一堆文档，作为过去技术开发的总结，其实大多都已经整理在我的个人博客中了。可毕竟我不能ctrl-s下来吧，文档要的是干净利落整洁清晰，html参杂了博客的样式，显然不合适，同时公司喜欢归档pdf或是word格式的文件</p>
+<p>而我又习惯使用markdown写文档，我想大多程序员也是如此吧，在word里写会做噩梦的</p>
+<p>于是我找到<code>Mou</code>(一款优秀的markdown写作工具)的导出功能，导出为PDF，可效果丑的不要不要的</p>
+<p>祭出神器Github，分分钟，找到pandoc</p>
+<p>一看源码吓的我都坐到地上了，90.5%的代码是Haskell写的，Haskell写的！写的！的！</p>
+<p>Pandoc作者是John MacFarlane，一位来自美国加州大学伯克利分校的哲学教授</p>
+<p>抛开Haskell的贵族血统不说，稳定和易用程度也是惊人</p>
+<p>#特性
+pandoc能轻易把文件从一种标记语言格式转换到另一种格式，瑞士军刀一般全面而锋利。</p>
+<p>允许的input file：</p>
+<ul>
+<li>Markdown</li>
+<li>reStructuredText</li>
+<li>GitHub-Flavored Markdown</li>
+<li>Word docx</li>
+<li>ODT</li>
+<li>HTML</li>
+<li>LaTeX</li>
+<li>EPUB(v2 or v3)</li>
+<li>CommonMark</li>
+<li>PHP Markdown Extra</li>
+<li>Textile</li>
+<li>MediaWiki markup</li>
+<li>TWiki markup</li>
+<li>Haddock markup</li>
+<li>OPML</li>
+<li>Emacs Org mode</li>
+<li>DocBook</li>
+<li>txt2tags</li>
+</ul>
+<p>可选的output file</p>
+<ul>
+<li>PDF</li>
+<li>plain text,</li>
+<li>Markdown</li>
+<li>HTML5</li>
+<li>LaTeX</li>
+<li>Word docx</li>
+<li>OpenDocument</li>
+<li>ODT</li>
+<li>reveal.js或是S5 HTML 幻灯片</li>
+<li>CommonMark</li>
+<li>PHP Markdown Extra</li>
+<li>GitHub-Flavored Markdown</li>
+<li>reStructuredText</li>
+<li>XHTML</li>
+<li>ConTeXt</li>
+<li>RTF</li>
+<li>OPML</li>
+<li>DocBook</li>
+<li>OpenDocument</li>
+<li>ODT</li>
+<li>GNU Texinfo</li>
+<li>MediaWiki markup</li>
+<li>DokuWiki markup</li>
+<li>Haddock markup</li>
+<li>EPUB(v2 or v3)</li>
+<li>FictionBook2</li>
+<li>Textile</li>
+<li>groff man</li>
+<li>Emacs Org mode</li>
+<li>AsciiDoc</li>
+<li>InDesign ICML</li>
+<li>Slidy</li>
+<li>Slideous</li>
+<li>DZSlides]</li>
+</ul>
+<p><a href="http://yanping.me/cn/blog/2012/03/13/pandoc/">这篇文章</a>做了更好的分类：</p>
+<ul>
+<li>HTML格式: XHTML, HTML5, 以及HTML幻灯片Slidy， S5，或者DZSlides.</li>
+<li>文字处理软件格式： Microsoft Word docx, OpenOffice/LibreOffice ODT, OpenDocument XML</li>
+<li>电子书： EPUB</li>
+<li>文档格式： DocBook, GNU TexInfo, Groff man pages</li>
+<li>TeX格式： LaTeX, ConTeXt, LaTeX Beamer slides</li>
+<li>PDF via LaTeX</li>
+<li>轻量级标记语言格式： Markdown, reStructuredText, AsciiDoc, MediaWiki markup, Emacs Org-Mode, Textile</li>
+</ul>
+<p>#安装（Mac下）
+brew install pandoc</p>
+<p>#使用
+pandoc Open edX体系架构.md -o test.docx -c Github.css</p>
+<p>你看pandoc很聪明的，它会根据后缀自动判断格式</p>
+<p>于是我们看到格式从markdown：</p>
+<p><img src="img/tools/pandoc1.png" alt="pandoc1"></p>
+<p>转化到docx，以Github的样式风格</p>
+<p><img src="img/tools/pandoc2.png" alt="pandoc2"></p>
+<p>#Todo
+##md2docx.py
+写个脚本把当前目录下所有md文件装化为同名docx</p>
+<p>##md2webppt</p>
+<p>也不想写ppt，折腾半天的字号好烦</p>
+<p>vim slides.md</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="cl">% md2webppt
+</span></span><span class="line"><span class="cl">% wwj
+</span></span><span class="line"><span class="cl">% 2015/11/24
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="gh"># 第一页
+</span></span></span><span class="line"><span class="cl"><span class="gh"></span>
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 第一项
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 第二项
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="gh"># 第一页
+</span></span></span><span class="line"><span class="cl"><span class="gh"></span>
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 第三项
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 第四项
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="gh"># 第一页
+</span></span></span><span class="line"><span class="cl"><span class="gh"></span>
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 第五项
+</span></span><span class="line"><span class="cl"><span class="k">-</span> 第六项
+</span></span><span class="line"><span class="cl"><span class="k">-</span> ![<span class="nt">1</span>](<span class="na">img/1.png</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>pandoc slides.md -o slides.html -t dzslides -s</code></p>
+<p>我们也可以使用流行的<a href="https://github.com/hakimel/reveal.js">reveal.js</a></p>
+<p><code>pandoc slides.md -o slides.html -t revealjs -s</code></p>
+<p>我们还有一些主题可选：</p>
+<p><code>pandoc slides.md -o slides.html -t revealjs -s -V theme=solarized</code></p>
+<ul>
+<li>default：（默认）深灰色背景，白色文字</li>
+<li>beige：米色背景，深色文字</li>
+<li>sky：天蓝色背景，白色细文字</li>
+<li>night：黑色背景，白色粗文字</li>
+<li>serif：浅色背景，灰色衬线文字</li>
+<li>simple：白色背景，黑色文字</li>
+<li>solarized：奶油色背景，深青色文字</li>
+</ul>
+<p>更完备的案例参考<a href="https://github.com/wwj718/reveal.js-with-pandoc">reveal.js-with-pandoc</a>.这也是我自己在用的模板</p>
+<p>用markdown写PPT真是爽嗨</p>
+<p>#more
+更多强大的特性，参考<a href="https://github.com/jgm/pandoc">jgm/pandoc</a></p>
+<h1 id="附">附</h1>
+<p>如果你想convert pdf，请使用<a href="https://github.com/coolwanglu/pdf2htmlEX">pdf2htmlEX</a></p>
+<p>pdf2htmlEX &ndash;fit-width 1024 integral.pdf</p>
+<p>#参考</p>
+<ul>
+<li><a href="https://github.com/jgm/pandoc-templates">pandoc-templates</a></li>
+<li><a href="https://github.com/wwj718/reveal.js-with-pandoc">reveal.js-with-pandoc</a></li>
+<li><a href="http://www.jianshu.com/p/6e2ec0b8fff1">利用pandoc把markdown转换为doc和ppt</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-11-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/fake-data-factory/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">伪数据工厂faker</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/open-edx-cn-sandbox/">
+            <span class="next-text nav-default">Open edX国内社区演示平台</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

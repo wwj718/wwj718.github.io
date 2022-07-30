@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>JWT学习笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="最近的这几篇文章都与身份认证有关，前边我们说到的CAS只是实现单点登录(SSO)的一种方式，本文将提到的JWT（JSON Web Token）是当前" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/jwt-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="JWT学习笔记" />
+<meta property="og:description" content="最近的这几篇文章都与身份认证有关，前边我们说到的CAS只是实现单点登录(SSO)的一种方式，本文将提到的JWT（JSON Web Token）是当前" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/jwt-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-12-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-12-29T00:00:00+00:00" />
+
+<meta itemprop="name" content="JWT学习笔记">
+<meta itemprop="description" content="最近的这几篇文章都与身份认证有关，前边我们说到的CAS只是实现单点登录(SSO)的一种方式，本文将提到的JWT（JSON Web Token）是当前"><meta itemprop="datePublished" content="2015-12-29T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-12-29T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1875">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="JWT学习笔记"/>
+<meta name="twitter:description" content="最近的这几篇文章都与身份认证有关，前边我们说到的CAS只是实现单点登录(SSO)的一种方式，本文将提到的JWT（JSON Web Token）是当前"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">JWT学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-12-29 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#安全性">安全性</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>最近的这几篇文章都与身份认证有关，前边我们说到的CAS只是实现单点登录(SSO)的一种方式，本文将提到的JWT（JSON Web Token）是当前最流行的身份认证方式之一,也能实现单点登录。</p>
+<p>#基于Cookie/服务端的认证
+身份认证是Web应用中极重要的一个部分，Cookie和基于服务器的身份验证（Session）一直都是最简单而常见的解决方案</p>
+<p>在传统的基于Cookie/服务端方案中,用户的每个请求中携带Cookie，服务端据此识别用户。</p>
+<p>这种方式可能存在很多问题:</p>
+<ul>
+<li>它在跨域场景表现并不好</li>
+<li>很难提供对移动端的支持</li>
+<li>存在跨站点脚本攻击（XSS）的风险</li>
+<li>很难在两个使用不同语言编写的web框架间共享session数据。</li>
+</ul>
+<p>#基于Token的认证
+在API被广泛使用的今天（广泛到不少应用后端仅需提供API就好了），为API设计更合适的身份认证解决方案就变得十分必要，OAuth 2.0和JSON Web Token（JWT）是这些解决方案中最流行的</p>
+<p>基于Token的认证，除了能回避Cookie存在的问题，还有许多额外的优点：</p>
+<ul>
+<li>无状态：由于Token已经自包含了所有的用户信息，所以无须再存储Session， 服务端易于扩展。</li>
+<li>内容分发：易于实现CDN，将静态资源分布到CDN上，某些CDN服务商提供了基于Token验证的安全服务，服务器仅提供API</li>
+<li>解耦：无须被绑定在一个特定的验证方案。作为独立的会话系统，利于实现分布式</li>
+<li>基于标准：JWT作为Token的标准已经被广泛的接受。主流语言都有相应支持JWT标准的工具包</li>
+</ul>
+<p>#JWT</p>
+<p>###组成
+JWT是一个轻巧的规范。这个规范允许我们使用JWT在用户和服务器之间传递安全可靠的信息。规范的细节参考<a href="https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32">jwt规范</a></p>
+<p>一个JWT实际上就是一个字符串,看起来大概是这样的</p>
+<blockquote>
+<p>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb21lIjoicGF5bG9hZCJ9.4twFt5NiznN84AWoo1d7KO1T_yoc0Z6XOpOVswacPZg</p>
+</blockquote>
+<p>JWT是一段被base64url编码过的字符序列（去除了尾部的“=”），并用点号分隔。它由三部分组成，头部(Header)、载荷(Payload)与签名(Signature)。</p>
+<p>###Header
+Header 包含了一些元数据，至少会表明 token 类型以及 签名方法。比如</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;typ&#34;</span> <span class="p">:</span> <span class="s2">&#34;JWT&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;alg&#34;</span> <span class="p">:</span> <span class="s2">&#34;HS256&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>type</code>: 必需。token 类型，JWT 表示是 JSON Web Token.
+<code>alg</code>: 必需。token 所使用的签名算法，可用的值在<a href="http://tools.ietf.org/html/rfc7518#section-3.1">这里</a>有规定。</p>
+<p>###Payload
+Payload部分包含了一些跟这个 token 有关的重要信息。 JWT 标准规定了一些字段，节选一些:</p>
+<ul>
+<li><code>iss</code>: The issuer of the token，token 是给谁的</li>
+<li><code>sub</code>: The subject of the token，token 主题</li>
+<li><code>exp</code>: Expiration Time。 token 过期时间，Unix 时间戳格式</li>
+<li><code>iat</code>: Issued At。 token 创建时间， Unix 时间戳格式</li>
+<li><code>jti</code>: JWT ID。针对当前 token 的唯一标识</li>
+</ul>
+<p>除了规定的字段外，可以包含其他任何 JSON 兼容的字段。</p>
+<p>Payload 示例:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;iss&#34;</span><span class="p">:</span> <span class="s2">&#34;example.com&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;exp&#34;</span><span class="p">:</span> <span class="mi">1435055117</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;user_id&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;foo&#34;</span><span class="p">:</span> <span class="s2">&#34;bar&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Payload加密后是安全可信的，所以我们可以将JWT设计为自说明、无状态的！</p>
+<p>###Signature
+签名主要用于验证 token 是否有效，是否被篡改。 签名时可以加密算法进行签名，比如 HMAC SHA-256:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">content</span> <span class="o">=</span> <span class="n">base64url_encode</span><span class="p">(</span><span class="n">Header</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">base64url_encode</span><span class="p">(</span><span class="n">Payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">signature</span> <span class="o">=</span> <span class="n">hmacsha256</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>默认情况下Payload的内容并没有被加密,可以通过 base64url_decode(text) 的方式解码得到.如果要包含敏感信息的话，记得先将 Payload 的内容进行加密.</p>
+<p>可以使用<code>http://jwt.io</code>来调试</p>
+<h3 id="安全性">安全性</h3>
+<p>上边说到默认情况下Payload的内容并没有被加密，所以你如果有加密需求，请使用pycrypto或是cryptography来加密。jwt的签名目的不是加密而是防止篡改.</p>
+<p>#demo
+##pyjwt
+我们来看一个Python实现的案例:<a href="https://github.com/jpadilla/pyjwt">padilla/pyjwt</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; import jwt
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; encoded = jwt.encode({&#39;some&#39;: &#39;payload&#39;}, &#39;secret&#39;, algorithm=&#39;HS256&#39;)
+</span></span><span class="line"><span class="cl">&#39;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb21lIjoicGF5bG9hZCJ9.4twFt5NiznN84AWoo1d7KO1T_yoc0Z6XOpOVswacPZg&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; jwt.decode(encoded, &#39;secret&#39;, algorithms=[&#39;HS256&#39;])
+</span></span><span class="line"><span class="cl">{&#39;some&#39;: &#39;payload&#39;}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从中我们可以发现，加解密的过程只在服务端发生（secret只有服务端存在），故而客户端拿到的是加密数据，其中携带的Payload是安全的，无法篡改。</p>
+<p>####Django实现
+<a href="https://github.com/GetBlimp/django-rest-framework-jwt">django-rest-framework-jwt</a></p>
+<p>#附录：Base64
+前边提到JWT使用base64来编码它的内容</p>
+<p>Base64是一种编码,并不是一种加密过程。</p>
+<p>关于Base64，维基百科已经说的很清楚了</p>
+<blockquote>
+<p>Base64是一种基于64个可打印字符来表示二进制数据的表示方法,由于2的6次方等于64，所以每6个比特为一个单元，对应某个可打印字符。三个字节有24个比特，对应于4个Base64单元，即3个字节需要用4个可打印字符来表示&hellip;在Base64中的可打印字符包括字母A-Z、a-z、数字0-9，这样共有62个字符</p>
+</blockquote>
+<blockquote>
+<p>Base64常用于在通常处理文本数据的场合，表示、传输、存储一些二进制数据。包括MIME的email、在XML中存储复杂数据。</p>
+</blockquote>
+<blockquote>
+<p>编码后的数据比原始数据略长，为原来的4/3</p>
+</blockquote>
+<p>举个例子，编码<code>Man</code></p>
+<p><img src="img/edx/auth/base64.png" alt="base64.png"></p>
+<p>#参考</p>
+<ul>
+<li><a href="http://jwt.io/">jwt.io</a></li>
+<li><a href="http://codelife.me/blog/2014/03/26/token-based-authentication-and-claims-based-identity/">基于Token的认证和基于声明的标识</a></li>
+<li><a href="http://mozillazg.com/2015/06/hello-jwt.html">JSON Web Token (JWT) 简介</a></li>
+<li><a href="http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/#disqus_thread">八幅漫画理解使用JSON Web Token设计单点登录系统</a></li>
+<li><a href="https://github.com/jpadilla/pyjwt">jpadilla/pyjwt</a></li>
+<li><a href="https://developer.okta.com/blog/2017/08/17/why-jwts-suck-as-session-tokens">Why JWTs Suck as Session Tokens</a></li>
+<li><a href="https://github.com/dwyl/learn-json-web-tokens">learn-json-web-tokens</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-12-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/about-creative-commons/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Open edX，开放教育与许可协议</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/oauth2-note/">
+            <span class="next-text nav-default">OAuth学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

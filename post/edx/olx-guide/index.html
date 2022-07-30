@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>如何从外部创建edx课程及其可编程性 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="当我们把Open edX用于spoc中，可能会有这样一种需求：如何将既有课程尽可能自动化得导入到Open edX中 我想到比较好的一种策略是采用O" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/olx-guide/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="如何从外部创建edx课程及其可编程性" />
+<meta property="og:description" content="当我们把Open edX用于spoc中，可能会有这样一种需求：如何将既有课程尽可能自动化得导入到Open edX中 我想到比较好的一种策略是采用O" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/olx-guide/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-06-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-06-28T00:00:00+00:00" />
+
+<meta itemprop="name" content="如何从外部创建edx课程及其可编程性">
+<meta itemprop="description" content="当我们把Open edX用于spoc中，可能会有这样一种需求：如何将既有课程尽可能自动化得导入到Open edX中 我想到比较好的一种策略是采用O"><meta itemprop="datePublished" content="2016-06-28T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-06-28T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2475">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="如何从外部创建edx课程及其可编程性"/>
+<meta name="twitter:description" content="当我们把Open edX用于spoc中，可能会有这样一种需求：如何将既有课程尽可能自动化得导入到Open edX中 我想到比较好的一种策略是采用O"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">如何从外部创建edx课程及其可编程性</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-06-28 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#olx的功能">OLX的功能</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#课程结构">课程结构</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#课程meta信息">课程meta信息</a></li>
+        <li><a href="#关联信息">关联信息</a></li>
+        <li><a href="#结构细节">结构细节</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#uuid">UUID</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>当我们把Open edX用于spoc中，可能会有这样一种需求：如何将既有课程尽可能自动化得导入到Open edX中</p>
+<p>我想到比较好的一种策略是采用Open edX的Open Learning XML (OLX) 来做这件事</p>
+<h1 id="open-learning-xml-olx">Open Learning XML (OLX)</h1>
+<p>Open Learning XML给出了一套课程文本化的描述，采用Open Learning XML，我们可以采用xml来定义我们的课程，从而做到在不使用edX Studio的情况下我们也能制作出所需的课程</p>
+<p>课程的组成结构和元素在Open Learning XML都有相应描述，参考这些描述，你可以通过任何程序/语言生成所需的课程内容，之后导入到Open edX即可</p>
+<h3 id="olx的功能">OLX的功能</h3>
+<p>顺便我们也援引一下官方对OLX功能的描述</p>
+<ul>
+<li>在不同的Open edx实例网站中迁移课程</li>
+<li>在studio外部创建课程，包括转化自不同格式的内容</li>
+<li>保证内容格式的开放性和可移植性</li>
+</ul>
+<h1 id="olx与跨平台导课">OLX与跨平台导课</h1>
+<p>假设学校已有一套采用Java语言写成的教学系统，现在我们想使用Open edX，而不想废弃既有平台的课程，那么一般的做法是认为地将课程进行转化，如果课程数量庞大，这项工作就极其耗时</p>
+<p>需要说明的是，由于平台特性上的差异，在转化之前你应当尽可能理解两个平台的特性，然后你作为一个“翻译者”，将内容形式进行转化，这部分的工作，机器无法帮到你，需要你花时间去理解课程结构,理解之后，你就可以开始将旧平台的课程，导出为OLX结构的文档，之后导入到Open edX平台中</p>
+<h1 id="olx入门">OLX入门</h1>
+<p>如果官方能把create new repo的时间用来好好写文档，那么这部分本该很完备的</p>
+<ul>
+<li><a href="http://edx.readthedocs.io/projects/edx-open-learning-xml/en/latest/getting-started.html">Getting Started with OLX</a></li>
+<li><a href="http://edx.readthedocs.io/projects/edx-open-learning-xml/en/latest/tasks/deploy-lms.html">Build a Course in OLX and Deploy to the edX LMSi</a></li>
+</ul>
+<p>然而由于跳票的习惯，这部分也只是有个大纲，并没有内容，所有需要我们自力更生</p>
+<h3 id="课程结构">课程结构</h3>
+<p>关于课程结构可以参考这个文档<a href="http://edx.readthedocs.io/projects/edx-open-learning-xml/en/latest/directory-structure.html">OLX Course Structure</a></p>
+<h1 id="demo">demo</h1>
+<p>文档枯燥，我们还是那一个课程demo来遛一遛吧,可以<a href="http://edx.readthedocs.io/projects/edx-open-learning-xml/en/latest/example-course/index.html">Example of an OLX Course</a>,习惯阅读英文的话，可以跟着文档走一遍，不习惯的话，可以跟着下文摸索</p>
+<p>我们以官方示范课程为例:<a href="https://github.com/edx/edx-demo-course">edx-demo-course</a>,这门课在新安装的平台中都预制了，在studio中导出到本地，然后解压后即可看到如下结构</p>
+<p>tree ./course -d(列出所有目录)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">├── about
+</span></span><span class="line"><span class="cl">├── annotatable
+</span></span><span class="line"><span class="cl">├── assets
+</span></span><span class="line"><span class="cl">├── chapter
+</span></span><span class="line"><span class="cl">├── course
+</span></span><span class="line"><span class="cl">├── discussion
+</span></span><span class="line"><span class="cl">├── drafts
+</span></span><span class="line"><span class="cl">│   ├── annotatable
+</span></span><span class="line"><span class="cl">│   ├── discussion
+</span></span><span class="line"><span class="cl">│   ├── html
+</span></span><span class="line"><span class="cl">│   ├── problem
+</span></span><span class="line"><span class="cl">│   ├── vertical
+</span></span><span class="line"><span class="cl">│   └── video
+</span></span><span class="line"><span class="cl">├── html
+</span></span><span class="line"><span class="cl">├── info
+</span></span><span class="line"><span class="cl">├── policies
+</span></span><span class="line"><span class="cl">│   └── course
+</span></span><span class="line"><span class="cl">├── problem
+</span></span><span class="line"><span class="cl">├── sequential
+</span></span><span class="line"><span class="cl">├── static
+</span></span><span class="line"><span class="cl">│   ├── VGL
+</span></span><span class="line"><span class="cl">│   │   ├── edx
+</span></span><span class="line"><span class="cl">│   │   ├── localhost
+</span></span><span class="line"><span class="cl">│   │   ├── mitx-lms
+</span></span><span class="line"><span class="cl">│   │   ├── mitx-staging
+</span></span><span class="line"><span class="cl">│   │   ├── original
+</span></span><span class="line"><span class="cl">│   │   └── sandbox
+</span></span><span class="line"><span class="cl">│   ├── applets
+</span></span><span class="line"><span class="cl">│   ├── css
+</span></span><span class="line"><span class="cl">│   ├── handouts
+</span></span><span class="line"><span class="cl">│   ├── images
+</span></span><span class="line"><span class="cl">│   ├── js
+</span></span><span class="line"><span class="cl">│   │   ├── IGV
+</span></span><span class="line"><span class="cl">│   │   │   ├── js
+</span></span><span class="line"><span class="cl">│   │   │   └── resources
+</span></span><span class="line"><span class="cl">│   │   ├── i18n
+</span></span><span class="line"><span class="cl">│   │   └── loupeAndLightbox
+</span></span><span class="line"><span class="cl">│   ├── jsmol
+</span></span><span class="line"><span class="cl">│   │   └── j2s
+</span></span><span class="line"><span class="cl">│   │       ├── com
+</span></span><span class="line"><span class="cl">│   │       │   └── jcraft
+</span></span><span class="line"><span class="cl">│   │       │       └── jzlib
+</span></span><span class="line"><span class="cl">│   │       ├── java
+</span></span><span class="line"><span class="cl">│   │       │   ├── awt
+</span></span><span class="line"><span class="cl">│   │       │   │   └── event
+</span></span><span class="line"><span class="cl">│   │       │   ├── io
+</span></span><span class="line"><span class="cl">│   │       │   ├── lang
+</span></span><span class="line"><span class="cl">│   │       │   │   ├── annotation
+</span></span><span class="line"><span class="cl">│   │       │   │   └── reflect
+</span></span><span class="line"><span class="cl">│   │       │   ├── net
+</span></span><span class="line"><span class="cl">│   │       │   ├── text
+</span></span><span class="line"><span class="cl">│   │       │   └── util
+</span></span><span class="line"><span class="cl">│   │       │       ├── regex
+</span></span><span class="line"><span class="cl">│   │       │       └── zip
+</span></span><span class="line"><span class="cl">│   │       ├── make
+</span></span><span class="line"><span class="cl">│   │       ├── org
+</span></span><span class="line"><span class="cl">│   │       │   └── jmol
+</span></span><span class="line"><span class="cl">│   │       │       ├── adapter
+</span></span><span class="line"><span class="cl">│   │       │       │   ├── readers
+</span></span><span class="line"><span class="cl">│   │       │       │   │   ├── cifpdb
+</span></span><span class="line"><span class="cl">│   │       │       │   │   ├── molxyz
+</span></span><span class="line"><span class="cl">│   │       │       │   │   ├── more
+</span></span><span class="line"><span class="cl">│   │       │       │   │   ├── quantum
+</span></span><span class="line"><span class="cl">│   │       │       │   │   ├── simple
+</span></span><span class="line"><span class="cl">│   │       │       │   │   ├── xml
+</span></span><span class="line"><span class="cl">│   │       │       │   │   └── xtal
+</span></span><span class="line"><span class="cl">│   │       │       │   └── smarter
+</span></span><span class="line"><span class="cl">│   │       │       ├── api
+</span></span><span class="line"><span class="cl">│   │       │       ├── appletjs
+</span></span><span class="line"><span class="cl">│   │       │       ├── atomdata
+</span></span><span class="line"><span class="cl">│   │       │       ├── awtjs
+</span></span><span class="line"><span class="cl">│   │       │       ├── awtjs2d
+</span></span><span class="line"><span class="cl">│   │       │       ├── bspt
+</span></span><span class="line"><span class="cl">│   │       │       ├── constant
+</span></span><span class="line"><span class="cl">│   │       │       ├── exportjs
+</span></span><span class="line"><span class="cl">│   │       │       ├── g3d
+</span></span><span class="line"><span class="cl">│   │       │       ├── geodesic
+</span></span><span class="line"><span class="cl">│   │       │       ├── i18n
+</span></span><span class="line"><span class="cl">│   │       │       ├── io
+</span></span><span class="line"><span class="cl">│   │       │       ├── io2
+</span></span><span class="line"><span class="cl">│   │       │       ├── jvxl
+</span></span><span class="line"><span class="cl">│   │       │       │   ├── api
+</span></span><span class="line"><span class="cl">│   │       │       │   ├── calc
+</span></span><span class="line"><span class="cl">│   │       │       │   ├── data
+</span></span><span class="line"><span class="cl">│   │       │       │   └── readers
+</span></span><span class="line"><span class="cl">│   │       │       ├── minimize
+</span></span><span class="line"><span class="cl">│   │       │       │   └── forcefield
+</span></span><span class="line"><span class="cl">│   │       │       │       └── data
+</span></span><span class="line"><span class="cl">│   │       │       ├── modelset
+</span></span><span class="line"><span class="cl">│   │       │       ├── modelsetbio
+</span></span><span class="line"><span class="cl">│   │       │       ├── navigate
+</span></span><span class="line"><span class="cl">│   │       │       ├── parallel
+</span></span><span class="line"><span class="cl">│   │       │       ├── quantum
+</span></span><span class="line"><span class="cl">│   │       │       ├── render
+</span></span><span class="line"><span class="cl">│   │       │       ├── renderbio
+</span></span><span class="line"><span class="cl">│   │       │       ├── renderspecial
+</span></span><span class="line"><span class="cl">│   │       │       ├── rendersurface
+</span></span><span class="line"><span class="cl">│   │       │       ├── script
+</span></span><span class="line"><span class="cl">│   │       │       ├── shape
+</span></span><span class="line"><span class="cl">│   │       │       ├── shapebio
+</span></span><span class="line"><span class="cl">│   │       │       ├── shapespecial
+</span></span><span class="line"><span class="cl">│   │       │       ├── shapesurface
+</span></span><span class="line"><span class="cl">│   │       │       ├── smiles
+</span></span><span class="line"><span class="cl">│   │       │       ├── symmetry
+</span></span><span class="line"><span class="cl">│   │       │       ├── thread
+</span></span><span class="line"><span class="cl">│   │       │       ├── util
+</span></span><span class="line"><span class="cl">│   │       │       └── viewer
+</span></span><span class="line"><span class="cl">│   │       │           └── binding
+</span></span><span class="line"><span class="cl">│   │       └── test
+</span></span><span class="line"><span class="cl">│   ├── molecules
+</span></span><span class="line"><span class="cl">│   ├── python
+</span></span><span class="line"><span class="cl">│   └── subs
+</span></span><span class="line"><span class="cl">├── tabs
+</span></span><span class="line"><span class="cl">├── vertical
+</span></span><span class="line"><span class="cl">└── video
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">115 directories
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中大多目录一目了然</p>
+<h3 id="课程meta信息">课程meta信息</h3>
+<p>参见root目录下的course.xml文件，这就是我们在studio中创建课程时，填写的数据</p>
+<h3 id="关联信息">关联信息</h3>
+<p>课程的结构描述信息在course/course.xml，高级配置也在其中,这个文件的命名规则由根目录下的course.xml文件的url_name字段信息确定</p>
+<p>而course/course.xml可视为这门课程的地图</p>
+<h3 id="结构细节">结构细节</h3>
+<p><a href="http://edx.readthedocs.io/projects/edx-open-learning-xml/en/latest/studio-example/manual-testing-structure.html#the-courseware-structure-file">The Structure of the Manual Testing Course</a></p>
+<p>对于demo课程的细节，可以阅读这篇文档</p>
+<p>其中可能引起的疑惑有两个</p>
+<p>其一是资源定位的问题，如何关联到相关资源，OLX给出的策略似乎是uuid,生成规则猜测为:<code>uuid.uuid4().get_hex()</code></p>
+<p>其二是unicode（中文）编码的问题，如果你看到你的<code>python入门.pdf</code>在OLX文档中变为<code>python\u5165\u95e8.pdf</code>这是完全正常的</p>
+<h1 id="附">附</h1>
+<h3 id="uuid">UUID</h3>
+<p>UUID是128位的全局唯一标识符，通常由32字节的字符串表示。它可以保证时间和空间的唯一性，也称为GUID</p>
+<p>UUID主要有五个算法，也就是五种方法来实现：</p>
+<ul>
+<li>uuid1()——基于时间戳。由MAC地址、当前时间戳、随机数生成。可以保证全球范围内的唯一性， 但MAC的使用同时带来安全性问题，局域网中可以使用IP来代替MAC</li>
+<li>uuid2()——基于分布式计算环境DCE（Python中没有这个函数）</li>
+<li>uuid3()——基于名字的MD5散列值：通过计算名字和命名空间的MD5散列值得到，保证了同一命名空间中不同名字的唯一性， 和不同命名空间的唯一性，但同一命名空间的同一名字生成相同的uuid。</li>
+<li>uuid4()——基于随机数，由伪随机数得到，有一定的重复概率，该概率可以计算出来</li>
+<li>uuid5()——基于名字的SHA-1散列值</li>
+</ul>
+<p>若在Global的分布式计算环境下，最好用uuid1；若有名字的唯一性要求，最好用uuid3或uuid5。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://edx.readthedocs.io/projects/edx-open-learning-xml/en/latest/">edX Open Learning XML Guide</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-06-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%97%E8%AF%8D/2016-07-02/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default"> 朋友将离南京</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/decode-and-encode-note/">
+            <span class="next-text nav-default">编码相关的笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
