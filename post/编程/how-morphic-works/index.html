@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="前言 近期重新阅读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malo" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malon" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="[译] Morphic 的工作原理" />
-<meta property="og:description" content="前言 近期重新阅读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malo" />
+<meta property="og:description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malon" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/how-morphic-works/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2022-08-24T00:00:00+00:00" />
 <meta property="article:modified_time" content="2022-08-24T00:00:00+00:00" />
 
 <meta itemprop="name" content="[译] Morphic 的工作原理">
-<meta itemprop="description" content="前言 近期重新阅读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malo"><meta itemprop="datePublished" content="2022-08-24T00:00:00+00:00" />
+<meta itemprop="description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malon"><meta itemprop="datePublished" content="2022-08-24T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2022-08-24T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2781">
+<meta itemprop="wordCount" content="2780">
 <meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="[译] Morphic 的工作原理"/>
-<meta name="twitter:description" content="前言 近期重新阅读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malo"/>
+<meta name="twitter:description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malon"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -155,8 +155,8 @@
 </div>
     <div class="post-content">
       <h2 id="前言">前言</h2>
-<p>近期重新阅读 <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/morphic.final.pdf">An introdution to Morphic</a>, 本文翻译自其中的部分章节。</p>
-<p>Morphic 是我最喜欢的 UI 框架, <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/morphic.final.pdf">An introdution to Morphic</a> 是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Maloney。</p>
+<p>近期重读 <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/morphic.final.pdf">An introdution to Morphic</a>, 本文翻译自其中的部分章节。</p>
+<p>Morphic 是我最喜欢的 UI 框架, <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/morphic.final.pdf">An introdution to Morphic</a> 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Maloney。</p>
 <p>教程中涉及的一些例子，我已经整理放到了 Github 上 (修复了因 Squeak 的版本变化导致的 bug): <a href="https://github.com/wwj718/Morphic-Fun">Morphic-Fun</a></p>
 <h3 id="morphic-介绍">Morphic 介绍</h3>
 <p>Morphic 是一个用户界面框架，它使构建生动的(lively)交互式用户界面变得简单而有趣。Morphic 处理了大部分显示更新、事件调度、拖放、动画和自动布局的繁琐工作，从而将程序员解放出来，专注于设计而不是机制。有些用户界面框架需要大量的模板代码来完成简单的事情, 而在 Morphic 中，少量的代码就能发挥很大的作用，几乎不浪费任何努力。</p>
