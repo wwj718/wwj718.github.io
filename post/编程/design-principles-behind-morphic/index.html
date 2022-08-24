@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译] Morphic 背后的设计原则 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 近期重新阅读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/design-principles-behind-morphic/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译] Morphic 背后的设计原则" />
+<meta property="og:description" content="前言 近期重新阅读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/design-principles-behind-morphic/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-08-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-24T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译] Morphic 背后的设计原则">
+<meta itemprop="description" content="前言 近期重新阅读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者"><meta itemprop="datePublished" content="2022-08-24T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-08-24T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3973">
+<meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译] Morphic 背后的设计原则"/>
+<meta name="twitter:description" content="前言 近期重新阅读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译] Morphic 背后的设计原则</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-08-24 </span>
+        <div class="post-category">
+            <a href="/categories/smalltalk/"> Smalltalk </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#morphic-介绍">Morphic 介绍</a></li>
+      </ul>
+    </li>
+    <li><a href="#译文">译文</a>
+      <ul>
+        <li><a href="#具体性concreteness和直接性directness">具体性(Concreteness)和直接性(Directness)</a></li>
+        <li><a href="#活性liveness">活性(Liveness)</a></li>
+        <li><a href="#统一性uniformity">统一性(Uniformity)</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>近期重新阅读 <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/Morphic.final.pdf">An introdution to Morphic</a>, 本文翻译自其中的部分章节。</p>
+<p>Morphic 是我最喜欢的 UI 框架, <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/Morphic.final.pdf">An introdution to Morphic</a>是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Maloney。</p>
+<p>教程中涉及的一些例子，我已经整理放到了 Github 上 (修复了因 Squeak 的版本变化导致的 bug): <a href="https://github.com/wwj718/Morphic-Fun">Morphic-Fun</a></p>
+<h3 id="morphic-介绍">Morphic 介绍</h3>
+<p>Morphic 是一个用户界面框架，它使构建生动的(lively)交互式用户界面变得简单而有趣。Morphic 处理了大部分显示更新、事件调度、拖放、动画和自动布局的繁琐工作，从而将程序员解放出来，专注于设计而不是机制。有些用户界面框架需要大量的模板代码来完成简单的事情, 而在 Morphic 中，少量的代码就能发挥很大的作用，几乎不浪费任何努力。</p>
+<h2 id="译文">译文</h2>
+<p>一个系统背后的设计原则 &ndash; 为什么事情以一种方式来做而不以其他方式来做 &ndash; 往往不在系统本身里显现出来。但是，理解系统背后的设计理念，可以帮助程序员以与原始设计相协调的方式扩展系统。本节将阐述 Morphic 的三个重要设计原则：具体性(Concreteness)、活性(liveness)和统一性(uniformity)。</p>
+<h3 id="具体性concreteness和直接性directness">具体性(Concreteness)和直接性(Directness)</h3>
+<p>我们生活在一个由物理对象(physical objects)组成的世界里，我们不断地摆弄着这些东西。我们从书架上取下一本书，弄乱一叠纸，收拾一个包。这些事情看起来很容易，因为我们已经内化了物理世界的法则：物体是持久的，它们可以被移动，如果一个人平时小心摆放东西，它们通常会留在它们被放置的地方。Morphic 努力在计算机中创造一种具体物体的幻觉，这种幻觉具有物理世界中物体的一些特性。我们把这个原则称为具体性。具体性帮助 Morphic 用户通过与物理世界的类比来理解屏幕上发生的事情。例如，图 9 所示的分页器允许简单地通过拖放页面的缩略图对 BookMorph 的页面进行重新排序。由于大多数人都在物理世界中对纸张进行过分类，分页器的具体性使得人们对书页进行分类的过程感到熟悉而浅显。</p>
+<img width=500 src="/post/img/morphic-09.png" />
+<center>图9：使用分页器对 BookMorph 的页面进行重新排序。每一页都由一张小的缩略图表示。通过拖动缩略图，可以将一个页面移动到序列中所需要的位置。分页器在为 Squeak 演示文稿的 "幻灯片" 排序时非常方便。</center>
+<p>用户很快意识到，屏幕上的所有东西都是可以触摸和操作的 Morph。复合 Morph 可以被分解，单个 Morph 可以被检查、浏览和改变。由于所有这些动作都是从直接指向相关的 Morph 开始的，所以我们有时会说直接性是另一个 Morphic 设计原则。具体性和直接性创造了一种强烈的自信和授权感；用户很快就获得了对 Morph 的推理能力，就像他们对物理对象的推理一样。</p>
+<p>Morphic 通过几种方式实现了具体性和直接性。首先，显示是使用双缓冲更新的，所以用户永远不会看到正在重绘的 Morph。与那些只显示正在移动的物体轮廓的用户界面不同，Morphic 总是显示完整的物体。此外，当一个物体被拾起时，它会抛出一个半透明的阴影，其形状与自身完全一样。综合来看，这些显示技术创造了一种感觉，即 Morph 是平整的物理对象，就像从纸上剪下来的形状，躺在水平面上，直到被用户拿起。像纸片一样，Morph 可以重叠并遮盖彼此的部分，它们可以有孔洞，让后面的 Morph 露出来。</p>
+<p>第二，像素不是通过某种瞬时过程或程序滴到屏幕上的；相反，显示某个像素的代理总是一个 Morph，它仍然存在，可以被检查和操纵。由于 Morph 只在其范围内作画，而且这些范围是已知的，所以总是可以通过指向它来找到负责在显示屏上作画的 Morph。(当然，在 Squeak 中，直接在<strong>显示屏</strong>上画画也是可能的，但 Morph 的具体化是如此之好，以至于有很大的动力去编写遵循 Morph 规则的代码）。</p>
+<p>Halo 允许 Morph 的许多方面 &ndash; 它的大小、位置、旋转和复合 Morph 结构 &ndash; 直接通过拖动 Morph 本身的手柄(handles)来操作。这有时被称为 &ldquo;接触操作&rdquo;（action-by-contact）。与此相反，有些用户界面要求用户通过菜单或对话框来操作对象，而这些菜单或对话框在物理上与被操作的对象相距甚远，这可能被称为远距离操作。接触式操作加强了直接性和具体性；在物理世界中，我们通常通过接触来操作物体。在现实世界中，远距离行动是可能的 &ndash; 例如，你可以在不接触蜡烛的情况下吹灭它 &ndash; 但这种情况不太常见，而且感觉像魔术。</p>
+<p>最后，正如前面所讨论的，Morph 直接结合产生复合 Morph。如果你从一个复合 Morph 中移除所有的 submorphs，父级 Morph 仍然存在。没有无形的 &ldquo;容器&rdquo; 或 &ldquo;胶水&rdquo; 对象将 submorphs 固定在一起；所有的东西都是具体的，复合 Morph 可以通过直接操作重新组装。自动布局也是如此，布局是由 Morph 完成的，这些布局 Morph 也是有形的存在，独立于它们所包含的 Morph。因此，有一个地方可以让人去理解和改变布局的属性。我们说，Morph 具体化了复合结构和自动布局行为。</p>
+<h3 id="活性liveness">活性(Liveness)</h3>
+<p>Morphic 的灵感来自于物理世界的另一个属性：活性。物理世界中的许多物体都是活跃的：时钟滴答，交通灯变化，电话铃声。同样，在 Morphic 中，任何 Morph 都可以有自己的生命：对象检查器更新，钢琴卷轴滚动，电影播放。就像在现实世界中一样，当用户做其他事情的时候，Morph 可以继续运行。与那些被动地等待下一个用户动作的用户界面形成鲜明对比的是，Morphic 成为屏幕上发生的事情的平等伙伴。用户不是在操纵死的物体，而是与活的物体进行互动。活性使 Morphic 变得充满乐趣。</p>
+<p>活性支持使用动画，既是为了动画本身，也是为了增强用户体验。例如，如果一个人把一个物体掉在一个不接受它的东西上，它可以平滑地以动画形式回到原来的位置，以显示这个物体被拒绝。动画并不会妨碍你，因为用户可以在动画完成的同时进行其他操作。</p>
+<p>Liveness 还支持一种叫做观察(observing)的有用技术，在这种技术中，一些 Morph（比如 UpdatingStringMorph）会实时显示一些数值。例如，下面的代码创建了一个观察器来监视 Squeak 对象内存中的自由空间余量。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">spaceWatcher := UpdatingStringMorph new.
+</span></span><span class="line"><span class="cl">spaceWatcher stepTime: 1000.
+</span></span><span class="line"><span class="cl">spaceWatcher target: Smalltalk.
+</span></span><span class="line"><span class="cl">spaceWatcher getSelector: #garbageCollectMost.
+</span></span><span class="line"><span class="cl">spaceWatcher openInWorld.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Model-View-Controller 这类基于通知的方案中，视图会观察模型，这些模型经过精心设计，可以将更改报告广播到它们的视图。相比之下，观察(observing)可以查看那些没有被设计为被查看的东西。例如，在调试一个耗费内存的多媒体应用程序时，人们可能希望监视内存中所有图形对象使用的字节总数。虽然这不是一个已经由系统维护的数量，但它可以被计算和观察。甚至可以观察 Squeak 系统以外的东西，比如邮件服务器上新邮件的数量。</p>
+<p>观察(observing)是一种轮询技术&ndash;观察者周期性地将其当前的观察与先前的观察进行比较，并在两者不同时执行一些行动。这并不一定意味着它是低效的。首先，观察者只在观察到的值发生变化时更新显示，所以当值没有变化时，没有显示更新或布局成本。其次，观察者的轮询频率是可以调整的。即使计算内存中所有图形对象所使用的字节数需要整整十分之一秒的时间，如果这个计算每分钟只进行一次，它所消耗的 CPU 周期将远低于百分之一。当然，低的轮询率在显示器反映变化之前会产生一个时间滞后，但这种松散的耦合也允许快速变化的数据被观察到（实际上是采样），而不会将计算速度降低到屏幕更新率。</p>
+<p>一个用 Morphic 建立的儿童编程环境显示了几个活性的例子（图 10）。右边的查看器在孩子操纵汽车的过程中不断地更新其显示的汽车位置和方向（观察的一种应用）。这有助于孩子将代表 x 和 y 的数字与汽车的物理位置联系起来。汽车可以通过孩子写的脚本，使用从查看器(viewer)中拖出的命令来实现动画。脚本甚至可以在运行过程中改变，使孩子能够立即看到脚本变化的效果。单个脚本可以独立打开和关闭。</p>
+<img width=500 src="/post/img/morphic-10.png" />
+<center>图10：儿童编程环境中的活性。汽车脚本运行时，查看器的 x、y 和 heading 字段实时更新，甚至在孩子写另一个脚本或执行其他活动时也是如此。</center>
+<p>用来实现活性的主要机制是步进(stepping)机制。正如我们所看到的，任何变形体都可以实现 step 消息，并可以定义它所需要的步进频率。这给了 Morph 一个心跳，它们可以用来做动画、观察(observing)或其他自主行为。令人惊讶的是，这样一个简单的机制却如此强大。Morphic 的增量显示管理也使活性成为可能，它允许多个 Morph 同时步进，而不必担心如何安排它们的屏幕更新顺序。Morphic 对拖放和鼠标覆盖行为的支持进一步增加了系统的活性。</p>
+<p>Morphic 避免了许多其他系统中的全局运行/编辑开关。就像你在现实世界中操纵一个物体之前不必（也不能！）关闭物理定律一样，你在操纵一个 Morph 甚至编辑它的代码之前也不需要暂停步进(stepping)。一切都继续运行。当你在一个正在运行的 Morph 上弹出一个菜单或 Halo 时，它会继续运行。当你用调色板改变一个 Morph 的颜色时，它的颜色会持续更新。如果你够快的话，你可以在一个动画 Morph 上点击或投掷东西，因为它在屏幕上移动。所有这些都是对 &ldquo;活性&rdquo; 原则的支持。</p>
+<h3 id="统一性uniformity">统一性(Uniformity)</h3>
+<p>物理世界的另一个鼓舞人心的特性是其统一性。无论你去哪里，无论你做什么，物理对象都遵守相同的物理规律。我们每天都在利用这种统一性来预测事物在新的情况下会有什么表现。如果你扔下一个物体，它就会掉下来；你不需要测试你遇到的每一个物体，就知道它遵守重力法则。</p>
+<p>Morphic 努力为屏幕上的物体创造一种类似的统一性，一种 Morph 互动的 &ldquo;物理学&rdquo;。这有助于用户对系统进行推理，并帮助他们以设计者没有预料到的方式将 Morph 组合起来。例如，由于 Morphic 中的菜单只是复合 Morph，人们可以从一个菜单中提取一些方便的命令，并将它们嵌入到其他一些 Morph 中，以制作一个自定义的控制面板。</p>
+<p>统一性在 Morphic 中是通过努力避免特殊情况来实现的。屏幕上的所有东西都是 Morph，所有的 Morph 都继承于 Morph，任何 Morph 都可以有 submorphs 或成为 submorphs，复合 Morph 的行为就像原子 Morph。在这些和其他的设计选择中，Morphic 试图将不同的东西合并到一个一般的模型下，并避免做出有损于统一性的区分。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-08-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/how-morphic-works/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译] Morphic 的工作原理</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/squeak-dotpack-simulator/">
+            <span class="next-text nav-default">Squeak 中的 dotPack 模拟器</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
