@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>一篇用动态媒介写的文章 - 夜行人</title>
+  <title>[译] Morphic 的工作原理 - 夜行人</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &amp;ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malon" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -39,20 +39,20 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="一篇用动态媒介写的文章" />
-<meta property="og:description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经" />
+<meta property="og:title" content="[译] Morphic 的工作原理" />
+<meta property="og:description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malon" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/how-morphic-works/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2022-08-25T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-08-25T00:00:00+00:00" />
+<meta property="article:published_time" content="2022-08-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-24T00:00:00+00:00" />
 
-<meta itemprop="name" content="一篇用动态媒介写的文章">
-<meta itemprop="description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经"><meta itemprop="datePublished" content="2022-08-25T00:00:00+00:00" />
-<meta itemprop="dateModified" content="2022-08-25T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1454">
+<meta itemprop="name" content="[译] Morphic 的工作原理">
+<meta itemprop="description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malon"><meta itemprop="datePublished" content="2022-08-24T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-08-24T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2780">
 <meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="一篇用动态媒介写的文章"/>
-<meta name="twitter:description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经"/>
+<meta name="twitter:title" content="[译] Morphic 的工作原理"/>
+<meta name="twitter:description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 是我最喜欢的 UI 框架, An introdution to Morphic 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Malon"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -119,10 +119,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">一篇用动态媒介写的文章</h1>
+      <h1 class="post-title">[译] Morphic 的工作原理</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2022-08-25 </span>
+        <span class="post-time"> 2022-08-24 </span>
         <div class="post-category">
             <a href="/categories/smalltalk/"> Smalltalk </a>
             </div>
@@ -135,57 +135,35 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#前言">前言</a></li>
-    <li><a href="#遇到困难">遇到困难</a></li>
-    <li><a href="#救星">救星</a></li>
-    <li><a href="#加载动态文章">加载动态文章</a>
+    <li><a href="#前言">前言</a>
       <ul>
-        <li><a href="#开始阅读">开始阅读</a></li>
+        <li><a href="#morphic-介绍">Morphic 介绍</a></li>
       </ul>
     </li>
-    <li><a href="#尾声">尾声</a></li>
-    <li><a href="#参考">参考</a></li>
+    <li><a href="#译文">译文</a>
+      <ul>
+        <li><a href="#ui-循环the-ui-loop">UI 循环(The UI Loop)</a></li>
+        <li><a href="#输入处理">输入处理</a></li>
+        <li><a href="#活性">活性</a></li>
+        <li><a href="#布局更新">布局更新</a></li>
+        <li><a href="#显示更新">显示更新</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
-      <blockquote>
-<p>如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay</p>
-</blockquote>
-<h2 id="前言">前言</h2>
-<p>近期重读 <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/morphic.final.pdf">An Introduction to Morphic</a> 的时候，发现 Morphic 中用于自动布局的类 <code>AlignmentMorph</code> 已经被弃用:</p>
-<p><img src="/post/img/morphic-layout01.png" alt=""></p>
-<p>顺着类注释中的提示, 准备学习一下 layoutPolicy , 在 <a href="https://wiki.squeak.org/squeak">Squeak wiki</a> 里读了几篇与此相关的词条:</p>
-<ul>
-<li><a href="https://wiki.squeak.org/squeak/2141">How to lay out submorphs</a></li>
-<li><a href="https://wiki.squeak.org/squeak/2142">LayoutPolicy</a></li>
-<li><a href="https://wiki.squeak.org/squeak/2340">TableLayout</a></li>
-</ul>
-<p>也跟着做了不少例子:</p>
-<p><img src="/post/img/morphic-layout02.png" alt=""></p>
-<p>Morphic 新的布局系统有点像 CSS 里的 Flexbox，但早了 20 多年。</p>
-<p>在 Morphic 布局系统话题下，好几篇 Squeak wiki 词条都提到了 Ted kaehler 和 Andreas Raab 写的《Control Your Submorphs》一文。</p>
-<p><img src="/post/img/MorphLayoutArticle_a_simple_table.png" alt=""></p>
-<p>由于 Ted kaehler 和 Andreas Raab 都是 Squeak 的核心开发者，所以我想好好读读这篇文章，看看能否学到一些关于布局的强大想法。</p>
-<p>我最近在 Smalltalk 里弄懂了许多过去一知半解的概念，越来越喜欢和信任这个学习环境。在 Squeak 里，好像什么都能学会。正如 Alan Kay 承诺的那样，强大的系统能够增强学习者，帮助 Ta 更好的理解和学习复杂系统。我过去接触 HTML/CSS 时在排版布局问题上碰了很多壁，以至一直不愿再折腾它们。这次有点蠢蠢欲动，指不定 Squeak 能够帮助我，就像它曾帮助我理解了许多过去觉得困难的事情。</p>
-<h2 id="遇到困难">遇到困难</h2>
-<p>可是，始终无法在互联网上搜到《Control Your Submorphs》的电子版。</p>
-<p>重新阅读 <a href="https://wiki.squeak.org/squeak/2400">MorphLayoutArticle</a>词条，发现它是一篇动态文章:</p>
-<blockquote>
-<p>The <strong>dynamic essay</strong> MorphLayoutArticle describes how layout works in Morphic.</p>
-</blockquote>
-<p>或许 Ted kaehler 和 Andreas Raab 完全在 Squeak 里写作，压根没有发布 PDF 和 HTML 版本！</p>
-<p>这篇文章的格式是: <a href="/post/img/MorphLayoutArticle.pr">MorphLayoutArticle.pr</a></p>
-<p><code>.pr</code> 是 Squeak/Etoys 项目文件的后缀名。 <a href="https://wiki.squeak.org/squeak/2400">MorphLayoutArticle</a> 提到 它在 Squeak 3.2 中加载良好。但若要将其加载到 Squeak 3.8.1 中，需要参考<a href="https://wiki.squeak.org/squeak/2401">这些说明</a>。</p>
-<p>Squeak 3.2 <a href="https://files.squeak.org/3.2/">发行于 2002 年</a>, Squeak 3.8 则<a href="https://files.squeak.org/3.8/">发行于 2005 年</a>, 年代如此久远，在瞬息万变的计算机世界，仿佛远古时代的文物, 它们在我的 MacOS 12.3.1(M1) 都运行不了。</p>
-<h2 id="救星">救星</h2>
-<p>突然想到之前换电脑之后，无法运行 Etoys 的经历，后来的解决方案是使用 <a href="https://squeak.js.org/">SqueakJS</a> 虚拟机来<a href="https://squeak.js.org/etoys/#fullscreen">运行 Etoys 镜像(image)</a> (<a href="https://smalltalkzoo.thechm.org/HOPL-Squeak.html?etoys">Etoys Lively</a>)。</p>
-<p>SqueakJS 是由 Vanessa Freudenberg 使用纯 JavaScript 编写的 Squeak 虚拟机。</p>
-<p>我想起 SqueakJS 可以运行很多种 Smalltalk image！指不定就包括 Squeak 3.2 或 Squeak 3.8。 果真，Squeak 3.8 可用！</p>
-<p><img src="/post/img/morphic-layout03.png" alt=""></p>
-<h2 id="加载动态文章">加载动态文章</h2>
-<p><a href="/post/img/MorphLayoutArticle.pr">MorphLayoutArticle.pr</a> 是在 Squeak 3.2 里写的，为了将其加载到 Squeak 3.8 里，需要 <a href="https://wiki.squeak.org/squeak/2401">做些修改</a>。</p>
+      <h2 id="前言">前言</h2>
+<p>近期重读 <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/morphic.final.pdf">An introdution to Morphic</a>, 本文翻译自其中的部分章节。</p>
+<p>Morphic 是我最喜欢的 UI 框架, <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/morphic.final.pdf">An introdution to Morphic</a> 则是我最喜欢的 Morphic 教程，教程的作者正好也是 Morphic 的设计者: John Maloney。</p>
+<p>教程中涉及的一些例子，我已经整理放到了 Github 上 (修复了因 Squeak 的版本变化导致的 bug): <a href="https://github.com/wwj718/Morphic-Fun">Morphic-Fun</a></p>
+<h3 id="morphic-介绍">Morphic 介绍</h3>
+<p>Morphic 是一个用户界面框架，它使构建生动的(lively)交互式用户界面变得简单而有趣。Morphic 处理了大部分显示更新、事件调度、拖放、动画和自动布局的繁琐工作，从而将编程者解放出来，专注于设计而不是机制。有些用户界面框架需要大量的模板代码来完成简单的事情, 而在 Morphic 中，少量的代码就能发挥很大的作用，几乎不浪费任何努力。</p>
+<h2 id="译文">译文</h2>
+<p>这一节概述了 Morphic 的工作原理，其详细程度足以帮助 Morphic 编程者从系统中获得最大收益。</p>
+<h3 id="ui-循环the-ui-loop">UI 循环(The UI Loop)</h3>
+<p>每个交互式用户界面框架的核心, 都是最早的交互式计算机系统中的 &ldquo;读取(read)-评估(evaluate)-打印(print)&rdquo; 循环(loop)的现代版。然而，在这个现代版本中，&ldquo;读取&rdquo; 处理事件而不是字符，&ldquo;打印&rdquo; 执行绘图操作以更新图形显示而不是输出文本。Morphic 版本的这个循环增加了两个额外的步骤，为自动布局和活性(liveness)提供钩子(hook)。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -193,40 +171,29 @@
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
-</span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> SmartRefStream&gt;&gt;#initKnownRenames
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        renamed
-</span></span><span class="line"><span class="cl">            at: #AlansTextPlusMorph put: #TextPlusMorph;
-</span></span><span class="line"><span class="cl">            at: #FlasherMorph put: #Flasher;
-</span></span><span class="line"><span class="cl">            yourself
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">do forever:
+</span></span><span class="line"><span class="cl">    process inputs
+</span></span><span class="line"><span class="cl">    send step to all active morphs
+</span></span><span class="line"><span class="cl">    update morph layouts
+</span></span><span class="line"><span class="cl">    update the display
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>通过将 SmartRefStream 类的<code>#initKnownRenames</code> 方法，修改为上述内容.成功加载了 MorphLayoutArticle.pr。</p>
-<p><img src="/post/img/morphic-layout-squeak38-essay.png" alt=""></p>
-<h3 id="开始阅读">开始阅读</h3>
-<p>这篇文章篇幅很小，读来十份轻松。</p>
-<p>不同于 Squeak wiki 里的文字和图片描述，这篇短文里，穿插了 6 个交互式的案例，作者每次在阐述一个控制布局的关键概念(参数)后，就让读者通过操控作者精心准备的交互案例，来把握这些参数。</p>
-<p>这是我第一次感受到布局的乐趣，它是如此清晰、浅显而直观！短短几分钟，就毫不费劲地掌握了它们，我心里十份清楚，我并不只是理解了作者通过静态媒介(文字)所表达的东西，要比这更多。通过按照自己的意志操控这些布局元素，我仿佛变成了一个布局元素本身，亲身参与到了布局之中！</p>
-<p>这就像 Seymour Papert 在《Mindstorms》里提到的童年的齿轮。</p>
-<h2 id="尾声">尾声</h2>
-<p>遗憾的是，计算机并没有像 Alan Kay 所期待的那样，作为一种动态媒介流行起来。今天计算机里边的内容主要是对旧媒介的模仿，它模仿书籍、电视、电影&hellip; 人们在计算机里写作，就像过去用纸笔写作。像 《Control Your Submorphs》 这样帮助读者更好地理解复杂事物的文章不仅不多见，而且连阅读它的工具都日渐式微，不易寻得。</p>
-<p>近年情况有所好转，Jupyter 这几年在科学界很流行，尤其是物理学、生物学和数据科学/AI 领域，人们甚至直接在里头写论文 &ndash; 一篇可运行的论文，一篇读者可以与作者的论点进行交互的论文。</p>
-<p>但相比于 Squeak，Jupyter 才刚刚起步，即使是 20 年前 的Squeak 也走得更远。</p>
-<p>差距是愿景上的。</p>
-<h2 id="参考">参考</h2>
-<ul>
-<li><a href="https://wiki.squeak.org/squeak/2141">How to lay out submorphs</a></li>
-<li><a href="https://wiki.squeak.org/squeak/2400">MorphLayoutArticle</a></li>
-<li><a href="https://squeak.js.org/">SqueakJS</a>
-<ul>
-<li><a href="https://squeak.js.org/run/#url=https://freudenbergs.de/vanessa/squeakjs&amp;files=%5BSqueak3.8.1-6747full.image,Squeak3.8.1-6747full.changes,SqueakV3.sources%5D&amp;swapButtons=true">Squeak 3.8 (2006)</a></li>
-</ul>
-</li>
-<li><a href="http://wiki.squeak.org/squeak/885">pr file</a></li>
-</ul>
+</div><p>有时，这些步骤都无事可做；没有事件需要处理，没有 Morph 需要步进(step)，没有布局更新，也没有显示更新。在这种情况下，Morphic 会休眠几毫秒，这样它就不会在空闲的时候占用 CPU 了。</p>
+<h3 id="输入处理">输入处理</h3>
+<p>输入处理是将传入的事件分派给适当的 Morph 的问题。击键事件被发送到当前的键盘焦点 Morph，它通常由鼠标点击建立。如果没有建立键盘焦点，按键事件就会被丢弃。在任何时候，最多只有一个键盘焦点 Morph。</p>
+<p>鼠标按下(Mouse down)事件是按位置派发的；事件发生位置的最前面的 Morph 可以处理该事件。事件不会穿过 Morph；你不可能意外地按下藏在其他 Morph 后面的按钮。Morphic 需要知道哪些 Morph 对获取鼠标事件感兴趣。它通过向每个候选 Morph 发送 <code>handlesMouseDown:</code> 消息来实现这一目的。事件的提供是为了让 Morph 可以根据事件发生时 按下的鼠标键和按下的修改键 来决定是否要处理这个事件。如果没有找到处理该事件的 Morph，默认行为是拾起光标下最前面的 Morph。</p>
+<p>在一个复合 Morph 中，其最前面的 submorph 被给予第一个机会来处理一个事件，这与 submorph 出现在其所有者(owner)前面的事实一致。如果该 submorph 不想处理该事件，它的所有者会得到一个机会。如果它的所有者不想处理，那么它的所有者的所有者就会得到一次机会，以此类推，沿着所有者链向上。这个策略允许一个对鼠标敏感的 Morph，比如一个按钮，被装饰上标签或图形，仍然可以得到鼠标的点击。在我们第一次尝试事件调度的时候，鼠标在 submorph 上的点击并没有传递给它的所有者，所以点击被按钮的标签阻止了。 要想点击一个按钮而不碰到它的标签，并不是那么容易的事。</p>
+<p>鼠标移动(mouse move)和鼠标抬起(mouse up)的事件呢？考虑一下当用户拖动一个滚动条的手柄时会发生什么。当鼠标在滚动条上向下移动时，滚动条开始跟踪被拖动的鼠标。如果光标移动到滚动条之外，甚至光标被拖到一个按钮或其他滚动条上，它也会继续跟踪鼠标。这是因为 Morphic 认为鼠标按下、鼠标重复移动和鼠标抬起的整个序列是一个单一事务。无论哪个 Morph 接受了鼠标按下的事件，都被认为是鼠标焦点，直到鼠标再次抬起。鼠标焦点 Morph 保证获得整个鼠标拖动事务：一个鼠标按下事件，至少一个鼠标移动事件，以及一个鼠标抬起事件。因此，Morph 可以在鼠标按下时执行一些初始化，在鼠标抬起时进行清理，并保证初始化和清理总是能够完成的。</p>
+<h3 id="活性">活性</h3>
+<p>活性的处理方法是保留一个需要被步进(step)的 Morph 列表，以及它们所期望的下一个步进时间。每一个周期，步进信息都会被发送到任何一个需要步进的 Morph 上，并且更新它们的下一个步进时间。被删除的 Morph 将从步进列表中删减掉，这既是为了避免步进不再出现在屏幕上的 Morph，也是为了让这些 Morph 能够被垃圾回收。</p>
+<h3 id="布局更新">布局更新</h3>
+<p>Morphic 渐进地维护 Morph 的布局。当一个 Morph 的变化可能影响到布局时（例如，当一个新的 submorph 被添加到它上面时），消息 <code>layoutChanged</code> 就会被发送给它。这将触发一连串的活动。首先，改变后的 Morph 的布局被更新。这可能会改变分配给它的 submorp(s)的空间量，导致它们的布局被更新。然后，如果改变后的 Morph 的空间需求发生了变化（例如，如果它需要更多的空间来容纳一个新增加的 submorph），它的所有者的布局就会被更新，可能还有它的所有者的所有者的布局，依此类推。在某些情况下，一个深度嵌套的复合 Morph 中的每个 submorph 的布局都可能需要更新。幸运的是，在很多情况下，布局的更新可以被局部化，从而节省大量的工作。</p>
+<p>和改变消息(changed message)一样，Morph 客户端通常不需要明确地发送 <code>layoutChanged</code>，因为影响 Morph 布局的最常见的操作已经做了这个， 这些常见操作包括添加和删除 submorph 或改变 Morph 的大小&hellip;警觉的读者可能会担心，在建立一个有很多 submorph 的行或列时，在添加 Morph 后更新布局可能会使事情变得缓慢。事实上，由于更新布局的成本与该行或列中已存在的 Morph 数量成正比，那么一次添加 N 个 Morph，并在每个 Morph 之后更新布局，其成本与 N 的平方成正比。当建立像 ScorePlayerMorph 这样复杂的 Morph 时，这个成本会迅速增加。为了避免这个问题，Morphic 将所有布局的更新推迟到下一个显示周期。毕竟，在下一次重绘屏幕之前，用户无法看到任何布局的变化。因此，一个程序可以在两个显示周期之间对一个给定的 Morph 进行任何数量的布局改变操作，而 Morphic 只会更新这个 Morph 的布局一次。</p>
+<h3 id="显示更新">显示更新</h3>
+<p>Morphic 使用一种双缓冲、增量的算法来保持屏幕的更新。这种算法是高效的（它试图在变化后做尽可能少的工作来更新屏幕）和高质量的（用户不会看到屏幕被重新绘制）。它也大多是自动的；许多应用程序可以在编程者不知道如何维护显示的情况下建立。这里的描述主要是为了让那些对该系统的工作原理感到好奇的人受益。</p>
+<p>Morphic 保留了一个列表，称为损坏列表(必须重新绘制的屏幕部分)。每个 Morph 都有一个边界矩形，包围着它的整个可见表示。当一个 Morph 改变了外观的任何方面（例如，它的颜色），它就会向自己发送改变(changed)消息，这就把它的边界矩形添加到损坏列表中。Morphic UI 循环的显示更新阶段负责将屏幕更新。对于损坏列表中的每个矩形，它都会重绘（按从后到前的顺序）所有与损坏矩形相交的 Morph。这种重绘是在屏幕外的缓冲区完成的，然后复制到屏幕上。由于单个 Morph 是在屏幕外绘制的，用户永远不会看到绘制过程的中间阶段，而且从屏幕外的缓冲区到屏幕的最终拷贝也相当快。其结果是，无论单个绘制操作的顺序如何，物体的动画效果都很流畅，看起来很牢固。当所有的损坏矩形都被处理后，Morphic 清除损坏列表，为下一个周期做准备。</p>
 
     </div>
 
@@ -238,7 +205,7 @@
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        2022-08-25
+        2022-08-24
         
     </span>
   </p>
@@ -250,9 +217,13 @@
           <a href="/tags/smalltalk/">Smalltalk</a>
           </div>
       <nav class="post-nav">
-        
-        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/how-morphic-works/">
-            <span class="next-text nav-default">[译] Morphic 的工作原理</span>
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/morph-layout-article/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">一篇用动态媒介写的文章</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-morphic/">
+            <span class="next-text nav-default">[译] Morphic 背后的设计原则</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>
