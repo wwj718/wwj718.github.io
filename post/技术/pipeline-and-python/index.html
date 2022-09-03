@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口 &amp;ndash;Malcolm Douglas McIlroy(Uni" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口 &amp;ndash;Malcolm Douglas McIlroy(Unix 管道发明者) 此前写过" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="Pipeline and Python" />
-<meta property="og:description" content="程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口 &ndash;Malcolm Douglas McIlroy(Uni" />
+<meta property="og:description" content="程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口 &ndash;Malcolm Douglas McIlroy(Unix 管道发明者) 此前写过" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/pipeline-and-python/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2015-06-16T00:00:00+00:00" />
 <meta property="article:modified_time" content="2015-06-16T00:00:00+00:00" />
 
 <meta itemprop="name" content="Pipeline and Python">
-<meta itemprop="description" content="程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口 &ndash;Malcolm Douglas McIlroy(Uni"><meta itemprop="datePublished" content="2015-06-16T00:00:00+00:00" />
+<meta itemprop="description" content="程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口 &ndash;Malcolm Douglas McIlroy(Unix 管道发明者) 此前写过"><meta itemprop="datePublished" content="2015-06-16T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2015-06-16T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1268">
+<meta itemprop="wordCount" content="1173">
 <meta itemprop="keywords" content=" python," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Pipeline and Python"/>
-<meta name="twitter:description" content="程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口 &ndash;Malcolm Douglas McIlroy(Uni"/>
+<meta name="twitter:description" content="程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口 &ndash;Malcolm Douglas McIlroy(Unix 管道发明者) 此前写过"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -133,26 +133,37 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#环境">环境</a></li>
+        <li><a href="#代码">代码</a></li>
+        <li><a href="#pythonpy-demo">pythonpy demo</a></li>
+        <li><a href="#python-脚本作为过滤器">python 脚本作为过滤器</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
       <blockquote>
-<p>程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口  &ndash;Malcolm Douglas McIlroy(Unix管道发明者)</p>
+<p>程序应该只关注一个目标，并尽可能把它做好。让程序能够互相协同工作。应该让程序处理文本数据流，因为这是一个通用的接口 &ndash;Malcolm Douglas McIlroy(Unix 管道发明者)</p>
 </blockquote>
 <p>此前写过这篇：<a href="http://wwj718.github.io/regex-demo.html">正则表达式一例</a></p>
-<p>我试着用多种语言去完成这个任务，当我试着用bash和perl去解决这个问题的时候，发现perl和命令行的的结合十分紧密，很容易将perl作为管道的一截，就像sed或是grep一样。</p>
-<p>而管道是我极喜欢的Unix特性之一。</p>
-<p>一旦习惯了管道，将程序作为过滤器，就十分容易与Unix工具箱中的其他组件协作，如此一来绝大多数的工作都省了！过滤器之间协作的力量常常十分惊人。</p>
+<p>我试着用多种语言去完成这个任务，当我试着用 bash 和 perl 去解决这个问题的时候，发现 perl 和命令行的的结合十分紧密，很容易将 perl 作为管道的一截，就像 sed 或是 grep 一样。</p>
+<p>而管道是我极喜欢的 Unix 特性之一。</p>
+<p>一旦习惯了管道，将程序作为过滤器，就十分容易与 Unix 工具箱中的其他组件协作，如此一来绝大多数的工作都省了！过滤器之间协作的力量常常十分惊人。</p>
 <p>##Pipeline
-管道(Pipeline)依赖于这样的约定，每个程序一开始有两个I/O数据流可用：标准输入和标准输出，许多程序都可以写作过滤器，从标准输入顺序读入数据，并且向标准输出写数据。</p>
+管道(Pipeline)依赖于这样的约定，每个程序一开始有两个 I/O 数据流可用：标准输入和标准输出，许多程序都可以写作过滤器，从标准输入顺序读入数据，并且向标准输出写数据。</p>
 <p>###语法
-典型语法是使用ASCII中的垂直线<code>|</code></p>
+典型语法是使用 ASCII 中的垂直线<code>|</code></p>
 <p>###demo
 <code>ls -l | less</code></p>
-<p>ls用于在Unix下列出目录内容，less是一个有搜索功能的交互式的文本分页器</p>
+<p>ls 用于在 Unix 下列出目录内容，less 是一个有搜索功能的交互式的文本分页器</p>
 <p>###从管道中获益
-上边的less将程序员从为自己的软件开发分页器的负担中解放了出来：他们只需要把他们的输出用过“管道”导入到less程序中即可，可以完全不顾分页问题</p>
+上边的 less 将程序员从为自己的软件开发分页器的负担中解放了出来：他们只需要把他们的输出用过“管道”导入到 less 程序中即可，可以完全不顾分页问题</p>
 <p>这样就避免了代码的臃肿，降低和全局复杂度</p>
 <p>《代码大全》中给出过一个观点:</p>
 <blockquote>
@@ -169,16 +180,16 @@
 <li>第三个命令去掉所有只包含数字的行。</li>
 </ul>
 <p>##Pipeline and Python</p>
-<p>那么Python程序能否方便地作为过滤器放到管道里呢。毕竟我不想捏着鼻子写perl。</p>
-<p>github了一下，找到这个<a href="https://github.com/Russell91/pythonpy">pythonpy</a></p>
-<p>下边我们试着用pythonpy来完成<a href="http://wwj718.github.io/regex-demo.html">正则表达式一例</a>中的任务</p>
-<p>###环境</p>
+<p>那么 Python 程序能否方便地作为过滤器放到管道里呢。毕竟我不想捏着鼻子写 perl。</p>
+<p>github 了一下，找到这个<a href="https://github.com/Russell91/pythonpy">pythonpy</a></p>
+<p>下边我们试着用 pythonpy 来完成<a href="http://wwj718.github.io/regex-demo.html">正则表达式一例</a>中的任务</p>
+<h3 id="环境">环境</h3>
 <ul>
 <li>zsh</li>
-<li>virtualenv(python3) ps:涉及到中文的问题尽量用python3</li>
+<li>virtualenv(python3) ps:涉及到中文的问题尽量用 python3</li>
 <li>pip install pythonpy</li>
 </ul>
-<p>###代码</p>
+<h3 id="代码">代码</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -196,7 +207,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>怎么样，够简洁吧！</p>
-<p>###pythonpy demo</p>
+<h3 id="pythonpy-demo">pythonpy demo</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -226,7 +237,7 @@
 </span></span><span class="line"><span class="cl"><span class="c1">##Append &#34;.txt&#34; to each line of input</span>
 </span></span><span class="line"><span class="cl">py <span class="s1">&#39;range(3)&#39;</span> <span class="p">|</span> py -x <span class="s1">&#39;x + &#34;.txt&#34;&#39;</span> <span class="c1">#0.txt\n1.txt\n2.txt</span>
 </span></span><span class="line"><span class="cl"><span class="c1">##Append &#34;.txt&#34; to every file in the directory,ps:还是使用ipython或是shell的for来做吧</span>
-</span></span><span class="line"><span class="cl">ls <span class="p">|</span> py -x <span class="s1">&#39;&#34;mv `%s` `%s.txt`&#34; % (x,x)&#39;</span> <span class="p">|</span> sh 
+</span></span><span class="line"><span class="cl">ls <span class="p">|</span> py -x <span class="s1">&#39;&#34;mv `%s` `%s.txt`&#34; % (x,x)&#39;</span> <span class="p">|</span> sh
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">#py -l ：treat list of stdin as l</span>
 </span></span><span class="line"><span class="cl">py <span class="s1">&#39;range(3)&#39;</span> <span class="p">|</span> py -l <span class="s1">&#39;sum(int(x) for x in l)&#39;</span>
@@ -235,8 +246,8 @@
 </span></span><span class="line"><span class="cl">cat /usr/share/dict/words <span class="p">|</span> py -x <span class="s1">&#39;x[0].lower()&#39;</span> <span class="p">|</span> py -l <span class="s1">&#39;collections.Counter(l).most_common(5)&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>###python脚本作为过滤器
-如果我们想将python脚本当做过滤器用在管道里，关键便是让它能处理输入(stdin)输出(stdout)流</p>
+</div><h3 id="python-脚本作为过滤器">python 脚本作为过滤器</h3>
+<p>如果我们想将 python 脚本当做过滤器用在管道里，关键便是让它能处理输入(stdin)输出(stdout)流</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -248,15 +259,18 @@
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#myscript.py</span>
 </span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
 </span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">  <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="c1">#sys.stdout.write与print的区别是，print会默认添加换行符</span>
+</span></span><span class="line"><span class="cl">  <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="c1"># sys.stdout.write与print的区别是，print会默认添加换行符</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>使用：<code>cat text.txt|python myscript.py</code></p>
+<!--
+python3 -c 'import sys;sys.stdout.write(sys.stdin)'
+-->
 <p>#参考</p>
 <ul>
 <li><a href="https://github.com/Russell91/pythonpy">pythonpy</a></li>
 <li><a href="https://zh.wikipedia.org/wiki/%E7%AE%A1%E9%81%93_(Unix)">管道_Unix wiki</a></li>
-<li><a href="http://book.douban.com/subject/1467587/">Unix编程艺术</a></li>
+<li><a href="http://book.douban.com/subject/1467587/">Unix 编程艺术</a></li>
 </ul>
 
     </div>
