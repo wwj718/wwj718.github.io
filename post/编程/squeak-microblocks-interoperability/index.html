@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Squeak 与 MicroBlocks 互操作 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 Smalltalk 爱好者们期待已久的 Making Smalltalk 在上周五举行。Lounsen 提议在来一场 After Party。 我想在 After Party 上分享近期使用 Squeak 做的项目: Squeak 中的 dotPack 模拟器。 为了让" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak-microblocks-interoperability/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Squeak 与 MicroBlocks 互操作" />
+<meta property="og:description" content="前言 Smalltalk 爱好者们期待已久的 Making Smalltalk 在上周五举行。Lounsen 提议在来一场 After Party。 我想在 After Party 上分享近期使用 Squeak 做的项目: Squeak 中的 dotPack 模拟器。 为了让" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak-microblocks-interoperability/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-09-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-09-05T00:00:00+00:00" />
+
+<meta itemprop="name" content="Squeak 与 MicroBlocks 互操作">
+<meta itemprop="description" content="前言 Smalltalk 爱好者们期待已久的 Making Smalltalk 在上周五举行。Lounsen 提议在来一场 After Party。 我想在 After Party 上分享近期使用 Squeak 做的项目: Squeak 中的 dotPack 模拟器。 为了让"><meta itemprop="datePublished" content="2022-09-05T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-09-05T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1966">
+<meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Squeak 与 MicroBlocks 互操作"/>
+<meta name="twitter:description" content="前言 Smalltalk 爱好者们期待已久的 Making Smalltalk 在上周五举行。Lounsen 提议在来一场 After Party。 我想在 After Party 上分享近期使用 Squeak 做的项目: Squeak 中的 dotPack 模拟器。 为了让"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Squeak 与 MicroBlocks 互操作</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-09-05 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#开始">开始</a>
+      <ul>
+        <li><a href="#思路">思路</a></li>
+        <li><a href="#两个版本">两个版本</a></li>
+        <li><a href="#基于-http-的互操作">基于 HTTP 的互操作</a></li>
+        <li><a href="#基于-udp-的互操作">基于 UDP 的互操作</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>Smalltalk 爱好者们期待已久的 <a href="https://computerhistory.org/events/making-smalltalk/">Making Smalltalk</a> 在上周五举行。Lounsen 提议在来一场 After Party。</p>
+<img src="/post/img/6e934c02a195cd32836e268aeb55e2.jpg" width=350>
+<p>我想在 After Party 上分享近期使用 Squeak 做的项目: <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak-dotpack-simulator/">Squeak 中的 dotPack 模拟器</a>。</p>
+<p><video src="https://adapter.codelab.club/video/198554c8f938dfe9a85bfa509b414c.mp4" controls="controls"></video></p>
+<p>为了让分享更加充实，我做了些增强，使这个 dotPack 模拟器可以跟 <a href="https://dotpack.fun/">dotPack 实物</a>互动。我喜欢<a href="/post/%E7%BC%96%E7%A8%8B/microblocks-dotpack/">在 MicroBlocks 里为硬件写固件</a>，它是我迄今为止最喜欢的物理计算平台。</p>
+<p>我就打算把分享的话题定为 《Squeak 与 MicroBlocks 的互操作》，这样我不仅能够在分享时讨论 Smalltalk，还能讨论 Smalltalk 的精神后裔: MicroBlocks，它们共享了大量的系统特性和个人计算愿景，值得一提的是 MicroBlocks 的创始者 <a href="/post/%E7%BC%96%E7%A8%8B/squeak-news-interview-with-john-maloney/">John Maloney</a> 也是 Squeak 创始团队的成员，John Maloney 在 Squeak 的贡献包括: Smalltalk-to-C 翻译器(可移植性的关键)、第一个 Squeak VM (Mac)、Morphic 用户界面框架&hellip;</p>
+<p>原定 2 小时的 After Party，持续了 3 个小时，虽然大家都是 Smalltalk 爱好者，依然被 Smalltalk 的灵活和强大所震惊，我们几乎是一边讨论，一边实时编程，在系统中探索碰撞出的新想法，而且几乎总是能够实现突如其来的灵感。</p>
+<h2 id="开始">开始</h2>
+<h3 id="思路">思路</h3>
+<blockquote>
+<p>制作出色且可扩展的系统的关键在于设计模块的通信方式，而不是设计其内部属性和行为应该是什么 &ndash; Alan Kay</p>
+</blockquote>
+<p>我最初打算在 Squeak 中使用串口(serial)来跟 dotPack 硬件通信，后来发现 Squeak 中的串口插件(MacOS)年久失修。于是打算采用网络来通信(dotPack 使用 ESP32，所以能够支持网络)。</p>
+<h3 id="两个版本">两个版本</h3>
+<p>前后设计了两个版本的通信机制。</p>
+<ul>
+<li>基于 HTTP 的互操作</li>
+<li>基于 UDP 的互操作</li>
+</ul>
+<p>相关的源码都已经放到 Github: <a href="https://github.com/wwj718/DotPack">DotPack</a></p>
+<p>只需把 <code>DotPack.st</code> 下载下来拖到 Squeak 桌面(确保后缀是.st， MacOS 会把后缀名改为 txt，最好在命令行里检查一下)，然后选择 <code>fileIn entire file</code> 即可载入相应的 DotPack 包。</p>
+<p>你在 browser 里应该能看到 DotPack。</p>
+<h3 id="基于-http-的互操作">基于 HTTP 的互操作</h3>
+<h4 id="服务端">服务端</h4>
+<p>HTTP 是一个服务端和客户端模型，在我们的案例里，MicroBlocks 中的程序充当服务端，Squeak 充当客户端。</p>
+<p>我们先来看下 <a href="https://blocks.aimaker.space#project=projectName%20%27dotPack-Squeak-HTTP-Server%27%0A%0Amodule%20main%0Aauthor%20unknown%0Aversion%201%200%20%0Adescription%20%27%27%0Avariables%20responses%20test%20body%20command_and_args%20%0A%0Ascript%2056%2056%20%7B%0AwhenStarted%0AsetBrightness%205%0Acomment%20%27Remember%20to%20use%20your%20network%20name%20%28SSID%29%20and%20password%20below%27%0AwifiConnect%20%27%27%20%27%27%0Alocal%20%27request%27%20%27%27%0Aforever%20%7B%0A%20%20request%20%3D%20%28%27%5Bnet%3AhttpServerGetRequest%5D%27%29%0A%20%20if%20%28request%20%21%3D%20%27%27%29%20%7B%0A%20%20%20%20test%20%3D%20request%0A%20%20%20%20body%20%3D%20%28%27body%20of%20request%27%20request%29%0A%20%20%20%20command_and_args%20%3D%20%28%27%5Bdata%3Asplit%5D%27%20body%20%27%2C%27%29%0A%20%20%20%20if%20%28%28at%201%20command_and_args%29%20%3D%3D%20%27clear%27%29%20%7B%0A%20%20%20%20%20%20clearDisplay%0A%20%20%20%20%7D%0A%20%20%20%20if%20%28%28at%201%20command_and_args%29%20%3D%3D%20%27setpixel%27%29%20%7B%0A%20%20%20%20%20%20setPixel%20%28str2num%20%28at%202%20command_and_args%29%29%20%28str2num%20%28at%203%20command_and_args%29%29%20%28str2num%20%28at%204%20command_and_args%29%29%0A%20%20%20%20%7D%0A%20%20%20%20%27%5Bnet%3ArespondToHttpRequest%5D%27%20%27200%20OK%27%0A%20%20%7D%0A%20%20waitMillis%2010%0A%7D%0A%7D%0A%0Ascript%20482%20217%20%28test%29%0A%0Ascript%20549%20273%20%28%27%5Bnet%3AhttpServerGetRequest%5D%27%29%0A%0Ascript%20546%20339%20%7B%0A%27%5Bnet%3ArespondToHttpRequest%5D%27%20%27200%20OK%27%0A%7D%0A%0A%0Amodule%20%27HTTP%20server%27%20Comm%0Aauthor%20MicroBlocks%0Aversion%201%203%20%0Adepends%20WiFi%20%0Atags%20http%20network%20%0Adescription%20%27Create%20an%20HTTP%20server%20in%20MicroBlocks.%20You%20can%20use%20this%20library%20to%20allow%20remote%20control%20for%20your%20Wifi-enabled%20board.%27%0A%0A%20%20spec%20%27r%27%20%27%5Bnet%3AhttpServerGetRequest%5D%27%20%27HTTP%20server%20request%20%3A%20binary%20data%20_%27%20%27bool%27%20false%0A%20%20spec%20%27r%27%20%27request%20method%27%20%27method%20of%20request%20_%27%20%27str%27%20%27%27%0A%20%20spec%20%27r%27%20%27path%20of%20request%27%20%27path%20of%20request%20_%27%20%27str%27%20%27%27%0A%20%20spec%20%27r%27%20%27headers%20of%20request%27%20%27headers%20of%20request%20_%27%20%27str%27%20%27%27%0A%20%20spec%20%27r%27%20%27body%20of%20request%27%20%27body%20of%20request%20_%27%20%27str%27%20%27%27%0A%20%20spec%20%27r%27%20%27content%20length%20of%20request%27%20%27content%20length%20of%20request%20_%27%20%27str%27%20%27%27%0A%20%20spec%20%27%20%27%20%27%5Bnet%3ArespondToHttpRequest%5D%27%20%27respond%20_%20to%20HTTP%20request%20%3A%20with%20body%20_%20%3A%20and%20headers%20_%20%3A%20keepAlive%20_%27%20%27str%20str%20str%20bool%27%20%27200%20OK%27%20%27Welcome%20to%20the%20MicroBlocks%20HTTP%20server%27%20%27Content-Type%3A%20text%2Fplain%27%20false%0A%20%20spec%20%27r%27%20%27_endOfHeaders%27%20%27_end%20of%20headers%20_%27%20%27str%27%0A%20%20spec%20%27r%27%20%27_toString%27%20%27_toString%20_%27%20%27auto%27%20%27abc%27%0A%0Ato%20%27_endOfHeaders%27%20request%20%7B%0A%20%20return%20%28%27%5Bdata%3Afind%5D%27%20%28%27%5Bdata%3AunicodeString%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%2013%2010%2013%2010%29%29%20request%29%0A%7D%0A%0Ato%20%27_toString%27%20aStringOrByteArray%20%7B%0A%20%20comment%20%27If%20argument%20is%20a%20byte%20array%2C%20convert%20it%20to%20a%20string.%20%27%0A%20%20if%20%28not%20%28isType%20aStringOrByteArray%20%27string%27%29%29%20%7B%0A%20%20%20%20aStringOrByteArray%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%27%27%20aStringOrByteArray%29%0A%20%20%7D%0A%20%20return%20aStringOrByteArray%0A%7D%0A%0Ato%20%27body%20of%20request%27%20request%20%7B%0A%20%20i%20%3D%20%28%27_endOfHeaders%27%20request%29%0A%20%20if%20%28i%20%3C%200%29%20%7B%0A%20%20%20%20return%20%27%27%0A%20%20%7D%0A%20%20return%20%28%27%5Bdata%3AcopyFromTo%5D%27%20request%20%28i%20%2B%204%29%29%0A%7D%0A%0Ato%20%27content%20length%20of%20request%27%20request%20%7B%0A%20%20local%20%27i%27%20%28%27_endOfHeaders%27%20request%29%0A%20%20if%20%28i%20%3C%200%29%20%7B%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20local%20%27j%27%20%28%27%5Bdata%3Afind%5D%27%20%27Content-Length%3A%20%27%20request%29%0A%20%20if%20%28j%20%3C%200%29%20%7B%0A%20%20%20%20comment%20%27Try%20alternate%20capitalization%27%0A%20%20%20%20j%20%3D%20%28%27%5Bdata%3Afind%5D%27%20%27Content-length%3A%20%27%20request%29%0A%20%20%7D%0A%20%20if%20%28or%20%28j%20%3C%200%29%20%28j%20%3E%20i%29%29%20%7B%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20j%20%2B%3D%2016%0A%20%20local%20%27k%27%20%28%27%5Bdata%3Afind%5D%27%20%28%27%5Bdata%3AunicodeString%5D%27%2013%29%20request%20j%29%0A%20%20return%20%28%28%27%5Bdata%3AcopyFromTo%5D%27%20request%20j%20%28k%20-%201%29%29%20%2B%200%29%0A%7D%0A%0Ato%20%27headers%20of%20request%27%20request%20%7B%0A%20%20i%20%3D%20%28%27_endOfHeaders%27%20request%29%0A%20%20if%20%28i%20%3C%200%29%20%7B%0A%20%20%20%20return%20%27%27%0A%20%20%7D%0A%20%20return%20%28%27_toString%27%20%28%27%5Bdata%3AcopyFromTo%5D%27%20request%201%20%28i%20-%201%29%29%29%0A%7D%0A%0Ato%20%27path%20of%20request%27%20request%20%7B%0A%20%20return%20%28%27_toString%27%20%28%27%5Bdata%3AcopyFromTo%5D%27%20request%20%28%28%27%5Bdata%3Afind%5D%27%20%27%20%27%20request%29%20%2B%201%29%20%28%28%27%5Bdata%3Afind%5D%27%20%27%20HTTP%27%20request%29%20-%201%29%29%29%0A%7D%0A%0Ato%20%27request%20method%27%20request%20%7B%0A%20%20return%20%28%27_toString%27%20%28%27%5Bdata%3AcopyFromTo%5D%27%20request%201%20%28%28%27%5Bdata%3Afind%5D%27%20%27%20%27%20request%29%20-%201%29%29%29%0A%7D%0A%0A%0Amodule%20Strings%20Data%0Aauthor%20MicroBlocks%0Aversion%201%205%20%0Adescription%20%27String%20operations.%27%0A%0A%20%20spec%20%27r%27%20%27isDigit%27%20%27_%20is%20a%20digit%27%20%27str%27%20%275%27%0A%20%20spec%20%27r%27%20%27isLowercase%27%20%27_%20is%20lowercase%27%20%27str%27%20%27A%27%0A%20%20spec%20%27r%27%20%27isUppercase%27%20%27_%20is%20uppercase%27%20%27str%27%20%27E%27%0A%20%20spec%20%27r%27%20%27beginsWith%27%20%27_%20begins%20with%20_%27%20%27str%20str%27%20%27prefix%27%20%27pre%27%0A%20%20spec%20%27r%27%20%27endsWith%27%20%27_%20ends%20with%20_%27%20%27str%20str%27%20%27suffix%27%20%27fix%27%0A%20%20spec%20%27r%27%20%27contains%27%20%27_%20contains%20_%27%20%27str%20str%27%20%27smiles%27%20%27mile%27%0A%20%20spec%20%27r%27%20%27lowercase%27%20%27lowercase%20_%27%20%27str%27%20%27THIS%20is%20a%20String%21%20%3A%29%27%0A%20%20spec%20%27r%27%20%27uppercase%27%20%27uppercase%20_%27%20%27str%27%20%27Hello%2C%20world%21%27%0A%20%20spec%20%27r%27%20%27withoutWhiteSpace%27%20%27_%20without%20white%20space%27%20%27str%27%20%271%2C%202%2C%093%2C%0A4%27%0A%20%20spec%20%27r%27%20%27joinWith%27%20%27join%20string%20list%20_%20separator%20_%27%20%27auto%20str%27%20%27%20%27%20%27%20%27%0A%20%20spec%20%27r%27%20%27stringToUnicodes%27%20%27unicodes%20_%27%20%27auto%27%20%27aString%27%0A%20%20spec%20%27r%27%20%27unicodesToString%27%20%27string%20from%20unicodes%20_%27%20%27auto%27%20%27aList%27%0A%20%20spec%20%27r%27%20%27num2str%27%20%27num2str%20_%27%20%27auto%27%2042%0A%20%20spec%20%27r%27%20%27str2num%27%20%27str2num%20_%27%20%27str%27%20%27123%27%0A%0Ato%20beginsWith%20string%20substring%20%7B%0A%20%20return%20%28%28%27%5Bdata%3Afind%5D%27%20substring%20string%29%20%3D%3D%201%29%0A%7D%0A%0Ato%20contains%20string%20substring%20%7B%0A%20%20return%20%28%28%27%5Bdata%3Afind%5D%27%20substring%20string%29%20%3E%200%29%0A%7D%0A%0Ato%20endsWith%20string%20substring%20%7B%0A%20%20return%20%28%28%27%5Bdata%3Afind%5D%27%20substring%20string%29%20%3E%20%28%28size%20string%29%20-%20%28size%20substring%29%29%29%0A%7D%0A%0Ato%20isDigit%20char%20%7B%0A%20%20local%20%27unicode%27%20%28%27%5Bdata%3AunicodeAt%5D%27%201%20char%29%0A%20%20return%20%28and%20%28unicode%20%3E%3D%2048%29%20%28unicode%20%3C%3D%2057%29%29%0A%7D%0A%0Ato%20isLowercase%20char%20%7B%0A%20%20local%20%27unicode%27%20%28%27%5Bdata%3AunicodeAt%5D%27%201%20char%29%0A%20%20return%20%28and%20%28unicode%20%3E%3D%2097%29%20%28unicode%20%3C%3D%20122%29%29%0A%7D%0A%0Ato%20isUppercase%20char%20%7B%0A%20%20local%20%27unicode%27%20%28%27%5Bdata%3AunicodeAt%5D%27%201%20char%29%0A%20%20return%20%28and%20%28unicode%20%3E%3D%2065%29%20%28unicode%20%3C%3D%2090%29%29%0A%7D%0A%0Ato%20joinWith%20stringList%20separator%20%7B%0A%20%20if%20%28not%20%28isType%20stringList%20%27list%27%29%29%20%7Breturn%20%28%27%5Bdata%3Ajoin%5D%27%20%27%27%20stringList%29%7D%0A%20%20if%20%28or%20%28%28pushArgCount%29%20%3D%3D%201%29%20%28separator%20%3D%3D%20%27%27%29%29%20%7Breturn%20%28%27%5Bdata%3AjoinStrings%5D%27%20stringList%29%7D%0A%20%20local%20%27result%27%20%28newList%20%282%20%2A%20%28size%20stringList%29%29%29%0A%20%20%27%5Bdata%3Adelete%5D%27%20%27all%27%20result%0A%20%20for%20s%20stringList%20%7B%0A%20%20%20%20%27%5Bdata%3AaddLast%5D%27%20s%20result%0A%20%20%20%20%27%5Bdata%3AaddLast%5D%27%20separator%20result%0A%20%20%7D%0A%20%20%27%5Bdata%3Adelete%5D%27%20%27last%27%20result%0A%20%20return%20%28%27%5Bdata%3AjoinStrings%5D%27%20result%29%0A%7D%0A%0Ato%20lowercase%20string%20%7B%0A%20%20local%20%27new%20string%27%20%27%27%0A%20%20for%20i%20%28size%20string%29%20%7B%0A%20%20%20%20if%20%28isUppercase%20%28at%20i%20string%29%29%20%7B%0A%20%20%20%20%20%20%27new%20string%27%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%28v%20%27new%20string%27%29%20%28%27%5Bdata%3AunicodeString%5D%27%20%28%28%27%5Bdata%3AunicodeAt%5D%27%20i%20string%29%20%2B%2032%29%29%29%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%27new%20string%27%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%28v%20%27new%20string%27%29%20%28at%20i%20string%29%29%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20return%20%28v%20%27new%20string%27%29%0A%7D%0A%0Ato%20num2str%20n%20%7B%0A%20%20return%20%28%27%5Bdata%3Ajoin%5D%27%20%27%27%20n%29%0A%7D%0A%0Ato%20str2num%20s%20%7B%0A%20%20return%20%280%20%2B%20s%29%0A%7D%0A%0Ato%20stringToUnicodes%20s%20%7B%0A%20%20local%20%27result%27%20%28newList%20%28size%20s%29%29%0A%20%20for%20i%20%28size%20s%29%20%7B%0A%20%20%20%20atPut%20i%20result%20%28%27%5Bdata%3AunicodeAt%5D%27%20i%20s%29%0A%20%20%7D%0A%20%20return%20result%0A%7D%0A%0Ato%20unicodesToString%20aList%20%7B%0A%20%20return%20%28%27%5Bdata%3AunicodeString%5D%27%20aList%29%0A%7D%0A%0Ato%20uppercase%20string%20%7B%0A%20%20local%20%27new%20string%27%20%27%27%0A%20%20for%20i%20%28size%20string%29%20%7B%0A%20%20%20%20if%20%28isLowercase%20%28at%20i%20string%29%29%20%7B%0A%20%20%20%20%20%20%27new%20string%27%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%28v%20%27new%20string%27%29%20%28%27%5Bdata%3AunicodeString%5D%27%20%28%28%27%5Bdata%3AunicodeAt%5D%27%20i%20string%29%20-%2032%29%29%29%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%27new%20string%27%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%28v%20%27new%20string%27%29%20%28at%20i%20string%29%29%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20return%20%28v%20%27new%20string%27%29%0A%7D%0A%0Ato%20withoutWhiteSpace%20aString%20%7B%0A%20%20local%20%27result%27%20%28newList%20%28size%20aString%29%29%0A%20%20%27%5Bdata%3Adelete%5D%27%20%27all%27%20result%0A%20%20for%20i%20%28size%20aString%29%20%7B%0A%20%20%20%20local%20%27ch%27%20%28%27%5Bdata%3AunicodeAt%5D%27%20i%20aString%29%0A%20%20%20%20if%20%28ch%20%3E%2032%29%20%7B%0A%20%20%20%20%20%20%27%5Bdata%3AaddLast%5D%27%20ch%20result%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20return%20%28%27%5Bdata%3AunicodeString%5D%27%20result%29%0A%7D%0A%0A%0Amodule%20WiFi%20Comm%0Aauthor%20MicroBlocks%0Aversion%201%205%20%0Atags%20communication%20network%20%0Adescription%20%27Connect%20to%20a%20WiFi%20network.%20Used%20in%20conjunction%20with%20other%20network%20libraries%2C%20such%20as%20HTTP%20client%2C%20HTTP%20server%20or%20Web%20Thing.%0A%27%0A%0A%20%20spec%20%27%20%27%20%27wifiConnect%27%20%27wifi%20connect%20to%20_%20password%20_%20%3A%20IP%20_%20gateway%20_%20subnet%20_%27%20%27str%20str%20auto%20auto%20auto%27%20%27Network_Name%27%20%27%27%20%27192.168.1.42%27%20%27192.168.1.1%27%20%27255.255.255.0%27%0A%20%20spec%20%27%20%27%20%27wifiCreateHotspot%27%20%27wifi%20create%20hotspot%20_%20password%20_%27%20%27str%20str%27%20%27Network_Name%27%20%27Network_Password%27%0A%20%20spec%20%27r%27%20%27getIPAddress%27%20%27IP%20address%27%0A%20%20spec%20%27r%27%20%27%5Bnet%3AmyMAC%5D%27%20%27MAC%20address%27%0A%0Ato%20getIPAddress%20%7B%0A%20%20return%20%28%27%5Bnet%3AmyIPAddress%5D%27%29%0A%7D%0A%0Ato%20wifiConnect%20ssid%20password%20fixedIP%20gatewayIP%20subnetIP%20%7B%0A%20%20if%20%28not%20%28%27%5Bnet%3AhasWiFi%5D%27%29%29%20%7Breturn%7D%0A%20%20%27%5Bnet%3AstopWiFi%5D%27%0A%20%20if%20%28%28pushArgCount%29%20%3C%205%29%20%7B%0A%20%20%20%20%27%5Bnet%3AstartWiFi%5D%27%20ssid%20password%0A%20%20%7D%20else%20%7B%0A%20%20%20%20%27%5Bnet%3AstartWiFi%5D%27%20ssid%20password%20false%20fixedIP%20gatewayIP%20subnetIP%0A%20%20%7D%0A%20%20local%20%27startMSecs%27%20%28millisOp%29%0A%20%20repeatUntil%20%28%28%27%5Bnet%3AmyIPAddress%5D%27%29%20%21%3D%20%270.0.0.0%27%29%20%7B%0A%20%20%20%20comment%20%27Timeout%20after%20N%20seconds%27%0A%20%20%20%20if%20%28%28%28millisOp%29%20-%20startMSecs%29%20%3E%2010000%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27Could%20not%20connect%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%20%20comment%20%27Slow%20blink%20while%20trying%20to%20connect%27%0A%20%20%20%20setUserLED%20true%0A%20%20%20%20waitMillis%20300%0A%20%20%20%20setUserLED%20false%0A%20%20%20%20waitMillis%20300%0A%20%20%7D%0A%20%20repeat%206%20%7B%0A%20%20%20%20comment%20%27Quick%20blinks%20when%20connected%27%0A%20%20%20%20setUserLED%20true%0A%20%20%20%20waitMillis%2050%0A%20%20%20%20setUserLED%20false%0A%20%20%20%20waitMillis%2050%0A%20%20%7D%0A%20%20sayIt%20%27My%20IP%20address%20is%3A%27%20%28%27%5Bnet%3AmyIPAddress%5D%27%29%0A%7D%0A%0Ato%20wifiCreateHotspot%20ssid%20password%20%7B%0A%20%20if%20%28not%20%28%27%5Bnet%3AhasWiFi%5D%27%29%29%20%7Breturn%7D%0A%20%20%27%5Bnet%3AstartWiFi%5D%27%20ssid%20password%20true%0A%20%20if%20%28%27Connected%27%20%21%3D%20%28%27%5Bnet%3AwifiStatus%5D%27%29%29%20%7B%0A%20%20%20%20sayIt%20%27Could%20not%20create%20hotspot%27%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20repeat%206%20%7B%0A%20%20%20%20comment%20%27Quick%20blinks%20when%20connected%27%0A%20%20%20%20setUserLED%20true%0A%20%20%20%20waitMillis%2050%0A%20%20%20%20setUserLED%20false%0A%20%20%20%20waitMillis%2050%0A%20%20%7D%0A%20%20sayIt%20%27My%20IP%20address%20is%3A%27%20%28%27%5Bnet%3AmyIPAddress%5D%27%29%0A%7D%0A%0A%0Amodule%20dotPack%20Output%0Aauthor%20%27%E8%8B%B1%E8%8D%94%E6%95%99%E8%82%B2%27%0Aversion%201%200%20%0Adepends%20BMP4dotPack%20%0Achoices%20size%20big%20small%20%0Adescription%20%27dotpack%20%28%20Eliteu%20Programable%20led%20matrix%20bag%20%29%27%0Avariables%20_stop_scrolling_text%20%27_dotPack%20initialized%27%20%0A%0A%20%20spec%20%27%20%27%20%27_displayText%27%20%27_display%20text%20_%20_%20_%20_%20_%20_%27%20%27auto%20auto%20auto%20auto%20auto%20auto%27%20%27hi%27%200%200%2065280%200%201%0A%20%20spec%20%27%20%27%20%27_dotPackSetup%27%20%27_dotPack%20setup%27%0A%20%20spec%20%27%20%27%20%27clearDisplay%27%20%27clear%20display%27%0A%20%20spec%20%27%20%27%20%27setBrightness%27%20%27set%20brightness%20_%27%20%27auto%27%20%2710%27%0A%20%20spec%20%27%20%27%20%27setPixel%27%20%27set%20pixel%20x%20_%20y%20_%20color%20_%20%3A%20update%20_%27%20%27auto%20auto%20color%20bool%27%201%201%20nil%20true%0A%20%20spec%20%27%20%27%20%27update%27%20%27update%27%0A%20%20spec%20%27%20%27%20%27setBackground%27%20%27set%20background%20color%20_%27%20%27color%27%0A%20%20spec%20%27%20%27%20%27displayChar%27%20%27display%20character%20_%20color%20_%20%3A%20size%20_%27%20%27str%20color%20menu.size%27%20%27A%27%20nil%20%27big%27%0A%20%20spec%20%27%20%27%20%27dotPackScrollText%27%20%27scroll%20text%20_%20color%20_%20%3A%20pausing%20_%20ms%20size%20_%27%20%27str%20color%20auto%20menu.size%27%20%27hello%27%20nil%20100%20%27big%27%0A%20%20spec%20%27%20%27%20%27stopScrolling%27%20%27stop%20scrolling%27%0A%20%20spec%20%27%20%27%20%27drawLine%27%20%27draw%20line%20x0%20_%20y0%20_%20x1%20_%20y1%20_%20color%20_%27%20%27auto%20auto%20auto%20auto%20color%27%201%201%208%208%0A%20%20spec%20%27%20%27%20%27drawTriangle%27%20%27draw%20triangle%20x0%20_%20y0%20_%20x1%20_%20y1%20_%20x2%20_%20y2%20_%20color%20_%20%3A%20fill%20_%27%20%27auto%20auto%20auto%20auto%20auto%20auto%20color%20bool%27%201%201%208%201%208%208%20nil%20false%0A%20%20spec%20%27%20%27%20%27drawRect%27%20%27draw%20rectangle%20x0%20_%20y0%20_%20w%20_%20h%20_%20color%20_%20%3A%20fill%20_%27%20%27auto%20auto%20auto%20auto%20color%20bool%27%201%201%208%204%20nil%20false%0A%20%20spec%20%27%20%27%20%27drawCircle%27%20%27draw%20circle%20x0%20_%20y0%20_%20r%20_%20color%20_%20%3A%20fill%20_%27%20%27auto%20auto%20auto%20color%20bool%27%208%208%204%20nil%20false%0A%20%20spec%20%27r%27%20%27color_rgb%27%20%27color%20r%20_%20g%20_%20b%20_%27%20%27auto%20auto%20auto%27%20255%200%200%0A%0Ato%20%27_displayText%27%20text%20x0%20y0%20text_color%20bg_color%20size%20%7B%0A%20%20comment%20%27lock%27%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDisplay%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20text%20x0%20y0%20text_color%20bg_color%20size%29%0A%20%20update%0A%7D%0A%0Ato%20%27_dotPackSetup%27%20%7B%0A%20%20if%20%28%28v%20%27_dotPack%20initialized%27%29%20%3D%3D%200%29%20%7B%0A%20%20%20%20%27_dotPack%20initialized%27%20%3D%201%0A%20%20%20%20_stop_scrolling_text%20%3D%20%28booleanConstant%20true%29%0A%20%20%20%20setBrightness%2020%0A%20%20%7D%0A%7D%0A%0Ato%20clearDisplay%20%7B%0A%20%20setBackground%20%28colorSwatch%200%200%200%20255%29%0A%7D%0A%0Ato%20color_rgb%20r%20g%20b%20%7B%0A%20%20comment%20%27%20%28blue%20%3C%3C%2016%29%20%7C%20%28green%20%3C%3C%208%29%20%7C%20red%3B%27%0A%20%20if%20%28or%20%28or%20%28r%20%3C%200%29%20%28r%20%3E%20255%29%29%20%28or%20%28or%20%28g%20%3C%200%29%20%28g%20%3E%20255%29%29%20%28or%20%28b%20%3C%200%29%20%28b%20%3E%20255%29%29%29%29%20%7B%0A%20%20%20%20sayIt%20%27r%2C%20g%2C%20b%20%3A%200-255%27%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20return%20%28%28%28r%20%3C%3C%2016%29%20%7C%20%28g%20%3C%3C%208%29%29%20%7C%20b%29%0A%7D%0A%0Ato%20displayChar%20s%20color%20size%20%7B%0A%20%20local%20%27x0%27%200%0A%20%20local%20%27y0%27%200%0A%20%20local%20%27bg_color%27%200%0A%20%20if%20%28%28pushArgCount%29%20%3C%203%29%20%7B%0A%20%20%20%20local%20%27_size%27%20%27big%27%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_size%27%20size%0A%20%20%7D%0A%20%20if%20%28_size%20%3D%3D%20%27big%27%29%20%7B%0A%20%20%20%20x0%20%3D%203%0A%20%20%20%20y0%20%3D%201%0A%20%20%20%20_size%20%3D%202%0A%20%20%7D%0A%20%20if%20%28_size%20%3D%3D%20%27small%27%29%20%7B%0A%20%20%20%20x0%20%3D%205%0A%20%20%20%20y0%20%3D%204%0A%20%20%20%20_size%20%3D%201%0A%20%20%7D%0A%20%20if%20%28%28size%20s%29%20%3D%3D%200%29%20%7B%0A%20%20%20%20comment%20%27clean%27%0A%20%20%20%20clearDisplay%0A%20%20%7D%20else%20%7B%0A%20%20%20%20%27_displayText%27%20%28at%201%20s%29%20x0%20y0%20color%20bg_color%20_size%0A%20%20%7D%0A%7D%0A%0Ato%20dotPackScrollText%20text%20color%20pausing%20size%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20if%20%28%28pushArgCount%29%20%3C%204%29%20%7B%0A%20%20%20%20local%20%27_pausing%27%20100%0A%20%20%20%20local%20%27_size%27%20%27big%27%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_pausing%27%20pausing%0A%20%20%20%20local%20%27_size%27%20size%0A%20%20%7D%0A%20%20local%20%27rows%27%2016%0A%20%20local%20%27column%27%2016%0A%20%20local%20%27size_pixels%27%200%0A%20%20local%20%27bg_color%27%200%0A%20%20local%20%27y0%27%200%0A%20%20if%20%28_size%20%3D%3D%20%27small%27%29%20%7B%0A%20%20%20%20_size%20%3D%201%0A%20%20%20%20y0%20%3D%204%0A%20%20%20%20size_pixels%20%3D%20%285%20%2B%201%29%0A%20%20%7D%0A%20%20if%20%28_size%20%3D%3D%20%27big%27%29%20%7B%0A%20%20%20%20_size%20%3D%202%0A%20%20%20%20y0%20%3D%201%0A%20%20%20%20size_pixels%20%3D%20%2810%20%2B%203%29%0A%20%20%7D%0A%20%20local%20%27i%27%20rows%0A%20%20_stop_scrolling_text%20%3D%20%28booleanConstant%20false%29%0A%20%20repeat%20%28%28%28size%20text%29%20%2A%20size_pixels%29%20%2B%20rows%29%20%7B%0A%20%20%20%20if%20%28_stop_scrolling_text%20%3D%3D%20%28booleanConstant%20true%29%29%20%7Breturn%200%7D%0A%20%20%20%20%27_displayText%27%20text%20i%20y0%20color%20bg_color%20_size%0A%20%20%20%20i%20%2B%3D%20-1%0A%20%20%20%20waitMillis%20_pausing%0A%20%20%7D%0A%7D%0A%0Ato%20drawCircle%20x0%20y0%20r%20color%20fill%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x0%20y0%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20if%20%28%28pushArgCount%29%20%3C%205%29%20%7B%0A%20%20%20%20local%20%27_fill%27%20%28booleanConstant%20false%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_fill%27%20fill%0A%20%20%7D%0A%20%20if%20_fill%20%7B%0A%20%20%20%20_fill%20%3D%201%0A%20%20%7D%20else%20%7B%0A%20%20%20%20_fill%20%3D%200%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawCircle%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x0%20-%201%29%20%28y0%20-%201%29%20r%20color%20_fill%29%0A%20%20update%0A%7D%0A%0Ato%20drawLine%20x0%20y0%20x1%20y1%20color%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x0%20y0%20x1%20y1%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawLine%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x0%20-%201%29%20%28y0%20-%201%29%20%28x1%20-%201%29%20%28y1%20-%201%29%20color%29%0A%20%20update%0A%7D%0A%0Ato%20drawRect%20x0%20y0%20w%20h%20color%20fill%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x0%20y0%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20if%20%28%28pushArgCount%29%20%3C%206%29%20%7B%0A%20%20%20%20local%20%27_fill%27%20%28booleanConstant%20false%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_fill%27%20fill%0A%20%20%7D%0A%20%20if%20_fill%20%7B%0A%20%20%20%20_fill%20%3D%201%0A%20%20%7D%20else%20%7B%0A%20%20%20%20_fill%20%3D%200%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawRect%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x0%20-%201%29%20%28y0%20-%201%29%20w%20h%20color%20_fill%29%0A%20%20update%0A%7D%0A%0Ato%20drawTriangle%20x0%20y0%20x1%20y1%20x2%20y2%20color%20fill%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x0%20y0%20x1%20y1%20x2%20y2%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20if%20%28%28pushArgCount%29%20%3C%206%29%20%7B%0A%20%20%20%20local%20%27_fill%27%20%28booleanConstant%20false%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_fill%27%20fill%0A%20%20%7D%0A%20%20if%20_fill%20%7B%0A%20%20%20%20_fill%20%3D%201%0A%20%20%7D%20else%20%7B%0A%20%20%20%20_fill%20%3D%200%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawTriangle%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x0%20-%201%29%20%28y0%20-%201%29%20%28x1%20-%201%29%20%28y1%20-%201%29%20%28x2%20-%201%29%20%28y2%20-%201%29%20color%20_fill%29%0A%20%20update%0A%7D%0A%0Ato%20setBackground%20color%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackFillScreen%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20color%29%0A%20%20update%0A%7D%0A%0Ato%20setBrightness%20brightness%20%7B%0A%20%20comment%20%27%E6%89%80%E6%9C%89%E7%81%AF%E6%89%93%E5%BC%80%E5%88%B0%E6%9C%80%E4%BA%AE%E5%8F%AF%E8%83%BD%E4%BC%9A%E5%AF%BC%E8%87%B4%E9%87%8D%E5%90%AF%EF%BC%8C%E8%BF%9E%E6%8E%A5%E6%96%AD%E5%BC%80%0A%0A%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9A%84%E6%97%B6%E5%80%99%E4%BC%9A%E8%AE%BE%E7%BD%AE%E5%88%9D%E5%A7%8B%E4%BA%AE%E5%BA%A6%EF%BC%8C%E8%A2%ABsetup%E6%8E%89%E7%94%A8%27%0A%20%20if%20%28brightness%20%3E%2020%29%20%7B%0A%20%20%20%20sayIt%20%27%E4%BA%AE%E5%BA%A6%E5%BA%94%E5%BD%93%20%3C%3D%2020%27%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackSetBrightness%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20brightness%29%0A%20%20update%0A%7D%0A%0Ato%20setPixel%20x%20y%20color%20update%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x%20y%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20if%20%28%28pushArgCount%29%20%3C%204%29%20%7B%0A%20%20%20%20local%20%27_update%27%20%28booleanConstant%20true%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_update%27%20update%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawPixel%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x%20-%201%29%20%28y%20-%201%29%20color%29%0A%20%20if%20_update%20%7B%0A%20%20%20%20update%0A%20%20%7D%0A%7D%0A%0Ato%20stopScrolling%20%7B%0A%20%20_stop_scrolling_text%20%3D%20%28booleanConstant%20true%29%0A%20%20waitMillis%2010%0A%20%20comment%20%27clean%27%0A%7D%0A%0Ato%20update%20%7B%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackShow%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%29%0A%7D%0A%0A">MicroBlocks 里的程序</a>:</p>
+<p><img src="/post/img/squeak-microblocks-01.png" alt="">.</p>
+<p>前边说到 MicroBlocks 是 Smalltalk 的精神后裔，它具有大量 Smalltalk 的典型特征, 诸如 &ldquo;活性(liveness)&ldquo;的环境: 你可以实时与环境交互，每一块积木都是活的，点击它将实时得到反馈: 你将看到积木的功能, 如果你用过 Scratch，你对此应该十分熟悉，这种方式支持你以建构主义的方式自由探索系统，整个系统是一个活的文档，它通过响应你来帮助你理解它。一旦你接触过这种编程体验，就再也无法忍受大多数编程环境。硬件领域的编程环境更是令人难以忍受。</p>
+<p>计算机应该像乐器，它应该对用户的操作作出即时且一致的响应。想象一下，在吹出一个音符和听到它之间的一秒钟的延迟是多么荒谬！</p>
+<p>我喜欢的一个演示是以交互的方式应答 HTTP 请求。你可以先点击 <code>HTTP 服务器请求</code> 积木，对用户的请求做一番探索，等你玩够了，再决定 <code>回应xx至HTTP请求</code>， 对客户端来说一切正常，Ta 完全不知道有一个人手动处理了他的请求！这是一个真正的&quot;人工&quot;智能服务器!</p>
+<h4 id="客户端">客户端</h4>
+<p>我最初使用 Squeak 内置的 HTTP 客户端编程跟 MicroBlocks http server 通信，结果遇到一个问题, 我把问题反馈给了 John, John 给出了精彩分析, 记录在此: <a href="https://bitbucket.org/john_maloney/smallvm/issues/287/http-server-can-not-work-with-squeak">https://bitbucket.org/john_maloney/smallvm/issues/287/http-server-can-not-work-with-squeak</a>。</p>
+<p>这个问题通信的双方（Squeak 和 MicroBlocks）都有责任，MicroBlocks 的责任多一些，John 说近期会修复。</p>
+<p>后来我用 curl 暂时绕开了这个问题。</p>
+<p>为了在 Squeak 中使用 curl, 需要 Squeak 与宿主系统的互操作，让 Squeak 能够调用 shell 命令。<a href="https://wiki.squeak.org/squeak/1914">CommandShell</a> 是很棒的选择。这是我的意料之外的收获，当我决定用 Squeak 时，我几乎做好了放弃在 Unix/Linux 下积累的经验(我从大二开始用 Linux，差不多十年的经验)。现在这些经验突然又能够在 Squeak 里使用了， Unix/Linux 里有大量实用小工具，一口气都丢了真有些可惜。更加意料之外的是， CommandShell 支持 Unix 管道(pipe), 而且能够用 Squeak 的 inspect 增强它！ 这样一来，我不仅没有丢掉 Unix/Linux 工具，还能够随时使用 Squeak 增强它们！</p>
+<p>为了在 Squeak 里调用 shell 命令，需要现在 squeak 安装 CommandShell：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">MCMcmUpdater updateFromRepository: &#39;http://www.squeaksource.com/OSProcess&#39;
+</span></span><span class="line"><span class="cl">MCMcmUpdater updateFromRepository: &#39;http://www.squeaksource.com/CommandShell&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Squeak 客户端中相关代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pack := DotPack new.
+</span></span><span class="line"><span class="cl">pack stopStepping.
+</span></span><span class="line"><span class="cl">pack clear.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">pack withDevice: true deviceAddress: #[192 168 1 8]. &#34;IP Address&#34;
+</span></span><span class="line"><span class="cl">pack sendMessageWith: &#39;HTTP&#39;. &#34;default&#34;
+</span></span><span class="line"><span class="cl">pack clear.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">pack x: 1 y:1 color: Color red.
+</span></span><span class="line"><span class="cl">1 to: 16 do: [:i | pack x: i y:i color: Color red].
+</span></span><span class="line"><span class="cl">1 to: 16 do: [:i | pack x: i y:i color: Color blue].
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以下是一个演示视频:</p>
+<p><video src="https://adapter.codelab.club/video/449a28b3fbf505616c2344631e7897.mp4" controls="controls"></video></p>
+<p>通过在 browser 中探索 DotPack 类，你应该能很快弄懂它的工作方式。</p>
+<p>我把视频分享给 John，John 觉得很有意思。他建议我试试他最近设计的 UDP 积木，代码将更简单，响应速度也会更快。</p>
+<h3 id="基于-udp-的互操作">基于 UDP 的互操作</h3>
+<p>这个版本是在分享开始前的半个小时前做的。我突然想在 16x16 的粗糙&quot;屏幕&quot;上<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/computer-software/">构建出鼠标的幻觉</a></p>
+<p><video src="https://adapter.codelab.club/video/f40adc4912a0fb90392562d7244523.mp4" controls="controls"></video></p>
+<p>为了获得足够好的实时性，我决定试一试 UDP。</p>
+<h4 id="服务端-1">服务端</h4>
+<p><a href="https://blocks.aimaker.space#project=projectName%20%27dotPack-Squeak-UDP-Server%27%0A%0Amodule%20main%0Aauthor%20unknown%0Aversion%201%200%20%0Adescription%20%27%27%0Avariables%20test%20data%20command_and_args%20%0A%0Ascript%2065%2065%20%7B%0AwhenStarted%0AsetBrightness%205%0Acomment%20%27Remember%20to%20use%20your%20network%20name%20%28SSID%29%20and%20password%20below%27%0AwifiConnect%20%27CU_ZKSH%27%20%27zkshdehv%27%0A%27%5Bnet%3AudpStart%5D%27%205000%0Adata%20%3D%20%27%27%0Aforever%20%7B%0A%20%20data%20%3D%20%28%27%5Bnet%3AudpReceivePacket%5D%27%29%0A%20%20if%20%28data%20%21%3D%20%27%27%29%20%7B%0A%20%20%20%20comment%20%27command%2C%20%3Cargs%20list%3E%0Aeg%3A%20%0A%20%20setpixel%20x%20y%20color%0A%20%20clear%0A%20%20...%27%0A%20%20%20%20command_and_args%20%3D%20%28%27%5Bdata%3Asplit%5D%27%20data%20%27%2C%27%29%0A%20%20%20%20if%20%28%28at%201%20command_and_args%29%20%3D%3D%20%27setpixel%27%29%20%7B%0A%20%20%20%20%20%20setPixel%20%28str2num%20%28at%202%20command_and_args%29%29%20%28str2num%20%28at%203%20command_and_args%29%29%20%28str2num%20%28at%204%20command_and_args%29%29%0A%20%20%20%20%7D%0A%20%20%20%20if%20%28%28at%201%20command_and_args%29%20%3D%3D%20%27clear%27%29%20%7B%0A%20%20%20%20%20%20clearDisplay%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20waitMillis%2010%0A%7D%0A%7D%0A%0A%0Amodule%20Strings%20Data%0Aauthor%20MicroBlocks%0Aversion%201%205%20%0Adescription%20%27String%20operations.%27%0A%0A%20%20spec%20%27r%27%20%27isDigit%27%20%27_%20is%20a%20digit%27%20%27str%27%20%275%27%0A%20%20spec%20%27r%27%20%27isLowercase%27%20%27_%20is%20lowercase%27%20%27str%27%20%27A%27%0A%20%20spec%20%27r%27%20%27isUppercase%27%20%27_%20is%20uppercase%27%20%27str%27%20%27E%27%0A%20%20spec%20%27r%27%20%27beginsWith%27%20%27_%20begins%20with%20_%27%20%27str%20str%27%20%27prefix%27%20%27pre%27%0A%20%20spec%20%27r%27%20%27endsWith%27%20%27_%20ends%20with%20_%27%20%27str%20str%27%20%27suffix%27%20%27fix%27%0A%20%20spec%20%27r%27%20%27contains%27%20%27_%20contains%20_%27%20%27str%20str%27%20%27smiles%27%20%27mile%27%0A%20%20spec%20%27r%27%20%27lowercase%27%20%27lowercase%20_%27%20%27str%27%20%27THIS%20is%20a%20String%21%20%3A%29%27%0A%20%20spec%20%27r%27%20%27uppercase%27%20%27uppercase%20_%27%20%27str%27%20%27Hello%2C%20world%21%27%0A%20%20spec%20%27r%27%20%27withoutWhiteSpace%27%20%27_%20without%20white%20space%27%20%27str%27%20%271%2C%202%2C%093%2C%0A4%27%0A%20%20spec%20%27r%27%20%27joinWith%27%20%27join%20string%20list%20_%20separator%20_%27%20%27auto%20str%27%20%27%20%27%20%27%20%27%0A%20%20spec%20%27r%27%20%27stringToUnicodes%27%20%27unicodes%20_%27%20%27auto%27%20%27aString%27%0A%20%20spec%20%27r%27%20%27unicodesToString%27%20%27string%20from%20unicodes%20_%27%20%27auto%27%20%27aList%27%0A%20%20spec%20%27r%27%20%27num2str%27%20%27num2str%20_%27%20%27auto%27%2042%0A%20%20spec%20%27r%27%20%27str2num%27%20%27str2num%20_%27%20%27str%27%20%27123%27%0A%0Ato%20beginsWith%20string%20substring%20%7B%0A%20%20return%20%28%28%27%5Bdata%3Afind%5D%27%20substring%20string%29%20%3D%3D%201%29%0A%7D%0A%0Ato%20contains%20string%20substring%20%7B%0A%20%20return%20%28%28%27%5Bdata%3Afind%5D%27%20substring%20string%29%20%3E%200%29%0A%7D%0A%0Ato%20endsWith%20string%20substring%20%7B%0A%20%20return%20%28%28%27%5Bdata%3Afind%5D%27%20substring%20string%29%20%3E%20%28%28size%20string%29%20-%20%28size%20substring%29%29%29%0A%7D%0A%0Ato%20isDigit%20char%20%7B%0A%20%20local%20%27unicode%27%20%28%27%5Bdata%3AunicodeAt%5D%27%201%20char%29%0A%20%20return%20%28and%20%28unicode%20%3E%3D%2048%29%20%28unicode%20%3C%3D%2057%29%29%0A%7D%0A%0Ato%20isLowercase%20char%20%7B%0A%20%20local%20%27unicode%27%20%28%27%5Bdata%3AunicodeAt%5D%27%201%20char%29%0A%20%20return%20%28and%20%28unicode%20%3E%3D%2097%29%20%28unicode%20%3C%3D%20122%29%29%0A%7D%0A%0Ato%20isUppercase%20char%20%7B%0A%20%20local%20%27unicode%27%20%28%27%5Bdata%3AunicodeAt%5D%27%201%20char%29%0A%20%20return%20%28and%20%28unicode%20%3E%3D%2065%29%20%28unicode%20%3C%3D%2090%29%29%0A%7D%0A%0Ato%20joinWith%20stringList%20separator%20%7B%0A%20%20if%20%28not%20%28isType%20stringList%20%27list%27%29%29%20%7Breturn%20%28%27%5Bdata%3Ajoin%5D%27%20%27%27%20stringList%29%7D%0A%20%20if%20%28or%20%28%28pushArgCount%29%20%3D%3D%201%29%20%28separator%20%3D%3D%20%27%27%29%29%20%7Breturn%20%28%27%5Bdata%3AjoinStrings%5D%27%20stringList%29%7D%0A%20%20local%20%27result%27%20%28newList%20%282%20%2A%20%28size%20stringList%29%29%29%0A%20%20%27%5Bdata%3Adelete%5D%27%20%27all%27%20result%0A%20%20for%20s%20stringList%20%7B%0A%20%20%20%20%27%5Bdata%3AaddLast%5D%27%20s%20result%0A%20%20%20%20%27%5Bdata%3AaddLast%5D%27%20separator%20result%0A%20%20%7D%0A%20%20%27%5Bdata%3Adelete%5D%27%20%27last%27%20result%0A%20%20return%20%28%27%5Bdata%3AjoinStrings%5D%27%20result%29%0A%7D%0A%0Ato%20lowercase%20string%20%7B%0A%20%20local%20%27new%20string%27%20%27%27%0A%20%20for%20i%20%28size%20string%29%20%7B%0A%20%20%20%20if%20%28isUppercase%20%28at%20i%20string%29%29%20%7B%0A%20%20%20%20%20%20%27new%20string%27%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%28v%20%27new%20string%27%29%20%28%27%5Bdata%3AunicodeString%5D%27%20%28%28%27%5Bdata%3AunicodeAt%5D%27%20i%20string%29%20%2B%2032%29%29%29%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%27new%20string%27%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%28v%20%27new%20string%27%29%20%28at%20i%20string%29%29%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20return%20%28v%20%27new%20string%27%29%0A%7D%0A%0Ato%20num2str%20n%20%7B%0A%20%20return%20%28%27%5Bdata%3Ajoin%5D%27%20%27%27%20n%29%0A%7D%0A%0Ato%20str2num%20s%20%7B%0A%20%20return%20%280%20%2B%20s%29%0A%7D%0A%0Ato%20stringToUnicodes%20s%20%7B%0A%20%20local%20%27result%27%20%28newList%20%28size%20s%29%29%0A%20%20for%20i%20%28size%20s%29%20%7B%0A%20%20%20%20atPut%20i%20result%20%28%27%5Bdata%3AunicodeAt%5D%27%20i%20s%29%0A%20%20%7D%0A%20%20return%20result%0A%7D%0A%0Ato%20unicodesToString%20aList%20%7B%0A%20%20return%20%28%27%5Bdata%3AunicodeString%5D%27%20aList%29%0A%7D%0A%0Ato%20uppercase%20string%20%7B%0A%20%20local%20%27new%20string%27%20%27%27%0A%20%20for%20i%20%28size%20string%29%20%7B%0A%20%20%20%20if%20%28isLowercase%20%28at%20i%20string%29%29%20%7B%0A%20%20%20%20%20%20%27new%20string%27%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%28v%20%27new%20string%27%29%20%28%27%5Bdata%3AunicodeString%5D%27%20%28%28%27%5Bdata%3AunicodeAt%5D%27%20i%20string%29%20-%2032%29%29%29%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%27new%20string%27%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%28v%20%27new%20string%27%29%20%28at%20i%20string%29%29%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20return%20%28v%20%27new%20string%27%29%0A%7D%0A%0Ato%20withoutWhiteSpace%20aString%20%7B%0A%20%20local%20%27result%27%20%28newList%20%28size%20aString%29%29%0A%20%20%27%5Bdata%3Adelete%5D%27%20%27all%27%20result%0A%20%20for%20i%20%28size%20aString%29%20%7B%0A%20%20%20%20local%20%27ch%27%20%28%27%5Bdata%3AunicodeAt%5D%27%20i%20aString%29%0A%20%20%20%20if%20%28ch%20%3E%2032%29%20%7B%0A%20%20%20%20%20%20%27%5Bdata%3AaddLast%5D%27%20ch%20result%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20return%20%28%27%5Bdata%3AunicodeString%5D%27%20result%29%0A%7D%0A%0A%0Amodule%20UDP%20Comm%0Aauthor%20MicroBlocks%0Aversion%201%200%20%0Adepends%20WiFi%20%0Atags%20udp%20network%20%0Adescription%20%27Blocks%20to%20send%20and%20receive%20UDP%20packets.%27%0A%0A%20%20spec%20%27%20%27%20%27%5Bnet%3AudpStart%5D%27%20%27UDP%20start%20port%20_%27%20%27auto%27%205000%0A%20%20spec%20%27%20%27%20%27%5Bnet%3AudpStop%5D%27%20%27UDP%20stop%27%0A%20%20spec%20%27%20%27%20%27%5Bnet%3AudpSendPacket%5D%27%20%27UDP%20send%20packet%20_%20to%20ip%20_%20port%20_%27%20%27auto%20auto%20num%27%20%27Hello%21%27%20%27255.255.255.255%27%205000%0A%20%20spec%20%27r%27%20%27%5Bnet%3AudpReceivePacket%5D%27%20%27UDP%20receive%20packet%20%3A%20binary%20data%20_%27%20%27bool%27%20false%0A%20%20spec%20%27r%27%20%27%5Bnet%3AudpRemoteIPAddress%5D%27%20%27UDP%20remote%20IP%20address%27%0A%20%20spec%20%27r%27%20%27%5Bnet%3AudpRemotePort%5D%27%20%27UDP%20remote%20port%27%0A%0Amodule%20WiFi%20Comm%0Aauthor%20MicroBlocks%0Aversion%201%205%20%0Atags%20communication%20network%20%0Adescription%20%27Connect%20to%20a%20WiFi%20network.%20Used%20in%20conjunction%20with%20other%20network%20libraries%2C%20such%20as%20HTTP%20client%2C%20HTTP%20server%20or%20Web%20Thing.%0A%27%0A%0A%20%20spec%20%27%20%27%20%27wifiConnect%27%20%27wifi%20connect%20to%20_%20password%20_%20%3A%20IP%20_%20gateway%20_%20subnet%20_%27%20%27str%20str%20auto%20auto%20auto%27%20%27Network_Name%27%20%27%27%20%27192.168.1.42%27%20%27192.168.1.1%27%20%27255.255.255.0%27%0A%20%20spec%20%27%20%27%20%27wifiCreateHotspot%27%20%27wifi%20create%20hotspot%20_%20password%20_%27%20%27str%20str%27%20%27Network_Name%27%20%27Network_Password%27%0A%20%20spec%20%27r%27%20%27getIPAddress%27%20%27IP%20address%27%0A%20%20spec%20%27r%27%20%27%5Bnet%3AmyMAC%5D%27%20%27MAC%20address%27%0A%0Ato%20getIPAddress%20%7B%0A%20%20return%20%28%27%5Bnet%3AmyIPAddress%5D%27%29%0A%7D%0A%0Ato%20wifiConnect%20ssid%20password%20fixedIP%20gatewayIP%20subnetIP%20%7B%0A%20%20if%20%28not%20%28%27%5Bnet%3AhasWiFi%5D%27%29%29%20%7Breturn%7D%0A%20%20%27%5Bnet%3AstopWiFi%5D%27%0A%20%20if%20%28%28pushArgCount%29%20%3C%205%29%20%7B%0A%20%20%20%20%27%5Bnet%3AstartWiFi%5D%27%20ssid%20password%0A%20%20%7D%20else%20%7B%0A%20%20%20%20%27%5Bnet%3AstartWiFi%5D%27%20ssid%20password%20false%20fixedIP%20gatewayIP%20subnetIP%0A%20%20%7D%0A%20%20local%20%27startMSecs%27%20%28millisOp%29%0A%20%20repeatUntil%20%28%28%27%5Bnet%3AmyIPAddress%5D%27%29%20%21%3D%20%270.0.0.0%27%29%20%7B%0A%20%20%20%20comment%20%27Timeout%20after%20N%20seconds%27%0A%20%20%20%20if%20%28%28%28millisOp%29%20-%20startMSecs%29%20%3E%2010000%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27Could%20not%20connect%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%20%20comment%20%27Slow%20blink%20while%20trying%20to%20connect%27%0A%20%20%20%20setUserLED%20true%0A%20%20%20%20waitMillis%20300%0A%20%20%20%20setUserLED%20false%0A%20%20%20%20waitMillis%20300%0A%20%20%7D%0A%20%20repeat%206%20%7B%0A%20%20%20%20comment%20%27Quick%20blinks%20when%20connected%27%0A%20%20%20%20setUserLED%20true%0A%20%20%20%20waitMillis%2050%0A%20%20%20%20setUserLED%20false%0A%20%20%20%20waitMillis%2050%0A%20%20%7D%0A%20%20sayIt%20%27My%20IP%20address%20is%3A%27%20%28%27%5Bnet%3AmyIPAddress%5D%27%29%0A%7D%0A%0Ato%20wifiCreateHotspot%20ssid%20password%20%7B%0A%20%20if%20%28not%20%28%27%5Bnet%3AhasWiFi%5D%27%29%29%20%7Breturn%7D%0A%20%20%27%5Bnet%3AstartWiFi%5D%27%20ssid%20password%20true%0A%20%20if%20%28%27Connected%27%20%21%3D%20%28%27%5Bnet%3AwifiStatus%5D%27%29%29%20%7B%0A%20%20%20%20sayIt%20%27Could%20not%20create%20hotspot%27%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20repeat%206%20%7B%0A%20%20%20%20comment%20%27Quick%20blinks%20when%20connected%27%0A%20%20%20%20setUserLED%20true%0A%20%20%20%20waitMillis%2050%0A%20%20%20%20setUserLED%20false%0A%20%20%20%20waitMillis%2050%0A%20%20%7D%0A%20%20sayIt%20%27My%20IP%20address%20is%3A%27%20%28%27%5Bnet%3AmyIPAddress%5D%27%29%0A%7D%0A%0A%0Amodule%20dotPack%20Output%0Aauthor%20%27%E8%8B%B1%E8%8D%94%E6%95%99%E8%82%B2%27%0Aversion%201%200%20%0Adepends%20BMP4dotPack%20%0Achoices%20size%20big%20small%20%0Adescription%20%27dotpack%20%28%20Eliteu%20Programable%20led%20matrix%20bag%20%29%27%0Avariables%20_stop_scrolling_text%20%27_dotPack%20initialized%27%20%0A%0A%20%20spec%20%27%20%27%20%27_displayText%27%20%27_display%20text%20_%20_%20_%20_%20_%20_%27%20%27auto%20auto%20auto%20auto%20auto%20auto%27%20%27hi%27%200%200%2065280%200%201%0A%20%20spec%20%27%20%27%20%27_dotPackSetup%27%20%27_dotPack%20setup%27%0A%20%20spec%20%27%20%27%20%27clearDisplay%27%20%27clear%20display%27%0A%20%20spec%20%27%20%27%20%27setBrightness%27%20%27set%20brightness%20_%27%20%27auto%27%20%2710%27%0A%20%20spec%20%27%20%27%20%27setPixel%27%20%27set%20pixel%20x%20_%20y%20_%20color%20_%20%3A%20update%20_%27%20%27auto%20auto%20color%20bool%27%201%201%20nil%20true%0A%20%20spec%20%27%20%27%20%27update%27%20%27update%27%0A%20%20spec%20%27%20%27%20%27setBackground%27%20%27set%20background%20color%20_%27%20%27color%27%0A%20%20spec%20%27%20%27%20%27displayChar%27%20%27display%20character%20_%20color%20_%20%3A%20size%20_%27%20%27str%20color%20menu.size%27%20%27A%27%20nil%20%27big%27%0A%20%20spec%20%27%20%27%20%27dotPackScrollText%27%20%27scroll%20text%20_%20color%20_%20%3A%20pausing%20_%20ms%20size%20_%27%20%27str%20color%20auto%20menu.size%27%20%27hello%27%20nil%20100%20%27big%27%0A%20%20spec%20%27%20%27%20%27stopScrolling%27%20%27stop%20scrolling%27%0A%20%20spec%20%27%20%27%20%27drawLine%27%20%27draw%20line%20x0%20_%20y0%20_%20x1%20_%20y1%20_%20color%20_%27%20%27auto%20auto%20auto%20auto%20color%27%201%201%208%208%0A%20%20spec%20%27%20%27%20%27drawTriangle%27%20%27draw%20triangle%20x0%20_%20y0%20_%20x1%20_%20y1%20_%20x2%20_%20y2%20_%20color%20_%20%3A%20fill%20_%27%20%27auto%20auto%20auto%20auto%20auto%20auto%20color%20bool%27%201%201%208%201%208%208%20nil%20false%0A%20%20spec%20%27%20%27%20%27drawRect%27%20%27draw%20rectangle%20x0%20_%20y0%20_%20w%20_%20h%20_%20color%20_%20%3A%20fill%20_%27%20%27auto%20auto%20auto%20auto%20color%20bool%27%201%201%208%204%20nil%20false%0A%20%20spec%20%27%20%27%20%27drawCircle%27%20%27draw%20circle%20x0%20_%20y0%20_%20r%20_%20color%20_%20%3A%20fill%20_%27%20%27auto%20auto%20auto%20color%20bool%27%208%208%204%20nil%20false%0A%20%20spec%20%27r%27%20%27color_rgb%27%20%27color%20r%20_%20g%20_%20b%20_%27%20%27auto%20auto%20auto%27%20255%200%200%0A%0Ato%20%27_displayText%27%20text%20x0%20y0%20text_color%20bg_color%20size%20%7B%0A%20%20comment%20%27lock%27%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDisplay%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20text%20x0%20y0%20text_color%20bg_color%20size%29%0A%20%20update%0A%7D%0A%0Ato%20%27_dotPackSetup%27%20%7B%0A%20%20if%20%28%28v%20%27_dotPack%20initialized%27%29%20%3D%3D%200%29%20%7B%0A%20%20%20%20%27_dotPack%20initialized%27%20%3D%201%0A%20%20%20%20_stop_scrolling_text%20%3D%20%28booleanConstant%20true%29%0A%20%20%20%20setBrightness%2020%0A%20%20%7D%0A%7D%0A%0Ato%20clearDisplay%20%7B%0A%20%20setBackground%20%28colorSwatch%200%200%200%20255%29%0A%7D%0A%0Ato%20color_rgb%20r%20g%20b%20%7B%0A%20%20comment%20%27%20%28blue%20%3C%3C%2016%29%20%7C%20%28green%20%3C%3C%208%29%20%7C%20red%3B%27%0A%20%20if%20%28or%20%28or%20%28r%20%3C%200%29%20%28r%20%3E%20255%29%29%20%28or%20%28or%20%28g%20%3C%200%29%20%28g%20%3E%20255%29%29%20%28or%20%28b%20%3C%200%29%20%28b%20%3E%20255%29%29%29%29%20%7B%0A%20%20%20%20sayIt%20%27r%2C%20g%2C%20b%20%3A%200-255%27%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20return%20%28%28%28r%20%3C%3C%2016%29%20%7C%20%28g%20%3C%3C%208%29%29%20%7C%20b%29%0A%7D%0A%0Ato%20displayChar%20s%20color%20size%20%7B%0A%20%20local%20%27x0%27%200%0A%20%20local%20%27y0%27%200%0A%20%20local%20%27bg_color%27%200%0A%20%20if%20%28%28pushArgCount%29%20%3C%203%29%20%7B%0A%20%20%20%20local%20%27_size%27%20%27big%27%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_size%27%20size%0A%20%20%7D%0A%20%20if%20%28_size%20%3D%3D%20%27big%27%29%20%7B%0A%20%20%20%20x0%20%3D%203%0A%20%20%20%20y0%20%3D%201%0A%20%20%20%20_size%20%3D%202%0A%20%20%7D%0A%20%20if%20%28_size%20%3D%3D%20%27small%27%29%20%7B%0A%20%20%20%20x0%20%3D%205%0A%20%20%20%20y0%20%3D%204%0A%20%20%20%20_size%20%3D%201%0A%20%20%7D%0A%20%20if%20%28%28size%20s%29%20%3D%3D%200%29%20%7B%0A%20%20%20%20comment%20%27clean%27%0A%20%20%20%20clearDisplay%0A%20%20%7D%20else%20%7B%0A%20%20%20%20%27_displayText%27%20%28at%201%20s%29%20x0%20y0%20color%20bg_color%20_size%0A%20%20%7D%0A%7D%0A%0Ato%20dotPackScrollText%20text%20color%20pausing%20size%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20if%20%28%28pushArgCount%29%20%3C%204%29%20%7B%0A%20%20%20%20local%20%27_pausing%27%20100%0A%20%20%20%20local%20%27_size%27%20%27big%27%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_pausing%27%20pausing%0A%20%20%20%20local%20%27_size%27%20size%0A%20%20%7D%0A%20%20local%20%27rows%27%2016%0A%20%20local%20%27column%27%2016%0A%20%20local%20%27size_pixels%27%200%0A%20%20local%20%27bg_color%27%200%0A%20%20local%20%27y0%27%200%0A%20%20if%20%28_size%20%3D%3D%20%27small%27%29%20%7B%0A%20%20%20%20_size%20%3D%201%0A%20%20%20%20y0%20%3D%204%0A%20%20%20%20size_pixels%20%3D%20%285%20%2B%201%29%0A%20%20%7D%0A%20%20if%20%28_size%20%3D%3D%20%27big%27%29%20%7B%0A%20%20%20%20_size%20%3D%202%0A%20%20%20%20y0%20%3D%201%0A%20%20%20%20size_pixels%20%3D%20%2810%20%2B%203%29%0A%20%20%7D%0A%20%20local%20%27i%27%20rows%0A%20%20_stop_scrolling_text%20%3D%20%28booleanConstant%20false%29%0A%20%20repeat%20%28%28%28size%20text%29%20%2A%20size_pixels%29%20%2B%20rows%29%20%7B%0A%20%20%20%20if%20%28_stop_scrolling_text%20%3D%3D%20%28booleanConstant%20true%29%29%20%7Breturn%200%7D%0A%20%20%20%20%27_displayText%27%20text%20i%20y0%20color%20bg_color%20_size%0A%20%20%20%20i%20%2B%3D%20-1%0A%20%20%20%20waitMillis%20_pausing%0A%20%20%7D%0A%7D%0A%0Ato%20drawCircle%20x0%20y0%20r%20color%20fill%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x0%20y0%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20if%20%28%28pushArgCount%29%20%3C%205%29%20%7B%0A%20%20%20%20local%20%27_fill%27%20%28booleanConstant%20false%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_fill%27%20fill%0A%20%20%7D%0A%20%20if%20_fill%20%7B%0A%20%20%20%20_fill%20%3D%201%0A%20%20%7D%20else%20%7B%0A%20%20%20%20_fill%20%3D%200%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawCircle%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x0%20-%201%29%20%28y0%20-%201%29%20r%20color%20_fill%29%0A%20%20update%0A%7D%0A%0Ato%20drawLine%20x0%20y0%20x1%20y1%20color%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x0%20y0%20x1%20y1%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawLine%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x0%20-%201%29%20%28y0%20-%201%29%20%28x1%20-%201%29%20%28y1%20-%201%29%20color%29%0A%20%20update%0A%7D%0A%0Ato%20drawRect%20x0%20y0%20w%20h%20color%20fill%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x0%20y0%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20if%20%28%28pushArgCount%29%20%3C%206%29%20%7B%0A%20%20%20%20local%20%27_fill%27%20%28booleanConstant%20false%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_fill%27%20fill%0A%20%20%7D%0A%20%20if%20_fill%20%7B%0A%20%20%20%20_fill%20%3D%201%0A%20%20%7D%20else%20%7B%0A%20%20%20%20_fill%20%3D%200%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawRect%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x0%20-%201%29%20%28y0%20-%201%29%20w%20h%20color%20_fill%29%0A%20%20update%0A%7D%0A%0Ato%20drawTriangle%20x0%20y0%20x1%20y1%20x2%20y2%20color%20fill%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x0%20y0%20x1%20y1%20x2%20y2%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20if%20%28%28pushArgCount%29%20%3C%206%29%20%7B%0A%20%20%20%20local%20%27_fill%27%20%28booleanConstant%20false%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_fill%27%20fill%0A%20%20%7D%0A%20%20if%20_fill%20%7B%0A%20%20%20%20_fill%20%3D%201%0A%20%20%7D%20else%20%7B%0A%20%20%20%20_fill%20%3D%200%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawTriangle%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x0%20-%201%29%20%28y0%20-%201%29%20%28x1%20-%201%29%20%28y1%20-%201%29%20%28x2%20-%201%29%20%28y2%20-%201%29%20color%20_fill%29%0A%20%20update%0A%7D%0A%0Ato%20setBackground%20color%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackFillScreen%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20color%29%0A%20%20update%0A%7D%0A%0Ato%20setBrightness%20brightness%20%7B%0A%20%20comment%20%27%E6%89%80%E6%9C%89%E7%81%AF%E6%89%93%E5%BC%80%E5%88%B0%E6%9C%80%E4%BA%AE%E5%8F%AF%E8%83%BD%E4%BC%9A%E5%AF%BC%E8%87%B4%E9%87%8D%E5%90%AF%EF%BC%8C%E8%BF%9E%E6%8E%A5%E6%96%AD%E5%BC%80%0A%0A%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9A%84%E6%97%B6%E5%80%99%E4%BC%9A%E8%AE%BE%E7%BD%AE%E5%88%9D%E5%A7%8B%E4%BA%AE%E5%BA%A6%EF%BC%8C%E8%A2%ABsetup%E6%8E%89%E7%94%A8%27%0A%20%20if%20%28brightness%20%3E%2020%29%20%7B%0A%20%20%20%20sayIt%20%27%E4%BA%AE%E5%BA%A6%E5%BA%94%E5%BD%93%20%3C%3D%2020%27%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackSetBrightness%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20brightness%29%0A%20%20update%0A%7D%0A%0Ato%20setPixel%20x%20y%20color%20update%20%7B%0A%20%20%27_dotPackSetup%27%0A%20%20for%20i%20%28%27%5Bdata%3AmakeList%5D%27%20x%20y%29%20%7B%0A%20%20%20%20if%20%28or%20%28i%20%3E%2016%29%20%28i%20%3C%201%29%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27x%2Cy%20%E7%9A%84%E5%8F%96%E5%80%BC%E8%8C%83%E5%9B%B4%E4%B8%BA%201-16%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%7D%0A%20%20if%20%28%28pushArgCount%29%20%3C%204%29%20%7B%0A%20%20%20%20local%20%27_update%27%20%28booleanConstant%20true%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20local%20%27_update%27%20update%0A%20%20%7D%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackDrawPixel%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20%28x%20-%201%29%20%28y%20-%201%29%20color%29%0A%20%20if%20_update%20%7B%0A%20%20%20%20update%0A%20%20%7D%0A%7D%0A%0Ato%20stopScrolling%20%7B%0A%20%20_stop_scrolling_text%20%3D%20%28booleanConstant%20true%29%0A%20%20waitMillis%2010%0A%20%20comment%20%27clean%27%0A%7D%0A%0Ato%20update%20%7B%0A%20%20callCustomCommand%20%27%5Bdisplay%3AdotPackShow%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%29%0A%7D%0A%0A">MicroBlocks 中的程序</a></p>
+<p><img src="/post/img/squeak-microblocks-02.png" alt=""></p>
+<h4 id="客户端-1">客户端</h4>
+<p>Squeak 客户端中相关代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pack := DotPack new.
+</span></span><span class="line"><span class="cl">pack stopStepping.
+</span></span><span class="line"><span class="cl">pack clear.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">pack withDevice: true deviceAddress: #[192 168 1 8]. &#34;IP Address&#34;
+</span></span><span class="line"><span class="cl">pack sendMessageWith: &#39;UDP&#39;.
+</span></span><span class="line"><span class="cl">pack clear.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">pack x: 1 y:1 color: Color red.
+</span></span><span class="line"><span class="cl">1 to: 16 do: [:i | pack x: i y:i color: Color red].
+</span></span><span class="line"><span class="cl">1 to: 16 do: [:i | pack x: i y:i color: Color blue].
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-09-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/a-combination-of-curiosity-and-confidence-a-conversation-with-john-maloney/">
+            <span class="next-text nav-default">[译]&#34;好奇心和信心的结合&#34;: 与John Maloney的对话</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
