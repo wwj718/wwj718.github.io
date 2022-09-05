@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Squeak 与 MicroBlocks 互操作">
 <meta itemprop="description" content="前言 Smalltalk 爱好者们期待已久的 Making Smalltalk 在上周五举行。Lounsen 提议在来一场 After Party。 我想在 After Party 上分享近期使用 Squeak 做的项目: Squeak 中的 dotPack 模拟器。 为了让"><meta itemprop="datePublished" content="2022-09-05T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2022-09-05T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1966">
+<meta itemprop="wordCount" content="2071">
 <meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Squeak 与 MicroBlocks 互操作"/>
 <meta name="twitter:description" content="前言 Smalltalk 爱好者们期待已久的 Making Smalltalk 在上周五举行。Lounsen 提议在来一场 After Party。 我想在 After Party 上分享近期使用 Squeak 做的项目: Squeak 中的 dotPack 模拟器。 为了让"/>
@@ -142,6 +142,11 @@
         <li><a href="#两个版本">两个版本</a></li>
         <li><a href="#基于-http-的互操作">基于 HTTP 的互操作</a></li>
         <li><a href="#基于-udp-的互操作">基于 UDP 的互操作</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录">附录</a>
+      <ul>
+        <li><a href="#python--microblocks-udp">Python &amp; MicroBlocks UDP</a></li>
       </ul>
     </li>
   </ul>
@@ -264,6 +269,39 @@
 </span></span><span class="line"><span class="cl">pack x: 1 y:1 color: Color red.
 </span></span><span class="line"><span class="cl">1 to: 16 do: [:i | pack x: i y:i color: Color red].
 </span></span><span class="line"><span class="cl">1 to: 16 do: [:i | pack x: i y:i color: Color blue].
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="附录">附录</h2>
+<h3 id="python--microblocks-udp">Python &amp; MicroBlocks UDP</h3>
+<p>以下是使用 Python UDP 客户端 与<a href="/post/%E7%BC%96%E7%A8%8B/squeak-microblocks-interoperability/#%E5%9F%BA%E4%BA%8E-udp-%E7%9A%84%E4%BA%92%E6%93%8D%E4%BD%9C">MicroBlocks 的 UDP 服务</a>交互的例子, 运行以下代码将把 dotPack (8,8) 位置的LED点亮为红色。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># https://wiki.python.org/moin/UdpCommunication
+</span></span><span class="line"><span class="cl">import socket
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ip = &#34;192.168.1.8&#34;
+</span></span><span class="line"><span class="cl">port = 5000
+</span></span><span class="line"><span class="cl">x,y = (8,8)
+</span></span><span class="line"><span class="cl">r,g,b = (255,0,0)
+</span></span><span class="line"><span class="cl">color = r&lt;&lt;16|g&lt;&lt;8|b
+</span></span><span class="line"><span class="cl">message = &#34;setpixel,{},{},{}&#34;.format(x,y,color)
+</span></span><span class="line"><span class="cl">sock = socket.socket(socket.AF_INET, # Internet
+</span></span><span class="line"><span class="cl">                     socket.SOCK_DGRAM) # UDP
+</span></span><span class="line"><span class="cl">sock.sendto(message.encode(), (ip, port))
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
