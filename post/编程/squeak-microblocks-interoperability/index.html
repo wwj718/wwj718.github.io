@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Squeak 与 MicroBlocks 互操作">
 <meta itemprop="description" content="前言 Smalltalk 爱好者们期待已久的 Making Smalltalk 在上周五举行。Lounsen 提议在来一场 After Party。 我想在 After Party 上分享近期使用 Squeak 做的项目: Squeak 中的 dotPack 模拟器。 为了让"><meta itemprop="datePublished" content="2022-09-05T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2022-09-05T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2085">
+<meta itemprop="wordCount" content="2093">
 <meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Squeak 与 MicroBlocks 互操作"/>
 <meta name="twitter:description" content="前言 Smalltalk 爱好者们期待已久的 Making Smalltalk 在上周五举行。Lounsen 提议在来一场 After Party。 我想在 After Party 上分享近期使用 Squeak 做的项目: Squeak 中的 dotPack 模拟器。 为了让"/>
@@ -161,16 +161,16 @@
 <p>我想在 After Party 上分享近期使用 Squeak 做的项目: <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak-dotpack-simulator/">Squeak 中的 dotPack 模拟器</a>。</p>
 <p><video width=80% src="https://adapter.codelab.club/video/198554c8f938dfe9a85bfa509b414c.mp4" controls="controls"></video></p>
 <p>为了让分享更加充实，我做了些增强，使这个 dotPack 模拟器可以跟 <a href="https://dotpack.fun/">dotPack 实物</a>互动。我喜欢<a href="/post/%E7%BC%96%E7%A8%8B/microblocks-dotpack/">在 MicroBlocks 里为硬件写固件</a>，它是我迄今为止最喜欢的物理计算平台。</p>
-<p>我就打算把分享的话题定为 《Squeak 与 MicroBlocks 的互操作》，这样我不仅能够在分享时讨论 Smalltalk，还能讨论 Smalltalk 的精神后裔: MicroBlocks，它们共享了大量的系统特性和个人计算愿景，值得一提的是 MicroBlocks 的创始者 <a href="/post/%E7%BC%96%E7%A8%8B/squeak-news-interview-with-john-maloney/">John Maloney</a> 也是 Squeak 创始团队的成员，John Maloney 在 Squeak 的贡献包括: Smalltalk-to-C 翻译器(可移植性的关键)、第一个 Squeak VM (Mac)、Morphic 用户界面框架&hellip;</p>
+<p>打算把分享的话题定为 《Squeak 与 MicroBlocks 的互操作》，这样一来，我不仅能够在分享时讨论 Smalltalk，还能讨论 Smalltalk 的精神后裔: MicroBlocks，它们共享了大量的系统特性和个人计算愿景，值得一提的是 MicroBlocks 的创始者 <a href="/post/%E7%BC%96%E7%A8%8B/squeak-news-interview-with-john-maloney/">John Maloney</a> 也是 Squeak 创始团队的成员，John Maloney 在 Squeak 的贡献包括: Smalltalk-to-C 翻译器(可移植性的关键)、第一个 Squeak VM (Mac)、Morphic 用户界面框架&hellip;</p>
 <p>原定 2 小时的 After Party，持续了 3 个小时，虽然大家都是 Smalltalk 爱好者，依然被 Smalltalk 的灵活和强大所震惊，我们几乎是一边讨论，一边实时编程，在系统中探索碰撞出的新想法，而且几乎总是能够实现突如其来的灵感。</p>
 <h2 id="开始">开始</h2>
 <h3 id="思路">思路</h3>
 <blockquote>
 <p>制作出色且可扩展的系统的关键在于设计模块的通信方式，而不是设计其内部属性和行为应该是什么 &ndash; Alan Kay</p>
 </blockquote>
-<p>我最初打算在 Squeak 中使用串口(serial)来跟 dotPack 硬件通信，后来发现 Squeak 中的串口插件(MacOS)年久失修。于是打算采用网络来通信(dotPack 使用 ESP32，所以能够支持网络)。</p>
+<p>最初打算在 Squeak 中使用串口(serial)来跟 dotPack 硬件通信，后来发现 Squeak 中的串口插件(MacOS)年久失修。于是打算采用网络来通信(dotPack 使用 ESP32，所以能够支持网络)。</p>
 <h3 id="两个版本">两个版本</h3>
-<p>前后设计了两个版本的通信机制。</p>
+<p>前后设计了两个版本的通信机制：</p>
 <ul>
 <li>基于 HTTP 的互操作</li>
 <li>基于 UDP 的互操作</li>
@@ -187,7 +187,7 @@
 <p>计算机应该像乐器，它应该对用户的操作作出即时且一致的响应。想象一下，在吹出一个音符和听到它之间的一秒钟的延迟是多么荒谬！</p>
 <p>我喜欢的一个演示是以交互的方式应答 HTTP 请求。你可以先点击 <code>HTTP 服务器请求</code> 积木，对用户的请求做一番探索，等你玩够了，再决定 <code>回应xx至HTTP请求</code>， 对客户端来说一切正常，Ta 完全不知道有一个人手动处理了他的请求！这是一个真正的&quot;人工&quot;智能服务器!</p>
 <h4 id="客户端">客户端</h4>
-<p>我最初使用 Squeak 内置的 HTTP 客户端编程跟 MicroBlocks http server 通信，结果遇到一个问题, 我把问题反馈给了 John, John 给出了精彩分析, 记录在此: <a href="https://bitbucket.org/john_maloney/smallvm/issues/287/http-server-can-not-work-with-squeak">https://bitbucket.org/john_maloney/smallvm/issues/287/http-server-can-not-work-with-squeak</a>。</p>
+<p>最初使用 Squeak 内置的 HTTP 客户端(WebClient)跟 MicroBlocks http server 通信，结果遇到一个问题, 我把问题反馈给了 John, John 给出了精彩分析, 记录在此: <a href="https://bitbucket.org/john_maloney/smallvm/issues/287/http-server-can-not-work-with-squeak">https://bitbucket.org/john_maloney/smallvm/issues/287/http-server-can-not-work-with-squeak</a>。</p>
 <p>这个问题通信的双方（Squeak 和 MicroBlocks）都有责任，MicroBlocks 的责任多一些，John 说近期会修复。</p>
 <p>后来我用 curl 暂时绕开了这个问题。</p>
 <p>为了在 Squeak 中使用 curl, 需要 Squeak 与宿主系统的互操作，让 Squeak 能够调用 shell 命令。<a href="https://wiki.squeak.org/squeak/1914">CommandShell</a> 是很棒的选择。这是我的意料之外的收获，当我决定用 Squeak 时，我几乎做好了放弃在 Unix/Linux 下积累的经验(我从大二开始用 Linux，差不多十年的经验)。现在这些经验突然又能够在 Squeak 里使用了， Unix/Linux 里有大量实用小工具，一口气都丢了真有些可惜。更加意料之外的是， CommandShell 支持 Unix 管道(pipe), 而且能够用 Squeak 的 inspect 增强它！ 这样一来，我不仅没有丢掉 Unix/Linux 工具，还能够随时使用 Squeak 增强它们！</p>
