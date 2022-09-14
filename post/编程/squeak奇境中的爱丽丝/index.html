@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="[译]Squeak 奇境中的爱丽丝(Alice) 前言 原文 Jeff Pierce(CMU) Alice in a Squeak Wonderland 译文 关于本章 本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak%E5%A5%87%E5%A2%83%E4%B8%AD%E7%9A%84%E7%88%B1%E4%B8%BD%E4%B8%9D/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="" />
+<meta property="og:description" content="[译]Squeak 奇境中的爱丽丝(Alice) 前言 原文 Jeff Pierce(CMU) Alice in a Squeak Wonderland 译文 关于本章 本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak%E5%A5%87%E5%A2%83%E4%B8%AD%E7%9A%84%E7%88%B1%E4%B8%BD%E4%B8%9D/" /><meta property="article:section" content="post" />
+
+
+
+<meta itemprop="name" content="">
+<meta itemprop="description" content="[译]Squeak 奇境中的爱丽丝(Alice) 前言 原文 Jeff Pierce(CMU) Alice in a Squeak Wonderland 译文 关于本章 本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第">
+
+<meta itemprop="wordCount" content="5117">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="[译]Squeak 奇境中的爱丽丝(Alice) 前言 原文 Jeff Pierce(CMU) Alice in a Squeak Wonderland 译文 关于本章 本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title"></h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 0001-01-01 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#译文">译文</a>
+      <ul>
+        <li><a href="#关于本章">关于本章</a></li>
+        <li><a href="#什么是-alice">什么是 Alice</a></li>
+        <li><a href="#alice-是从哪里来的">Alice 是从哪里来的？</a></li>
+        <li><a href="#squeak-alice-是如何开始的">Squeak Alice 是如何开始的。</a></li>
+        <li><a href="#在-squeak-中使用-alice">在 Squeak 中使用 Alice</a></li>
+        <li><a href="#改变显示深度">改变显示深度</a></li>
+        <li><a href="#创建一个演员">创建一个演员</a></li>
+        <li><a href="#用鼠标工作">用鼠标工作</a></li>
+        <li><a href="#相机camera控制">相机(Camera)控制</a></li>
+        <li><a href="#无处不在的动画">无处不在的动画</a></li>
+        <li><a href="#持续时间为-0-的动画和-rightnow">持续时间为 0 的动画和 rightNow</a></li>
+        <li><a href="#动画的风格">动画的风格</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="译squeak-奇境中的爱丽丝alice">[译]Squeak 奇境中的爱丽丝(Alice)</h1>
+<h2 id="前言">前言</h2>
+<p>原文 Jeff Pierce(CMU) <a href="http://stephane.ducasse.free.fr/FreeBooks/CollectiveNBlueBook/pierce-final.pdf">Alice in a Squeak Wonderland</a></p>
+<h2 id="译文">译文</h2>
+<h3 id="关于本章">关于本章</h3>
+<p>本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第一部分介绍了 Squeak Alice 提供的一些命令，以及这些命令背后的理念。这一部分不要求读者有任何的 3D 图形知识，从 Squeak 新手到 Squeak 专家，每个人应该都能理解。第二部分描述了 Squeak Alice 的实现，需要对 Squeak 类和三维图形有更高的理解。</p>
+<h3 id="什么是-alice">什么是 Alice</h3>
+<p>印刷文本、广播和电影都是不同类型的媒介。尽管每种媒介都有不同的优劣势，但有一个因素是所有媒介的共同点: 人们利用媒介讲故事。讲故事是最古老、最持久的职业之一：人们迟早会尝试使用每一种新媒介来讲故事。</p>
+<p>交互式三维图形是一种新媒介，人们尝试用它来讲故事。对潜在的 3D 创作者来说，需要昂贵的专业硬件曾经是一个障碍，但廉价的图形加速卡的发展在很大程度上消除了这个障碍。仍然存在的一个重要障碍是创作问题：创造一个互动的三维世界需要专门的培训，而大多数对讲故事感兴趣的人并不具备这种能力。</p>
+<p>处理 3D 图形通常需要有 C/C++ 编程语言的经验，以及熟悉线性代数（如 4x4 齐次变换矩阵）。不幸的是，拥有 3D 图形技能的人通常不是想用它来讲述新故事的人。为了让后者能够使用交互式三维图形，需要一种新型的三维创作工具。Alice 项目的目标是创建一个用于构建交互式三维世界的创作工具，该工具对新手来说易于学习和使用。</p>
+<h3 id="alice-是从哪里来的">Alice 是从哪里来的？</h3>
+<p>Randy Pausch 和他的研究小组在弗吉尼亚大学启动了 Alice 项目。该项目的既定目标是使一个主修艺术或英语的大二学生在几乎没有编程经验的情况下也能建立一个互动的三维世界。我们实际上超过了这个目标：我们普遍发现，有积极性的高中生，甚至是一些小学生，都可以使用 Alice。</p>
+<p>Alice 的第一个版本是在 Silicon Graphics 工作站上运行的，越来越强大的硬件使我们能在 1995 年底，将 Alice 移植到 Windows PC 电脑上。我们在 1996 年的 SIGGRAPH 会议上首次公开发布了 Alice，至今已有 10 万多人下载了 Alice 并亲自试用。当前版本的 Alice 可以从 <a href="http://www.alice.org">http://www.alice.org</a> 免费下载，用于 Windows 95、98 和 NT。</p>
+<p>1997 年，Randy Pausch 和一些最初的 Alice 团队搬到了 CMU，成立了<a href="http://www.cs.cmu.edu/~stage3">第三阶段研究小组</a>。在 CMU，我们继续开发 Alice，并学习如何使交互式三维图形更容易被人们接受。我们目前的目标是通过尽可能多地消除打字，使 Alice 对年幼的儿童更容易。</p>
+<h3 id="squeak-alice-是如何开始的">Squeak Alice 是如何开始的。</h3>
+<p>Squeak 版本的 Alice，简称 Squeak Alice，是在 Alice 项目的负责人 Randy Pausch 和 Squeak 开发团队的负责人 Alan Kay 会面, 就如何让儿童更容易接受不同媒介的创作交换了意见后诞生的。作为那次会议的结果，Alan 想把我们在开发 Alice 过程中学到的经验在 Squeak 中实施。为了实现这个目标，他让我在迪斯尼实习一个学期，以实现 Alice 的 Squeak 版本。作为与 Randy 一起工作的博士生和 Alice 设计团队的成员，我对我们从 Alice 学到的经验和系统本身的结构都很熟悉。我抓住了与 Alan 合作的机会，经过 1999 年春季学期三个半月的努力工作，第一个版本的 Squeak Alice 诞生了。</p>
+<h3 id="在-squeak-中使用-alice">在 Squeak 中使用 Alice</h3>
+<p>要使用 Squeak Alice，首先需要创建一个 Wonderland。Wonderland 本质上是创建交互式 3D 世界所需的所有东西的集合：一个相机窗口，让你看到你的世界，一个脚本编辑器，让你把演员(Actor)装进你的世界，给他们下命令，并为他们创造行为。</p>
+<h4 id="如何创建一个-wonderland">如何创建一个 Wonderland</h4>
+<p>要创建一个 Wonderland，需要首先确保你在一个 Morphic 项目中，然后打开一个工作区。要打开一个工作区，首先通过左击你的鼠标显示 World 菜单，选择 &ldquo;open&hellip;&quot;，并在出现的新菜单中选择 &ldquo;workspace&rdquo;。在出现的工作区中输入:</p>
+<p><code>Wonderland new</code></p>
+<p>并告诉 Squeak 去 <code>Doit</code>（PC 用户按 <code>Alt-D</code>，Mac 用户按 <code>Cmd-D</code>）。当 Squeak 创建你的 Wonderland 时，会有一些窗口弹出。</p>
+<p>图一的窗口是相机窗口。这个窗口是你进入三维世界的视野。在这个窗口中，你将看到你所执行的命令的效果。你还可以通过这个窗口 &ldquo;伸手&rdquo;，用鼠标来操纵你的世界中的三维对象。</p>
+<img width=400 src="/post/img/alice-01.png" />
+<center>图1: 相机窗口</center>
+<p>图 2 的窗口是 Wonderland 脚本编辑器。该编辑器由四个不同的部分组成。最左边的是对象树，它列出了场景中的对象。在本章的后面，你将会了解更多关于对象树的信息。在窗口顶部(对象树的右边)有三个按钮。这些按钮用来选择编辑器的哪个部分处于活动状态: 脚本标签、演员(Actor)信息标签、快速参考标签。</p>
+<img width=400 src="/post/img/alice-02.png" />
+<center>图2: 显示脚本标签的脚本编辑器</center>
+<p>脚本标签是你向 Squeak Alice 输入命令和执行脚本的地方。这个标签页与工作区非常相似（DoIt 将执行命令，而 PrintIt 将打印出结果），它也预先定义了 Wonderland 的名称（如左，绿，和相机）。本章将提供大量的命令样本供大家尝试。要尝试一个命令，把它输入脚本标签，然后用 DoIt 执行它。</p>
+<p>演员信息标签提供了演员的视图和关于该演员的一些当前信息。左键点击对象树中的一个演员，决定了演员信息标签将显示哪个演员的信息。</p>
+<img width=400 src="/post/img/alice-03.png" />
+<center>图3: 演员信息标签</center>
+<p>快速参考标签提供了 Squeak Alice 提供的许多命令的例子。如果你忘记了如何格式化一个命令，你可以查看这个标签。</p>
+<img width=400 src="/post/img/alice-04.png" />
+<center>图4: 快速参考标签</center>
+<h3 id="改变显示深度">改变显示深度</h3>
+<p>为了更快地运行并节省内存，Squeak 最初使用了一个低的显示深度。显示深度是 Squeak 用来表示每个像素的颜色的比特数。3D 图形通常需要更高的显示深度才能看起来更漂亮，所以你可以想把显示深度改为 16 或 32 位。要做到这一点，左击打开 World 菜单，选择 &ldquo;appearance&hellip;&quot;，然后选择 &ldquo;set display depth…&quot;，最后选择 &ldquo;16 &quot; 或 &ldquo;32&rdquo;。</p>
+<h3 id="创建一个演员">创建一个演员</h3>
+<p>既然你已经创建了 Wonderland ，接下来需要向它添加一些 3D 对象。在 Squeak Alice 中，3D 对象被称为演员。Squeak Alice 可以用各种 3D 文件格式创建演员，包括 Alice MDL 文件、3DS 文件和 VRML 文件。要创建一个演员，你需要告诉 Wonderland 要使用什么文件。例如，要从 Alice MDL 文件 bunny.mdl 创建一个演员，可在脚本标签中输入并执行以下命令:</p>
+<p><code>w makeActorFrom: 'path/to/file/bunny.mdl'</code></p>
+<img width=400 src="/post/img/alice-05.png" />
+<center>图5：加载兔子后的 Wonderland</center>
+<p>这将告诉 Wonderland(w 是 Wonderland 在脚本标签中的名称) 使用 bunny.mdl 文件创建一个演员。默认情况下，Squeak Alice 会尝试用文件名来命名这个角色；在此，它会创建一个名为 &ldquo;bunny&rdquo; 的角色。如果这个名字的 演员已经存在（例如，如果你已经用 bunny.mdl 文件创建了一个演员），Squeak Alice 会尝试将这个演员命名为 bunny2，bunny3&hellip;</p>
+<p>作为一项公共服务，CMU Alice 团队已经将他们的 3D 对象库免费提供给 Squeak 社区。你可以从以下地址下载这些对象: <code>http://www.cs.cmu.edu/~jpierce/squeak/SqueakObjects.zip</code></p>
+<p>唯一的限制是，如果你选择使用这些对象，你必须承认它们的版权属于 CMU。</p>
+<p>你也可以通过使用 <code>makeActorFrom3DS:</code> 和 <code>makeActorFromVRML:</code> 方法从其他文件格式创建演员。在加载 3DS 或 VRML 文件时要记住一点，这些格式使用一个抽象的 &ldquo;单位&rdquo; 来指定 3D 对象的大小，所以你的 3DS 汽车模型可能是 200 个单位高。然而，Squeak Alice 是以米为单位来指定尺寸的，而不是以某种抽象的单位来指定，所以如果你把你的汽车加载到 Squeak Alice 中，它将是 200 米高。幸运的是，你可以使用本章后面提到的 resize:方法来快速缩小(或放大)你的 3D 对象的尺寸。</p>
+<h4 id="简单命令">简单命令</h4>
+<p>我们从 Alice 项目中学到的一个重要经验是，词汇(vocabulary)很重要。许多三维创作工具使用 &ldquo;平移(translate)&rdquo; 和 &ldquo;旋转(rotate)&rdquo; 等命令来操纵对象。不幸的是，对于新手来说，这些并不是最好的命令。考虑到对于我们的目标受众来说，翻译通常被认为是你对一种语言所做的事情（例如，从英语翻译成法语），而不是对一个三维对象做某件事。</p>
+<p>因此，Squeak Alice 的用户不再是平移和旋转，而是 &ldquo;移动(rotate)&rdquo; 和 &ldquo;转动(turn)&rdquo; 对象。然而，这只解决了部分问题。其他创作工具通常也要求用户在 X、Y 和 Z 轴上指定方向，但大多数人通常不会想到在 X 方向上移动对象。在 Squeak Alice 中，我们允许用户用左、右、前、后、上、下来指定方向。然后每个对象都定义了自己的坐标系统（例如，兔子有内置的向前、向左和向上的方向）。不是所有的对象都有一个固有的前进方向（我们注意到对象并没有一个固定的 X 方向）。如果一个对象没有内在的前进方向，那么我们就任意地指定一个方向。</p>
+<img width=400 src="/post/img/alice-06.png" />
+<center>图6：兔子的内置方向</center>
+<p>在 Wonderland 脚本窗口中输入以下命令，并执行它们来尝试移动和转动一个演员:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny move: forward
+</span></span><span class="line"><span class="cl">bunny turn: left
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这两个命令都提供了一个默认的移动或转动的量。默认情况下，演员将移动 1 米或转动四分之一圈。用户也可以自己指定。对于<code>move:</code>命令，用户指定以米为单位的距离，而对于<code>turn:</code>命令，指定转动的量。这是我们从 Alice 那里学到的另一个教训：新手不会用弧度或度数来考虑转动对象。相反，他们更愿意考虑四分之一圈、半圈或整圈。</p>
+<p>试试下面的命令，看看改变距离或转弯的数量会发生什么:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny move: forward distance: 2
+</span></span><span class="line"><span class="cl">bunny turn: left turns: 1/2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="用鼠标工作">用鼠标工作</h3>
+<p>除了向对象输入命令，用户还可以用鼠标来操纵它们。用鼠标左键点击并拖动一个演员，就可以使该演员平行于地平面。要向上或向下移动演员，先在演员上左键点击，然后在拖动前按住 Shift 键。点击左键，并按住 Control 键拖动，将使演员向左或向右移动（围绕场景的向上矢量）。最后，用户可以左键点击演员，然后同时按住 Shift 和 Control 键来旋转演员，不受任何约束。</p>
+<p>用户还可以访问一个常用命令的菜单。要进入这个菜单，首先在对象树上左键点击演员的名字来选择它，然后在对象树上右键点击。这将弹出一个有用的命令菜单，这些命令可以将被选中的对象转过来一次，将相机对准它，使它增长、缩小，等等。</p>
+<p>Squeak Alice 还使用户在点击角色时为其创建新的响应。本章后面将介绍如何改变演员的反应。</p>
+<h3 id="相机camera控制">相机(Camera)控制</h3>
+<p>默认情况下，每个 Wonderland 都包含一个相机，控制相机的命令与控制演员相似。例如，试试下面的方法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">camera move: back distance: 3
+</span></span><span class="line"><span class="cl">camera turn: left
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>用户还可以使用鼠标在 world 界面里操纵相机。要做到这一点，需要显示相机的控制器，可以通过运行以下命令来做到:</p>
+<p><code>cameraWindow showCameraControls</code></p>
+<img width=400 src="/post/img/alice-07.png" />
+<center>图7：相机窗口和相机控制器</center>
+<p>要再次隐藏相机控制器，请运行:</p>
+<p><code>cameraWindow hideCameraControls</code></p>
+<p>显示相机控制器将在相机窗口下面显示一个小的 morph，像四个箭头。要在场景中移动相机，可在相机控制 morph 左击，然后拖动鼠标。相对于控制 morph 的中心，向上移动鼠标将使相机向前移动；鼠标指针离中心越远，相机的移动速度就越快。要将相机向后移动，就从中心向下移动鼠标，而要将相机向左或向右转动，就将鼠标指针从中心向左或向右移动。请注意，不需要释放后再重新点击来改变方向。当按住鼠标左键时，只需将鼠标指针移动到相对于相机控制 morph 中心的不同位置即可。</p>
+<p>可通过按住修饰键来改变相机的移动方式。要想让相机向上或向下移动，按住 Shift 键。要强制相机只向左或向右旋转，按住 Control 键。因为 Squeak 将你在同时按住 Control 键和左键理解为不同的命令，你需要先点击相机的控制按钮，然后再按 Control 键。最后，你可以通过按住 Shift 和 Control 键，然后左键点击控制按钮并拖动鼠标，使相机向上或向下倾斜。</p>
+<h3 id="无处不在的动画">无处不在的动画</h3>
+<p>如果你在阅读本章时正在尝试 Squeak Alice，你会注意到移动和转动兔子的命令会随着时间的推移而产生动画。Squeak Alice 中的所有命令(只要有意义)都会默认为一秒钟的动画。这实际上是基于一个心理学原理：人们需要 1 到 2 秒钟来理解任何瞬间的变化。考虑到这一事实，我们可以利用这 1 秒钟的时间将命令做成动画，这样用户就可以看到命令的展开。我们发现，这往往会使用户更容易调试脚本。例如，演员不是瞬间消失在屏幕上，而是向左移出视野，让用户知道演员去了哪里。</p>
+<p>Squeak Alice 还允许用户自定义持续时间。任何默认动画的命令也允许用户明确设置持续时间。比如说:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny move: left distance: 2 duration: 4
+</span></span><span class="line"><span class="cl">bunny turn: forward turns: 1 duration: 10
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Squeak Alice 中的动画还有一些有趣的地方。比如说，这些动画是基于时间而不是基于帧的。用户指定一个动画持续多少秒，而不是指定帧的数量。这有两个原因。首先，新手们直观地认为持续时间是以秒为单位的。帧的概念需要对计算机图形的工作原理有更多的了解。第二，以帧为单位的动画所需的实际时间取决于计算机的速度。在一台能以每秒 30 帧渲染动画的计算机上，一个 30 帧的动画将持续一秒钟。然而，在一台能以每秒 60 帧渲染的计算机上，同样的 30 帧动画将只持续半秒。相比之下，以秒为单位的动画，在两台电脑上持续的时间是一样的。</p>
+<h3 id="持续时间为-0-的动画和-rightnow">持续时间为 0 的动画和 rightNow</h3>
+<p>Squeak Alice 允许你创建一个持续时间为 0 秒的动画。然而，这并没有使命令瞬间完成。当你执行一个持续时间为 0 的命令时，Squeak Alice 仍然为该命令创建一个动画对象:</p>
+<p><code>bunny move: forward distance: 2 duration: 0</code></p>
+<p>这意味着 Squeak Alice 在下一次处理动画时才会评估该命令，这将是稍后的事情。如果你的脚本中的下一行假设兔子已经移动了，这就会造成问题。</p>
+<p>要让 Squeak Alice 即时执行一个命令，你需要使用 rightNow 基元。这告诉 Squeak Alice 立即执行命令，而不创建一个动画对象。你可以像这样使用 rightNow:</p>
+<p><code>bunny move: forward distance: 2 duration: rightNow</code></p>
+<h3 id="动画的风格">动画的风格</h3>
+<p>默认情况下，Squeak Alice 使用缓进/缓出（也被称为慢进/慢出）的动画风格来制作命令。因此，如果你告诉兔子在一秒钟内移动一米，它不会以恒定的速度移动；相反，兔子会加速到最大速度，然后减速。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        0001-01-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/scratch%E5%A4%87%E5%BF%98/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default"></span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/wot%E5%A4%87%E5%BF%98/">
+            <span class="next-text nav-default"></span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
