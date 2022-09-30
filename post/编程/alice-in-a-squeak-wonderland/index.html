@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Squeak 奇境中的爱丽丝 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 原文: Jeff Pierce(CMU) Alice in a Squeak Wonderland 译文 关于本章 本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第一部分介绍了 Squeak Alice 提供的一些命令，以及这些命令" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/alice-in-a-squeak-wonderland/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Squeak 奇境中的爱丽丝" />
+<meta property="og:description" content="前言 原文: Jeff Pierce(CMU) Alice in a Squeak Wonderland 译文 关于本章 本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第一部分介绍了 Squeak Alice 提供的一些命令，以及这些命令" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/alice-in-a-squeak-wonderland/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-09-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-09-30T00:00:00+00:00" />
+
+<meta itemprop="name" content="Squeak 奇境中的爱丽丝">
+<meta itemprop="description" content="前言 原文: Jeff Pierce(CMU) Alice in a Squeak Wonderland 译文 关于本章 本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第一部分介绍了 Squeak Alice 提供的一些命令，以及这些命令"><meta itemprop="datePublished" content="2022-09-30T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-09-30T00:00:00+00:00" />
+<meta itemprop="wordCount" content="14541">
+<meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Squeak 奇境中的爱丽丝"/>
+<meta name="twitter:description" content="前言 原文: Jeff Pierce(CMU) Alice in a Squeak Wonderland 译文 关于本章 本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第一部分介绍了 Squeak Alice 提供的一些命令，以及这些命令"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Squeak 奇境中的爱丽丝</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-09-30 </span>
+        <div class="post-category">
+            <a href="/categories/smalltalk/"> Smalltalk </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#译文">译文</a>
+      <ul>
+        <li><a href="#关于本章">关于本章</a></li>
+        <li><a href="#什么是-alice">什么是 Alice</a></li>
+        <li><a href="#alice-从何而来">Alice 从何而来？</a></li>
+        <li><a href="#squeak-alice-是如何开始的">Squeak Alice 是如何开始的。</a></li>
+        <li><a href="#在-squeak-中使用-alice">在 Squeak 中使用 Alice</a></li>
+        <li><a href="#助手helper演员">助手(helper)演员</a></li>
+        <li><a href="#活性纹理">活性纹理</a></li>
+        <li><a href="#squeak-alice-的实现">Squeak Alice 的实现</a></li>
+        <li><a href="#squeak-alice-的未来">Squeak Alice 的未来</a></li>
+        <li><a href="#延伸阅读">延伸阅读</a></li>
+        <li><a href="#关于作者">关于作者</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>原文: Jeff Pierce(CMU) <a href="http://stephane.ducasse.free.fr/FreeBooks/CollectiveNBlueBook/pierce-final.pdf">Alice in a Squeak Wonderland</a></p>
+<h2 id="译文">译文</h2>
+<h3 id="关于本章">关于本章</h3>
+<p>本章是对 Squeak Alice 的介绍，它是用 Squeak 构建交互式三维世界的创作工具。第一部分介绍了 Squeak Alice 提供的一些命令，以及这些命令背后的理念。这一部分不要求读者有任何的 3D 图形知识，从 Squeak 新手到 Squeak 专家，每个人应该都能理解。第二部分描述了 Squeak Alice 的实现，需要对 Squeak 类(class)和三维图形有更多的理解。</p>
+<h3 id="什么是-alice">什么是 Alice</h3>
+<p>印刷文本、广播和电影都是不同类型的媒介。尽管每种媒介有不同的优劣势，但有一个因素是所有媒介的共同点: 人们利用媒介讲故事。讲故事是最古老、最持久的职业之一：人们迟早会尝试使用每一种新媒介来讲故事。</p>
+<p>交互式三维图形是一种新媒介，人们尝试用它来讲故事。对潜在的 3D 创作者来说，需要昂贵的专业硬件曾经是一个障碍，但廉价的图形加速卡的发展在很大程度上消除了这个障碍。仍然存在的一个重要障碍是创作问题：创造一个互动的三维世界需要专门的培训，而大多数对讲故事感兴趣的人并不具备这种能力。</p>
+<p>处理 3D 图形通常需要有 C/C++ 编程语言的经验，以及熟悉线性代数（如 4x4 齐次变换矩阵）。不幸的是，拥有 3D 图形技能的人通常不是想用它来讲述新故事的人。为了让后者能够使用交互式三维图形，需要一种新型的三维创作工具。Alice 项目的目标是创建一个用于构建交互式三维世界的创作工具，对新手来说易于学习和使用。</p>
+<h3 id="alice-从何而来">Alice 从何而来？</h3>
+<p>Randy Pausch 和他的研究小组在弗吉尼亚大学启动了 Alice 项目。该项目的既定目标是使一个主修艺术或英语的大二学生在几乎没有编程经验的情况下也能建立一个互动的三维世界。我们实际上超过了这个目标：我们普遍发现，有积极性的高中生，甚至是一些小学生，都可以使用 Alice。</p>
+<p>Alice 的第一个版本是在 Silicon Graphics 工作站上运行的，越来越强大的硬件使我们能在 1995 年底，将 Alice 移植到 Windows PC 电脑上。我们在 1996 年的 SIGGRAPH 会议上首次公开发布了 Alice，至今已有 10 万多人下载了 Alice 并亲自试用。当前版本的 Alice 可以从 <a href="http://www.alice.org">http://www.alice.org</a> 免费下载，用于 Windows 95、98 和 NT。</p>
+<p>1997 年，Randy Pausch 和一些最初的 Alice 团队搬到了 CMU，成立了<a href="http://www.cs.cmu.edu/~stage3">第三阶段研究小组</a>。在 CMU，我们继续开发 Alice，并学习如何使交互式三维图形更易于被人们接受。我们目前的目标是通过尽可能多地消除打字，使 Alice 对年幼的儿童更容易。</p>
+<h3 id="squeak-alice-是如何开始的">Squeak Alice 是如何开始的。</h3>
+<p>Squeak 版本的 Alice，简称 Squeak Alice，是在 Alice 项目的负责人 Randy Pausch 和 Squeak 开发团队的负责人 Alan Kay 会面后诞生的, 他们就如何让儿童更容易接受在不同媒介上创作交换了意见。作为会议的结果，Alan 想把我们在开发 Alice 过程中学到的经验在 Squeak 中实施。为了实现这个目标，他让我在迪斯尼实习一个学期，以实现 Alice 的 Squeak 版本。作为与 Randy 一起工作的博士生和 Alice 设计团队的成员，我对我们从 Alice 学到的经验和系统本身的结构都很熟悉。我抓住了与 Alan 合作的机会，经过 1999 年春季学期三个半月的努力工作，第一个版本的 Squeak Alice 诞生了。</p>
+<h3 id="在-squeak-中使用-alice">在 Squeak 中使用 Alice</h3>
+<p>要使用 Squeak Alice，首先需要创建一个 Wonderland。Wonderland 本质上是创建交互式 3D 世界所需的所有东西的集合：一个摄像机窗口，让你看到你的世界，一个脚本编辑器，让你把演员(Actor)装进你的世界，给他们下命令，并为他们创造行为。</p>
+<h4 id="如何创建一个-wonderland">如何创建一个 Wonderland</h4>
+<p>要创建一个 Wonderland，需要首先确保你在一个 Morphic 项目中，然后打开一个工作区(workspace)。要打开一个工作区，首先通过左击你的鼠标显示 World 菜单，选择 &ldquo;open&hellip;&quot;，并在出现的新菜单中选择 &ldquo;workspace&rdquo;。在出现的工作区中输入:</p>
+<p><code>Wonderland new</code></p>
+<p>并告诉 Squeak 去 <code>Doit</code>（PC 用户按 <code>Alt-D</code>，Mac 用户按 <code>Cmd-D</code>）。当 Squeak 创建你的 Wonderland 时，会有一些窗口弹出。</p>
+<p>图一的窗口是摄像机窗口。这个窗口是你进入三维世界的视野。在这个窗口中，你将看到你所执行的命令的效果。你还可以通过这个窗口 &ldquo;伸手&rdquo;，用鼠标来操纵你的世界中的三维对象。</p>
+<img width=400 src="/post/img/alice-01.png" />
+<center>图1: 摄像机窗口</center>
+<p>图 2 的窗口是 Wonderland 脚本编辑器。该编辑器由四个不同的部分组成。最左边的是对象树，它列出了场景中的对象。在本章的后面，你将会了解更多关于对象树的信息。在窗口顶部(对象树的右边)有三个按钮。这些按钮用来选择编辑器的哪个部分处于活动状态: 脚本标签页、演员(Actor)信息标签页、快速参考标签页。</p>
+<img width=400 src="/post/img/alice-02.png" />
+<center>图2: 显示脚本标签页的脚本编辑器</center>
+<p>脚本标签页是你向 Squeak Alice 输入命令和执行脚本的地方。这个标签页与工作区非常相似（DoIt 将执行命令，而 PrintIt 将打印出结果），它也预先定义了 Wonderland 的名称（如左，绿，和摄像机）。本章将提供大量的命令样本供大家尝试。要尝试一个命令，把它输入脚本标签页，然后用 DoIt 执行它。</p>
+<p>演员信息标签页提供了演员的视图和关于该演员的一些当前信息。左键点击对象树中的一个演员，决定了演员信息标签页将显示哪个演员的信息。</p>
+<img width=400 src="/post/img/alice-03.png" />
+<center>图3: 演员信息标签页</center>
+<p>快速参考标签页提供了 Squeak Alice 提供的许多命令的例子。如果你忘记了如何格式化一个命令，你可以查看这个标签页。</p>
+<img width=400 src="/post/img/alice-04.png" />
+<center>图4: 快速参考标签页</center>
+<h4 id="改变显示深度">改变显示深度</h4>
+<p>为了更快地运行并节约内存，Squeak 最初使用了一个低的显示深度。显示深度是 Squeak 用来表示每个像素的颜色的比特数。3D 图形通常需要更高的显示深度才能看起来更漂亮，所以你可以想把显示深度改为 16 或 32 位。要做到这一点，左击打开 World 菜单，选择 &ldquo;appearance&hellip;&quot;，然后选择 &ldquo;set display depth…&quot;，最后选择 &ldquo;16 &quot; 或 &ldquo;32&rdquo;。</p>
+<h4 id="创建一个演员actor">创建一个演员(Actor)</h4>
+<p>既然你已经创建了 Wonderland ，接下来需要向它添加一些 3D 对象。在 Squeak Alice 中，3D 对象被称为演员。Squeak Alice 可以用各种 3D 格式的文件创建演员，包括 Alice MDL 、3DS 和 VRML 格式的文件。要创建一个演员，你需要告诉 Wonderland 要使用什么文件。例如，要从 Alice MDL 格式的文件 bunny.mdl 创建一个演员，可在脚本标签页中输入并执行以下命令:</p>
+<p><code>w makeActorFrom: 'path/to/file/bunny.mdl'</code></p>
+<img width=400 src="/post/img/alice-05.png" />
+<center>图5：加载bunny后的 Wonderland</center>
+<p>这将告诉 Wonderland(w 是 Wonderland 在脚本标签页中的名称) 使用 bunny.mdl 文件创建一个演员。默认情况下，Squeak Alice 会尝试用文件名来命名这个演员；在此，它会创建一个名为 &ldquo;bunny&rdquo; 的演员。如果这个名字的演员已经存在（例如，如果你已经用 bunny.mdl 文件创建了一个演员），Squeak Alice 会尝试将这个演员命名为 bunny2，bunny3&hellip;</p>
+<p>作为一项公共服务，CMU Alice 团队已经将他们的 3D 对象库免费提供给 Squeak 社区。你可以从以下地址下载这些对象: <code>http://www.cs.cmu.edu/~jpierce/squeak/SqueakObjects.zip</code></p>
+<p>唯一的限制是，如果你选择使用这些对象，你必须承认它们的版权属于 CMU。</p>
+<p>你也可以通过使用 <code>makeActorFrom3DS:</code> 和 <code>makeActorFromVRML:</code> 方法从其他文件格式创建演员。在加载 3DS 或 VRML 文件时要记住一点，这些格式使用一个抽象的 &ldquo;单位&rdquo; 来指定 3D 对象的大小，所以你的 3DS 汽车模型可能是 200 个单位高。然而，Squeak Alice 是以米为单位来指定尺寸的，而不是以某种抽象的单位来指定，所以如果你把你的汽车加载到 Squeak Alice 中，它将是 200 米高。幸运的是，你可以使用本章后面提到的 <code>resize:</code> 方法来快速缩小(或放大)你的 3D 对象的尺寸。</p>
+<h4 id="简单命令">简单命令</h4>
+<p>我们从 Alice 项目中学到的一个重要经验是，词汇(vocabulary)很重要。许多三维创作工具使用 &ldquo;平移(translate)&rdquo; 和 &ldquo;旋转(rotate)&rdquo; 等命令来操纵对象。不幸的是，对于新手来说，这些并不是最好的命令。考虑到对于我们的目标受众来说，翻译通常被认为是你对一种语言所做的事情（例如，从英语翻译成法语），而不是对一个三维对象所做之事。</p>
+<p>因此，Squeak Alice 的用户不再用&quot;平移(translate)&ldquo;和&quot;旋转(rotate)&quot;，而是 &ldquo;移动(rotate)&rdquo; 和 &ldquo;转动(turn)&rdquo; 对象。然而，这只解决了部分问题。其他创作工具通常也要求用户在 X、Y 和 Z 轴上指定方向，但大多数人通常不会想到在 X 方向上移动对象。在 Squeak Alice 中，我们允许用户用左、右、前、后、上、下来指定方向。每个对象都定义了自己的坐标系统（例如，bunny 有内置的向前、向左和向上的方向）。不是所有的对象都有一个固有的前进方向（我们注意到对象并没有一个固定的 X 方向）。如果一个对象没有内在的前进方向，那么我们就任意地指定一个方向。</p>
+<img width=400 src="/post/img/alice-06.png" />
+<center>图6：bunny的内置方向</center>
+<p>在 Wonderland 脚本窗口中输入以下命令，并执行它们来尝试移动和转动一个演员:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny move: forward
+</span></span><span class="line"><span class="cl">bunny turn: left
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这两个命令都提供了一个默认的移动或转动的量。默认情况下，演员将移动 1 米或转动四分之一圈。用户也可以自己指定。对于<code>move:</code>命令，用户指定以米为单位的距离，而对于<code>turn:</code>命令，指定转动的量。这是我们从 Alice 那里学到的另一个教训：新手不会用弧度或度数来考虑转动对象。相反，他们更愿意考虑四分之一圈、半圈或整圈。</p>
+<p>试试下面的命令，看看改变距离或转动的数量会发生什么:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny move: forward distance: 2
+</span></span><span class="line"><span class="cl">bunny turn: left turns: 1/2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="用鼠标工作">用鼠标工作</h4>
+<p>除了向对象输入命令，用户还可以用鼠标来操控它们。用鼠标左键点击并拖动一个演员，就可以使该演员平行于地面。要向上或向下移动演员，先在演员上左键点击，然后在拖动前按住 Shift 键。点击左键，并按住 Control 键拖动，将使演员向左或向右移动（围绕场景的向上矢量）。最后，用户可以左键点击演员，然后同时按住 Shift 和 Control 键来旋转演员，不受任何约束。</p>
+<p>用户还可以访问一个常用命令的菜单。要进入这个菜单，首先在对象树上左键点击演员的名字来选择它，然后在对象树上右键点击。这将弹出一个有用的命令菜单，这些命令可以将被选中的对象转过来一次，将摄像机对准它，使它增长、缩小，等等。</p>
+<p>Squeak Alice 还使用户在点击演员时为其创建新的响应。本章后面将介绍如何改变演员的反应。</p>
+<h4 id="摄像机camera控制">摄像机(Camera)控制</h4>
+<p>默认情况下，每个 Wonderland 都包含一个摄像机，控制摄像机的命令与控制演员相似。例如，试试下面的方法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">camera move: back distance: 3
+</span></span><span class="line"><span class="cl">camera turn: left
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>用户还可以使用鼠标在 world 界面里操纵摄像机。要做到这一点，需要显示摄像机的控制器，可以通过运行以下命令来做到:</p>
+<p><code>cameraWindow showCameraControls</code></p>
+<img width=400 src="/post/img/alice-07.png" />
+<center>图7：摄像机窗口和摄像机控制器</center>
+<p>要隐藏摄像机控制器，请运行:</p>
+<p><code>cameraWindow hideCameraControls</code></p>
+<p>显示摄像机控制器时，将在摄像机窗口下面显示一个小的 morph，像四个箭头。要在场景中移动摄像机，可左击摄像机控制 morph ，然后拖动鼠标。相对于控制 morph 的中心，向上移动鼠标将使摄像机向前移动；鼠标指针离中心越远，摄像机的移动速度就越快。要将摄像机向后移动，就从中心向下移动鼠标，而要将摄像机向左或向右转动，就将鼠标指针从中心向左或向右移动。请注意，不需要释放后再重新点击来改变方向。当按住鼠标左键时，只需将鼠标指针移动到相对于摄像机控制 morph 中心的不同位置即可。</p>
+<p>可通过按住修饰键来改变摄像机的移动方式。要想让摄像机向上或向下移动，按住 Shift 键。要强制摄像机只向左或向右旋转，按住 Control 键。因为 Squeak 将你在同时按住 Control 键和左键理解为不同的命令，你需要先点击摄像机的控制按钮，然后再按 Control 键。最后，你可以通过按住 Shift 和 Control 键，然后左键点击控制按钮并拖动鼠标，使摄像机向上或向下倾斜。</p>
+<h4 id="无处不在的动画">无处不在的动画</h4>
+<p>如果你在阅读本章时正在尝试 Squeak Alice，你会注意到移动和转动 bunny 的命令会随着时间的推移而产生动画。Squeak Alice 中的所有命令(只要有意义)都会默认为 1 秒钟的动画。这是基于一个心理学原理：人们需要 1 到 2 秒钟来理解任何瞬间的变化。考虑到这一事实，我们可以利用这 1 秒钟的时间将命令做成动画，这样用户就可以看到命令的展开。我们发现，这往往会使用户更容易调试脚本。例如，演员不是瞬间消失在屏幕上，而是向左移出视野，让用户知道演员去了哪里。</p>
+<p>Squeak Alice 还允许用户自定义持续时间。任何默认动画的命令也允许用户明确设置持续时间。比如说:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny move: left distance: 2 duration: 4
+</span></span><span class="line"><span class="cl">bunny turn: forward turns: 1 duration: 10
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Squeak Alice 中的动画还有一些有趣的地方。比如说，这些动画是基于时间而不是基于帧的。用户指定一个动画持续多少秒，而不是指定帧的数量。这有两个原因。首先，新手们直观地认为持续时间是以秒为单位的。而帧的概念需要对计算机图形的工作原理有更多的了解。第二，以帧为单位的动画所需的实际时间取决于计算机的速度。在一台能以每秒 30 帧渲染动画的计算机上，一个 30 帧的动画将持续一秒钟。然而，在一台能以每秒 60 帧渲染的计算机上，同样的 30 帧动画将只持续半秒。相比之下，以秒为单位的动画，在两台电脑上持续的时间是一样的。</p>
+<h4 id="持续时间为-0-的动画和-rightnow">持续时间为 0 的动画和 rightNow</h4>
+<p>Squeak Alice 允许你创建一个持续时间为 0 的动画。然而，这并没有使命令瞬间完成。当你执行一个持续时间为 0 的命令时，Squeak Alice 仍然为该命令创建一个动画对象:</p>
+<p><code>bunny move: forward distance: 2 duration: 0</code></p>
+<p>这意味着 Squeak Alice 在下一次处理动画时才会评估该命令，这将是稍后的事情。如果你的脚本中的下一行假设 bunny 已经移动了，这就会造成问题。</p>
+<p>要让 Squeak Alice 立刻执行一个命令，你需要使用 rightNow 基元(primitive)。这告诉 Squeak Alice 立即执行命令，而不创建一个动画对象。你可以像这样使用 rightNow:</p>
+<p><code>bunny move: forward distance: 2 duration: rightNow</code></p>
+<h4 id="动画的风格">动画的风格</h4>
+<p>默认情况下，Squeak Alice 使用缓进/缓出（也被称为慢进/慢出）的动画风格来制作命令。因此，如果你告诉 bunny 在一秒钟内移动 1 米，它不会以恒定的速度移动；相反，bunny 会加速到最大速度，然后减速。</p>
+<p>虽然这是默认的动画风格，但你也可以使用 <code>style:</code> 指定其他的动画风格。除了默认的样式（称为 gently），你还可以使用 beginGently、endGently 或 abruptly 动画风格。beginGently 风格将加速到最大速度，但不会逐渐减速，而 endGently 风格将从最大速度开始，然后平稳减速。abruptly 风格将导致动画以恒定的速度进行。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny move: forward distance: 2 duration: 2 style: abruptly
+</span></span><span class="line"><span class="cl">bunny move: forward distance: 4 duration: 8 style: endGently
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="无处不在的撤销undo">无处不在的撤销(Undo)</h4>
+<p>Alice 项目的部分目标是鼓励用户探索 3D 图形的可能性。在用户进行探索之前，他们需要有安全感。具体来说，他们需要感到行动不会有不可挽回的后果，这样就可以撤销任何他们不喜欢的变化。我们实现这一目标的方法之一是提供一个无处不在的撤销机制，这样用户就可以随时回退到一个安全状态。</p>
+<p>Squeak Alice 在 Wonderland 编辑器中提供了一个绿色的大撤消按钮。每次你点击这个按钮，Squeak 就会撤消一个动作/命令(从最近的开始)。Wonderland 实际上记录了你之前的所有命令，所以如果你点击了五次 Undo 按钮，Squeak 会撤销你最近的五个动作。为了与我们无处不在的动画理念保持一致，撤消操作也呈现为 1 秒钟的动画。</p>
+<img width=400 src="/post/img/alice-08.png" />
+<center>图8：撤销按钮</center>
+<h4 id="父子parent-child关系">父子(parent-child)关系</h4>
+<p>Alice 演员是分层的对象，这意味着它们被分成不同的部分，具有父子关系。这种父子关系很重要，因为你给父演员的命令可以影响它的子演员。例如，因为 head 是 bunny 的一个子代，如果你移动 bunny，head 就会移动。</p>
+<p>在 Squeak Alice 中，位于 Wonderland 编辑器中 Undo 按钮下方的对象树，描述了不同演员之间的父子关系。位于左上方的场景(scene)是 Wonderland 中所有演员的父代。地面、摄像机、灯光和 bunny 是场景的直接子代，所以 Squeak Alice 将它们显示在场景的右下角一层。bunny 演员也是由不同的部分组成的（head、body 和 drum），而这些部分又是由更多的部分构成的。</p>
+<img width=400 src="/post/img/alice-09.png" />
+<center>图9：对象树</center>
+<p>因为这些构成部分本身也是演员，我们使用与完整的演员相同的命令。试试下面的命令:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny turn: left
+</span></span><span class="line"><span class="cl">bunny head turn: left turns: 1
+</span></span><span class="line"><span class="cl">bunny drum move: forward distance: 2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>一些命令对演员子代的影响取决于给定的子代是第一类对象还是部分对象。思考这种区别的最简单方法是，第一类对象是一个完整的、独立的实体，比如一张桌子或一本书，而部分对象是一个物体的一部分（比如一条桌腿）。</p>
+<p>构建这种区别的原因是，我们需要一种方法，让用户能够决定一个角色的属性变化是否会影响该角色的子代。因此，一本书可能是一张桌子的子代，当桌子移动时，书也会移动，但如果用户改变了桌子的颜色，书应该保持同样的颜色。用户可以通过使书成为桌子的子代，并将两个角色都设置为第一类对象来创建这种行为。你可以通过改变一个角色的第一类/部分状态来看看这个行为是如何进行的。试试下面的方法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny setColor: green
+</span></span><span class="line"><span class="cl">bunny head becomeFirstClass
+</span></span><span class="line"><span class="cl">bunny setColor: red
+</span></span><span class="line"><span class="cl">bunny head becomePart
+</span></span><span class="line"><span class="cl">bunny setColor: blue
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>演员的第一类/部分状态也会影响该演员处理事件的方式，下边很快就会看到。</p>
+<p>除了改变演员的第一类/部分状态外，你还可以改变演员的父代。下面的内容使 bunny 的 head 成为 ground 的子代:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny head becomeChildOf: ground
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在，点击 bunny 并拖动，你将移动 bunny 的 body 和 drum，但他的 head 将保持原位。bunny 的 head 现在是 ground 的一部分了。这也导致 head 名字发生改变。因为 head 是 ground 的一个子代，所以演员的名字变成了<code>ground head</code>。你可以用这个新名字给它下命令:</p>
+<p><code>ground head turn: left</code></p>
+<h4 id="高级命令">高级命令</h4>
+<p>移动和转动命令是 Alice 中最简单和最常用的命令。Squeak Alice 还提供了一些有用的高级命令供用户使用:</p>
+<ul>
+<li>Squeaks Alice 提供了一个销毁命令(动画)，将物体从 Wonderland 中移除。像其他命令一样，如果用户不小心误删一个物体，可以撤销这个操作:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny destroy bunny destroy: 4
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>resize:</code> 命令改变物体大小。许多三维创作工具将这种操作称为 scale，但我们发现，用户倾向于将 scale 一词与轻重的概念联系起来。resize 的基本版本允许用户指定一个数量和持续时间。更高级的版本允许用户指定非均匀的 resize 和体积保存 resize:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny resize: 2
+</span></span><span class="line"><span class="cl">bunny resize: 1/2 duration: 4
+</span></span><span class="line"><span class="cl">bunny resizeTopToBottom: 2 leftToRight: 1 frontToBack: 3
+</span></span><span class="line"><span class="cl">bunny resizeLikeRubber: 2 dimension: topToBottom
+</span></span></code></pre></td></tr></table>
+</div>
+</div><img width=400 src="/post/img/alice-09.png" />
+<center>图10：调整大小(resizeLikeRubber)后的Bunny</center>
+<ul>
+<li>
+<p>我们发现用户直观地使用 <code>turn:</code> 来指定偏航（左/右）和俯仰（上/下）。 但是，用户没有将滚动的方向与 turn 联系起来。 我们为此操作实现了 <code>roll:</code> 命令: <code>bunny roll: right</code></p>
+</li>
+<li>
+<p>Squeak Alice 提供 <code>moveTo:</code> 和 <code>turnTo:</code> 命令，允许用户指定运动到绝对位置或方向。 用户可以使用数字三元组或参考对象来指定绝对位置或方向。 三元组使用 <code>{Left. Up. Forward}</code> 符号,它描述演员父级参考系中的位置或方向。 例如，对于 bunny， <code>{0. 2. 0}</code> 是场景(scene)坐标系原点上方两米的点，而对于 bunny 的 head，同样的三元组是 bunny 原点上方两米的点.</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny moveTo: {0. 2. 0}
+</span></span><span class="line"><span class="cl">bunny turn: left
+</span></span><span class="line"><span class="cl">bunny turnTo: {0. 0. 0} duration: 3
+</span></span><span class="line"><span class="cl">bunny moveTo: camera duration: 2 bunny turnTo: camera
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>尽管用户可以使用 <code>turnTo:</code> 命令告诉一个演员与另一个演员对齐，但我们也提供了一个 <code>alignWith:</code> 命令</li>
+</ul>
+<p><code>bunny alignWith: camera</code></p>
+<ul>
+<li>有时，你不想让一位演员与另一位演员对齐，而是让一位演员指向另一位演员。 <code>pointAt:</code> 命令提供了这个功能：该命令转动演员，使其指向指定的目标。 请注意，你可以指定另一个演员或 <code>{Left. UP. Forward}</code> 三元组作为目标。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">camera pointAt: bunny
+</span></span><span class="line"><span class="cl">camera pointAt: {0. 0. 0} duration: 3
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>place:</code> 命令将演员移动到相对于另一个演员的特定位置。 支持的位置包括: <code>inFrontOf, inBackOf, onTopOf, onBottomOf, toRightOf, toLeftOf, onCeilingOf, onFloorOf.</code>.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">light place: onTopOf object: bunny
+</span></span><span class="line"><span class="cl">light place: inFrontOf object: bunny duration: 4
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>在你转动和滚动演员或摄像机后，偶尔希望将演员与 Wonderland 的向上矢量重新对齐。 对于摄像机来说更是如此，因为我们发现当摄像机向左或向右滚动太远时，用户很快就会迷失方向。 我们创建了 standUp 命令来提供此功能。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">camera standUp
+</span></span><span class="line"><span class="cl">camera standUpWithDuration: 4
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>nudge:</code> 命令以其长度、宽度或高度的倍数移动演员:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny nudge: forward
+</span></span><span class="line"><span class="cl">bunny nudge: up distance: 2 duration: 2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>偶尔，用户需要在他们的 Wonderland 中暂时隐藏一个演员。hide 命令会让 Squeak 停止绘制一个对象，而 show 命令会让 Squeak 重新开始绘制它。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny hide
+</span></span><span class="line"><span class="cl">bunny show
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>playSound:</code> 命令将使一个演员播放一个指定的 WAV 文件。Squeak Alice 创建了一个控制播放的动画对象: <code>bunny playSound: 'bangdrum.wav'</code></li>
+</ul>
+<p>这当然不是 Squeak Alice 为演员提供的所有命令。要想获得更全面的列表，你可以查看 Wonderland 编辑器中的快速参考标签页，也可以查看 WonderlandActor 的实现本身。</p>
+<h4 id="超越随时间变化的动画">超越随时间变化的动画</h4>
+<p>尽管 Squeak Alice 中的大部分命令都能创建与时间有关的动画，但你也可以用 Squeak Alice 来创建更持续的动作。首先，你可以使用<code>speed:</code> 关键字来使演员以恒定的速度移动。当你在<code>move:</code> 命令中加入<code>speed:</code> 关键字时，Squeak Alice 将以指定的速度（米/秒）移动物体, 如果你指定了一个<code>distance:</code>, 演员将(以<code>speed:</code>指定的速度)移动这个距离，然后停止；如果你不指定，那么演员将永远以恒定的速度移动（或者直到明确停止）。<code>speed:</code>关键字的工作方式与<code>turn:</code>命令类似，但 <code>turn:</code> 的参数是每秒的旋转次数。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny move: forward distance: 5 speed:1
+</span></span><span class="line"><span class="cl">bunny move: forward speed: 1
+</span></span><span class="line"><span class="cl">bunny turn: left turns: 2 speed: 1/2
+</span></span><span class="line"><span class="cl">bunny turn: left speed: 1/2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们发现，使用速度来创建一个涉及移动或转动的持续性动作对我们的用户来说是有意义的。不幸的是，并非所有的命令都自然地涉及到速度。我们需要一种方法，让用户能够建立简单的约束，比如让 bunny 的 head 始终对着摄像机。对于这种类型的动作，我们创建了 <code>eachFrame</code> 参数。你可以用 <code>eachFrame</code> 作为持续时间来创建一个每次 Squeak 重绘 Wonderland 时发生的动作:</p>
+<p><code>bunny head pointAt: camera duration: eachFrame</code></p>
+<p>除了允许用户提供 <code>eachFrame</code> 作为持续时间外，Squeak Alice 还提供了 <code>eachFrameUntil:</code> 和 <code>eachFrameFor:</code> 关键字，用户可以将其添加到命令中。<code>eachFrameUntil:</code>命令允许用户提供一个返回真或假的 BlockContext ；该命令将重复执行，直到提供的 BlockContext 返回真。<code>eachFrameFor:</code> 关键字使命令在指定的秒数内重复。下面的命令利用了另一个参数 <code>asIs</code>，来约束 bunny 在 10 秒内只能沿地面移动。</p>
+<p><code>bunny moveTo: {asIs. 0. asIs} eachFrameFor: 10</code></p>
+<p><code>asIs</code> 参数告诉 Squeak Alice 让当前值保持 &ldquo;原样(as is)&quot;。请注意，这并不妨碍数值的改变，它只是防止该命令改变数值。因此，当前一个命令处于激活状态时，用户可以左键点击 bunny 来拖动它（<code>moveTo:</code> 命令不会导致 bunny 的左侧或前方位置发生任何变化）。然而，如果用户在拖动时按住 Shift 键来向上或向下移动 bunny，那么 <code>moveTo:</code> 命令将始终把 bunny 的向上位置重置为 0。</p>
+<h4 id="参考框架">参考框架</h4>
+<p>通过给每个演员提供自己的参考框架，我们就可以很容易地谈论演员向前、向上移动等问题。然而，在现实世界中，人们谈论移动物体的另一种方式是相对于其他物体，例如，把它移到你的左边。用户可以使用 <code>asSeenBy:</code> 关键字在 Wonderland 中相对于其他演员移动演员。下面的命令将把 bunny 移到摄像机的左边 1 米处:</p>
+<p><code>bunny move: left distance: 1 asSeenBy: camera</code></p>
+<p>你也可以将演员移动到相对于另一个演员的绝对位置。下面的命令将 bunny 移动到摄像机前面 1 米和上面 1 米的位置:</p>
+<p><code>bunny moveTo: {0. 1. 1} asSeenBy: camera</code></p>
+<h4 id="控制权力的可见度">控制权力的可见度</h4>
+<p>在创建 Alice 的过程中，我们使用的一个基本设计原则是控制权力可见度的概念。这个原则的实质是，命令应该有合理的默认值，这样用户就可以在最简单的形式下使用它们，并且仍然能够完成有用的工作。然后，随着用户变得更加成熟，他学会了如何明确地指定数值，而不是依赖这些默认值。用户继续使用相同的命令，但这些命令随着用户的进步而进步(译者注,Alan Kay: 让简单的事情保持简单，让苦难的事情变得可能)。例如，<code>move:</code> 命令可以采取以下所有形式:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny move: forward
+</span></span><span class="line"><span class="cl">bunny move: forward distance: 1
+</span></span><span class="line"><span class="cl">bunny move: forward distance: 1 duration: 1
+</span></span><span class="line"><span class="cl">bunny move: forward distance: 1 speed: 1/2
+</span></span><span class="line"><span class="cl">bunny move: forward speed: 1/2
+</span></span><span class="line"><span class="cl">bunny move: forward speed: 1/2 for: 5
+</span></span><span class="line"><span class="cl">bunny move: forward asSeenBy: camera
+</span></span><span class="line"><span class="cl">bunny move: forward distance: 1 asSeenBy: camera
+</span></span><span class="line"><span class="cl">bunny move: forward distance: 1/10 duration: eachFrame
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这是 <code>move:</code> 可以采取的一些形式。尽管用户一开始只是简单地指定一个方向，但随着他们成为更高级的用户，他们可以有很多不同的方式使用 <code>move:</code>。</p>
+<h4 id="动画方法">动画方法</h4>
+<p>当你给 Wonderland 中的演员一个命令时，Squeak 会创建一个 WonderlandAnimation 实例，来管理该命令的时间相关行为。你可以把这个实例分配给一个变量并访问定义在动画上的方法。动画提供的四个有用的方法是暂停(pause)、恢复(resume)、停止(stop)、开始(start)。暂停将暂时停止一个动画，直到你恢复它。停止将完全停止该动画，而开始将重新运行该动画。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">spin := bunny turn: left turns: 20 duration: 40
+</span></span><span class="line"><span class="cl">spin pause
+</span></span><span class="line"><span class="cl">spin resume
+</span></span><span class="line"><span class="cl">spin stop
+</span></span><span class="line"><span class="cl">spin start
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>你也可以用 loop 命令使一个动画重复。如果你在 <code>loop:</code> 命令中提供一个数字，动画将重复该次数。否则，动画将永远重复，直到明确停止。如果你希望动画在停止前完成当前迭代，你可以使用 <code>stopLooping</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">flip := bunny turn: forward turns: 1 duration: 2
+</span></span><span class="line"><span class="cl">flip loop: 2
+</span></span><span class="line"><span class="cl">flip loop
+</span></span><span class="line"><span class="cl">flip stopLooping
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="组合动画">组合动画</h4>
+<p>Squeak Alice 提供了一套原始的命令（例如<code>move:</code>和<code>turn:</code>）以及一套更高级的命令（例如 <code>pointAt:</code>和 <code>alignWith:</code>）。在最初设计 Alice 的过程中，我们意识到仅靠这些命令并不能为用户提供我们所希望的控制和灵活性。因此，我们为用户提供了一种方法，让他们可以组合原始的动画来创造更复杂的动画。有两种组合动画的方法: <code>doTogether:</code> 使动画同时运行， <code>doInOrder:</code> 使动画一个接一个的运行。这些命令是由 Wonderland 本身定义的，而不是由 WonderlandActors 定义的。例如，通过 <code>doInOrder:</code>命令，我们可以创建一个动画，使 bunny 上下跳动。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">jump := bunny move: up distance: 1 duration: 1/2
+</span></span><span class="line"><span class="cl">fall := bunny move: down distance: 1 duration: 1/2
+</span></span><span class="line"><span class="cl">hop := w doInOrder: {jump. fall}
+</span></span><span class="line"><span class="cl">hop start
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以将你用 <code>doInOrder:</code> 和 <code>doTogether:</code> 创建的动画与其他动画进行组合。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">spinJump := w doTogether: {hop. bunny turn: left turns: 1 duration: 1}
+</span></span><span class="line"><span class="cl">spinJump loop
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="设置警报alarm">设置警报(Alarm)</h4>
+<p>因为 Squeak Alice 中的命令是随时间变化的，每个 Wonderland 都需要跟踪时间的流逝。为了做到这一点，每个 Wonderland 都有一个 Scheduler 实例，负责跟踪时间的流逝和更新命令的动画。当你创建一个 Wonderland 时, Scheduler 将时间设置为零，然后每帧更新这个时间。你可以通过打印以下结果来找出 Wonderland 的当前时间（以秒为单位）。</p>
+<p><code>scheduler getTime</code></p>
+<p>Squeak Alice 利用了 Scheduler 跟踪时间流逝的特性，允许你设置 Alarm。Alarm 是一些动作（一个 BlockContext），你希望 Wonderland 在一个特定的时间或在一些指定的时间过后执行这些动作。</p>
+<p>Alarm 类为此提供的两个命令是 <code>do:at:inScheduler:</code> 和 <code>do:in:inScheduler:</code> 。第一个命令需要</p>
+<ul>
+<li>一个 <code>BlockContext</code></li>
+<li>执行动作的时间</li>
+<li>scheduler(添加到警报(alarm)上)。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Alarm do: [bunny turn: left turns: 1] at: (scheduler getTime + 10) inScheduler: scheduler
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>第二条命令需要</p>
+<ul>
+<li>一个 <code>BlockContext</code></li>
+<li>在执行动作前需要等待的时长（以秒为单位）</li>
+<li>添加警报的 scheduler。</li>
+</ul>
+<p>这两个命令都返回一个 Alarm 实例。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">myAlarm := Alarm do: [bunny turn: left turns: 1] in: 5 inScheduler: scheduler.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Alarm 实例有一个 checkTime 命令，用它来确定警报何时响起，以及一个 stop 命令，用它来在警报响起之前停止它。</p>
+<h4 id="使对象对用户做出反应">使对象对用户做出反应</h4>
+<p>到目前为止，介绍的所有命令对于为对象创建行为都很有用，但它们不会使 Wonderland 具有交互性。 要为 Wonderland 中的演员创建交互式行为，你需要使用 <code>respondWith:to:</code> 或 <code>addResponse:to:</code> 方法。</p>
+<p>这些方法允许你指定你希望演员响应什么，以及你希望它如何响应。 演员可以响应 <code>leftMouseDown</code>、<code>leftMouseUp</code>、<code>leftMouseClick</code>、<code>rightMouseDown</code>、<code>rightMouseUp</code>、<code>rightMouseClick</code> 和 <code>keyPress</code> 事件。 响应接受单参数 <code>BlockContext</code>。 该参数是 Squeak 生成的 WonderlandEvent 实例，用于封装有关事件的数据（例如，用户按下了什么键）。</p>
+<p><code>respondWith:to:</code> 方法告诉演员只用指定的响应来响应事件； 演员忽略所有其他先前为该事件定义的响应。 每次用鼠标左键单击 bunny 时，以下命令将使 bunny 旋转一次。 请注意，单击并拖动 bunny 将不再移动它。</p>
+<p><code>bunny respondWith: [:event | bunny turn: left turns: 1] to: leftMouseClick</code></p>
+<p><code>addResponse:to:</code> 方法将把新响应添加到指定事件的任何其他已定义的响应中。该方法返回新的响应，这样你就可以在以后使用 <code>removeResponse:to:</code>方法删除该响应。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">newReaction := bunny addResponse: [:event | bunny turn: left turns: 1] to: leftMouseClick
+</span></span><span class="line"><span class="cl">bunny addResponse: [:event | bunny move: forward distance: 2] to: leftMouseClick
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在你可以点击并拖动 bunny，当你松开鼠标左键时，bunny 会在一个小圆圈内移动。如果你现在去掉你添加的第一个响应，bunny 只会在你松开按钮的时候向前移动。</p>
+<p><code>bunny removeResponse: newReaction to: leftMouseClick</code></p>
+<h3 id="助手helper演员">助手(helper)演员</h3>
+<p>大多数时候，用户都是与具有几何图形（Squeak Alice 用来创建演员的视觉描述的多边形网格）的演员一起工作。不过在编写脚本时，用户偶尔也需要描述一个物体相对于某个任意位置或方向的运动/行为。作为一个简单的例子，我们可以考虑让 bunny 绕场景坐标 <code>{0. 0. 2}</code> 转动. 最简单的方法是创建一个没有任何几何形状的角色（非正式地称为助手演员）:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">helper := w makeActor
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>将它移动到所需位置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">helper moveTo: {0. 0. 2} duration: rightNow
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后围绕该点旋转 bunny：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny turn: left turns: 1 asSeenBy: helper
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="多台摄像机">多台摄像机</h4>
+<p>虽然 Squeak Alice 默认只提供一台摄像机，但你可以创建新的摄像机来提供进入 Wonderland 的多个视图。创建新的摄像机有一个缺点：因为计算资源是有限的，每一个新的摄像机都会降低所有摄像机视角的整体帧率。如果你用一台摄像机的帧率是 F，那么你用 N 台摄像机的帧率将大约是 F/N。</p>
+<p>尽管有这个缺点，用户经常发现提供场景的多个视图是很有用的。例如，多视图可以使人们更容易找到和操纵场景中的演员。制作一个新摄像机的语法是:</p>
+<p><code>w makeCamera</code></p>
+<p>当你执行这个命令时，Squeak Alice 会创建一台新的摄像机（为你创建的第二个摄像机命名为 camera2，为第三个摄像机命名为 camera3&hellip;）并将其添加到场景中。新的摄像机窗口都从相同的默认位置开始，所以你可能需要移动一个摄像机窗口才能看到另一个。你可以用鼠标移动摄像机窗口的 morph，也可以对摄像机窗口 morph 本身发出 Squeak Alice 命令。morph 的距离单位是像素。</p>
+<p><code>cameraWindow move: down distance: 50 duration: 2</code></p>
+<p>Squeak Alice 实际上是用一个 3D 摄像机模型来表示 Wonderland 中摄像机的位置。在单台摄像机时，你永远不会看到这个模型，但如果有两台或更多摄像机，你就可以通过移动一台摄像机来查看另一台。甚至可以在 Wonderland 中左键点击摄像机模型，像移动其他 3D 对象一样用鼠标移动摄像机。</p>
+<img width=400 src="/post/img/alice-11.png" />
+<center>图11：多部摄像机提供多种视图</center>
+<h4 id="融合-2d-和-3d">融合 2D 和 3D</h4>
+<p>与其他 3D 创作工具（包括 CMU 版本的 Alice）不同，Squeak Alice 允许你在 Squeak 中顺利地将 3D Wonderland 与其他 2D 内容结合起来。要做到这一点，只需关闭摄像机窗口中的背景:</p>
+<p><code>cameraWindow turnBackgroundOff</code></p>
+<p>你可能还想把地面隐藏起来，以专注于用当前的项目(Project)(译者注: Project 是 Squeak morphic 2d 桌面)来组成演员。</p>
+<p><code>ground hide</code></p>
+<img width=400 src="/post/img/alice-12.png" />
+<center>图12：bunny与脚本编辑器的融合</center>
+<p>假设你把摄像机对准了 Wonderland 中的一个演员，你现在应该看到这个演员与项目(Project)平滑地融合在一起。要在项目中移动演员，你需要移动摄像机窗口，而不是演员本身。试试下面的方法，看看有什么不同:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cameraWindow move: right distance: 50
+</span></span><span class="line"><span class="cl">bunny move: right distance: 5
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在你已经创建了一个与你的 2D 项目相结合的 3D 演员，你可以让这个演员与项目互动。Squeak Alice 提供了将 2D 点转换为 3D 点的命令，以及改变项目中摄像机窗口 morph 的 Z 顺序的命令。因此，你可以让 bunny 的头看着你的光标:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bunny head doEachFrame: [ bunny head pointAt: (camera transformScreenPointToScenePoint: (Sensor mousePoint) using: bunny) duration: rightNow ].
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个例子介绍了<code>doEachFrame:</code>方法，它允许你向演员发送一段代码来执行每一帧，以及介绍了摄像机<code>transformScreenPointToScenePoint:using:</code>方法，它利用 bunny 来确定 3D 点的相对深度，将 2D 点转换为 3D 点。</p>
+<p>另外两个有用的方法是摄像机窗口提供的 <code>sendInFrontOf:</code> 和 <code>sendBehind:</code> 方法。这些方法允许你使一个 3D 角色在一个 2D morph 周围（在前面和后面）徘徊。</p>
+<h3 id="活性纹理">活性纹理</h3>
+<p>Andreas Raab 实现了一种在 Wonderland 中的 3D 物体上绘制 morph 内容的方法，他称之为活性纹理。要创建一个活性纹理，你需要打开摄像机窗口的 morph 来拖动，为一个特定的 3D 物体启用活性纹理，然后在上面投放一个 morph。</p>
+<p>要打开摄像机窗口 morph 进行拖放，需要按住 Control 键，左键点击摄像机窗口 morph，显示其菜单。从这个菜单中选择 &ldquo;打开拖放&rdquo;。</p>
+<p>接下来创建一个你想在上面绘制 morph 的 3D 物体。通常使用一个 2D 平面是最简单的。Wonderlands 提供了一个创建简单的平面方形的快捷方式。</p>
+<p><code>w makePlaneNamed: 'myPlane'</code></p>
+<p>现在你需要为你的对象启用活性纹理。按住 Alt 键（Mac 用户为 option），左键点击平面以显示 halo。点击红色的 halo，显示平面的菜单，选择 &ldquo;启用活性纹理&rdquo;。重复这些步骤，再次显示平面的菜单，但这次选择 &ldquo;自动调整为纹理&rdquo;。</p>
+<p>你可以通过在你的项目中左键点击显示 World 菜单并选择 &ldquo;new morph&rdquo; 来创建一个样板 morph 作为你的活性纹理。在新菜单中选择 <code>Demo -&gt; BouncingAtomsMorph</code>. Squeak 会创建一个新的 morph 并把它连接到你的光标上。现在只需左键点击平面，将 morph 放在它上面，你应该看到弹跳原子(BouncingAtoms)的 morph 出现在你的 Wonderland 中的平面上。</p>
+<img width=400 src="/post/img/alice-13.png" />
+<center>图13：Wonderland中的一个活性纹理</center>
+<h4 id="退出-wonderland">退出 Wonderland</h4>
+<p>Squeak 为每个 Wonderland 创建了特定的类，并且只在该 Wonderland 中使用。因此，当你想删除一个 Wonderland 时，你需要确保 Squeak 正确地删除这些类。要做到这一点，你可以点击 Wonderland 编辑器中的红色退出按钮；Squeak 将为你删除 Wonderland 并正确地进行清理。</p>
+<p>你可以通过退出包含该 Wonderland 的项目来暂停它，而不是删除一个 Wonderland。你也可以通过点击黄色的 &ldquo;重置&rdquo; 按钮，将 Wonderland 重置为初始状态（但保留你在编辑器中编写的脚本）。</p>
+<h3 id="squeak-alice-的实现">Squeak Alice 的实现</h3>
+<p>这一部分简要介绍了我如何在 Squeak 中实现 Alice。我的意图是提供对 Squeak Alice 如何工作的高层次理解。想要更详细地了解 Squeak Alice 如何工作的高级 Squeak 开发者应该会发现，这个讨论至少为阅读和理解实际代码提供了一个框架。</p>
+<h4 id="balloon3d">Balloon3D</h4>
+<p>Balloon3D 是一个由 Andreas Raab 编写的即时模式 3D 渲染器。Balloon3D 提供了绘制 3D 场景的单帧所需的必要基元（照明、着色、纹理、网格和矩阵变换、合成操作等）。然而，Balloon3D 不提供帧之间的任何连续性，也没有任何分层、持久化场景的概念。简单地说，Balloon3D 知道如何绘制三角形，而不是物体。</p>
+<p>Squeak Alice 使用 Balloon3D 来创建一个基于场景图的保留模式渲染器。这意味着 Squeak Alice 知道如何绘制物体：它创建了一个从一帧到另一帧持续存在的 3D 世界。Squeak Alice 在一个场景图中组织 3D 世界中的对象（灯光、摄像机和演员）。场景图是一个分层结构，它描述了场景中的物体和它们的属性（颜色、灯光、纹理、位置等）之间的关系。通过在每一帧中逐步修改场景图中物体的属性，Squeak Alice 可以将 3D 世界变成动画。</p>
+<h4 id="scheduler">Scheduler</h4>
+<p>每个 Wonderland 都有一个 Scheduler 实例。scheduler 保存着活动的动画、行动（例如每一帧应该执行的 BlockContexts）和警报的列表。scheduler 通过迭代这些列表使时间在 Wonderland 中流逝。</p>
+<p>scheduler 可能频繁地自我更新（使用 Morphic <code>step</code> 方法）。每次 scheduler 更新时，它首先确定已经过去了多少时间，以及 Wonderland 的当前时间应该是什么。然后，scheduler 处理活动行动、警报和动画的列表。</p>
+<p>scheduler 执行任何当前操作并检查是否应从活动列表中删除这些操作。 如果动作的 <code>for:</code> 时间已过期或其关联的 <code>until:</code> 条件为真，scheduler 将删除该动作。</p>
+<p>scheduler 接下来检查是否有任何报警时间已经过去。如果 scheduler 发现一个时间已过的警报，它将执行与该警报相关的 BlockContext，然后将其从当前的警报列表中删除。</p>
+<p>scheduler 的最后一步是更新活动的动画。动画知道它们的开始状态和时间，结束状态和时间，以及用于在状态之间移动的插值函数。因此，scheduler 只需要告诉一个动画当前的时间，就可以使该动画更新到下一个中间状态。scheduler 最后会删除任何结束时间早于当前时间的动画。请注意，它确实先更新了这些动画，以确保它们达到了它们的结束状态。</p>
+<h4 id="wonderlandactor">WonderlandActor</h4>
+<p>WonderlandActor 是 Squeak Alice 中最重要的类(class)。这个类封装了构成演员视觉表现的网格(mesh)和纹理，并定义了用来与演员互动的核心行为。在内部，WonderlandActor 类使用 4x4 齐次矩阵来表示物体的位置、方向和大小。然而，这种内部表示法对用户是隐藏的；Alice 的设计理念之一是为用户提供一个基于易用性的界面，而不是基于实现细节。</p>
+<p>WonderlandActor 类所提供的行为都以类似的方式工作。如果用户指定该行为应该立即发生，那么该行为的效果就是即时的。否则，行为方法实际上创建了一个动画，其中包含了当前（开始）状态、期望的目标（结束）状态、持续时间和使用的插值函数（通常是缓缓地，或慢进慢出）。在任何一种情况下，行为方法都会创建一个撤销(undo)动画，并将其推送到该 Wonderland 的 WonderlandUndoStack 实例中。</p>
+<h4 id="wonderlandcamera">WonderlandCamera</h4>
+<p>WonderlandCamera 类定义了一种特殊类型的 WonderlandActor。除了拥有与演员相同的行为外，摄像机还知道如何从其当前的视角渲染 Wonderland 的一帧。摄像机根据其当前的位置和方向创建一个偏移量(offset)来绘制场景，然后告诉 Wonderland 来遍历(walk)场景图。遍历场景图包括设置背景颜色，然后告诉顶层演员（场景的直接子女）绘制自己。每个子角色都会绘制自己（使用其位置、方向、网格和纹理），然后告诉它的任何子角色绘制自己（译者注: 沿用了 Morphic 的架构）。</p>
+<p>每个 WonderlandCamera 实例都有一个 WonderlandCameraMorph 实例，它用于渲染内容。你可以使用摄像机上的 getCameraWindow 方法访问这个 morph。这个 morph 使用 Morphic step 方法，尽可能频繁地将视图重新渲染到 Wonderland 中。</p>
+<h4 id="wonderland">Wonderland</h4>
+<p>Wonderland 类是 3D 世界的容器。 此类包含世界中的摄像机、灯光和演员的列表，并提供创建或加载这些对象的方法。 Wonderland 类还负责在你创建一个新的 Wonderland 实例时干净地初始化它（例如创建 scheduler 和撤消堆栈(undo stack)），以及在你删除 Wonderland 实例时清理它（通过退出 Wonderland）。</p>
+<h3 id="squeak-alice-的未来">Squeak Alice 的未来</h3>
+<p>自从我在 Alan 小组完成实习后，Squeak Alice 几乎没有什么变化。 虽然我相信 Squeak Alice 有很大的潜力，但至少在短期内，我的时间主要集中在完成博士学位上。 当我下次有时间将注意力转向 Squeak Alice 时，它的发展应该有很多可能性。 Andreas 将完成一个能够利用硬件 3D 加速的新版本 Balloon3D，CMU 的 Alice 团队将学到一套全新的经验，让新手更容易使用 3D 图形。 此外，我希望下一代 Squeak Alice 能够直接利用目标受众(3D 图形新手)的反馈。</p>
+<h3 id="延伸阅读">延伸阅读</h3>
+<p>要了解更多关于 Alice 项目的信息，请访问 <a href="http://www.alice.org">Alice 主页</a>。关于我们从 Alice 学到的教训的更多信息，请参考这些资料:</p>
+<ul>
+<li>Matthew J. Conway. Alice: Interactive 3D Scripting for Novices. Ph.D. dissertation, University of Virginia, May 1998.</li>
+<li>Matthew Conway, Steve Audia, Tommy Burnette, Dennis Cosgrove, Kevin Christiansen, Rob Deline, Jim Durbin, Rich Gossweiler, Shuichi Koga, Chris Long, Beth Mallory, Steve Miale, Kristen Monkaitis, James</li>
+<li>Patten, Jeff Pierce, Joe Shochet, David Staack, Brian Stearns, Richard Stoakley, Chris Sturgill, John Viega, Jeff White, George Williams, Randy Pausch. Alice: Lessons Learned from Building a 3D System For Novices. Proceedings of CHI 2000, pages 486-493.</li>
+</ul>
+<h3 id="关于作者">关于作者</h3>
+<p>Jeff Pierce 正在 CMU 大学攻读计算机科学博士学位。在他的博士生生涯中，他曾在 Alice 上工作，为迪斯尼公司提供关于 DisneyQuest 的咨询，在微软研究院从事手持设备和 3D 交互的工作，并为 Alan Kay 和他的团队实施 Squeak Alice。这些天，他正忙于完成他关于新型 3D 交互技术的学位论文。Jeff 的联系方式是：jpierce@cs.cmu.edu。更多信息请访问http://www.cs.cmu.edu/~jpierce。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-09-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/compare-hardware-blocks-platforms/">
+            <span class="next-text nav-default">比较图形化硬件编程平台</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
