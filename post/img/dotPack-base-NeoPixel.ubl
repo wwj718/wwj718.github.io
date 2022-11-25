@@ -1,0 +1,60 @@
+module dotPack
+author wwj718
+version 1 0 
+depends NeoPixel 
+description dotPack
+variables '_dotPack initialized' 
+
+	spec ' ' '_dotPack setup' '_dotPack setup'
+	spec ' ' 'clear' 'clear'
+	spec ' ' 'set_background' 'set_background _' 'color'
+	spec ' ' 'set_pixel' 'set_pixel x _ y _ _ update _' 'auto auto color bool' 1 1
+	spec ' ' 'update' 'update'
+
+
+to '_dotPack setup' {
+  if ((v '_dotPack initialized') == 0) {
+    neoPixelAttach 256 12
+    '_dotPack initialized' = 1
+    clearNeoPixels
+  }
+}
+
+to clear {
+  '_dotPack setup'
+  clearNeoPixels
+}
+
+to set_background color {
+  '_dotPack setup'
+  neoPixelSetAllToColor color
+}
+
+to set_pixel x y color update {
+  '_dotPack setup'
+  if (or (x < 1) (or (x > 16) (or (y < 1) (y > 16)))) {
+    sayIt '1<= x <= 16,  1<= y <=16'
+    return 0
+  }
+  local 'num' 0
+  if ((y % 2) == 1) {
+    num = (x + ((y - 1) * 16))
+  } else {
+    num = ((17 - x) + ((y - 1) * 16))
+  }
+  comment 'custom set NeoPixel color'
+  local 'i' num
+  '_NeoPixel_ensureInitialized'
+  if (and (1 <= i) (i <= (size _np_pixels))) {
+    atPut i _np_pixels color
+  }
+  if update {
+    '_NeoPixel_update'
+  }
+}
+
+to update {
+  '_dotPack setup'
+  '_NeoPixel_update'
+}
+
