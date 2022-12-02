@@ -49,7 +49,7 @@
 <meta itemprop="name" content="将新设备引入 MicroBlocks">
 <meta itemprop="description" content="前言 阅读本文的你可能有这样的需求：你刚在网上买了个新设备，颜色传感器、可编程书包或者 24 路舵机控制板之类的东西。 你在 MicroBlocks 内置的积木库里，怎么也没"><meta itemprop="datePublished" content="2022-12-02T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2022-12-02T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2639">
+<meta itemprop="wordCount" content="2642">
 <meta itemprop="keywords" content="MicroBlocks," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="将新设备引入 MicroBlocks"/>
 <meta name="twitter:description" content="前言 阅读本文的你可能有这样的需求：你刚在网上买了个新设备，颜色传感器、可编程书包或者 24 路舵机控制板之类的东西。 你在 MicroBlocks 内置的积木库里，怎么也没"/>
@@ -141,9 +141,9 @@
         <li><a href="#写驱动库很难吧">写驱动库很难吧？</a></li>
         <li><a href="#可生长的系统">可生长的系统</a></li>
         <li><a href="#操作步骤">操作步骤</a></li>
-        <li><a href="#弄清楚新设备使用的硬件通信协议">弄清楚新设备使用的硬件通信协议</a></li>
-        <li><a href="#在-ide-创建自定义积木">在 IDE 创建自定义积木</a></li>
-        <li><a href="#将自定义积木移入新的库">将自定义积木移入新的库</a></li>
+        <li><a href="#1-弄清楚新设备使用的硬件通信协议">1. 弄清楚新设备使用的硬件通信协议</a></li>
+        <li><a href="#2-在-ide-创建自定义积木">2. 在 IDE 创建自定义积木</a></li>
+        <li><a href="#3-将自定义积木移入新的库">3. 将自定义积木移入新的库</a></li>
       </ul>
     </li>
     <li><a href="#继续学习">继续学习</a></li>
@@ -171,7 +171,7 @@
 </blockquote>
 <p>当你在&quot;底层&quot;写驱动，你就不再能够使用之前学到的技能来编程，因为你现在可是在&quot;底层&quot;工作！今天的大多数图形化编程系统都如此，无论是 MakeCode、Scratch、node-red，还是 Mind+、慧编程、Kittenbot&hellip;</p>
 <p>用户怎么看待这件事呢？ 用户似乎应该抱怨这类平台的可扩展性很差，抱怨系统设计者没有能力打造更加一致的系统，抱怨他们根本没有理解终端用户编程的含义&hellip;</p>
-<p>可用户通常被&quot;底层&quot;开发者教导说，那才是真正的编程。他们好像在说你之前用的东西只是糊弄小孩的玩意儿。这是今天计算机文化相当可悲的一面。 Bret Victor 在 <a href="https://www.youtube.com/watch?v=8pTEmbeENF4"> The Future of Programming</a> 里对所谓 &ldquo;真正的编程&rdquo; 这种无知和傲慢做了相当辛辣的讽刺。</p>
+<p>可用户通常被&quot;底层&quot;开发者教导说，那才是真正的编程。他们好像在说你之前用的东西只是糊弄小孩的玩意儿。这是今天计算机文化相当可悲的一面。 Bret Victor 在 <a href="https://www.youtube.com/watch?v=8pTEmbeENF4">The Future of Programming</a> 里对所谓 &ldquo;真正的编程&rdquo; 这种无知和傲慢做了相当辛辣的讽刺。</p>
 <h3 id="可生长的系统">可生长的系统</h3>
 <p>一个系统，如果希望随着时间的流逝，帮助用户成长，并且与用户一起成长，它应该认真对待可扩展性和可生长性，它应该支持终端用户轻松扩展它(<a href="https://en.wikipedia.org/wiki/HyperCard">Hypercard</a> 是这类系统中的典范)。用户社区应该掌控这个系统，而不能指望工作在&quot;底层&quot;的开发者(他们就像垄断&quot;识字&quot;的&quot;神职人员&quot;)。</p>
 <p>MicroBlocks 正是这样可由用户轻松扩展的可生长系统。在架构设计时，它充分考虑了可生长性和可扩展性。</p>
@@ -191,10 +191,10 @@
 <li>将自定义积木移入新创建的库(根据需要分发它)。</li>
 </ol>
 <p>接下来，让我们开始逐一讨论。</p>
-<h3 id="弄清楚新设备使用的硬件通信协议">弄清楚新设备使用的硬件通信协议</h3>
+<h3 id="1-弄清楚新设备使用的硬件通信协议">1. 弄清楚新设备使用的硬件通信协议</h3>
 <p>如果你购买的新设备有在线文档，通过查阅文档可以快速弄清通信协议。设备厂商通常会开放出主流平台的驱动(诸如 Arduino、MicroPython、JavaScript(MakeCode)), 只需要将这些驱动翻译到 MicroBlocks 中即可。</p>
 <p>以恩孚科技的游戏手柄(Joystick:bit V2)为例，通过<a href="https://elecfreaks.com/learn-cn/microbitExtensionModule/joystick_bit_v2.html">查阅文档</a>, 可以发现它简单使用了模拟信号和数字信号。它的 JavaScript(MakeCode) 驱动在<a href="https://github.com/tinkertanker/pxt-joystickbit/blob/master/joystickbit.ts">这里</a></p>
-<h3 id="在-ide-创建自定义积木">在 IDE 创建自定义积木</h3>
+<h3 id="2-在-ide-创建自定义积木">2. 在 IDE 创建自定义积木</h3>
 <p>弄懂了通信协议，我们就可以在 MicroBlocks IDE 创建自定义积木了。</p>
 <p>先在设置中开启 <code>显示高级积木</code>:</p>
 <img width=800 src="/post/img/show-adcanced-blocks.png" />
@@ -215,7 +215,7 @@
 <p>至此，我们就完成了第一个自定义积木，点击它就可以让你的游戏手柄震动！</p>
 <p>在 MicroBlocks IDE 创建自定义积木的好处是，可以复用过去在 MicroBlocks 中的所有经验。也可使用 MicroBlocks 强大的实时调试能力！这带来极大效率提升，更重要的是，整个过程非常有趣，just for fun :-)</p>
 <p>同样道理，你可以创建新的自定义积木，来驱动游戏手柄的其他功能。</p>
-<h3 id="将自定义积木移入新的库">将自定义积木移入新的库</h3>
+<h3 id="3-将自定义积木移入新的库">3. 将自定义积木移入新的库</h3>
 <p>当你完成驱动新设备所需的自定义积木，可能会想如何分发这些积木给其他用户，就像分发一个软件库。</p>
 <p>将自定义积木移入新的库即可。</p>
 <p>首先让我们在 IDE 里创建一个新的库(确保你已经开启 <code>显示高级积木</code>) :</p>
