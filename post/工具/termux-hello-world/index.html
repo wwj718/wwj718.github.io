@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>神器之Termux - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 自从丢了iphone，换了安卓之后，手机的可玩性瞬间提升了一大截 之前在手机里跑Python，用的是QPython3，有诸多不便。一直想要" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/termux-hello-world/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="神器之Termux" />
+<meta property="og:description" content="前言 自从丢了iphone，换了安卓之后，手机的可玩性瞬间提升了一大截 之前在手机里跑Python，用的是QPython3，有诸多不便。一直想要" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/termux-hello-world/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-12-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-12-24T00:00:00+00:00" />
+
+<meta itemprop="name" content="神器之Termux">
+<meta itemprop="description" content="前言 自从丢了iphone，换了安卓之后，手机的可玩性瞬间提升了一大截 之前在手机里跑Python，用的是QPython3，有诸多不便。一直想要"><meta itemprop="datePublished" content="2017-12-24T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2017-12-24T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2160">
+<meta itemprop="keywords" content="dev-tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="神器之Termux"/>
+<meta name="twitter:description" content="前言 自从丢了iphone，换了安卓之后，手机的可玩性瞬间提升了一大截 之前在手机里跑Python，用的是QPython3，有诸多不便。一直想要"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">神器之Termux</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-12-24 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#提高输入效率">提高输入效率</a></li>
+        <li><a href="#安装jupyter-notebook">安装Jupyter Notebook</a></li>
+        <li><a href="#安装依赖">安装依赖</a></li>
+        <li><a href="#公网访问">公网访问</a></li>
+        <li><a href="#使用python驱动手机">使用Python驱动手机</a></li>
+        <li><a href="#邪恶一下">邪恶一下</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>自从丢了iphone，换了安卓之后，手机的可玩性瞬间提升了一大截</p>
+<p>之前在手机里跑Python，用的是QPython3，有诸多不便。一直想要在手机里跑linux环境，能使用linux工具箱的同时，又能以编程的方式与手机交互（发短信，拍照，打电话什么的），而且最好不要影响手机正常的使用。</p>
+<p>busybox当然是个不错选择，但我更偏好Termux</p>
+<p>Termux（一个Android App,仅支持Android 5.0及以上版本 ，可以在Google Play和F-Droid上下载）是一款<a href="https://github.com/termux/termux-app">开源</a>且不需要root，运行在Android上极其强大的linux模拟器，支持apt管理软件包，支持python,ruby,go,nodejs&hellip;甚至可以手机作为反向代理、或Web服务器</p>
+<p>安装好打开之后，你将看到这样的界面</p>
+<p><img src="/post/img/termuxce0b2f13.png" alt=""></p>
+<h1 id="使用">使用</h1>
+<h3 id="提高输入效率">提高输入效率</h3>
+<p>打开Termux之后，我们面对的是一个命令行界面，常用的手机输入工具，搜狗之类的，并没有功能键，无法输入esc、ctrl、alt、tab&hellip;</p>
+<p>Termux提供了一些解决方案:</p>
+<p>音量键(-)模拟Ctrl，所以你要中止输入到一半的命令，只好按下<code>音量键(-)+c</code>即可（等效于Ctrl+c）</p>
+<p>你也可以使用<code>音量键(+)+q</code>显示扩展键：<code>ESC、CTR、ALT、TAB、-、/、|</code></p>
+<p>你有多种方式提高输入效率:</p>
+<ul>
+<li>使用蓝牙键盘</li>
+<li>Hacker&rsquo;s Keyboard: 一个输入法App,提供一切你需要的按键，方便地在Android上输入快捷键组合、特殊符号，提高Coding和CLI的效率</li>
+<li>在电脑中使用ssh接入Termux</li>
+<li>安装Jupyter Notebook，在电脑中使用浏览器连接Termux(可以在网页中使用terminal)</li>
+</ul>
+<p>在以上多种方式中，我最喜欢Jupyter Notebook</p>
+<h3 id="安装jupyter-notebook">安装Jupyter Notebook</h3>
+<ul>
+<li><code>apt install clang python python-dev fftw libzmq libzmq-dev freetype freetype-dev libpng libpng-dev pkg-config</code> （目前(2017.12.24)默认安装的Python版本是<code>3.6.4</code>）</li>
+<li><code>pip install jupyter</code></li>
+<li><code>jupyter notebook --ip=0.0.0.0</code></li>
+</ul>
+<p><img src="/post/img/termux0c714cdf.png" alt=""></p>
+<p>假设你的手机在局域网里的ip为:<code>192.168.0.100</code>,那么访问你在局域网中的浏览器里输入<code>192.168.0.100:8888</code>即可，接下来会要求你输入token，如此一来远程访问便没有安全问题。token在<code>jupyter notebook</code>运行起来之后手机界面中会有，如截图中所示:</p>
+<p><img src="/post/img/termuxaa95c1ad.png" alt=""></p>
+<p>在浏览器中输入token之后，即可使用浏览器来访问termux。选择Terminal:</p>
+<p><img src="/post/img/termuxb43f54dc.png" alt=""></p>
+<p>之后你便可以在浏览器中进入termux的terminal，和ssh进入几乎相同</p>
+<p><img src="/post/img/termux4b7a5c1f.png" alt=""></p>
+<h3 id="安装依赖">安装依赖</h3>
+<p>进入linux，我做的第一件事一般是把我日常使用的工具装好。Termux支持apt管理软件包，所以这一切来的很轻松:</p>
+<p><code>apt install tmux fish vim git</code></p>
+<h3 id="公网访问">公网访问</h3>
+<p>我们如何把手机中的端口暴露到公网呢，有两种方式都很方便:</p>
+<ul>
+<li>使用ssh反向代理(使用autossh解决隧道的稳定性问题)</li>
+<li>使用ngrok（使用ngrok arm版本）</li>
+</ul>
+<p>如此一来手机中运行的网站你就可以在公网访问它，当然你也可以把ssh端口暴露到外网，这样你可以在任何有网络连接的地方连接到你的手机里。前提是Termux处于运行状态</p>
+<h3 id="使用python驱动手机">使用Python驱动手机</h3>
+<p>结下来才是精彩之处</p>
+<p>我们先安装termux的插件Termux:API，用于访问手机硬件。安装完Termux:API App之后，还需要在terminal里安装termux-api:<code>apt install termux-api</code>，之后就可以在terminal中操控手机硬件，这样一来我们可以以编程的方式来控制手机，</p>
+<p>什么 &ldquo;亲爱的每天早上6点钟准时电话喊你起床&rdquo;,还不是从不晚点！什么“短信一定秒回哦” 还不是毫秒级的速度！什么“今天是你的生日，我准时在12点给你发了这条祝福短信” 还不是差一秒绝对是网络延迟！</p>
+<p>巧伤诚 :(</p>
+<p>展示一些好用的api</p>
+<ul>
+<li>获取手机剪贴板内容: <code>termux-clipboard-get</code></li>
+</ul>
+<p><img src="/post/img/termux5489cc59.png" alt=""></p>
+<ul>
+<li>设置剪贴板内容: <code>termux-clipboard-set 你好啊</code></li>
+</ul>
+<p><img src="/post/img/termux-clipboard-settermux05d9c34a.png" alt=""></p>
+<p>之后你在手机中粘贴内容时，便会把<code>你好啊</code>粘贴出来。利用剪切板接口，你可以方便地在电脑和手机间传输内容，而不必通过微信、QQ之类的东西</p>
+<ul>
+<li>获取联系人列表: <code>termux-contact-list</code></li>
+</ul>
+<p><img src="/post/img/termuxf0795611.png" alt=""></p>
+<ul>
+<li>发送短信:<code>termux-sms-send -n 10010 hello</code>
+<img src="/post/img/termuxd867860c.png" alt=""></li>
+</ul>
+<p>通过以上指令我们成功给10010发了<code>hello</code></p>
+<p>更多有趣的连接可以参考: <a href="https://wiki.termux.com/wiki/Termux:API">Termux:API</a></p>
+<p>有了这些接口，我们可以在Python中使用subprocess来操控手机。已经有人做了简单包装，以供python调用termux-api: <a href="https://github.com/mguillau42/termux_python">termux_python</a></p>
+<p><img src="/post/img/termuxd33ab5b3.png" alt=""></p>
+<h3 id="邪恶一下">邪恶一下</h3>
+<p>使用Termux你可以轻松把手机打造为一个渗透工具</p>
+<p>日常使用的nmap当然没有问题（当然你可以以轻松使用routersploit、slowloris、Hydra），惊人的是竟然连Metasploit Framework都可以使用！</p>
+<p>如果你对使用termux来做渗透感兴趣，参考<a href="https://wiki.termux.com/wiki/Hacking">termux Hacking</a></p>
+<hr>
+<h1 id="20180603更新">2018.06.03更新</h1>
+<p>最近看到这篇文章访问的人比较多，做个更新</p>
+<p>termux和termux:api今年做了一个更新,增加了好几个有趣的api，其中我最喜欢termux-sensors,这个api能帮我们拿到几乎所有的手机传感器数据！</p>
+<p>此外我之前fork了一个项目，简单用python包装了一下termux:api: <a href="https://github.com/wwj718/termux_python">termux_python</a></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://wiki.termux.com/wiki/Main_Page">The Termux Wiki</a></li>
+<li><a href="https://wiki.termux.com/wiki/Termux:API">Termux:API</a></li>
+<li><a href="http://www.leouieda.com/blog/scipy-on-android.html">Running Jupyter and the Scipy stack on Android</a></li>
+<li><a href="https://segmentfault.com/a/1190000002718360">从外网 SSH 进局域网，反向代理+正向代理解决方案</a></li>
+<li><a href="https://gist.coding.net/u/infun/62a3b054f6104f729588a9ef9a2d43aa">在安卓上用termux和python自动转发短信到微信</a></li>
+<li><a href="http://blackwolfsec.cc/2016/12/10/termux/">基于Termux打造Android手机渗透神器（2017-7-22更新）</a>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/27923481">黑客破解工具Hydra在线爆破密码</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-12-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/microbit-notes/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">micro:bit使用笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/iot/micropython-notes/">
+            <span class="next-text nav-default">MicroPython使用笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

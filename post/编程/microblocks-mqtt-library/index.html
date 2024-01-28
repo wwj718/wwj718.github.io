@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MicroBlocks 编程案例: MQTT 库 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 CodeLab 候车群里吸引了一些「个人计算」爱好者，他们容易被「个人计算」气质的项目吸引。从 Scratch、Smalltalk 到 MicroBlocks. 最近群里讨论 MicroBlocks 十分" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-mqtt-library/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MicroBlocks 编程案例: MQTT 库" />
+<meta property="og:description" content="前言 CodeLab 候车群里吸引了一些「个人计算」爱好者，他们容易被「个人计算」气质的项目吸引。从 Scratch、Smalltalk 到 MicroBlocks. 最近群里讨论 MicroBlocks 十分" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-mqtt-library/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-02-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-02-08T00:00:00+00:00" />
+
+<meta itemprop="name" content="MicroBlocks 编程案例: MQTT 库">
+<meta itemprop="description" content="前言 CodeLab 候车群里吸引了一些「个人计算」爱好者，他们容易被「个人计算」气质的项目吸引。从 Scratch、Smalltalk 到 MicroBlocks. 最近群里讨论 MicroBlocks 十分"><meta itemprop="datePublished" content="2022-02-08T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-02-08T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2153">
+<meta itemprop="keywords" content="MicroBlocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MicroBlocks 编程案例: MQTT 库"/>
+<meta name="twitter:description" content="前言 CodeLab 候车群里吸引了一些「个人计算」爱好者，他们容易被「个人计算」气质的项目吸引。从 Scratch、Smalltalk 到 MicroBlocks. 最近群里讨论 MicroBlocks 十分"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MicroBlocks 编程案例: MQTT 库</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-02-08 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#思路">思路</a>
+      <ul>
+        <li><a href="#microblocks-虚拟机">MicroBlocks 虚拟机</a></li>
+        <li><a href="#投机取巧">投机取巧</a></li>
+      </ul>
+    </li>
+    <li><a href="#动手">动手</a>
+      <ul>
+        <li><a href="#在-arduino-生态里找一个-mqtt-库">在 Arduino 生态里找一个 MQTT 库</a></li>
+        <li><a href="#在-microblocks-虚拟机里提供-mqtt-相关的-primitives-方法">在 MicroBlocks 虚拟机里提供 MQTT 相关的 primitives 方法</a></li>
+        <li><a href="#在-ide-里构建-mqtt-积木-调用虚拟机里相关的-primitives-方法">在 IDE 里构建 MQTT 积木， 调用虚拟机里相关的 primitives 方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#使用">使用</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>CodeLab 候车群里吸引了一些「个人计算」爱好者，他们容易被「个人计算」气质的项目吸引。从 Scratch、Smalltalk 到 MicroBlocks.</p>
+<p>最近群里讨论 MicroBlocks 十分起劲，过年期间，也玩得不亦乐乎， @kwyjibo 做了很棒的<a href="https://kwyjibo.notion.site/MicroBlocks-f8af6fd0a8ea4786bf267bf948ae2ea1">梳理</a>。</p>
+<p>年前大家在「CodeLab 候车群」聊到对 MicroBlocks 有一些疑问，其中一个问题是，MicroBlocks 何时支持 MQTT？我把问题转给了 @John Maloney，他说在他那边 MQTT 优先级比较低，问我是否有兴趣来做。我答应他试试看。</p>
+<p>我担心超出我的能力范围，结果发现，这工作比我预期的简单，假期里完成了 MQTT 库，目前已提交给官方并合并到了 dev 分支。</p>
+<h2 id="思路">思路</h2>
+<p>为 MicroBlocks 构建 MQTT 库，比我构建之前的几个库来得复杂:</p>
+<ul>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/microblocks-sphero-rvr-library/">MicroBlocks 编程案例: 创建 Sphero RVR 代码库</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/microblocks-nezha-library/">MicroBlocks 编程案例: 创建哪吒扩展板代码库</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/microblocks-ailens-library/">MicroBlocks 编程案例: 创建 AI 摄像头代码库</a></li>
+</ul>
+<p>构建 MQTT 库与构建 传感器/执行器 库(通常是 I2C 协议)的区别在于: 后者只需要在 IDE 里编程(摆弄硬件协议，通常是 I2C)，换句话说，只需要拼搭积木即可，而构建 MQTT 库则需要在<a href="https://bitbucket.org/john_maloney/smallvm/src/master/vm/">虚拟机(vm)</a>层面编程。</p>
+<h3 id="microblocks-虚拟机">MicroBlocks 虚拟机</h3>
+<p>MicroBlocks 虚拟机是 MicroBlocks 如此卓越的主要原因之一。了解 Smalltalk 架构的朋友，可能会在这里看到 Smalltlak 的影子。 这并不偶然，MicroBlocks 的创始人之前也是 Squeak 的核心开发者(Morphic 的发明者)。</p>
+<p>MicroBlocks 虚拟机主要使用 C/C++ 构建，但并不意味着你有丰富的 C 经验，就能很好理解它，因为</p>
+<blockquote>
+<p>架构主宰材料. &ndash; Alan Kay</p>
+</blockquote>
+<p><a href="https://wiki.microblocks.fun/virtual_machine">The MicroBlocks Virtual Machine</a> 是了解
+MicroBlocks 虚拟机设计思路的好材料。当我们使用 MicroBlocks 对硬件编程时，我们处在 MicroBlocks IDE 环境里，这 IDE 环境由 GPblocks 构建(@John 的另一个项目)，编程过程看不见虚拟机，也不需要关心它，它只是默默地解释来自 IDE 的消息。IDE 与 MicroBlocks 虚拟机实时通信（串行协议），通信协议细节参考 <a href="https://bitbucket.org/john_maloney/smallvm/src/master/misc/SERIAL_PROTOCOL.md">SERIAL_PROTOCOL</a>。虽然看起来像是 Scratch 一样的交互式编程，但实时烧录，可以离线运行！</p>
+<p>MicroBlocks IDE 只是 MicroBlocks 虚拟机的一个客户端，理论上我们可以构建任何兼容 <a href="https://bitbucket.org/john_maloney/smallvm/src/master/misc/SERIAL_PROTOCOL.md">SERIAL_PROTOCOL</a> 的客户端/编程环境。</p>
+<h3 id="投机取巧">投机取巧</h3>
+<p>我并不打算完全弄懂 MicroBlocks 虚拟机，再来构建 MQTT 库，那样耗费的时间太多了。</p>
+<p>MicroBlocks 中已经有那么多代码库，找一个最接近 MQTT 库的东西来参考，依葫芦画瓢不是更简单吗？</p>
+<p>MicroBlocks 中代码库的分类十分清晰，由于 MQTT 库与网络有关，我自然去寻找网络相关的库，看看它们在虚拟机里的部分是怎么写的，很快我发现 WebSocket Server 库正是我需要的东西。</p>
+<p><img src="/post/img/1644310978158.jpg" alt=""></p>
+<p>粗略翻了下代码, 感觉相当简单啊！ 即使我几乎不写 Arduino 代码，而且多年不写 C 代码(可能只是入门水平)，感觉也没什么压力。毕竟编程主要与想法有关，其他缺啥补啥就好。</p>
+<h2 id="动手">动手</h2>
+<p>先抛出<a href="https://bitbucket.org/john_maloney/smallvm/commits/0f8ac4b9638ca935e815b102c2e4570e670f1cc9">相关源码</a>，再细聊我的具体做法。</p>
+<p>通过阅读 WebSocket Server 库的实现，我了解到大约需要做以下几件事:</p>
+<ul>
+<li>在 Arduino 生态里找一个 MQTT 库(不就是在 Github 搜一搜吗？)</li>
+<li>在 MicroBlocks 虚拟机里(<a href="https://bitbucket.org/john_maloney/smallvm/src/master/vm/netPrims.cpp">netPrims.cpp</a>) 提供 MQTT 相关的 primitives 方法( Smalltalk 虚拟机也是这么做的 )</li>
+<li>在 IDE 里构建 MQTT 积木， 调用虚拟机里相关的 primitives 方法</li>
+</ul>
+<h3 id="在-arduino-生态里找一个-mqtt-库">在 Arduino 生态里找一个 MQTT 库</h3>
+<p>这事儿简单，很快我就找到一个好东西: <a href="https://github.com/256dpi/arduino-mqtt">256dpi/arduino-mqtt</a>, 不止兼容 Arduino，而且可在 <a href="https://platformio.org/">PlatformIO</a> 里使用, 而 MicroBlocks 虚拟机正是使用 PlatformIO 构建的，PlatformIO 或许是硬件领域最好的编程平台。</p>
+<p><img src="/post/img/1644303641425.jpg" alt=""></p>
+<h3 id="在-microblocks-虚拟机里提供-mqtt-相关的-primitives-方法">在 MicroBlocks 虚拟机里提供 MQTT 相关的 primitives 方法</h3>
+<p>这是整件事情中最难的一步。</p>
+<p>但好在 MicroBlocks 是一个持续几年的项目了，成熟度已经很高。大多数工作，都可以学习项目里之前的工作来开始。这正是开源革命带来的最大好处之一: 从别人的代码里快速学习和成长。</p>
+<p>通过学习 @John 在 WebSocket Server 库上的工作，我用了很短时间就完成了可以工作的第一个原型，当时还是年前，我告知了 @John 最新进展，他也很开心:</p>
+<blockquote>
+<p>Wow, that was fast work! Enjoy your New Year’s holiday! Happy Year of the Tiger! &ndash; @John Maloney</p>
+</blockquote>
+<p>这期间，我甚至是一边翻<a href="https://learnxinyminutes.com/docs/c/">C 语言文档</a>, 一边编程的。说实话，我相当不喜欢 C 里边的一些设计决策，一种你一直在适应机器的不愉快感受。</p>
+<h4 id="吐槽">吐槽</h4>
+<p>我在 C 语言上其实是投入过一些时间的，抛开大学扯淡的 C 语言入门和计算机二级考试不算(他妈简直是一场灾难)，我也阅读 C 语言作者写的《The C Programming Language》，读过 Unix 文化的很多东西(包括《Unix 编程艺术》)，甚至读过 C++ 社区推荐的一些书。但如果你接触过 LISP/Smalltalk 之类的东西，尤其是接触过个人计算社区里的人写的东西(Alan Kay、Dan Ingalls 之类)，你就很难有耐心去阅读主流计算机世界里这些据说写得挺好的书 :(</p>
+<blockquote>
+<p>语言并不是你学到的东西，而是你参与的东西 &ndash; Arika Okrent</p>
+</blockquote>
+<h3 id="在-ide-里构建-mqtt-积木-调用虚拟机里相关的-primitives-方法">在 IDE 里构建 MQTT 积木， 调用虚拟机里相关的 primitives 方法</h3>
+<p>最后一步十分简单，现在还要更简单！</p>
+<p>我当时的做法是在文本环境里编程，因为之前没有直接调用 primitives 方法的积木。但现在有了！在 MicroBlocks 图形 IDE 里可以直接调用虚拟机里的 primitives 方法！参考<a href="https://bitbucket.org/john_maloney/smallvm/issues/246/is-there-any-example-of-call-block-to-call">这个 issue</a></p>
+<p>具体做法参考<a href="https://bitbucket.org/john_maloney/smallvm/commits/0f8ac4b9638ca935e815b102c2e4570e670f1cc9">相关源码</a></p>
+<h2 id="使用">使用</h2>
+<p>如果你想要开箱即用，可以使用 <a href="https://microblocks.codelab.club/">CodeLab 部署的版本</a>, 如果你之前打开过，请刷新缓存。</p>
+<p>由于 MQTT 库 还未经过充分测试(@John 提到网络相关的库，因其动态性，相当不好测试)，目前官方虚拟机还未默认包含 MQTT 支持。 @John 说:</p>
+<blockquote>
+<p>I’m being conservative because RAM is a scare resource. On the ESP32, the MicroBlocks VM is stored in RAM (including all libraries that are linked in), so even if the MQTT primitives are not used, the C++ MQTT library code consumes RAM. When RAM gets too low on the ESP32, then network operations can become unreliable and MicroBlocks itself can crash&hellip;<br>
+It is difficult to know how much RAM a complex network package needs because they allocate memory dynamically and the amount needed depends on the usage patterns and load.</p>
+</blockquote>
+<p>目前你需要自己 <a href="https://bitbucket.org/john_maloney/smallvm/src/0d4abb14608a836c8fb0c2d1b20045f7388ff929/platformio.ini#lines-121">build 固件</a>。但放心它相当容易: <code>pio run -e esp32-mqtt</code> 。 如果要上传到板子上(目前仅支持 ESP32)，只需: <code>pio run -e esp32-mqtt -t upload</code>。 @Tom Ming 提到他在 esp8266 下测试也是正常的。他这个学期计划在教学中使用。</p>
+<p>官方 IDE 里已经提供了 MQTT 积木:</p>
+<p><img src="/post/img/1644310626832.jpg" alt=""></p>
+<p>我还添加了一个 Demo:</p>
+<p><img src="/post/img/1644310656103.jpg" alt=""></p>
+<h2 id="总结">总结</h2>
+<p>为 MicroBlocks 虚拟机引入新的 primitives 方法十分简单！一旦掌握这种做法，你就可以轻松将 Ardoino 生态里的海量库轻松引入 MicroBlocks！</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://mqtt-explorer.com/">MQTT Explorer</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-02-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/scratch-guess-number-game/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Scratch 里的年会游戏</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/microblocks-websocket-server/">
+            <span class="next-text nav-default">MicroBlocks 编程案例: WebSocket server</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

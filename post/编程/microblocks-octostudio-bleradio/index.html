@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MicroBlocks 编程案例: 扩展 OctoStudio 库 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 前几天, @yinxi 问我 MicroBlocks 团队何时推出 BLE radio 库。 他想要使用 BLE radio 构建手柄和受控小车项目。相比于 wifi radio, BLE radio 功耗更低(手柄和小车因此会有更长的续航时间)而且" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-octostudio-bleradio/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MicroBlocks 编程案例: 扩展 OctoStudio 库" />
+<meta property="og:description" content="前言 前几天, @yinxi 问我 MicroBlocks 团队何时推出 BLE radio 库。 他想要使用 BLE radio 构建手柄和受控小车项目。相比于 wifi radio, BLE radio 功耗更低(手柄和小车因此会有更长的续航时间)而且" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-octostudio-bleradio/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-01-14T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-01-14T00:00:00+00:00" />
+
+<meta itemprop="name" content="MicroBlocks 编程案例: 扩展 OctoStudio 库">
+<meta itemprop="description" content="前言 前几天, @yinxi 问我 MicroBlocks 团队何时推出 BLE radio 库。 他想要使用 BLE radio 构建手柄和受控小车项目。相比于 wifi radio, BLE radio 功耗更低(手柄和小车因此会有更长的续航时间)而且"><meta itemprop="datePublished" content="2024-01-14T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-01-14T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1018">
+<meta itemprop="keywords" content="MicroBlocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MicroBlocks 编程案例: 扩展 OctoStudio 库"/>
+<meta name="twitter:description" content="前言 前几天, @yinxi 问我 MicroBlocks 团队何时推出 BLE radio 库。 他想要使用 BLE radio 构建手柄和受控小车项目。相比于 wifi radio, BLE radio 功耗更低(手柄和小车因此会有更长的续航时间)而且"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MicroBlocks 编程案例: 扩展 OctoStudio 库</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-01-14 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#hack">Hack</a></li>
+    <li><a href="#预编译固件">预编译固件</a></li>
+    <li><a href="#进一步">进一步</a>
+      <ul>
+        <li><a href="#simple-ble-radio">Simple BLE Radio</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>前几天, @yinxi 问我 MicroBlocks 团队何时推出 BLE radio 库。 他想要使用 BLE radio 构建手柄和受控小车项目。相比于 wifi radio, BLE radio 功耗更低(手柄和小车因此会有更长的续航时间)而且可以带到户外去玩。</p>
+<p>BLE radio 基于这样一种想法: 它像 <a href="https://microbit.org/get-started/features/radio-and-pins/">micro:bit radio</a>, 在无需配对的情况下, 两个板子之间广播消息来达成通信的目的。 BLE radio 与 micro:bit radio 的不同之处在于, 它支持任何有蓝牙的板子之间的通信, 即使它们采用不同的芯片。</p>
+<p>John Maloney 之前在邮件里与我讨论了关于 BLE radio 的构想:</p>
+<p><img src="/post/img/BLE-radio-draft.png" alt=""></p>
+<p>在 CodeLab 群里, 有用户发现 OctoStudio 库不仅可支持手机(安装 OctoStudio 软件) 与板子的通信, 也可支持两个板子之间的通信, 就像一个弱化版本的 BLE radio 。</p>
+<p>OctoStudio 目前只支持 5 种不同的消息信号, 这是 MIT 团队出于易用性考虑刻意做出的设计，而不是因为技术限制。 这对于映射手柄的按钮来说，信号类型太少了。</p>
+<p>通过 hack OctoStudio 库, 我们可以将信号数量扩展到 10 个, 这对于映射手柄上的按钮通常是足够的。</p>
+<p>在 MicroBlocks 中编程的乐趣之一就是, 你不仅可以在积木层面理解系统的工作方式，而且可以随意扩展它 !</p>
+<h2 id="hack">Hack</h2>
+<p>只需 hack 两处即可, 其一是下拉菜单，其二是 <code>_OctoInit</code> :</p>
+<p><img src="/post/img/microblocks-OctoStudio-BLEradio-01.png" alt=""></p>
+<p>从这里开始 <a href="https://microblocksfun.cn/run/microblocks.html#project=https://wwj718.github.io/post/img/OctoStudio-Demo-hack.ubp">OctoStudio-Demo-hack</a></p>
+<h2 id="预编译固件">预编译固件</h2>
+<p>目前官方最新的固件, 用于两个板子通信经常会丢失消息(但在板子与手机之间非常稳定)。下边这个固件提高了板子之间使用 OctoStudio 通信的稳定性:</p>
+<ul>
+<li><a href="https://wwj718.github.io/post/img/esp32-fixocto-20240116.bin">esp32-fixocto-20240116.bin</a></li>
+<li><a href="https://wwj718.github.io/post/img/microbitV2-fixocto-20240116.hex">microbitV2-fixocto-20240116.hex</a></li>
+</ul>
+<p>这些改进会部署到下一个版本里。</p>
+<p><a href="https://microblocksfun.cn/run/microblocks.html">在线</a>刷入固件:</p>
+<p><img src="/post/img/install-esp-firmware-from-url.png" alt=""></p>
+<h2 id="进一步">进一步</h2>
+<p>@yinxi 还提出&quot;多个手柄遥控不同的车&quot;的问题, micro:bit radio 通过不同的 &ldquo;广播分组&rdquo; 解决这个问题。John 规划中的 BLE radio 也支持广播分组。</p>
+<p>OctoStudio 目前还支持广播分组, 如果我们愿意的话，我们可以进一步扩展 OctoStudio 库来支持广播分组。但需要修改 vm 中代码, 关键的代码是 <a href="https://github.com/MicroBlocksCN/smallvm/blob/devCN/vm/blePrims.cpp#L172">shape_id = deviceName.back() - &lsquo;0&rsquo;;</a></p>
+<p>我们可以将广播消息的倒数第二个数字用作&quot;分组标识&quot;(从 0 到 9 一共也是 10 组)</p>
+<p>目前的 OctoStudio 广播机制有 8 个字符位置是可用的, 可扩展性很不错，即使仅使用数字(10)和大小写字母(26x2)，它也允许我们传递 218340105584896 种不同的信号(10+26x2 的 8 次方).</p>
+<p>但考虑到 MIT 团队没有公开 OctoStudio 广播消息的协议细节, 并且无法知道它在未来会如何变化, John 决定在 MicroBlocks 中, 我们实现自己的 BLE radio 协议。</p>
+<h3 id="simple-ble-radio">Simple BLE Radio</h3>
+<p>在正式开始构建 BLE Radio 之前, 我打算先按照上边的思路构建一个简单的版本。</p>
+<p>支持最多 99 个消息通道, 以及最多 6 个字符作为广播消息。</p>
+<p>这是预编的固件:</p>
+<pre><code>- 见下文
+</code></pre>
+<p>这是<a href="https://microblocksfun.cn/run/microblocks.html#project=https://wwj718.github.io/post/img/simple_ble_radio.ubp">示例项目</a></p>
+<p><video width=80% src="/post/img/simple-ble-radio.mp4" controls="controls"></video></p>
+<hr>
+<p><strong>提醒</strong> : 最新版本的 MicroBlocks(1.2.54) 已经支持 Simple BLE Radio (刷入标准固件即可)。 这是 MicroBlocks 的开发方式: 试验性的新功能会通过特定固件推出，供爱好者尝鲜。一旦稳定下来，就努力合并到默认固件里，以开箱可用的易用性提供给所有人.</p>
+<p><img src="/post/img/microblocks-OctoStudio-BLEradio-02.png" alt=""></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-01-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/offline-microblocks-webapp/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">离线版 MicroBlocks webapp</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/microblocks-ble-client/">
+            <span class="next-text nav-default">MicroBlocks 蓝牙客户端库</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

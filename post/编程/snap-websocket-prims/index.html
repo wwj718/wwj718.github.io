@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap! websocket 驱动库 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 在上一篇文章(Snap! 蓝牙驱动库)中, 我们记录了如何通过构建 BLE echo client, 得到通用的 BLE primitives。 Snap 与外部系统的交互, 就消息传递层面" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-websocket-prims/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Snap! websocket 驱动库" />
+<meta property="og:description" content="前言 在上一篇文章(Snap! 蓝牙驱动库)中, 我们记录了如何通过构建 BLE echo client, 得到通用的 BLE primitives。 Snap 与外部系统的交互, 就消息传递层面" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-websocket-prims/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-11-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-11-17T00:00:00+00:00" />
+
+<meta itemprop="name" content="Snap! websocket 驱动库">
+<meta itemprop="description" content="前言 在上一篇文章(Snap! 蓝牙驱动库)中, 我们记录了如何通过构建 BLE echo client, 得到通用的 BLE primitives。 Snap 与外部系统的交互, 就消息传递层面"><meta itemprop="datePublished" content="2023-11-17T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-11-17T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1019">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! websocket 驱动库"/>
+<meta name="twitter:description" content="前言 在上一篇文章(Snap! 蓝牙驱动库)中, 我们记录了如何通过构建 BLE echo client, 得到通用的 BLE primitives。 Snap 与外部系统的交互, 就消息传递层面"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Snap! websocket 驱动库</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-11-17 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>在上一篇文章(<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-ble-library/">Snap! 蓝牙驱动库</a>)中,  我们记录了如何通过构建 BLE echo client, 得到通用的 BLE primitives。</p>
+<p>Snap 与外部系统的交互, 就消息传递层面而言是相似的, 有三种操作: write/read/notify。这三种操作在 Adapter EIM primitives 和 BLE primitives 中都有体现。 read 和 notify 都是为了从外部系统获取数据, 但采用了不同的方式, read 是&quot;拉&quot;模式, notify 是&quot;推&quot;模式。 notify 一般适合使用 callback, 将数据抛到 Snap! 里。</p>
+<p>由于都是 write/read/notify 操作。我们便可以参考 BLE primitives, 实现 websocket primitives。</p>
+<h1 id="如何调试">如何调试</h1>
+<p>上一篇文章写道:</p>
+<blockquote>
+<p>这与调试 HTTP API 颇为相似。调试 HTTP API 时，我们经常需要弄清楚，客户端代码是否按照接口的要求，发送了正确的数据。达成目标的一种方法是构建一个 echo server, 它将我们发送消息原样返回，如一面镜子一样，让客户端知道自己做了什么。 httpbin 是这个领域的出色工具。</p>
+</blockquote>
+<blockquote>
+<p>我想在调试 BLE 客户端(BLE 主机)时，拥有类似的东西，它能够原样返回我发出的数据。我需要构建一个 BLE echo server。有 2 个不错的方案可供选择&hellip;</p>
+</blockquote>
+<p>同样地, 在此也想要一个 echo server , &ldquo;它将我们发送消息原样返回&rdquo;, 有了 echo server的<strong>反馈</strong>, 我们才知道构建出的 primitives , 它做的事情到底对不对。</p>
+<p>使用以下 Python 代码, 可以构建出一个简单的 websocket echo server, 将其命名为 <code>websocket-echo-server.py</code>, 运行之前需要先安装依赖: <code>python -m pip install websockets</code>, 然后你就可以运行它 <code>python websocket-echo-server.py</code>。</p>
+<p>运行起来之后, 可以通过这个url连接它: <code>ws://localhost:8765</code>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># pip install websockets</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">websockets.sync.server</span> <span class="kn">import</span> <span class="n">serve</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">echo</span><span class="p">(</span><span class="n">websocket</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">websocket</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;recv: &#34;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">websocket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">serve</span><span class="p">(</span><span class="n">echo</span><span class="p">,</span> <span class="s2">&#34;localhost&#34;</span><span class="p">,</span> <span class="mi">8765</span><span class="p">)</span> <span class="k">as</span> <span class="n">server</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;websocket echo server is running...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>同步版本:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">websockets</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">echo</span><span class="p">(</span><span class="n">websocket</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">websocket</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">websocket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">websockets</span><span class="o">.</span><span class="n">sync</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">serve</span><span class="p">(</span><span class="n">echo</span><span class="p">)</span> <span class="k">as</span> <span class="n">server</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果你更喜欢在 MicroBlocks 的活性环境, 也可以使用 MicroBlocks(esp32) 运行一个 websocket echo server。</p>
+<p><a href="https://microblocksfun.cn/run/microblocks.html#project=projectName%20%27%27%0A%0Amodule%20main%0Aauthor%20unknown%0Aversion%201%200%20%0Adescription%20%27%27%0Avariables%20message%20%0A%0Ascript%2074%2033%20%7B%0AwhenStarted%0AwifiConnect%20%27Network_Name%27%20%27%27%0A%27start%20WebSocket%20server%27%0Aforever%20%7B%0A%20%20message%20%3D%20%28%27%5Bnet%3AwebSocketLastEvent%5D%27%29%0A%20%20if%20%28message%20%21%3D%20%28booleanConstant%20false%29%29%20%7B%0A%20%20%20%20sayIt%20%28%27ws%20event%20payload%27%20message%29%0A%20%20%20%20%27%5Bnet%3AwebSocketSendToClient%5D%27%20%28%27ws%20event%20payload%27%20message%29%20%28%27ws%20client%20id%27%20message%29%0A%20%20%7D%0A%20%20waitMillis%2050%0A%7D%0A%7D%0A%0Ascript%20287%2033%20%28getIPAddress%29%0A%0A%0Amodule%20%27WebSocket%20server%27%20Comm%0Aauthor%20MicroBlocks%0Aversion%201%201%20%0Atags%20websockets%20network%20%0Adescription%20%27Blocks%20to%20build%20your%20own%20%28very%29%20simple%20websockets%20server.%20The%20websockets%20server%20runs%20on%20port%2081.%27%0A%0A%20%20spec%20%27%20%27%20%27start%20WebSocket%20server%27%20%27start%20WebSocket%20server%27%0A%20%20spec%20%27r%27%20%27%5Bnet%3AwebSocketLastEvent%5D%27%20%27last%20WebSocket%20event%27%0A%20%20spec%20%27r%27%20%27ws%20client%20id%27%20%27client%20ID%20for%20WebSocket%20event%20_%27%20%27str%27%20%27%27%0A%20%20spec%20%27r%27%20%27ws%20event%20payload%27%20%27payload%20for%20WebSocket%20event%20_%27%20%27str%27%20%27%27%0A%20%20spec%20%27r%27%20%27ws%20event%20type%27%20%27type%20of%20WebSocket%20event%20_%27%20%27str%27%20%27%27%0A%20%20spec%20%27%20%27%20%27%5Bnet%3AwebSocketSendToClient%5D%27%20%27send%20_%20to%20WebSocket%20client%20_%27%20%27str%20num%27%20%27Hello%2C%20Client%21%27%200%0A%0Ato%20%27start%20WebSocket%20server%27%20%7B%0A%20%20comment%20%27The%20websockets%20server%20runs%20on%20port%2081.%27%0A%20%20if%20%28%28getIPAddress%29%20%21%3D%20%270.0.0.0%27%29%20%7B%0A%20%20%20%20%27%5Bnet%3AwebSocketStart%5D%27%0A%20%20%7D%20else%20%7B%0A%20%20%20%20sayIt%20%27Not%20Connected%27%0A%20%20%7D%0A%7D%0A%0Ato%20%27ws%20client%20id%27%20event%20%7B%0A%20%20if%20%28and%20%28isType%20event%20%27list%27%29%20%28%28size%20event%29%20%3E%201%29%29%20%7B%0A%20%20%20%20return%20%28at%202%20event%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20return%20%27%27%0A%20%20%7D%0A%7D%0A%0Ato%20%27ws%20event%20payload%27%20event%20%7B%0A%20%20if%20%28and%20%28isType%20event%20%27list%27%29%20%28%28size%20event%29%20%3E%202%29%29%20%7B%0A%20%20%20%20return%20%28at%203%20event%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20return%20%27%27%0A%20%20%7D%0A%7D%0A%0Ato%20%27ws%20event%20type%27%20event%20%7B%0A%20%20if%20%28and%20%28isType%20event%20%27list%27%29%20%28%28size%20event%29%20%3E%200%29%29%20%7B%0A%20%20%20%20return%20%28at%20%28%28at%201%20event%29%20%2B%201%29%20%28%27%5Bdata%3AmakeList%5D%27%20%27error%27%20%27disconnected%27%20%27connected%27%20%27text%20message%27%20%27binary%20message%27%20%27text%20fragment%20start%27%20%27binary%20fragment%20start%27%20%27fragment%27%20%27fragment%20end%27%20%27ping%27%20%27pong%27%20%27waiting%27%29%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20return%20%27%27%0A%20%20%7D%0A%7D%0A%0A%0Amodule%20WiFi%20Comm%0Aauthor%20MicroBlocks%0Aversion%201%206%20%0Atags%20communication%20network%20%0Adescription%20%27Connect%20to%20a%20WiFi%20network.%20Used%20in%20conjunction%20with%20other%20network%20libraries%2C%20such%20as%20HTTP%20client%2C%20HTTP%20server%20or%20Web%20Thing.%0A%27%0A%0A%20%20spec%20%27%20%27%20%27wifiConnect%27%20%27wifi%20connect%20to%20_%20password%20_%20%3A%20IP%20_%20gateway%20_%20subnet%20_%27%20%27str%20str%20auto%20auto%20auto%27%20%27Network_Name%27%20%27%27%20%27192.168.1.42%27%20%27192.168.1.1%27%20%27255.255.255.0%27%0A%20%20spec%20%27%20%27%20%27wifiCreateHotspot%27%20%27wifi%20create%20hotspot%20_%20password%20_%27%20%27str%20str%27%20%27Network_Name%27%20%27Network_Password%27%0A%20%20spec%20%27r%27%20%27getIPAddress%27%20%27IP%20address%27%0A%20%20spec%20%27r%27%20%27%5Bnet%3AmyMAC%5D%27%20%27MAC%20address%27%0A%0Ato%20getIPAddress%20%7B%0A%20%20return%20%28%27%5Bnet%3AmyIPAddress%5D%27%29%0A%7D%0A%0Ato%20wifiConnect%20ssid%20password%20fixedIP%20gatewayIP%20subnetIP%20%7B%0A%20%20if%20%28not%20%28%27%5Bnet%3AhasWiFi%5D%27%29%29%20%7Breturn%7D%0A%20%20%27%5Bnet%3AstopWiFi%5D%27%0A%20%20if%20%28%28pushArgCount%29%20%3C%205%29%20%7B%0A%20%20%20%20%27%5Bnet%3AstartWiFi%5D%27%20ssid%20password%0A%20%20%7D%20else%20%7B%0A%20%20%20%20%27%5Bnet%3AstartWiFi%5D%27%20ssid%20password%20false%20fixedIP%20gatewayIP%20subnetIP%0A%20%20%7D%0A%20%20local%20%27startMSecs%27%20%28millisOp%29%0A%20%20repeatUntil%20%28%28%27%5Bnet%3AmyIPAddress%5D%27%29%20%21%3D%20%270.0.0.0%27%29%20%7B%0A%20%20%20%20comment%20%27Timeout%20after%20N%20seconds%27%0A%20%20%20%20if%20%28%28%28millisOp%29%20-%20startMSecs%29%20%3E%2030000%29%20%7B%0A%20%20%20%20%20%20sayIt%20%27Could%20not%20connect%27%0A%20%20%20%20%20%20return%200%0A%20%20%20%20%7D%0A%20%20%20%20comment%20%27Slow%20blink%20while%20trying%20to%20connect%27%0A%20%20%20%20setUserLED%20true%0A%20%20%20%20waitMillis%20300%0A%20%20%20%20setUserLED%20false%0A%20%20%20%20waitMillis%20300%0A%20%20%7D%0A%20%20repeat%206%20%7B%0A%20%20%20%20comment%20%27Quick%20blinks%20when%20connected%27%0A%20%20%20%20setUserLED%20true%0A%20%20%20%20waitMillis%2050%0A%20%20%20%20setUserLED%20false%0A%20%20%20%20waitMillis%2050%0A%20%20%7D%0A%20%20sayIt%20%27My%20IP%20address%20is%3A%27%20%28%27%5Bnet%3AmyIPAddress%5D%27%29%0A%7D%0A%0Ato%20wifiCreateHotspot%20ssid%20password%20%7B%0A%20%20if%20%28not%20%28%27%5Bnet%3AhasWiFi%5D%27%29%29%20%7Breturn%7D%0A%20%20%27%5Bnet%3AstartWiFi%5D%27%20ssid%20password%20true%0A%20%20if%20%28%27Connected%27%20%21%3D%20%28%27%5Bnet%3AwifiStatus%5D%27%29%29%20%7B%0A%20%20%20%20sayIt%20%27Could%20not%20create%20hotspot%27%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20repeat%206%20%7B%0A%20%20%20%20comment%20%27Quick%20blinks%20when%20connected%27%0A%20%20%20%20setUserLED%20true%0A%20%20%20%20waitMillis%2050%0A%20%20%20%20setUserLED%20false%0A%20%20%20%20waitMillis%2050%0A%20%20%7D%0A%20%20sayIt%20%27My%20IP%20address%20is%3A%27%20%28%27%5Bnet%3AmyIPAddress%5D%27%29%0A%7D%0A%0A">示例代码</a></p>
+<p>运行之后， 你需要先获知板子的 IP 地址, 然后通过这个url连接它<code>ws://IP:81</code> (将IP替换为真实地址)。</p>
+<h1 id="了解-websocket-client-的-api">了解 websocket client 的 API</h1>
+<p>为了制作 websocket primitives, 我们还需要熟悉下 websocket client 的 API。 以下这段简短的代码很好地展示了我们将使用的 API</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Create WebSocket connection.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s2">&#34;ws://localhost:8765&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Connection opened
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">socket</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;open&#34;</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s2">&#34;Hello Server!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Listen for messages
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">socket</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;message&#34;</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Message from server &#34;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">socket</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;disconnected&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// socket.close();
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="编写-primitives">编写 primitives</h1>
+<p>编写 primitives 的工作可以交给 ChatGPT, 但由于我们已经有了 BLE primitives , 手动调整为 websocket primitives 会更快。不然交给 ChatGPT 写, 等它写完后, 我们还是得调整。</p>
+<h1 id="使用-primitives">使用 primitives</h1>
+<p><img src="/post/img/Snap-websocket-prims-01.png" alt=""></p>
+<p>将这些积木放入自定义积木里, 就可以构建出 websocket echo client, 和上一篇文章基本相同, 就不在此展示了，作为给读者的课后作业 :)</p>
+<!--
+## 注意 
+
+需要使用 http 版本，你可以在本地运行本 Snap!
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-ble-library/">Snap! 蓝牙驱动库</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket">MDN WebSocket</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-11-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/microblocks-wireless-makeymakey/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">MicroBlocks 编程案例: 制作无线 Makey Makey</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/microblocks-octostudio/">
+            <span class="next-text nav-default">MicroBlocks ❤️ OctoStudio: 将手机用作 MicroBlocks 的传感器与执行器</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

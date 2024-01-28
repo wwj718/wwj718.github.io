@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>构建自己的智能聊天机器人 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="1 2 3 4 5 6 7 8 说明: 这篇文章读者较多，时常会收到邮件咨询问题， 大多是因为文章落后于源码库，我之后定期更新到最新源码库，大家之后发邮件,也麻" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/create-a-smart-chat-bot/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="构建自己的智能聊天机器人" />
+<meta property="og:description" content="1 2 3 4 5 6 7 8 说明: 这篇文章读者较多，时常会收到邮件咨询问题， 大多是因为文章落后于源码库，我之后定期更新到最新源码库，大家之后发邮件,也麻" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/create-a-smart-chat-bot/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-08-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-08-13T00:00:00+00:00" />
+
+<meta itemprop="name" content="构建自己的智能聊天机器人">
+<meta itemprop="description" content="1 2 3 4 5 6 7 8 说明: 这篇文章读者较多，时常会收到邮件咨询问题， 大多是因为文章落后于源码库，我之后定期更新到最新源码库，大家之后发邮件,也麻"><meta itemprop="datePublished" content="2016-08-13T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-08-13T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3928">
+<meta itemprop="keywords" content="data," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="构建自己的智能聊天机器人"/>
+<meta name="twitter:description" content="1 2 3 4 5 6 7 8 说明: 这篇文章读者较多，时常会收到邮件咨询问题， 大多是因为文章落后于源码库，我之后定期更新到最新源码库，大家之后发邮件,也麻"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">构建自己的智能聊天机器人</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-08-13 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE/"> 数据 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#原理">原理</a></li>
+    <li><a href="#安装和使用">安装和使用</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#基本使用">基本使用</a></li>
+        <li><a href="#采用中文语料库">采用中文语料库</a></li>
+        <li><a href="#开始玩耍">开始玩耍</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#默认配置">默认配置</a></li>
+        <li><a href="#手动训练">手动训练</a></li>
+        <li><a href="#只读模式">只读模式</a></li>
+        <li><a href="#创建自己的训练类">创建自己的训练类</a></li>
+        <li><a href="#创建自己的adapters">创建自己的adapters</a></li>
+        <li><a href="#案例">案例</a></li>
+        <li><a href="#训练好的模型如何分发">训练好的模型如何分发</a></li>
+        <li><a href="#算法相关">算法相关</a></li>
+        <li><a href="#其他算法">其他算法</a></li>
+        <li><a href="#nltk的使用">nltk的使用</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">说明: 这篇文章读者较多，时常会收到邮件咨询问题， 大多是因为文章落后于源码库，我之后定期更新到最新源码库，大家之后发邮件,也麻烦注明使用的依赖库版本
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 2020.03.03
+</span></span><span class="line"><span class="cl">这篇文章是三年多以前写的，最近还收到一些邮件讨论这个
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">如果你在构建一个笔记严肃的聊天机器人项目，推荐使用rasa: https://github.com/RasaHQ/rasa
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">当然ChatterBot是一个很好的项目，让你理解chatbot的构成。
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>The answer to life, universe and everything is 42     &ndash;deepThought</p>
+</blockquote>
+<p><img src="/post/img/bot1983acb5.png" alt=""></p>
+<p>今年的F8 开发者大会,Facebook大谈他们看好聊天机器人的未来 。通过这些聊天机器人，用户可以在交谈中完成许多任务，在线购物，航班查询、组织会议等。如此一来，用户再不必下载一堆app,而只需打开一个简单的文本对话框，你就可以对着它说：神灯神灯，我的第三个愿望是我还要三个愿望</p>
+<p>你说不定想到了：hi siri</p>
+<p>说不定又是一次用户入口的重新洗牌，这样就不难解释科技界的大公司们蜂拥而至了</p>
+<h1 id="缘起">缘起</h1>
+<p>我一直对自然语言处理（NLP）兴致勃勃，这大半年对机器学习/深度学习兴致盎然，而聊天机器人恰好结合了两者。</p>
+<p>对聊天机器人最早的兴趣可能追溯到大学。当时关注过一段时间风靡人人网的小黄鸡，后来发现它只是调用了一个闭源的云服务，转而折腾AIML。</p>
+<p>最近下班后喜欢到星巴克看看课程（近期在跟udacity的这门课：<a href="https://classroom.udacity.com/courses/ud730">Deep Learning</a>），写写博客,今天也是如此，怕往后的时间会更多花在深度学习上（对RNN尤其感兴趣），这几天陆续对折腾过的聊天机器人做个笔记</p>
+<h1 id="聊天机器人--开源框架">聊天机器人 &amp; 开源框架</h1>
+<p>目前聊天这块的云服务倒是不少，facebook也好微软也好，都有自己的框架。相比而言，开源的项目倒是没有很耀眼的，也许是起步不久的原因，大神们还在憋大招。</p>
+<p>我们到github逛一圈，发现<a href="https://github.com/gunthercox/ChatterBot">ChatterBot</a>看起来挺酷, 项目活跃, 文档清晰，代码也算干净利落。</p>
+<p>由于项目还小，源码读起来十分容易，作为构建自己的智能聊天机器人的脚手架是不错的</p>
+<h1 id="chatterbot">ChatterBot</h1>
+<p>ChatterBot是一个基于机器学习的聊天机器人引擎,构建在python上,可以<code>从已有的对话中学习</code>, 该项目的设计允许它接入任何语言</p>
+<h2 id="原理">原理</h2>
+<p>一个未经训练的ChatterBot机器人,并没有与用户交谈所需的知识。每当用户输入一句话，机器人将存下它，同时也存下答复的句子。 随着机器人接受的输入的增加，它能够回答的问题的数量和准确度都会相应提升.程序是如何响应用户输入的呢？首先从已知句子中匹配出与用户输入最相近的句子（如何衡量<code>相近</code>, 大家可以想想）,之后找到最有可能的回复，那么如何得出<code>最有可能</code>的回复呢？由所有和机器交流过的人们，对这个输入问题（匹配过的）的各个回答的频率决定</p>
+<h2 id="安装和使用">安装和使用</h2>
+<h3 id="安装">安装</h3>
+<p>pip install chatterbot (我的当前版本是：chatterbot==0.5.4)</p>
+<h3 id="基本使用">基本使用</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">chatterbot</span> <span class="kn">import</span> <span class="n">ChatBot</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">chatterbot.trainers</span> <span class="kn">import</span> <span class="n">ChatterBotCorpusTrainer</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">chatbot</span> <span class="o">=</span> <span class="n">ChatBot</span><span class="p">(</span><span class="s2">&#34;myBot&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">chatbot</span><span class="o">.</span><span class="n">set_trainer</span><span class="p">(</span><span class="n">ChatterBotCorpusTrainer</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 使用英文语料库训练它</span>
+</span></span><span class="line"><span class="cl"><span class="n">chatbot</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="s2">&#34;chatterbot.corpus.english&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 开始对话 </span>
+</span></span><span class="line"><span class="cl"><span class="n">chatbot</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="s2">&#34;Hello, how are you today?&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="采用中文语料库">采用中文语料库</h3>
+<p>我之前给这个项目添加了中文语料库,在新版本中可以直接使用</p>
+<p>使用中文语料库来训练机器人(仅支持python3)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">chatterbot</span> <span class="kn">import</span> <span class="n">ChatBot</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">chatterbot.trainers</span> <span class="kn">import</span> <span class="n">ChatterBotCorpusTrainer</span>
+</span></span><span class="line"><span class="cl"><span class="n">deepThought</span> <span class="o">=</span> <span class="n">ChatBot</span><span class="p">(</span><span class="s2">&#34;deepThought&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">deepThought</span><span class="o">.</span><span class="n">set_trainer</span><span class="p">(</span><span class="n">ChatterBotCorpusTrainer</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 使用中文语料库训练它</span>
+</span></span><span class="line"><span class="cl"><span class="n">deepThought</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="s2">&#34;chatterbot.corpus.chinese&#34;</span><span class="p">)</span>  <span class="c1"># 语料库</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>&mdash;&mdash;&mdash;&mdash;更新于2016.08.30</p>
+<p>我今天在pypi上看到，0.4.6版本（08.14号上传）已经把中文预料库包含在内了，直接pip3 install ChatterBot就行</p>
+<p>&mdash;&mdash;&mdash;&mdash;更新于2017.1.4</p>
+<p>需要注意的是，python2中使用，不能直接用语料训练，需要手动训练</p>
+<p>参见FAQ中的 手动训练(手动训练可以直接在python2中使用中文)</p>
+<h3 id="开始玩耍">开始玩耍</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">deepThought</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="s2">&#34;很高兴认识你&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">deepThought</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="s2">&#34;嗨，最近如何?&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">deepThought</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="s2">&#34;复杂优于晦涩&#34;</span><span class="p">))</span> <span class="c1">#语出 The Zen of Python</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">deepThought</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="s2">&#34;面对模棱两可，拒绝猜测的诱惑.&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># print(deepThought.get_response(&#34;生命、宇宙以及世间万物的终极答案是什么?&#34;))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="faq非官方">FAQ（非官方）</h1>
+<h3 id="默认配置">默认配置</h3>
+<p>默认情况下, ChatterBot 使用 <code>JsonDatabaseAdapter</code>作为storage adapter,使用 <code>ClosestMatchAdapter</code> 作为 logic adapter, 使用 <code>VariableInputTypeAdapter</code> 作为 input adapter</p>
+<h3 id="手动训练">手动训练</h3>
+<p>稀土掘金上的小伙伴<code>@guoweikuang</code>问道&quot;采用中文语料库那个地方是怎么操作的&quot;，下边补充手动训练的办法。对原理有兴趣可以翻阅源码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">chatterbot</span> <span class="kn">import</span> <span class="n">ChatBot</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">chatterbot.trainers</span> <span class="kn">import</span> <span class="n">ListTrainer</span>
+</span></span><span class="line"><span class="cl"><span class="n">deepThought</span> <span class="o">=</span> <span class="n">ChatBot</span><span class="p">(</span><span class="s2">&#34;Training demo&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">deepThought</span><span class="o">.</span><span class="n">set_trainer</span><span class="p">(</span><span class="n">ListTrainer</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">deepThought</span><span class="o">.</span><span class="n">train</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;嗳，渡边君，真喜欢我?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;那还用说?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;那么，可依得我两件事?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;三件也依得&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># test</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">deepThought</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="s2">&#34;真喜欢我?&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">deepThought</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="s2">&#34;可依得我两件事?&#34;</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<p>&mdash;&mdash;&mdash;-更新于2016.10.26</p>
+<p>通过设置好编码环境我们可以在python2使用中文训练机器人,这样就不需要在python2/3中来回切换了（我把它封装为服务不存在这个问题，且效率提高）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span><span class="n">reload</span><span class="p">(</span><span class="n">sys</span><span class="p">);</span><span class="n">sys</span><span class="o">.</span><span class="n">setdefaultencoding</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">chatterbot</span> <span class="kn">import</span> <span class="n">ChatBot</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">chatterbot.trainers</span> <span class="kn">import</span> <span class="n">ListTrainer</span>
+</span></span><span class="line"><span class="cl"><span class="n">deepThought</span> <span class="o">=</span> <span class="n">ChatBot</span><span class="p">(</span><span class="s2">&#34;Training demo&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">deepThought</span><span class="o">.</span><span class="n">set_trainer</span><span class="p">(</span><span class="n">ListTrainer</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">deepThought</span><span class="o">.</span><span class="n">train</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;嗳，渡边君，真喜欢我?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;那还用说?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;那么，可依得我两件事?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;三件也依得&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># test</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">deepThought</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="s2">&#34;真喜欢我?&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">deepThought</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="s2">&#34;可依得我两件事?&#34;</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="只读模式">只读模式</h3>
+<p><code>chatbot = ChatBot(&quot;wwjtest&quot;, read_only=True)</code>  //否则bot会学习每个输入</p>
+<h3 id="创建自己的训练类">创建自己的训练类</h3>
+<p><a href="https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/training">chatterbot/training</a></p>
+<h3 id="创建自己的adapters">创建自己的adapters</h3>
+<p>参考默认使用的<a href="http://chatterbot.readthedocs.io/en/latest/_modules/chatterbot/adapters/logic/closest_match.html#ClosestMatchAdapter">ClosestMatchAdapter</a>、<a href="http://chatterbot.readthedocs.io/en/latest/_modules/chatterbot/adapters/input/variable_input_type_adapter.html#VariableInputTypeAdapter">VariableInputTypeAdapter</a>即可</p>
+<p>诸如我们可以写一个输入/输出 adapters，对接到微信（我偏好werobot）</p>
+<p>io的一个案例是<a href="https://github.com/gunthercox/chatterbot-voice">chatterbot-voice</a>（使用方法参考<a href="https://github.com/gunthercox/chatterbot-voice/blob/master/examples/example.py">examples/example.py</a>），这个adapters让我们可以使用语音与我们的机器人沟通，原理很简单，我此前折腾过<a href="https://github.com/wwj718/PyBaiduYuyin">BaiduYuyin</a>，国内用户可以使用它</p>
+<h3 id="案例">案例</h3>
+<p>参考<a href="https://github.com/gunthercox/ChatterBot/tree/master/examples">examples</a> ，案例中已经有很多种机器人了</p>
+<h3 id="训练好的模型如何分发">训练好的模型如何分发</h3>
+<p>训练好的数据，默认存在<code>./database.db</code>（参考<a href="https://github.com/gunthercox/ChatterBot/blob/master/chatterbot/adapters/storage/jsondatabase.py">jsondatabase.py</a>）,不是sqlite数据库，实际是<a href="https://github.com/gunthercox/jsondb">jsondb</a>，对json做了封装（参考<a href="https://github.com/gunthercox/jsondb/blob/master/jsondb/db.py">jsondb/db.py</a>）</p>
+<h3 id="算法相关">算法相关</h3>
+<p>默认情况下，使用 <a href="https://github.com/gunthercox/ChatterBot/blob/master/chatterbot/adapters/logic/closest_match.py#L5">ClosestMatchAdapter</a> 作为 logic adapter ，用来找出与用户输入最接近的一句话</p>
+<p>核心代码为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">fuzzywuzzy</span> <span class="kn">import</span> <span class="n">process</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">closest_match</span><span class="p">,</span> <span class="n">confidence</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">input_statement</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">text_of_all_statements</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">limit</span><span class="o">=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里我们用到了<a href="https://github.com/seatgeek/fuzzywuzzy">fuzzywuzzy</a>，具体用法参考<a href="https://github.com/seatgeek/fuzzywuzzy#process">fuzzywuzzy#process</a></p>
+<p>fuzzywuzzy用于计算句子之间的相似度，采用的字符串相似度算法为 Levenshtein Distance(编辑距离算法)</p>
+<h4 id="levenshtein-distance引用自维基百科">Levenshtein Distance（引用自维基百科）</h4>
+<p>编辑距离，又称Levenshtein距离（也叫做Edit Distance），是指两个字串之间，由一个转成另一个所需的最少编辑操作次数，如果它们的距离越大，说明它们越是不同。允许的编辑操作包括：</p>
+<ul>
+<li>将一个字符替换成另一个字符</li>
+<li>插入一个字符</li>
+<li>删除一个字符。</li>
+</ul>
+<p>从上述描述我们可以看出，这种算法适用于任何文字，而且我们使用<code>process.extract</code>时,使用中文不会影响相似度度量的准确性。当然我们也可以看出这种算法的缺陷，它无法理解语义的相似性，甚至连同义词都完全无法处理。这是一个十分明显的短板，有必要根据你的问题域重新实现一套度量文本相似的logic adapter</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">fuzzywuzzy</span> <span class="kn">import</span> <span class="n">fuzz</span>
+</span></span><span class="line"><span class="cl"><span class="n">fuzz</span><span class="o">.</span><span class="n">ratio</span><span class="p">(</span><span class="sa">u</span><span class="s2">&#34;你好&#34;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&#34;你好!&#34;</span><span class="p">)</span> <span class="c1">#80 </span>
+</span></span><span class="line"><span class="cl"><span class="n">fuzz</span><span class="o">.</span><span class="n">ratio</span><span class="p">(</span><span class="sa">u</span><span class="s2">&#34;你好&#34;</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&#34;你好&#34;</span><span class="p">)</span> <span class="c1">#100 </span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="其他算法">其他算法</h3>
+<p><a href="https://github.com/gunthercox/ChatterBot/blob/master/chatterbot/adapters/logic/time_adapter.py">time_adapter.py</a>中用到朴素贝叶斯:<code>from textblob.classifiers import NaiveBayesClassifier</code>，这里也是目前唯一一处引用textblob的地方</p>
+<p>接受的数据很简单，形如<code>[(&quot;what time is it&quot;, 1), xxx, xxx,...]</code></p>
+<h3 id="nltk的使用">nltk的使用</h3>
+<p>目前主要用了nltk的<code>word_tokenize</code>、<code>wordnet</code>和<code>stopwords</code></p>
+<h1 id="todo">todo</h1>
+<p>这是我最近在做的</p>
+<ul>
+<li>使这个项目能更适合训练中文语料库</li>
+<li>用其他的文本相似算法写一个logic adapter</li>
+<li>加入中文的停用词等（取代nltk的停用词）</li>
+<li>使用<a href="https://github.com/isnowfy/snownlp">snownlp</a>和jieba替代既有依赖（nltk和textblob）</li>
+<li>fork这个项目，采用它的架构，重写一个更适合中文的</li>
+</ul>
+<p>有兴趣跟进的小伙伴，可以关注<a href="https://github.com/wwj718/deepThought">wwj718/deepThought</a></p>
+<h1 id="聊天语料库">聊天语料库</h1>
+<p>聊天语料涉及隐私，网上几乎没有公开的中文语料，我们开脑洞：</p>
+<ul>
+<li>siri对小冰（用wechat api使对话可编程）</li>
+<li>柏拉图《对话录》</li>
+<li>《论语》</li>
+<li>古龙小说</li>
+<li>电影字幕</li>
+</ul>
+<h1 id="坑">坑</h1>
+<p>ChatterBot本身支持python2/python3，如果要使用中文，目前只支持python3</p>
+<p>Python2中文问题出在:</p>
+<p><code>statement_list = self.context.storage.get_response_statements()</code></p>
+<p>得到的<code>statement_list</code>是编码错误的句子列表（编解码问题）</p>
+<p>解决思路可以参考我的这篇博客：<a href="http://blog.just4fun.site/decode-and-encode-note.html">编码相关的笔记</a></p>
+<h1 id="结语">结语</h1>
+<p>当前这个项目给出了一个漂亮的bot骨架，插件式的设计，十分利于插入强大的功能，这也是这个项目中我最喜欢的地方，就chat bot功能而言，功能比较简单、清晰</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-08-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/data/">data</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/edx-mobile-enrollment/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">为Open edX移动端实现选课功能</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%AE%97%E6%B3%95/algorithm-trie/">
+            <span class="next-text nav-default">算法笔记之trie树</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

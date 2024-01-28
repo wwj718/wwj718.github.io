@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>elasticsearch学习笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="介绍 Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎。它能帮助你搜索、分析和浏览数据，而往往大家并没有在某个项目一开始就预料到需要这些功能。Elas" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/elasticsearch-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="elasticsearch学习笔记" />
+<meta property="og:description" content="介绍 Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎。它能帮助你搜索、分析和浏览数据，而往往大家并没有在某个项目一开始就预料到需要这些功能。Elas" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/elasticsearch-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-04-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-04-16T00:00:00+00:00" />
+
+<meta itemprop="name" content="elasticsearch学习笔记">
+<meta itemprop="description" content="介绍 Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎。它能帮助你搜索、分析和浏览数据，而往往大家并没有在某个项目一开始就预料到需要这些功能。Elas"><meta itemprop="datePublished" content="2016-04-16T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-04-16T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1694">
+<meta itemprop="keywords" content="dev-tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="elasticsearch学习笔记"/>
+<meta name="twitter:description" content="介绍 Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎。它能帮助你搜索、分析和浏览数据，而往往大家并没有在某个项目一开始就预料到需要这些功能。Elas"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">elasticsearch学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-04-16 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#导入数据">导入数据</a></li>
+        <li><a href="#搜索">搜索</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#用例">用例</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#分析和分析器httpesxiaoleilucom052_mapping_analysis40_analysishtml"><a href="http://es.xiaoleilu.com/052_Mapping_Analysis/40_Analysis.html">分析和分析器</a></a></li>
+        <li><a href="#object嵌套的索引httpesxiaoleilucom052_mapping_analysis50_complex_datatypeshtml"><a href="http://es.xiaoleilu.com/052_Mapping_Analysis/50_Complex_datatypes.html">object嵌套的索引</a></a></li>
+        <li><a href="#映射和分析httpesxiaoleilucom052_mapping_analysis00_introhtml"><a href="http://es.xiaoleilu.com/052_Mapping_Analysis/00_Intro.html">映射和分析</a></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="介绍">介绍</h1>
+<p>Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎。它能帮助你搜索、分析和浏览数据，而往往大家并没有在某个项目一开始就预料到需要这些功能。Elasticsearch之所以出现就是为了重新赋予原始数据新的活力。</p>
+<p>学习过程中主要参考:</p>
+<ul>
+<li><a href="https://www.elastic.co/guide/index.html">官方文档</a></li>
+<li><a href="https://www.gitbook.com/book/looly/elasticsearch-the-definitive-guide-cn/details">Elasticsearch权威指南</a></li>
+<li>github中的案例</li>
+</ul>
+<h1 id="提醒">提醒</h1>
+<p>注意先查看自己使用的elasticsearch的版本。Open edX中目前使用的elasticsearch为0.92版，十分落后，以至于许多特性都和最新的版本不一致</p>
+<p>#目的</p>
+<ul>
+<li>for open edx</li>
+<li>for my note system</li>
+<li>full-text search</li>
+</ul>
+<p>#关键概念
+<code>index -&gt; type -&gt; document</code></p>
+<p>类比数据库的话，我们可以认为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">Relational DB -&gt; Databases -&gt; Tables -&gt; Rows -&gt; Columns
+</span></span><span class="line"><span class="cl">Elasticsearch -&gt; Indices   -&gt; Types  -&gt; Documents -&gt; Fields
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="install">install</h1>
+<p>当然是使用docker，最为方便啦</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo docker pull elasticsearch
+</span></span><span class="line"><span class="cl">sudo mkdir -p /data/elasticsearch
+</span></span><span class="line"><span class="cl">sudo docker run -d --name elasticsearch -p 9200:9200 -v /data/elasticsearch:/usr/share/elasticsearch/data elasticsearch
+</span></span><span class="line"><span class="cl">sudo docker <span class="nb">exec</span>  elasticsearch env <span class="c1">#我的是：ELASTICSEARCH_VERSION=2.3.0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>#quick start
+我们跟着这个案例走一遍:<a href="https://github.com/siddontang/elasticsearch-note/blob/master/searching_data.md">searching_data</a></p>
+<p>案例中有用到<code>_bulk</code>，关于<code>_bulk</code>,参考这里:<a href="http://stackoverflow.com/questions/23798433/json-bulk-import-to-elasticstearch">JSON Bulk import to Elasticstearch</a></p>
+<p>我们来看一下原始数据(<a href="https://raw.githubusercontent.com/siddontang/elasticsearch-note/master/data/book_document.json">book_document.json</a>)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;index&#34;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&#34;_index&#34;</span><span class="p">:</span> <span class="s2">&#34;library&#34;</span><span class="p">,</span> <span class="nt">&#34;_type&#34;</span><span class="p">:</span> <span class="s2">&#34;book&#34;</span><span class="p">,</span> <span class="nt">&#34;_id&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">}}</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;title&#34;</span><span class="p">:</span> <span class="s2">&#34;All Quiet on the Western Front&#34;</span><span class="p">,</span><span class="nt">&#34;otitle&#34;</span><span class="p">:</span> <span class="s2">&#34;Im Westen nichts Neues&#34;</span><span class="p">,</span><span class="nt">&#34;author&#34;</span><span class="p">:</span> <span class="s2">&#34;Erich Maria Remarque&#34;</span><span class="p">,</span><span class="nt">&#34;year&#34;</span><span class="p">:</span> <span class="mi">1929</span><span class="p">,</span><span class="nt">&#34;characters&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;Paul Bäumer&#34;</span><span class="p">,</span> <span class="s2">&#34;Albert Kropp&#34;</span><span class="p">,</span> <span class="s2">&#34;Haie Westhus&#34;</span><span class="p">,</span> <span class="s2">&#34;Fredrich Müller&#34;</span><span class="p">,</span> <span class="s2">&#34;Stanislaus Katczinsky&#34;</span><span class="p">,</span> <span class="s2">&#34;Tjaden&#34;</span><span class="p">],</span><span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;novel&#34;</span><span class="p">],</span><span class="nt">&#34;copies&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nt">&#34;available&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span><span class="nt">&#34;section&#34;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;index&#34;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&#34;_index&#34;</span><span class="p">:</span> <span class="s2">&#34;library&#34;</span><span class="p">,</span> <span class="nt">&#34;_type&#34;</span><span class="p">:</span> <span class="s2">&#34;book&#34;</span><span class="p">,</span> <span class="nt">&#34;_id&#34;</span><span class="p">:</span> <span class="s2">&#34;2&#34;</span><span class="p">}}</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;title&#34;</span><span class="p">:</span> <span class="s2">&#34;Catch-22&#34;</span><span class="p">,</span><span class="nt">&#34;author&#34;</span><span class="p">:</span> <span class="s2">&#34;Joseph Heller&#34;</span><span class="p">,</span><span class="nt">&#34;year&#34;</span><span class="p">:</span> <span class="mi">1961</span><span class="p">,</span><span class="nt">&#34;characters&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;John Yossarian&#34;</span><span class="p">,</span> <span class="s2">&#34;Captain Aardvark&#34;</span><span class="p">,</span><span class="s2">&#34;Chaplain Tappman&#34;</span><span class="p">,</span> <span class="s2">&#34;Colonel Cathcart&#34;</span><span class="p">,</span> <span class="s2">&#34;Doctor Daneeka&#34;</span><span class="p">],</span><span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;novel&#34;</span><span class="p">],</span><span class="nt">&#34;copies&#34;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="nt">&#34;available&#34;</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span><span class="nt">&#34;section&#34;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;index&#34;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&#34;_index&#34;</span><span class="p">:</span> <span class="s2">&#34;library&#34;</span><span class="p">,</span> <span class="nt">&#34;_type&#34;</span><span class="p">:</span> <span class="s2">&#34;book&#34;</span><span class="p">,</span> <span class="nt">&#34;_id&#34;</span><span class="p">:</span> <span class="s2">&#34;3&#34;</span><span class="p">}}</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;title&#34;</span><span class="p">:</span> <span class="s2">&#34;The Complete Sherlock Holmes&#34;</span><span class="p">,</span><span class="nt">&#34;author&#34;</span><span class="p">:</span> <span class="s2">&#34;Arthur Conan Doyle&#34;</span><span class="p">,</span><span class="nt">&#34;year&#34;</span><span class="p">:</span> <span class="mi">1936</span><span class="p">,</span><span class="nt">&#34;characters&#34;</span><span class="p">:[</span><span class="s2">&#34;Sherlock Holmes&#34;</span><span class="p">,</span><span class="s2">&#34;Dr. Watson&#34;</span><span class="p">,</span> <span class="s2">&#34;G. Lestrade&#34;</span><span class="p">],</span><span class="nt">&#34;tags&#34;</span><span class="p">:[],</span><span class="nt">&#34;copies&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nt">&#34;available&#34;</span> <span class="p">:</span> <span class="kc">false</span><span class="p">,</span> <span class="nt">&#34;section&#34;</span> <span class="p">:</span> <span class="mi">12</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;index&#34;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&#34;_index&#34;</span><span class="p">:</span> <span class="s2">&#34;library&#34;</span><span class="p">,</span> <span class="nt">&#34;_type&#34;</span><span class="p">:</span> <span class="s2">&#34;book&#34;</span><span class="p">,</span> <span class="nt">&#34;_id&#34;</span><span class="p">:</span> <span class="s2">&#34;4&#34;</span><span class="p">}}</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;title&#34;</span><span class="p">:</span> <span class="s2">&#34;Crime and Punishment&#34;</span><span class="p">,</span><span class="nt">&#34;otitle&#34;</span><span class="p">:</span> <span class="s2">&#34;Преступлéние и наказáние&#34;</span><span class="p">,</span><span class="nt">&#34;author&#34;</span><span class="p">:</span> <span class="s2">&#34;Fyodor Dostoevsky&#34;</span><span class="p">,</span><span class="nt">&#34;year&#34;</span><span class="p">:</span> <span class="mi">1886</span><span class="p">,</span><span class="nt">&#34;characters&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;Raskolnikov&#34;</span><span class="p">,</span> <span class="s2">&#34;Sofia Semyonovna Marmeladova&#34;</span><span class="p">],</span><span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">[],</span><span class="nt">&#34;copies&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nt">&#34;available&#34;</span> <span class="p">:</span> <span class="kc">true</span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>交互工具使用httpie取代curl</p>
+<h3 id="导入数据">导入数据</h3>
+<p>http POST :9200/_bulk &lt; book_document.json</p>
+<p>http http://localhost:9200/library/book/_count , 一共有4条数据</p>
+<h3 id="搜索">搜索</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">http GET :9200/library/book/_search query:<span class="o">=</span><span class="s1">&#39;{&#34;query_string&#34;:{&#34;query&#34;:&#34;title:crime&#34;}}&#39;</span> <span class="c1">#/&lt;index&gt;/&lt;type&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">http GET :9200/library/book/_search query:<span class="o">=</span><span class="s1">&#39;{&#34;query&#34;:{&#34;match_all&#34;:{}}}&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="日常管理">日常管理</h1>
+<ul>
+<li>列出所有index：/_cat/indices?v (http localhost:9200/_cat/indices?v)
+<ul>
+<li>而在0.92版本中则要使用/_status (http localhost:9200/_status),旧版的文档参考<a href="https://www.elastic.co/guide/en/elasticsearch/reference/0.90/index.html">这里</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="用例">用例</h3>
+<p>如果你在Open edX中启用课程/内容搜索功能，那么课程数据将被索引到elasticsearch里。目前这部分有一个问题，当课程被删除后索引还存在，如果不手动删除，用户还能检索出课程。这是个bug</p>
+<p>我们先探索索引的结构</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">http localhost:9200/_status
+</span></span><span class="line"><span class="cl">http localhost:9200/courseware_index/_status
+</span></span><span class="line"><span class="cl">http localhost:9200/courseware_index/_search
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1">#查找特定课程索引</span>
+</span></span><span class="line"><span class="cl">http  localhost:9200/courseware_index/_search?q<span class="o">=</span><span class="s2">&#34;course-v1:edX+DemoX+Demo_Course&#34;</span> <span class="c1">#可以看到index和type</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#删除特定课程索引</span>
+</span></span><span class="line"><span class="cl">http delete <span class="s2">&#34;localhost:9200/courseware_index/course_info/_query?q=course-v1:edX+DemoX+Demo_Course&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#or</span>
+</span></span><span class="line"><span class="cl">curl -XDELETE <span class="s2">&#34;localhost:9200/courseware_index/course_info/_query?q=course-v1:edX+DemoX+Demo_Course&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="一些学习笔记">一些学习笔记</h1>
+<h3 id="分析和分析器httpesxiaoleilucom052_mapping_analysis40_analysishtml"><a href="http://es.xiaoleilu.com/052_Mapping_Analysis/40_Analysis.html">分析和分析器</a></h3>
+<blockquote>
+<p>标准化这些词为标准形式，提高它们的“可搜索性”或“查全率”</p>
+</blockquote>
+<p>####标准分析器
+标准分析器是Elasticsearch默认使用的分析器。对于文本分析，它对于任何语言都是最佳选择（译者注：就是没啥特殊需求，对于任何一个国家的语言，这个分析器就够用了）
+它根据Unicode Consortium的定义的单词边界(word boundaries)来切分文本，然后去掉大部分标点符号。最后，把所有词转为小写</p>
+<h3 id="object嵌套的索引httpesxiaoleilucom052_mapping_analysis50_complex_datatypeshtml"><a href="http://es.xiaoleilu.com/052_Mapping_Analysis/50_Complex_datatypes.html">object嵌套的索引</a></h3>
+<p>Lucene 并不了解内部对象。 一个 Lucene 文件包含一个键-值对应的扁平表单。 为了让 Elasticsearch 可以有效的索引内部对象，将文件转换为扁平格式</p>
+<p>例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;tweet&#34;</span><span class="p">:</span>            <span class="p">[</span><span class="err">elasticsearch</span><span class="p">,</span> <span class="err">flexible</span><span class="p">,</span> <span class="err">very</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;user.id&#34;</span><span class="p">:</span>          <span class="p">[</span><span class="err">@johnsmith</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;user.gender&#34;</span><span class="p">:</span>      <span class="p">[</span><span class="err">male</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;user.age&#34;</span><span class="p">:</span>         <span class="p">[</span><span class="mi">26</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;user.name.full&#34;</span><span class="p">:</span>   <span class="p">[</span><span class="err">john</span><span class="p">,</span> <span class="err">smith</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;user.name.first&#34;</span><span class="p">:</span>  <span class="p">[</span><span class="err">john</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;user.name.last&#34;</span><span class="p">:</span>   <span class="p">[</span><span class="err">smith</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>关联内部对象可解决此类问题，我们称之为嵌套对象</p>
+<h3 id="映射和分析httpesxiaoleilucom052_mapping_analysis00_introhtml"><a href="http://es.xiaoleilu.com/052_Mapping_Analysis/00_Intro.html">映射和分析</a></h3>
+<p>映射(mapping)机制用于进行字段类型确认，将每个字段匹配为一种确定的数据类型(string, number, booleans, date等)。</p>
+<p>#####查看映射
+GET /edx_tracking_log/_mapping/logs</p>
+<p>string类型字段默认值是analyzed，对于不允许全文索引的字段需要注明</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    &#34;tag&#34;: {
+</span></span><span class="line"><span class="cl">        &#34;type&#34;:     &#34;string&#34;,
+</span></span><span class="line"><span class="cl">        &#34;index&#34;:    &#34;not_analyzed&#34;
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="周边">周边</h1>
+<ul>
+<li><a href="https://github.com/dzharii/awesome-elasticsearch">awesome-elasticsearch</a></li>
+<li><a href="https://github.com/medcl/elasticsearch-analysis-ik">中文分词</a></li>
+<li><a href="https://github.com/medcl/elasticsearch-rtf">elasticsearch-rtf</a>：elasticsearch中文发行版</li>
+<li><a href="https://github.com/taskrabbit/elasticsearch-dump">elasticsearch-dump</a></li>
+<li><a href="https://github.com/NLPchina/elasticsearch-sql">elasticsearch-sql</a></li>
+<li><a href="https://github.com/elastic/elasticsearch-dsl-py">elasticsearch-dsl-py</a> : High level Python client for Elasticsearch</li>
+<li><a href="https://github.com/elastic/elasticsearch-py">elasticsearch-py</a>:Official Python low-level client for Elasticsearch.</li>
+<li><a href="https://github.com/Yelp/elastalert">elastalert</a>:找出elk中有问题的数据</li>
+<li><a href="https://github.com/oliver006/elasticsearch-gmail">elasticsearch-gmail</a>: use python</li>
+</ul>
+<p>至于<a href="https://github.com/elastic/logstash">logstash</a>和<a href="https://github.com/elastic/kibana">kibana</a>,将作为单独的章节介绍</p>
+<p>更多案例参考<a href="https://github.com/elastic/examples">elastic/examples</a></p>
+<p>#参考</p>
+<ul>
+<li><a href="https://blog.coding.net/blog/elastic-search">如何使用正确的姿势进行搜索</a></li>
+<li><a href="http://es.xiaoleilu.com/">Elasticsearch 权威指南</a></li>
+<li><a href="http://learnes.net/">Elasticsearch 权威指南</a></li>
+<li><a href="http://www.jianshu.com/p/05cff717563c">Elasticsearch学习笔记</a>:概念清晰
+<ul>
+<li><a href="https://github.com/siddontang/elasticsearch-note">elasticsearch-note</a></li>
+</ul>
+</li>
+<li><a href="http://www.jianshu.com/p/2c7b0c76fa04">Elasticsearch、MongoDB和Hadoop比较</a></li>
+<li><a href="http://www.searchtech.pro/elasticsearch-users-case">一些国外优秀的elasticsearch使用案例</a></li>
+<li><a href="https://www.zhihu.com/question/25535889">elasticsearch（lucene）可以代替NoSQL（mongodb）吗</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-04-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/blockchain-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">区块链学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/kibana4-note/">
+            <span class="next-text nav-default">kibana4学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

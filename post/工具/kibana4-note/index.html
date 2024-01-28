@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>kibana4学习笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="以下是学习Kibana时做的笔记 介绍 Kibana 是为 Elasticsearch设计的开源分析和可视化平台。你可以使用 Kibana 来搜索，查看存储在 Elasticsearch 索引中的数据" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/kibana4-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="kibana4学习笔记" />
+<meta property="og:description" content="以下是学习Kibana时做的笔记 介绍 Kibana 是为 Elasticsearch设计的开源分析和可视化平台。你可以使用 Kibana 来搜索，查看存储在 Elasticsearch 索引中的数据" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/kibana4-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-04-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-04-16T00:00:00+00:00" />
+
+<meta itemprop="name" content="kibana4学习笔记">
+<meta itemprop="description" content="以下是学习Kibana时做的笔记 介绍 Kibana 是为 Elasticsearch设计的开源分析和可视化平台。你可以使用 Kibana 来搜索，查看存储在 Elasticsearch 索引中的数据"><meta itemprop="datePublished" content="2016-04-16T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-04-16T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1728">
+<meta itemprop="keywords" content="dev-tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="kibana4学习笔记"/>
+<meta name="twitter:description" content="以下是学习Kibana时做的笔记 介绍 Kibana 是为 Elasticsearch设计的开源分析和可视化平台。你可以使用 Kibana 来搜索，查看存储在 Elasticsearch 索引中的数据"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">kibana4学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-04-16 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#v3">v3</a></li>
+        <li><a href="#v4">v4</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>以下是学习Kibana时做的笔记</p>
+<h1 id="介绍">介绍</h1>
+<blockquote>
+<p>Kibana 是为 Elasticsearch设计的开源分析和可视化平台。你可以使用 Kibana 来搜索，查看存储在 Elasticsearch 索引中的数据并与之交互。你可以很容易实现高级的数据分析和可视化，以图标的形式展现出来。</p>
+</blockquote>
+<p>Kibana 是 Elasticsearch 分析和搜索仪表板。已经历经了 v1, v2, v3, v4 个版本，分别采用了 PHP，Ruby，AngularJS，JRuby，NodeJS 等不同语言编写。我们主要关注v3 和 v4 的区别。实际项目中尽量用v4</p>
+<p>Kibana 非常容易安装和使用。整个项目都是用 HTML 和 Javascript 写的，所以 Kibana 不需要任何服务器端组件，一个纯文本发布服务器就够了</p>
+<p>ELK 这一套体系，不应该和 Hadoop 体系同质化。定期的离线报表，不是 Elasticsearch 专长所在.</p>
+<p>Kibana 的使用场景，应该集中在两方面：</p>
+<ul>
+<li>实时监控
+<ul>
+<li>通过 histogram 面板，配合不同条件的多个 queries 可以对一个事件走很多个维度组合出不同的时间序列走势。时间序列数据是最常见的监控报警了。</li>
+</ul>
+</li>
+<li>问题分析</li>
+</ul>
+<p>关于 elk 的用途，可以参照其对应的商业产品 splunk 的场景：使用 Splunk 的意义在于使信息收集和处理智能化。而其操作智能化表现在：</p>
+<ul>
+<li>搜索，通过下钻数据排查问题，通过分析根本原因来解决问题；</li>
+<li>实时可见性，可以将对系统的检测和警报结合在一起，便于跟踪 SLA 和性能问题；</li>
+<li>历史分析，可以从中找出趋势和历史模式，行为基线和阈值，生成一致性报告。</li>
+</ul>
+<h1 id="v3--v4对比">v3 / v4对比</h1>
+<p>Kibana4 在使用 <code>Aggregation</code> 接口提供更复杂功能和更高性能的同时，彻底改变了用户的使用形式。用户必须明确了解 ES 各个 aggs 接口的意义，请求和响应体的数据情况；还要想清楚可视化的展现形式，充分理解数据字段的作用。然后才能实现想要的结果。毫无疑问，这是有学习成本的。</p>
+<h1 id="metric-和-bucket是什么">metric 和 bucket是什么</h1>
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html#search-aggregations">aggregations</a></li>
+<li><a href="https://qbox.io/blog/elasticsearch-aggregations">An Introduction to Elasticsearch Aggregations</a></li>
+</ul>
+<h1 id="知识点">知识点</h1>
+<ol>
+<li>你可以在 Visualization页为你的搜索结构构造可视化。每个可视化都是跟一个搜索关联着的</li>
+<li><a href="http://www.code123.cc/docs/kibana-logstash/v4/setup.html">本地安装</a>：跨平台，无依赖
+<ul>
+<li>5601端口</li>
+</ul>
+</li>
+<li>默认情况下，Kibana 会连接运行在 localhost 的 Elasticsearch。要连接其他 Elasticsearch 实例，修改 kibana.yml 里的 Elasticsearch URL，然后重启 Kibana。如何在生产环境下使用 Kibana，阅读 [Using Kibana in a Production Environment].</li>
+<li>索引：
+<ul>
+<li>默认情况下，Kibana 认为你要访问的是通过 Logstash 导入 Elasticsearch 的数据。这时候你可以用默认的 logstash-* 作为你的 index pattern。</li>
+<li>选择一个包含了时间戳的索引字段，可以用来做基于时间的处理。Kibana 会读取索引的映射，然后列出所有包含了时间戳的字段(译者注：实际是字段类型为 date 的字段，而不是“看起来像时间戳”的字段)。如果你的索引没有基于时间的数据，关闭 Index contains time-based events 参数。</li>
+</ul>
+</li>
+<li>默认的时间过滤器设置为最近 15 分钟
+<ul>
+<li>发挥：意味着这是一个real-time展示</li>
+</ul>
+</li>
+<li>discover
+<ul>
+<li>你可以直接输入简单的请求字符串，也就是用 Lucene query syntax，也可以用完整的基于 JSON 的 Elasticsearch Query DSL。</li>
+<li>当你提交搜索的时候，直方图，文档表格，字段列表，都会自动反映成搜索的结果。hits(匹配的文档)总数会在直方图的右上角显示。文档表格显示前 500 个匹配文档。</li>
+<li>默认的，文档倒序排列，最新的文档最先显示</li>
+<li>发挥：要搜素课程太容易了，探索课程和学生staff
+<ul>
+<li>使用 Lucene query syntax就可以做简易搜索</li>
+</ul>
+</li>
+<li>你可以在 Discover 页加载已保存的搜索，也可以用作 visualizations 的基础。保存一个搜索，意味着同时保存下了搜索请求字符串和当前选择的索引模式。</li>
+</ul>
+</li>
+<li>Visualize
+<ul>
+<li>你可以保存可视化，以后再用，或者合并到 dashboard 里。一个可视化可以基于以下几种数据源类型：
+<ul>
+<li>一个新的交互式搜索</li>
+<li>一个已保存的搜索</li>
+<li>一个已保存的可视化</li>
+</ul>
+</li>
+<li>可视化是基于 Elasticsearch 1 引入的聚合(aggregation) 特性。</li>
+<li>可以通过Settings &gt; Edit Saved Objects 来管理已存的可视化。</li>
+<li>用页面左侧的聚合构建器配置你的可视化要用的 metric 和 bucket 聚合。<code>桶(Buckets) 的效果类似于 SQL GROUP BY</code> 语句。</li>
+</ul>
+</li>
+<li>dashboard
+<ul>
+<li>要用仪表板，你需要至少有一个已保存的 visualization。</li>
+<li>分享仪表板
+<ul>
+<li>你可以分享仪表板给其他用户。可以直接分享 Kibana 的仪表板链接，也可以嵌入到你的网页里。</li>
+<li>用户必须有 Kibana 的访问权限才能看到嵌入的仪表板。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="认证鉴权">认证鉴权</h1>
+<h3 id="v3">v3</h3>
+<p>参考：<a href="http://www.code123.cc/docs/kibana-logstash/v3/auth/nodejs-cas.html">用 nodejs 实现 CAS 认证</a></p>
+<h3 id="v4">v4</h3>
+<ul>
+<li><a href="https://github.com/trevan/oauth2">oauth2</a>:k4的oauth2插件</li>
+<li><a href="https://github.com/fangli/kibana-authentication-proxy">kibana-authentication-proxy</a>:kibana的认证机制（cas）</li>
+</ul>
+<h1 id="todo思考">Todo:思考</h1>
+<p>关于可视化 ， 二维平面在展示什么 每种图表的特性。<br>
+一些概念：向量，特征值，降维，桶(Buckets)</p>
+<p>关于图表的可视化，推荐阅读《数据可视化的基本原理与方法》</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://www.code123.cc/docs/kibana-logstash/v4/discover.html">Elasticsearch 官方指南 Kibana 部分</a></li>
+<li><a href="https://github.com/elastic/kibana">kibana</a>:Kibana analytics and search dashboard for Elasticsearch</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-04-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/dev-tools/">dev-tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/elasticsearch-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">elasticsearch学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/logstash-note/">
+            <span class="next-text nav-default">logstash学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

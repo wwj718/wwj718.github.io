@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>openbot之自然语言解析器 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="行程才是目的，顿悟在每日的实践中 &amp;ndash;《UNIX设编程艺术》 openbot openbot是我的业余项目，对NLP和AI的兴趣由来已久，想通过造轮" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/iot/openbot-natural-language-parser/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="openbot之自然语言解析器" />
+<meta property="og:description" content="行程才是目的，顿悟在每日的实践中 &ndash;《UNIX设编程艺术》 openbot openbot是我的业余项目，对NLP和AI的兴趣由来已久，想通过造轮" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/iot/openbot-natural-language-parser/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-12-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-12-26T00:00:00+00:00" />
+
+<meta itemprop="name" content="openbot之自然语言解析器">
+<meta itemprop="description" content="行程才是目的，顿悟在每日的实践中 &ndash;《UNIX设编程艺术》 openbot openbot是我的业余项目，对NLP和AI的兴趣由来已久，想通过造轮"><meta itemprop="datePublished" content="2016-12-26T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-12-26T00:00:00+00:00" />
+<meta itemprop="wordCount" content="3334">
+<meta itemprop="keywords" content="tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="openbot之自然语言解析器"/>
+<meta name="twitter:description" content="行程才是目的，顿悟在每日的实践中 &ndash;《UNIX设编程艺术》 openbot openbot是我的业余项目，对NLP和AI的兴趣由来已久，想通过造轮"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">openbot之自然语言解析器</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-12-26 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#缘起">缘起</a></li>
+        <li><a href="#关于">关于</a></li>
+        <li><a href="#入门">入门</a></li>
+        <li><a href="#使用场景">使用场景</a></li>
+        <li><a href="#问题">问题</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#入门-1">入门</a></li>
+        <li><a href="#支持中文">支持中文</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>行程才是目的，顿悟在每日的实践中 &ndash;《UNIX设编程艺术》</p>
+</blockquote>
+<h1 id="openbot">openbot</h1>
+<p>openbot是我的业余项目，对NLP和AI的兴趣由来已久，想通过造轮子的方式来学习</p>
+<p>我是api.ai的忠实用户，也使用wit.ai（给这个项目的client提交过源码）。国内的yige.ai也很棒。openbot的web/sdk接口模仿着它们设计</p>
+<p>openbot最初作为<a href="https://github.com/wwj718/deepThought">deepThought</a>的衍生项目，相关思路可以参考：<a href="https://github.com/wwj718/deepThought#%E8%A1%8D%E7%94%9F%E8%AE%A1%E5%88%92">deepThought#衍生计划</a></p>
+<p>后来觉得我的兴趣更多在架构，我日常接触的更多的也是架构，想把它变为一个通用的框架：这个框架提供通用的webapp，对外提供restful api，也提供各个语言的sdk以便开发者集成，目前完成了python sdk，nodejs的正在编写</p>
+<p>近期在看《Unix编程艺术》，13.4部分在谈论emacs的设计哲学，作者把emacs视为一个框架，作者说到：</p>
+<blockquote>
+<p>当编制一个框架时，牢记分离原则：框架是机制，尽可能少地包含策略&hellip;尽可能多地将行为分解到使用框架的模块中去</p>
+</blockquote>
+<p>我之前的架构简图如下</p>
+<p><img src="/post/img/openbotda2fa65a.png" alt=""></p>
+<p>openbot致力于将webapp和sdk做得开箱可用，而nlu可插拔，不限制实现策略，只要满足相关约定，即可插入到框架中对最终用户提供nlp服务,在结构图中，我以chatterbot作为bot server为例</p>
+<p>openbot项目近期没有开源，朋友的创业公司打算用它，如果之后合适，我会将其开源。</p>
+<h1 id="语法解析">语法解析</h1>
+<p>轮子哥@vczh有句话在技术圈很有名</p>
+<blockquote>
+<p>程序员的三大浪漫是编译原理，图形学和操作系统</p>
+</blockquote>
+<p>编译原理确实一个有趣的话题，仅其中涉及的词法分析和语法分析就已十分迷人</p>
+<p>相较于解析编程语言（python程序员的入门资料可以参考<a href="http://python3-cookbook.readthedocs.io/zh_CN/latest/c02/p18_tokenizing_text.html">字符串令牌解析</a>），我对解析自然语言的兴趣更大些，一方面来自对人工智能的兴趣，另一方面来自一直关注的分析哲学流派，他们把大多哲学问题处理为语言问题，分析哲学阵营的路德维希.维特根斯坦有句名言</p>
+<blockquote>
+<p>语言的极限便是世界的极限   &ndash;《逻辑哲学论》 5.6</p>
+</blockquote>
+<p>今天的nlp领域同大多涉及智能的领域一样，基于统计/大数据。</p>
+<h1 id="parsetronhttpsgithubcomkitt-aiparsetron"><a href="https://github.com/Kitt-AI/parsetron">parsetron</a></h1>
+<h3 id="缘起">缘起</h3>
+<p>我在<a href="http://blog.just4fun.site/rpi-siri-close-light.html">嘿 Siri 关灯</a>里提到我需要一个自然语言解析器，我准备使用yige.ai来替代Siri，以实现跨平台使用。我又想把它运行在本地</p>
+<p>《嘿 Siri 关灯》是典型的nlp+硬件控制的案例（你可能想到扎尔伯格的<a href="https://m.toutiao.com/i6366879371965235714/?tt_from=weixin_moments&amp;utm_campaign=client_share&amp;app=news_article&amp;utm_source=weixin_moments&amp;iid=6814510930&amp;utm_medium=toutiao_android&amp;wxshare_count=2&amp;pbid=31547628651&amp;from=timeline&amp;isappinstalled=0">Jarvis</a>），在我的场景中（使用自然语言驱动硬件），自然语言处理模块并不需要很强大，对话的模式也很简单，多是<code>嘿siri，把灯打开/把空调打开/把风扇打开</code></p>
+<p>Kitt.ai开放的<a href="Parsetron">https://github.com/Kitt-AI/parsetron</a>是个不错的选择，小巧而实用，可以一言不合就修改源码。</p>
+<h3 id="关于">关于</h3>
+<p>parsetron是个非常有趣的项目，来自Kitt.ai</p>
+<p>parsetron将自己定位在一个足够小的领域（诸如我手头的硬件控制），这样需要处理的语言模式比较单一，绕开了nlp领域会遇到的大多复杂问题(许多问题在学术圈也依旧困难，遑论工程)</p>
+<p>parsetron是个典型的通过降低选择复杂度，让项目变得健壮而实用的案例，按照《UNIX编程艺术》的说法：通过选择合适的目标能有效降低复杂度</p>
+<p>人工智能在一个细分领域可能做得很好，可如果我们一开始提高人们的期望，把它定位在通用型AI，往往容易给人&quot;人工智障&quot;的感觉，目前好用的bot多是找了一个具体的小场景，这也符合UNIX哲学里的：</p>
+<blockquote>
+<p>Do one thing and do well</p>
+</blockquote>
+<p>本文关注如何使用parsetron，之后有时间再分析<a href="http://parsetron.kitt.ai/en/latest/quickstart.html#how-it-works">原理</a>和<a href="https://github.com/Kitt-AI/parsetron">源码</a></p>
+<h3 id="入门">入门</h3>
+<p>安装很简单<code>pip install parsetron</code>,目前只支持python2，parsetron没有任何外部依赖</p>
+<p><a href="http://parsetron.kitt.ai/en/latest/quickstart.html#simple-example">文档</a>里的demo是非常好的入门案例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">parsetron</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">OneOrMore</span><span class="p">,</span> <span class="n">Grammar</span><span class="p">,</span> <span class="n">RobustParser</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">LightGrammar</span><span class="p">(</span><span class="n">Grammar</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">action</span> <span class="o">=</span> <span class="n">Set</span><span class="p">([</span><span class="s1">&#39;change&#39;</span><span class="p">,</span> <span class="s1">&#39;flash&#39;</span><span class="p">,</span> <span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;blink&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">light</span> <span class="o">=</span> <span class="n">Set</span><span class="p">([</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;middle&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">color</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(red|yellow|blue|orange|purple|...)&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">times</span> <span class="o">=</span> <span class="n">Set</span><span class="p">([</span><span class="s1">&#39;once&#39;</span><span class="p">,</span> <span class="s1">&#39;twice&#39;</span><span class="p">,</span> <span class="s1">&#39;three times&#39;</span><span class="p">])</span> <span class="o">|</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+ times&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">one_parse</span> <span class="o">=</span> <span class="n">action</span> <span class="o">+</span> <span class="n">light</span> <span class="o">+</span> <span class="n">Optional</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="o">+</span> <span class="n">color</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GOAL</span> <span class="o">=</span> <span class="n">OneOrMore</span><span class="p">(</span><span class="n">one_parse</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@staticmethod</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="n">parser</span> <span class="o">=</span> <span class="n">RobustParser</span><span class="p">((</span><span class="n">LightGrammar</span><span class="p">()))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sents</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;set my top light to red&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;set my top light to red and change middle light to yellow&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;set my top light to red and change middle light to yellow and flash bottom light twice in blue&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">sents</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tree</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sent</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">one_parse</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;red&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="s1">&#39;&#34;</span><span class="si">%s</span><span class="s1">&#34;&#39;</span> <span class="o">%</span> <span class="n">sent</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="s2">&#34;parse tree:&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="n">tree</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="s2">&#34;parse result:&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="n">result</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>运行<code>LightGrammar.test()</code>得到：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span><span class="lnt">244
+</span><span class="lnt">245
+</span><span class="lnt">246
+</span><span class="lnt">247
+</span><span class="lnt">248
+</span><span class="lnt">249
+</span><span class="lnt">250
+</span><span class="lnt">251
+</span><span class="lnt">252
+</span><span class="lnt">253
+</span><span class="lnt">254
+</span><span class="lnt">255
+</span><span class="lnt">256
+</span><span class="lnt">257
+</span><span class="lnt">258
+</span><span class="lnt">259
+</span><span class="lnt">260
+</span><span class="lnt">261
+</span><span class="lnt">262
+</span><span class="lnt">263
+</span><span class="lnt">264
+</span><span class="lnt">265
+</span><span class="lnt">266
+</span><span class="lnt">267
+</span><span class="lnt">268
+</span><span class="lnt">269
+</span><span class="lnt">270
+</span><span class="lnt">271
+</span><span class="lnt">272
+</span><span class="lnt">273
+</span><span class="lnt">274
+</span><span class="lnt">275
+</span><span class="lnt">276
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&#34;set my top light to red&#34;
+</span></span><span class="line"><span class="cl">parse tree:
+</span></span><span class="line"><span class="cl">(GOAL
+</span></span><span class="line"><span class="cl">  (one_parse
+</span></span><span class="line"><span class="cl">    (action &#34;set&#34;)
+</span></span><span class="line"><span class="cl">    (light &#34;top&#34;)
+</span></span><span class="line"><span class="cl">    (color &#34;red&#34;)
+</span></span><span class="line"><span class="cl">  )
+</span></span><span class="line"><span class="cl">)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">parse result:
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">  &#34;one_parse&#34;: [
+</span></span><span class="line"><span class="cl">    {
+</span></span><span class="line"><span class="cl">      &#34;one_parse&#34;: [
+</span></span><span class="line"><span class="cl">        &#34;set&#34;,
+</span></span><span class="line"><span class="cl">        &#34;top&#34;,
+</span></span><span class="line"><span class="cl">        &#34;red&#34;
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light_span_&#34;: [
+</span></span><span class="line"><span class="cl">        2,
+</span></span><span class="line"><span class="cl">        3
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;action_span_&#34;: [
+</span></span><span class="line"><span class="cl">        0,
+</span></span><span class="line"><span class="cl">        1
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light&#34;: &#34;top&#34;,
+</span></span><span class="line"><span class="cl">      &#34;color_span_&#34;: [
+</span></span><span class="line"><span class="cl">        5,
+</span></span><span class="line"><span class="cl">        6
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;color&#34;: &#34;red&#34;,
+</span></span><span class="line"><span class="cl">      &#34;action&#34;: &#34;set&#34;,
+</span></span><span class="line"><span class="cl">      &#34;one_parse_span_&#34;: [
+</span></span><span class="line"><span class="cl">        0,
+</span></span><span class="line"><span class="cl">        6
+</span></span><span class="line"><span class="cl">      ]
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">  ],
+</span></span><span class="line"><span class="cl">  &#34;GOAL&#34;: [
+</span></span><span class="line"><span class="cl">    [
+</span></span><span class="line"><span class="cl">      &#34;set&#34;,
+</span></span><span class="line"><span class="cl">      &#34;top&#34;,
+</span></span><span class="line"><span class="cl">      &#34;red&#34;
+</span></span><span class="line"><span class="cl">    ]
+</span></span><span class="line"><span class="cl">  ]
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&#34;set my top light to red and change middle light to yellow&#34;
+</span></span><span class="line"><span class="cl">parse tree:
+</span></span><span class="line"><span class="cl">(GOAL
+</span></span><span class="line"><span class="cl">  (one_parse
+</span></span><span class="line"><span class="cl">    (action &#34;set&#34;)
+</span></span><span class="line"><span class="cl">    (light &#34;top&#34;)
+</span></span><span class="line"><span class="cl">    (color &#34;red&#34;)
+</span></span><span class="line"><span class="cl">  )
+</span></span><span class="line"><span class="cl">  (one_parse
+</span></span><span class="line"><span class="cl">    (action &#34;change&#34;)
+</span></span><span class="line"><span class="cl">    (light &#34;middle&#34;)
+</span></span><span class="line"><span class="cl">    (color &#34;yellow&#34;)
+</span></span><span class="line"><span class="cl">  )
+</span></span><span class="line"><span class="cl">)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">parse result:
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">  &#34;one_parse&#34;: [
+</span></span><span class="line"><span class="cl">    {
+</span></span><span class="line"><span class="cl">      &#34;one_parse&#34;: [
+</span></span><span class="line"><span class="cl">        &#34;set&#34;,
+</span></span><span class="line"><span class="cl">        &#34;top&#34;,
+</span></span><span class="line"><span class="cl">        &#34;red&#34;
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light_span_&#34;: [
+</span></span><span class="line"><span class="cl">        2,
+</span></span><span class="line"><span class="cl">        3
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;action_span_&#34;: [
+</span></span><span class="line"><span class="cl">        0,
+</span></span><span class="line"><span class="cl">        1
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light&#34;: &#34;top&#34;,
+</span></span><span class="line"><span class="cl">      &#34;color_span_&#34;: [
+</span></span><span class="line"><span class="cl">        5,
+</span></span><span class="line"><span class="cl">        6
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;color&#34;: &#34;red&#34;,
+</span></span><span class="line"><span class="cl">      &#34;action&#34;: &#34;set&#34;,
+</span></span><span class="line"><span class="cl">      &#34;one_parse_span_&#34;: [
+</span></span><span class="line"><span class="cl">        0,
+</span></span><span class="line"><span class="cl">        6
+</span></span><span class="line"><span class="cl">      ]
+</span></span><span class="line"><span class="cl">    },
+</span></span><span class="line"><span class="cl">    {
+</span></span><span class="line"><span class="cl">      &#34;one_parse&#34;: [
+</span></span><span class="line"><span class="cl">        &#34;change&#34;,
+</span></span><span class="line"><span class="cl">        &#34;middle&#34;,
+</span></span><span class="line"><span class="cl">        &#34;yellow&#34;
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light_span_&#34;: [
+</span></span><span class="line"><span class="cl">        8,
+</span></span><span class="line"><span class="cl">        9
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;action_span_&#34;: [
+</span></span><span class="line"><span class="cl">        7,
+</span></span><span class="line"><span class="cl">        8
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light&#34;: &#34;middle&#34;,
+</span></span><span class="line"><span class="cl">      &#34;color_span_&#34;: [
+</span></span><span class="line"><span class="cl">        11,
+</span></span><span class="line"><span class="cl">        12
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;color&#34;: &#34;yellow&#34;,
+</span></span><span class="line"><span class="cl">      &#34;action&#34;: &#34;change&#34;,
+</span></span><span class="line"><span class="cl">      &#34;one_parse_span_&#34;: [
+</span></span><span class="line"><span class="cl">        7,
+</span></span><span class="line"><span class="cl">        12
+</span></span><span class="line"><span class="cl">      ]
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">  ],
+</span></span><span class="line"><span class="cl">  &#34;GOAL&#34;: [
+</span></span><span class="line"><span class="cl">    [
+</span></span><span class="line"><span class="cl">      &#34;set&#34;,
+</span></span><span class="line"><span class="cl">      &#34;top&#34;,
+</span></span><span class="line"><span class="cl">      &#34;red&#34;
+</span></span><span class="line"><span class="cl">    ],
+</span></span><span class="line"><span class="cl">    [
+</span></span><span class="line"><span class="cl">      &#34;change&#34;,
+</span></span><span class="line"><span class="cl">      &#34;middle&#34;,
+</span></span><span class="line"><span class="cl">      &#34;yellow&#34;
+</span></span><span class="line"><span class="cl">    ]
+</span></span><span class="line"><span class="cl">  ]
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&#34;set my top light to red and change middle light to yellow and flash bottom light twice in blue&#34;
+</span></span><span class="line"><span class="cl">parse tree:
+</span></span><span class="line"><span class="cl">(GOAL
+</span></span><span class="line"><span class="cl">  (one_parse
+</span></span><span class="line"><span class="cl">    (action &#34;set&#34;)
+</span></span><span class="line"><span class="cl">    (light &#34;top&#34;)
+</span></span><span class="line"><span class="cl">    (color &#34;red&#34;)
+</span></span><span class="line"><span class="cl">  )
+</span></span><span class="line"><span class="cl">  (one_parse
+</span></span><span class="line"><span class="cl">    (action &#34;change&#34;)
+</span></span><span class="line"><span class="cl">    (light &#34;middle&#34;)
+</span></span><span class="line"><span class="cl">    (color &#34;yellow&#34;)
+</span></span><span class="line"><span class="cl">  )
+</span></span><span class="line"><span class="cl">  (one_parse
+</span></span><span class="line"><span class="cl">    (action &#34;flash&#34;)
+</span></span><span class="line"><span class="cl">    (light &#34;bottom&#34;)
+</span></span><span class="line"><span class="cl">    (Optional(times)
+</span></span><span class="line"><span class="cl">      (times
+</span></span><span class="line"><span class="cl">        (Set(three times|twice|once) &#34;twice&#34;)
+</span></span><span class="line"><span class="cl">      )
+</span></span><span class="line"><span class="cl">    )
+</span></span><span class="line"><span class="cl">    (color &#34;blue&#34;)
+</span></span><span class="line"><span class="cl">  )
+</span></span><span class="line"><span class="cl">)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">parse result:
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">  &#34;one_parse&#34;: [
+</span></span><span class="line"><span class="cl">    {
+</span></span><span class="line"><span class="cl">      &#34;one_parse&#34;: [
+</span></span><span class="line"><span class="cl">        &#34;set&#34;,
+</span></span><span class="line"><span class="cl">        &#34;top&#34;,
+</span></span><span class="line"><span class="cl">        &#34;red&#34;
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light_span_&#34;: [
+</span></span><span class="line"><span class="cl">        2,
+</span></span><span class="line"><span class="cl">        3
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;action_span_&#34;: [
+</span></span><span class="line"><span class="cl">        0,
+</span></span><span class="line"><span class="cl">        1
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light&#34;: &#34;top&#34;,
+</span></span><span class="line"><span class="cl">      &#34;color_span_&#34;: [
+</span></span><span class="line"><span class="cl">        5,
+</span></span><span class="line"><span class="cl">        6
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;color&#34;: &#34;red&#34;,
+</span></span><span class="line"><span class="cl">      &#34;action&#34;: &#34;set&#34;,
+</span></span><span class="line"><span class="cl">      &#34;one_parse_span_&#34;: [
+</span></span><span class="line"><span class="cl">        0,
+</span></span><span class="line"><span class="cl">        6
+</span></span><span class="line"><span class="cl">      ]
+</span></span><span class="line"><span class="cl">    },
+</span></span><span class="line"><span class="cl">    {
+</span></span><span class="line"><span class="cl">      &#34;one_parse&#34;: [
+</span></span><span class="line"><span class="cl">        &#34;change&#34;,
+</span></span><span class="line"><span class="cl">        &#34;middle&#34;,
+</span></span><span class="line"><span class="cl">        &#34;yellow&#34;
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light_span_&#34;: [
+</span></span><span class="line"><span class="cl">        8,
+</span></span><span class="line"><span class="cl">        9
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;action_span_&#34;: [
+</span></span><span class="line"><span class="cl">        7,
+</span></span><span class="line"><span class="cl">        8
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light&#34;: &#34;middle&#34;,
+</span></span><span class="line"><span class="cl">      &#34;color_span_&#34;: [
+</span></span><span class="line"><span class="cl">        11,
+</span></span><span class="line"><span class="cl">        12
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;color&#34;: &#34;yellow&#34;,
+</span></span><span class="line"><span class="cl">      &#34;action&#34;: &#34;change&#34;,
+</span></span><span class="line"><span class="cl">      &#34;one_parse_span_&#34;: [
+</span></span><span class="line"><span class="cl">        7,
+</span></span><span class="line"><span class="cl">        12
+</span></span><span class="line"><span class="cl">      ]
+</span></span><span class="line"><span class="cl">    },
+</span></span><span class="line"><span class="cl">    {
+</span></span><span class="line"><span class="cl">      &#34;one_parse&#34;: [
+</span></span><span class="line"><span class="cl">        &#34;flash&#34;,
+</span></span><span class="line"><span class="cl">        &#34;bottom&#34;,
+</span></span><span class="line"><span class="cl">        &#34;twice&#34;,
+</span></span><span class="line"><span class="cl">        &#34;blue&#34;
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;color_span_&#34;: [
+</span></span><span class="line"><span class="cl">        18,
+</span></span><span class="line"><span class="cl">        19
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light_span_&#34;: [
+</span></span><span class="line"><span class="cl">        14,
+</span></span><span class="line"><span class="cl">        15
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;action_span_&#34;: [
+</span></span><span class="line"><span class="cl">        13,
+</span></span><span class="line"><span class="cl">        14
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;light&#34;: &#34;bottom&#34;,
+</span></span><span class="line"><span class="cl">      &#34;Optional(times)&#34;: &#34;twice&#34;,
+</span></span><span class="line"><span class="cl">      &#34;times&#34;: &#34;twice&#34;,
+</span></span><span class="line"><span class="cl">      &#34;Optional(times)_span_&#34;: [
+</span></span><span class="line"><span class="cl">        16,
+</span></span><span class="line"><span class="cl">        17
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;times_span_&#34;: [
+</span></span><span class="line"><span class="cl">        16,
+</span></span><span class="line"><span class="cl">        17
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;Set(three times|twice|once)&#34;: &#34;twice&#34;,
+</span></span><span class="line"><span class="cl">      &#34;action&#34;: &#34;flash&#34;,
+</span></span><span class="line"><span class="cl">      &#34;Set(three times|twice|once)_span_&#34;: [
+</span></span><span class="line"><span class="cl">        16,
+</span></span><span class="line"><span class="cl">        17
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;one_parse_span_&#34;: [
+</span></span><span class="line"><span class="cl">        13,
+</span></span><span class="line"><span class="cl">        19
+</span></span><span class="line"><span class="cl">      ],
+</span></span><span class="line"><span class="cl">      &#34;color&#34;: &#34;blue&#34;
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">  ],
+</span></span><span class="line"><span class="cl">  &#34;GOAL&#34;: [
+</span></span><span class="line"><span class="cl">    [
+</span></span><span class="line"><span class="cl">      &#34;set&#34;,
+</span></span><span class="line"><span class="cl">      &#34;top&#34;,
+</span></span><span class="line"><span class="cl">      &#34;red&#34;
+</span></span><span class="line"><span class="cl">    ],
+</span></span><span class="line"><span class="cl">    [
+</span></span><span class="line"><span class="cl">      &#34;change&#34;,
+</span></span><span class="line"><span class="cl">      &#34;middle&#34;,
+</span></span><span class="line"><span class="cl">      &#34;yellow&#34;
+</span></span><span class="line"><span class="cl">    ],
+</span></span><span class="line"><span class="cl">    [
+</span></span><span class="line"><span class="cl">      &#34;flash&#34;,
+</span></span><span class="line"><span class="cl">      &#34;bottom&#34;,
+</span></span><span class="line"><span class="cl">      &#34;twice&#34;,
+</span></span><span class="line"><span class="cl">      &#34;blue&#34;
+</span></span><span class="line"><span class="cl">    ]
+</span></span><span class="line"><span class="cl">  ]
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>非常漂亮！</p>
+<p>更完整的例子可以参考 <a href="http://parsetron.kitt.ai/en/latest/quickstart.html#complex-example">Complex Example</a></p>
+<h3 id="使用场景">使用场景</h3>
+<blockquote>
+<p>It is mainly used to convert natural language command to executable API calls (e.g., “set my bedroom light to red” –&gt; set_light(&lsquo;bedroom&rsquo;, [255, 0, 0]))</p>
+</blockquote>
+<p>parsetron的典型使用场景是将自然语言转变为api调用，实际是将非结构话的自然语言，解析为结构化的数据，进而调用api。</p>
+<p>作者给出了一些<a href="http://parsetron.kitt.ai/en/latest/quickstart.html#what-it-is">典型使用场景</a>:</p>
+<p>诸如使用自然语言控制你的智能灯泡：</p>
+<ul>
+<li>give me something romantic</li>
+<li>my living room light is too dark</li>
+<li>change bedroom light to sky blue</li>
+<li>blink living room light twice in red color</li>
+</ul>
+<p>以及控制你的微波炉：</p>
+<ul>
+<li>defrost this chicken please, the weight is 4 pounds</li>
+<li>heat up the pizza for 2 minutes 20 seconds</li>
+<li>warm up the milk for 1 minute</li>
+</ul>
+<p>作者给出了这类需求的通用解决方案：从自然语言命令中提取关键信息，以帮助开发人员调用API来控制智能设备。由此完成了自然语言指令到传统程序的映射</p>
+<p>作者进一步分析说传统的方法是编写一系列规则，如正则表达式，这些规则难以维护和扩展。而采用编译原理中的词法/语法解析。不但学习曲线很高，且解析器输出通常是树结构，对我们的任务没有直接的帮助</p>
+<p>我在<a href="https://github.com/wwj718/deepThought">deepThought</a>的目标里写过</p>
+<blockquote>
+<p>构造通用的解析工具，将自然语言解析为结构化信息</p>
+</blockquote>
+<p>这点与parsetron不谋而合，parsetron对我而言是作为bot server的理想实现，用于解析硬件指令</p>
+<p>其实目前Siri也具有这个功能（需要hack，而且比较繁琐），我在《嘿 Siri 关灯》主要就用到这个功能。</p>
+<h3 id="问题">问题</h3>
+<p>parsetron暂不支持中文，项目的todo中有支持unicode的计划，不过项目一年来似乎没更新了，我fork了这个项目，近期试着为它增加中文支持</p>
+<h1 id="pyparsing">Pyparsing</h1>
+<p>Parsetron的文档里写道：</p>
+<blockquote>
+<p>Parsetron is inspired by pyparsing.</p>
+</blockquote>
+<p>我们顺路了解一下<a href="https://pyparsing.wikispaces.com/">pyparsing</a>，顾名思义，Pyparsing是python实现的解析器。</p>
+<h3 id="入门-1">入门</h3>
+<p>简单做个入门了解。以解析&quot;Hello, World!&ldquo;为例</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">Word</span><span class="p">,</span> <span class="n">alphas</span>
+</span></span><span class="line"><span class="cl"><span class="n">greet</span> <span class="o">=</span> <span class="n">Word</span><span class="p">(</span> <span class="n">alphas</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;,&#34;</span> <span class="o">+</span> <span class="n">Word</span><span class="p">(</span> <span class="n">alphas</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;!&#34;</span> <span class="c1"># &lt;-- grammar defined here</span>
+</span></span><span class="line"><span class="cl"><span class="n">hello</span> <span class="o">=</span> <span class="s2">&#34;Hello, World!&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="p">(</span><span class="n">hello</span><span class="p">,</span> <span class="s2">&#34;-&gt;&#34;</span><span class="p">,</span> <span class="n">greet</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span> <span class="n">hello</span> <span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>输出为：<code>Hello, World! -&gt; ['Hello', ',', 'World', '!']</code></p>
+<p>上边的greet可以解析任何具有以下模式的句子： <code>&lt;salutation&gt;, &lt;addressee&gt;!</code></p>
+<p>更多案例和使用方法参考:<a href="https://pyparsing.wikispaces.com/Examples">Examples</a></p>
+<h3 id="支持中文">支持中文</h3>
+<p>值得一提的是pyparsing支持python3和unicode，这对我们处理中文会有大帮助。我们来做个试验：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># python3</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">Word</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span><span class="n">CharsNotIn</span>
+</span></span><span class="line"><span class="cl"><span class="n">greet</span> <span class="o">=</span> <span class="n">CharsNotIn</span><span class="p">(</span> <span class="s1">&#39;,!&#39;</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;,&#34;</span> <span class="o">+</span> <span class="n">CharsNotIn</span><span class="p">(</span> <span class="s1">&#39;,!&#39;</span> <span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;!&#34;</span> <span class="c1"># &lt;-- grammar defined here</span>
+</span></span><span class="line"><span class="cl"><span class="n">hello</span> <span class="o">=</span> <span class="s2">&#34;你好, 世界!&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="p">(</span><span class="n">hello</span><span class="p">,</span> <span class="s2">&#34;-&gt;&#34;</span><span class="p">,</span> <span class="n">greet</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span> <span class="n">hello</span> <span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>输出为 ： <code>好, 世界! -&gt; ['你好', ',', ' 世界', '!']</code></p>
+<p>这个解决方案可行，但比较丑陋，如何在pyparsing使用unicode，可以自行google</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-12-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/2017-plan/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">2017年小目标</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/rpi-siri-close-light/">
+            <span class="next-text nav-default">嘿 Siri 关灯</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Smalltalk(Pharo)学习之旅 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 2014年的时候，曾对Smalltalk有过一段时间兴趣: Smalltalk学习笔记, 那会儿刚毕业工作几个月，对各类事物都有兴趣，同时兴" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/pharo-trip/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Smalltalk(Pharo)学习之旅" />
+<meta property="og:description" content="前言 2014年的时候，曾对Smalltalk有过一段时间兴趣: Smalltalk学习笔记, 那会儿刚毕业工作几个月，对各类事物都有兴趣，同时兴" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/pharo-trip/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-02-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-02-05T00:00:00+00:00" />
+
+<meta itemprop="name" content="Smalltalk(Pharo)学习之旅">
+<meta itemprop="description" content="前言 2014年的时候，曾对Smalltalk有过一段时间兴趣: Smalltalk学习笔记, 那会儿刚毕业工作几个月，对各类事物都有兴趣，同时兴"><meta itemprop="datePublished" content="2019-02-05T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-02-05T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2122">
+<meta itemprop="keywords" content="code," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Smalltalk(Pharo)学习之旅"/>
+<meta name="twitter:description" content="前言 2014年的时候，曾对Smalltalk有过一段时间兴趣: Smalltalk学习笔记, 那会儿刚毕业工作几个月，对各类事物都有兴趣，同时兴"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Smalltalk(Pharo)学习之旅</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-05 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/trip_a02b6900.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>2014年的时候，曾对Smalltalk有过一段时间兴趣: <a href="/learn-Smalltalk.html">Smalltalk学习笔记</a>, 那会儿刚毕业工作几个月，对各类事物都有兴趣，同时兴趣来得也浅。最终浅尝辄止，并没有实际用Smalltalk写过项目，哪怕练手项目也没有。</p>
+<p>后来，由于<a href="/scratch.html">对人工智能、认知论、教育感兴趣</a>，开始读<a href="https://zh.wikipedia.org/zh-cn/%E8%AE%93%C2%B7%E7%9A%AE%E4%BA%9E%E5%82%91">让·皮亚杰</a>、<a href="https://zh.wikipedia.org/zh-cn/%E8%A5%BF%E6%91%A9%E7%88%BE%C2%B7%E6%B4%BE%E6%99%AE%E7%89%B9">西摩尔·派普特</a>和<a href="https://zh.wikipedia.org/zh-hans/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">艾伦·凯</a>的东西.</p>
+<p><a href="https://zh.wikipedia.org/zh-cn/%E8%A5%BF%E6%91%A9%E7%88%BE%C2%B7%E6%B4%BE%E6%99%AE%E7%89%B9">西摩尔·派普特</a>和<a href="https://zh.wikipedia.org/zh-hans/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">艾伦·凯</a>将计算机视为一种增强人类智能的工具。</p>
+<p>Bret在<a href="http://worrydream.com/">他的博客</a>将这些概念综合在一起，以一种清晰的媒介重新展现出来。几乎是一夜之间，我突然知道自己在寻找什么，它如此确定无疑，你知道这就是你期待的东西了, 你愿意投入你往后的所有时间。 关于计算机的未来是什么，编程的未来是什么，教育的未来是什么，这些问题我想了很久,深受其扰,而且一度怀疑它们不是好问题，它们大而无当。Bret让我确信，他沿着<a href="https://zh.wikipedia.org/zh-cn/%E8%A5%BF%E6%91%A9%E7%88%BE%C2%B7%E6%B4%BE%E6%99%AE%E7%89%B9">西摩尔·派普特</a>和<a href="https://zh.wikipedia.org/zh-hans/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">艾伦·凯</a>所走的路，继续前行，最终带着我们看到了理想的未来。它如此耀眼，以至于你会担心，如果这些想法没被实现，未来得多么黯淡和乏味。</p>
+<p>在技术方面，Bret使我确信，Smalltalk是相对理想的创作工具，在更为理想的工具(如<a href="https://dynamicland.org">Dynamicland</a>的realtalk)诞生之前，我应该切换到Smalltalk上，将其用作日常编程所用的语言。这是一门经过精心设计，方便探索和创造的语言。</p>
+<p>和稀泥的人总喜欢说，“采用什么编程语言并不重要，它们都一样”，我对这话的理解是，就&quot;图灵完备&quot;这点来说，他们是等价的。但图灵还论证过你在一条无限长的纸带上，是可以做到你用今天的电脑做到的所有事情的，它们在逻辑上等价，难道这是你选择使用纸带编程的理由吗？</p>
+<p>编程语言不可能恰好都一样，总有一些粗制滥造，而另一些精心设计。像我这样愿意不断尝试新语言的人，实在没有办法假装使用过的编程语言都一样。像我这么蠢的人如果去设计一个编程语言，它怎么会和艾伦·凯精心设计的Smalltalk一样。对这个话题感兴趣的小伙伴，可以看看Bret在<a href="http://worrydream.com/#!/LearnableProgramming">LEARNABLE PROGRAMMING</a>对Processing这门语言的攻击，招招致命。</p>
+<h1 id="热情">热情</h1>
+<p>Bret让我相信Smalltalk对我很重要，但仅是知道一件事很重要，似乎无法支撑我持续投入时间。</p>
+<p>我有个习惯，在找到做一件事的乐趣/热情之前，并不愿意投入到这件事的细节之中。</p>
+<p>换一种说法，我是个没什么毅力的人，如果没有兴趣驱动，就没办法坚持去做一件事。这么多年来学会了破罐子破摔，不和自己闹别扭，如果没有找到热情所在，就宁可发发呆，看看小说，四处走走，也不愿开始干活。</p>
+<p>但有些事情即便没有兴趣，你还是会知道它挺重要的，我的做法是花点时间去寻找这件事的乐趣和意义所在，一般情况下都能找到。一旦找到后，就乐在其中，不必外部监督，也能用心于此事。我不知道别人的意志力是不是都很多，但我的意志力很少，而且是消耗品，它原本就不多，一旦消耗完，就对自己没办法了，多坐一会儿都极难受，如果此时非强迫自己一定要做点什么事，这事儿是体力活还好，磨磨蹭蹭也总有做完的时候；若是脑力劳动，还需要创造性的话，结果准特别糟糕。所以我没办法使用意志力来推进工作。</p>
+<p>于是在假期的头几天，我并没有投入到Smalltalk的语法细节(完全忘了以前所学)。我开始了解Smalltalk社区的人都在干嘛?他们聚集在哪儿?他们做了什么好玩的东西?</p>
+<h1 id="4p">4P</h1>
+<p>很喜欢<a href="https://zh.wikipedia.org/zh-cn/%E5%AF%86%E5%A5%91%E7%88%BE%C2%B7%E7%91%9E%E6%96%AF%E5%B0%BC%E5%85%8B">Mitchel Resnick</a>在<a href="https://book.douban.com/subject/30285992/">终生幼儿园</a>一书中提到的4P学习方法: Projects, Passion, Peers, Play</p>
+<p>我开始浏览各类<a href="https://twitter.com/pharoproject">Smalltalk Projects</a>(主要关注Smalltalk的现代方言:<a href="https://pharo.org/web">Pharo</a>)，看看它们中的哪些能激起我的热情, 在<a href="https://pharo.org/success">pharo stories</a>里看到许多有意思的项目， 我对<a href="https://pharo.org/success/Phratch">Phratch</a>最感兴趣。如它的名字所暗示的: Phratch是使用Pharo重写的Scratch.</p>
+<p><a href="https://pharo.org/success/Phratch">Phratch</a>是<a href="https://code.google.com/p/scat/">Scat</a>的改进版。Scat的项目声明写得有趣:</p>
+<blockquote>
+<p>We believe there is a conspiracy going on all over the universe, evil forces are constantly fighting to take down great Smalltalk projects and port them to other languages.<br>
+In a quest against such demonic plots, a couple of us started a confidential mission to rescue the last of these endangered projects, namely Scratch.</p>
+</blockquote>
+<h1 id="pharohttpspharoorg"><a href="https://pharo.org">Pharo</a></h1>
+<p>至此，我已经迫不及待想学习Pharo了，恨不得立刻就能读懂<a href="https://pharo.org/success/Phratch">Phratch</a>，想着学习完这个项目源码之后，立即使用Pharo7.0重写Scratch3.0。</p>
+<p>确定了将要学习的方言(Pharo)，开始搜索Pharo新手写的博文，看看从中能够找到他们发现的好的学习资源， 读到<a href="https://blog.khinsen.net/posts/2018/12/19/exploring-pharo/">Exploring Pharo</a>这篇文章，觉得十分出色。</p>
+<p>在投入到<a href="https://pharo.org/success/Phratch">Phratch</a>源码之前，我准备简单过一下Pharo的语法，但有不愿只是看语法，希望有更周全的引导，包括调试工具的使用说明之类的。<a href="http://mooc.pharo.org/">The Pharo MOOC</a>是非常理想的选择，我选择在<a href="http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content.html">WebPortal</a>里看课件学习，起初看了几个视频，后来觉得直接看PDF课件更快些，于是便直接看PDF。我今天已经看到了<a href="http://rmod-pharo-mooc.lille.inria.fr/MOOC/Slides/Week5/C019-W5S01-Seaside-ComposingComponents.pdf">第五周的第一节</a>，预计明天就看完了。Smalltalk的语法非常简单，连同它的编程风格，我想我已经基本掌握了。这个过程十分愉快，每学会一点知识，感觉离实现目标就更近了一步(读懂Phratch，重写Scratch3.0)。</p>
+<h1 id="结语">结语</h1>
+<p>本文记录我的学习习惯 以及Pharo的一些学习资料。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://rmod-pharo-mooc.lille.inria.fr/MOOC/WebPortal/co/content.html">the pharo mooc</a></li>
+<li><a href="https://code.google.com/archive/p/scat">scat</a></li>
+<li><a href="/Enhance-Scratch3.html">Scratch增强计划</a></li>
+<li><a href="http://files.pharo.org/media/pharoCheatSheet.pdf">Pharo Cheat Sheet</a></li>
+<li><a href="https://blog.khinsen.net/posts/2018/12/19/exploring-pharo/">Exploring Pharo</a></li>
+<li><a href="https://github.com/janniklaval/phratch/blob/c27e55d8bbbe9871de506df75ce0d06bc0c69143/Elements090224.pdf">Syntax-Elements for Smalltalk</a></li>
+<li><a href="https://twitter.com/pharoproject">pharoproject</a></li>
+<li><a href="https://github.com/jmari/JupyterTalk">JupyterTalk</a></li>
+<li><a href="https://github.com/hernanmd/pi">pi</a></li>
+<li><a href="http://worrydream.com/refs/Papert%20-%20Mindstorms%201st%20ed.pdf">MINDSTORMS</a></li>
+<li><a href="https://github.com/zeroflag/Teapot">Teapot</a></li>
+<li><a href="https://github.com/svenvc/zinc">zinc</a>
+<ul>
+<li><a href="https://ci.inria.fr/pharo-contribution/job/EnterprisePharoBook/lastSuccessfulBuild/artifact/book-result/Zinc-HTTP-Server/Zinc-HTTP-Server.html">Zinc HTTP: The Server Side</a></li>
+</ul>
+</li>
+<li><a href="http://files.pharo.org/books-pdfs/tinyblog-tutorial/2016-02-18-tinyblog-tutorial.pdf">TinyBlog</a></li>
+<li><a href="http://worrydream.com/#!/LearnableProgramming">LEARNABLE PROGRAMMING</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-02-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/code/">code</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-req-rep/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">codelab-adapter与应答模式</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/xiangxingsanji/">
+            <span class="next-text nav-default">湘行散记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Python与系统日常管理 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="大多时间都在linux下工作，虽说不算系统管理员，也免不了要处理许多系统相关的东西。对linux还算熟悉，偶尔也在公司客串系统管理员的角色。" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/python-for-system-administrators/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Python与系统日常管理" />
+<meta property="og:description" content="大多时间都在linux下工作，虽说不算系统管理员，也免不了要处理许多系统相关的东西。对linux还算熟悉，偶尔也在公司客串系统管理员的角色。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/python-for-system-administrators/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-10-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-10-17T00:00:00+00:00" />
+
+<meta itemprop="name" content="Python与系统日常管理">
+<meta itemprop="description" content="大多时间都在linux下工作，虽说不算系统管理员，也免不了要处理许多系统相关的东西。对linux还算熟悉，偶尔也在公司客串系统管理员的角色。"><meta itemprop="datePublished" content="2015-10-17T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-10-17T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1377">
+<meta itemprop="keywords" content="技术," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python与系统日常管理"/>
+<meta name="twitter:description" content="大多时间都在linux下工作，虽说不算系统管理员，也免不了要处理许多系统相关的东西。对linux还算熟悉，偶尔也在公司客串系统管理员的角色。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Python与系统日常管理</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-10-17 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#build-in">build-in</a></li>
+        <li><a href="#shhttpsgithubcomamoffatsh"><a href="https://github.com/amoffat/sh">sh</a></a></li>
+        <li><a href="#pathpyhttpsgithubcomjaracopathpy"><a href="https://github.com/jaraco/path.py">path.py</a></a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>大多时间都在linux下工作，虽说不算系统管理员，也免不了要处理许多系统相关的东西。对linux还算熟悉，偶尔也在公司客串系统管理员的角色。于是就免不了要写许多自动化脚本的东西，来方便系统日常管理了。</p>
+<p>bash脚本挺让人恶心的，属于dirty and quick一类。而Python语法清新可人，Python与系统的交互也极其便利，写自动化脚本再合适不过。</p>
+<p>在此就分享些自己在写自动化脚本时中意的Python工具：</p>
+<hr>
+<h3 id="build-in">build-in</h3>
+<ul>
+<li>glob:文件名的匹配,比如
+<ul>
+<li>glob.glob(&lsquo;somedir/*.py&rsquo;)</li>
+</ul>
+</li>
+<li>pathlib python3支持,路径处理的瑞士军刀</li>
+<li>subprocess
+<ul>
+<li>启动一个子进程建议的方式是使用下面的便捷函数:subprocess.call(args, *, stdin=None, stdout=None, stderr=None, shell=False)
+<ul>
+<li>subprocess.call([&ldquo;ls&rdquo;, &ldquo;-l&rdquo;])</li>
+</ul>
+</li>
+<li>对于更高级的使用场景当它们不能满足你的需求时，可以使用底层的Popen接口。</li>
+<li>subprocess.call([&ldquo;sed&rdquo;, &ldquo;-i&rdquo;, &ldquo;-e&rdquo;,  &rsquo;s/hello/helloworld/g&rsquo;, &ldquo;www.txt&rdquo;])</li>
+<li>单行：subprocess.call([&ldquo;sed -i -e &rsquo;s/hello/helloworld/g&rsquo; www.txt&rdquo;], shell=True)</li>
+</ul>
+</li>
+</ul>
+<h3 id="shhttpsgithubcomamoffatsh"><a href="https://github.com/amoffat/sh">sh</a></h3>
+<blockquote>
+<p>sh is a full-fledged subprocess replacement for Python 2.6 - 3.4 that allows you to call any program as if it were a function</p>
+</blockquote>
+<p>使用sh可以用 Python 函数的语法去调用 shell 命令，比subprocess舒服多了</p>
+<p>有了sh，就可以方便地用python写逻辑，而与系统的交互依然使用shell指令</p>
+<p>sh并没有自己去实现一遍系统指令(也不现实)，sh的原理很有趣，是通过ModuleType来实现的。有兴趣的同学可以参考源码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sh</span> <span class="kn">import</span> <span class="n">tail</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">process_log_line</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="s2">&#34;ERROR&#34;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">send_an_email_to_support</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">process</span> <span class="o">=</span> <span class="n">tail</span><span class="p">(</span><span class="s2">&#34;-f&#34;</span><span class="p">,</span> <span class="s2">&#34;info.log&#34;</span><span class="p">,</span> <span class="n">_out</span><span class="o">=</span><span class="n">process_log_line</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ... do other stuff here ...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">process</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="pathpyhttpsgithubcomjaracopathpy"><a href="https://github.com/jaraco/path.py">path.py</a></h3>
+<p>简化文件系统相关操作。与文件系统的相关操作，在python中有些分散，path.py把它们聚合在一个类文件对象里</p>
+<blockquote>
+<p>path.py implements a path objects as first-class entities, allowing common operations on files to be invoked on those path objects directly</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">path</span> <span class="kn">import</span> <span class="n">Path</span>
+</span></span><span class="line"><span class="cl"><span class="n">d</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/home/guido/bin&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="s1">&#39;*.py&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="mi">0755</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###<a href="https://github.com/gorakhargosh/watchdog">Watchdog</a>
+监视文件系统改动.事件驱动真是适合用来写监控逻辑啊</p>
+<blockquote>
+<p>Python library and shell utilities to monitor filesystem events</p>
+</blockquote>
+<p>可以在python中使用，也提供shell指令</p>
+<p>###<a href="https://github.com/Russell91/pythonpy">pythonpy</a></p>
+<blockquote>
+<p>the swiss army knife of the command line</p>
+</blockquote>
+<p>让python更方便与shell配合使用，行为更像过滤器</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">ls</span> <span class="o">|</span> <span class="n">py</span> <span class="o">-</span><span class="n">x</span> <span class="s1">&#39;&#34;mv `</span><span class="si">%s</span><span class="s1">` `</span><span class="si">%s</span><span class="s1">.txt`&#34; % (x,x)&#39;</span> <span class="o">|</span> <span class="n">sh</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###<a href="https://github.com/giampaolo/psutil">psutil</a></p>
+<blockquote>
+<p>A cross-platform process and system utilities module for Python</p>
+</blockquote>
+<p>方便用来查看系统信息（CPU, memory, disks, network）</p>
+<p>###<a href="https://github.com/fabric/fabric">Fabric</a></p>
+<blockquote>
+<p>Simple, Pythonic remote execution and deployment.</p>
+</blockquote>
+<p>自动化运维工具，也可用于自动化本地任务，本地机器无非也只是一个普通的host</p>
+<p>###<a href="https://github.com/ansible/ansible">ansible</a>
+大大有名的自动化运维工具，热度已远超Fabric，当部署环境巨复杂是，ansible playbook就是救星了。当然学习成本也是在不低，edX就是用它来自动化部署的，有700+ task好像</p>
+<hr>
+<p>#用户身份与进程权限</p>
+<p>顺便提一下用户身份与进程权限，python脚本中与系统交互（操作文件等），必然涉及到权限问题，所以我们需要了解linux的权限机制</p>
+<p>linux中，子进程将继承了父进程的所有权限</p>
+<p>当Linux加载内核文件以后，就开始运行第一个程序 /sbin/init，它的作用是初始化系统环境，init是第一个运行的程序，它的进程编号（pid）为1。其他所有进程都从它衍生，都是它的子进程。init进程在运行各种开机启动的程序之后，会执行一个login的子进程。我们将用户名和密码传递给login子进程。login在查询了/etc/passwd和/etc/shadow，并确定了其合法性之后，运行(利用exec)一个shell进程，shell进程有效身份被设置成为该用户的身份。</p>
+<p>终于轮到我们的python进程登场啦，python进程从shell中启动，<code>python权限为执行它的用户的权限，此后python中调用的shell指令则为python的子进程，权限与python相同</code></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-10-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%97%E8%AF%8D/2015-my-poem/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">种瓜集(2014.06-2015.10)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/edx-cypress-cn-for-deveiopment/">
+            <span class="next-text nav-default">使用Open edX中国社区Docker版来开发调试edX</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

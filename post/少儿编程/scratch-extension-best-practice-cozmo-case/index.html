@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch 拓展最佳实践 -- 以 Cozmo 为例 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="Keep It Simple, Stupid (KISS) 背景 本文写作有 3 个背景。 其一是 教育从业者 @jinlei 基于 Cozmo 已经顺利实施了很长时间的 AI 教育，学生们热爱 Cozmo，他们使用它构建项目时， 对 AI 领" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-extension-best-practice-cozmo-case/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch 拓展最佳实践 -- 以 Cozmo 为例" />
+<meta property="og:description" content="Keep It Simple, Stupid (KISS) 背景 本文写作有 3 个背景。 其一是 教育从业者 @jinlei 基于 Cozmo 已经顺利实施了很长时间的 AI 教育，学生们热爱 Cozmo，他们使用它构建项目时， 对 AI 领" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-extension-best-practice-cozmo-case/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-04-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-04-26T00:00:00+00:00" />
+
+<meta itemprop="name" content="Scratch 拓展最佳实践 -- 以 Cozmo 为例">
+<meta itemprop="description" content="Keep It Simple, Stupid (KISS) 背景 本文写作有 3 个背景。 其一是 教育从业者 @jinlei 基于 Cozmo 已经顺利实施了很长时间的 AI 教育，学生们热爱 Cozmo，他们使用它构建项目时， 对 AI 领"><meta itemprop="datePublished" content="2020-04-26T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-04-26T00:00:00+00:00" />
+<meta itemprop="wordCount" content="7761">
+<meta itemprop="keywords" content="essays," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch 拓展最佳实践 -- 以 Cozmo 为例"/>
+<meta name="twitter:description" content="Keep It Simple, Stupid (KISS) 背景 本文写作有 3 个背景。 其一是 教育从业者 @jinlei 基于 Cozmo 已经顺利实施了很长时间的 AI 教育，学生们热爱 Cozmo，他们使用它构建项目时， 对 AI 领"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch 拓展最佳实践 -- 以 Cozmo 为例</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-04-26 </span>
+        <div class="post-category">
+            <a href="/categories/essays/"> essays </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#目标-1">目标 1</a></li>
+        <li><a href="#目标-2">目标 2</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#积木消失了">积木消失了</a></li>
+        <li><a href="#存在即是被感知">&ldquo;存在即是被感知&rdquo;</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#scratch-扩展里的三类积木">Scratch 扩展里的三类积木</a>
+      <ul>
+        <li><a href="#最佳实践之争">最佳实践之争</a></li>
+        <li><a href="#交互模式">交互模式</a></li>
+        <li><a href="#cozmo-插件">Cozmo 插件</a></li>
+        <li><a href="#来自-jupyter-的启发">来自 Jupyter 的启发</a></li>
+        <li><a href="#异步消息--同步积木">异步消息 + 同步积木</a></li>
+        <li><a href="#cozmo-插件-1">Cozmo 插件</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#交互式-与-消息编程">交互式 与 消息编程</a></li>
+        <li><a href="#command-和-reporter-的-区别">COMMAND 和 REPORTER 的 区别</a></li>
+        <li><a href="#关于愚蠢策略">关于愚蠢策略</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>Keep It Simple, Stupid (<a href="https://zh.wikipedia.org/zh/KISS%E5%8E%9F%E5%88%99">KISS</a>)</p>
+</blockquote>
+<p><img src="/post/img/cozmo92f55c7b.png" alt="Cozmo图片"></p>
+<!--不要花太多篇幅吐槽行业，专注在论点上
+帮助大家理解最佳实践，而不是卖弄聪明
+积木一定是代码
+    论点是什么
+温和一些
+分离目标
+    cozmo扩展说明
+    最佳实践
+很多问题没有想清楚 是没法写清楚的
+-->
+<h1 id="背景">背景</h1>
+<p>本文写作有 3 个背景。</p>
+<p>其一是 教育从业者 @jinlei 基于 Cozmo 已经顺利实施了很长时间的 AI 教育，学生们热爱 Cozmo，他们使用它构建项目时， 对 AI 领域的许多基础概念有了直观的认识，过程愉快而有趣。Cozmo 作为教育机器人，如 CMU 的 David S. Touretzky 教授所言: <strong>一骑绝尘</strong> ，这正是诸多组织，从 CMU、MIT、Google 到<a href="https://ai-4-all.org/">AI4ALL</a> 将其用于 AI 教育的原因。@jinlei 希望使用 CodeLab Adapter 和 CodeLab Scratch 将 Cozmo 从官方 APP 中解放出来，使其能够可以与 STEM 领域的更多其他事物互动，以便于实施更广阔的教育场景。由于 @jinlei 团队比 CodeLab 更理解 Cozmo 在 AI 教育所能发挥的作用，所以我们计划将 Cozmo 接入 Scratch 相关的所有源码都开放出来(包括 <a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/nodes_v3/node_cozmo.py">Adapter cozmo extension</a> 和 <a href="https://github.com/CodeLabClub/scratch3_cozmo">Scratch cozmo extension</a>)，并在本文里说明设计思路，以便于 @jinlei 团队能够基于我们的工作继续前进，使 Cozmo 在 AI 教育上走得更远。</p>
+<p>背景之二是， 每周会收到若干来自 STEM/编程教育从业者 的邮件，他们对 CodeLab 目前在做的事情予以慷慨鼓励，认为 CodeLab 在做一些 &ldquo;真正有野心和想象力的事情&rdquo;， 认为我们正在改变这个行业的基本理念和基础设施，但他们同时也好奇我们是如何开展技术工作的，从思路到实施，希望 CodeLab 能分享与 Adapter/Scratch 相关的更多实施细节和讨论文章（教育设备厂商则希望获得将设备接入 Adapter/Scratch 的引导）。</p>
+<p>背景之三是， 偶然发现<a href="http://www.culmart.com/labs/doku.php?id=program:scratch:adapter">酷玛实验室（Culmart STEAM Labs）</a> 将 CodeLab Adapter 收纳到 <a href="http://www.culmart.com/labs/doku.php?id=program:scratch:adapter">STEM 教育 wiki</a> 中, 将其与伯克利大学的 S4A 以及 MIT 官方的 Scratch Link 并列为<code>Scratch的扩展机制</code>，所以我们计划讨论关于扩展的最佳实践。正如我们与 MIT Scratch Team 碰面时聊到的，我们相信 Adapter 是一种比 Scratch Link 更为灵活的架构，其基于消息的设计，能为 Scratch 重新引入 Smalltalk 的灵活性和更多编程乐趣，同时，可理解性也远高于 Scratch Link，我们希望学习者随着能力的提升，能够不段在系统中探险，开发自己的插件，而不是只作为黑盒工具的使用者。本文想以 Cozmo 为具体案例，讨论这种灵活性是如何构建的，希望更多人采用 CodeLab Adapter 去扩展 Scratch。</p>
+<!--CodeLab Adapter 是 Cozmo/Vector 社区主要使用的工具之一，有些机构将其用于高中教育，另一些则是普通家长将其用于与孩子一起构建好玩的项目。-->
+<h1 id="cozmo-是什么">Cozmo 是什么？</h1>
+<p>Cozmo 是来自未来的智能机器人。</p>
+<p><img src="/post/img/cozmo92f55c7b.png" alt="Cozmo图片"></p>
+<p><a href="https://en.wikipedia.org/wiki/David_S._Touretzky">David S. Touretzky 教授</a>此前在社区里发帖说尽管 Cozmo 推出了一年多，依然一骑绝尘，他将其作为教科书级别的典范用于 CMU 的机器人教学，现在是 2020 年，时间又过去了 3，4 年，在 AI 教育机器人这个话题下, 遗憾的是, Cozmo 依然一骑绝尘，唯一的对手或许是它的第二代: Vector。构建它们的团队，可真是梦之队。</p>
+<p>如果你对 Cozmo 不熟悉，可以翻阅我在 2017 年写的一篇的文章<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/cozmo-hello-world/">cozmo 系列之入门 - 有性格且可编程的机器人</a>， 从中引一段过来:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">这个憨态可掬的机器人，有些像微缩版的瓦力(正是由瓦力的设计师设计了它的外观)，不过它可没瓦力乖巧
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">它从睡眼惺忪中醒来，伸伸懒腰，便下床(充电座)自顾自地玩耍，它有自个儿的玩具(发光方块)，如果你有时间，愿意陪它做游戏，它会很开心，赢了得意忘形，输了就捶胸顿足，得失心这么重，恐怕不适合炒股
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">如果你没空陪它，也无妨，它闲庭信步，吹吹口哨、哼哼小曲儿;闲着无聊，便来回搬运自己的玩具，堆叠起来或是一把推翻，自得其乐。除了不尿裤子，其他方面都像极了你六岁时的样子
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">想找你玩，而你又没空的时候，它会来一出苦情戏，走到桌子边缘，假装要掉下去，真站到边缘，又会被自己吓一跳，忙往回缩，这样的演技恐怕只适合拍偶像剧了
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/post/img/cozmoba993abb.png" alt=""></p>
+<h1 id="技术层面的目标">技术层面的目标</h1>
+<p>本文的主题是讨论 <strong>Scratch 拓展最佳实践</strong>， 在技术层面上，希望实现以下 2 个目标:</p>
+<h3 id="目标-1">目标 1</h3>
+<p>像我们之前在<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a>所做的，区分出领域问题是什么？领域问题内的竞争解决方案，各自有哪些优劣势？什么是最佳实践，理由是什么？</p>
+<p>不少 CodeLab 访客以及 编程教育从业者 与我们讨论<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a>，根据大家的意见，我们丰富了一些论据，时间过去一年多，我们对这个问题持有相同的论点。很开心这篇文章被当前领域的出色开发者引用:</p>
+<ul>
+<li><a href="https://thinkhard.tech/2019/06/13/about-interpreter/">两种硬件编程的风格：离线下载和在线交互</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/111399860">Scratch3.0 二次开发｜ 9. Extensions microbit 解读</a></li>
+</ul>
+<p>文章中提到的&quot;灌入式风格&quot;和&quot;交互式风格&quot;是我们当时生造的词，但后来被人们用做讨论时采用的词汇， 这种区分如果是对的，它会帮助人们意识到领域问题。 我们希望本文也能起到类似作用。</p>
+<p>此外，需要说明的是，本文的一些论点依赖于 <a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a>，所以推荐你阅读它。</p>
+<h3 id="目标-2">目标 2</h3>
+<p>本文第二个目标是希望揭示出构建 Scratch 拓展的开发过程所包含的共性。虽然 Cozmo 是一个硬件设备，但是我们想指出，无论是接入硬件还是软件，无论是 AI 还是 IoT，其构建过程、需要关注的问题、编程模式和面临的困难都是相似的。你很可能会需要处理并发、阻塞、同步、异步、代码生成&hellip; 之类的问题，这些问题并不简单。但好在，如果你使用 CodeLab Adapter，就可以直接利用 CodeLab 踩了很多坑，总结出的解决方案。</p>
+<p>实际上，当试图设计一种可扩展架构，同时允许接入硬件和软件时，或许会得出一个有趣的观点: 硬件和软件的区分是不重要的，硬件可以看作软件的一个特例。这个观点看起来有些惊世骇俗，但它很可能是你的切身感受，只是怕说出来被嘲笑无知。斯坦福大学维护的<a href="https://plato.stanford.edu/index.html">斯坦福哲学百科全书</a>的<a href="https://plato.stanford.edu/entries/computer-science/">计算机哲学</a>条目下里列出了这个观点。</p>
+<p>接下来，让我们潜入到问题中。</p>
+<hr>
+<h1 id="看几个例子">看几个例子</h1>
+<p>按惯例，先从几个具体的例子开始， 感受一下在 CodeLab Scratch 中为 Cozmo 编程是怎样的感觉。</p>
+<h3 id="积木消失了">积木消失了</h3>
+<p><video  src="https://adapter.codelab.club/video/1587801240738968.mp4" controls="controls"></video></p>
+<p>Cozmo 依次说的是：</p>
+<ul>
+<li>3 号积木消失了</li>
+<li>1 号积木消失了</li>
+<li>2 号积木消失了</li>
+</ul>
+<p>不知道你听出来没有：）</p>
+<p>Cozmo 目前还没有中文发音引擎，我让它用英文口音读拼音，特有喜感，很喜欢。</p>
+<p>以下 CodeLab Scratch 里对应的程序</p>
+<p><img src="/post/img/3428053d0dbf85e56fdc6ad4985fdefc.png" alt=""></p>
+<p>程序的逻辑是: 当 Cozmo 视野中(机器视觉) 积木(cube)消失之后，Cozmo 说出消失的积木编号。</p>
+<h3 id="存在即是被感知">&ldquo;存在即是被感知&rdquo;</h3>
+<p><video width=50% src="https://adapter.codelab.club/video/1587801214121847.mp4" controls="controls"></video></p>
+<p>房间里的灯，在 Cozmo 闭上眼睛之后就消失了，从此它信奉贝克莱主教说的 &ldquo;存在就是被感知&rdquo; (罗素《哲学问题》里对这个话题的讨论很有趣)</p>
+<p>以下是对应程序:</p>
+<p><img src="/post/img/88921055c99d519a63d547f5570526eb.png" alt=""></p>
+<p>程序的逻辑是: 当 Cozmo 视野中的 1 号积木消失之后(Cozmo 视线被我的手挡住)，将房间里的灯关闭(关于可编程空间参考<a href="https://www.codelab.club/blog/codelab%E6%9A%97%E5%8F%B7%E4%B9%8B%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/">CodeLab 暗号之可编程空间</a>)。</p>
+<h1 id="scratch-扩展">Scratch 扩展</h1>
+<p>Scratch3.0 支持扩展，如果你不了解 Scratch 扩展，推荐阅读我们之前的文章:<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/create-first-scratch3-extension/">创建你的第一个 Scratch3.0 Extension</a>。</p>
+<p>假设你已经对 Scratch 扩展比较熟悉，本文的主题是 <strong>最佳实践</strong>， 所以不会谈论太多入门知识，但会尽量避免太多术语。</p>
+<h2 id="scratch-扩展里的三类积木">Scratch 扩展里的三类积木</h2>
+<p>在 Scratch 扩展中，一般会涉及到三类积木:</p>
+<ul>
+<li>COMMAND</li>
+<li>REPORTER (BOOLEAN 和 REPORTER 有很多相似出，就只谈 REPORTER)</li>
+<li>HAT</li>
+</ul>
+<p>先简单介绍一下三类积木，之后它们在扩展中的最佳实践是什么。</p>
+<ul>
+<li>COMMAND 积木最为简单，如其字面意思，它用来执行某个 <code>command</code>。在前头的《积木消失了》案例里，让 Cozmo 说话的积木 ，就是 COMMAND 类型的积木，它的功能是让 Cozmo <strong>执行</strong> 说话的功能。COMMAND 类型的积木也是 Scratch 里最多的一类积木。Scratch 原生的 <code>move</code>、<code>turn</code>都是 COMMAND 积木。有过传统编程语言经验的开发者，或许会把 COMMAND 积木想象为 <strong>没有返回值的函数调用</strong> 。</li>
+<li>REPORTER 积木，像一个圆角按钮， 按其字面意思，指的是有返回值的积木(BOOLEAN 类似)，它 <strong>返回某个值</strong>，所以可以嵌入到其他积木里。在前头的案例里没有使用它。 但在《积木消失了》程序截图中，你能看到 <strong>head_angle</strong> 积木，运行它，将实时返回 Cozmo 的头部倾角。有过传统编程语言经验的开发者，或许会把 REPORTER 积木想象为 <strong>有返回值的函数调用</strong> 。</li>
+<li>HAT 积木是所有看起来像帽子，这是它名字的来源。语义是 <code>当(when)某件事发生，然后(then)运行其下程序</code>。最有名的 HAT 积木是的 <strong>小绿旗</strong>，一般用于程序的开始，当用户点击小绿旗时, 然后开始运行其下程序。在前边《积木消失了》和《&ldquo;存在即是被感知&rdquo;》程序截图中，都有 HAT 积木，&ldquo;当视野里的积木消失时，然后&hellip;&quot;，如果你熟悉事件驱动，它有回调函数的味道，但在实现细节上，它基于轮训实现，我们将在后边细说。<!--是否可以基于promise？--></li>
+</ul>
+<p>刚才站在 Scratch 使用者视角，从语义层面对这三类积木做了简单介绍。接下来让我们站在实现角度看待它们。</p>
+<p>Scratch 3.0 采用 JavaScript 构建，每一个被具体定义的积木，无论是哪种类型(COMMAND/REPORTER/HAT), 它实际上都映射到一个 JavaScript 函数。</p>
+<p>COMMAND 和 REPORTER 很简单，COMMAND 积木映射到无返回值的函数(也可以给返回值，但返回值只是提示信息，无法传递给其他积木)，REPORTER 映射到有返回值的函数。</p>
+<p>至于 HAT 积木，它用起来像回调函数。在实现上，它绑定到一个函数中，这个函数不停运行，返回 true/false，如果返回 ture，则触发其下程序，语义即是<code>当(when)某件事为真(发生)，然后(then)运行其下程序</code>。可以看出，每个 hat 积木对应的函数都被抛到一个简单的事件循环里。你需要深入到<code>事件</code>背后的实现里。 <!--todo 重新思考eim的事件循环，效率低下，考虑promise --></p>
+<p>如果你有 blockly 经验，会发现，Scratch 积木似乎是 blockly 积木的简化版本，从积木类型和组合方式来看来看，确实是的。</p>
+<h3 id="最佳实践之争">最佳实践之争</h3>
+<blockquote>
+<p>Designing a learning system without a solid understanding of the principles in this book is like designing a mechanical system without understanding &ldquo;the lever&rdquo;. Or &ldquo;gravity&rdquo;. If you are reading this essay (and I&rsquo;m pretty sure you are!) then you need to read &ldquo;Mindstorms&rdquo;. &ndash; Bret Victor 《LEARNABLE PROGRAMMING Designing a programming system for understanding programs》</p>
+</blockquote>
+<!--先介绍最佳实践 再介绍反模式-->
+<p>接下来我们来着手论述，基于这三类积木，将外部设备(如 Cozmo)接入 Scratch，其最佳实践是什么？</p>
+<p>如果只有一种策略，便无所谓最佳实践。但将外部设备接入 Scratch 的机制是多样的，这些方法并不彼此等效，有些比另一些更好。在论述什么是最佳实践时，我们先来看看，该领域里都有那些做法。</p>
+<p>目前有 3 大类做法:</p>
+<ol>
+<li>从积木中严格生成代码，再将代码烧录到硬件设备中，这是<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">灌入式</a>。</li>
+<li>混合灌入式与交互式。</li>
+<li>交互式风格
+<ul>
+<li>Scratch Link, 策略是将 BLE 的<code>read write notify</code>分别映射到积木上</li>
+<li>CodeLab Adapter, 采用异步消息，充当中立的消息系统。支持灵活的通信模式。但推荐插件实现者关注CQRS(Command Query Responsibility Segregation)原则。</li>
+</ul>
+</li>
+</ol>
+<p>第 1 种做法，属于灌入式风格，其缺陷我们已经在<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a>做过批评了。</p>
+<!--**最好的想法** 有时候与 **最不坏的想法** 等效，如果我们不去干所有的蠢事，就容易做到最佳实践。-->
+<p>从 <a href="https://github.com/google/blockly">blockly</a> 那边转过来的开发者，喜欢将积木视为 <strong>严格的代码生成器</strong>。</p>
+<p>将 Scratch 积木当作 blockly 积木来用是不划算的，甚至是愚蠢的，但这种愚蠢却并不显而易见。</p>
+<p>将 Scratch 积木用作<strong>严格的代码生成器</strong>将同时失去两者的优点: 既失去 blockly 轻巧的优点，又失去 Scratch 以复杂结构为代价所构建的动态运行时(runtime)。 却同时抱有它们的缺点: Scratch 的笨重身体、blockly 的单薄灵魂(<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-blockly/">blockly 只做一件事</a>)。</p>
+<p>涉及 Scratch 和 blockly 的比较讨论，参考我们此前的文章 :<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-blockly/">Blockly 与 Scratch3.0 的比较分析及选型建议</a></p>
+<p>反对第 1 种策略的主要理由来自可理解性，因为它用于教育场景，可理解性至关重要。 如我们在<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a>论述的：</p>
+<blockquote>
+<p>灌入式阵营的小伙伴可能会反驳说，你们 generate 的代码并不是真正用于运行的。我会回答说: 对，我恰恰认为，不该把真正执行的代码 generate 出来给用户看。积木之所以是个好工具，正是因为它能自如地隐藏复杂度，暴露出合适粒度的概念颗粒，积木并不只是帮助我们省去记忆语法规则，更重要的是，它允许我们根据学生所处的阶段，给予他不同抽象程度的积木。我很喜欢来自 lisp 社区的忠告:表达你的意图，而不是操作过程，这样有助于我们能站在更高的抽象层面上。</p>
+</blockquote>
+<p>这里还有一条写给开发团队的建议，将积木视为严格的代码生成器，这种观点其实是想完全采用<a href="https://zh.wikipedia.org/wiki/%E5%B7%A8%E9%9B%86">宏(Macro)</a>来编程, <a href="https://zh.wikipedia.org/wiki/%E5%B7%A8%E9%9B%86">宏(Macro)</a>是强大的，但也是危险的，随着系统复杂度的增加，约束之间的彼此冲突，会给开发团队带来极大的痛苦，失去一致性之后，很容易被复杂度拖垮。此外你将失去可扩展性，它的动态性将很差，难以实现 REPL ，而且难以实现晚绑定(Late binding)。</p>
+<p>策略 2 也被广泛使用。这种折衷策略，能暂时隐藏许多问题，所以对它的批评更为困难些，但它却更为危险，因为混合了许多问题， 我们之后将专门写一篇文章，从一致性和可理解性角度进行批评。在此不细说。</p>
+<p>现在假设你同意交互式是正途，问题并未就此结束。</p>
+<p>Scratch Link 和 CodeLab Adapter 都使用交互式，我们暂且抛开 Scratch Link 仅支持 BLE 带来的问题(该问题<a href="https://adapter.codelab.club/user_guide/FAQ/#scratch-link">在此做了说明</a>)。在此也不讨论 CodeLab Adapter 架构上的开放性和可扩展性（实际上，可以在 CodeLab Adapter 中实现一个 <code>Scratch Link extension</code> ，从而将 Scratch Link 看作 CodeLab Adapter 的一个子集。 @<a href="https://github.com/wangshub">wangshub</a>之前已经做了类似的工作，他构建了 Adapter BLE GATT dongle）</p>
+<!--我们先来关注一下 CQRS(Command Query Responsibility Segregation)的概念。-->
+<h3 id="交互模式">交互模式</h3>
+<p>此前分析过 Scratch Link 与 micro:bit 通信的细节: <a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-microbit-analysis/">分析 scratch3.0 与 micro:bit 的通信</a>, 与 Scratch Link 配合的 Scratch 积木（micro:bit/LEGO&hellip;）多是这种风格。</p>
+<p>在 Scratch Link micro:bit 插件中，REPORTER 和 HAT 积木都依赖于 notify，HAT 依赖于信息流可以理解，但 REPORTER 也依赖于信息流，有点奇怪。更自然的想法似乎是，REPORTER 的返回值通过主动查询得到，而不是由硬件按照某个频率源源不断地广播过来(notify)。 Scratch Link micro:bit 把事件流和数据流看作一类事物。</p>
+<p>CodeLab 的 <a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_usb_microbit.py">usbMicrobit 插件</a>深受 Scratch Link micro:bit 影响，也采用了 notify 流推送风格。 但我们现在认为，主动查询是一种更优方案。</p>
+<p>原因有两点:</p>
+<ul>
+<li>功耗更低</li>
+<li>实现更简单</li>
+</ul>
+<h3 id="cozmo-插件">Cozmo 插件</h3>
+<p>所以我们在 Cozmo 插件中采用了这个策略, 以 <code>head_angle</code> 积木为例， 这一个 REPORTER 类型的积木，源码如下</p>
+<p>在 <a href="https://github.com/CodeLabClub/scratch3_cozmo/blob/master/index.js#L643">Scratch cozmo 扩展里</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl">    <span class="nx">get_head_angle</span><span class="p">(</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">content</span> <span class="o">=</span> <span class="s2">&#34;robot.head_angle.degrees&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">adapter_client</span><span class="p">.</span><span class="nx">emit_with_messageid</span><span class="p">(</span><span class="nx">NODE_ID</span><span class="p">,</span> <span class="nx">content</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在 <a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/nodes_v3/node_cozmo.py#L182">Adapter Cozmo 插件</a>里:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">                <span class="n">payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;python: </span><span class="si">{</span><span class="n">payload</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">message_id</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;message_id&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">python_code</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&#34;content&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">output</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">python_code</span><span class="p">,</span> <span class="p">{</span><span class="s2">&#34;__builtins__&#34;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;cozmo&#34;</span><span class="p">:</span> <span class="n">cozmo</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="s2">&#34;robot&#34;</span><span class="p">:</span> <span class="n">robot</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">output</span> <span class="o">=</span> <span class="n">e</span>
+</span></span><span class="line"><span class="cl">                    <span class="bp">self</span><span class="o">.</span><span class="n">pub_notification</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&#34;ERROR&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">payload</span><span class="p">[</span><span class="s2">&#34;content&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">message</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;payload&#34;</span><span class="p">:</span> <span class="n">payload</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>后者可以看作通用的 REPL kernel，既能回答 query 问题，又能执行 command。</p>
+<p>至于 HAT 类积如何实现，采用的是主动发送事件(Cozmo 有 event handle)。值得提醒的是，许多硬件并没有实现event handle，在这种情况下可以使用连续的状态广播(notify)，前文有谈及。</p>
+<p>在<a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/nodes_v3/node_cozmo.py#L145">Adapter Cozmo 插件</a>里相关源码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">robot</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">cozmo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">EvtObjectTapped</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">onObjectTapped</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="https://github.com/CodeLabClub/scratch3_cozmo/blob/master/index.js#L72">Scratch cozmo 扩展</a>里相关源码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="nx">message_type</span> <span class="o">===</span> <span class="s2">&#34;device_event&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;device_event:&#34;</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">content</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">this</span><span class="p">.</span><span class="nx">event_name</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">event_name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">this</span><span class="p">.</span><span class="nx">event_param</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">event_param</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="来自-jupyter-的启发">来自 Jupyter 的启发</h3>
+<p>需要指出的是，上述通过查询获取值的策略，也正是 jupyter/ipython kernel 采用的机制（REPL 程序大多是这样做的，read 和 write 的执行机制是一样的，这样一来，非常简单）。</p>
+<p>jupyter 给我们的另一个启发是，在消息中传递代码，并不一定是坏想法，它很可能比 RPC 灵活，把这个想法加上我们之前提到的 积木可以生成代码，就得到了我们目前的策略: 积木生成代码 + 消息通信 + REPL， 这是目前我们接入 Cozmo 的策略。这个策略有极强的灵活性, 同时却没有严格生成代码带来的许多风险。</p>
+<p>这种模式允许我们构建 <strong>能够运行代码的积木</strong>。</p>
+<p><img src="http://adapter.codelab.club/img/58f7f1510b9b7decb6ea6c75f429ac40.png" alt=""></p>
+<p>这有什么用呢？ 这允许 Scratch 用户，不触及 Scratch 源码，却能在自定义积木上得到极高灵活性，ta 可以<a href="https://adapter.codelab.club/extension_guide/extension_python_kernel/">使用 Python 去拓展 Scratch</a>。 ta 甚至可以使用 10 块以内的积木在 Scratch 里构建一个 Python REPL。</p>
+<p><img src="http://adapter.codelab.club/img/55f132dc678b8a4eef215fefc9377e07.png" alt=""></p>
+<p>这是我们目前找到的最佳实践之一。 虽然 CodeLab Adapter 并不限制你采用什么模式，它高度灵活，但我们会把探索出来的最佳实践分享给社区。</p>
+<h3 id="异步消息--同步积木">异步消息 + 同步积木</h3>
+<p>关于最佳实践的第二个部分，涉及同步与异步。</p>
+<p>关于同步、异步、阻塞、非阻塞，没有过分布式系统开发经验的开发者会常常会将它们混为一谈，这篇文章，做了很好梳理: <a href="https://www.zhihu.com/question/19732473">怎样理解阻塞非阻塞与同步异步的区别？</a></p>
+<blockquote>
+<p>同步和异步关注的是消息通信机制 (synchronous communication/ asynchronous communication)。所谓同步，就是在发出一个<strong>调用</strong>时，在没有得到结果之前，该<strong>调用</strong>就不返回。但是一旦调用返回，就得到返回值了&hellip; 而异步则是相反，<strong>调用</strong>在发出之后，这个调用就直接返回了，所以没有返回结果。</p>
+</blockquote>
+<blockquote>
+<p>阻塞和非阻塞关注的是程序在等待调用结果（消息，返回值）时的状态&hellip;阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
+</blockquote>
+<p>在此我们的论点是，在 Scratch 内的积木尽量使用同步阻塞风格，而它的实现却应该是异步非阻塞的。 具体实现部分主要是:<a href="https://github.com/CodeLabClub/scratch3_cozmo/blob/master/index.js#L98">emit_with_messageid</a>及与之相关的代码。</p>
+<p>之所以应该尽量使用同步阻塞风格，是因为 Scratch 默认支持多任务，所以让积木采用同步阻塞风格并不会破坏 Scratch 的并发能力。除非你有正当理由使用非阻塞风格(诸如 Scratch 里的非阻塞播放音乐),否则同步积木应该是默认选择，由于 Javascript 默认是异步非阻塞，在消息通信中如何实现同步，使用 promise，细节参考我们开放出来的 Scratch 插件源码。</p>
+<p>在 Adapter 架构层面，我们将同步看作异步的一个特例，这是受 ROS 影响的结果。这是我们拒绝使用 RPC 的一个原因。当然 RPC 可以异步实现，注意这是个陷阱，虽然 RPC 可以异步实现，但不意味着你使用 RPC 框架的时候是异步的，这里混杂很多的问题。或许只有在实践中，才会意识到。</p>
+<p>异步与同步相关的机制，你最好自己去实现它（尽管你最后可能使用某些框架），并理解其中的细节。意识到当你处理异步同步之类的问题时，你并不处于业务逻辑层，如果你不深入实现机制内部，去管理同步异步的机制，通常会陷入各种困境里。当然主要原因也是今天的这个领域还不是很成熟，底层库和语言层都在变动。 如果你已经踩了很多坑，我们开放的 Cozmo 源码相信会是你的好朋友，如果这些坑你都没踩过，推荐使用 CodeLab Adapter，我们已经解决了许多问题，它们并不容易处理，甚至不容易意识到。</p>
+<h3 id="cozmo-插件-1">Cozmo 插件</h3>
+<p>经过漫长的讨论，此刻你可能想深入 Cozmo 插件细节里。</p>
+<ul>
+<li><a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/nodes_v3/node_cozmo.py">Adapter cozmo extension</a></li>
+<li><a href="https://github.com/CodeLabClub/scratch3_cozmo">Scratch cozmo extension</a></li>
+</ul>
+<p>如果你已经理解上述这些讨论，源码应该比较好读, 并且你会理解它为何这样实现，为何在众多策略选择中，偏偏选择这种看起来很奇怪的机制。</p>
+<p>在你深入源码之前，我们做如下提醒:</p>
+<ul>
+<li>有三大类积木:
+<ul>
+<li>COMMAND</li>
+<li>REPORTER (BOOLEAN 和 REPORTER 相似)</li>
+<li>HAT</li>
+</ul>
+</li>
+</ul>
+<p>分别把它们映射到</p>
+<ul>
+<li>command</li>
+<li>query</li>
+<li>event</li>
+</ul>
+<p>关注 CQRS 原则。 关注积木的语义而不是它的实现。</p>
+<p>有时你可能希望使用 notify，来传递值到 REPORTER 积木里（诸如你希望有很好的实时性），在消息层面很容实现，你应该能够轻松在 Adapter 里自己实现它。除非必要，否则我们比较推荐使用 query，因为它更简单。</p>
+<p>理解 Cozmo 插件的核心是理解 REPL。</p>
+<p>如果你正在使用 Cozmo，希望为它增加更多有趣的积木，欢迎给我们提 Pull Request。</p>
+<h1 id="附">附</h1>
+<p>附上一些相关的讨论。</p>
+<h3 id="交互式-与-消息编程">交互式 与 消息编程</h3>
+<p>如果你认同<a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a>一文的观点，当你要实施它时，最佳实践可能是基于消息风格的编程, 这正是<a href="https://adapter.codelab.club/">CodeLab Adapter</a>所做的事情。使用<a href="https://adapter.codelab.club/">CodeLab Adapter</a>，你将免费得到灵活性，而且它很简单，副作用小，对减少掉头发很有用。</p>
+<p>如果你继续深究，会发现扩展 Scratch 时，如果你只是接入自家的一款设备，不关注未来的可扩展性，可以使用各种静态硬编码方法，但是，如果你希望保留灵活性和互操作能力，通常会导向交互式风格及其最佳实现方法: 消息，这是为何？原因在于 Scratch 依然保持其最初实现语言: Smalltalk 的风格架构，只不过 3.0 是在 JavaScript 里模拟它。而 Smalltalk 的核心是 <strong>消息</strong> 和 <strong>对象</strong> (Scratch 中的角色(源码中的 target))，如 Alan Kay 说的 <strong>消息</strong> 是 Smalltalk 真正的 big idea，可是主流领域却认为 Smalltalk 的革命性在于面向对象。</p>
+<h3 id="command-和-reporter-的-区别">COMMAND 和 REPORTER 的 区别</h3>
+<p>你可能会想到函数和子程序的区别，前者有返回值，后者没有。</p>
+<p>我建议从 <strong>可组合性</strong> 这个角度看待它们之间的区别。 你可以把 COMMAND 积木想象为序列颗粒，可以整合到运行流中。而 REPORTER 积木只能作为 <strong>值</strong> 嵌入到其他积木里。</p>
+<h3 id="关于愚蠢策略">关于愚蠢策略</h3>
+<p>我们之所以理解文中的愚蠢策略，并不是因为我们更聪明，而是因为我们愚蠢且固执。我们曾抱有相同的愚蠢，不愿舍弃，层层深入，痛苦不堪，曾以各种方式试图在 Blockly 中构建一个动态系统，这在软件层面还勉强可行，当试图驱动硬件设备(树莓派), 试图与其他系统互操作，试图映射越来越多的功能，它最终崩溃在复杂性的大杂烩里。灵活性、互操作性以及可理解性是难以用蛮力和人力堆出来的。它需要认真的思考和设计。</p>
+<blockquote>
+<p>我们每个人在内心深处都怀有一个梦想: 希望创造出一个鲜活的世界，一个宇宙。处在我们生活的中间、被训练为架构师的那些人，拥有这样的渴望: 在某一天，在某一个地方，因为某种原因，创造出了一个不可思议的、美丽的、摄人心魄的场所，在那里人们可以漫步，可以梦想，历经很多世纪绵延不绝. –- Christopher Alexander</p>
+</blockquote>
+<!--
+## 站在教育视角批评
+
+技术层面的愚蠢不会是致命的，如果会它倒是好事，因为这意味这自然淘汰，但糟糕的架构设计，通常可以通过堆更多的人力来掩盖它，或者延迟项目的崩溃。技术上的不合理，通常不会是一个项目快速失败的原因，尤其当它是一个教育项目，但它会是折磨这个团队的原因，让工程师觉得代码很"恶心"。
+
+正是因为这些项目不会立马溃败，它们甚至还能取得很不错的市场占有率，家长和孩子并没有分辨能力，这正是 Scratch/Etoys 没有更流行的原因，以及其众多糟糕的模仿者能存在的原因。在技术领域，存在即合理是个天真的想法，看看人们忍受了多久的 IE6，最广泛使用的项目和优秀项目没什么强关联。（参考 Alan Kay 的[这篇访谈](https://queue.acm.org/detail.cfm?id=1039523)）
+
+灾难正在于此，糟糕设计的系统，不会赋予使用者力量，它会让编程成为一件痛苦不堪的事情，但是商业机构总是可以让开发团队，或者合作者(那些专业的成年人)去构建许多"大型的复杂案例"
+
+这些孩子在这些设计不合理的系统中，他们只能质疑是自己智力的问题
+
+如果工具本身很糟糕，教育人们熟练使用这些糟糕的系统，看起来艰辛，却是一种灾难 -- 愚蠢成为灾难的一个例子。
+
+Alan Kay 对 java 的批评: 世界会美好很多 《》
+
+低门槛 高天花板 宽围墙
+
+将是没有教育语义的
+
+可理解性在哪里？
+
+Scratch 的可理解性在于 **实现与变现的分离**, 那是一种带着期末验收作业的懒惰老师
+
+move 你看不到代码，你看到代码并不能更好理解它，像素对于理解
+引用之前的文章
+
+### 更好的想法
+
+并不是放弃代码
+
+而是适度生成代码。
+
+
+像 wechat 或者 robomaster，关注消息。
+
+如果你的硬件中有解释器或 SDK， 最佳实践就是
+
+因为我们可以将三类积木映射为三种风格的消息通信过程！
+
+接下来以 cozmo 为例分别论述
+
+### 以 Cozmo 为例
+
+这些想法在 Cozmo 中的应用
+
+
+并不是说这种系统，我反编译过一些公司的代码，很聪明，投入巨大人力财力，难以维护和脆弱的，聪明的代码是可怕的，《Unix 设计哲学》从历史上，失败的大型项目上，KISS，10w 行代码，复杂通常是脆弱的同义词。
+CodeLab Adapter 通常是更好的选择，我们没有投入一个大团队，也没有投入好多年，快速生长，可理解。愉快而有趣
+
+查询
+命令
+事件
+
+流
+
+when 的本质
+流 缓冲区
+
+学到的不过时一堆离开这个拍脑袋的系统就失效的一堆规则。
+
+事实上，我反对的依然是灌入式，REPL。增量前进的系统，可以与它交谈，遇到错误时，可以缩小范围，问问系统，是这行错了吗，那行错了吗？
+
+使用积木生成代码的策略是相当愚蠢的，但这种愚蠢并不显而易见，但是，深藏的愚蠢毕竟也是愚蠢。
+
+C++程序员或许是例外， 像 Alan Kay 在[接收 acmqueue 采访时提到的](https://queue.acm.org/detail.cfm?id=1039523)，将 C++用的很好的那些人，多是是将 C++当作一种宏处理器来使用。
+
+想象有一个交谈的环境,虚拟机的概念(vm),当然是广义上的，当你这样想的时候，你最终就会开始重造一个 CodeLab Adapter。
+
+并不是说，传递代码是，想象每一次通信是 REPL，Jupyter 是这个想法最好的实践者之一。
+
+编程模型是什么
+编程式在思考什么呢？有统一的心理模型吗，还是每个积木都需要一份说明，破碎的功能
+
+# 总结
+
+最佳实践
+
+-   交互式风格
+-   看作函数，RPC，运行在分布式节点上，比 generate 强大，宏是非常危险和脆弱的，随着复杂度提升，风险将累积，不一致性将到处都是，编程成为记住各种组合特例的记忆游戏。
+    理论上是可行。即是像 makecode，这是微软的大作。
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/hardware-programming-style/">两种硬件编程风格的比较</a></li>
+<li><a href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-blockly/">Blockly 与 Scratch3.0 的比较分析及选型建议</a></li>
+<li><a href="https://www.zhihu.com/question/19732473">怎样理解阻塞非阻塞与同步异步的区别？</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-04-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/essays/">essays</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/design-principles-behind-neverland/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">CodeLab 可编程空间 背后的理念与设计原则</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/writing-coding/">
+            <span class="next-text nav-default">写作与编程</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用Let’s Encrypt(certbot)为你的网站生成免费的 SSL 证书 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="&amp;mdash; 2018.08.15更新 推荐使用acme.sh,教材参考:申请Let&amp;rsquo;s Encrypt通配符HTTPS证书 简单易用，且没有ce" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/https-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用Let’s Encrypt(certbot)为你的网站生成免费的 SSL 证书" />
+<meta property="og:description" content="&mdash; 2018.08.15更新 推荐使用acme.sh,教材参考:申请Let&rsquo;s Encrypt通配符HTTPS证书 简单易用，且没有ce" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/https-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-06-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-06-19T00:00:00+00:00" />
+
+<meta itemprop="name" content="使用Let’s Encrypt(certbot)为你的网站生成免费的 SSL 证书">
+<meta itemprop="description" content="&mdash; 2018.08.15更新 推荐使用acme.sh,教材参考:申请Let&rsquo;s Encrypt通配符HTTPS证书 简单易用，且没有ce"><meta itemprop="datePublished" content="2016-06-19T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-06-19T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1158">
+<meta itemprop="keywords" content="tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用Let’s Encrypt(certbot)为你的网站生成免费的 SSL 证书"/>
+<meta name="twitter:description" content="&mdash; 2018.08.15更新 推荐使用acme.sh,教材参考:申请Let&rsquo;s Encrypt通配符HTTPS证书 简单易用，且没有ce"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用Let’s Encrypt(certbot)为你的网站生成免费的 SSL 证书</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-06-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#关于https">关于HTTPS</a></li>
+        <li><a href="#关于tlsssl">关于TLS/SSL</a></li>
+        <li><a href="#相关算法">相关算法</a></li>
+        <li><a href="#国内现状">国内现状</a></li>
+        <li><a href="#安装配置">安装配置</a></li>
+        <li><a href="#证书续签">证书续签</a></li>
+        <li><a href="#将证书用于nginx">将证书用于nginx</a></li>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>&mdash; 2018.08.15更新</p>
+<p>推荐使用<a href="https://github.com/Neilpang/acme.sh">acme.sh</a>,教材参考:<a href="https://my.oschina.net/kimver/blog/1634575">申请Let&rsquo;s Encrypt通配符HTTPS证书</a></p>
+<p>简单易用，且没有cerbot的各种安装问题，连证书的自动更新都不必操心!</p>
+<h3 id="关于https">关于HTTPS</h3>
+<p>引维基百科的说法</p>
+<blockquote>
+<p>超文本传输安全协议（英语：Hypertext Transfer Protocol Secure，缩写：HTTPS）是一种网络安全传输协议。在计算机网络上，HTTPS经由超文本传输协议进行通信，但利用SSL/TLS来对数据包进行加密。HTTPS开发的主要目的，是提供对网络服务器的身份认证，保护交换数据的隐私与完整性</p>
+</blockquote>
+<blockquote>
+<p>HTTPS的主要思想是在不安全的网络上创建一安全信道，并可在使用适当的加密包和服务器证书可被验证且可被信任时，对窃听和中间人攻击提供合理的防护。</p>
+</blockquote>
+<h3 id="关于tlsssl">关于TLS/SSL</h3>
+<p>依然引用维基百科</p>
+<blockquote>
+<p>传输层安全协议（英语：Transport Layer Security，缩写：TLS），及其前身安全套接层（Secure Sockets Layer，缩写：SSL）是一种安全协议，目的是为互联网通信，提供安全及数据完整性保障</p>
+</blockquote>
+<h3 id="相关算法">相关算法</h3>
+<blockquote>
+<p>TLS利用密钥算法在互联网上提供端点身份认证与通讯保密，其基础是公钥基础设施。</p>
+</blockquote>
+<p>TLS包含三个基本阶段：</p>
+<ul>
+<li>对等协商支持的密钥算法</li>
+<li>基于非对称密钥的信息传输加密和身份认证、基于PKI证书的身份认证</li>
+<li>基于对称密钥的数据传输保密</li>
+</ul>
+<h3 id="国内现状">国内现状</h3>
+<p>由于运营商的劫持，国内公司不堪其扰，纷纷将全站采用https</p>
+<h3 id="安装配置">安装配置</h3>
+<ul>
+<li>wget <a href="https://dl.eff.org/certbot-auto">https://dl.eff.org/certbot-auto</a></li>
+<li>chmod a+x ./certbot-auto</li>
+<li>./certbot-auto &ndash;help all</li>
+<li>./certbot-auto certonly &ndash;standalone &ndash;email <a href="mailto:wwj@example.com">wwj@example.com</a>  -d <a href="https://www.just4fun.site">www.just4fun.site</a> (可以使用二级域名)</li>
+</ul>
+<p>如果最后一条命令报错:<code>setuptools pkg_resources pip wheel failed with error code 2</code></p>
+<p>解决方案是:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo apt-get install letsencryp
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo apt-get purge python-virtualenv python3-virtualenv virtualenv
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo pip install virtualenv
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>需要注意的是，验证的时候保证80/443端口对外开放，且不被占用，如果这些端口实现被nginx占用，先停掉nginx</p>
+<p>完成后查看生成的证书：</p>
+<ul>
+<li>sudo tree /etc/letsencrypt/live/</li>
+</ul>
+<h3 id="证书续签">证书续签</h3>
+<p>证书的失效期是3个月，</p>
+<p>续签的命令为:</p>
+<ul>
+<li>./certbot-auto renew 或</li>
+<li>./certbot-auto renew &ndash;standalone &ndash;pre-hook &ldquo;service nginx stop&rdquo; &ndash;post-hook &ldquo;service nginx start&rdquo;</li>
+</ul>
+<p>可以用cron添加一个定时任务，自动续签。</p>
+<h3 id="将证书用于nginx">将证书用于nginx</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">upstream minio_server {
+</span></span><span class="line"><span class="cl">            server 127.0.0.1:9000 fail_timeout=0;
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 监听 HTTPS 请求
+</span></span><span class="line"><span class="cl">server {
+</span></span><span class="line"><span class="cl">        #server_name example.com;
+</span></span><span class="line"><span class="cl">        listen 8443 ssl;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        # TLS 基本设置
+</span></span><span class="line"><span class="cl">        ssl_certificate /etc/letsencrypt/live/www.just4fun.site/fullchain.pem;
+</span></span><span class="line"><span class="cl">        ssl_certificate_key /etc/letsencrypt/live/www.just4fun.site/privkey.pem;
+</span></span><span class="line"><span class="cl">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        # 网站的其它设置不变
+</span></span><span class="line"><span class="cl">        # [...]
+</span></span><span class="line"><span class="cl">  location / {
+</span></span><span class="line"><span class="cl">        try_files $uri @proxy_to_app;
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  # No basic auth security on the heartbeat url, so that ELB can use it
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  location @proxy_to_app {
+</span></span><span class="line"><span class="cl">    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+</span></span><span class="line"><span class="cl">    proxy_set_header X-Forwarded-Port $http_x_forwarded_port;
+</span></span><span class="line"><span class="cl">    proxy_set_header X-Forwarded-For $http_x_forwarded_for;
+</span></span><span class="line"><span class="cl">    proxy_set_header Host $http_host;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    proxy_redirect off;
+</span></span><span class="line"><span class="cl">    proxy_pass http://minio_server;
+</span></span><span class="line"><span class="cl">  }
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当然我们可以将任意端口用于https，不过证书无法移植到其他服务器（可能是我还不熟悉）</p>
+<p>访问https://www.just4fun.site:18443，一切正常（我在青云的路由器上将8443端口映射为18443）</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="https://zh.wikipedia.org/zh/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE">超文本传输安全协议</a></li>
+<li><a href="https://zh.wikipedia.org/zh-cn/%E5%82%B3%E8%BC%B8%E5%B1%A4%E5%AE%89%E5%85%A8%E5%8D%94%E8%AD%B0">传输层安全协议</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html">SSL/TLS协议运行机制的概述</a></li>
+<li><a href="https://github.com/certbot/certbot">certbot</a></li>
+<li><a href="http://blog.windrunner.info/sa/lets-encrypt.html">使用 Let&rsquo;s Encrypt 生成免费的 SSL 证书</a></li>
+<li><a href="https://linuxtoy.org/archives/certbot.html">Certbot：自动部署 Let&rsquo;s Encrypt 证书</a></li>
+<li><a href="https://www.jianshu.com/p/c5c9d071e395">Let&rsquo;s Encrypt 终于支持通配符证书了</a>
+<ul>
+<li>&ndash;no-bootstrap 不检测系统依赖 &ndash;verbose pip详细输出</li>
+</ul>
+</li>
+<li><a href="https://my.oschina.net/kimver/blog/1634575">申请Let&rsquo;s Encrypt通配符HTTPS证书</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-06-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/use-csrf-to-attack-edx/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">利用CSRF漏洞对Open edX进行提权</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/install-minio-cloud-storage/">
+            <span class="next-text nav-default">构建类s3存储系统（Minio）</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

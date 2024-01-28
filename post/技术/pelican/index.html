@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>基于Pelican和github的静态博客搭建过程 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前两天刚把博客搭好，如你所见，你所在的地方就是用Pelican搭建的 为何使用github来搭建博客呢，这里给出了理由 Why not Jekyll? Jekyll基于r" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/pelican/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="基于Pelican和github的静态博客搭建过程" />
+<meta property="og:description" content="前两天刚把博客搭好，如你所见，你所在的地方就是用Pelican搭建的 为何使用github来搭建博客呢，这里给出了理由 Why not Jekyll? Jekyll基于r" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/pelican/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2013-08-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2013-08-09T00:00:00+00:00" />
+
+<meta itemprop="name" content="基于Pelican和github的静态博客搭建过程">
+<meta itemprop="description" content="前两天刚把博客搭好，如你所见，你所在的地方就是用Pelican搭建的 为何使用github来搭建博客呢，这里给出了理由 Why not Jekyll? Jekyll基于r"><meta itemprop="datePublished" content="2013-08-09T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2013-08-09T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1810">
+<meta itemprop="keywords" content=" python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="基于Pelican和github的静态博客搭建过程"/>
+<meta name="twitter:description" content="前两天刚把博客搭好，如你所见，你所在的地方就是用Pelican搭建的 为何使用github来搭建博客呢，这里给出了理由 Why not Jekyll? Jekyll基于r"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">基于Pelican和github的静态博客搭建过程</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-08-09 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#categories-技术">categories: [&ldquo;技术&rdquo;]</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>前两天刚把博客搭好，如你所见，你所在的地方就是用<code>Pelican</code>搭建的 <br>
+为何使用<code>github</code>来搭建博客呢，<a href="#todo">这里</a>给出了理由<br>
+Why not <a href="#todo">Jekyll</a>? <br>
+Jekyll基于<code>ruby</code>,Pelican基于<code>python</code>，我更习惯python，如此而已<br>
+使用Pelican之后，你只要用<code>markdown</code>格式写日志，Pelican会把markdown转换成<code>html</code>的格式，之后push到github pages上, 就可以看到你写的日志了，就是说你的所有工作就是用markdown写作，是不是很惬意^_^<br>
+Pelican 的一些主要<code>特性</code>：</p>
+<ul>
+<li>Python实现，开放源码</li>
+<li>输出静态页面，方便托管</li>
+<li>支持主题，采用Jajin2模板引擎</li>
+<li>支持代码语法高亮</li>
+<li>支持reStructuredText、Markdown、AsciiDoc格式</li>
+<li>支持Disqus评论</li>
+<li>支持Atom和RSS输出</li>
+</ul>
+<p>闲话不说，进入主题<br>
+我假设你是初来乍到的小白.（我也是小白啦～）虽说是小白,搭建这种geek类博客并没有你想象的费劲。just do it  <br>
+首先，你得把git给入门了，入门简单，要掌握的命令不多，这是<a href="#todo">git基本教程</a>（虽说git的学习曲线很陡峭，基本用法还是很容易的，don&rsquo;t worry about it）
+我假设你掌握了基本的git命令，接着我们可以正式开始了
+##安装linux系统
+as a geek(或者渴望成为geek的小白）你还抱着win7不放么，还舍不得那熟悉的蓝屏么，还舍不得莫名其妙的报错么,果断抛弃娇气的windows，投入linux的怀抱吧。俺使用的发行版是Ubuntu12.04.一直很稳定且顺心 <br>
+你要执意使用window，之后可能在环境配置上得费些功夫，其他基本一样。
+本文的环境是Ubuntu12.04。</p>
+<p>##安装Pelican
+pip install pelican</p>
+<p>####使用Markdown来写文章的话，还需要安装Markdown库
+pip install Markdown</p>
+<p>####创建blog目录：</p>
+<pre><code>mkdir myblog
+cd myblog
+</code></pre>
+<p>####创建一个博客：(在当前目录下，即myblog)
+pelican-quickstart
+按照提示设置，可按默认的设置，之后可在pelicanconf.py文件中修改设置。</p>
+<p>以下是生成的目录结构：</p>
+<pre><code>myblog/     
+├── content              # 存放输入的源文件  
+├── output               # 生成的输出文件  
+├── develop_server.sh    # 方便开启测试服务器    
+├── Makefile             # 方便管理博客的Makefile  
+├── pelicanconf.py       # 主配置文件    
+└── publishconf.py       # 发布时使用的配置文件   
+</code></pre>
+<p>####写一篇文章
+以mardown格式举例，具体可以去看pelican的文档. 进入content目录，创建一个文件，写入博客内容：</p>
+<pre><code>---
+</code></pre>
+<p>Date: 2013-08-09 #日期</p>
+<pre><code>title: &quot;test ＃标题&quot;
+
+tags: [&quot;python pelican github #标签&quot;]
+</code></pre>
+<h2 id="categories-技术">categories: [&ldquo;技术&rdquo;]</h2>
+<pre><code>Category: python #分类
+</code></pre>
+<p>其中Date和Title是必须的，其它的可以不写 <br>
+如果该文件位于content目录中某个子目录中时，如./content/python，那pelican就把这篇文章分类为子目录名python</p>
+<p>####生成html</p>
+<pre><code>make html
+</code></pre>
+<p>你将看到output文件夹里多了×××.html文件
+在myblog所在的地方新建一个myblog_for_github（名字随意）,把output里的文件复制到里面。<br>
+为何呢，下文解释
+##在github上创建GitHub Pages
+新建一个Repository，Repository名字为yourname.github.com，yourname是您的用户ID。</p>
+<p>创建成功以后，便可以把生成的页面push到github。</p>
+<pre><code>cd myblog_for_github
+git init
+git add .
+git commit -m &quot;first commit&quot;
+git remote add origin https://github.com/xxx/xxx.github.io.git
+git push -u origin master
+</code></pre>
+<p>现在可以通过 xxx.github.io 或者 xxx.github.com 来访问您的博客了。</p>
+<p>##修改以及更新博客
+看了几篇资料，里面似乎都没有谈到后续继续写博客的问题，当然这不属于搭建的问题<br>
+顺带也提一下吧，做个备忘。<br>
+当我们隔了几天继续写博客时，把写好的×××.md文件放到content文件夹里输入：<br>
+make html
+之所以要把内容复制到myblog_for_github里再提交，是因为每次执行
+make html
+output里的文件会被覆盖，不能在这里git init，否则仓库会被删了<br>
+至于增删改已经提交的博客的内容基本是git的任务，也就是本教程之初让你去入门git的原因 <br>
+会用到的一些指令：</p>
+<pre><code>git rm ×××.html    //删除代码库中文件
+git add . 
+git commit -m &quot;some message&quot;
+git push -u origin master
+</code></pre>
+<p>##域名绑定
+在repo的根目录下面，新建一个名为CNAME的文本文件，里面写入你要绑定的域名，比如顶级域名 example.com 或者二级域名 xxx.example.com。</p>
+<p>遇到问题请谷歌,或者查看官方文档</p>
+<p>参考资料:</p>
+<ol>
+<li><a href="#todo">用pelican在github上创建博客极简教程</a></li>
+<li><a href="http://readthedocs.org/docs/pelican/en/2.8/">Pelican官方文档</a></li>
+<li><a href="#todo">用 Pelican 和 GitHub Pages 搭建免费的个人博客</a></li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2013-08-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/"> python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/%E9%9A%8F%E7%AC%94/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">每天写些东西</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/book-song/">
+            <span class="next-text nav-default">送你一颗子弹</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

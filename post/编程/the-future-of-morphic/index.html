@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译] Morphic 的过去与未来 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 介绍 Morphic 是一个用户界面框架，它使构建生动的(lively)交互式用户界面变得简单而有趣。Mor" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/the-future-of-morphic/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译] Morphic 的过去与未来" />
+<meta property="og:description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 介绍 Morphic 是一个用户界面框架，它使构建生动的(lively)交互式用户界面变得简单而有趣。Mor" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/the-future-of-morphic/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-01-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-01-26T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译] Morphic 的过去与未来">
+<meta itemprop="description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 介绍 Morphic 是一个用户界面框架，它使构建生动的(lively)交互式用户界面变得简单而有趣。Mor"><meta itemprop="datePublished" content="2023-01-26T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-01-26T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1647">
+<meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译] Morphic 的过去与未来"/>
+<meta name="twitter:description" content="前言 近期重读 An introdution to Morphic, 本文翻译自其中的部分章节。 Morphic 介绍 Morphic 是一个用户界面框架，它使构建生动的(lively)交互式用户界面变得简单而有趣。Mor"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译] Morphic 的过去与未来</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-01-26 </span>
+        <div class="post-category">
+            <a href="/categories/smalltalk/"> Smalltalk </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#morphic-介绍">Morphic 介绍</a></li>
+      </ul>
+    </li>
+    <li><a href="#译文">译文</a>
+      <ul>
+        <li><a href="#morphic-vs-mvc">Morphic vs MVC</a></li>
+        <li><a href="#morphic-的未来">Morphic 的未来</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>近期重读 <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/morphic.final.pdf">An introdution to Morphic</a>, 本文翻译自其中的部分章节。</p>
+<h3 id="morphic-介绍">Morphic 介绍</h3>
+<p>Morphic 是一个用户界面框架，它使构建生动的(lively)交互式用户界面变得简单而有趣。Morphic 处理了大部分显示更新、事件调度、拖放、动画和自动布局的繁琐工作，从而将编程者解放出来，专注于设计而不是机制。有些用户界面框架需要大量的模板代码来完成简单的事情, 而在 Morphic 中，少量的代码就能发挥很大的作用，几乎不浪费任何努力。</p>
+<h2 id="译文">译文</h2>
+<p>morphic 的第一个版本是由 John Maloney 和 Randy Smith 在 Sun Microsystems Laboratories 里开发的，作为 Self 4.0 系统的用户界面构建环境。 Self 是一种基于原型的语言，类似于 Smalltalk，但没有类和赋值。 Randy 之前在 Alternate Reality Kit 项目上的工作， 以及他对具体性和统一性的热情对 morphic 的设计做出了巨大贡献。 至于 Squeak，morphic 在 Smalltalk 中从头开始重写。 虽然细节有所不同，但 Squeak 版本保留了原始 morphic 的精神和感觉，它需要感谢 Self。</p>
+<h3 id="morphic-vs-mvc">Morphic vs MVC</h3>
+<p>morphic 与传统的 Smalltalk 模型-视图-控制器 (MVC) 框架有何不同？ 一个区别是 morph 通过处理用户输入和显示来结合控制器和视图这两个角色(roles)。 这种设计源于一种简化的愿望，并且观察到大多数视图和控制器类是如此相互依赖，以至于它们必须作为不可分割的一对来使用。</p>
+<p>模型呢？ 许多 morph 是不需要模型的独立图形对象，有些 morph 是它们自己的模型。 例如， StringMorph 拥有自己的字符串，而不是引用一个可能共享的 StringHolder 模型。 然而，morphic 还支持 MVC 在同一模型上拥有多个视图的能力，使用更新机制通知所有视图模型的更改。 morphic 浏览器和其他编程工具与它们的模型的接口与它们的 MVC 对应物完全相同。</p>
+<p>morphic 的活性(liveness)目标也不同于 MVC。 在 MVC 中，在任何给定时间只有一个顶层视图（即窗口）处于控制之中。 只有该视图可以在显示器上绘制，并且只能在自己的边界内绘制。 如果它显示这些边界之外的任何内容，例如弹出菜单或滚动条，则它必须保存并恢复弹出对象下方的显示像素。 这种显示管理设计比 morphic 的增量重新显示机制更有效，因为当最前面的窗口保持控制时，最前面的窗口后面的任何东西都不会被重绘。 对于开发 MVC 的相对较慢的机器来说，这是一个极好的选择。 然而，MVC 设计很难支持活性，因为没有简单的方法让多个实时视图在不相互绘制的情况下交错其屏幕更新。 相比之下，Morphic 的损坏报告和增量屏幕更新的集中化让 liveness 变得容易。</p>
+<p>Morphic 的具体性也背离了 MVC。 在 MVC 中，移动窗口或调整窗口大小的反馈以空心矩形的形式提供，而不是实心对象。 同样，这更高效, 当反馈矩形被拖动时，只有几个屏幕像素被更新， 并且不需要运行视图显示代码, 对于速度较慢的机器来说是正确的选择。morphic 也支持仅轮廓窗口拖动来调整大小作为慢速机器的一个选项。</p>
+<h3 id="morphic-的未来">Morphic 的未来</h3>
+<p>Morphic 的未来是什么？ Squeak 系统发展如此之快，以至于任何关于其未来的预测在发布时都可能成为旧闻。 尽管如此，还是有几个方向值得一提。</p>
+<p>首先，morphic 急需对旋转和缩放的处理进行彻底改革， 这些功能在初始设计和实现完成后很长时间才重新安装到其中。 拥有一个统一的全球坐标系的最初设计决定可能需要被逆转； 然后每个 morph 都会为其 submorphs 提供坐标系，并带有可选的旋转和缩放。</p>
+<p>Morphic 非常擅长直接操作图形对象，因此使用 morphic 本身通过拖放组件来组装 ScorePlayerMorph 等工具似乎很自然。 事实上，这已经可以做到，尽管目前的工具相当粗糙。 真正的问题是如何处理构建后的 morph 。 它存储在哪里? 如何实例化? 以及它的更新和改进如何在 image 内和更大的用户社区传播？ 这些问题都不算棘手，但它们都需要作为通过 <strong>直接操作实现 morph 构造</strong> 的一部分来解决。</p>
+<p>morphic 的 Self 版本支持多个用户在一个叫做 &ldquo;Kansas&rdquo; 的大而平坦的空间中一起工作。 从一开始，就计划将此功能添加到 Squeak morphic，但除了一项名为 &ldquo;telemorphic&rdquo; 的早期实验外，并没有做太多工作。 然而，最近人们对这个领域的兴趣又回来了，而且很快就可以让多个用户在互联网上共享一个 morphic world。</p>
+<p>正在努力支持 3-D 硬件加速，并允许 MPEG 电影播放器等外部软件包显示为 morph。 这些目标要求 morphic 与其他代理共享屏幕。 随着 3-D 性能的提高，morphic 可能会完全整合 3-D 和 2-D 世界。 今天的 2-D 变形可能只是 3-D 环境中一些平坦的特例，而不是在 2-D morph 中显示 3-D 世界。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-01-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/understanding-business/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">认识商业</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/gong-tong-de-di-xian/">
+            <span class="next-text nav-default">共同的底线</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

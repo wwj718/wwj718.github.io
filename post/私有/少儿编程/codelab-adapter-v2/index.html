@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Codelab Adapter v2 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content=" Water as a first principle &amp;ndash; Thales
+The Big Idea is Messaging &amp;ndash; Alan Kay
+ 大纲 本文将讨论以下话题:
+ 关于 CodeLab Adapter v2  从 CodeLab Adapter 说起 v2 相对于 v1 做了哪些改进  CodeLab Adapter v2 可以用来做些什么有趣的东西 CodeLab Adapter v2 的开放计划 " /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-v2/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Codelab Adapter v2" />
+<meta property="og:description" content="
+
+
+Water as a first principle &ndash; Thales
+
+The Big Idea is Messaging &ndash; Alan Kay
+
+
+大纲
+
+本文将讨论以下话题:
+
+
+关于 CodeLab Adapter v2
+
+
+从 CodeLab Adapter 说起
+v2 相对于 v1 做了哪些改进
+
+CodeLab Adapter v2 可以用来做些什么有趣的东西
+CodeLab Adapter v2 的开放计划
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-adapter-v2/" />
+<meta property="article:published_time" content="2019-08-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-08-27T00:00:00+00:00" />
+<meta itemprop="name" content="Codelab Adapter v2">
+<meta itemprop="description" content="
+
+
+Water as a first principle &ndash; Thales
+
+The Big Idea is Messaging &ndash; Alan Kay
+
+
+大纲
+
+本文将讨论以下话题:
+
+
+关于 CodeLab Adapter v2
+
+
+从 CodeLab Adapter 说起
+v2 相对于 v1 做了哪些改进
+
+CodeLab Adapter v2 可以用来做些什么有趣的东西
+CodeLab Adapter v2 的开放计划
+">
+
+
+<meta itemprop="datePublished" content="2019-08-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-08-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="4027">
+
+
+
+<meta itemprop="keywords" content="codelab," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Codelab Adapter v2"/>
+<meta name="twitter:description" content="
+
+
+Water as a first principle &ndash; Thales
+
+The Big Idea is Messaging &ndash; Alan Kay
+
+
+大纲
+
+本文将讨论以下话题:
+
+
+关于 CodeLab Adapter v2
+
+
+从 CodeLab Adapter 说起
+v2 相对于 v1 做了哪些改进
+
+CodeLab Adapter v2 可以用来做些什么有趣的东西
+CodeLab Adapter v2 的开放计划
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Codelab Adapter v2</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-08-27 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#大纲">大纲</a></li>
+<li><a href="#关于-codelab-adapter-v2">关于 CodeLab Adapter v2</a>
+<ul>
+<li>
+<ul>
+<li><a href="#jupyter-python-scratch">Jupyter/Python &amp; Scratch</a></li>
+<li><a href="#谁动了我的糖果">谁动了我的糖果</a></li>
+<li><a href="#i-am-reading">I am reading!</a></li>
+<li><a href="#cube-symphony">cube symphony</a></li>
+<li><a href="#从-codelab-adapter-说起">从 CodeLab Adapter 说起</a></li>
+<li><a href="#v2-相对于-v1-做了哪些改进">v2 相对于 v1 做了哪些改进</a>
+<ul>
+<li><a href="#优化消息结构">优化消息结构</a></li>
+<li><a href="#分离-ui-与内核">分离 UI 与内核</a></li>
+<li><a href="#将内部功能服务化">将内部功能服务化</a></li>
+<li><a href="#使用-web-ui">使用 web UI</a></li>
+<li><a href="#配套的调试工具">配套的调试工具</a></li>
+<li><a href="#分布式优先">分布式优先</a></li>
+<li><a href="#提供-python-client">提供 Python Client</a></li>
+<li><a href="#可扩展的-gateway">可扩展的 Gateway</a></li>
+<li><a href="#降低开发门槛">降低开发门槛</a></li>
+</ul></li>
+<li><a href="#增强可定制性">增强可定制性</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#codelab-adapter-v2-可以用来做些什么有趣的东西">CodeLab Adapter v2 可以用来做些什么有趣的东西</a></li>
+<li><a href="#开放计划">开放计划</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/water_727df488.png" alt="" /></p>
+
+<blockquote>
+<p>Water as a first principle &ndash; Thales</p>
+
+<p>The Big Idea is Messaging &ndash; Alan Kay</p>
+</blockquote>
+
+<h1 id="大纲">大纲</h1>
+
+<p>本文将讨论以下话题:</p>
+
+<ul>
+<li>关于 CodeLab Adapter v2
+
+<ul>
+<li>从 CodeLab Adapter 说起</li>
+<li>v2 相对于 v1 做了哪些改进</li>
+</ul></li>
+<li>CodeLab Adapter v2 可以用来做些什么有趣的东西</li>
+<li>CodeLab Adapter v2 的开放计划</li>
+</ul>
+
+<h1 id="关于-codelab-adapter-v2">关于 CodeLab Adapter v2</h1>
+
+<blockquote>
+<p>talk is cheap, show me the <s>code</s> demo</p>
+</blockquote>
+
+<p>我们先来看几个由 CodeLab Adapter v2 驱动的例子。</p>
+
+<h3 id="jupyter-python-scratch">Jupyter/Python &amp; Scratch</h3>
+
+<video width=600px src="http://scratch3-files.just4fun.site/jupyter_scratch.mp4" controls="controls"></video>
+
+<p>使用 CodeLab Adapter v2，用户可以在 Jupyter 中编写 Python 代码，并与 Scratch 互操作。</p>
+
+<h3 id="谁动了我的糖果">谁动了我的糖果</h3>
+
+<video width=600px src="http://scratch3-files.just4fun.site/toio_candy.mp4" controls="controls"></video>
+
+<p>使用 CodeLab Adapter v2 的物体追踪插件(OpenCV)实时检测物体，将数据传递给 Scratch，最终在积木里编写程序逻辑，进而让 toio 小方块拥有视觉能力！</p>
+
+<p>CodeLab Adapter v2 可以将任何 Python 程序整合到自身中。这个例子展示了 SmallTalk 的理念：用环境增强环境内的物体。</p>
+
+<h3 id="i-am-reading">I am reading!</h3>
+
+<p>当你妈妈进入房间的时候，只见你在聚精会神地阅读《理想国》，只是不知为何你喜欢用《权利的游戏》的片头曲作为背景乐。</p>
+
+<video width=600px src="http://scratch3-files.just4fun.site/python_neverland.mp4" controls="controls"></video>
+
+<p>这个例子展示的是“当有人推门时，屏幕自动切换到阅读界面”，在 10 行 Python 代码内，为整个生活空间编程。CodeLab Adapter v2 让 Python 入门充满趣味。</p>
+
+<h3 id="cube-symphony">cube symphony</h3>
+
+<video width=600px src="http://scratch3-files.just4fun.site/cube%20symphony.mp4" controls="controls"></video>
+
+<p>用实体与空间交互，将桌面的物体当作系统 UI，实现类似<a href="https://dynamicland.org/">Dynamicland</a>空间里交互效果。</p>
+
+<p>这个程序目前有两个版本:Python 版和 Scratch 版，都由 CodeLab Adapter v2 驱动。</p>
+
+<h3 id="从-codelab-adapter-说起">从 CodeLab Adapter 说起</h3>
+
+<p>CodeLab Adapter 是由<a href="https://www.codelab.club/">CodeLab</a>构建的基础项目，致力于连接万物，无论是软件还是硬件，无论是 AI、开源硬件、现实世界的物体、还是虚拟世界的动画角色，在 CodeLab Adapter 的驱动下，皆可彼此互动。</p>
+
+<p>目前，我们在 CodeLab Neverland 中使用 CodeLab Adapter。CodeLab Neverland 是一个由 CodeLab Adapter 驱动的可编程空间，也是我们的办公室和活动室，空间里的一切事物皆可编程。</p>
+
+<p>在 CodeLab Adapter 驱动的空间里，你可以与万物沟通，你可以让神经网络识别出你的身体部位，进而制作一个体感游戏, 或是通过算法让整个空间变得智能。你可以在朋友生日那天，在 Ta 进门的一刻，将手中的魔杖一挥，在空中划一个字母 L 的轨迹，瞬间，点亮房间里五彩的灯光。在这儿，你将轻松做出这样的魔杖。</p>
+
+<video width=300px src="http://scratch3-files.just4fun.site/wand.mp4" controls="controls"></video>
+
+<video width=300px src="http://scratch3-files.just4fun.site/tello_leapmotion.mp4" controls="controls"></video>
+
+<p>更多的<a href="/user_guide/gallery/">演示案例</a>。</p>
+
+<p>CodeLab Adapter 的一个典型用例，是将任何有趣的东西接入 Scratch3.0，接入之后你便能用 Scratch3.0 的积木来操控它，让它与任何接入 Scratch3.0 的物体互动。无论是来自现实世界的物体，还是来自虚拟世界的 AI 或动画角色，都能彼此互动，我们不想针对某个硬件产品发布一个客户端，我们相信创意来自广泛的连接，我们致力于做一个中立的东西，将 Scratch3.0 连接到更广阔的领域，我们想做到<a href="http://learn.media.mit.edu/lcl/weeks/week5/">宽围墙</a>。</p>
+
+<p>CodeLab Adapter 是一个跨平台跨语言的通用工具，你可以在多个平台上,将多种编程语言作为它的 client， 详情参考<a href="/dev_guide/Architecture/">Architecture</a>。除了 Scratch3.0，CodeLab Adapter 目前也支持 Blockly、 Python、Javascript、SmallTalk，更多的编程语言支持目前正在开发中。</p>
+
+<h3 id="v2-相对于-v1-做了哪些改进">v2 相对于 v1 做了哪些改进</h3>
+
+<p>CodeLab Adapter v2 是 CodeLab Adapter 的最新版本。</p>
+
+<p>我们为此付出了巨大努力。 相比于 v1，v2 作出的主要改进包括以下方面:</p>
+
+<ul>
+<li>优化消息结构</li>
+<li>分离 UI 与内核
+
+<ul>
+<li>可以作为 Python 库使用</li>
+<li>方便与 Electron 等工具集成</li>
+</ul></li>
+<li>将内部功能服务化
+
+<ul>
+<li>允许用户自定义 UI</li>
+</ul></li>
+<li>使用 web UI</li>
+<li>配套的调试工具</li>
+<li>分布式优先
+
+<ul>
+<li>云端 AI</li>
+<li>支持移动端</li>
+</ul></li>
+<li>提供 Python Client
+
+<ul>
+<li>提供教学例子</li>
+<li>允许以多种方式扩展 CodeLab Adapter</li>
+</ul></li>
+<li>支持扩展 gateway
+
+<ul>
+<li>默认构建了 MQTT gateway，websocket gateway</li>
+<li>允许用户自行构建 gateway：Arduino、socket&hellip;</li>
+</ul></li>
+<li>降低开发门槛
+
+<ul>
+<li>更加一致和易用的 API</li>
+</ul></li>
+<li>增强可定制性
+
+<ul>
+<li>https 证书</li>
+<li>静态资源</li>
+</ul></li>
+</ul>
+
+<p>接下来逐项陈述.</p>
+
+<h4 id="优化消息结构">优化消息结构</h4>
+
+<p>从 CodeLab Adapter<a href="https://adapter.codelab.club/dev_guide/Architecture/">架构图</a>中可以看出，CodeLab Adapter 本质上是一个消息系统，它的核心设计理念是: Everything Is Message(EIM), 这个想法来自 SmallTalk 的设计理念:</p>
+
+<blockquote>
+<p>Everything is an object, and objects communicate only by sending each other messages.</p>
+</blockquote>
+
+<p>在 v2 中，我们设计了更为通用的消息结构，新的消息结构使得系统的一致性提高，复杂性降低。待我们将核心部分开源之后，再来对这部分做深入讨论。</p>
+
+<p>目前所有的 message topic 都在这儿: <a href="https://github.com/Scratch3Lab/codelab_adapter_client_python/blob/master/codelab_adapter_client/topic.py">codelab_adapter_client</a>, CodeLab Adapter v2 的所有行为都可用这些 topic 的语义来描述。</p>
+
+<p>CodeLab Adapter v1 的消息结构记录在<a href="https://github.com/Scratch3Lab/codelab_adapter_extensions/wiki/%E6%B6%88%E6%81%AF%E7%BB%93%E6%9E%84">这儿</a>。</p>
+
+<p>v2 的消息结构目前还在梳理中，之后也会更新到 wiki 上。</p>
+
+<h4 id="分离-ui-与内核">分离 UI 与内核</h4>
+
+<p>v2 将内核(core)与 UI 做了分离，出于以下目的考虑:</p>
+
+<ul>
+<li>将两者解耦，提高开发效率，减少调试的困难</li>
+<li>支持多种 UI，允许开发者定制自己的 UI</li>
+<li>支持 headless 模式，方便集成到其他程序中
+
+<ul>
+<li>诸如与 Electron 等工具集成</li>
+</ul></li>
+<li>作为 Python 库单独发布</li>
+</ul>
+
+<p>基于新的消息结构，CodeLab Adapter 的各个部分是对等的，无论是 GUI 、 Extension 还是系统的其他部分，它们都只是在 send/receive 消息，所以分离内核(core)与 UI 就是一件简单的事情，我们甚至允许内核(core)与 UI 运行在不同的设备上。</p>
+
+<h4 id="将内部功能服务化">将内部功能服务化</h4>
+
+<p>分离 UI 与内核之后，我们将内核中的所有功能，都变为了服务，可以通过消息与内核中的服务交互，诸如:</p>
+
+<ul>
+<li>获取插件信息</li>
+<li>更新插件</li>
+<li>下载插件</li>
+<li>启停插件</li>
+<li>接收和发布通知(错误信息等)</li>
+<li>REST API</li>
+<li>将消息发往特定 gateway</li>
+<li>退出程序</li>
+<li>&hellip;</li>
+</ul>
+
+<p>以启停插件为例，可以参考<a href="https://github.com/Scratch3Lab/scratch3_eim/blob/v2/index.js#L351">scratch3_eim</a></p>
+
+<h4 id="使用-web-ui">使用 web UI</h4>
+
+<p>v2 默认使用 web UI。</p>
+
+<p>此前有过两个版本的 UI，分别基于 Tkinter 和 PyQt5，如下图所示。</p>
+
+<p><img width=250 src="/post/img/tui_064332a6.png"/></p>
+
+<p><img width=250 src="/post/img/qtui_7f67c7f8.png"/></p>
+
+<p>Tkinter 的组件不大好看。Qt 是目前最强大的 UI 库，但存在一些跨平台的不一致性，诸如有用户反馈在某些 windows 版本下字体排版很奇怪，此外 Mac 下 PyQt5 的线程会自动休眠。只要投入足够多的时间，当然可以解决这些兼容性问题，但似乎不大划算。</p>
+
+<p>web 技术的跨平台能力是最好的，而且基于 html 和 css 的布局技术，足够简单和灵活，所以我们最终决定采用 web UI 作为默认的 UI。由于 web 开发者众多，也方便更多开发者能参与进来改进它。</p>
+
+<p>由于我们已经将内部功能服务化，所以所有的功能都可以在 Web UI 上使用。开发者可以自行构建新的 UI。以下是极简版的 demo UI， 只用到了 HTML：</p>
+
+<p><img width=250 src="/post/img/webui_0cdd2618.png" /></p>
+
+<h4 id="配套的调试工具">配套的调试工具</h4>
+
+<p>v2 携带了一组调试工具，方便开发者用于构建新的<a href="https://github.com/Scratch3Lab/codelab_adapter_extensions">CodeLab Adapter Extension</a>。</p>
+
+<p>既包含基于 web 的调试工具:</p>
+
+<ul>
+<li>webdebug</li>
+<li>web_log_page</li>
+</ul>
+
+<p>又包含基于命令行的调试工具:</p>
+
+<ul>
+<li>codelab-message-monitor</li>
+<li>codelab-message-trigger</li>
+</ul>
+
+<p><img width=600 src="/post/img/shelldebug_3ca7313d.png"/></p>
+
+<p>此外我们还提供了 MQTT 调试工具: <a href="https://github.com/Scratch3Lab/codelab_adapter_mqtt_client">codelab_adapter_mqtt_client</a>.</p>
+
+<p>这些工具是我们自己在构建 CodeLab Adapter v2 时，爱吃的狗粮，也分享出来给大家。</p>
+
+<h4 id="分布式优先">分布式优先</h4>
+
+<p>CodeLab Adapter v2 是一种分布式设计。</p>
+
+<p>我们出于以下的理由这样做:</p>
+
+<ul>
+<li>让云端和本地可以轻松建立连接，让云端的 AI 能力可以轻松为用户使用，也方便云端产品可以轻易接入教育体系，只需要写一个 CodeLab Adapter extension 即可。</li>
+<li>让分布式的节点可以协同工作，典型用途包括教室里只需要有一个强大服务器，所有轻量级的学生端(诸如树莓派或 chromeOS)都可以得到这种计算力，来做 AI 之类的项目。</li>
+<li>支持移动端设备。分布式的架构允许把硬件能力跑在树莓派或路由器上，而用户在 iPad 免费得到这种连接能力，无需构建单独的的 APP。</li>
+</ul>
+
+<p>拿前头展示过的一个例子来说:</p>
+
+<video width=600px src="http://scratch3-files.just4fun.site/python_neverland.mp4" controls="controls"></video>
+
+<p>在这个例子中, 用户在电脑上，使用 Python 编程，却可以与 Neverland 整个空间交互，驱动 Neverland 的程序跑在树莓派中。如此一来用户的客户端无需任何配置，即可进入编程教学。</p>
+
+<p>此外也方便在浏览器上做教学（跨平台），方便集成到任何网站中(诸如使用 brython（浏览器中的 Python）). 你可以认为 CodeLab Adapter 拓展了 web 的能力，你依然可以得到 web 的任何好处，可以与自己的云打通，它兼容你的任何架构。</p>
+
+<p>因为没有任何客户端依赖，极大节省了课前配置的时间。</p>
+
+<h4 id="提供-python-client">提供 Python Client</h4>
+
+<p>上头的例子，便使用了我们提供的 Python Client：<a href="https://github.com/Scratch3Lab/codelab_adapter_client_python">codelab_adapter_client_python</a>，利用 Python Client，你可以免费得到若干案例用于教学和演示，也可以模仿我们的案例设计你自己的教学内容，或者构建新的 extension，将你的业务整合进来。 我们会持续推出有趣的案例，在 CodeLab，这些案例都属于 realworld(类比于《Mindstorms》的 microworld)。</p>
+
+<p>同时我们也构建了 <a href="https://github.com/Scratch3Lab/codelab_adapter_client_nodejs">codelab_adapter_client_nodejs</a>、<a href="https://github.com/Scratch3Lab/codelab_adapter_mqtt_client">codelab_adapter_mqtt_client</a></p>
+
+<p>之后会陆续放出 ruby client，smalltalk client&hellip;</p>
+
+<p>利用 CodeLab Adapter v2，开发者可以用任何喜欢的编程语言来拓展 Scratch。</p>
+
+<h4 id="可扩展的-gateway">可扩展的 Gateway</h4>
+
+<p>在 CodeLab Adapter v2 内部，我们将消息通道作为 gateway，它本质上是一个分布式节点(node)。只是收发消息，真正重要的是消息的结构以及它对应的语义功能。</p>
+
+<p>消息是一种极强的逻辑构造，利用消息你可以构建一个编程语言(SmallTalk)或者操作系统。</p>
+
+<p>CodeLab Adapter v2 与 Scratch 通信其实基于我们的 websocket gateway，与 MQTT 通信基于 MQTT gateway，这种高度的一致性，使其简易和清晰，也让 v2 易于迭代更新,v1 的复杂性是我过去一段时间痛苦的来源。</p>
+
+<h4 id="降低开发门槛">降低开发门槛</h4>
+
+<p>降低开发门槛是我们在 v2 中做的核心考虑之一。这也是我们做前头这些工作动机之一。</p>
+
+<p>为了方便开发者上手，我们近期正在构建 v2 的文档，以及开放 v2 的相关插件。</p>
+
+<p>v2 的内核我们也计划开放它。</p>
+
+<h3 id="增强可定制性">增强可定制性</h3>
+
+<p>由于 v2 计划开源，所以我们希望提高软件的可定制性，方便开发者能够很轻松地 fork 它，赋予它新的能力，将其集成到自己的系统中。我们试图将更多的配置放在用户目录下，而不是软件内部。</p>
+
+<h1 id="codelab-adapter-v2-可以用来做些什么有趣的东西">CodeLab Adapter v2 可以用来做些什么有趣的东西</h1>
+
+<p>CodeLab Adapter v2 实际上接近一个分布式系统，有灵活的扩展能力，有强劲的消息内核，在 4 核机器上，每秒能处理 2000 万条消息。所以你可以将其用于很多领域：物联网、物理计算、空间编程&hellip;</p>
+
+<p>CodeLab 的初心是让其成为编程教育的基础设施。使用 CodeLab Adapter v2，我们可以快速构建一个万物互联的 Playground 或者一个 AIoT Lab，它可能类似于<a href="https://dynamicland.org/">Dynamicland</a>或者 CodeLab Neverland。</p>
+
+<p>当然，你也可以将其视为灵活、可扩展、跨平台的 Scratch Link。或者将其视为特定硬件图形化编程工具的开放版本。</p>
+
+<p>如果认同 Seymour Papert 在《Mindstorms》提到的 microworld；</p>
+
+<p>如果你认同 Alan Kay 提到的：real playing；</p>
+
+<p>如果你是 Dynamicland 的粉丝；</p>
+
+<p>那么，CodeLab Adapter v2 便是为你打造的，因为正是这些理念驱使我们构建它。</p>
+
+<p>我们希望实现约翰·杜威提倡的:</p>
+
+<blockquote>
+<p>educaition as life</p>
+</blockquote>
+
+<p>如果你想亲眼看到 CodeLab Adapter v2 可以构建出什么有趣的东西，欢迎到 Neverland 参观: 预约报名地址是:<a href="https://jinshuju.net/f/YEJGfB">CodeLab Neverland 参观报名表</a>。</p>
+
+<h1 id="开放计划">开放计划</h1>
+
+<p>CodeLab Adapter v2 的开源计划分为 3 个阶段:</p>
+
+<ol>
+<li>本周我们将开放出所有的 extension 和 server。这些 extension 和 server 是 CodeLab Adapter 抵达万物的触角。</li>
+<li>我们计划在<a href="http://www.shenzhenmakerfaire.com/">Maker Faire Shenzhen</a>开幕的那天(2019.11.09)对企业和组织开放早期成员资格申请，以此向 Maker Faire 致敬。</li>
+<li>CodeLab 与早期成员一起商讨可能的社区形态以及方向，半年后正式向社区开放所有源码。</li>
+</ol>
+
+<p>源码的第一个开放版本我们已经想好了名字: Thales。</p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-08-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">codelab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/the-little-schemer/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">The Little Schemer</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/ten-novels-and-their-authors/">
+            <span class="next-text nav-default">巨匠与杰作</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

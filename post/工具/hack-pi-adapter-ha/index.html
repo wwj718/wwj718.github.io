@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>入侵的艺术: 对树莓派、CodeLab Adapter 和 Home Assistant 做渗透测试 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="在美洲森林里要骄横为害的人，在王座上大概也不会善良很多；在王座上，恐怕他将找出学问、宗教为他对臣民所做的一切事情辩护，凡有胆敢提出怀疑的人，" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/hack-pi-adapter-ha/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="入侵的艺术: 对树莓派、CodeLab Adapter 和 Home Assistant 做渗透测试" />
+<meta property="og:description" content="在美洲森林里要骄横为害的人，在王座上大概也不会善良很多；在王座上，恐怕他将找出学问、宗教为他对臣民所做的一切事情辩护，凡有胆敢提出怀疑的人，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/hack-pi-adapter-ha/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-10-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-10-01T00:00:00+00:00" />
+
+<meta itemprop="name" content="入侵的艺术: 对树莓派、CodeLab Adapter 和 Home Assistant 做渗透测试">
+<meta itemprop="description" content="在美洲森林里要骄横为害的人，在王座上大概也不会善良很多；在王座上，恐怕他将找出学问、宗教为他对臣民所做的一切事情辩护，凡有胆敢提出怀疑的人，"><meta itemprop="datePublished" content="2019-10-01T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-10-01T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2602">
+<meta itemprop="keywords" content="tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="入侵的艺术: 对树莓派、CodeLab Adapter 和 Home Assistant 做渗透测试"/>
+<meta name="twitter:description" content="在美洲森林里要骄横为害的人，在王座上大概也不会善良很多；在王座上，恐怕他将找出学问、宗教为他对臣民所做的一切事情辩护，凡有胆敢提出怀疑的人，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">入侵的艺术: 对树莓派、CodeLab Adapter 和 Home Assistant 做渗透测试</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-10-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#kali-linux">Kali Linux</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#metasploit">Metasploit</a></li>
+        <li><a href="#armitage">Armitage</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#确定目标">确定目标</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/hack_cf330ee8.png" alt=""></p>
+<blockquote>
+<p>在美洲森林里要骄横为害的人，在王座上大概也不会善良很多；在王座上，恐怕他将找出学问、宗教为他对臣民所做的一切事情辩护，凡有胆敢提出怀疑的人，利剑立刻叫他们噤声。 &ndash; 伯特兰·罗素《西方哲学史》</p>
+</blockquote>
+<h1 id="前言">前言</h1>
+<p>对<code>安全</code>的兴趣由来已久。</p>
+<p>近来在技术上的工作，主要与以下三个项目有关:</p>
+<ul>
+<li>树莓派</li>
+<li>CodeLab Adapter</li>
+<li>Home Assistant</li>
+</ul>
+<p>因为考虑将这些项目产品化，这几个项目都有很强的可扩展性和连接能力，它们的安全性就是需要纳入考虑的话题。防御的最好方式之一是理解潜在的攻击行为，所以计划陆续抽出一些时间对它们做渗透入侵测试。</p>
+<p>着重关注以下几个方面:</p>
+<ul>
+<li>Linux 系统安全性</li>
+<li>暴力破解</li>
+<li>中间人攻击</li>
+<li>IoT 的安全性
+<ul>
+<li>工业物联网安全</li>
+<li>MQTT</li>
+<li>zigbee</li>
+<li>wifi</li>
+<li>bluetooth</li>
+</ul>
+</li>
+<li>web 安全
+<ul>
+<li>https</li>
+</ul>
+</li>
+<li>逆向工程</li>
+</ul>
+<p>以下是笔记。</p>
+<h1 id="前置工作">前置工作</h1>
+<p>由于是内部测试，避免了很多麻烦，不必使用 tor 之类的工具保护自己。</p>
+<p>准备使用 Kali Linux 作为工作环境，关于环境的搭建，可以参考此前的笔记:<a href="/safe.html">在 mac 虚拟机中安装 Kali Linux</a>。</p>
+<p>我目前在用VMware，对应的虚拟镜像下载链接为:<a href="https://www.offensive-security.com/kali-linux-vm-vmware-virtualbox-image-download/">https://www.offensive-security.com/kali-linux-vm-vmware-virtualbox-image-download/</a></p>
+<p>下载之后记得检验<code>SHA256Sum</code>。</p>
+<p>启动之后，默认的用户名密码是：<code>root:toor</code></p>
+<p><img src="/post/img/metasploit_606a8a79.png" alt=""></p>
+<h3 id="kali-linux">Kali Linux</h3>
+<blockquote>
+<p>Kali Linux 是基于 Debian 的 Linux 发行版，设计用于数字鉴识和渗透测试。</p>
+</blockquote>
+<p>Kali 有 arm 版本，可用于树莓派。</p>
+<blockquote>
+<p>Kali Linux 拥有超过 600 个预装的渗透测试程序.</p>
+</blockquote>
+<p>Kali Linux 包含许多的安全工具，比如:</p>
+<ul>
+<li>Aircrack-ng</li>
+<li>Burp suite</li>
+<li>Cisco Global Exploiter</li>
+<li>Ettercap</li>
+<li>John the Ripper</li>
+<li>Kismet</li>
+<li>Maltego</li>
+<li>Metasploit framework</li>
+<li>Nmap</li>
+<li>OWASP ZAP</li>
+<li>Social engineering tools.</li>
+<li>Wireshark</li>
+<li>Hydra</li>
+<li>Reverse Engineering tools</li>
+<li>Forensics tools like Binwalk, Foremost, Volatility e.t.c</li>
+</ul>
+<h1 id="流程">流程</h1>
+<p>攻击的流程主要参考<a href="https://book.douban.com/subject/10433737/">Metasploit 渗透测试指南</a>, 很喜欢这本书。</p>
+<h3 id="metasploit">Metasploit</h3>
+<blockquote>
+<p>Metasploit项目是一个旨在提供安全漏洞信息计算机安全项目，可以协助安全工程师进行渗透测试（penetration testing）及入侵检测系统签名开发。</p>
+</blockquote>
+<p>维基百科对其介绍简明扼要，引用过来，方便读者参考:</p>
+<p>使用Metasploit框架的基本步骤包括：</p>
+<ul>
+<li>选择并配置一个攻击代码(exploit, 利用漏洞来进入目标系统的代码）；</li>
+<li>（可选）检查目标系统是否会被此代码影响；</li>
+<li>选择并配置一个有效负载 (payload, 在成功进入后在目标系统上执行的代码；例如，一个远端壳层或一个VNC服务器）；</li>
+<li>选择编码方式，使入侵预防系统，忽略已被编码的有效负载；</li>
+<li>执行攻击代码。</li>
+</ul>
+<p>这种允许任何攻击代码和任何有效负载进行随意组合的模块化的结构是Metasploit框架的主要优势。用户可以通过不同的搭配在有限的漏洞下导入不同的负载。Metasploit框架可以通过添加模块实现扩展，允许用户，攻击代码作者和有效负载的作者专注于写出所需的功能，而无需处理其他问题。</p>
+<p>选择攻击代码和有效负载需要目标系统的部分信息，比如其操作系统的版本和安装的网络服务。这些信息可被类似于Nmap的端口扫描和操作系统分析工具收集到。类似于Nexpose或Nessus的弱点扫描工具可以探测到目标系统的弱点。Metasploit可以导入弱点扫描数据并通过对比已发现的弱点和拥有的攻击代码模块来进行准确的攻击。</p>
+<h3 id="armitage">Armitage</h3>
+<p>Armitage是一个拥有图形用户界面的Metasploit管理工具，Armitage对初学者比较友好。</p>
+<p>我当前的系统(2019-03)没有内置Armitage(早年的kali是自带的))，需要自行安装<code>apt-get install armitage</code>。</p>
+<p>安装完之后，可在Metasploit交互界面里启用armitage。</p>
+<p><img src="/post/img/Armitage_9c03e625.png" alt=""></p>
+<hr>
+<p>结下来让我们开始渗透之旅 ：）</p>
+<h1 id="扫描网络">扫描网络</h1>
+<p>我们先来做下前期交互和情报搜集工作。</p>
+<p>使用<code>Zenmap</code>简单扫描一下网络:<code>192.168.31.0/24</code>(Quick Scan)，找到局域网里存活的主机（手机上的应用Fing也是很好的工具）。</p>
+<p>Zenmap是Nmap的图形界面，如果想对扫描过程做更多精细操作，参考Nmap文档。一般来说，<code>Intense scan</code>可以满足一般扫描需求。</p>
+<p><img src="/post/img/network-neverland_86887df6.png" alt=""></p>
+<p>可以看出网络里有2个主机跑着VNC服务，它们是Neverland里的2台树莓派, 它们是主从关系 ：）</p>
+<img src="/post/img/neverland-pi_2c8e8ffe.png" width=600 />
+<p>也可使用<code>fping -g 192.168.31.0/24</code>来发现局域网存活主机（速度比较快）。</p>
+<h3 id="确定目标">确定目标</h3>
+<p>确定我们的目标主机地址：<code>rpi4.codelab.club</code>，2个树莓派中的一台。</p>
+<p>对目标主机做更全面的扫描（<code>Intense scan, all TCP ports</code>）：<code>nmap -p 1-65535 -T4 -A -v rpi4.codelab.club</code></p>
+<p>扫描到了一些有用的信息:</p>
+<p><img src="/post/img/nmap_rpi4_e7f8bd54.png" alt=""></p>
+<p>我们发现了这个树莓派上开放的端口、端口上跑的服务、服务相关的技术栈（Python/Nginx）以及系统信息。</p>
+<h1 id="尝试ssh暴力破解">尝试ssh暴力破解</h1>
+<p>既然ssh服务是开放的，我们来试试暴力破解，说不定是默认密码或者弱密码。</p>
+<p>打了捡便宜的心态，测试了一下<code>pi:raspberry</code>默认密码，没有捡到便宜。</p>
+<p>我们使用著名的<a href="https://github.com/vanhauser-thc/thc-hydra">hydra</a>来碰碰运气，hydra是著名黑客组织thc的一款开源的暴力密码破解工具，已经内置在Kali Linux中。</p>
+<p>这儿使用<a href="https://github.com/vanhauser-thc/thc-hydra">hydra</a>的图形界面来操作。</p>
+<p>暴力破解的精髓是用户名/密码字典, 我们随便选择metasploit自带的字典<code>/usr/share/wordlists/metasploit</code>碰碰运气。</p>
+<p>可惜，没有使用<code>123456/admin/...</code>之类的弱密码。 我们接下来把真实密码放在字典的最后一行来品尝暴力破解的快感：）</p>
+<p>哈哈 成功爆破:</p>
+<p><img src="/post/img/pi_pass_attack_4a64ac10.png" alt=""></p>
+<p>ps: <a href="https://zh.wikipedia.org/zh-hans/%E7%A4%BE%E4%BC%9A%E5%B7%A5%E7%A8%8B%E5%AD%A6">社会工程学</a>往往是破解密码很好的思路，在这个意义上，优秀的黑客是一个具有心理学兴趣的人文工作者。</p>
+<h1 id="树莓派的安全性">树莓派的安全性</h1>
+<p>树莓派是黑客的宠儿，黑客群体是它的铁杆粉，所以树莓派自身当然拥有很高的安全性。</p>
+<p>树莓派的安全风险主要由使用者造成，弱密码首当其冲。</p>
+<p>一些简单的策略可以大大提高树莓派的安全风险:</p>
+<ul>
+<li>使用最新的官方系统</li>
+<li>关闭非必要的服务和端口
+<ul>
+<li>VNC</li>
+<li>ftp</li>
+</ul>
+</li>
+<li>修改ssh端口，禁用密码登陆，使用证书登陆</li>
+<li>确保自定义服务的安全性</li>
+</ul>
+<p>接下来我们便来开始聊聊自定义服务的安全性。</p>
+<p>ps: 对树莓派更完整的渗透，留待后边讲到<a href="https://zh.wikipedia.org/wiki/Metasploit">metasploit</a>时再说。</p>
+<h1 id="渗透自定义服务">渗透自定义服务</h1>
+<p>目前我们的树莓派里跑着两个自定义服务，正是我们的渗透目标。</p>
+<ul>
+<li>CodeLab Adapter</li>
+<li>Home Assistant</li>
+</ul>
+<p>两者都对外提供web服务，又都与IoT有关，而IoT整个领域以安全漏洞多著称，我们接下来看看从它们身上能收获什么。据此思考如何提高它们的安全性。</p>
+<hr>
+<p>waiting&hellip;</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://book.douban.com/subject/25962826/">入侵的艺术</a></li>
+<li><a href="https://book.douban.com/subject/3988180/">菜鸟也能防黑客之非技术攻击</a></li>
+<li><a href="https://book.douban.com/subject/10433737/">Metasploit 渗透测试指南</a></li>
+<li><a href="/safe.html">在 mac 虚拟机中安装 Kali Linux</a></li>
+<li><a href="https://github.com/rapid7/metasploitable3">metasploitable3</a>:Metasploitable3 is a VM that is built from the ground up with a large amount of security vulnerabilities.</li>
+<li><a href="https://github.com/infoslack/awesome-web-hacking">awesome-web-hacking</a></li>
+<li><a href="https://github.com/Hack-with-Github/Awesome-Hacking">Awesome-Hacking</a></li>
+<li><a href="https://github.com/nebgnahz/awesome-iot-hacks">Awesome IoT Hacks</a></li>
+<li><a href="https://github.com/sergey-pronin/Awesome-Vulnerability-Research">Awesome Vulnerability Research</a></li>
+<li><a href="https://github.com/0x90/wifi-arsenal">wifi-arsenal</a></li>
+<li><a href="https://github.com/tylerha97/awesome-reversing">awesome-reversing</a></li>
+<li><a href="https://github.com/enaqx/awesome-pentest">awesome-pentest</a></li>
+<li><a href="https://github.com/jivoi/awesome-osint">Awesome OSINT</a></li>
+<li><a href="https://github.com/hslatman/awesome-industrial-control-system-security">awesome-industrial-control-system-security</a></li>
+<li><a href="https://github.com/secfigo/Awesome-Fuzzing">Awesome-Fuzzing</a></li>
+<li><a href="https://github.com/trimstray/the-book-of-secret-knowledge">the-book-of-secret-knowledge</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Metasploit">wikipedia Metasploit</a></li>
+<li><a href="https://zh.wikipedia.org/zh-hans/Kali_Linux">wikipedia Kali Linux</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Burp_suite">Burp suite</a></li>
+<li><a href="https://www.wikihow.com/Run-a-Simple-Nmap-Scan">How to Run a Simple Nmap Scan</a></li>
+<li><a href="http://einverne.github.io/post/2017/01/nmap.html">每天学习一个命令：nmap 扫描开放端口</a></li>
+</ul>
+<ul>
+<li><a href="https://github.com/NullArray/AutoSploit/blob/master/.github/.translations/README-zh.md">AutoSploit</a></li>
+<li><a href="https://bbs.pediy.com/thread-225286.htm">有志之士的Metasploit，第四部分(Armitage)</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-10-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%97%E8%AF%8D/autumn/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">秋</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/dream/">
+            <span class="next-text nav-default">梦</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

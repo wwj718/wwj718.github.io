@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scheme学习笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="大学时读了不少函数式的资料，十分喜欢函数式的风格。 前段时间比较认真地学了一下Scheme。 尽管我们在实际项目中很少会用到Scheme，但学习" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/learn-scheme/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scheme学习笔记" />
+<meta property="og:description" content="大学时读了不少函数式的资料，十分喜欢函数式的风格。 前段时间比较认真地学了一下Scheme。 尽管我们在实际项目中很少会用到Scheme，但学习" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/learn-scheme/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-09-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-09-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="Scheme学习笔记">
+<meta itemprop="description" content="大学时读了不少函数式的资料，十分喜欢函数式的风格。 前段时间比较认真地学了一下Scheme。 尽管我们在实际项目中很少会用到Scheme，但学习"><meta itemprop="datePublished" content="2014-09-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2014-09-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1195">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scheme学习笔记"/>
+<meta name="twitter:description" content="大学时读了不少函数式的资料，十分喜欢函数式的风格。 前段时间比较认真地学了一下Scheme。 尽管我们在实际项目中很少会用到Scheme，但学习"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scheme学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-09-03 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>大学时读了不少函数式的资料，十分喜欢函数式的风格。<br>
+前段时间比较认真地学了一下Scheme。<br>
+尽管我们在实际项目中很少会用到Scheme，但学习Scheme有助于写出更高质量函数。就像学习Smalltalk有助于理解对象。<br>
+Scheme和Smalltalk是我见过最纯粹优美的两门语言。<br>
+说说学习Scheme中的一些心得体会：</p>
+<ul>
+<li>表达你的意图，而不是操作过程，这样有助于我们能站在更高的抽象层面上</li>
+<li>尽量不要副作用，函数主要目的是返回(return)一个值。这样可以保证函树能更容易被当作黑箱，就是说有更好的抽象性</li>
+<li>for-loops表达的是过程，map,reduce,filter(sorted,groupby)隐含循环，语义上却在表达意图</li>
+<li>表达出你的意图能提高代码可读性</li>
+<li>在自己的定义中调用自己的函数叫做递归函数.</li>
+<li>现实中很多任务是递归的，重复某个动作，符合条件退出。这是普适性很强的抽象模型</li>
+<li>以下内容有助于你理解递归：你可能需要去阅读你正在阅读的文献所引用的文献。进一步，你可能还需要去阅读文件所引用的其它文献。这样，文献调研就是一个递归的过程，你也可以重复这个调研过程直到满足了特定条件</li>
+<li>递归耗内存的原因是开销大的原因在于过程没有被计算。一直存在内存中。尾递归的本质是用某个内存空间来收集计算的结果，而不必一直存在内存中</li>
+<li>cons 负责把每个结果串起来。大脑的内存不很大，我们能应付的复杂度很有限。所以每次不要走太远，每次只处理当前一步，思考后续一致，用递归的方式思考。  使用抽象来描述，不要把所有过程加载到大脑</li>
+<li>命名递归变量很重要，表达出意图</li>
+<li>lambda表达式的参数仅在函数定义内部有效。let只是lambda的语法糖，因此二者无异。对于语义的表达有帮助的话，语法糖就是良好的</li>
+<li>lambda表达式用于定义函数，它为变量建立了一个作用域，变量的作用域被限定在了源码中定义其的那个括号里</li>
+<li>闭包能记住内部状态，因此可以用来模拟对象</li>
+<li>赋值改变了参数的值，具有破坏性，当万不得已时才使用赋值</li>
+<li>Scheme并没有定义块结构的语法，因此使用lambda表达式作为一个块</li>
+<li>高阶函数是一种以函数为参数的函数。它们都被用于映射（mapping）、过滤（filtering）、归档（folding）和排序（sorting）表。高阶函数提高了程序的模块性。使用一个高阶函数来实现排序可以使得我们使用不同的条件来排序，这就将排序条件和排序过程清楚地划分开来。很容易写函数来实现插拔。</li>
+<li>Scheme中代码即数据，因此你可以通过将函数当作参数传递轻松的定义自己的高阶函数。</li>
+<li>你可以通过“程序”来写程序</li>
+<li>lisp中所有东西都是数据  代码也是 虚虚实实 惰性求值变得容易 。</li>
+<li>字符是个比较关键的概念，代码本身只是文本而已。Lisp语言的最初目的就是符号处理，在Scheme语言中几乎所有的东西都可以看做是符号或做为符号列表来处理</li>
+</ul>
+<p>##参考资料</p>
+<ul>
+<li><a href="http://deathking.github.io/yast-cn/">Scheme入门教程</a></li>
+<li><a href="http://www.cnblogs.com/heros/archive/2009/11/30/1614111.html">Scheme简明教程</a></li>
+<li><a href="http://www.ibm.com/search/csass/search/?q=Scheme&amp;sn=dw&amp;lang=zh&amp;cc=CN&amp;en=utf&amp;hpp=20&amp;dws=cndw&amp;lo=zh">ibm</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-09-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/learning-python-mixin/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Mixin技术学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/learn-smalltalk/">
+            <span class="next-text nav-default">Smalltalk学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

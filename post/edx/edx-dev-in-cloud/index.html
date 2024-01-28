@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>基于云端环境的edx开发协作 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="本地开发edx有许多坑，其中一个是open edx的环境搭建十分复杂，而且极其耗费cpu和内存资源。如果每个小伙伴都自行折腾一遍，真是一个不小" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/edx-dev-in-cloud/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="基于云端环境的edx开发协作" />
+<meta property="og:description" content="本地开发edx有许多坑，其中一个是open edx的环境搭建十分复杂，而且极其耗费cpu和内存资源。如果每个小伙伴都自行折腾一遍，真是一个不小" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/edx-dev-in-cloud/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-02-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-02-18T00:00:00+00:00" />
+
+<meta itemprop="name" content="基于云端环境的edx开发协作">
+<meta itemprop="description" content="本地开发edx有许多坑，其中一个是open edx的环境搭建十分复杂，而且极其耗费cpu和内存资源。如果每个小伙伴都自行折腾一遍，真是一个不小"><meta itemprop="datePublished" content="2016-02-18T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-02-18T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1615">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="基于云端环境的edx开发协作"/>
+<meta name="twitter:description" content="本地开发edx有许多坑，其中一个是open edx的环境搭建十分复杂，而且极其耗费cpu和内存资源。如果每个小伙伴都自行折腾一遍，真是一个不小"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">基于云端环境的edx开发协作</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-02-18 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>本地开发edx有许多坑，其中一个是open edx的环境搭建十分复杂，而且极其耗费cpu和内存资源。如果每个小伙伴都自行折腾一遍，真是一个不小的精力浪费。而且由于各自平台的不同，出现的错误五花八门，虽然采用vagrant可以部分解决，但vagrant本身又引来了各种蛋疼的问题。</p>
+<p>就我个人而言，习惯分布式的协作，团队成员分布在全国各地，甚至国外，为了交流方便，常常围绕一个一致的中心，否则容易各说各的，这个中心包括源码远程仓库和一致的开发环境。</p>
+<p>为了让每个人专注在自己的领域，通过分工来达到最大效率，团队中最好有一个全栈(其实就是万金油 囧)来协调大家。全栈未必熟悉具体细节，但对流程应该能整体把握，以便来黏合不同领域和分配任务，划清职责</p>
+<p>#我们的开发环境
+虽然我们的开发环境基于云，但思路是通用的，希望对你的团队也有用</p>
+<p>目前我们的开发环境在青云上，按需付费。1核4G内存(swap)就足够了,ip按流量计费。价格很廉价</p>
+<p>所有配置由技术负责人完成就行，任务量并不大。</p>
+<p>###云端开发环境
+云上存有一份干净的原生dogwood镜像，在此基础上定制出公司的开发基础版，假设代号为<code>dogwood_base</code>，该基础版包括一同通用的定制。</p>
+<p>前后端的开发均从中衍生各自的版本。</p>
+<p>###代码管理</p>
+<ul>
+<li>只谈论核心仓库：edx-platform</li>
+<li>在git服务器上，存有公司定制的open edx源码库，存为私有仓库</li>
+<li><code>dogwood_base</code>是基于named-release/Dogwood的分支</li>
+<li>团队每个成员均有自己的开发分支，命名为<code>&lt;NAME&gt;/&lt;FEATURE&gt;</code>,<code>&lt;NAME&gt;</code>为成员姓名,<code>&lt;FEATURE&gt;</code>为功能代号</li>
+<li>技术负责人负责将各个开发代码merge到dogwood_base，当然你也可以采用gitflow工作流</li>
+</ul>
+<p>#后端开发
+后端开发的同学，可能分布在网络各地</p>
+<p><code>tmux</code>可以让你们在一个同个shell会话里协作:参考<a href="http://www.kancloud.cn/kancloud/tmux/62466">使用 tmux 结对编程</a></p>
+<p>采用组来做到协同会话</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">tmux new-session -s groupedsession
+</span></span><span class="line"><span class="cl">tmux new-session -t groupedsession -s mysession
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>####新人入职
+只需要给他分发一个镜像就好啦，环境的搭配十分容易。团队内经验的传递也是个影响效率的关键因素，通过tmux，新老员工能容易地结对编程，经验的传递变得容易。使用qq和文档互动性是很低的，而高互动性能明显提高学习效率，tmux，你值得拥有</p>
+<p>####为前端提供服务
+前端同学一般对linux不怎么熟悉，后端同学最好能直接给他们一个一切就绪的环境，因为我自己在处理后端，所以给后端安排的任务会多些</p>
+<ul>
+<li>负责后端的同学，折腾好配置环境，可以用我的<a href="https://github.com/wwj718/edx_tools">edx_tools</a>,按照这篇教程为前端同学准备好环境：<a href="http://blog.just4fun.site/edx-front-dev-workflow.html">edx前端定制开发工作流</a>,交付给前端的仅仅是个一切就绪的url</li>
+<li>将前端修改的文件拉取到themes目录，按照theme机制摆放定制文件，参考<a href="https://github.com/edx/edx-platform/tree/master/themes">edx-platform/themes</a></li>
+</ul>
+<p>####在云上开发xblock
+相比于xblock-sdk，我更倾向于原生的环境，有了云的话，很容易将环境分发给xblock开发者</p>
+<p>####特性开发（遇到风险）
+在开发一些新特性时，有些特性可能会搞坏环境，当这种情况出现，云环境能很好帮到你，做个快照只要你不到一分钟的时间</p>
+<p>#前端开发
+由于云端是外网可访问的，后端同学可以帮助前端构建好所有的环境，所以前端可以专注在前端开发，不需要与环境和服务器打交道（open edx的环境对于后端同学来说头很头疼，实在不该把锅甩给前端，毕竟术业有专攻）</p>
+<p>前端同学只需要打开浏览器，输入ip就得到一个干净的开发环境，所需要做的只是用Chrome Dev Tools或者firebug来直接调试scss代码</p>
+<p><img src="img/edx/sass/sass1.png" alt="sass1.png"></p>
+<p>前端同学的工作流为：</p>
+<ul>
+<li>配置好chrome/firefox， 使其支持sass调试，参考<a href="http://thesassway.com/intermediate/using-source-maps-with-sass">Using source maps with Sass 3.3</a></li>
+<li>直接在chrome里调试,如下如
+<img src="img/edx/sass/sass2.png" alt="sas2"></li>
+<li>由于在chrome里的修改只对当然会话有效，我们需要将修改保存到本地，使用git管理，每个修改旁边都应该有注释说明，注释格式为：<code>// &lt;NAME&gt;:&lt;MESSAGE&gt;</code>
+<img src="img/edx/sass/sass3.png" alt="sas3"></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-02-18
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/jupyter-summary/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">jupyter使用小结</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/data-analysis-and-visualization/">
+            <span class="next-text nav-default">数据分析和可视化(我的学习资料)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

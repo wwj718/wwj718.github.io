@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>将新设备引入 MicroBlocks - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 阅读本文的你可能有这样的需求：你刚在网上买了个新设备，颜色传感器、可编程书包或者 24 路舵机控制板之类的东西。 你在 MicroBlocks 内置的积木库里，怎么也没" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/new-device-microblocks-library/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="将新设备引入 MicroBlocks" />
+<meta property="og:description" content="前言 阅读本文的你可能有这样的需求：你刚在网上买了个新设备，颜色传感器、可编程书包或者 24 路舵机控制板之类的东西。 你在 MicroBlocks 内置的积木库里，怎么也没" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/new-device-microblocks-library/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-12-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-12-02T00:00:00+00:00" />
+
+<meta itemprop="name" content="将新设备引入 MicroBlocks">
+<meta itemprop="description" content="前言 阅读本文的你可能有这样的需求：你刚在网上买了个新设备，颜色传感器、可编程书包或者 24 路舵机控制板之类的东西。 你在 MicroBlocks 内置的积木库里，怎么也没"><meta itemprop="datePublished" content="2022-12-02T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-12-02T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2700">
+<meta itemprop="keywords" content="MicroBlocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="将新设备引入 MicroBlocks"/>
+<meta name="twitter:description" content="前言 阅读本文的你可能有这样的需求：你刚在网上买了个新设备，颜色传感器、可编程书包或者 24 路舵机控制板之类的东西。 你在 MicroBlocks 内置的积木库里，怎么也没"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">将新设备引入 MicroBlocks</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-12-02 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#怎么做">怎么做</a>
+      <ul>
+        <li><a href="#写驱动库很难吧">写驱动库很难吧？</a></li>
+        <li><a href="#可生长的系统">可生长的系统</a></li>
+        <li><a href="#操作步骤">操作步骤</a></li>
+        <li><a href="#1-弄清楚新设备使用的硬件通信协议">1. 弄清楚新设备使用的硬件通信协议</a></li>
+        <li><a href="#2-在-ide-创建自定义积木">2. 在 IDE 创建自定义积木</a></li>
+        <li><a href="#3-将自定义积木移入新的库">3. 将自定义积木移入新的库</a></li>
+      </ul>
+    </li>
+    <li><a href="#继续学习">继续学习</a></li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#目前-ide-支持哪些硬件通信协议">目前 IDE 支持哪些硬件通信协议</a></li>
+        <li><a href="#如何让-microblocks-支持新的编程主板">如何让 MicroBlocks 支持新的编程主板</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/grow.png" alt=""></p>
+<h2 id="前言">前言</h2>
+<p>阅读本文的你可能有这样的需求：你刚在网上买了个新设备，颜色传感器、可编程书包或者 24 路舵机控制板之类的东西。 你在 MicroBlocks 内置的积木库里，怎么也没找到这个新设备的驱动库，可你又想使用 MicroBlocks 对新设备进行编程，怎么办呢？</p>
+<p>别着急, 这篇文章正是为你写的。</p>
+<h2 id="怎么做">怎么做</h2>
+<h3 id="写驱动库很难吧">写驱动库很难吧？</h3>
+<p>为新设备写驱动库，听起来是一件吓人的事。在大多数硬件编程平台中，你需要进入 &ldquo;底层&rdquo; 去工作，这些平台会把用户界面打扮的漂漂亮亮，可等你一旦进入 &ldquo;底层&rdquo;，会发现它简直混乱得像你的卧室。</p>
+<blockquote>
+<p>他们将材料一块块胡乱堆在一起，然后用石灰岩做外墙，使其外表光鲜 &ndash; Alan Kay <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/software-art-engineering-mathematics-or-science/">《软件: 艺术，工程，数学还是科学？》</a></p>
+</blockquote>
+<p>当你在&quot;底层&quot;写驱动，你就不再能够使用之前学到的技能来编程，因为你现在可是在&quot;底层&quot;工作！今天的大多数图形化编程系统都如此，无论是 MakeCode、Scratch、node-red，还是 Mind+、慧编程、Kittenbot&hellip;</p>
+<p>用户怎么看待这件事呢？ 用户似乎应该抱怨这类平台的可扩展性很差，抱怨系统设计者没有能力打造更加一致的系统，抱怨他们根本没有理解终端用户编程的含义&hellip;</p>
+<p>可用户通常被&quot;底层&quot;开发者教导说，那才是真正的编程。他们好像在说你之前用的东西只是糊弄小孩的玩意儿。这是今天计算机文化相当可悲的一面。 Bret Victor 在 <a href="https://www.youtube.com/watch?v=8pTEmbeENF4">The Future of Programming</a> 里对所谓 &ldquo;真正的编程&rdquo; 这种无知和傲慢做了相当辛辣的讽刺。</p>
+<h3 id="可生长的系统">可生长的系统</h3>
+<p>一个系统，如果希望随着时间的流逝，帮助用户成长，并且与用户一起成长，它应该认真对待可扩展性和可生长性，它应该支持终端用户轻松扩展它(<a href="https://en.wikipedia.org/wiki/HyperCard">Hypercard</a> 是这类系统中的典范)。用户社区应该掌控这个系统，而不能指望工作在&quot;底层&quot;的开发者(他们就像垄断&quot;识字&quot;的&quot;神职人员&quot;)。</p>
+<p>MicroBlocks 正是这样可由用户轻松扩展的可生长系统。在架构设计时，它充分考虑了可生长性和可扩展性。</p>
+<p>MicroBlocks 允许你在图形化环境构建驱动库！(另一个拥有强大扩展能力的图形化系统是伯克利的 <a href="https://snap.berkeley.edu/">Snap!</a>)</p>
+<p>你不需要进入&quot;底层&quot;，在普通用户的编程界面里，就可直接构建新的驱动库，来驱动的新设备。</p>
+<h3 id="操作步骤">操作步骤</h3>
+<p>下面，我们进入操作环节。</p>
+<p>具体而言，将新设备引入 MicroBlocks ，可分为以下三步:</p>
+<!--
+我们假设你接入，I2C、UART、电风扇，
+
+如果你想接入主板，新的通信协议，参考FAQ
+-->
+<ol>
+<li>弄清楚新设备使用的硬件通信协议。</li>
+<li>在 IDE 创建自定义积木(通常是对通信协议的包装)。</li>
+<li>将自定义积木移入新创建的库(根据需要分发它)。</li>
+</ol>
+<p>接下来，让我们开始逐一讨论。</p>
+<h3 id="1-弄清楚新设备使用的硬件通信协议">1. 弄清楚新设备使用的硬件通信协议</h3>
+<p>如果你购买的新设备有在线文档，通过查阅文档可以快速弄清通信协议。设备厂商通常会开放出主流平台的驱动(诸如 Arduino、MicroPython、JavaScript(MakeCode)), 只需要将这些驱动翻译到 MicroBlocks 中即可。顺便一提，Adafruit 开放了大量优秀的 Arduino/MicroPython 驱动库: <a href="https://github.com/adafruit">Adafruit Github</a>。</p>
+<p>以恩孚科技的游戏手柄(Joystick:bit V2)为例。</p>
+<p><img src="https://elecfreaks.com/learn-cn/_images/joystick_v2_01.png" alt=""></p>
+<p>通过<a href="https://elecfreaks.com/learn-cn/microbitExtensionModule/joystick_bit_v2.html">查阅文档</a>, 可以发现它简单使用了模拟信号和数字信号。它的 JavaScript(MakeCode) 驱动在<a href="https://github.com/tinkertanker/pxt-joystickbit/blob/master/joystickbit.ts">这里</a></p>
+<h3 id="2-在-ide-创建自定义积木">2. 在 IDE 创建自定义积木</h3>
+<p>弄懂了通信协议，我们就可以在 MicroBlocks IDE 创建自定义积木了。</p>
+<p>先在设置中开启 <code>显示高级积木</code>:</p>
+<img width=800 src="/post/img/show-adcanced-blocks.png" />
+<p>从 <a href="https://elecfreaks.com/learn-cn/microbitExtensionModule/joystick_bit_v2.html">文档</a> 和 <a href="https://github.com/tinkertanker/pxt-joystickbit/blob/master/joystickbit.ts">JavaScript 驱动</a> 可以获知振动马达连接在 <code>Pin 16</code> 接口。</p>
+<p>让我们创建一个自定义积木来控制震动马达。</p>
+<p>首先点击 IDE 左侧的 <code>我的积木</code>:</p>
+<img width=800 src="/post/img/my-blocks.png" />
+<p>可以看到有两个选项:</p>
+<ul>
+<li>新建命令积木(输出, 用于控制执行器)</li>
+<li>新建报告积木(输入，用于从传感器获取数据)</li>
+</ul>
+<p>控制震动马达属于第一种。</p>
+<p>创建命令积木, 给积木库起一个名字，并且指定它接收的参数（默认为100），这和在 Scratch 中创建自制积木几乎一样。</p>
+<img width=800 src="/post/img/my-blocks-1.png" />
+<p>接下来，让我们参考设备文档和驱动的说明，给积木赋予实际功能:</p>
+<img width=800 src="/post/img/my-blocks-2.png" />
+<p>至此，我们就完成了第一个自定义积木，点击它就可以让你的游戏手柄震动！</p>
+<p>在 MicroBlocks IDE 创建自定义积木的好处是，可以复用过去在 MicroBlocks 中的所有经验。也可使用 MicroBlocks 强大的实时调试能力！这带来极大效率提升，更重要的是，整个过程非常有趣，just for fun :-)</p>
+<p>同样道理，你可以创建新的自定义积木，来驱动游戏手柄的其他功能。</p>
+<h3 id="3-将自定义积木移入新的库">3. 将自定义积木移入新的库</h3>
+<p>当你完成驱动新设备所需的自定义积木，可能会想如何分发这些积木给其他用户，就像分发一个软件库。</p>
+<p>将自定义积木移入新的库即可。</p>
+<p>首先让我们在 IDE 里创建一个新的库(确保你已经开启 <code>显示高级积木</code>) :</p>
+<img width=800 src="/post/img/new-library-1.png" />
+<p>我们给它起名叫 &ldquo;Joystick&rdquo;。</p>
+<p>我们需要给这个新的库设置一些信息。</p>
+<p>填写完库信息后，点击保存。</p>
+<img width=800 src="/post/img/new-library-2.png" />
+<p>不同的颜色代表不同类型的设备，游戏手柄通常被视为一种传感器(输入设备)，从用户那儿获取输入信息。当然它可能也有输出功能(诸如震动，但这不是它的主要功能)。所以我们选择紫色(输入)。</p>
+<p>创建完 &ldquo;Joystick&rdquo; 库后，我们就可以把之前创建的自定义积木拖入库中:</p>
+<img width=800 src="/post/img/new-library-3.png" />
+<p>完成后，在 &ldquo;Joystick&rdquo; 库里就能看到你的积木:</p>
+<img width=800 src="/post/img/new-library-4.png" />
+<p>至此，你就为新硬件写完驱动了。</p>
+<h4 id="导出驱动库">导出驱动库</h4>
+<p>你可以将驱动库分发给更多用户。 右键点击驱动库，导出为 ubl 文件，把这个文件发给需要的人即可。</p>
+<img width=800 src="/post/img/export-ubl.png" />
+<p>如果你获得一个 ubl 文件，想要导入它，只需要将文件直接拖到 IDE 里即可。</p>
+<img width=800 src="/post/img/import-ubl.png" />
+<h4 id="更多分发方法">更多分发方法</h4>
+<p>通常你不需要直接分发积木库。如果你的项目中使用到新的驱动库，当你分享你的项目时，驱动库会一并存在于项目文件(udp)和项目 URL 里。</p>
+<p>如果你想让驱动库内置在 MicroBlocks 平台里，你可以将它提交给 <a href="https://bitbucket.org/john_maloney/smallvm/">MicroBlocks 官方仓库</a>(确保你的驱动库是采用英文写的，这样全球用户才能使用它)。</p>
+<p>如果你的驱动库，采用中文来写，只打算给中文社区使用，欢迎提交到 <a href="https://github.com/MicroBlocksCN/smallvm">中文社区仓库</a>。</p>
+<h2 id="继续学习">继续学习</h2>
+<p>如果你想学习更多关于编写驱动库的知识，查看 MicroBlocks 平台内置的驱动库是个好办法。目前已经有很多驱动库内置在 MicroBlocks 里</p>
+<img width=800 src="/post/img/libraries-catelog.png" />
+<p>右键感兴趣的积木，点击``，就可以学习它是怎么做的了:</p>
+<img width=800 src="/post/img/blocks-show-definition.png" />
+<p>有些内置的驱动库是我提交的(也列出了它们使用的硬件通信协议):</p>
+<ul>
+<li>AI/AILens
+<ul>
+<li>I2C</li>
+</ul>
+</li>
+<li>Kits and Boards/哪吒扩展板
+<ul>
+<li>I2C</li>
+</ul>
+</li>
+<li>Kits and Boards/悟空扩展板
+<ul>
+<li>I2C</li>
+</ul>
+</li>
+<li>Network/MQTT</li>
+<li>Other/Joystick_bit (本文例子的完整版)
+<ul>
+<li>数字信号/模拟信号</li>
+</ul>
+</li>
+<li>Robots/酷比特小车
+<ul>
+<li>I2C</li>
+</ul>
+</li>
+<li>Robots/Sphero-RVR
+<ul>
+<li>UART</li>
+</ul>
+</li>
+</ul>
+<p>我对这几个库比较熟悉，如果你在阅读这些积木库的过程中遇到什么疑惑，欢迎与我讨论。</p>
+<p><a href="https://wwj718.github.io/tags/microblocks/">我的博客文章</a>里也记录了一些编写驱动库的经验, 供大家参考。</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="目前-ide-支持哪些硬件通信协议">目前 IDE 支持哪些硬件通信协议</h3>
+<ul>
+<li>数字/模拟信号</li>
+<li>I2C</li>
+<li>UART</li>
+<li>SPI</li>
+</ul>
+<img width=800 src="/post/img/comm-catelog.png" />
+<p>这些硬件通信协议足以涵盖主流的绝大多数传感器/执行器。</p>
+<p>如果你的新设备，不是采用这些硬件通信协议，那么你可能无法在 IDE 里接入它，如果你不知如何将你的新设备接入到 MicroBlocks，<a href="https://bitbucket.org/john_maloney/smallvm/issues">提一个 issue</a>吧，MicroBlocks 团队会给你合适的指引。</p>
+<h3 id="如何让-microblocks-支持新的编程主板">如何让 MicroBlocks 支持新的编程主板</h3>
+<p>MicroBlocks 目前支持 <a href="https://wiki.microblocks.fun/boards/supported">这些主板</a>。</p>
+<p>如果你想让 MicroBlocks 支持新的编程主板或芯片模组 ，需要在在虚拟机(VM)层面工作。</p>
+<!--
+### 更多例子
+
+Cutebot 智能赛车 为例，通过[查阅文档](https://www.elecfreaks.net/learn-cn/microbitKit/smart_cutebot/cutebot-python.html), 可以看到它采用了 I2C 等协议，它的 Python 驱动在[这里](https://github.com/elecfreaks/EF_Produce_MicroPython/blob/master/Cutebot.py)
+-->
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/451548782">如何在 MicroBlocks 中创建代码库 [译]</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-12-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/zou-chu-di-zhi/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">走出帝制</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/microblocks-interoperability/">
+            <span class="next-text nav-default">MicroBlocks 与其他编程语言的互操作</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

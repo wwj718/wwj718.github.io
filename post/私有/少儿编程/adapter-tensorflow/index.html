@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>运行在树莓派中的scratch3-adapter tensorflow插件 - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="树莓派与Scratch3.0 树莓派目前的浏览器不支持webGL，但scratch3.0需要webGL支持。这篇文章准备让scratch3-a" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/adapter-tensorflow/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="运行在树莓派中的scratch3-adapter tensorflow插件" />
+<meta property="og:description" content="树莓派与Scratch3.0 树莓派目前的浏览器不支持webGL，但scratch3.0需要webGL支持。这篇文章准备让scratch3-a" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/adapter-tensorflow/" />
+<meta property="article:published_time" content="2018-12-27T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-12-27T00:00:00+00:00" />
+<meta itemprop="name" content="运行在树莓派中的scratch3-adapter tensorflow插件">
+<meta itemprop="description" content="树莓派与Scratch3.0 树莓派目前的浏览器不支持webGL，但scratch3.0需要webGL支持。这篇文章准备让scratch3-a">
+
+
+<meta itemprop="datePublished" content="2018-12-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-12-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2328">
+
+
+
+<meta itemprop="keywords" content="codelab," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="运行在树莓派中的scratch3-adapter tensorflow插件"/>
+<meta name="twitter:description" content="树莓派与Scratch3.0 树莓派目前的浏览器不支持webGL，但scratch3.0需要webGL支持。这篇文章准备让scratch3-a"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">运行在树莓派中的scratch3-adapter tensorflow插件</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-12-27 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#树莓派与scratch3-0">树莓派与Scratch3.0</a>
+<ul>
+<li>
+<ul>
+<li><a href="#在树莓派中运行scratch3-adapter">在树莓派中运行scratch3-adapter</a></li>
+<li><a href="#建立连接">建立连接</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#在树莓派安装依赖-tensorflow及其他">在树莓派安装依赖(tensorflow及其他)</a>
+<ul>
+<li>
+<ul>
+<li><a href="#安装-tensorflow">安装 tensorflow</a></li>
+<li><a href="#安装opencv">安装opencv</a></li>
+<li><a href="#安装-protobuf">安装 Protobuf</a></li>
+<li><a href="#其他">其他</a></li>
+<li><a href="#运行物体识别程序">运行物体识别程序</a></li>
+<li><a href="#构建scratch3-adapter插件">构建scratch3-adapter插件</a></li>
+<li><a href="#tips">tips</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#展示">展示</a></li>
+<li><a href="#提醒">提醒</a></li>
+<li><a href="#todo">todo</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/vasetf_5e0ac57e.png" alt="" /></p>
+
+<h1 id="树莓派与scratch3-0">树莓派与Scratch3.0</h1>
+
+<p>树莓派目前的浏览器不支持webGL，但scratch3.0需要webGL支持。这篇文章准备让scratch3-adapter运行在树莓派中，而scratch3.0运行在电脑上的chrome浏览器里。</p>
+
+<p>scratch team正在和树莓派社区合作，推出scratch3.0的树莓派版本。所以在未来，你也可以使用树莓派中使用scratch3.0。</p>
+
+<p>当我们允许scratch3.0和scratch3-adapter运行在不同机器上时，我们得到了一些有趣的副产品，诸如支持移动端(ipad/mobile)、分布式运行、远程教育等等。</p>
+
+<h3 id="在树莓派中运行scratch3-adapter">在树莓派中运行scratch3-adapter</h3>
+
+<p><a href="https://codelab-adapter-docs.codelab.club/user_guide/install/">下载scratch3-adapter</a>。建议你重新下载插件，我刚才有更新，修复了一个字节码相关的bug。</p>
+
+<p>下载好之后，给予它运行权限: <code>chmod +x xxx</code></p>
+
+<p>之后双击运行即可.</p>
+
+<p><img src="/post/img/rpiadapter_35394424.png" width=600 /></p>
+
+<h3 id="建立连接">建立连接</h3>
+
+<p>首先访问: <a href="https://raspberrypi.local:12358/">https://raspberrypi.local:12358/</a></p>
+
+<p>点击<code>高级 &gt; 继续前往raspberrypi.local（不安全）</code></p>
+
+<p><img src="/post/img/rpiadapter_03d96e0e.png" width=600 /></p>
+
+<p>当你看到<code>hello world</code>就ok了。</p>
+
+<p>打开<a href="https://scratch3.codelab.club/?adapter_host=raspberrypi.local">scratch3.codelab.club</a>, 指定adapter_host参数: <code>https://scratch3.codelab.club/?adapter_host=raspberrypi.local</code></p>
+
+<p>你将看到，本地的网页已经与树莓派上的scratch3-adapter建立了连接. 之后你就可以在树莓派中<a href="https://codelab-adapter-docs.codelab.club/dev_guide/helloworld/">构建scratch3-adapter的插件</a>，同时在PC上的scratch3.0中操控它.和本地插件没有区别。</p>
+
+<p><img src="/post/img/rpiadapter_4bc72c77.png" width=600 /></p>
+
+<p>如果你在windows下打开scratch3.0，将<code>raspberrypi.local</code>替代为你的树莓派的IP。</p>
+
+<p>对于mac/linux用户，如果你没有修改树莓的hostname，可以直接使用<code>raspberrypi.local</code>,作为adapter_host.</p>
+
+<p>如果windows用户也不想每次去找树莓派的IP，需要安装<a href="https://support.apple.com/kb/DL999?locale=zh_CN">Bonjour Print Services (Windows)</a>，之后<code>raspberrypi.local</code>就会直接指向树莓派。这部分涉及到<a href="https://en.wikipedia.org/wiki/Multicast_DNS">mDNS</a></p>
+
+<h1 id="在树莓派安装依赖-tensorflow及其他">在树莓派安装依赖(tensorflow及其他)</h1>
+
+<p>scratch3-adatper默认启动为图形界面模式，所以你需要在图形界面中操作。我们之后会推出cli版本。</p>
+
+<p>如果你希望一切都在浏览器中操作，可以使用<a href="https://blog.just4fun.site/raspberrypi-install-and-config.html#novnc">noVNC</a>，在浏览器中操作树莓派的桌面。</p>
+
+<p><img src="/post/img/rpinovnc_fa7f131c.png" alt="" /></p>
+
+<h3 id="安装-tensorflow">安装 tensorflow</h3>
+
+<p>tensorflow只是一个普通的Python库，scratch3-adatper允许使用Python构建插件，来拓展scrtach3.0的能力。所以这部分没有任何特殊性。构建AI插件和构建普通插件没有区别。你可以参考目前已有的插件例子:<a href="https://github.com/Scratch3Lab/scratch3_adapter_extensions/">scratch3_adapter_extensions</a></p>
+
+<p>在树莓派中安装<a href="https://github.com/tensorflow/tensorflow">tensorflow</a>已经变得非常简单，<a href="https://medium.com/tensorflow/tensorflow-1-9-officially-supports-the-raspberry-pi-b91669b0aa0">tensorflow 1.9之后官方正式支持树莓派</a>, 安装只需运行两行命令:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install libatlas-base-dev
+pip3 install tensorflow pyzmq --user</code></pre></td></tr></table>
+</div>
+</div>
+<p>使用python3运行以下代码，看是否安装成功:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># python3</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">enable_eager_execution</span><span class="p">()</span>
+<span class="n">hello</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="s1">&#39;Hello, TensorFlow!&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">hello</span><span class="p">)</span> <span class="c1"># tf.Tensor(b&#39;Hello, TensorFlow!&#39;, shape=(), dtype=string)</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="安装opencv">安装opencv</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt-get install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev
+sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+sudo apt-get install libxvidcore-dev libx264-dev
+sudo apt-get install qt4-dev-tools
+pip3 install opencv-python --user</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="安装-protobuf">安装 Protobuf</h3>
+
+<p>如果你想使用<a href="https://github.com/tensorflow/models">tensorflow/models</a>,你就需要安装protobuf-compiler。</p>
+
+<p><code>sudo apt-get install protobuf-compiler</code></p>
+
+<h3 id="其他">其他</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">pip3 install matplotlib pyzmq --user</code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="运行物体识别程序">运行物体识别程序</h3>
+
+<p>从<a href="https://github.com/wwj718/TensorFlow-Object-Detection-on-the-Raspberry-Pi#5-set-up-tensorflow-directory-structure-and-pythonpath-variable">Set up TensorFlow Directory Structure and PYTHONPATH Variable</a>往下做相应配置。</p>
+
+<p>配置好之后你应该就能在树莓派上运行<a href="https://github.com/wwj718/TensorFlow-Object-Detection-on-the-Raspberry-Pi/blob/master/Object_detection_usb_cam.py">Object_detection_usb_cam.py</a>
+而不报错。</p>
+
+<p>程序目前使用usb摄像头，如果你想使用树莓派官方的摄像头，需要做些调整。</p>
+
+<p>以上这些步骤与scratch3-adapter无关，是在树莓派中用tensorflow运行物体识别程序需要的步骤，挺繁琐的。</p>
+
+<p>ps: 我们之后写一篇文章讲解在opencv中跑神经网络，而不用tensorflow，将省去很多繁琐步骤。</p>
+
+<p>完成之后，我们就可以开始在scratch3-adapter中写插件了。</p>
+
+<h3 id="构建scratch3-adapter插件">构建scratch3-adapter插件</h3>
+
+<!--构建常见的管道，让开发者易于上手，构建一些基础设施和小工具到adatper中，内置它-->
+
+<p>首先把tensorflow物体识别程序放到用户目录下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">cd</span> ~
+wget https://raw.githubusercontent.com/wwj718/TensorFlow-Object-Detection-on-the-Raspberry-Pi/master/Object_detection_for_adapter.py</code></pre></td></tr></table>
+</div>
+</div>
+<p>在<code>~/scratch3_adapter/extensions/</code>构建<code>extension_tensorflow.py</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">zmq</span>
+<span class="kn">from</span> <span class="nn">zmq</span> <span class="kn">import</span> <span class="n">Context</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">from</span> <span class="nn">scratch3_adapter.core_extension</span> <span class="kn">import</span> <span class="n">Extension</span>
+<span class="kn">from</span> <span class="nn">scratch3_adapter</span> <span class="kn">import</span> <span class="n">settings</span>
+
+
+<span class="k">class</span> <span class="nc">TensorflowExtension</span><span class="p">(</span><span class="n">Extension</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="c1"># class name</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># REP</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="mi">38779</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+        <span class="n">socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REP</span><span class="p">)</span>
+        <span class="n">socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&#34;tcp://*:</span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">port</span><span class="p">)</span>
+        <span class="c1"># Object_detection_for_adapter.py 依赖于shell中的变量，所以需要在命令行里启动</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&#34;/usr/bin/python3 /home/pi/Object_detection_for_adapter.py&#34;</span>
+        <span class="n">tf</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span> <span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+            <span class="n">tf_class</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">recv_json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;class&#34;</span><span class="p">)</span>
+            <span class="n">socket</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span><span class="s2">&#34;status&#34;</span><span class="p">:</span><span class="s2">&#34;200&#34;</span><span class="p">})</span>
+            <span class="c1"># 发往scratch3.0中的eim积木</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">({</span><span class="s2">&#34;topic&#34;</span><span class="p">:</span> <span class="s2">&#34;eim&#34;</span><span class="p">,</span> <span class="s2">&#34;message&#34;</span><span class="p">:</span> <span class="n">tf_class</span><span class="p">})</span>
+        <span class="c1"># release socket</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">term</span><span class="p">()</span>
+
+<span class="n">export</span> <span class="o">=</span> <span class="n">TensorflowExtension</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>搞定。</p>
+
+<p>之后双击启动extension_tensorflow插件就行。</p>
+
+<p>注意: tensorflow的model在在树莓派中加载很慢，所以从运行插件，到你看到摄像头被激活，可能有几秒钟时间。</p>
+
+<h3 id="tips">tips</h3>
+
+<p>每次退出scratch3-adapter，记得取消勾选extension_tensorflow，不关闭这个进程，树莓派的很多计算资源仍然会被它占用。</p>
+
+<p>如果你不慎直接退出了scratch3-adapter，可以通过<code>ps aux |grep adapter</code>查杀<code>Object_detection_for_adapter.py</code></p>
+
+<h1 id="展示">展示</h1>
+
+<p><img src='/post/img/vasetf_5e0ac57e.png' width=600></p>
+
+<p><img src="/post/img/tfscratch_de6dfb62.png" alt="" /></p>
+
+<h1 id="提醒">提醒</h1>
+
+<p>[scratch3-adapter tensorflow插件](http(s://blog.just4fun.site/adapter-tensorflow.html)除了用于树莓派中，也完全可用在电脑上。需要对资源(model)路径做些调整（使用绝对路径）。</p>
+
+<p><img src="/post/img/macopencv_4d12f7dd.png" alt="" /></p>
+
+<p>运行在笔记本上，处理速度要快很多。</p>
+
+<h1 id="todo">todo</h1>
+
+<p>在未来，我们会直接发布内置scratch3-adapter的树莓派镜像，支持tensorflow/opencv/dlib/gpio。开箱即用，只需要将树莓派接入局域网(将内置<a href="https://github.com/balena-io/wifi-connect">wifi-connect</a>来简化wifi连接)，你就可以立刻用scratch3.0来为它编程。</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="https://codelab-adapter-docs.codelab.club/">codelab-adapter docs</a></li>
+<li><a href="https://github.com/Scratch3Lab/scratch3_adapter_extensions/">scratch3_adapter_extensions</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Multicast_DNS">wikipedia mDNS</a></li>
+<li><a href="https://github.com/wwj718/TensorFlow-Object-Detection-on-the-Raspberry-Pi">TensorFlow-Object-Detection-on-the-Raspberry-Pi</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-12-27
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">codelab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/adapter-opencv/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">运行在树莓派中的 scratch3-adapter opencv 插件</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-love-vector/">
+            <span class="next-text nav-default">codelab.club ❤️ Vector</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Open edx笔记系统探究 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="edx笔记系统是很有意思的一个话题 架构 前端 后端 通信方式：RESTful接口 由此可知笔记可以作为一项服务 前端 笔记库：annotator openannotation/annotator 文档 e" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/open-edx-note-system/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Open edx笔记系统探究" />
+<meta property="og:description" content="edx笔记系统是很有意思的一个话题 架构 前端 后端 通信方式：RESTful接口 由此可知笔记可以作为一项服务 前端 笔记库：annotator openannotation/annotator 文档 e" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/open-edx-note-system/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-05-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-05-24T00:00:00+00:00" />
+
+<meta itemprop="name" content="Open edx笔记系统探究">
+<meta itemprop="description" content="edx笔记系统是很有意思的一个话题 架构 前端 后端 通信方式：RESTful接口 由此可知笔记可以作为一项服务 前端 笔记库：annotator openannotation/annotator 文档 e"><meta itemprop="datePublished" content="2016-05-24T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-05-24T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2612">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Open edx笔记系统探究"/>
+<meta name="twitter:description" content="edx笔记系统是很有意思的一个话题 架构 前端 后端 通信方式：RESTful接口 由此可知笔记可以作为一项服务 前端 笔记库：annotator openannotation/annotator 文档 e"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Open edx笔记系统探究</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-05-24 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#笔记库annotator">笔记库：annotator</a></li>
+        <li><a href="#edx中的依赖">edx中的依赖</a></li>
+        <li><a href="#edx中业务逻辑">edx中业务逻辑</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#在lms中记条笔记的来龙去脉">在LMS中记条笔记的来龙去脉</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#搜索笔记">搜索笔记</a>
+      <ul>
+        <li><a href="#edx-notes-api-1">edx-notes-api</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>edx笔记系统是很有意思的一个话题</p>
+<h1 id="架构">架构</h1>
+<ul>
+<li>前端</li>
+<li>后端</li>
+<li>通信方式：RESTful接口</li>
+</ul>
+<p>由此可知笔记可以作为一项服务</p>
+<h1 id="前端">前端</h1>
+<h3 id="笔记库annotator">笔记库：annotator</h3>
+<ul>
+<li><a href="https://github.com/openannotation/annotator">openannotation/annotator</a></li>
+<li><a href="http://docs.annotatorjs.org/en/v1.2.x/">文档</a></li>
+</ul>
+<h3 id="edx中的依赖">edx中的依赖</h3>
+<ul>
+<li><a href="https://github.com/edx/edx-platform/blob/named-release/dogwood.rc/lms/static/js/edxnotes/views/shim.js">shim.js</a></li>
+<li><a href="https://github.com/edx/edx-platform/blob/named-release/dogwood.rc/lms/static/lms/js/require-config.js#L36">require-config.js</a></li>
+</ul>
+<h3 id="edx中业务逻辑">edx中业务逻辑</h3>
+<ul>
+<li><a href="https://github.com/edx/edx-platform/tree/named-release/dogwood.rc/lms/static/js/edxnotes">lms/static/js/edxnotes</a></li>
+</ul>
+<h1 id="后端">后端</h1>
+<h4 id="已废弃">已废弃</h4>
+<ul>
+<li><a href="https://github.com/edx/edx-platform/tree/master/lms/djangoapps/notes">lms/djangoapps/notes</a></li>
+</ul>
+<h4 id="edx-notes-api">edx-notes-api</h4>
+<ul>
+<li><a href="https://github.com/edx/edx-notes-api">edx-notes-api</a>
+<ul>
+<li><a href="https://github.com/edx/edx-notes-api/blob/master/notesapi/v1/search_indexes.py">search</a></li>
+<li><a href="https://github.com/edx/edx-notes-api/blob/caf5719aa1fbcf344927c7530a2fd627d9d7782f/notesserver/settings/common.py">search setting</a></li>
+<li><a href="https://github.com/edx/edx-notes-api/blob/master/Makefile#L42">create-index</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/edx/edx-notes-api/blob/master/notesapi/v1/views.py">api 文档（RESTful）</a></li>
+</ul>
+<h4 id="lms">lms</h4>
+<ul>
+<li><a href="https://github.com/edx/edx-platform/tree/master/lms/djangoapps/edxnotes">lms/djangoapps/edxnotes</a></li>
+</ul>
+<h4 id="其他">其他</h4>
+<ul>
+<li><a href="https://github.com/edx/edx-platform/blob/master/common/lib/xmodule/xmodule/annotator_token.py">annotator_token</a></li>
+</ul>
+<h1 id="restful接口">RESTful接口</h1>
+<p>通信相关</p>
+<h2 id="在lms中记条笔记的来龙去脉">在LMS中记条笔记的来龙去脉</h2>
+<p>在lms里做笔记，观察ajax请求，可以看到笔记以POST方式发往：http://NOTESERVER/api/v1/annotations/</p>
+<p>header中带有<code>x-annotator-auth-token</code>和<code>X-CSRFToken</code></p>
+<p><code>x-annotator-auth-token</code>实际上是一个JWT编码的串，放到<a href="https://jwt.io/">jwt.io</a>解码完，可看到结果形如</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;sub&#34;</span><span class="p">:</span> <span class="s2">&#34;35774bce800db0e8a76980d9c332df73&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;administrator&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;ww&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;exp&#34;</span><span class="p">:</span> <span class="mi">1464079917</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;iss&#34;</span><span class="p">:</span> <span class="s2">&#34;http://LMS/oauth2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;iat&#34;</span><span class="p">:</span> <span class="mi">1464079887</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;preferred_username&#34;</span><span class="p">:</span> <span class="s2">&#34;ww&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;email&#34;</span><span class="p">:</span> <span class="s2">&#34;ww@qq.com&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;aud&#34;</span><span class="p">:</span> <span class="s2">&#34;edx-notes-id&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>代码见<a href="https://github.com/edx/edx-platform/blob/master/lms/djangoapps/edxnotes/views.py#L174">get_token</a></p>
+<p>上边链接所在的模块就是lms与NOTESERVER通信的模块，通信的url入口为<a href="https://github.com/edx/edx-platform/blob/master/lms/djangoapps/edxnotes/helpers.py#L381">get_internal_endpoint</a></p>
+<h5 id="新技能">新技能</h5>
+<p>这里边有个值得注意的地方是：<a href="https://github.com/edx/edx-platform/blob/master/lms/djangoapps/edxnotes/helpers.py#L26">get_id_token</a>,这个工具是通用的，如果想用jwt来发送受信信息的话</p>
+<p>通过JWT，我们可以保证数据是被签名过可信任的。</p>
+<p>值得注意的还有当前这部分并不完善，许多地方还是硬编码的,诸如：<a href="https://github.com/edx/edx-platform/blob/master/lms/djangoapps/edxnotes/helpers.py#L35">CLIENT_NAME</a></p>
+<hr>
+<p>观察网络面板，可以看到，发送的数据形如</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;ranges&#34;</span><span class="p">:[{</span><span class="nt">&#34;start&#34;</span><span class="p">:</span><span class="s2">&#34;/div[1]/p[2]&#34;</span><span class="p">,</span><span class="nt">&#34;startOffset&#34;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span><span class="nt">&#34;end&#34;</span><span class="p">:</span><span class="s2">&#34;/div[1]/p[2]&#34;</span><span class="p">,</span><span class="nt">&#34;endOffset&#34;</span><span class="p">:</span><span class="mi">18</span><span class="p">}],</span><span class="nt">&#34;quote&#34;</span><span class="p">:</span><span class="s2">&#34;你可以观看介绍视频&#34;</span><span class="p">,</span><span class="nt">&#34;text&#34;</span><span class="p">:</span><span class="s2">&#34;课程介绍&#34;</span><span class="p">,</span><span class="nt">&#34;tags&#34;</span><span class="p">:[</span><span class="s2">&#34;fun&#34;</span><span class="p">],</span><span class="nt">&#34;user&#34;</span><span class="p">:</span><span class="s2">&#34;35774bce800db0e8a76980d9c332df73&#34;</span><span class="p">,</span><span class="nt">&#34;usage_id&#34;</span><span class="p">:</span><span class="s2">&#34;block-v1:edX+test+2014_T2+type@html+block@af9f16e4a4704f4ab52bc90e5280ba18&#34;</span><span class="p">,</span><span class="nt">&#34;course_id&#34;</span><span class="p">:</span><span class="s2">&#34;course-v1:edX+test+2014_T2&#34;</span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>相关的前端模型定义在<a href="https://github.com/edx/edx-platform/blob/named-release/dogwood.rc/lms/static/js/edxnotes/models/note.js">edxnotes/models/note.js</a></p>
+<p>前端note工厂为<a href="https://github.com/edx/edx-platform/blob/named-release/dogwood.rc/lms/static/js/edxnotes/views/notes_factory.js">edxnotes/views/notes_factory.js</a></p>
+<p>user是不是采用了什么编码/加密（和edx的匿名用户id一样吗？）</p>
+<p>对此有兴趣的同学可以参考<a href="https://github.com/edx/edx-platform/blob/master/common/templates/edxnotes_wrapper.html">common/templates/edxnotes_wrapper.html</a>,其中关键部分为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">student.models</span> <span class="kn">import</span> <span class="n">anonymous_id_for_user</span>
+</span></span><span class="line"><span class="cl"><span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">anonymous_id_for_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="kc">None</span><span class="p">)})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>猜测和edx成绩单中匿名用户的机制一样</p>
+<p>出于好奇，追踪到底:<a href="https://github.com/edx/edx-platform/blob/master/common/djangoapps/student/models.py#L107">anonymous_id_for_user</a>,至此我们揭开了匿名ip的全部谜团</p>
+<ul>
+<li>Return a unique id for a (user, course) pair</li>
+<li>If user is an <code>AnonymousUser</code>, returns <code>None</code></li>
+</ul>
+<p>核心源码为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">unicode</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">course_id</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">course_id</span><span class="o">.</span><span class="n">to_deprecated_string</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">digest</span> <span class="o">=</span> <span class="n">hasher</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>由此可知，登录用户的anonymous_id是唯一的，使其具有唯一性的影响因素包括：</p>
+<ul>
+<li>settings.SECRET_KEY（站点级别）</li>
+<li>course_id</li>
+<li>user.id</li>
+</ul>
+<p>心满意足收场</p>
+<h2 id="搜索笔记">搜索笔记</h2>
+<p>我们在lms的笔记汇总页面<code>http://LMS/courses/course-v1:edX+DemoX+Demo_Course/edxnotes/</code></p>
+<p>搜索笔记时，发出的http（ajax）请求为<code>http://LMS/courses/course-v1:edX+DemoX+Demo_Course/edxnotes/search/?text=hello</code></p>
+<p>实际上，这个请求实际上是代理了edx-notes-api。</p>
+<h3 id="edx-notes-api-1">edx-notes-api</h3>
+<p>我们使用httpie来向edx-notes-api请求笔记数据</p>
+<p><code>http://NOTESERVER/api/v1/search/?user=106ecd878f4148a5cabb6bbb0979b730&amp;usage_id=block-v1%3AedX%2BDemoX%2BDemo_Course%2Btype%40html%2Bblock%4082d599b014b246c7a9b5dfc750dc08a9&amp;course_id=course-v1%3AedX%2BDemoX%2BDemo_Course</code></p>
+<p>url解码完为<code>http://NOTESERVER/api/v1/search/?user=106ecd878f4148a5cabb6bbb0979b730&amp;usage_id=block-v1:edX+DemoX+Demo_Course+type@html+block@82d599b014b246c7a9b5dfc750dc08a9&amp;course_id=course-v1:edX+DemoX+Demo_Course</code></p>
+<p>我们使用httpie测试</p>
+<p>http &ldquo;http://NOTESERVER/api/v1/search/?user=106ecd878f4148a5cabb6bbb0979b730&amp;usage_id=block-v1%3AedX%2BDemoX%2BDemo_Course%2Btype%40html%2Bblock%4082d599b014b246c7a9b5dfc750dc08a9&amp;course_id=course-v1%3AedX%2BDemoX%2BDemo_Course&rdquo; (注意要url编码！)</p>
+<p>得到</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;rows&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;course_id&#34;</span><span class="p">:</span> <span class="s2">&#34;course-v1:edX+DemoX+Demo_Course&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;created&#34;</span><span class="p">:</span> <span class="s2">&#34;2016-05-12T03:38:24.565900+00:00&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;quote&#34;</span><span class="p">:</span> <span class="s2">&#34;nks above. At edX&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;ranges&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;end&#34;</span><span class="p">:</span> <span class="s2">&#34;/div[1]/p[2]&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;endOffset&#34;</span><span class="p">:</span> <span class="mi">206</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;start&#34;</span><span class="p">:</span> <span class="s2">&#34;/div[1]/p[2]&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;startOffset&#34;</span><span class="p">:</span> <span class="mi">188</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;tag&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;text&#34;</span><span class="p">:</span> <span class="s2">&#34;df&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;updated&#34;</span><span class="p">:</span> <span class="s2">&#34;2016-05-12T03:38:24.566048+00:00&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;usage_id&#34;</span><span class="p">:</span> <span class="s2">&#34;block-v1:edX+DemoX+Demo_Course+type@html+block@82d599b014b246c7a9b5dfc750dc08a9&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;user&#34;</span><span class="p">:</span> <span class="s2">&#34;106ecd878f4148a5cabb6bbb0979b730&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;course_id&#34;</span><span class="p">:</span> <span class="s2">&#34;course-v1:edX+DemoX+Demo_Course&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;created&#34;</span><span class="p">:</span> <span class="s2">&#34;2016-05-12T03:09:01.496272+00:00&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;quote&#34;</span><span class="p">:</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;ranges&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;end&#34;</span><span class="p">:</span> <span class="s2">&#34;/div[1]/p[1]&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;endOffset&#34;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;start&#34;</span><span class="p">:</span> <span class="s2">&#34;/div[1]/p[1]&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;startOffset&#34;</span><span class="p">:</span> <span class="mi">8</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;text&#34;</span><span class="p">:</span> <span class="s2">&#34;a&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;updated&#34;</span><span class="p">:</span> <span class="s2">&#34;2016-05-12T03:09:01.496376+00:00&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;usage_id&#34;</span><span class="p">:</span> <span class="s2">&#34;block-v1:edX+DemoX+Demo_Course+type@html+block@82d599b014b246c7a9b5dfc750dc08a9&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;user&#34;</span><span class="p">:</span> <span class="s2">&#34;106ecd878f4148a5cabb6bbb0979b730&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;total&#34;</span><span class="p">:</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意其中的<code>ranges</code>属性,这是定位的关键，end和start是xpath，<code>tags</code>属性用于存放标签，<code>usage_id</code>是课程内容的定位符，user是用户匿名化后的结果</p>
+<h1 id="架构设计">架构设计</h1>
+<p>edx的架构总体而言是采用RESTful api来解耦，笔记模块也不例外</p>
+<p>edx的笔记前端模块采用的是openannotation开放出来的annotator，openannotation同时也开放了后端，edX没有采用他们的后端，而是使用django-rest-framework重写了笔记部分的后端，我想应该是出于一致性的考虑，这样一来，整个团队的技术栈是统一的，个人而言我觉得这是个明智的决定，尽管这可能浪费一些时间（这确实浪费了不少时间，要知道笔记系统在birch版本中就准备投入使用的！）。</p>
+<p>我之所以会赞同这种做法，可能是因为对论坛模块的恐惧吧，论坛采用ruby写的，想对此做定制优化，就显得艰难（事实证明论坛也的确不够稳定）</p>
+<p>保持技术栈的一致，有利于让团队成员更热衷维护它们</p>
+<p>如果你有兴趣进一步看笔记的模型，请阅读<a href="https://github.com/edx/edx-notes-api/blob/master/notesapi/v1/models.py">notesapi/v1/models.py</a></p>
+<h1 id="总结">总结</h1>
+<p>edx的笔记系统可以单独部署，只要做好oauth2的配置即可</p>
+<p>由于笔记系统是基于oauth2的，所以可以为手机端所用，同时如果我们将笔记系统视为一个服务，我们可以将它用在edx之外的网站或app里</p>
+<h1 id="后话">后话</h1>
+<p>我对阅读和笔记偏好有加，想基于以下东西做个工具</p>
+<ul>
+<li>annotator</li>
+<li>firebase</li>
+<li>chrome插件
+<ul>
+<li>参考划词翻译或者pocket</li>
+</ul>
+</li>
+</ul>
+<p>一个随手摘工具，同时能高亮做过笔记的网页</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-05-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/learn-redis/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">redis学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/canvas-and-open-edx/">
+            <span class="next-text nav-default">整合canvas lms和Open edX</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

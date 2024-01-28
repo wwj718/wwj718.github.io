@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用 MicroBlocks 制作物联网设备(兼容 Home Assistant) - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="MicroBlocks 是快乐制造平台 &amp;ndash; 阿立 前言 之前在 MicroBlocks 分享会上演示了如何使用 MicroBlocks 制作物联网设备(兼容 Home Assistant)。 将 MicroBlocks 与 Home Assistant 结合, 提供了一条通往 CodeLab 可编程" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-home-assistant-device/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用 MicroBlocks 制作物联网设备(兼容 Home Assistant)" />
+<meta property="og:description" content="MicroBlocks 是快乐制造平台 &ndash; 阿立 前言 之前在 MicroBlocks 分享会上演示了如何使用 MicroBlocks 制作物联网设备(兼容 Home Assistant)。 将 MicroBlocks 与 Home Assistant 结合, 提供了一条通往 CodeLab 可编程" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-home-assistant-device/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-05-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-05-01T00:00:00+00:00" />
+
+<meta itemprop="name" content="使用 MicroBlocks 制作物联网设备(兼容 Home Assistant)">
+<meta itemprop="description" content="MicroBlocks 是快乐制造平台 &ndash; 阿立 前言 之前在 MicroBlocks 分享会上演示了如何使用 MicroBlocks 制作物联网设备(兼容 Home Assistant)。 将 MicroBlocks 与 Home Assistant 结合, 提供了一条通往 CodeLab 可编程"><meta itemprop="datePublished" content="2023-05-01T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-05-01T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2224">
+<meta itemprop="keywords" content="IoT,MicroBlocks,Home Assistant," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用 MicroBlocks 制作物联网设备(兼容 Home Assistant)"/>
+<meta name="twitter:description" content="MicroBlocks 是快乐制造平台 &ndash; 阿立 前言 之前在 MicroBlocks 分享会上演示了如何使用 MicroBlocks 制作物联网设备(兼容 Home Assistant)。 将 MicroBlocks 与 Home Assistant 结合, 提供了一条通往 CodeLab 可编程"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用 MicroBlocks 制作物联网设备(兼容 Home Assistant)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-05-01 </span>
+        <div class="post-category">
+            <a href="/categories/microblocks/"> MicroBlocks </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#安装并配置-home-assistant-本地开发环境">安装并配置 Home Assistant 本地开发环境</a>
+      <ul>
+        <li><a href="#安装-home-assistant">安装 Home Assistant</a></li>
+        <li><a href="#配置-home-assistant">配置 Home Assistant</a></li>
+      </ul>
+    </li>
+    <li><a href="#使用-microblocks-为设备编程">使用 MicroBlocks 为设备编程</a></li>
+    <li><a href="#整合以上工作">整合以上工作</a>
+      <ul>
+        <li><a href="#解释细节">解释细节</a></li>
+      </ul>
+    </li>
+    <li><a href="#进阶">进阶</a>
+      <ul>
+        <li><a href="#长期运行">长期运行</a></li>
+        <li><a href="#api--ai">API &amp; AI</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/ha_mb_9.png" alt=""></p>
+<blockquote>
+<p>MicroBlocks 是快乐制造平台 &ndash; 阿立</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p>之前在 MicroBlocks 分享会上演示了如何<a href="https://www.bilibili.com/video/BV1Ws4y127Qd/?t=1794">使用 MicroBlocks 制作物联网设备(兼容 Home Assistant)</a>。 将 MicroBlocks 与 Home Assistant 结合, 提供了一条通往 <a href="https://codelab.club/blog/2020/04/29/%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/">CodeLab 可编程空间</a> 的理想途径。</p>
+<p>本文将分享演示中涉及的代码，并提供教程帮助大家复现之前的演示。</p>
+<p>接下来的内容分为以下 3 个部分:</p>
+<ul>
+<li>安装并配置 <a href="https://www.home-assistant.io/">Home Assistant</a> 本地开发环境</li>
+<li>使用 <a href="https://microblocksfun.cn/run/microblocks.html">MicroBlocks</a> 为设备编程</li>
+<li>整合以上工作</li>
+</ul>
+<h2 id="安装并配置-home-assistant-本地开发环境">安装并配置 Home Assistant 本地开发环境</h2>
+<h3 id="安装-home-assistant">安装 Home Assistant</h3>
+<p>Home Assistant 是个成熟的开源项目, 由于社区的努力, 每天都在变得更好。</p>
+<p>要在本地运行 Home Assistant, <a href="https://www.home-assistant.io/installation/">有许多种方式</a>, 最简单的方式可能是使用 Docker。</p>
+<p>首先<a href="https://www.docker.com/">安装 Docker</a>, 把 Docker 看成一个普通软件安装在本地即可。</p>
+<p>安装好 Docker 之后, 在命令行里运行以下命令，安装并启动 Home Assistant:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker run -d --name homeassistant --restart<span class="o">=</span>unless-stopped -e <span class="nv">TZ</span><span class="o">=</span>Asia/Shanghai -v config:/config -p 8123:8123 ghcr.io/home-assistant/home-assistant:2022.11.4
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>等待这条命令运行完, Home Assistant 就在本地运行起来了。</p>
+<p>在浏览器中打开 <code>http://127.0.0.1:8123</code>。 第一次打开，需要填写一些信息，完成后便可进入 Home Assistant 控制面板。</p>
+<h4 id="管理-home-assistant">管理 Home Assistant</h4>
+<p>如果需要管理正在运行的 Home Assistant, 以下命令或许有帮助:</p>
+<ul>
+<li><code>docker start homeassistant</code>: 启动 Home Assistant</li>
+<li><code>docker stop homeassistant</code>: 停止 Home Assistant</li>
+<li><code>docker ps</code>: 显示正在运行和已停止的 docker 容器</li>
+</ul>
+<h3 id="配置-home-assistant">配置 Home Assistant</h3>
+<p>为了让 MicroBlocks 编程的物联网设备能够兼容 Home Assistant(在 Home Assistant 中管理它们), 我们需要在 Home Assistant 与设备之间建立沟通桥梁，有多种方式可以做到这点，出于以下原因，我选择 MQTT 作为通信管道:</p>
+<ul>
+<li>能够突破局域网的限制(只需要把 MQTT 服务器放到公网)</li>
+<li>能够获知设备是否离线(MQTT 遗言机制)</li>
+<li>方便调试(可使用 <a href="http://mqtt-explorer.com/">MQTT Explorer</a>观察通信中的产生的消息)</li>
+</ul>
+<p>为了建立 Home Assistant 与设备之间的通信管道，需要进行以下 2 个操作:</p>
+<ol>
+<li>将 Home Assistant 连接到 MQTT 服务器上(考虑到通信的安全性, 我们应该使用独立的 MQTT 账号)</li>
+<li>在 MicroBlocks 中将设备连接到 MQTT 服务器 (使用同样的的 MQTT 账号)</li>
+</ol>
+<p>让我们先进行第 1 个操作, 在 Home Assistant 将 MQTT 集成进来。</p>
+<p>首先打开<a href="http://127.0.0.1:8123/config/integrations">集成页面(/config/integrations)</a>.</p>
+<p><img src="/post/img/ha_mb_1.png" alt=""></p>
+<p>输入<code>mqtt</code>, 选择 MQTT。</p>
+<p><img src="/post/img/ha_mb_3.png" alt=""></p>
+<p>我们需要一个 MQTT broker 和账号, 在这个实验里我使用的是 <a href="https://adapter.codelab.club/extension_guide/iot/">CodeLab MQTT broker</a></p>
+<ul>
+<li>服务器: mqtt.longan.link</li>
+<li>端口: 1883</li>
+<li>用户名: ha_mb</li>
+<li>密码: ha_mb</li>
+</ul>
+<p>将这些信息填到页面:</p>
+<p><img src="/post/img/ha_mb_2.png" alt=""></p>
+<p>至此就完成了在 Home Assistant 里配置 MQTT 的工作。</p>
+<p><strong>提醒</strong>: 建议使用独立的 MQTT 账号，如果你使用公开的账号(就像本文里的), 每个拥有用户名/密码的人都能够控制你的设备! 如果你需要独立的 MQTT 账号, 可以给我发邮件索要。 由于 MQTT 是标准协议，你也可以部署自己的 MQTT 服务器(MQTT broker)。</p>
+<h2 id="使用-microblocks-为设备编程">使用 MicroBlocks 为设备编程</h2>
+<p>接下来让我们使用 <a href="https://microblocksfun.cn/run/microblocks.html">MicroBlocks</a> 为物联网设备编程。</p>
+<p>由于设备需要通过网络与 MQTT 服务器通信，你需要准备一个能够连接网络的编程板，我使用的是 ESP32。</p>
+<p>在 MicroBlocks 中为板子刷入固件后，就可以开始编程了。</p>
+<p>建议从这个程序模版开始 <a href="/post/img/MQTT-HA-fan-temp-will-template.ubp">Demo template</a></p>
+<p><img src="/post/img/ha_mb_4.png" alt=""></p>
+<p>我们先让这段程序运行起来，然后简单解释下这段程序做了什么。</p>
+<p>为了让它运行起来，需要填入 wifi 信息。完成后就可以运行程序了！</p>
+<p>程序运行之后，设备就会连到 MQTT 服务器上，由于 Home Assistant 也连到了同一个 MQTT 账号，于是我们就可以在 Home Assistant 上管理这个设备了！</p>
+<p>MicroBlocks 会实时将程序刷到设备里，所以你可以随时断开 usb 连接。只要设备通上电，它就会运行这些程序。</p>
+<p><strong>提醒</strong>: 如果你不想使用本文公开的 MQTT 账号，你还需要填入你自己的 MQTT 账号信息。如果你使用自己的 MQTT 账号，也要修改 loop 积木里头的 MQTT 积木。</p>
+<h2 id="整合以上工作">整合以上工作</h2>
+<p>顺利完成了以上工作后，设备应该已经接入到 Home Assistant。</p>
+<p>怎么找到设备呢？</p>
+<p>打开<a href="http://127.0.0.1:8123/config/entities">实体注册表(/config/entities)</a>, 你将看到这两个设备:</p>
+<p><img src="/post/img/ha_mb_6.png" alt=""></p>
+<p>设备既然已经接入 Home Assistant, 接下来我们就可以把它们放到<strong>仪表盘</strong>上。</p>
+<p>在<a href="http://127.0.0.1:8123/lovelace/default_view">仪表盘</a> 里添加你要的设备(实体):</p>
+<ul>
+<li><a href="http://127.0.0.1:8123/lovelace/default_view?edit=1">编辑仪表盘(右上角)</a></li>
+<li>添加卡片(右下角)</li>
+<li>添加<strong>实体</strong>卡片</li>
+</ul>
+<p><img src="/post/img/ha_mb_7.png" alt=""></p>
+<p>完成后你就可以在仪表盘上管理风扇，并查看温度。</p>
+<p><img src="/post/img/ha_mb_8.png" alt=""></p>
+<h3 id="解释细节">解释细节</h3>
+<p>前边 MicroBlocks 的程序，为何能够将设备注册到 Home Assistant 里, 并允许 Home Assistant 管理它呢？</p>
+<p>答案是这个 MicroBlocks 程序实现了 Home Assistant 兼容的 MQTT 协议。</p>
+<p>Home Assistant 公开了一份<a href="https://www.home-assistant.io/integrations/mqtt/">MQTT 协议</a>, 任何实现这个 MQTT 协议的程序(无论是否运行在硬件上), 都能够与 Home Assistant 交互, 包括以下交互:</p>
+<ul>
+<li>发现设备: 将设备注册到 Home Assistant</li>
+<li>获取传感器信息、控制执行器</li>
+<li>更新离线与在线状态</li>
+<li>&hellip;</li>
+</ul>
+<p>通过查看 MicroBlocks 程序的自定义积木，对照着 Home Assistant 的 <a href="https://www.home-assistant.io/integrations/mqtt/">MQTT 协议</a>，你可以弄懂具体是怎么实现的。</p>
+<p>弄懂这些以后，你就可以将任何设备接入进来了！</p>
+<p>为了帮助你弄懂它们，让我们进一步深入到细节里。</p>
+<p>MicroBlocks 程序管理着两个设备(典型的做法可能是只管理一个设备):</p>
+<ul>
+<li>风扇(fan)</li>
+<li>温度传感器(temperature)</li>
+</ul>
+<p>展开 loop 积木, 你就能够看到来自 Home Assistant 的 MQTT 消息是如何控制风扇的:</p>
+<p><img src="/post/img/ha_mb_5.png" alt=""></p>
+<p>温度传感器相关的代码在这里:</p>
+<img width=500 src="/post/img/scriptImage3083191.png" />
+<h2 id="进阶">进阶</h2>
+<h3 id="长期运行">长期运行</h3>
+<p>为了让你的物联网系统长期运行，你需要将 Home Assistant 跑在一个不关机的设备上，社区里流行的做法是<a href="https://www.home-assistant.io/installation/raspberrypi">跑在树莓派上</a>。</p>
+<p><strong>提醒</strong>: 如果你在安装 <a href="https://www.home-assistant.io/installation/raspberrypi#install-home-assistant-operating-system">Home Assistant 操作系统</a> 时遇到困难(通常是因为没有翻墙导致的), 可以试试<a href="https://www.home-assistant.io/installation/raspberrypi#platform-installation">采用 Docker 安装</a>, 和<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-home-assistant-device/#%E5%AE%89%E8%A3%85-home-assistant">前头</a>一样，安装完 Docker 之后, 只需一行命令即可安装 Home Assistant。</p>
+<p>完成之后, 在浏览器里访问 <code>http://树莓派的IP:8123</code>, 即可访问到树莓派里的 Home Assistant。</p>
+<h3 id="api--ai">API &amp; AI</h3>
+<p>Home Assistant 开放了它的 API:</p>
+<ul>
+<li><a href="https://developers.home-assistant.io/docs/api/rest">REST API</a></li>
+<li><a href="https://developers.home-assistant.io/docs/api/websocket">WebSocket API</a></li>
+</ul>
+<p>使用 MicroBlocks 将设备变为 Home Assistant 兼容设备之后，我们就可以使用 Home Assistant 的 API 驱动这些设备。通过简单包装这些 API(诸如使用 Python/Snap/Scratch), 就可以将可编程空间变为一个教学环境。</p>
+<p>由于这些 API 整洁而通用, 你可以将它们投喂给大语言模型, 这样一来, 就可以让 AI 来管理你的可编程空间了。</p>
+<p>如果你想探索 AI 与物联网之间的协作，我最推荐的做法是, 把这些 API 包装为 <a href="https://python.langchain.com/en/latest/index.html">LangChain</a> 的 Agent(Tool), 然后让 GPT-3.5/GPT-4 操作它。</p>
+<p>还有一个与 AI 有关的有趣方向是，将 <a href="https://developers.home-assistant.io/docs/voice/overview/">Home Assistant 语音/意图</a>(<a href="https://www.home-assistant.io/blog/2022/12/20/year-of-voice/">今年是 Home Assistant 的语音之年</a>)与大语言模型结合。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://www.home-assistant.io/installation/">Home Assistant/installation</a></li>
+<li><a href="https://www.home-assistant.io/integrations/mqtt/">Home Assistant/MQTT</a></li>
+<li><a href="https://www.home-assistant.io/installation/raspberrypi">Home Assistant/raspberrypi</a></li>
+<li><a href="https://developers.home-assistant.io/docs/api/rest/">Home Assistant/REST API</a></li>
+<li><a href="https://developers.home-assistant.io/docs/api/websocket">Home Assistant/WebSocket API</a></li>
+<li><a href="https://developers.home-assistant.io/docs/voice/overview/">Home Assistant/Voice in Home Assistant</a></li>
+<li><a href="https://www.home-assistant.io/blog/2022/12/20/year-of-voice/">Home Assistant/2023: Home Assistant&rsquo;s year of Voice</a></li>
+<li><a href="https://github.com/home-assistant/intents">home-assistant/intents</a></li>
+<li><a href="https://www.bilibili.com/video/BV1Ws4y127Qd/?t=1794">使用 MicroBlocks 制作物联网传感器与执行器(兼容 Home Assistant)</a></li>
+<li><a href="https://python.langchain.com/en/latest/modules/agents.html">LangChain Agents</a></li>
+<li><a href="https://codelab.club/blog/2020/04/29/%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/">CodeLab 可编程空间 背后的理念与设计原则</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-05-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/iot/">IoT</a>
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          <a href="/tags/home-assistant/">Home Assistant</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%97%E8%AF%8D/mountain-biking/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">山路骑行</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/looking-for-a-cat/">
+            <span class="next-text nav-default">寻隐猫不遇</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

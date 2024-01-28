@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Open edX体系架构[译文] - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="接下来准备翻译一些文章。 决定这样做是因为，在开发群里，@amspring提到之前我知道论坛部分使用到轻量级的Sinatra，没有看到Rail" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/open-edx-architecture-translation/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Open edX体系架构[译文]" />
+<meta property="og:description" content="接下来准备翻译一些文章。 决定这样做是因为，在开发群里，@amspring提到之前我知道论坛部分使用到轻量级的Sinatra，没有看到Rail" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/open-edx-architecture-translation/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-09-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-09-28T00:00:00+00:00" />
+
+<meta itemprop="name" content="Open edX体系架构[译文]">
+<meta itemprop="description" content="接下来准备翻译一些文章。 决定这样做是因为，在开发群里，@amspring提到之前我知道论坛部分使用到轻量级的Sinatra，没有看到Rail"><meta itemprop="datePublished" content="2015-09-28T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-09-28T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1901">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Open edX体系架构[译文]"/>
+<meta name="twitter:description" content="接下来准备翻译一些文章。 决定这样做是因为，在开发群里，@amspring提到之前我知道论坛部分使用到轻量级的Sinatra，没有看到Rail"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Open edX体系架构[译文]</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-09-28 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>接下来准备翻译一些文章。</p>
+<p>决定这样做是因为，在开发群里，@amspring提到<code>之前我知道论坛部分使用到轻量级的Sinatra，没有看到Rails，看好几个地方博客什么的涉及技术这块都写ROR,我以为我漏掉了什么呢 Rails比较重，这里提供简单接口的 使用Sinatra较符合</code></p>
+<p>而不少群友似乎也觉得edX架构中使用了Rails，而实际上Rails并没有被采用，这类知识其实在官方的文章中都已经说清楚了</p>
+<hr>
+<p>Open edX是一个基于web技术的平台，用于创建，发布和分析在线课程。它驱动着edx.org以及其他的许多在线教育网站。</p>
+<p>这篇文章准备站在较高的层面上来说明平台当前的架构方案，而不会深入到许多细节里。同时也描述出我们正在积极做着的变更。</p>
+<p>#技术
+Open edX中，几乎所有的后端(服务器端)代码都是用Python写的，django作为web应用框架，使用Mako模板（译者注：替换Django原生模板）</p>
+<p>前端(浏览器端)代码主要用JavaScript来写。部分代码使用CoffeeScript来写，edX正将其替换为JavaScript。部分客户端代码(前端)由Backbone.js写成，更多的代码正在往这个框架上迁移。</p>
+<p>edX同时使用Sass和Bourbon框架来写css</p>
+<p>#组件</p>
+<p>Open edX平台中有一组核心组件。在可能的情况下，这些组件采用稳定的，经过验证的的api来互相通信</p>
+<p>点击示意图可以查看Open edX的组件：</p>
+<p><img src="https://open.edx.org/sites/default/files/wysiwyg/open-edx-pages/edX_architecture_CMS_LMS_0.png" alt="edX_architecture_CMS_LMS_0"></p>
+<p>###学习管理系统（LMS）</p>
+<p>LMS是Open edX的核心部分，学生使用它来学习课程。LMS也提供教师面板。</p>
+<p>LMS采用了多种存储机制，课程存储在Mongo中，视频存储在YouTube和或亚马逊S3上，而每个学生的数据存储在MySQL数据库里</p>
+<p>学生浏览课程并与课程内容交互。这个过程产生的事件被推送到analytics pipeline里，这些事件将被收集，分析和发布</p>
+<p>当前edX正在把LMS打造成一个LTI服务提供者，以便Open edX课程组件能嵌入到其他学习平台</p>
+<p>###Studio
+Studio是课程制作系统，课程团队使用它来创建和更新课程。Studio将课程内容写入到Mongo数据库中，之后LMS从中读取课程内容</p>
+<p>###课程浏览
+Open edX提供了一个简单的前端页面用来浏览课程。edx.org有一个独立的主页和课程搜索页面，不过并没有开源</p>
+<p>###课程结构</p>
+<p>Open edX的课程由单元构成，这些单元被称为XBlocks。任何人都可以写出新的XBlocks，教育者和技术人员可以利用xblock来扩充他们的课程组件。edX平台仍然包含着一些XModules组件，XModules组件是XBlocks的前一个版本。EdX正在将这部分XModules重写为XBlocks，逐渐将它移除。</p>
+<p>除了XBlocks，还有几种方法也可以拓展课程组件的行为：</p>
+<ul>
+<li>LMS支持LTI，课程作者可以集成其他LTI工具到Open edX课程中</li>
+<li>问题中，可以嵌入python代码来呈现问题或是评审学生的答案，这些python代码将在CodeJail中执行（隔离的环境）</li>
+<li>JavaScript组件能通过JS Input集成进去</li>
+<li>课件可以导入导出为Open Learning XML (OLX)，这是一种基于XML的格式</li>
+</ul>
+<p>###讨论<br>
+课程内的讨论由一个独立的论坛组件来驱动。这是为数不多没有采用Python来写的组件，它选择了Ruby的Sinatra框架，LMS使用了论坛组件提供的API
+来与之通信，并将论坛集成到LMS中</p>
+<p>论坛带有一个通知服务，会通知学生有哪些他感兴趣的话题有了更新</p>
+<p>###移动端
+Open edX也打造了移动端，包括iOS和Android平台，目前只允许学生看视频。edX正在强化他们</p>
+<p>###数据分析
+记录学生行为的事件由Open edX的数据分析管道捕获。这些事件数据使用json格式存储在S3中。之后可以使用Hadoop来处理，分析聚合完的结果将被发布到MySQL中。这些分析结果将通过REST API传送到Insights中呈现给用户。Insights是一个Django app，课程讲师和网站管理员可以通过它来了解学生正在做什么，以及他们的学习习惯</p>
+<p>示意图中展示了Open edX中数据分析部分的架构:</p>
+<p><img src="https://open.edx.org/sites/default/files/wysiwyg/open-edx-pages/edX_Architecture_Analytics.png" alt="edX_Architecture_Analytics"></p>
+<p>###后台进程
+一些比较大的任务被丢到后台进程，而不是在请求中执行。这些任务是队列式和分布式的，使用了Celery and RabbitMQ来管理它们。例子如：</p>
+<ul>
+<li>课程学习评分（成绩单）</li>
+<li>群发邮件</li>
+<li>生成答案分布报告</li>
+<li>生成结业证书</li>
+</ul>
+<p>Open edX包含了一个叫做XQueue的可定制队列，用来跑自定义评级代码。这些都是独立的进程，用来运行计算密集型评估工作</p>
+<p>###搜索
+Open edX在以下地方使用了Elasticsearch来搜索：</p>
+<ul>
+<li>课程内容</li>
+<li>讨论区</li>
+<li>学生笔记</li>
+</ul>
+<p>#原文
+<a href="https://open.edx.org/contributing-to-edx/architecture">Open edX Architecture</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-09-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/edx-feature-microsite/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">edX feature之microsite</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/use-django-debug-toolbar-1.3.2-in-edx/">
+            <span class="next-text nav-default">在edx中使用新版的django-debug-toolbar来调试edx</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

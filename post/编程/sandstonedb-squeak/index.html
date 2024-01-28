@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>SandstoneDb: Squeak 中的简易持久化存储 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 如 Seaside 文档所言, 不同的情况下，有不同的存储需求: 如果你在编写小型演示程序，并希望在系统中填充一些典型数据。使用类实例变量来存储数据，然后简" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/sandstonedb-squeak/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="SandstoneDb: Squeak 中的简易持久化存储" />
+<meta property="og:description" content="前言 如 Seaside 文档所言, 不同的情况下，有不同的存储需求: 如果你在编写小型演示程序，并希望在系统中填充一些典型数据。使用类实例变量来存储数据，然后简" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/sandstonedb-squeak/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-09-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-09-08T00:00:00+00:00" />
+
+<meta itemprop="name" content="SandstoneDb: Squeak 中的简易持久化存储">
+<meta itemprop="description" content="前言 如 Seaside 文档所言, 不同的情况下，有不同的存储需求: 如果你在编写小型演示程序，并希望在系统中填充一些典型数据。使用类实例变量来存储数据，然后简"><meta itemprop="datePublished" content="2022-09-08T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-09-08T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1053">
+<meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="SandstoneDb: Squeak 中的简易持久化存储"/>
+<meta name="twitter:description" content="前言 如 Seaside 文档所言, 不同的情况下，有不同的存储需求: 如果你在编写小型演示程序，并希望在系统中填充一些典型数据。使用类实例变量来存储数据，然后简"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">SandstoneDb: Squeak 中的简易持久化存储</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-09-08 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#使用-sandstonedb-的场景">使用 SandstoneDB 的场景</a></li>
+      </ul>
+    </li>
+    <li><a href="#使用">使用</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#测试一下">测试一下</a></li>
+        <li><a href="#开始使用">开始使用</a></li>
+      </ul>
+    </li>
+    <li><a href="#版本信息">版本信息</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>如 <a href="https://github.com/SeasideSt/Seaside/wiki/Persistence">Seaside</a> 文档所言, 不同的情况下，有不同的存储需求:</p>
+<ul>
+<li>如果你在编写小型演示程序，并希望在系统中填充一些典型数据。使用类实例变量来存储数据，然后简单地保存 image 就行了。这种情况下，直接存储 image 是最简单的。</li>
+<li>如果你有一个包含几十万个对象的小型系统，并且不想依赖于外部系统. SandstoneDB 可能是一个完美选择。对象将保存在文件系统里, 并保留了一些旧版本的数据，因此备份或恢复很容易。</li>
+<li>如果你有一个遗留的关系数据库，需要为其编写了大量报表。可使用 ORM。</li>
+<li>如果你有一个复杂且大型的对象模型，它必须支持在开发时更改对象模型。解决方案是 OODB。Gemstone 是经过验证的大型商业产品。</li>
+</ul>
+<p>SandstoneDB 足以覆盖多数人的多数用例，<a href="http://onsmalltalk.com/sandstonedb-simple-activerecord-style-persistence-in-squeak">SandstoneDb, Simple ActiveRecord Style Persistence in Squeak</a> 对此有精彩论述。</p>
+<h3 id="使用-sandstonedb-的场景">使用 SandstoneDB 的场景</h3>
+<p>以下是我自己可能会用到 SandstoneDB 的场景:</p>
+<ul>
+<li>使用 <a href="https://github.com/SeasideSt/Seaside/wiki/Persistence">Seaside</a> 构建小型 Web 应用</li>
+<li>数据类型的应用(如爬虫)</li>
+<li>将 Squeak 作为日常工作环境使用时，需要 SandstoneDB 实时持久化一些实例数据（诸如备忘录），避免图像意外崩溃造成的数据丢失</li>
+</ul>
+<h2 id="使用">使用</h2>
+<p>SandstoneDb 文档匮乏，而且一些过时的信息已经不再适用(如<a href="https://vimeo.com/11209919?embedded=true&amp;source=video_title&amp;owner=2934029">这个视频演示</a>)。以下是我的使用笔记，供其他新用户参考 (Squeak/Pharo 中应该都能使用).</p>
+<h3 id="安装">安装</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Gofer new
+</span></span><span class="line"><span class="cl">    squeaksource: &#39;SandstoneDb&#39;;
+</span></span><span class="line"><span class="cl">    package: &#39;SandstoneDb&#39;;
+</span></span><span class="line"><span class="cl">    load.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>SandstoneDb 支持多种不同的存储后端, 在此我们使用基于文件系统的存储后端。</p>
+<p>打开 Monticello，加载我们需要的存储后端: <code>SandstoneDbFileDirectoryStore</code>, 其中包含 <code>SDFileStore</code> 类。<code>SandstoneDbFileDirectoryStore</code> 依赖于<code>SandstoneDbTests</code>，所以先加载<code>SandstoneDbTests</code>。如果你跟我一样在使用 Squeak，建议也顺便加载 <code>SandstoneDbSqueak</code>。</p>
+<p><img src="/post/img/SandstoneDb-03.png" alt=""></p>
+<p>完成后，你应该能够在 browser 里看到这几个包:</p>
+<p><img src="/post/img/SandstoneDb-02.png" alt=""></p>
+<h3 id="测试一下">测试一下</h3>
+<p>在<code>Test Runner</code>运行测试看看是否一切正常</p>
+<p><img src="/post/img/SandstoneDb-04.png" alt=""></p>
+<p>如果一切正常，你应该会在 Squeak 目录里看到 SandstoneDb 的数据目录:</p>
+<p><img src="/post/img/SandstoneDb-05.png" alt="">.</p>
+<h3 id="开始使用">开始使用</h3>
+<p>结下来就可以开始创建我们的第一个数据类:</p>
+<p>开始创建我们的第一个数据存储类: <code>Person</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SDActiveRecord subclass: #Person
+</span></span><span class="line"><span class="cl">	instanceVariableNames: &#39;name&#39;
+</span></span><span class="line"><span class="cl">	classVariableNames: &#39;&#39;
+</span></span><span class="line"><span class="cl">	poolDictionaries: &#39;&#39;
+</span></span><span class="line"><span class="cl">	category: &#39;Data-Fun&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>实例方法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Person&gt;&gt;name
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    ^ name
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Person&gt;&gt;name: aString
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    name := aString
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">printOn: aStream
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	aStream nextPutAll: self name
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>类方法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Person class&gt;&gt;named: aString
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    ^ self new name: aString
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>创建完成后，保存并退出 image。再次加载 image，你就能在 Squeak 目录里(跟 image 在同一层级)看到:</p>
+<p><img src="/post/img/SandstoneDb-06.png" alt=""></p>
+<p>每次创建完新的数据类，需要保存并退出 image, 来创建本地数据仓库。</p>
+<p>现在就可以开始使用 SandstoneDb 持久化的能力了。</p>
+<p>在 Workspace 里创建 3 条数据:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">(Person named: &#39;joe&#39;) save.
+</span></span><span class="line"><span class="cl">(Person named: &#39;bob&#39;) save.
+</span></span><span class="line"><span class="cl">(Person named: &#39;alice&#39;) save.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Person findAll size.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>直接退出 image.</p>
+<p><img src="/post/img/SandstoneDb-07.png" alt=""></p>
+<p>再次进入镜像, 运行 <code>Person findAll size.</code> 发现存在 3 条数据，说明这些数据已经在镜像之外持久化了.</p>
+<h2 id="版本信息">版本信息</h2>
+<p>在次列出我的系统和软件包信息:</p>
+<p>Squeak: <code>Squeak6.1alpha-22143-64bit</code></p>
+<p>SandstoneDb:</p>
+<ul>
+<li>SandstoneDb-tcj.152</li>
+<li>SandstoneDbFileDirectoryStore-RamonLeon.2</li>
+<li>SandstoneDbSqueak-RamonLeon.1</li>
+<li>SandstoneDbTests-RamonLeon.13</li>
+</ul>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://onsmalltalk.com/sandstonedb-simple-activerecord-style-persistence-in-squeak">SandstoneDb, Simple ActiveRecord Style Persistence in Squeak</a></li>
+<li><a href="http://squeaksource.com/SandstoneDb.html">squeaksource SandstoneDb</a></li>
+<li><a href="https://github.com/SeasideSt/Seaside/wiki/Persistence">Seaside Persistence</a></li>
+<li><a href="https://vimeo.com/11209919?embedded=true&amp;source=video_title&amp;owner=2934029">SandstoneDb, simple ActiveRecord style persistence</a></li>
+<li><a href="https://wiki.squeak.org/squeak/512">squeak wiki Databases and Persistence</a></li>
+<li><a href="https://astares.blogspot.com/2011/05/fuel-in-sandstonedb.html">Fuel in SandstoneDB</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-09-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/should-web-browsers-have-stuck-to-being-document-viewers/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译]web浏览器是否应该坚持成为文档查看器？</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/squeak-microblocks-interoperability/">
+            <span class="next-text nav-default">Squeak 与 MicroBlocks 互操作</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

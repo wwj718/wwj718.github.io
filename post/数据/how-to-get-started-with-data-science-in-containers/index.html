@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译]如何在容器中开始你的数据科学之旅 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="说明: 本文译自How to get started with data science in containers,翻译的原因是我最近正好在关注kaggle开放出来的镜像，看到kaggle官方博客的这" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/how-to-get-started-with-data-science-in-containers/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译]如何在容器中开始你的数据科学之旅" />
+<meta property="og:description" content="说明: 本文译自How to get started with data science in containers,翻译的原因是我最近正好在关注kaggle开放出来的镜像，看到kaggle官方博客的这" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/how-to-get-started-with-data-science-in-containers/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-03-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-03-09T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译]如何在容器中开始你的数据科学之旅">
+<meta itemprop="description" content="说明: 本文译自How to get started with data science in containers,翻译的原因是我最近正好在关注kaggle开放出来的镜像，看到kaggle官方博客的这"><meta itemprop="datePublished" content="2017-03-09T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2017-03-09T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2029">
+<meta itemprop="keywords" content="data," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译]如何在容器中开始你的数据科学之旅"/>
+<meta name="twitter:description" content="说明: 本文译自How to get started with data science in containers,翻译的原因是我最近正好在关注kaggle开放出来的镜像，看到kaggle官方博客的这"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译]如何在容器中开始你的数据科学之旅</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-03-09 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE/"> 数据 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>说明: 本文译自<a href="http://blog.kaggle.com/2016/02/05/how-to-get-started-with-data-science-in-containers/">How to get started with data science in containers</a>,翻译的原因是我最近正好在关注kaggle开放出来的镜像，看到kaggle官方博客的这篇文章，于是随手翻译.本文主要用google翻译(google的翻译质量已经非常棒了)，顺带人为做些润色</p>
+<h1 id="正文">正文</h1>
+<p>现在对数据科学的最大影响并不是来自新的算法或统计方法,而是来自Docker容器。容器同时解决了一堆棘手的问题：</p>
+<ul>
+<li>使配置复杂的的库易于使用</li>
+<li>使得你的输出可再现</li>
+<li>容易分享你的工作;</li>
+<li>让你从Python数据科学栈中解脱出来。</li>
+</ul>
+<p>我们在<a href="https://www.kaggle.com/scripts">Kaggle Scripts</a>的核心中使用Docker容器。使用Scripts能让你了解可以用数据科学容器做些什么。当然你也可以在自己的电脑室折腾它，我将在下文中介绍。</p>
+<h1 id="为什么要使用容器">为什么要使用容器？</h1>
+<p>容器就像超轻量的虚拟机。从快照还原正常VM时，可能需要一分钟左右才能完成，但Docker容器大约在一毫秒内启动。所以你可以在容器中运行一些东西，就像运行一个本地二进制文件一样。每次重新启动容器时，其执行环境都是相同的，这使给予了你可重复性。而且容器在OS X，Windows和Linux上运行相同，因此协作和共享变得比以前容易得多。</p>
+<p>在我看来容器的最好的东西是，他们消除了在数据科学里使用python的痛苦。对统计来说，R和Python都很伟大，当然他们也都有自己的优势和弱点，但他们之间的一个显著的区别是处理库和包的方式。R的<code>install.packages()</code>机制运行得非常顺利，包之间的冲突是罕见的。如果你的项目需要某个依赖库你本地却没安装，你可以从CRAN安装它，一会儿便好。</p>
+<p>我们来与Python做个比较。在Python世界中，典型的工作流将是这样：你需要X库，所以调用<code>pip install X</code>，它还安装了依赖库A、B和C。但B已经通过easy_install安装到你的系统里了，所以停止pip安装过程，只是部分地删除新的东西，然后import B将无法正常运行。或者你发现C依赖于你后来安装的numpy的版本，而库Y和Z却链接到一个老的numpy库。等等等等。</p>
+<p>Python的库安装过程逐渐产生出此类问题，在库之间产生冲突，以及同一系统上单一的Python setups产生的进一步冲突。使用virtualenv可以起到一点帮助，但以我的经验，它只是延缓崩溃而已。最终你都必须重新安装Python。这还没考虑你把一个库正常跑起来的时间。</p>
+<p>如果你在一个容器中使用Python，所有这些问题都消失了。你只需要一次性投入时间去设置容器：一旦构建完成，你就全部搞定。事实上，如果你使用Kaggle的容器，你不必担心去构建任何东西。而且你可以轻松尝试新的包，一旦你退出一个容器会话，它将重置自己为初始状态。</p>
+<h1 id="他们包含什么">他们包含什么</h1>
+<p>为了运行Kaggle Scripts，我们把三个Docker容器放在一起：<code>kaggle/rstats</code>有一个安装了所有的CRAN包和许多其他包的R语言环境，<code>kaggle/julia</code>包含Julia 0.5以及一组数据科学库，<code>kaggle/python</code>是一个Anaconda Python环境，带有许多库。要查看容器内部的详细信息，您可以浏览构建它们时所用的Dockerfile，这些都是开源的。我们不得不将其分割成几个部分，以便于我们可以在Docker Hub自动构建他们：这里是链接到Python <a href="https://github.com/Kaggle/docker-python0/blob/master/Dockerfile">part1</a>，<a href="https://github.com/Kaggle/docker-python1/blob/master/Dockerfile">part2</a>，<a href="https://github.com/Kaggle/docker-python/blob/master/Dockerfile">part3</a> ; <a href="https://github.com/Kaggle/docker-rcran0">rcran0</a>至<a href="https://github.com/Kaggle/docker-rcran22">22</a>，和<a href="https://github.com/Kaggle/docker-rstats">rstats</a> ; Julia <a href="https://github.com/Kaggle/docker-juliabuild/blob/master/Dockerfile">part1</a>，<a href="https://github.com/Kaggle/docker-julia">part2</a>。</p>
+<p>此外请注意：我们只支持Python 3.现在已经2016年了</p>
+<h1 id="如何开始">如何开始</h1>
+<p>这里有一个在本地设置Python容器的方法。这些具体的步骤是为OS X准备的，但Windows或Linux下也同样容易配置，如果你<a href="https://docs.docker.com/">rtfm</a>(Read The Fucking Manual)</p>
+<p>第一步:跳到Docker网站,并在你的系统上<a href="https://docs.docker.com/mac/">安装Docker</a>,安装很容易，不过眨眼工夫</p>
+<p>第二步: 默认创建一个Linux虚拟机来运行你的容器(译者注:新版本的Docker在mac下不需要虚拟机了) ，别怕，它很小，且专注在数据科学。我们来创建一个新的,我们把它叫做&rsquo;docker2'</p>
+<p><code>$ docker-machine create -d virtualbox --virtualbox-disk-size &quot;50000&quot; --virtualbox-cpu-count &quot;4&quot; --virtualbox-memory &quot;8092&quot; docker2</code></p>
+<p>你可以定制<code>disk-size</code>，<code>cpu-count</code>和<code>memory</code></p>
+<p>第三部，启动它:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ docker-machine start docker2
+</span></span><span class="line"><span class="cl">$ eval $(docker-machine env docker2)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果你新开一个终端窗口,docker无法连接到守护进程，请确认docker守护进程是否在本机运行，然后再执行以上两行</p>
+<p>第四步: 拉取目标镜像:</p>
+<p><code>$ docker pull kaggle/python</code></p>
+<p>现在可以在容器中运行东西了，下边是些辅助脚本(让你更方便使用它),将他们放入<a href="https://unix.stackexchange.com/questions/129143/what-is-the-purpose-of-bashrc-and-how-does-it-work%60">.bashrc</a>中(windows用户<a href="https://superuser.com/questions/144347/is-there-windows-equivalent-of-the-bashrc-file-in-linux">点这里</a>)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kpython<span class="o">(){</span>
+</span></span><span class="line"><span class="cl">  docker run -v <span class="nv">$PWD</span>:/tmp/working -w<span class="o">=</span>/tmp/working --rm -it kaggle/python python <span class="s2">&#34;</span><span class="nv">$@</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">ikpython<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  docker run -v <span class="nv">$PWD</span>:/tmp/working -w<span class="o">=</span>/tmp/working --rm -it kaggle/python ipython
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">kjupyter<span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="o">(</span>sleep <span class="m">3</span> <span class="o">&amp;&amp;</span> open <span class="s2">&#34;http://</span><span class="k">$(</span>docker-machine ip docker2<span class="k">)</span><span class="s2">:8888&#34;</span><span class="o">)</span><span class="p">&amp;</span>
+</span></span><span class="line"><span class="cl">  docker run -v <span class="nv">$PWD</span>:/tmp/working -w<span class="o">=</span>/tmp/working -p 8888:8888 --rm -it kaggle/python jupyter notebook --no-browser --ip<span class="o">=</span><span class="s2">&#34;\*&#34;</span> --notebook-dir<span class="o">=</span>/tmp/working
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在你可以使用<code>kpython</code>来替代<code>python</code>，<code>ikpython</code>替代<code>ipython</code>,<code>kjupyter</code>替代<code>jupyter notebook</code>.这些指令都将让你即刻进入Kaggle组装的完整数据科学环境</p>
+<p>希望你和我一样喜欢这些容器.</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-03-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/data/">data</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%9E%B6%E6%9E%84/jupyter-notebook-architecture-hack/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">对jupyter notebook的分析、扩展与hack</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%9E%B6%E6%9E%84/jupyter-notebook-architecture/">
+            <span class="next-text nav-default">jupyter notebook架构分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

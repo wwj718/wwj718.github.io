@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>让智能技术服务于日常工作: 从PyAutoGUI到automagica - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="我很喜欢oakwood主页上的slogan： Smart solutions for real business problems with tomorrow&amp;rsquo;s technology. automagica 是什么 automagica是oakwood开源的一个项目, 源码开放在auto" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/from-pyautogui-to-automagica/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="让智能技术服务于日常工作: 从PyAutoGUI到automagica" />
+<meta property="og:description" content="我很喜欢oakwood主页上的slogan： Smart solutions for real business problems with tomorrow&rsquo;s technology. automagica 是什么 automagica是oakwood开源的一个项目, 源码开放在auto" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/from-pyautogui-to-automagica/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-06-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-06-11T00:00:00+00:00" />
+
+<meta itemprop="name" content="让智能技术服务于日常工作: 从PyAutoGUI到automagica">
+<meta itemprop="description" content="我很喜欢oakwood主页上的slogan： Smart solutions for real business problems with tomorrow&rsquo;s technology. automagica 是什么 automagica是oakwood开源的一个项目, 源码开放在auto"><meta itemprop="datePublished" content="2019-06-11T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-06-11T00:00:00+00:00" />
+<meta itemprop="wordCount" content="913">
+<meta itemprop="keywords" content="programming," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="让智能技术服务于日常工作: 从PyAutoGUI到automagica"/>
+<meta name="twitter:description" content="我很喜欢oakwood主页上的slogan： Smart solutions for real business problems with tomorrow&rsquo;s technology. automagica 是什么 automagica是oakwood开源的一个项目, 源码开放在auto"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">让智能技术服务于日常工作: 从PyAutoGUI到automagica</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-06-11 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#是什么">是什么</a></li>
+        <li><a href="#可以做些什么">可以做些什么</a></li>
+        <li><a href="#想象空间">想象空间</a></li>
+        <li><a href="#安装--使用">安装 &amp; 使用</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/auto-python_b46a3552.png" alt=""></p>
+<p>我很喜欢<a href="https://oakwood.ai/">oakwood</a>主页上的slogan：</p>
+<blockquote>
+<p>Smart solutions for real business problems with tomorrow&rsquo;s technology.</p>
+</blockquote>
+<h1 id="automagica">automagica</h1>
+<h3 id="是什么">是什么</h3>
+<p><a href="https://automagica.be/">automagica</a>是<a href="https://oakwood.ai/">oakwood</a>开源的一个项目,  源码开放在<a href="https://github.com/OakwoodAI/automagica">automagica</a>。</p>
+<p><a href="https://github.com/OakwoodAI/automagica">automagica</a>是一个开源智能机器人过程自动化（SRPA: Smart Robotic Process Automation）平台。</p>
+<p>它基于Python和Tensorflow等开源技术，因此可以轻松接入人工智能领域的最新和重大发展，将其用于日常办公。</p>
+<p>项目readme里写道:</p>
+<blockquote>
+<p>借助automagica，自动化跨平台流程将变得简易。通过这个项目，我们希望为现有的自动化库提供同意的接口。</p>
+</blockquote>
+<p>从项目的依赖关系中可以看出，它对许多已有的项目做了包装:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">install_requires</span><span class="o">=</span><span class="p">[</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;socketIO-client==0.7.2&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;PyAutoGUI==0.9.36&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;opencv-python==3.4.2.17&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;sty==1.0.0b2&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;selenium==3.7.0&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;pywinauto==0.6.5&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;pytesseract==0.2.0&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;openpyxl==2.4.8&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;python-docx==0.8.6&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;pywin32==223&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;PyPDF2==1.26.0&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;psutil==5.4.6&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;beautifulsoup4==4.6.0&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="s1">&#39;py-trello==0.13.0&#39;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="可以做些什么">可以做些什么</h3>
+<p>使用<a href="https://automagica.be/">automagica</a>我们可以做些什么？</p>
+<p>官方给出了一些有趣的例子。</p>
+<h4 id="自动绘图">自动绘图</h4>
+<p><img src="/post/img/automagica_drawing.gif" alt=""></p>
+<h4 id="自动去网络搜集资料填入表格">自动去网络搜集资料填入表格</h4>
+<p><img src="https://automagica.be/wp-content/uploads/2018/05/browser_excel.gif" alt=""></p>
+<h4 id="自动化sap">自动化SAP</h4>
+<p><img src="/post/img/sap.gif" alt=""></p>
+<h4 id="文件夹和文件操作">文件夹和文件操作</h4>
+<p><img src="/post/img/USPresidents.gif" alt=""></p>
+<h3 id="想象空间">想象空间</h3>
+<p><a href="https://automagica.be/">automagica</a>还很新，有许多有趣的想象空间，我目前想到最有趣的方向是 构建开发者生态，打造各类自动化和AI插件，来自动化办公领域的重复劳动。</p>
+<h3 id="安装--使用">安装 &amp; 使用</h3>
+<p><a href="https://automagica.be/">automagica</a>还非常早期，官方团队似乎主要在Windows环境下工作(当然大量用户也是有Windows作为办公环境)，如果你使用Windows，按照<a href="">官方文档</a>安装和使用应该问题都不大。</p>
+<p>我日常使用MacOS，安装起来，还有些手动工作,我的安装过程为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pip3 install PyAutoGUI pyobjc-core pyobjc --user
+</span></span><span class="line"><span class="cl">pip3 install https://github.com/codelabclub/Automagica/tarball/master --user
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我fork了一份Automagica到自己的仓库，fix了MacOS下安装的bug，已经给官方提了pr。</p>
+<p>MacOS用户要获得良好使用体验可能还得等上一段时间，使用中的问题也还挺多。</p>
+<p>如果你愿意尝鲜而不是成为核心开发者，建议在Windows下试用。</p>
+<h1 id="pyautogui">PyAutoGUI</h1>
+<blockquote>
+<p>A cross-platform GUI automation Python module for human beings. Used to programmatically control the mouse &amp; keyboard.</p>
+</blockquote>
+<p>automagica依赖<a href="https://github.com/asweigart/pyautogui">PyAutoGUI</a>.</p>
+<p><a href="https://github.com/asweigart/pyautogui">PyAutoGUI</a>是我非常喜欢的一个项目，之前计划将其整合到<a href="http://adapter.codelab.club">codelab-adapater</a>。</p>
+<p>PyAutoGUI是一个跨平台项目，允许编程人员在代码中控制鼠标和键盘，如此一来，几乎可以做任何的自动化工作。一旦接管了<a href="https://zh.wikipedia.org/zh-hans/%E4%BA%BA%E4%BD%93%E5%AD%A6%E6%8E%A5%E5%8F%A3%E8%AE%BE%E5%A4%87">HID设备</a>,计算机就无法区分当前操作对象是人类还是机器。所以理论上可以自动化任何软件。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://automagica.be/">automagica.be</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-06-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/programming/">programming</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/home-assistant-yeelight/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Home Assistant 与 Yeelight彩光灯泡的通信过程分析</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/socket-learn-note/">
+            <span class="next-text nav-default">Socket学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

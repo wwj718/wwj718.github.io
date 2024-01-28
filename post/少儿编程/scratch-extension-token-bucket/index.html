@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch3.0自定义插件注意事项之令牌桶算法 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 我们之前在两种硬件编程风格的比较中提到: 在少儿编程/硬件编程教育领域，硬件编程有两种风格，我将这两种风格分别称为灌入式和交互式 在上述文章" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-extension-token-bucket/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch3.0自定义插件注意事项之令牌桶算法" />
+<meta property="og:description" content="前言 我们之前在两种硬件编程风格的比较中提到: 在少儿编程/硬件编程教育领域，硬件编程有两种风格，我将这两种风格分别称为灌入式和交互式 在上述文章" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch-extension-token-bucket/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-08-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-08-29T00:00:00+00:00" />
+
+<meta itemprop="name" content="Scratch3.0自定义插件注意事项之令牌桶算法">
+<meta itemprop="description" content="前言 我们之前在两种硬件编程风格的比较中提到: 在少儿编程/硬件编程教育领域，硬件编程有两种风格，我将这两种风格分别称为灌入式和交互式 在上述文章"><meta itemprop="datePublished" content="2018-08-29T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-08-29T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2747">
+<meta itemprop="keywords" content="scratch ," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch3.0自定义插件注意事项之令牌桶算法"/>
+<meta name="twitter:description" content="前言 我们之前在两种硬件编程风格的比较中提到: 在少儿编程/硬件编程教育领域，硬件编程有两种风格，我将这两种风格分别称为灌入式和交互式 在上述文章"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch3.0自定义插件注意事项之令牌桶算法</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-08-29 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#算法">算法</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#python实现">Python实现</a></li>
+        <li><a href="#scratch3_wedo2-extension的实现">scratch3_wedo2 extension的实现</a></li>
+        <li><a href="#使用scratch官方的ratelimiter">使用scratch官方的RateLimiter</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/bucket_df323db8.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>我们之前在<a href="/Hardware-Programming-style.html">两种硬件编程风格的比较</a>中提到:</p>
+<blockquote>
+<p>在少儿编程/硬件编程教育领域，硬件编程有两种风格，我将这两种风格分别称为灌入式和交互式</p>
+</blockquote>
+<p>在上述文章里，我试图论述了,对少儿编程教育而言，为何交互式编程优于灌入式编程。</p>
+<p>如果我们按照Scratch的设计风格，那么拓展Scratch，使其与硬件交互的插件一定是交互式的。Scratch大量采用了Smalltalk的设计原则，这些原则包括:</p>
+<ul>
+<li>如果一个系统要服务于创造精神，那么对于一个人来说，它必须是完全可以理解的。</li>
+<li>系统应该用最少的且不可更改的部件构建; 这些部分应尽可能一般化; 系统的所有部分都应保持在统一的框架内。</li>
+<li>计算应该被视为可通过发送消息来统一调用的对象的内在功能。</li>
+<li>语言应围绕一个强大的隐喻设计，这样就可以统一应用于所有领域。</li>
+<li>用户可以访问的每个组件都应该能够以有意义的方式呈现自己，以便于用户进行观察和操作。</li>
+</ul>
+<p>这些原则，我们之后有时间再细说，单独提一下第三点:</p>
+<blockquote>
+<p>计算应该被视为可通过发送消息来统一调用的对象的内在功能。</p>
+</blockquote>
+<p>这一点指出了消息通信在Scratch所占据的核心位置，我之前构建<a href="https://adapter.codelab.club/">codelab-adapter</a>就主要围绕这条原则。我相信这点是Smalltalk留给Scratch的重要遗产，是Scratch如此灵活强大的原因，也是理解和写出复杂的Scratch程序的核心所在</p>
+<p><a href="https://github.com/LLK/Scratch_1.4">第一代的Scratch</a>就是用Smalltalk的方言Squeak写的，尽管Scratch经过2次的重写，最新的一代已经从Squeak迁移到了JavaScript，但设计原则上并没有发生变化。</p>
+<p>所以我坚持Scratch的插件都应该遵循这些原则。如果Scratch3.0的硬件插件是灌入式的（目前国内不少公司确实在这样做），系统的所有部分将无法保持在统一的框架内。</p>
+<h1 id="交互式存在的问题">交互式存在的问题</h1>
+<p>如果我们同意了Scratch插件应该采用交互式风格来写，并且以message为中心（官方团队目前都是这么做的，但他们在消息之上很聪明地抽象出了一层:远程调用）</p>
+<p>那么我们就需要解决消息通信类系统固有的一些问题，典型的问题之一就是消息发送速率</p>
+<p>在通信系统中，我们需要控制发送数据的速率，如果速率太高，可能带来许多问题，诸如带宽不足，或者服务端无法应对意料之外的高频消息，诸如社区里在使用官方的wedo插件时就遇到了:</p>
+<ul>
+<li><a href="https://github.com/LLK/scratch-vm/issues/1531">Wedo2 sometimes drops commands</a></li>
+<li><a href="https://github.com/LLK/scratch-vm/issues/1523">WeDo2 motor blocks do not work correctly with two motors plugged in</a></li>
+</ul>
+<p>消息发送速率问题当然有很多解决方案，在ZeroMQ中，框架内可以帮我们处理这个问题，诸如让消息在接受者一端排队，当消息高于设置水位之后，自动丢弃。<a href="https://adapter.codelab.club/">codelab-adapter</a>采用了ZeroMQ，所以这个问题可以通过简单配置来解决。</p>
+<p>但scratch团队的<a href="https://scratch.mit.edu/wedo">Scratch Link</a>并未采用ZeroMQ，所以他们选择手写<code>令牌桶算法</code>(token bucket)来实现<code>速率限制（Rate Limiting）</code>。</p>
+<h1 id="令牌桶算法token-buckethttpsenwikipediaorgwikitoken_bucket"><a href="https://en.wikipedia.org/wiki/Token_bucket">令牌桶算法(token bucket)</a></h1>
+<p>令牌桶算法是速率限制（Rate Limiting）中最常使用的一种算法。</p>
+<p>令牌桶算法基于令牌桶中是否存在令牌来指示什么时候可以发送数据。如果桶中存在令牌，则允许发送数据；反之，则不允许。</p>
+<p>图示如下:</p>
+<img width=300 src="/post/img/tokenbucket_b8e36c38.png" />
+<h3 id="算法">算法</h3>
+<p>令牌桶算法在概念上表述如下：</p>
+<ul>
+<li>如果设置的平均发送速率为r，那么令牌以1/r秒的速率添加到桶中。</li>
+<li>假设桶最多可存b个令牌。如果令牌在桶已满时到达，则将其丢弃。</li>
+<li>当n个数据包到达时，从令牌桶中取出(删除)n个令牌，同时将数据包被发送出去。如果令牌不够，则数据不发送。
+<ul>
+<li>它们可以被丢弃；也可以排放在队列中以便当桶中累积了足够多的令牌时再发送；</li>
+</ul>
+</li>
+</ul>
+<p>由于在此我们主要关心数据包数量，而不考虑不讨论具体数据大小，所以我们暂不讨论流量问题。</p>
+<h1 id="算法实现">算法实现</h1>
+<h3 id="python实现">Python实现</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TokenBucket</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;An implementation of the token bucket algorithm.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &gt;&gt;&gt; bucket = TokenBucket(80, 0.5)
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &gt;&gt;&gt; print bucket.consume(10)
+</span></span></span><span class="line"><span class="cl"><span class="s2">    True
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &gt;&gt;&gt; print bucket.consume(90)
+</span></span></span><span class="line"><span class="cl"><span class="s2">    False
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">fill_rate</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;tokens is the total tokens in the bucket. fill_rate is the
+</span></span></span><span class="line"><span class="cl"><span class="s2">        rate in tokens/second that the bucket will be refilled.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">fill_rate</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fill_rate</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">consume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;Consume tokens from the bucket. Returns True if there were
+</span></span></span><span class="line"><span class="cl"><span class="s2">        sufficient tokens otherwise False.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">tokens</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">-=</span> <span class="n">tokens</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">get_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fill_rate</span> <span class="o">*</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capacity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">now</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tokens</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_tokens</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们来对它进行测试:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bucket</span> <span class="o">=</span> <span class="n">TokenBucket</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;tokens = </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">bucket</span><span class="o">.</span><span class="n">_tokens</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;consume(10) = </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">bucket</span><span class="o">.</span><span class="n">consume</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;consume(10) = </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">bucket</span><span class="o">.</span><span class="n">consume</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;tokens = </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">bucket</span><span class="o">.</span><span class="n">_tokens</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;tokens = </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">bucket</span><span class="o">.</span><span class="n">_tokens</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;consume(90) = </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">bucket</span><span class="o">.</span><span class="n">consume</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;tokens = </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">bucket</span><span class="o">.</span><span class="n">_tokens</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;consume(90) = </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">bucket</span><span class="o">.</span><span class="n">consume</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;tokens = </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">bucket</span><span class="o">.</span><span class="n">_tokens</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>输出为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  /tmp python token_bucket.py
+</span></span><span class="line"><span class="cl">tokens = 80.0
+</span></span><span class="line"><span class="cl">consume(10) = True
+</span></span><span class="line"><span class="cl">consume(10) = True
+</span></span><span class="line"><span class="cl">tokens = 61.0040922165
+</span></span><span class="line"><span class="cl">tokens = 62.0080561638
+</span></span><span class="line"><span class="cl">consume(90) = False
+</span></span><span class="line"><span class="cl">tokens = 62.0081322193
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="scratch3_wedo2-extension的实现">scratch3_wedo2 extension的实现</h3>
+<p>我们来看看scratch官方的实现（包含在<a href="https://github.com/LLK/scratch-vm/pull/1540">这次提交</a>中）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">Timer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../util/timer&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">class</span> <span class="nx">RateLimiter</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * A utility for limiting the rate of repetitive send operations, such as
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * bluetooth messages being sent to hardware devices. It uses the token bucket
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * strategy: a counter accumulates tokens at a steady rate, and each send costs
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * a token. If no tokens remain, it&#39;s not okay to send.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param {number} maxRate the maximum number of sends allowed per second
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @constructor
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">constructor</span> <span class="p">(</span><span class="nx">maxRate</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * The maximum number of tokens.
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @type {number}
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">_maxTokens</span> <span class="o">=</span> <span class="nx">maxRate</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * The interval in milliseconds for refilling one token. It is calculated
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * so that the tokens will be filled to maximum in one second.
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @type {number}
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">_refillInterval</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">/</span> <span class="nx">maxRate</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * The current number of tokens in the bucket.
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @type {number}
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">_count</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_maxTokens</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">_timer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Timer</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">_timer</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * The last time in milliseconds when the token count was updated.
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @type {number}
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">_lastUpdateTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_timer</span><span class="p">.</span><span class="nx">timeElapsed</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * Check if it is okay to send a message, by updating the token count,
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * taking a token and then checking if we are still under the rate limit.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @return {boolean} true if we are under the rate limit
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">okayToSend</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Calculate the number of tokens to refill the bucket with, based on the
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// amount of time since the last refill.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">now</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_timer</span><span class="p">.</span><span class="nx">timeElapsed</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">timeSinceRefill</span> <span class="o">=</span> <span class="nx">now</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">_lastUpdateTime</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">refillCount</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">timeSinceRefill</span> <span class="o">/</span> <span class="k">this</span><span class="p">.</span><span class="nx">_refillInterval</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// If we&#39;re adding at least one token, reset _lastUpdateTime to now.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// Otherwise, don&#39;t reset it so that we can continue measuring time until
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// the next refill.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="nx">refillCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">this</span><span class="p">.</span><span class="nx">_lastUpdateTime</span> <span class="o">=</span> <span class="nx">now</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// Refill the tokens up to the maximum
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">this</span><span class="p">.</span><span class="nx">_count</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_maxTokens</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_count</span> <span class="o">+</span> <span class="nx">refillCount</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// If we have at least one token, use one, and it&#39;s okay to send.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">this</span><span class="p">.</span><span class="nx">_count</span><span class="o">--</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">RateLimiter</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="https://github.com/LLK/scratch-vm/blob/769156c9af416430c5e0cc20621471d2b99fde43/test/unit/util_rateLimiter.js">测试用例</a>为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">test</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;tap&#39;</span><span class="p">).</span><span class="nx">test</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">RateLimiter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../../src/util/rateLimiter.js&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"> <span class="nx">test</span><span class="p">(</span><span class="s1">&#39;rate limiter&#39;</span><span class="p">,</span> <span class="nx">t</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">rate</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">limiter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RateLimiter</span><span class="p">(</span><span class="nx">rate</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">     <span class="c1">// The rate limiter starts with a number of tokens equal to the max rate
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">t</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">limiter</span><span class="p">.</span><span class="nx">_count</span><span class="p">,</span> <span class="nx">rate</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">     <span class="c1">// Running okayToSend rate times uses up all of the tokens
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">rate</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">t</span><span class="p">.</span><span class="kc">true</span><span class="p">(</span><span class="nx">limiter</span><span class="p">.</span><span class="nx">okayToSend</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">t</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">limiter</span><span class="p">.</span><span class="nx">_count</span><span class="p">,</span> <span class="nx">rate</span> <span class="o">-</span> <span class="p">(</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">t</span><span class="p">.</span><span class="kc">false</span><span class="p">(</span><span class="nx">limiter</span><span class="p">.</span><span class="nx">okayToSend</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">     <span class="c1">// After a delay of one second divided by the max rate, we should have exactly
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// one more token to use.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">t</span><span class="p">.</span><span class="kc">true</span><span class="p">(</span><span class="nx">limiter</span><span class="p">.</span><span class="nx">okayToSend</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">t</span><span class="p">.</span><span class="kc">false</span><span class="p">(</span><span class="nx">limiter</span><span class="p">.</span><span class="nx">okayToSend</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">t</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span> <span class="mi">1000</span> <span class="o">/</span> <span class="nx">rate</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="使用scratch官方的ratelimiter">使用scratch官方的RateLimiter</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// const RateLimiter = require(&#39;../../util/rateLimiter.js&#39;);
+</span></span></span><span class="line"><span class="cl"><span class="c1">// this._rateLimiter = new RateLimiter(30);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">_send</span> <span class="p">(</span><span class="nx">uuid</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">getPeripheralIsConnected</span><span class="p">())</span> <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_rateLimiter</span><span class="p">.</span><span class="nx">okayToSend</span><span class="p">())</span> <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ble</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">UUID</span><span class="p">.</span><span class="nx">IO_SERVICE</span><span class="p">,</span> <span class="nx">uuid</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="s1">&#39;base64&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在<a href="https://github.com/LLK/scratch-vm/blob/769156c9af416430c5e0cc20621471d2b99fde43/src/extensions/scratch3_wedo2/index.js">wedo插件</a>中，我们可以看到RateLimiter暴露出的接口:<code>this._rateLimiter.okayToSend()</code>清晰易用</p>
+<p>值得一提的是，scratch官方实现的令牌桶算法和Python的实现略有不同。scratch官方实现没有n条消息同时涌入的情况，而是逐条处理:<code>this._count--</code></p>
+<p>大家之后在Scratch3.0中自定义插件，需要处理速率问题时，可以直接使用官方的<code>RateLimiter</code>,我的建议是所有与消息相关的插件都该加上<code>RateLimiter</code>, 否则系统的健壮性是堪忧的，也很难做到<code>宽围墙</code>，可能一不小心就塌了</p>
+<!--
+[Rate-limiting with a token bucket for the WeDo extension](https://github.com/LLK/scratch-vm/pull/1540)
+    算法:[rateLimiter.js](https://github.com/LLK/scratch-vm/blob/769156c9af416430c5e0cc20621471d2b99fde43/src/util/rateLimiter.js)
+    应用: [scratch3_wedo2/index.js](https://github.com/LLK/scratch-vm/blob/769156c9af416430c5e0cc20621471d2b99fde43/src/extensions/scratch3_wedo2/index.js#L541)
+    解决的问题:[Wedo2 sometimes drops commands](https://github.com/LLK/scratch-vm/issues/1531)
+
+交互式中的核心问题,我之前写交互式设计
+
+为了实现宽围墙
+
+设施的牢固性
+
+蹦蹦床的时候
+
+那是疫苗
+
+# todo
+*  算法的图示
+*  算法的伪代码
+*  Python实现
+*  Scratch实现
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="/Hardware-Programming-style.html">两种硬件编程风格的比较</a></li>
+<li><a href="https://github.com/LLK/scratch-vm/pull/1540">Rate-limiting with a token bucket for the WeDo extension</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Token_bucket">wikipedia Token bucket</a></li>
+<li><a href="https://baike.baidu.com/item/token%20bucket/4315253?noadapt=1">百度 token bucket</a></li>
+<li><a href="https://blog.csdn.net/YEYUANGEN/article/details/20529793">qos令牌桶（Token Bucket）算法解析</a></li>
+<li><a href="https://github.com/falconry/token-bucket/blob/master/token_bucket/limiter.py">Python token-bucket</a></li>
+<li><a href="https://gist.github.com/drocco007/6155452">Python generator rate limiter using token bucket</a></li>
+<li><a href="https://github.com/ActiveState/code/blob/master/recipes/Python/511490_Implementatitoken_bucket/recipe-511490.py">Implementatitoken_bucket</a></li>
+<li><a href="https://jiajunhuang.com/articles/2016_11_05-token_bucket.rst.html">Token Bucket 算法 celery</a></li>
+<li><a href="https://medium.com/smyte/rate-limiter-df3408325846">High-performance rate limiting</a></li>
+<li><a href="https://liuliqiang.info/post/214/">速率限制的一些思考</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-08-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch </a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/devstack-openedx/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用devstack(docker)安装和调试open edx</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/interest-based-learning/">
+            <span class="next-text nav-default">基于兴趣的学习面临的诘难</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

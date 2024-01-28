@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>django笔记之Generic views - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="为何要使用通用视图呢，一步步地定义url，写函数取数据，渲染模板不也能完成任务么？仅仅因为这些函数比较高级，我们就得学，为了证明自己djan" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/django-generic-views/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="django笔记之Generic views" />
+<meta property="og:description" content="为何要使用通用视图呢，一步步地定义url，写函数取数据，渲染模板不也能完成任务么？仅仅因为这些函数比较高级，我们就得学，为了证明自己djan" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/django-generic-views/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-03-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-03-11T00:00:00+00:00" />
+
+<meta itemprop="name" content="django笔记之Generic views">
+<meta itemprop="description" content="为何要使用通用视图呢，一步步地定义url，写函数取数据，渲染模板不也能完成任务么？仅仅因为这些函数比较高级，我们就得学，为了证明自己djan"><meta itemprop="datePublished" content="2014-03-11T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2014-03-11T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2719">
+<meta itemprop="keywords" content=" django," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="django笔记之Generic views"/>
+<meta name="twitter:description" content="为何要使用通用视图呢，一步步地定义url，写函数取数据，渲染模板不也能完成任务么？仅仅因为这些函数比较高级，我们就得学，为了证明自己djan"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">django笔记之Generic views</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-03-11 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>为何要使用通用视图呢，一步步地定义url，写函数取数据，渲染模板不也能完成任务么？仅仅因为这些函数比较高级，我们就得学，为了证明自己django用的熟练？当然不是啦，djangobook中有一段话很好地回答了<code>why</code>的问题：</p>
+<blockquote>
+<ul>
+<li>在最坏的情况下， Web开发是一项无聊而且单调的工作（大多情况还是很有趣的啦～）。在视图的层面上，也经历着这种令人厌倦的事情。Django的通用视图可以减少这些痛苦。 它抽象出一些在视图开发中常用的代码和<code>模式</code>，这样就可以在无需编写大量代码的情况下，快速编写出常用的数据视图。 事实上，前面章节中的几乎所有视图的示例都可以在通用视图的帮助下重写。</li>
+</ul>
+</blockquote>
+<p>&lsquo;技术让生活更美好&rsquo;，我们只是想拥有更多的时间陪喜欢的人，做喜欢的事，更多的时间出游，看书，睡懒觉。所以我们需要更高级的工具来节省时间，提高效率。那么我们还有什么理由不好好学习高级工具呢。<br>
+好的既然值得学习，我们趁热打铁进入内容部分吧。</p>
+<p><a href="http://djangobook.py3k.cn/2.0/chapter11/">Djangobook第11章</a>中说内建通用视图可以实现如下功能：</p>
+<ul>
+<li>完成常用的简单任务： 重定向到另一个页面以及渲染一个指定的模板。</li>
+<li>显示列表和某个特定对象的详细内容页面。</li>
+<li>呈现基于日期的数据的年/月/日归档页面，关联的详情页面，最新页面。像是典型的新闻报纸归档。</li>
+</ul>
+<p>这些都是极其常见的需求，尤其是在一个新闻发布系统中，而大多企业建站需要的仅仅是个新闻发布系统而已。</p>
+<p>###使用举例：</p>
+<p>####direct_to_template</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#url.py</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#coding=utf-8</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#呈现静态“关于”页面</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.views.generic.simple</span> <span class="kn">import</span> <span class="n">direct_to_template</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^about/$&#39;</span><span class="p">,</span> <span class="n">direct_to_template</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;template&#39;</span><span class="p">:</span> <span class="s1">&#39;about.html&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>direct_to_template视图仅仅是直接从传递过来的额外参数获取信息并用于渲染视图。<br>
+这样就不用为了呈现一个静态页，mvc都得走一遍。<br>
+direct_to_template 。 因为它返回一个<code>HttpResponse</code>对象，我们只需要简单的返回它就好了。例如可以这样：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">about_pages</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">direct_to_template</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="s2">&#34;about/</span><span class="si">%s</span><span class="s2">.html&#34;</span> <span class="o">%</span> <span class="n">page</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="n">TemplateDoesNotExist</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="n">Http404</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>其他通用视图也是同理。</code></p>
+<p>####对象的通用视图<code>list_detail</code>(使用<code>djangobook</code>中的例子)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#models.py</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Publisher</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">address</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">city</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">state_province</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">country</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">website</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#urls.py</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.conf.urls.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">list_detail</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mysite.books.models</span> <span class="kn">import</span> <span class="n">Publisher</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">publisher_info</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;queryset&#39;</span><span class="p">:</span> <span class="n">Publisher</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;template_name&#39;</span><span class="p">:</span> <span class="s1">&#39;publisher_list_page.html&#39;</span><span class="p">,</span><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^publishers/$&#39;</span><span class="p">,</span> <span class="n">list_detail</span><span class="o">.</span><span class="n">object_list</span><span class="p">,</span> <span class="n">publisher_info</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>那么通用视图究竟有哪些可选的参数呢，可以参考这里<a href="http://www.djangobook.com/en/2.0/appendixC.html">Appendix C: Generic View Reference</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">object_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">,</span> <span class="n">paginate_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">template_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template_loader</span><span class="o">=</span><span class="n">loader</span><span class="p">,</span> <span class="n">extra_context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">context_processors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template_object_name</span><span class="o">=</span><span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="kc">None</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>特别说明下context字典项会被模板使用。如果不指定模板，该函数将使用[app_name]/[model_name]_list.html作为模板，这很有些<code>约定优于配置</code>味道。</p>
+<p>object_list函数创建的<code>context</code>中会包含许多字典项：
+<a href="http://blog.csdn.net/thinkinside/article/details/7251130">深入Django(1): 通用视图 (generic views)</a>这篇博客给出了详细的中文注释：</p>
+<ul>
+<li>object_list          要显示的对象的list</li>
+<li>is_paginated         是否分页</li>
+<li>results_per_page    如果分页，存储每页记录数</li>
+<li>has_next             是否有下一页</li>
+<li>has_previous       是否有上一页</li>
+<li>page                 当前页码</li>
+<li>next                 下一页</li>
+<li>previous             上一页</li>
+<li>pages                 总页数</li>
+<li>hits                 总条目数</li>
+<li>last_on_page       本页最后录一条记录的序数（从1开始）</li>
+<li>first_on_page       本页第一条记录的序数（从1开始）</li>
+<li>page_range          页码范围的列表</li>
+</ul>
+<p>如果这些context字典项不能满足你的需要，还可以通过指定extra_context参数，传入一个字典，该字典中的内容会被合并到context字典中。我们接下去说如何扩展通用视图，go on ～</p>
+<p>####扩展通用视图</p>
+<p>在我们最开始举的publisher例子中（来自djanobook），可以这样扩展context字典</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">publisher_info</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;queryset&#39;</span><span class="p">:</span> <span class="n">Publisher</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;template_object_name&#39;</span><span class="p">:</span> <span class="s1">&#39;publisher&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;extra_context&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;book_list&#39;</span><span class="p">:</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()}</span><span class="err">，</span><span class="c1">#这是错的！！使用下面一个</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;extra_context&#39;</span><span class="p">:</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;book_list&#39;</span><span class="p">:</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这样就把一个 {{ book_list }} 变量放到模板的context中。 这个方法可以用来传递任意数据 到通用视图模板中去，这是非常方便的. <br>
+需要注意的是all()不可立刻触发，应当由请求事件来触发，因此作为函数传递，不写().这是一个函数的引用，并没有真正调用它（通用视图将会在渲染时调用它）。<br>
+还有就是选项&rsquo;queryset&rsquo;仅仅是普通的queryset，你可以用对象的子集，比如<code>'queryset':Publisher.objects.filter(name='Harry')</code></p>
+<p>###当数据过滤比较复杂时</p>
+<p>这是我们可以把通用视图写到函数里，前头说过<code>通用视图返回一个</code>HttpResponse<code>对象</code>，我们提供参数返回它就好，故而用在views中是没问题的，像酱紫：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#urls.py</span>
+</span></span><span class="line"><span class="cl"><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^publishers/$&#39;</span><span class="p">,</span> <span class="n">list_detail</span><span class="o">.</span><span class="n">object_list</span><span class="p">,</span> <span class="n">publisher_info</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="o">**</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^books/(\w+)/$&#39;</span><span class="p">,</span> <span class="n">books_by_publisher</span><span class="p">),</span><span class="o">**</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#views.py</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">list_detail</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mysite.books.models</span> <span class="kn">import</span> <span class="n">Book</span><span class="p">,</span> <span class="n">Publisher</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">books_by_publisher</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Look up the publisher (and raise a 404 if it can&#39;t be found).</span>
+</span></span><span class="line"><span class="cl">    <span class="n">publisher</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Publisher</span><span class="p">,</span> <span class="n">name__iexact</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Use the object_list view for the heavy lifting.</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">list_detail</span><span class="o">.</span><span class="n">object_list</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">request</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">queryset</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">publisher</span><span class="o">=</span><span class="n">publisher</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;books/books_by_publisher.html&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">template_object_name</span> <span class="o">=</span> <span class="s1">&#39;book&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">extra_context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;publisher&#39;</span><span class="p">:</span> <span class="n">publisher</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我的个人习惯是直接查阅源码来得快些。推荐使用github的库内搜索功能，比如我们搜索django，之后在django项目中搜索object_list，这样每回遇到新的库，不一定非要下载到本地看代码样随时随地想起来都可以查阅，甚至火车晚点时，可以用手机看看源码。读源码也挺有意思的。许多大项目，源码都写得十分漂亮。</p>
+<p>好了，你现在有了更高效的工具了，因此节约出来的时间可以陪小伙伴去玩耍啦</p>
+<p>###Django提供的其他通用视图</p>
+<p>我们用<a href="http://blog.csdn.net/thinkinside/article/details/7251130">深入Django(1): 通用视图 (generic views)</a>中归纳的：</p>
+<p>分布在几个模块中：</p>
+<ul>
+<li>django.views.generic.list_detail模块</li>
+<li>object_list      显示模型对象列表</li>
+<li>object_detail  显示单个模型对象</li>
+<li>django.views.generic.create_update模块</li>
+<li>create_object    创建模型对象</li>
+<li>update_object   修改模型对象</li>
+<li>delete_object    删除模型对象</li>
+<li>django.views.generic.simple模块</li>
+<li>direct_to_template   直接使用指定的模板渲染给定的context对象</li>
+<li>redirect_to   重定向到指定的url</li>
+<li>django.views.generic.date_based模块</li>
+</ul>
+<p>这个模块主要处理“按时间查看存档”的功能，来源于新闻出版行业。具体包括：</p>
+<ul>
+<li>archive_index   最顶级的归档，列出所有年份及指定数量的最新对象</li>
+<li>archive_year     按年归档，列出所有拥有对象的月份</li>
+<li>archive_month   按月归档，列出本月的所有对象，找到拥有对象的上一个、下一个月份</li>
+<li>archive_week     按周归档，列出本周的所有对象</li>
+<li>archive_day     按日归档，列出当天的所有对象，找到拥有对象的上一个、下一个日期</li>
+<li>archive_today     当前日期（今天）的按日归档</li>
+<li>object_detail     显示按照年/月/日/序号找到的对象</li>
+</ul>
+<p>剩下的就是查阅文档，了解参数了。</p>
+<p>我的个人习惯是直接查阅源码来得快些。推荐使用github的库内搜索功能，比如我们搜索django，之后在django项目中搜索object_list，这样每回遇到新的库，不一定非要下载到本地看代码样随时随地想起来都可以查阅，甚至火车晚点时，可以用手机看看源码。读源码也挺有意思的。许多大项目，源码都写得十分漂亮。</p>
+<p>###参考资料：</p>
+<ul>
+<li><a href="http://djangobook.py3k.cn/2.0/chapter11/">djangobook第11章</a></li>
+<li><a href="http://blog.csdn.net/thinkinside/article/details/7251130">深入Django(1): 通用视图 (generic views)</a></li>
+<li><a href="http://www.djangobook.com/en/2.0/appendixC.html">Appendix C: Generic View Reference</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-03-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/django/"> django</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/git-learn/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">git学习笔记之项目开发与部署</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/django-wysiwyg/">
+            <span class="next-text nav-default">django笔记之富文本编辑器</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

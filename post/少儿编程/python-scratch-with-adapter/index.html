@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Python与Scratch的双向通信 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="说明 这是之前的文章，更新以匹配 CodeLab Adapter 3.0 近期我们在CodeLab Adapter制作了不少有趣的案例.得益于我们最近构建的json extensio" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/python-scratch-with-adapter/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Python与Scratch的双向通信" />
+<meta property="og:description" content="说明 这是之前的文章，更新以匹配 CodeLab Adapter 3.0 近期我们在CodeLab Adapter制作了不少有趣的案例.得益于我们最近构建的json extensio" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/python-scratch-with-adapter/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-05-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-05-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="Python与Scratch的双向通信">
+<meta itemprop="description" content="说明 这是之前的文章，更新以匹配 CodeLab Adapter 3.0 近期我们在CodeLab Adapter制作了不少有趣的案例.得益于我们最近构建的json extensio"><meta itemprop="datePublished" content="2020-05-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-05-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2067">
+<meta itemprop="keywords" content="codelab," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python与Scratch的双向通信"/>
+<meta name="twitter:description" content="说明 这是之前的文章，更新以匹配 CodeLab Adapter 3.0 近期我们在CodeLab Adapter制作了不少有趣的案例.得益于我们最近构建的json extensio"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Python与Scratch的双向通信</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-05-03 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#python-extensions">Python extensions</a></li>
+        <li><a href="#scratch">Scratch</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#scratch-1">Scratch</a></li>
+        <li><a href="#python-extensions-1">Python extensions</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/flow_6f3076dd.png" alt=""></p>
+<h1 id="说明">说明</h1>
+<p>这是之前的文章，更新以匹配 CodeLab Adapter 3.0</p>
+<p>近期我们在<a href="https://adapter.codelab.club/">CodeLab Adapter</a>制作了不少<a href="https://adapter.codelab.club/user_guide/gallery/">有趣的案例</a>.得益于我们最近构建的json extension，我们可以让Python与<a href="http://scratch3v3.codelab.club">Scratch3.0</a>之间传递任意复杂的数据结构。如此一来，我们就可以将任意的Python程序接入<a href="http://scratch3v3.codelab.club">Scratch3.0</a>中。</p>
+<p>以下是摘自<a href="https://adapter.codelab.club/user_guide/gallery/">CodeLab Adapter gallery</a>页面的一些有趣的案例:</p>
+<p><video width="600px" src="https://scratch3-files.just4fun.site/dlib_face.mp4" controls="controls"></video></p>
+<p>人脸地标： 在Python中使用dlib采集我的脸部地标，之后将这些数据完整地传给Scratch，接着在Scratch中解析这些数据，将其用于绘图，在Scratch中实时绘制出我的脸部特征点。当然我们也可以用于任何其他用途。这个策略是完全通用的，意味着可以将Python构建的任意AI项目积木化。当然这个过程有些细节需要注意，诸如numpy描述的矩阵得先转化为Python数据结构，如果你对此感兴趣，我们可以邮件里细说：）</p>
+<p><video width="600px" src="https://scratch3-files.just4fun.site/wechat.mp4" controls="controls"></video></p>
+<p>不喜欢微信的聊天界面？没关系，我们在Scratch中自己new一个。它真实可用，你可以用于与朋友聊天。当然你也可以通过组合积木将微信用于控制智能家居。</p>
+<p><video width="350px" src="https://scratch3-files.just4fun.site/%E8%A6%81%E6%9C%89%E5%85%89.mp4" controls="controls"></video></p>
+<p>所有的这些都发生在Scratch中！</p>
+<p>下边我们将以简单的例子，展示这种交互方式。</p>
+<h1 id="python---scratch">Python <code>-&gt;</code> Scratch</h1>
+<p>我们先来展示数据从Python流向Scratch。</p>
+<p>我们希望将以下数据发布给Scratch：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;hello&#34;</span><span class="p">:</span> <span class="s2">&#34;world&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;numbers&#34;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们先来看看CodeLab Adapter extension插件应该怎么写</p>
+<h3 id="python-extensions">Python extensions</h3>
+<style type="text/css">.notice{padding:18px;line-height:24px;margin-bottom:24px;border-radius:4px;color:#444;background:#e7f2fa}.notice p:last-child{margin-bottom:0}.notice-title{margin:-18px -18px 12px;padding:4px 18px;border-radius:4px 4px 0 0;font-weight:700;color:#fff;background:#6ab0de}.notice-title:before{margin-right:8px;font-family:"Font Awesome 5 Free",FontAwesome;font-weight:400}.notice.warning .notice-title{background:rgba(217,83,79,.9)}.notice.warning .notice-title:before{content:'\f071'}.notice.warning{background:#fae2e2}.notice.info .notice-title{background:#f0b37e}.notice.info .notice-title:before{content:'\f05a'}.notice.info{background:#fff2db}.notice.note .notice-title{background:#6ab0de}.notice.note .notice-title:before{content:'\f06a'}.notice.note{background:#e7f2fA}.notice.tip .notice-title{background:rgba(92,184,92,.8)}.notice.tip .notice-title:before{content:'\f058'}.notice.tip{background:#e6f9e6}</style><div class="notice tip" >
+<p class="first notice-title">提示</p><p>推荐使用 <a href="https://adapter.codelab.club/extension_guide/jupyterlab/">Jupyterlab插件</a> 编辑代码。</p></div>
+
+<p>在<code>~/codelab_adapter/extensions</code>目录下(linux/mac适用。windows用户可以点击<code>菜单栏-&gt;扩展-&gt;打开扩展目录</code>), 创建<code>extension_test.py</code>插件,内容如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">codelab_adapter.core_extension</span> <span class="kn">import</span> <span class="n">Extension</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">DemoExtension</span><span class="p">(</span><span class="n">Extension</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">NODE_ID</span> <span class="o">=</span> <span class="s2">&#34;eim&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># run 会被作为线程调用</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_template</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">message</span><span class="p">[</span><span class="s2">&#34;payload&#34;</span><span class="p">][</span><span class="s2">&#34;content&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;hello&#34;</span><span class="p">:</span> <span class="s2">&#34;world&#34;</span><span class="p">,</span><span class="s2">&#34;numbers&#34;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]}</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">export</span> <span class="o">=</span> <span class="n">DemoExtension</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="scratch">Scratch</h3>
+<div class="notice tip" >
+<p class="first notice-title">提示</p><p><a href="https://scratch3v3.codelab.club/?sb3url=https://adapter.codelab.club/sb3/scratch-json.sb3">Scratch 项目代码</a></p></div>
+
+<p>当extension_test插件在CodeLab Adapter中被加载后，在Scratch一侧，我们就可以利用EIM插件与Json插件 来取回我们从Python中发过来的消息。</p>
+<p>scratch接收到<code>{&quot;hello&quot;: &quot;world&quot;,&quot;numbers&quot;: [1,2,3]}</code>，它成为EIM <code>receive message</code>积木的内容。</p>
+<p>我们可以使用Json积木来解析消息体。</p>
+<img src="/post/img/jsonscratch_4f6ec6a4.png" width=600 />
+<img src="/post/img/jsonscratcgh_379ea9fb.png" width=600 />
+<p>以上两个例子展示了我们可以解析任意的json结构。值得注意的是，列表的下标从1开始(不是0)，这是为了遵循Scratch社区对列表的操作风格(用户更容易理解)。</p>
+<h1 id="scratch---python">Scratch <code>-&gt;</code> Python</h1>
+<p>接下来，我们将展示，从Scratch发往Python的消息。对大部分用户来说，发送字符串就够了。对于高级用户，他们可能希望传递更复杂的数据结构。当然没问题！</p>
+<p>一个典型的用例是:前端使用颜色控件选择颜色，将RGB信息发往后端</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;R&#34;</span><span class="p">:</span> <span class="mi">255</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;G&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;B&#34;</span><span class="p">:</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="scratch-1">Scratch</h3>
+<div class="notice tip" >
+<p class="first notice-title">提示</p><p><a href="https://scratch3v3.codelab.club/?sb3url=https://adapter.codelab.club/sb3/scratch-json-to-adapter.sb3">Scratch 项目代码</a></p></div>
+
+<p>我们在Scratch需要做的是</p>
+<img src="/post/img/jsonscratch_6f04d076.png" width=400 />
+<p>更理想的做法其实是在Scratch中制作一个新的extension，构建颜色选择器，这部分涉及前端的调整，官方还没放出教程，这种优化问题我们以后再讨论。如果你已经在EIM中构建好了这个积木，要迁移到新的extension UI上，是非常简单的。核心的通信过程并没有变化，我们已经为你都做好了。构建EIM的目的是给出一种通用的积木，你无需编写js代码，动态性在消息中，而不是固化在积木，这种特性，对开发和扩展极为有利。 在我们以后的<code>microworld</code>和<code>realworld</code>案例中，我们将演示这种架构将带来多么大的灵活性和可能性，我们认为Scratch从Smalltalk学到的重要东西，正是通过消息来解耦，并获得扩展能力，CodeLab Adapter将继续发挥这个原则。</p>
+<p>你可能会问，如何将你定制的的EIM积木分发给用户？目前你可以下载下来，之后让用户用这个文件初始化项目便可。在以后，我们会允许你发布到云端，用户打开特定链接就行。</p>
+<p><code>everything is a message</code></p>
+<h3 id="python-extensions-1">Python extensions</h3>
+<p>创建<code>extension_test.py</code>插件,内容如下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">codelab_adapter.core_extension</span> <span class="kn">import</span> <span class="n">Extension</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">DemoExtension</span><span class="p">(</span><span class="n">Extension</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">NODE_ID</span> <span class="o">=</span> <span class="s2">&#34;eim&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">extension_message_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">,</span> <span class="n">payload</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;eim message-&gt; </span><span class="si">{</span><span class="n">payload</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">payload</span><span class="p">[</span><span class="s2">&#34;content&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;ok&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">publish</span><span class="p">({</span><span class="s2">&#34;payload&#34;</span><span class="p">:</span> <span class="n">payload</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">export</span> <span class="o">=</span> <span class="n">DemoExtension</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当extension_test插件在codelab_adapter中被加载后吗， 新开一个命令行运行<code>tail -f ~/codelab_adapter/info.log | grep extension_test</code> (mac/linux适用，windows用户参考<a href="https://adapter.codelab.club/dev_guide/debug/#windows">windows用户</a>)，查看接收到的来自Scratch的消息:</p>
+<img src="/post/img/jsonscratch_eee125e9.png" width=600 />
+<p>至此演示完毕。</p>
+<p>对了如果你希望在一个插件中双向传递数据,你需要多线程，可以参考我们的例子:<a href="https://github.com/codelabclub/codelab_adapter_extensions/blob/master/extension_eim.py">extension_eim.py</a></p>
+<h1 id="注意">注意</h1>
+<p>大多数情况下，你只需要发送和接受字符串就够了，这种风格与Scratch内置的<code>广播</code>极为相近。是典型的事件驱动风格。</p>
+<p>这篇教程主要针对那些希望去拓展Scratch的人。当你需要将一些复杂的程序接入Scratch（例如接入AI或者接入微信，如我们制作的<a href="https://adapter.codelab.club/user_guide/gallery/">例子</a>），它会对你有帮助。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-05-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">codelab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-love-vector/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">codelab.club ❤️ Vector(v3)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-presentation/">
+            <span class="next-text nav-default">使用 Scratch3.0 制作幻灯片(v3)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

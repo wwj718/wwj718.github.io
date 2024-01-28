@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Code Grader in Open edX - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="友情提醒： 坑多慎入 : ) 但作为geek的你会很喜欢这部分的 首先感谢@DatoChan分享的经验 ：） #External Grader 说Code Grader之前，我们先来说说" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/code-grader-in-open-edx/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Code Grader in Open edX" />
+<meta property="og:description" content="友情提醒： 坑多慎入 : ) 但作为geek的你会很喜欢这部分的 首先感谢@DatoChan分享的经验 ：） #External Grader 说Code Grader之前，我们先来说说" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/code-grader-in-open-edx/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-10-23T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-10-23T00:00:00+00:00" />
+
+<meta itemprop="name" content="Code Grader in Open edX">
+<meta itemprop="description" content="友情提醒： 坑多慎入 : ) 但作为geek的你会很喜欢这部分的 首先感谢@DatoChan分享的经验 ：） #External Grader 说Code Grader之前，我们先来说说"><meta itemprop="datePublished" content="2015-10-23T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-10-23T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1957">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Code Grader in Open edX"/>
+<meta name="twitter:description" content="友情提醒： 坑多慎入 : ) 但作为geek的你会很喜欢这部分的 首先感谢@DatoChan分享的经验 ：） #External Grader 说Code Grader之前，我们先来说说"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Code Grader in Open edX</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-10-23 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#xqueue">xqueue</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>友情提醒： 坑多慎入 : )</p>
+<p>但作为geek的你会很喜欢这部分的</p>
+<p>首先感谢@DatoChan分享的经验 ：）</p>
+<p>#External Grader
+说Code Grader之前，我们先来说说<a href="http://edx.readthedocs.org/projects/edx-partner-course-staff/en/latest/exercises_tools/external_graders.html#external-grader">External Grader</a></p>
+<p>###这是个啥</p>
+<blockquote>
+<p>An external grader is a service that receives learner responses to a problem, processes those responses, and returns feedback and a problem grade to the edX platform. You build and deploy an external grader separately from the edX platform.</p>
+</blockquote>
+<p>这是一种用于评分的服务，这种评分机制作为独立的服务，接收学生的答题答案，对答案做出评估后，返回评估结果给edX platform.</p>
+<p>技术上的实现主要用到了消息队列，在edx中被封装为<a href="https://github.com/edx/xqueue">xqueue</a></p>
+<p>###想象空间
+这里充满想象的空间，好比可以使用自然语言的成果去自动对答案进行评分，又好比学生可以提交图片，平台使用图片识别去解读它。以及我们稍后介绍的，Code Grader，用于评估学生提交代码的正确性</p>
+<p>如此一来edx platform就可以专注在教育领域，把评分规则交由其他服务，通过这种机制 ，edx platform提高了内聚性的同时，带来了极大的扩展性</p>
+<p>有没有觉得似曾相似，没错，就是《Unix编程艺术》鼓励的</p>
+<blockquote>
+<p>Do one thing and do well</p>
+</blockquote>
+<p>而后通过组件之间的协作和组合来解决问题，而不是提供大而全的方案。</p>
+<p>edx的开放性和可扩展性无疑给大家提供了五彩缤纷的可能</p>
+<p>###Code Grader
+Code Grader只是External Grader的一个特例，特殊在学生提交的答案是代码，Grader的任务是运行和评估代码的正确性。edX实现了xserver，这是个用以评估Python代码的服务，如果需要，我们可以打造评估任意代码的服务，技术上无非是在Grader里调用解释器而已。</p>
+<p>好想写一个用于评估Hy的Grader呀.(Hy是Python实现的Lisp,与python几乎无缝对接)</p>
+<p>这种拓展性对计算机相关的课程极有助益，学生可以在线编写运行代码，而不必搭建自己的开发环境了。如果涉及数据库的话，后台都可以一并搭建好，学生有一个浏览器即可，而不必折腾一整套编程环境</p>
+<p>Talk is cheap，just do it</p>
+<p>External Grader的核心机制是<a href="https://github.com/edx/xqueue">xqueue</a></p>
+<h3 id="xqueue">xqueue</h3>
+<blockquote>
+<p>XQueue defines an interface for the LMS to communicate with external grader services.</p>
+</blockquote>
+<p>一语道尽</p>
+<p>流程：</p>
+<ul>
+<li>The learner either enters code or attaches a file for a problem, then selects Check.</li>
+<li>The external grader pulls the code from XQueue.</li>
+<li>The external grader runs the tests that you created on the code.</li>
+<li>The external grader returns the grade for the submission, as well as any results in a string, to XQueue.</li>
+<li>The XQueue delivers the results to the edX Learning Management System.</li>
+<li>The learner sees the problem results and the grade.</li>
+</ul>
+<p>在grader_payload可以指名test.py.如：{&ldquo;grader&rdquo;: &ldquo;ps02/bisect/grade_bisect.py&rdquo;}</p>
+<p>通过输入输出来测试！在前后输入连个变量，然后测试结果。可以参考官方的示例</p>
+<p>可以直接使用py.test:<a href="https://github.com/dagg/OpenEdxExternalGrader/blob/master/PythonGrader.py">PythonGrader.py</a></p>
+<p>这是test case的问题。要求必须写成函数接受参数？写测试用例  每一个test</p>
+<p>#安装与配置
+###安装
+依据<a href="https://github.com/antoviaque/xserver-grader">xserver-grader</a>:</p>
+<ul>
+<li>首先在<code>playbooks/edx_sandbox.yml</code>中加入<code>- xserver</code>到<code>nginx_sites</code>和<code>roles</code>中。</li>
+<li>编辑<code>roles/xserver/defaults/main.yml</code>,加入</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">XSERVER_GRADER_DIR: &#34;{{ xserver_data_dir }}/data/content-test-xserver&#34;
+</span></span><span class="line"><span class="cl">XSERVER_GRADER_SOURCE: &#34;https://github.com/antoviaque/xserver-grader.git&#34;
+</span></span><span class="line"><span class="cl">XSERVER_LOCAL_GIT_IDENTITY: &#34;{{ secure_dir }}/files/git-identity&#34;
+</span></span><span class="line"><span class="cl">XSERVER_GIT_IDENTITY: &#34;YOUR_GITHUB_NAME&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>之后重新执行ansible-playbook来安装xserver.安装完成后执行<code>sudo /edx/bin/supervisorctl status</code>应该能看到xserver依据跑起来了。内部端口为8050，外部端口为18050.</p>
+<p>###配置
+编辑<code>/edx/app/xqueue/xqueue.env.json</code>，添加你自己的queuename，指名它的url</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;LOCAL_LOGLEVEL&#34;</span><span class="p">:</span> <span class="s2">&#34;INFO&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;LOGGING_ENV&#34;</span><span class="p">:</span> <span class="s2">&#34;sandbox&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;LOG_DIR&#34;</span><span class="p">:</span> <span class="s2">&#34;/edx/var/logs/xqueue&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;RABBIT_HOST&#34;</span><span class="p">:</span> <span class="s2">&#34;localhost&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;S3_BUCKET&#34;</span><span class="p">:</span> <span class="s2">&#34;sandbox-bucket&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;S3_PATH_PREFIX&#34;</span><span class="p">:</span> <span class="s2">&#34;sandbox-xqueue&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;SYSLOG_SERVER&#34;</span><span class="p">:</span> <span class="s2">&#34;localhost&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;XQUEUES&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;certificates&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;edX-DemoX&#34;</span><span class="p">:</span> <span class="s2">&#34;http://localhost:8050&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;java-queue&#34;</span><span class="p">:</span> <span class="s2">&#34;http://localhost:1710&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;open-ended&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;open-ended-message&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;test-pull&#34;</span><span class="p">:</span> <span class="kc">null</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;XQUEUE_WORKERS_PER_QUEUE&#34;</span><span class="p">:</span> <span class="mi">12</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在studio中添加题目，类似以下这种</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;problem</span> <span class="na">title=</span><span class="s">&#34;Embedded Code Box&#34;</span> <span class="na">markdown=</span><span class="s">&#34;null&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;text&gt;</span>Blabla<span class="nt">&lt;/text&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;coderesponse&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;textbox</span> <span class="na">rows=</span><span class="s">&#34;10&#34;</span> <span class="na">cols=</span><span class="s">&#34;70&#34;</span> <span class="na">mode=</span><span class="s">&#34;python&#34;</span> <span class="na">tabsize=</span><span class="s">&#34;4&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;codeparam</span> <span class="na">queuename=</span><span class="s">&#34;edX-DemoX&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;initial_display/&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;answer_display&gt;</span>the definitive answer<span class="nt">&lt;/answer_display&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&lt;grader_payload&gt;</span>{&#34;grader&#34;: &#34;grade.py&#34;}<span class="nt">&lt;/grader_payload&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/codeparam&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;/coderesponse&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/problem&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>保存，发布，就该就好啦</p>
+<p>更具体的说明，参考<a href="http://edx.readthedocs.org/projects/edx-partner-course-staff/en/latest/exercises_tools/external_graders.html#create-a-code-response-problem">create-a-code-response-problem</a></p>
+<p>#填坑
+有个坑叫<code>DatabaseError: (1406, &quot;Data too long for column 'lms_callback_url' at row 1&quot;)</code> ，解决方案为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo mysql
+</span></span><span class="line"><span class="cl">use xqueue<span class="p">;</span>
+</span></span><span class="line"><span class="cl">alter table queue_submission modify lms_callback_url VARCHAR <span class="o">(</span>255<span class="o">)</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>此外不要在studio中CHECK你的答案，否则会说<code>Error: No grader has been set up for this problem.</code></p>
+<p>###Run it
+<img src="img/edx/xqueue/xserver1.png" alt="xserver1.png">
+<img src="img/edx/xqueue/xserver2.png" alt="xserver2.png"></p>
+<p>###重启服务</p>
+<ul>
+<li>sudo /edx/bin/supervisorctl restart xqueue_consumer</li>
+<li>sudo /edx/bin/supervisorctl restart xqueue</li>
+</ul>
+<p>#Java Grader
+参考这里就好：<a href="https://github.com/huynq55/java-grader">java-grader</a></p>
+<p><img src="img/edx/xqueue/javaGrader.png" alt="javaGrader.png"></p>
+<p>其他语言的实现，可以参考这个，或是xserver</p>
+<p>#设计原则
+<a href="http://edx.readthedocs.org/projects/edx-partner-course-staff/en/latest/exercises_tools/external_graders.html#building-an-external-grader">Building an External Grader</a>给出了构建自己的External Grader的指导原则</p>
+<ul>
+<li>Scale</li>
+<li>Security</li>
+<li>Reliability and Recovery</li>
+<li>Testing</li>
+</ul>
+<hr>
+<p>2016.01.19更新</p>
+<p>至于代码judge部分，建议使用专业的judge开源项目，比如为acm竞赛准备的评测组件</p>
+<p>以及这个工具也很棒:<a href="https://github.com/prasmussen/glot">glot</a>，他们提供了一套完备的解决方案</p>
+<hr>
+<p>2016.04.19更新</p>
+<p>使用pytest测试</p>
+<p><a href="http://pytest.org/latest/getting-started.html#getstarted">py.test</a></p>
+<p><a href="https://github.com/easy-edx/OpenEdxExternalGrader/blob/master/PythonGrader.py">OpenEdxExternalGrader</a></p>
+<p>这个作为测试的方法，而执行的环境放在docker里，采用-v来映射目录。让代码执行完</p>
+<p>采用<a href="https://github.com/docker/docker-py">docker-py</a></p>
+<p>采用subprogrem 还是 docker-py，先写出要运行的命令，然后再调用</p>
+<p>#用后即删
+#包括文件和docker 容器</p>
+<p>sudo docker run &ndash;rm -v /tmp/test:/pydata kleetaurus/compilebox python /pydata/test.py</p>
+<p>如何使用远程的docker</p>
+<p>#参考</p>
+<ul>
+<li><a href="http://edx.readthedocs.org/projects/edx-partner-course-staff/en/latest/exercises_tools/external_graders.html#external-grader">External Grader</a></li>
+<li><a href="https://github.com/edx/xqueue">xqueue</a></li>
+<li><a href="https://github.com/edx/xserver">xserver</a>*</li>
+<li><a href="https://groups.google.com/forum/#!topic/edx-code/-xMxjjg6uv8">How to configure Xqueue and External grader</a></li>
+<li><a href="https://github.com/huynq55/java-grader">java-grader</a></li>
+<li><a href="https://github.com/edx/xserver/blob/master/protocol.rst">protocol.rst</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-10-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/about-open-edx-distributed/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">about Open edx distributed</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/use-json-server/">
+            <span class="next-text nav-default">使用json-server来帮助前后端分离</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

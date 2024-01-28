@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MicroBlocks 与其他编程语言的互操作 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="在 MicroBlocks 和其他编程语言之间进行消息通信，以达到互操作的目的。 简单演示 先来看一个简单的视频演示。 视频演示涉及的程序如下: MicroBlocks 程序 Scratch 程序 以上演示了 MicroBlocks 与" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-interoperability/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MicroBlocks 与其他编程语言的互操作" />
+<meta property="og:description" content="在 MicroBlocks 和其他编程语言之间进行消息通信，以达到互操作的目的。 简单演示 先来看一个简单的视频演示。 视频演示涉及的程序如下: MicroBlocks 程序 Scratch 程序 以上演示了 MicroBlocks 与" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-interoperability/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-11-22T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-11-22T00:00:00+00:00" />
+
+<meta itemprop="name" content="MicroBlocks 与其他编程语言的互操作">
+<meta itemprop="description" content="在 MicroBlocks 和其他编程语言之间进行消息通信，以达到互操作的目的。 简单演示 先来看一个简单的视频演示。 视频演示涉及的程序如下: MicroBlocks 程序 Scratch 程序 以上演示了 MicroBlocks 与"><meta itemprop="datePublished" content="2022-11-22T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-11-22T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1919">
+<meta itemprop="keywords" content="MicroBlocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MicroBlocks 与其他编程语言的互操作"/>
+<meta name="twitter:description" content="在 MicroBlocks 和其他编程语言之间进行消息通信，以达到互操作的目的。 简单演示 先来看一个简单的视频演示。 视频演示涉及的程序如下: MicroBlocks 程序 Scratch 程序 以上演示了 MicroBlocks 与"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MicroBlocks 与其他编程语言的互操作</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-11-22 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#简单演示">简单演示</a>
+      <ul>
+        <li><a href="#消息流向图">消息流向图</a></li>
+      </ul>
+    </li>
+    <li><a href="#为何要让-microblocks-与其他编程语言进行互操作">为何要让 MicroBlocks 与其他编程语言进行互操作</a>
+      <ul>
+        <li><a href="#对-microblocks-的意义">对 MicroBlocks 的意义</a></li>
+        <li><a href="#对-scratch-的意义">对 Scratch 的意义</a></li>
+      </ul>
+    </li>
+    <li><a href="#它是如何工作的">它是如何工作的？</a></li>
+    <li><a href="#一些有趣的方向">一些有趣的方向</a></li>
+    <li><a href="#更多编程语言">更多编程语言</a>
+      <ul>
+        <li><a href="#microblocks-与-python-的互操作">MicroBlocks 与 Python 的互操作</a></li>
+        <li><a href="#microblocks-与-snaphttpssnapberkeleyedu-的互操作">MicroBlocks 与 <a href="https://snap.berkeley.edu/">Snap!</a> 的互操作</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#scratch或-python-与-microblocks-互操作时是否总是要连接数据线">Scratch(或 Python) 与 MicroBlocks 互操作时，是否总是要连接数据线</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/microblocks-scratch-python-snap.png" alt=""></p>
+<p>在 <a href="https://microblocksfun.cn/">MicroBlocks</a> 和其他编程语言之间进行消息通信，以达到互操作的目的。</p>
+<h2 id="简单演示">简单演示</h2>
+<p>先来看一个简单的视频演示。</p>
+<p><video width=80% src="https://adapter.codelab.club/video/1669037112237364.mp4" controls="controls"></video></p>
+<p>视频演示涉及的程序如下:</p>
+<ul>
+<li><a href="https://microblocksfun.cn/run/microblocks.html#project=projectName%20%27%27%0A%0Amodule%20main%0Aauthor%20unknown%0Aversion%201%200%20%0Adescription%20%27%27%0A%0Ascript%2061%2030%20%7B%0AwhenButtonPressed%20%27A%27%0AsendBroadcast%20%27A%27%0A%7D%0A%0Ascript%20249%2031%20%7B%0AwhenButtonPressed%20%27B%27%0AsendBroadcast%20%27B%27%0A%7D%0A%0Ascript%2057%20145%20%7B%0AwhenBroadcastReceived%20%27happy%27%0A%27%5Bdisplay%3AmbDisplay%5D%27%2015237440%0A%7D%0A%0Ascript%20237%20150%20%7B%0AwhenBroadcastReceived%20%27sad%27%0A%27%5Bdisplay%3AmbDisplay%5D%27%2018284864%0A%7D%0A%0Ascript%20393%20150%20%7B%0AwhenBroadcastReceived%20%27clear%27%0A%27%5Bdisplay%3AmbDisplayOff%5D%27%0A%7D%0A%0A%0Amodule%20%27LED%20Display%27%20Output%0Aauthor%20MicroBlocks%0Aversion%201%204%20%0Atags%20pixel%20matrix%20led%20tft%20%0Adescription%20%27Display%20primitives%20for%20the%205x5%20LED%20display%20on%20the%20BBC%20micro%3Abit%2C%20Calliope%20mini%20and%20M5Atom%20Matrix.%20Boards%20with%20TFT%20displays%20%28such%20as%20the%20Citilab%20ED1%20or%20the%20M5Stack%20family%29%20support%20these%20primitives%20with%20a%20simulated%20%22fat%20pixel%22%20display.%27%0Avariables%20_stop_scrolling_text%20%0A%0A%20%20spec%20%27%20%27%20%27%5Bdisplay%3AmbDisplay%5D%27%20%27display%20_%27%20%27microbitDisplay%27%2015237440%0A%20%20spec%20%27%20%27%20%27%5Bdisplay%3AmbDisplayOff%5D%27%20%27clear%20display%27%0A%20%20spec%20%27%20%27%20%27%5Bdisplay%3AmbPlot%5D%27%20%27plot%20x%20_%20y%20_%27%20%27num%20num%27%203%203%0A%20%20spec%20%27%20%27%20%27%5Bdisplay%3AmbUnplot%5D%27%20%27unplot%20x%20_%20y%20_%27%20%27num%20num%27%203%203%0A%20%20spec%20%27%20%27%20%27displayCharacter%27%20%27display%20character%20_%27%20%27str%27%20%27A%27%0A%20%20spec%20%27%20%27%20%27scroll_text%27%20%27scroll%20text%20_%20%3A%20pausing%20_%20ms%27%20%27str%20num%27%20%27HELLO%20ROSA%21%27%20100%0A%20%20spec%20%27%20%27%20%27stopScrollingText%27%20%27stop%20scrolling%27%0A%0Ato%20displayCharacter%20s%20%7B%0A%20%20s%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20%27%27%20s%29%0A%20%20if%20%28%28size%20s%29%20%3D%3D%200%29%20%7B%0A%20%20%20%20%27%5Bdisplay%3AmbDisplayOff%5D%27%0A%20%20%20%20return%200%0A%20%20%7D%0A%20%20%27%5Bdisplay%3AmbDrawShape%5D%27%20%28%27%5Bdisplay%3AmbShapeForLetter%5D%27%20%28at%201%20s%29%29%0A%7D%0A%0Ato%20scroll_text%20text%20optionalDelay%20%7B%0A%20%20text%20%3D%20%28%27%5Bdata%3Ajoin%5D%27%20text%20%27%27%29%0A%20%20delay%20%3D%20100%0A%20%20if%20%28%28pushArgCount%29%20%3E%201%29%20%7B%0A%20%20%20%20delay%20%3D%20optionalDelay%0A%20%20%7D%0A%20%20_stop_scrolling_text%20%3D%20%28booleanConstant%20false%29%0A%20%20local%20%27length%27%20%28size%20text%29%0A%20%20for%20position%20%28%28length%20%2A%206%29%20%2B%206%29%20%7B%0A%20%20%20%20if%20_stop_scrolling_text%20%7Breturn%200%7D%0A%20%20%20%20for%20i%20length%20%7B%0A%20%20%20%20%20%20%27%5Bdisplay%3AmbDrawShape%5D%27%20%28%27%5Bdisplay%3AmbShapeForLetter%5D%27%20%28%27%5Bdata%3AunicodeAt%5D%27%20i%20text%29%29%20%28%28%28i%20%2A%206%29%20%2B%202%29%20-%20position%29%201%0A%20%20%20%20%7D%0A%20%20%20%20waitMillis%20delay%0A%20%20%7D%0A%7D%0A%0Ato%20stopScrollingText%20%7B%0A%20%20_stop_scrolling_text%20%3D%20%28booleanConstant%20true%29%0A%20%20waitMillis%2010%0A%20%20%27%5Bdisplay%3AmbDisplayOff%5D%27%0A%7D%0A%0A">MicroBlocks 程序</a></li>
+<li><a href="https://create.codelab.club/projects/36864/editor/">Scratch 程序</a></li>
+</ul>
+<p>以上演示了 <a href="https://microblocksfun.cn/">MicroBlocks</a> 与 <a href="https://create.codelab.club/projects/editor/">Scratch</a> 如何通过消息通信来互操作，具体而言:</p>
+<ol>
+<li>先在 MicroBlocks 中编程，完成后断开连接</li>
+<li>之后将设备连接到 Scratch 的 MicroBlocks 插件。
+<ul>
+<li>对你的心智模型来说，就好像你可以在 Scratch 和 MicroBlocks 中相互广播和接收消息。</li>
+</ul>
+</li>
+</ol>
+<p>这个互操作是通用的，意味着可以在 Scratch 里控制 MicroBlocks 已经支持的数十种设备(还在持续增多)！</p>
+<p>MicroBlocks 不仅可以与 Scratch 进行互操作，也可以与大多数编程语言互操作。文末记录了目前已经实现互操作库的编程语言（MicroBlocks 社区优先关注在教育领域重要的编程语言）</p>
+<h3 id="消息流向图">消息流向图</h3>
+<p>以下是 MicroBlocks 与 Scratch 进行消息通信的消息流向图:</p>
+<p><img src="https://adapter.codelab.club/img/microblocks-scratch.png" alt=""></p>
+<p>具体使用，参考 <a href="https://adapter.codelab.club/extension_guide/MicroBlocks/">CodeLab Scratch MicroBlocks 插件文档</a></p>
+<h2 id="为何要让-microblocks-与其他编程语言进行互操作">为何要让 MicroBlocks 与其他编程语言进行互操作</h2>
+<p>我们以 MicroBlocks 与 Scratch 的互操作为例，阐述这样做的意义，其中的道理也适用于 Scratch 之外的其他编程语言。</p>
+<p>我们将分别从以下两个角度来讨论互操作的意义。</p>
+<h3 id="对-microblocks-的意义">对 MicroBlocks 的意义</h3>
+<p>MicroBlocks 专注于硬件编程/物理计算，它让板子可以离线运行，这对于许多实际应用和竞赛(如巡线赛车)是必要的。这使得 MicroBlocks 更多考虑&quot;下位机&quot;编程。</p>
+<p>通过 MicroBlocks 与 Scratch 的互操作，Scratch 可以成为硬件设备的&quot;上位机&quot;, 对设备进行&quot;指挥&quot;。 由于 Scratch 运行在电脑里，没有内存和计算性能的限制，在Scratch里制作控制界面(GUI程序)是非常容易的。</p>
+<p>这样一来，我们就可以利用 Scratch 的优势，为 MicroBlocks 设备提供出色的 GUI 界面。（同样的道理，也可以利用 Python 的深度学习生态来增强 MicroBlocks 程序）</p>
+<h3 id="对-scratch-的意义">对 Scratch 的意义</h3>
+<p>图形化编程领域喜欢魔改 Scratch 来支持硬件编程，这导致许多灾难性的后果，这个糟糕的策略破坏了可理解性，让学习者陷入云里雾里。 我在<a href="https://www.codelab.club/blog/2021/06/28/codelab%E7%BA%AA%E4%BA%8B">CodeLab 纪事</a> 和 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/compare-hardware-blocks-platforms/">比较图形化硬件编程平台</a> 做了批评。</p>
+<p>MicroBlocks 的创始人，也正是 Scratch 的联合创始人兼首席架构师 John Maloney 并未采用扩展 Scratch 的思路来支持硬件编程，他深知这里边的陷阱和天花板，所以 John Maloney 启动了新项目 MicroBlocks 作为图形化硬件编程的解决方案。</p>
+<p>MicroBlocks 因其出色的设计，拥有极高的灵活性和可扩展性，甚至可以由一个孩子而不是工程师来自由扩展它！目前为止 MicroBlocks 社区已经支持了丰富的编程板、传感器和执行器, 几乎涵盖主流领域的大多数类别！</p>
+<p><img src="/post/img/microblocks-libs.png" alt=""></p>
+<p>由于互操作是完全通用的(只是广播消息)， 意味着 MicroBlocks 生态的海量硬件都可以直接为 Scratch 所用(发消息即可！）。 未来新加入 MicroBlocks 生态的任何设备，也都可以直接在 Scratch 里使用，不需要任何额外工作！</p>
+<h2 id="它是如何工作的">它是如何工作的？</h2>
+<p>基于消息通信的互操作是如何工作的呢？</p>
+<p>这主要是得益于 MicroBlocks 出色的架构设计。 它的虚拟机支持强大的消息协议: <a href="https://bitbucket.org/john_maloney/smallvm/src/master/misc/SERIAL_PROTOCOL.md">Microblocks Serial Protocol (version 2.09)</a>, 该协议描述了消息如何在开发板 与 Microblocks IDE 流动，以及消息的其他可能流向。</p>
+<p>MicroBlocks IDE 就是基于这个消息协议与硬件设备(虚拟机)通信的。 所以理论上，我们可以在任何编程语言中做到 MicroBlocks IDE 做到的所有事情, 包括但不限于: 将脚本下载到板子; 启动/停止脚本; 跟踪脚本的运行状态; 广播消息&hellip;</p>
+<p>因此，你不只可以让其他编程语言与 MicroBlocks 进行互操作，甚至可以设计一个新的编程语言来与虚拟机交互，新的语言可以采用文本代码而不是积木块。只需将你设计的文本语言翻译成 MicroBlocks 虚拟机指令，然后通过消息其发送到板子即可。 MicroBlocks 的架构设计为我们打开了巨大的可能性空间！</p>
+<p>更多细节可参考:</p>
+<ul>
+<li><a href="https://bitbucket.org/john_maloney/smallvm/src/master/misc/SERIAL_PROTOCOL.md">Microblocks Serial Protocol (version 2.09)</a></li>
+<li><a href="https://wiki.microblocks.fun/virtual_machine">The MicroBlocks Virtual Machine</a></li>
+<li><a href="https://wiki.microblocks.fun/microblocks_ide_implementation">The MicroBlocks IDE</a></li>
+</ul>
+<h2 id="一些有趣的方向">一些有趣的方向</h2>
+<ul>
+<li>将<a href="https://adapter.codelab.club/extension_guide/microbit_radio/">Adapter microbit radio</a>迁移到 MicroBlocks，在相同的功能下，可以移除对 Adapter 的依赖，这样能很好地提高开箱可用性，只需要一个浏览器即可！
+<ul>
+<li>制作有趣的魔杖 🪄 : 将&quot;魔杖 micro:bit&quot; 的陀螺仪信息实时发给&quot;中转站 microbit&quot;, Python 与&quot;中转站 microbit&quot; 实时互操作，这样就可以利用 Python 社区的深度学习库来实时计算&quot;魔杖 micro:bit&quot; 的手势！</li>
+<li>制作 Scratch 演讲翻页笔（或者通过 <a href="https://pyautogui.readthedocs.io/">pyautogui</a> 库控制 PPT），而这个演讲装置本身又是很好的话题，用于在演讲中引出编程的实际作用。</li>
+</ul>
+</li>
+<li>在你最喜欢的编程语言中，制作通信库，来让它与 MicroBlocks 互操作，可参考我的 Python 实现: <a href="https://github.com/wwj718/microblocks_messaging_library">MicroBlocks Python 库</a></li>
+<li>&hellip;</li>
+</ul>
+<h2 id="更多编程语言">更多编程语言</h2>
+<h3 id="microblocks-与-python-的互操作">MicroBlocks 与 Python 的互操作</h3>
+<h4 id="消息流向图-1">消息流向图</h4>
+<p><img src="/post/img/MicroBlocks-Python-Communication.jpg" alt=""></p>
+<p>具体使用，参考 <a href="https://github.com/wwj718/microblocks_messaging_library">MicroBlocks Python 库</a>。<strong>目前已支持有线和无线两种连接方式</strong>。</p>
+<p>如果你想让它们无线通信，也可以使用 <a href="https://github.com/wwj718/microblocks_wifi_radio">microblocks_wifi_radio</a>。 关于 WiFi Radio 的使用说明, 参考<a href="https://www.bilibili.com/video/BV1su4y1P758/">这个视频</a>。</p>
+<h3 id="microblocks-与-snaphttpssnapberkeleyedu-的互操作">MicroBlocks 与 <a href="https://snap.berkeley.edu/">Snap!</a> 的互操作</h3>
+<p>具体使用，参考 <a href="https://wiki.microblocks.fun/snap/microblocks_snap_messaging">MicroBlocks and Snap! Communication with Messages</a></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="scratch或-python-与-microblocks-互操作时是否总是要连接数据线">Scratch(或 Python) 与 MicroBlocks 互操作时，是否总是要连接数据线</h3>
+<p><strong>更新(2023-12-23)</strong>: 最新的 <a href="https://github.com/wwj718/microblocks_messaging_library">Python库</a> 已经支持无线编程(BLE)</p>
+<p>是的。</p>
+<p>现阶段进行互操作时，必须连接数据线。未来有可能通过蓝牙或 wifi 提供无线支持。(理论上可行)</p>
+<p>如果你希望使用无线的方式让 Scratch(或 Python) 与 MicroBlocks 交互, 可以考虑 MQTT 库(需要板子支持wifi，推荐 ESP32)。<a href="https://microblocksfun.cn/">MicroBlocks</a> 与 <a href="https://create.codelab.club/projects/editor/">CodeLab Scratch</a> 都已支持 MQTT 协议。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://adapter.codelab.club/extension_guide/MicroBlocks/">CodeLab Scratch MicroBlocks 插件文档</a></li>
+<li><a href="https://github.com/wwj718/microblocks_messaging_library">MicroBlocks Python 库</a></li>
+<li><a href="https://wiki.microblocks.fun/snap/microblocks_snap_messaging">MicroBlocks and Snap! Communication with Messages</a></li>
+<li><a href="https://bitbucket.org/john_maloney/smallvm/src/master/misc/SERIAL_PROTOCOL.md">Microblocks Serial Protocol (version 2.09)</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-11-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/new-device-microblocks-library/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">将新设备引入 MicroBlocks</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/microblocks-chinese-community/">
+            <span class="next-text nav-default">从 MicroBlocks 开始你的硬件编程之旅</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

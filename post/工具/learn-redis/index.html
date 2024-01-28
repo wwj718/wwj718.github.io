@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>redis学习笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="动机 构建消息系统 构建IM 学习用缓存加速web应用 资源 入门文章 告诉你Redis是一个牛逼货 REDIS基础笔记:重点阅读 资源链接 使用Python" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/learn-redis/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="redis学习笔记" />
+<meta property="og:description" content="动机 构建消息系统 构建IM 学习用缓存加速web应用 资源 入门文章 告诉你Redis是一个牛逼货 REDIS基础笔记:重点阅读 资源链接 使用Python" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/learn-redis/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-05-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-05-26T00:00:00+00:00" />
+
+<meta itemprop="name" content="redis学习笔记">
+<meta itemprop="description" content="动机 构建消息系统 构建IM 学习用缓存加速web应用 资源 入门文章 告诉你Redis是一个牛逼货 REDIS基础笔记:重点阅读 资源链接 使用Python"><meta itemprop="datePublished" content="2016-05-26T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-05-26T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1948">
+<meta itemprop="keywords" content="tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="redis学习笔记"/>
+<meta name="twitter:description" content="动机 构建消息系统 构建IM 学习用缓存加速web应用 资源 入门文章 告诉你Redis是一个牛逼货 REDIS基础笔记:重点阅读 资源链接 使用Python"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">redis学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-05-26 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#入门文章">入门文章</a></li>
+        <li><a href="#经验分享">经验分享</a></li>
+        <li><a href="#书籍">书籍</a></li>
+        <li><a href="#生产使用">生产使用</a></li>
+        <li><a href="#论坛">论坛</a></li>
+        <li><a href="#文档">文档</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="动机">动机</h1>
+<ul>
+<li>构建消息系统</li>
+<li>构建IM</li>
+<li>学习用缓存加速web应用</li>
+</ul>
+<h1 id="资源">资源</h1>
+<h3 id="入门文章">入门文章</h3>
+<ul>
+<li><a href="http://www.jianshu.com/p/01b37cdb3f33">告诉你Redis是一个牛逼货</a></li>
+<li><a href="http://www.wklken.me/posts/2013/10/19/redis-base.html">REDIS基础笔记</a>:重点阅读
+<ul>
+<li><a href="http://www.wklken.me/posts/2013/10/19/redis-base.html#_1">资源链接</a></li>
+</ul>
+</li>
+<li><a href="http://debugo.com/python-redis/">使用Python操作Redis</a></li>
+<li><a href="http://blog.nosqlfan.com/html/3537.html">Redis资料汇总专题</a></li>
+</ul>
+<h3 id="经验分享">经验分享</h3>
+<ul>
+<li><a href="http://www.phpchina.com/forum.php?mod=viewthread&amp;tid=229629">Nginx与Redis解决高并发问题</a></li>
+<li><a href="http://blog.jobbole.com/44629/">成人网站YouPorn使用Redis之经验谈</a></li>
+<li><a href="http://www.slideshare.net/huacnlee/rails-app-redis">Rails App 运用 Redis 构建高性能的实时搜索</a></li>
+<li><a href="http://blog.nosqlfan.com/html/3379.html?ref=rediszt">节约内存：Instagram的Redis实践</a>
+<ul>
+<li>因为这个应用根本用不到数据库的update功能，事务功能和关联查询等等牛X功能，所以不必为这些用不到的功能去选择维护一个数据库</li>
+</ul>
+</li>
+<li><a href="http://blog.nosqlfan.com/html/1724.html?ref=rediszt">用Redis构建访问频率控制模块</a></li>
+<li>游戏系统，Redis为其中的评级和统计功能</li>
+</ul>
+<h3 id="书籍">书籍</h3>
+<ul>
+<li>
+<p><a href="https://github.com/JasonLai256/the-little-redis-book/blob/master/cn/redis.md">the-little-redis-book</a></p>
+<ul>
+<li>表格既复杂又灵活，基于表格的存储和管理，没有多少东西是你不能进行建模的，然而，这种通用性并不是没有缺点。具体来说就是，事情并不是总能达到假设中的简单或者快速</li>
+<li>针对特定类型的问题使用特定的数据结构？我们不就是这样进行编程的吗？</li>
+<li>典型的数据库应用案例是，将一个程序的所有数据组织起来，使之与另一个程序的数据保持独立。
+<ul>
+<li>在Redis里，数据库简单的使用一个数字编号来进行辨认，默认数据库的数字编号是0</li>
+</ul>
+</li>
+<li>在大多数情况下，Redis会把值看做是一个字节序列，而不会关注它们实质上是什么。要注意，不同的Redis载体处理序列化会有所不同</li>
+<li>查询：对于Redis而言，关键字就是一切，而值是没有任何意义。更通俗来看就是，Redis不允许你通过值来进行查询
+<ul>
+<li>在我们生活的世界里，数据查询是如此的灵活和强大，而Redis的方式看起来是这么的原始和不高效。Redis不是一种普遍使用（one-size-fits-all）的解决方案</li>
+<li>值可以是任何东西，因为Redis从来不需要去读取或理解它们。这也可以帮助我们理清思路，然后去思考如何在这个新世界里建立模型。</li>
+</ul>
+</li>
+<li>存储器和持久化：你可以对此进行设置，如果X个关键字已变更，那么每隔Y秒存储数据库一次。</li>
+<li>“今天我们有多少个独立用户访问”是个在Web应用里常见的问题，有一篇精彩的博文，在里面可以看到Spool是如何使用这两个命令有效地解决此问题。对于1.28亿个用户，一部笔记本电脑在不到50毫秒的时间里就给出了答复，而且只用了16MB的存储空间。</li>
+<li>当你理解了那些常用的应用案例后，你将发现Redis对于许多类型的问题</li>
+<li>常数时间复杂度O(1)被认为是最快速的
+<ul>
+<li>许多Redis命令都具有O(1)的时间复杂度</li>
+</ul>
+</li>
+<li>对数时间复杂度O(log(N))被认为是第二快速的
+<ul>
+<li>zadd</li>
+</ul>
+</li>
+<li>线性时间复杂度O(N)
+<ul>
+<li>在一个表格的非索引列里进行查找就需要O(N)次操作。ltrim命令具有O(N)的时间复杂度
+<ul>
+<li>N不是列表所拥有的元素数量，而是被删除的元素数量</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>在Redis里，当我们发现一些操作具有O(N)的时间复杂度时，我们可能可以找到更为好的方法去处理</li>
+<li><a href="https://github.com/JasonLai256/the-little-redis-book/blob/master/cn/redis.md#%E4%BB%BF%E5%A4%9A%E5%85%B3%E9%94%AE%E5%AD%97%E6%9F%A5%E8%AF%A2pseudo-multi-key-queries">仿多关键字查询</a>:很受启发</li>
+<li>性能或存储空间等问题，经过测试后，才会有真正的理解</li>
+<li>Redis命令都具有原子性，Redis实际上是单线程运行的
+<ul>
+<li>使用multi运行具有原子性的一组命令，执行exec命令去实际执行命令，使用discard命令放弃执行命令</li>
+</ul>
+</li>
+<li>关键是要理解基本的数据结构。你将能领悟到，这些数据结构是如何能够实现你最初视角之外的东西。</li>
+<li>使用期限（Expiration）：让Redis能成为一个理想的缓冲引擎</li>
+<li>发布和订阅：一流支持</li>
+<li>sort命令是Redis最强大的命令之一</li>
+<li>复制：当你向一个Redis实例（Master）进行写入时，一个或多个其他实例（Slaves）能通过Master实例来保持更新</li>
+<li>备份文件：Redis会把快照存储为一个名为dump.rdb的文件</li>
+<li>复制功能（Replication）是一个成长中的网站可以利用的第一个工具。有一些命令会比另外一些来的昂贵（例如sort命令），将这些运行载荷转移到一个Slave实例里，可以保持整体系统对于查询的快速响应。</li>
+</ul>
+</li>
+<li>
+<p><a href="http://redis-cookbook.readthedocs.io/en/latest/j.html">redis-cookbook</a></p>
+<ul>
+<li><a href="http://redis-cookbook.readthedocs.io/en/latest/h.html#python">缓存(cache)</a>:非常漂亮</li>
+</ul>
+</li>
+</ul>
+<h3 id="生产使用">生产使用</h3>
+<ul>
+<li><a href="https://hub.docker.com/_/redis/">docker redis</a>
+<ul>
+<li>docker run &ndash;name some-redis -d redis redis-server &ndash;appendonly yes : 持久化</li>
+<li>127.0.0.1可访问</li>
+<li>docker-compose</li>
+</ul>
+</li>
+<li><a href="https://github.com/wandoulabs/codis">codis</a>:Codis 是一个分布式 Redis 解决方案, 对于上层的应用来说, 连接到 Codis Proxy 和连接原生的 Redis Server 没有明显的区别, 上层应用可以像使用单机的 Redis一样使用. 可以简单的认为后边连接的是一个内存无限大的 Redis 服务.</li>
+<li><a href="http://dockone.io/article/180">用Docker构建分布式Redis集群</a>:十分简单</li>
+<li><a href="https://github.com/andymccurdy/redis-py">redis-py</a></li>
+<li><a href="https://github.com/steelThread/redmon">redmon</a>:性能监控
+<ul>
+<li><a href="http://blog.nosqlfan.com/html/3644.html">redmon：Redis监控管理Web工具</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/ErikDubbelboer/phpRedisAdmin">phpRedisAdmin</a></li>
+<li>性能测试：<a href="http://www.runoob.com/redis/redis-benchmarks.html">Redis 性能测试</a>，采用redis-benchmark</li>
+<li><a href="https://github.com/facebookarchive/redis-faina">统计分析</a></li>
+<li><a href="https://github.com/monterail/redis-browser">redis-browser</a>
+<ul>
+<li>http://127.0.0.1:4567/</li>
+</ul>
+</li>
+<li><a href="https://github.com/JoneXiong/PyRedisAdmin">PyRedisAdmin</a></li>
+</ul>
+<h3 id="论坛">论坛</h3>
+<ul>
+<li><a href="http://www.redis.cn/">redis.cn</a></li>
+</ul>
+<h3 id="文档">文档</h3>
+<p><a href="http://redisdoc.com/">Redis 命令参考</a></p>
+<h1 id="练习">练习</h1>
+<ul>
+<li><a href="http://try.redis.io/">try.redis.io</a></li>
+<li><a href="https://github.com/rolando/scrapy-redis">scrapy-redis</a></li>
+<li><a href="https://github.com/gnemoug/distribute_crawler">distribute_crawler</a></li>
+</ul>
+<h1 id="常见问题">常见问题</h1>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000002906345">Redis的持久化</a>:默认会持久化</li>
+<li>数据库是由一个整数索引标识，而不是由一个数据库名称 默认16个</li>
+<li>应用场景:<a href="http://debugo.com/python-redis/">使用Python操作Redis</a></li>
+</ul>
+<h1 id="我的理解">我的理解</h1>
+<ul>
+<li>redis是个类似数据库的东西，支持更丰富的数据结构，更少的约束</li>
+<li>如何将这些数据结构用于典型案例，捷径是一边理解redis的数据结构一遍看别人的案例</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-05-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/language-version/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Ruby/Nodejs解释器版本依赖笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/open-edx-note-system/">
+            <span class="next-text nav-default">Open edx笔记系统探究</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

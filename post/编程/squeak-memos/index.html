@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Squeak 备忘 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的. 发" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak-memos/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Squeak 备忘" />
+<meta property="og:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的. 发" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak-memos/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-11-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-11-18T00:00:00+00:00" />
+
+<meta itemprop="name" content="Squeak 备忘">
+<meta itemprop="description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的. 发"><meta itemprop="datePublished" content="2020-11-18T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-11-18T00:00:00+00:00" />
+<meta itemprop="wordCount" content="916">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Squeak 备忘"/>
+<meta name="twitter:description" content="日常备忘。 由于 Pharo 派生自 Squeak，所以很多资源是可以共用的 一些材料 语法备忘 Terse Guide to Squeak Array(list) 将 list 视为不可变的结构（历史不可变），每次都生成新的. 发"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Squeak 备忘</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-11-18 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#语法备忘">语法备忘</a>
+      <ul>
+        <li><a href="#arraylist">Array(list)</a></li>
+        <li><a href="#dictionaries">Dictionaries</a></li>
+      </ul>
+    </li>
+    <li><a href="#环境介绍视频">环境介绍(视频)</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#morphic">Morphic</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#dynamic-message-callingcompilinghttpssqueakorgdocumentationterse_guide"><a href="https://squeak.org/documentation/terse_guide/">Dynamic Message Calling/Compiling</a></a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#osc">OSC</a></li>
+    <li><a href="#scratch-client">Scratch Client</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>日常备忘。</p>
+<p>由于 Pharo 派生自 Squeak，所以<a href="/post/%E7%BC%96%E7%A8%8B/from-python-to-pharo/">很多资源</a>是可以共用的</p>
+<h1 id="一些材料">一些材料</h1>
+<h2 id="语法备忘">语法备忘</h2>
+<p><a href="https://squeak.org/documentation/terse_guide/">Terse Guide to Squeak</a></p>
+<h3 id="arraylist">Array(list)</h3>
+<p>将 list 视为不可变的结构（历史不可变），每次都生成新的.</p>
+<p>发挥 LISP 精神，灵活操控 list。</p>
+<p>只使用少量操作符:</p>
+<ul>
+<li>atom</li>
+<li>eq   (<code>x=y</code>)</li>
+<li>car  (<code>[:x |x at: 1.]</code>)</li>
+<li>cdr  (<code>[:x |x copyFrom: 2 to: x size.]</code>)</li>
+<li>cons (<code>[:x :y|Array with: x with: y]</code>)</li>
+<li>cond (<code>ifTrue:</code>)</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">car</span> <span class="o">:=</span> [<span class="o">:</span><span class="nv">x</span> <span class="o">|</span><span class="nv">x</span> <span class="nf">at:</span> <span class="m">1</span><span class="p">.</span>]<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">cdr</span> <span class="o">:=</span> [<span class="o">:</span><span class="nv">x</span> <span class="o">|</span><span class="nv">x</span> <span class="nf">copyFrom:</span> <span class="m">2</span> <span class="nf">to:</span> <span class="nv">x</span> <span class="nf">size</span><span class="p">.</span>]<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="err">cons</span><span class="o">:=</span> [<span class="o">:</span><span class="nv">x</span> <span class="o">:</span><span class="nv">y</span><span class="o">|</span><span class="nc">Array</span> <span class="nf">with:</span> <span class="nv">x</span> <span class="nf">with:</span> <span class="nv">y</span>]<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">car</span> <span class="nf">value:</span> <span class="ss">#(</span><span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="ss">)</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">cdr</span> <span class="nf">value:</span> <span class="ss">#(</span><span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="ss">)</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">cons</span> <span class="nf">value:</span> <span class="ss">#(</span><span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="ss">)</span> <span class="nf">value:</span> <span class="m">1</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/post/img/3e08d52387f63a4eee59f247e3ae566c.png" alt=""></p>
+<p>Smalltalk 源码不是S表达式，尽可能将 list 用作 S表达式, 灵活使用 block, 诸如: <code>#([:x |x at:1.], 1 2 3)</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">y</span> <span class="o">:=</span> {[<span class="o">:</span><span class="nv">x</span> <span class="o">|</span><span class="nv">x</span> <span class="nf">at:</span><span class="m">1</span><span class="p">.</span>] <span class="p">.</span> <span class="m">1</span> <span class="p">.</span> <span class="m">2</span> <span class="p">.</span> <span class="m">3</span>}<span class="p">.</span>
+</span></span><span class="line"><span class="cl">(<span class="nv">car</span> <span class="nf">value:</span> <span class="nv">y</span>) <span class="nf">value:</span> (<span class="nv">cdr</span> <span class="nf">value:</span> <span class="nv">y</span>)<span class="p">.</span> <span class="c">&#34;1&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>由于 Smalltalk 和LISP 一样(Alan Kay是LISP忠实粉丝)是一门关注<a href="#late-binding">late binding</a>的语言，所以 list 中可以携带各种东西！</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="c">&#34;receiver perform: message.&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">y</span> <span class="o">:=</span> {<span class="s">&#39;factorial&#39;</span> <span class="nf">asSymbol</span> <span class="p">.</span> <span class="m">5</span> <span class="p">.</span> <span class="m">6</span> <span class="p">.</span> <span class="m">7</span>}<span class="p">.</span>
+</span></span><span class="line"><span class="cl">(<span class="nv">car</span> <span class="nf">value:</span> (<span class="nv">cdr</span> <span class="nf">value:</span> <span class="nv">y</span>)) <span class="nf">perform:</span> (<span class="nv">car</span> <span class="nf">value:</span> <span class="nv">y</span>)<span class="p">.</span> <span class="c">&#34;120 (5x4x3x2x1)&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="create">create</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">x</span> <span class="o">:=</span> <span class="ss">#(</span><span class="m">4</span> <span class="m">3</span> <span class="m">2</span> <span class="m">1</span><span class="ss">)</span><span class="p">.</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">&#34;Array 长度固定&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="o">:=</span> <span class="nc">Array</span> <span class="nf">with:</span> <span class="m">5</span> <span class="nf">with:</span> <span class="m">4</span> <span class="nf">with:</span> <span class="m">3</span> <span class="nf">with:</span> <span class="m">2</span><span class="p">.</span>                 <span class="c">&#34;create array with up to 4 elements&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="o">:=</span> <span class="nc">Array</span> <span class="nf">new:</span> <span class="m">4</span><span class="p">.</span>                                          <span class="c">&#34;allocate an array with specified size&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span>                                                           <span class="c">&#34;set array elements&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">at:</span> <span class="m">1</span> <span class="nf">put:</span> <span class="m">5</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">at:</span> <span class="m">2</span> <span class="nf">put:</span> <span class="m">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">at:</span> <span class="m">3</span> <span class="nf">put:</span> <span class="m">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">at:</span> <span class="m">4</span> <span class="nf">put:</span> <span class="m">2</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">a</span> <span class="o">:=</span> <span class="s">&#39;hi&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nf">x</span> <span class="o">:=</span> {<span class="nv">a</span> <span class="p">.</span> <span class="m">1</span> <span class="p">.</span> <span class="m">2</span>} <span class="c">&#34;a 将被解析。 #(a 1 2)-&gt;a是symbol&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="query--utils">query &amp;&amp; utils</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">isEmpty</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">size</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">includes:</span> <span class="m">3</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">select:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nv">a</span> <span class="nf">&gt;</span> <span class="m">2</span>]<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">do:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nc">Transcript</span> <span class="nf">show:</span> <span class="nv">a</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">cr</span>]<span class="p">.</span>            <span class="c">&#34;iterate over the array&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="dictionaries">Dictionaries</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">x</span> <span class="o">:=</span> <span class="nc">Dictionary</span> <span class="nb">new</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">at:</span> <span class="ss">#e</span> <span class="nf">put:</span> <span class="m">3</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">at:</span> <span class="s">&#39;key1&#39;</span> <span class="nf">put:</span> <span class="m">3</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">includesKey:</span> <span class="ss">#a</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">keys</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">values</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">do:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nc">Transcript</span> <span class="nf">show:</span> <span class="nv">a</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">cr</span>]        <span class="c">&#34;iterate over the values collection&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nf">x</span> <span class="nf">keysDo:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nc">Transcript</span> <span class="nf">show:</span> <span class="nv">a</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">cr</span>]<span class="p">.</span>   <span class="c">&#34;iterate over the keys collection&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">keysAndValuesDo:</span> [<span class="o">:</span><span class="nv">aKey</span> <span class="o">:</span><span class="nv">aValue</span> <span class="o">|</span> <span class="nc">Transcript</span>         <span class="c">&#34;iterate over keys and values&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">show:</span> <span class="nv">aKey</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">space</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">show:</span> <span class="nv">aValue</span> <span class="nf">printString</span><span class="p">;</span> <span class="nf">cr</span>]<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">x</span> <span class="nf">select:</span> [<span class="o">:</span><span class="nv">a</span> <span class="o">|</span> <span class="nv">a</span> <span class="nf">&gt;</span> <span class="m">2</span>]<span class="p">.</span>       <span class="c">&#34;return collection(dict) of elements that(value) pass test&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nc">Smalltalk</span> <span class="nf">globals</span> <span class="nf">keys</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="环境介绍视频">环境介绍(视频)</h2>
+<p><a href="https://www.youtube.com/playlist?list=PL6601A198DF14788D">Squeak from the very start</a></p>
+<h1 id="常用">常用</h1>
+<h2 id="morphic">Morphic</h2>
+<p><a href="http://wiki.squeak.org/squeak/30">Morphic</a></p>
+<h1 id="late-binding">late binding</h1>
+<p>在持续积累 late binding 相关技能</p>
+<h3 id="dynamic-message-callingcompilinghttpssqueakorgdocumentationterse_guide"><a href="https://squeak.org/documentation/terse_guide/">Dynamic Message Calling/Compiling</a></h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="c">&#34;unary message&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">receiver</span> <span class="o">:=</span> <span class="m">5</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">message</span> <span class="o">:=</span> <span class="s">&#39;factorial&#39;</span> <span class="nf">asSymbol</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">result</span> <span class="o">:=</span> <span class="nv">receiver</span> <span class="nf">perform:</span> <span class="nv">message</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">result</span> <span class="o">:=</span> <span class="nc">Compiler</span> <span class="nf">evaluate:</span> ((<span class="nv">receiver</span> <span class="nf">storeString</span>)<span class="nf">,</span> <span class="s">&#39; &#39;</span><span class="nf">,</span> <span class="nv">message</span>)<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">result</span> <span class="o">:=</span> (<span class="nc">Message</span> <span class="nb">new</span> <span class="nf">setSelector:</span> <span class="nv">message</span> <span class="nf">arguments:</span> <span class="ss">#()</span>) <span class="nf">sentTo:</span> <span class="nv">receiver</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">&#34;binary message&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">receiver</span> <span class="o">:=</span> <span class="m">1</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">message</span> <span class="o">:=</span> <span class="s">&#39;+&#39;</span> <span class="nf">asSymbol</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">argument</span> <span class="o">:=</span> <span class="m">2</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">result</span> <span class="o">:=</span> <span class="nv">receiver</span> <span class="nf">perform:</span> <span class="nv">message</span> <span class="nf">withArguments:</span> (<span class="nc">Array</span> <span class="nf">with:</span> <span class="nv">argument</span>)<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">result</span> <span class="o">:=</span> <span class="nc">Compiler</span> <span class="nf">evaluate:</span> ((<span class="nv">receiver</span> <span class="nf">storeString</span>)<span class="nf">,</span> <span class="s">&#39; &#39;</span><span class="nf">,</span> <span class="nv">message</span><span class="nf">,</span> <span class="s">&#39; &#39;</span><span class="nf">,</span> (<span class="nv">argument</span> <span class="nf">storeString</span>))<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">result</span> <span class="o">:=</span> (<span class="nc">Message</span> <span class="nb">new</span> <span class="nf">setSelector:</span> <span class="nv">message</span> <span class="nf">arguments:</span> (<span class="nc">Array</span> <span class="nf">with:</span> <span class="nv">argument</span>)) <span class="nf">sentTo:</span> <span class="nv">receiver</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">&#34;keyword messages&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">receiver</span> <span class="o">:=</span> <span class="m">12</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">keyword1</span> <span class="o">:=</span> <span class="s">&#39;between:&#39;</span> <span class="nf">asSymbol</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">keyword2</span> <span class="o">:=</span> <span class="s">&#39;and:&#39;</span> <span class="nf">asSymbol</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">argument1</span> <span class="o">:=</span> <span class="m">10</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">argument2</span> <span class="o">:=</span> <span class="m">20</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">result</span> <span class="o">:=</span> <span class="nv">receiver</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">perform:</span> (<span class="nv">keyword1</span><span class="nf">,</span> <span class="nv">keyword2</span>) <span class="nf">asSymbol</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">withArguments:</span> (<span class="nc">Array</span> <span class="nf">with:</span> <span class="nv">argument1</span> <span class="nf">with:</span> <span class="nv">argument2</span>)<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">result</span> <span class="o">:=</span> <span class="nc">Compiler</span> <span class="nf">evaluate:</span>
+</span></span><span class="line"><span class="cl">   ((<span class="nv">receiver</span> <span class="nf">storeString</span>)<span class="nf">,</span> <span class="s">&#39; &#39;</span><span class="nf">,</span> <span class="nv">keyword1</span><span class="nf">,</span> (<span class="nv">argument1</span> <span class="nf">storeString</span>) <span class="nf">,</span> <span class="s">&#39; &#39;</span><span class="nf">,</span> <span class="nv">keyword2</span><span class="nf">,</span> (<span class="nv">argument2</span> <span class="nf">storeString</span>))<span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">result</span> <span class="o">:=</span> (<span class="nc">Message</span> <span class="nb">new</span>
+</span></span><span class="line"><span class="cl">      <span class="nf">setSelector:</span> (<span class="nv">keyword1</span><span class="nf">,</span> <span class="nv">keyword2</span>) <span class="nf">asSymbol</span>
+</span></span><span class="line"><span class="cl">      <span class="nf">arguments:</span> (<span class="nc">Array</span> <span class="nf">with:</span> <span class="nv">argument1</span> <span class="nf">with:</span> <span class="nv">argument2</span>))
+</span></span><span class="line"><span class="cl">   <span class="nf">sentTo:</span> <span class="nv">receiver</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="连接">连接</h1>
+<p>与外部系统通信</p>
+<ul>
+<li><a href="http://wiki.squeak.org/squeak/1414">FFI</a></li>
+<li>OSC</li>
+<li>ZeroMQ</li>
+<li>Socket</li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/pharo-http-websocket-mqtt/">HTTP/websocket/MQTT</a></li>
+<li>Scratch Client</li>
+</ul>
+<h2 id="osc">OSC</h2>
+<p><a href="https://adapter.codelab.club/extension_guide/Squeak/">Adatper Squeak</a></p>
+<p>在Squeak中, 下载 OSC : <a href="http://www.squeaksource.com/OSCClient/OSC-SimonHolland.14.mcz">OSC-SimonHolland</a>, 之后拖到 Squeak 桌面，加载使用即可。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl">(<span class="nc">OSCMessage</span> <span class="nf">for:</span> {<span class="s">&#39;/eim/osc&#39;</span> <span class="p">.</span> <span class="m">1</span>}) <span class="nf">sendTo:</span> <span class="err">#</span>[<span class="m">127</span> <span class="nf">0</span> <span class="m">0</span> <span class="nf">1</span>] <span class="nf">port:</span> <span class="m">12361</span><span class="p">.</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">(<span class="nc">OSCMessage</span> <span class="nf">for:</span> {<span class="s">&#39;/eim/osc&#39;</span> <span class="p">.</span> <span class="m">0</span>}) <span class="nf">sendTo:</span> <span class="err">#</span>[<span class="m">127</span> <span class="nf">0</span> <span class="m">0</span> <span class="nf">1</span>] <span class="nf">port:</span> <span class="m">12361</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">(<span class="nc">OSCMessage</span> <span class="nf">for:</span> {<span class="s">&#39;/eim/osc&#39;</span> <span class="p">.</span> <span class="m">-1</span>}) <span class="nf">sendTo:</span> <span class="err">#</span>[<span class="m">127</span> <span class="nf">0</span> <span class="m">0</span> <span class="nf">1</span>] <span class="nf">port:</span> <span class="m">12361</span><span class="p">.</span> 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="scratch-client">Scratch Client</h2>
+<p><a href="https://adapter.codelab.club/extension_guide/etoys/">Adapter Etoys</a></p>
+<h1 id="解析工具">解析工具</h1>
+<ul>
+<li>正则表达式</li>
+<li><a href="https://github.com/hpi-swa/Ohm-S">ohm-S</a></li>
+<li><a href="https://github.com/moosetechnology/PetitParser">PetitParser</a></li>
+</ul>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/from-python-to-pharo/">从Python转向Pharo</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/smalltalk-guide/">Smalltalk 入门导览</a></li>
+<li><a href="https://squeak.org/documentation/terse_guide/">Terse Guide to Squeak</a></li>
+<li><a href="https://www.youtube.com/playlist?list=PL6601A198DF14788D">Squeak from the very start</a></li>
+<li><a href="http://wiki.squeak.org/squeak/2983">Documentation</a></li>
+<li><a href="http://wiki.squeak.org/squeak/3419">Squeak in a Nutshell</a></li>
+<li><a href="http://web.cecs.pdx.edu/~harry/musings/SmalltalkOverview.html#Blocks">Smalltalk:A White Paper Overview</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/LISP">wikipedia LISP</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-11-18
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/lively-memos/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Lively 备忘</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/">
+            <span class="next-text nav-default">建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak、Snap! 上实现</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

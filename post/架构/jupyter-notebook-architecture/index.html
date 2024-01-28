@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>jupyter notebook架构分析 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="我的痛点 最近在折腾blockly4pi(暂未开源)，这是一个很好玩的项目，试图用blockly来控制树莓派，将硬件功能积木化，从而降低硬件编" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%9E%B6%E6%9E%84/jupyter-notebook-architecture/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="jupyter notebook架构分析" />
+<meta property="og:description" content="我的痛点 最近在折腾blockly4pi(暂未开源)，这是一个很好玩的项目，试图用blockly来控制树莓派，将硬件功能积木化，从而降低硬件编" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%9E%B6%E6%9E%84/jupyter-notebook-architecture/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-03-08T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-03-08T00:00:00+00:00" />
+
+<meta itemprop="name" content="jupyter notebook架构分析">
+<meta itemprop="description" content="我的痛点 最近在折腾blockly4pi(暂未开源)，这是一个很好玩的项目，试图用blockly来控制树莓派，将硬件功能积木化，从而降低硬件编"><meta itemprop="datePublished" content="2017-03-08T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2017-03-08T00:00:00+00:00" />
+<meta itemprop="wordCount" content="4138">
+<meta itemprop="keywords" content="architecture," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="jupyter notebook架构分析"/>
+<meta name="twitter:description" content="我的痛点 最近在折腾blockly4pi(暂未开源)，这是一个很好玩的项目，试图用blockly来控制树莓派，将硬件功能积木化，从而降低硬件编"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">jupyter notebook架构分析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-03-08 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%9E%B6%E6%9E%84/"> 架构 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#架构图">架构图</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#kernel中的socket对象">Kernel中的Socket对象</a></li>
+        <li><a href="#kernel中的线程">Kernel中的线程</a></li>
+        <li><a href="#用户代码的执行">用户代码的执行</a></li>
+        <li><a href="#查看shell_socket的消息">查看shell_socket的消息</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="我的痛点">我的痛点</h1>
+<p>最近在折腾blockly4pi(暂未开源)，这是一个很好玩的项目，试图用blockly来控制树莓派，将硬件功能积木化，从而降低硬件编程入门门槛</p>
+<p>在这个项目中，我将blockly用作代码生成器，这和官方的定位相同，虽然你也可以以其他方式使用它，但我认为将其用作代码生成器，并保持积木的灵活与可组合性(do one thing and do well)，能发挥极大的威力</p>
+<p>我把对blockly的理解都写在这里了：<a href="http://blog.just4fun.site/blockly-overview.html">blockly入门与介绍</a></p>
+<p>在这个项目中，我遇到一个很典型的问题：将浏览器里的代码丢到机器上运行，然后拿到运行结果，最好能即使给出运行过程信息</p>
+<p>大概像这样</p>
+<p><img src="" alt="架构图"></p>
+<p>实际上这是大多web IDE在做的事</p>
+<p>我的第一个版本很粗暴，用户拼接好积木,blockly生成代码后，点击运行，代码(python)被post到树莓派，在那里执行,然后返回运行结果</p>
+<p>这个过程粗暴到无从批评，因为到处都是槽点，灵活性和扩展性都很糟糕。</p>
+<p>第二个版本采用了websocket(flask-socketio)来通信，后台也加入了事件机制，这样一来阻塞的问题得到解决，c/s两边能及时传递运行时信息</p>
+<p>后来意识到我填坑流的泪，都是当初选web框架时脑子进的水,我需要一个异步非阻塞的框架 ，而不是对flask修修补补,一会加上多线程，一会儿加上事件机制，如果最初就选择<a href="https://github.com/tornadoweb/tornado">tornado</a>省去多少时间</p>
+<h1 id="踏破铁鞋">踏破铁鞋</h1>
+<p>再往后我发现，我特么就是在重造一个轮子，这个轮子在jupyter notebook已经实现得非常漂亮了</p>
+<p>jupyter notebook之前叫ipython notebook，我是它的脑残粉，之前对其做过介绍:</p>
+<ul>
+<li><a href="http://blog.just4fun.site/use-ipython-notebook.html">使用IPython Notebook来学习编程</a></li>
+<li><a href="http://blog.just4fun.site/jupyter-summary.html">jupyter使用小结</a></li>
+</ul>
+<h1 id="jupyter-notebook的架构">jupyter notebook的架构</h1>
+<p>在<a href="http://jupyter.org/">jupyter主页</a>上，官方有对其做个简要说明:</p>
+<blockquote>
+<p>The Jupyter Notebook is based on a set of open standards for interactive computing. Think HTML and CSS for interactive computing on the web. These open standards can be leveraged by third party developers to build customized applications with embedded interactive computing.</p>
+</blockquote>
+<p>jupyter notebook基于若干开放标准，可以将其视为三个部分:</p>
+<ul>
+<li>Notebook Document Format : 基于JSON的开放文档格式，完整地记录用户的会话(sessions)和代码、说明性的文本、方程以及富文本输出</li>
+<li>Interactive Computing Protocol: 该协议用于连接Notebook和内核，基于JSON数据、ZMQ以及WebSockets</li>
+<li>The Kernel: 使用特定编程语言实际跑代码的地方，并将输出返回给用户。内核也返回tab键补全信息</li>
+</ul>
+<h3 id="架构图">架构图</h3>
+<p>上边提到的三个部分直接的关系如下</p>
+<p><img src="/post/img/notebook_components.png" alt=""></p>
+<p>于是我们可以回答<a href="https://github.com/alex/what-happens-when">what happens when</a>这类经典问题,当我们点击运行<code>print(&quot;hello world&quot;)</code>时发生了什么</p>
+<p>从上图我们可以看出发生了这样一些事：用户在浏览器里写代码，点击运行后，代码从浏览器发送给Web服务器(tornado)，接着从Web服务器发送消息到Kernel(python)执行代码，在Kernel中执行代码产生的输出/错误会被发送给Web服务器，接着发往给浏览器,用户于是看到输出，这个过程说起来很绕，实际执行飞快无比</p>
+<p>如果你对jupyter的生态有兴趣，那么下边这张架构图，能让你看出各个项目直接的关系,如果你只关心jupyter notebook，它也给出了更为细致的信息</p>
+<p><img src="/post/img/repos_map.png" alt=""></p>
+<p>如果你对通信过程很感兴趣，这一看下这张图（消息的传输用到了 ZeroMQ）：</p>
+<p><img src="/post/img/frontend-kernel.png" alt=""></p>
+<p>如果你对ZeroMQ有兴趣，可以看我之前的笔记<a href="http://blog.just4fun.site/mq-note.html">消息队列中间件学习笔记</a></p>
+<p>从途中我们可以看到主要利用了ZeroMQ的Publisher-Subscriber模式来做通信</p>
+<h1 id="回到我的项目上">回到我的项目上</h1>
+<p>对上边<code>what happens when</code>的回答稍作修改，我们就能得到一个改良版的blocklu4pi的架构，而且这类架构几乎适用于任何的web IDE类型的项目。blockly正在流行，这套架构之后大有用武之地</p>
+<p>修改后的通信流程为: 用户在浏览器里拖拽blockly积木块生成代码,点击运行后，代码从浏览器发送给Web服务器(tornado)，接着从Web服务器发送消息到Kernel(python)执行代码，在Kernel中执行代码产生的输出/错误会被发送给Web服务器，接着发往给浏览器,用户于是看到输出</p>
+<p>上述两个流程的区别仅在于产生代码的方式不同而已，jupyter是用户手写，而blockly是用积木生成，余下过程一!模!一!样！</p>
+<h1 id="交互式探索">交互式探索</h1>
+<p>为了对通信和调用过程有更细致的了解，我们可以在notebook里进行交互式探索, REPL优雅之处在于让我们方便地做实验与探索未知</p>
+<p><a href="http://hyry.dip.jp/tech/slice/slice.html/36">这篇文章</a>给了我们一个思路来观察Kernel是如何接收、运行和返回消息:</p>
+<blockquote>
+<p>用户代码和Kernel在同一进程中执行，因此我们可以通过一些特殊的代码研究Kernel是如何接收、运行并返回消息的</p>
+</blockquote>
+<p>作者接下来演示了如何通过</p>
+<blockquote>
+<p>gc, threading, traceback, inspect查看了Kernel是如何接收和发送消息，以及如何运行用户代码的</p>
+</blockquote>
+<p>非常有意思的一篇分析,不过因为时间过去较久，架构有些调整，所以我这边给出最新的交互数据</p>
+<p>我的版本为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">jupyter 4.3.0
+</span></span><span class="line"><span class="cl">ipython 5.2.2
+</span></span><span class="line"><span class="cl">notebook 4.4.1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>下边是实验数据</p>
+<h3 id="kernel中的socket对象">Kernel中的Socket对象</h3>
+<p>通过gc模块的get_objects()遍历进程中所有的对象</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">gc</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_objects</span><span class="p">(</span><span class="n">class_name</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">[</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_objects</span><span class="p">()</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="n">class_name</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">kapp</span> <span class="o">=</span> <span class="n">get_objects</span><span class="p">(</span><span class="s2">&#34;IPKernelApp&#34;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#&lt;ipykernel.kernelapp.IPKernelApp at 0x108a22d10&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">kapp</span><span class="o">.</span><span class="n">shell_socket</span><span class="p">,</span> <span class="n">kapp</span><span class="o">.</span><span class="n">iopub_socket</span> <span class="c1"># (&lt;zmq.sugar.socket.Socket at 0x108a8d328&gt;, &lt;ipykernel.iostream.BackgroundSocket at 0x108aa3850&gt;)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>IPKernelApp对象的shell_socket和iopub_socket分别用于接收命令和广播代码执行输出，对应于架构图部分表示通信过程的图中绿色和红色端口</p>
+<p>在Notebook中执行用户输入的<code>print</code>时，会经由iopub_socket将输出的内容传送给Web服务器，最终在Notebook界面中显示</p>
+<p>我们知道python中，print语句实际上会调用sys.stdout完成输出工作</p>
+<p>那么Kernel中的sys.stdout是什么对象</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="c1">#&lt;ipykernel.iostream.OutStream object at 0x108a9cfd0&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">pub_thread</span> <span class="c1"># &lt;ipykernel.iostream.IOPubThread at 0x108aa32d0&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>前头说到iopub_socket用于广播代码的输出，可以推测sys.stdout是一个对kapp.iopub_socket进行包装的OutStream对象(sys.stdout经由kapp.iopub_socket广播出来)</p>
+<p>我们可以发现<code>sys.stderr</code>和<code>sys.stdout</code>是同个对象(内存地址完全相同)</p>
+<h3 id="kernel中的线程">Kernel中的线程</h3>
+<p>通过threading.enumerate()可以获得当前进程中的所有线程</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">threading</span>
+</span></span><span class="line"><span class="cl"><span class="n">threading</span><span class="o">.</span><span class="n">enumerate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">[&lt;_MainThread(MainThread, started 140736413283264)&gt;,
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &lt;Thread(Thread-2, started daemon 123145475149824)&gt;,
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &lt;HistorySavingThread(IPythonHistorySavingThread, started 123145485709312)&gt;,
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &lt;Heartbeat(Thread-3, started daemon 123145479356416)&gt;,
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &lt;ParentPollerUnix(Thread-1, started daemon 123145489915904)&gt;]
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>各个线程的功能为：</p>
+<ul>
+<li>主线程(MainThread)接收来自前端的命令，执行用户代码，并输出代码的执行结果。</li>
+<li>HistorySaving线程用户将用户输入的历史保存到Sqlite数据库中</li>
+<li>Heartbeat线程用于定时向前端发送消息，用于检测心跳</li>
+<li>ParentPollerUnix线程，监视父进程，如果父进程退出，则保证Kernel进程也退出</li>
+</ul>
+<h3 id="用户代码的执行">用户代码的执行</h3>
+<p>通过在用户代码中执行traceback.print_stack()输出整个执行堆栈</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">File</span> <span class="s2">&#34;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/runpy.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">162</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_run_module_as_main</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;__main__&#34;</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">loader</span><span class="p">,</span> <span class="n">pkg_name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/runpy.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">72</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_run_code</span>
+</span></span><span class="line"><span class="cl">    <span class="n">exec</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">run_globals</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/ipykernel/__main__.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">launch_new_instance</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/traitlets/config/application.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">658</span><span class="p">,</span> <span class="ow">in</span> <span class="n">launch_instance</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/ipykernel/kernelapp.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">474</span><span class="p">,</span> <span class="ow">in</span> <span class="n">start</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/zmq/eventloop/ioloop.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">177</span><span class="p">,</span> <span class="ow">in</span> <span class="n">start</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">super</span><span class="p">(</span><span class="n">ZMQIOLoop</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/tornado/ioloop.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">887</span><span class="p">,</span> <span class="ow">in</span> <span class="n">start</span>
+</span></span><span class="line"><span class="cl">    <span class="n">handler_func</span><span class="p">(</span><span class="n">fd_obj</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/tornado/stack_context.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">275</span><span class="p">,</span> <span class="ow">in</span> <span class="n">null_wrapper</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/zmq/eventloop/zmqstream.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">440</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_handle_events</span>
+</span></span><span class="line"><span class="cl">    <span class="bp">self</span><span class="o">.</span><span class="n">_handle_recv</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/zmq/eventloop/zmqstream.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">472</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_handle_recv</span>
+</span></span><span class="line"><span class="cl">    <span class="bp">self</span><span class="o">.</span><span class="n">_run_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/zmq/eventloop/zmqstream.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">414</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_run_callback</span>
+</span></span><span class="line"><span class="cl">    <span class="n">callback</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/tornado/stack_context.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">275</span><span class="p">,</span> <span class="ow">in</span> <span class="n">null_wrapper</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/ipykernel/kernelbase.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">276</span><span class="p">,</span> <span class="ow">in</span> <span class="n">dispatcher</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch_shell</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/ipykernel/kernelbase.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">228</span><span class="p">,</span> <span class="ow">in</span> <span class="n">dispatch_shell</span>
+</span></span><span class="line"><span class="cl">    <span class="n">handler</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">idents</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/ipykernel/kernelbase.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">390</span><span class="p">,</span> <span class="ow">in</span> <span class="n">execute_request</span>
+</span></span><span class="line"><span class="cl">    <span class="n">user_expressions</span><span class="p">,</span> <span class="n">allow_stdin</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/ipykernel/ipkernel.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">196</span><span class="p">,</span> <span class="ow">in</span> <span class="n">do_execute</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">shell</span><span class="o">.</span><span class="n">run_cell</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">store_history</span><span class="o">=</span><span class="n">store_history</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="n">silent</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/ipykernel/zmqshell.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">501</span><span class="p">,</span> <span class="ow">in</span> <span class="n">run_cell</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ZMQInteractiveShell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run_cell</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/IPython/core/interactiveshell.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2717</span><span class="p">,</span> <span class="ow">in</span> <span class="n">run_cell</span>
+</span></span><span class="line"><span class="cl">    <span class="n">interactivity</span><span class="o">=</span><span class="n">interactivity</span><span class="p">,</span> <span class="n">compiler</span><span class="o">=</span><span class="n">compiler</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/IPython/core/interactiveshell.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2827</span><span class="p">,</span> <span class="ow">in</span> <span class="n">run_ast_nodes</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_code</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;/Users/wwj/env/lib/python2.7/site-packages/IPython/core/interactiveshell.py&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2881</span><span class="p">,</span> <span class="ow">in</span> <span class="n">run_code</span>
+</span></span><span class="line"><span class="cl">    <span class="n">exec</span><span class="p">(</span><span class="n">code_obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_global_ns</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_ns</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;&lt;ipython-input-2-2e94e8c65f66&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">traceback</span><span class="o">.</span><span class="n">print_stack</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从中可以看到用户代码是如何被调用的</p>
+<p>在KernelApp对象的start()中，调用ZeroMQ中的ioloop.start()处理来自shell_socket的消息。当从Web服务器接收到execute_request消息时，将调用kernel.execute_request()方法</p>
+<p><code>kapp.kernel.execute_request #&lt;bound method IPythonKernel.execute_request of &lt;ipykernel.ipkernel.IPythonKernel object at 0x10c09f910&gt;&gt;</code></p>
+<p>在execute_request()中调用shell对象的如下方法最终执行用户代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">print kapp.kernel.shell.run_cell #&lt;bound method ZMQInteractiveShell.run_cell of &lt;ipykernel.zmqshell.ZMQInteractiveShell object at 0x10c09f950&gt;&gt;
+</span></span><span class="line"><span class="cl">print kapp.kernel.shell.run_ast_nodes #&lt;bound method ZMQInteractiveShell.run_ast_nodes of &lt;ipykernel.zmqshell.ZMQInteractiveShell object at 0x10c09f950&gt;&gt;
+</span></span><span class="line"><span class="cl">print kapp.kernel.shell.run_code #&lt;bound method ZMQInteractiveShell.run_code of &lt;ipykernel.zmqshell.ZMQInteractiveShell object at 0x10c09f950&gt;&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>shell对象在其user_global_ns和user_ns属性在执行代码，这两个字典就是用户代码的执行环境，实际上它们是同一个字典</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">print globals() is kapp.kernel.shell.user_global_ns #True
+</span></span><span class="line"><span class="cl">print globals() is kapp.kernel.shell.user_ns #True
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="查看shell_socket的消息">查看shell_socket的消息</h3>
+<p>可以利用inspect.stack()获得前面的执行堆栈中的各个frame对象，从而查看堆栈中的局域变量的内容，这样可以观察到Kernel经由shell_socket接收的回送的消息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">inspect</span>
+</span></span><span class="line"><span class="cl"><span class="n">frames</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&#34;dispatch_shell&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">frames</span><span class="p">[</span><span class="s2">&#34;request&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&#34;execute_request&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">frames</span><span class="p">[</span><span class="s2">&#34;reply&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s2">&#34;hello world&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上代码在kernel里执行的时候，通信过程已经完成，所以我们可以拿到frames[&ldquo;request&rdquo;]，frames[&ldquo;reply&rdquo;]在<code>print &quot;hello world&quot;</code>之前执行，所以frames[&ldquo;reply&rdquo;]不包含代码运行的结果</p>
+<p>Kernel接收到的消息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">frames[&#34;request&#34;].f_locals[&#34;msg&#34;]
+</span></span><span class="line"><span class="cl">&#39;&#39;&#39;
+</span></span><span class="line"><span class="cl">{&#39;buffers&#39;: [],
+</span></span><span class="line"><span class="cl"> &#39;content&#39;: {&#39;allow_stdin&#39;: True,
+</span></span><span class="line"><span class="cl">  &#39;code&#39;: &#39;import inspect\nframes = {}\nfor info in inspect.stack():\n    if info[3] == &#34;dispatch_shell&#34;:\n        frames[&#34;request&#34;] = info[0]\n    if info[3] == &#34;execute_request&#34;:\n        frames[&#34;reply&#34;] = info[0]\nprint &#34;hello world&#34;&#39;,
+</span></span><span class="line"><span class="cl">  &#39;silent&#39;: False,
+</span></span><span class="line"><span class="cl">  &#39;stop_on_error&#39;: True,
+</span></span><span class="line"><span class="cl">  &#39;store_history&#39;: True,
+</span></span><span class="line"><span class="cl">  &#39;user_expressions&#39;: {}},
+</span></span><span class="line"><span class="cl"> &#39;header&#39;: {&#39;date&#39;: datetime.datetime(2017, 3, 8, 9, 35, 4, 596768, tzinfo=tzutc()),
+</span></span><span class="line"><span class="cl">  &#39;msg_id&#39;: &#39;0616032D8FE8469780CA0A4A89D578AD&#39;,
+</span></span><span class="line"><span class="cl">  &#39;msg_type&#39;: &#39;execute_request&#39;,
+</span></span><span class="line"><span class="cl">  &#39;session&#39;: &#39;6DDDE94601B247779637A3F3A0F2F573&#39;,
+</span></span><span class="line"><span class="cl">  &#39;username&#39;: &#39;username&#39;,
+</span></span><span class="line"><span class="cl">  &#39;version&#39;: &#39;5.0&#39;},
+</span></span><span class="line"><span class="cl"> &#39;metadata&#39;: {},
+</span></span><span class="line"><span class="cl"> &#39;msg_id&#39;: &#39;0616032D8FE8469780CA0A4A89D578AD&#39;,
+</span></span><span class="line"><span class="cl"> &#39;msg_type&#39;: &#39;execute_request&#39;,
+</span></span><span class="line"><span class="cl"> &#39;parent_header&#39;: {}}
+</span></span><span class="line"><span class="cl">&#39;&#39;&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Kernel对上述消息的应答</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">frames</span><span class="p">[</span><span class="s2">&#34;reply&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="s2">&#34;reply_msg&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">{&#39;content&#39;: {u&#39;execution_count&#39;: 4,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  u&#39;payload&#39;: [],
+</span></span></span><span class="line"><span class="cl"><span class="s1">  u&#39;status&#39;: u&#39;ok&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  u&#39;user_expressions&#39;: </span><span class="si">{}</span><span class="s1">},
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &#39;header&#39;: {&#39;date&#39;: datetime.datetime(2017, 3, 8, 9, 35, 4, 613218, tzinfo=tzutc()),
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;msg_id&#39;: u&#39;d4d00f59-d6a3739d12069c2fb8c0a23f&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;msg_type&#39;: u&#39;execute_reply&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;session&#39;: u&#39;337fb80f-b3760e2423717a4de6ff4ba8&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;username&#39;: u&#39;wwj&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;version&#39;: &#39;5.0&#39;},
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &#39;metadata&#39;: {&#39;dependencies_met&#39;: True,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;engine&#39;: u&#39;7b3fd05a-613d-4c6e-a789-f952660d4edf&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;started&#39;: datetime.datetime(2017, 3, 8, 17, 35, 4, 598015),
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;status&#39;: u&#39;ok&#39;},
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &#39;msg_id&#39;: u&#39;d4d00f59-d6a3739d12069c2fb8c0a23f&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &#39;msg_type&#39;: u&#39;execute_reply&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &#39;parent_header&#39;: {&#39;date&#39;: datetime.datetime(2017, 3, 8, 9, 35, 4, 596768, tzinfo=tzutc()),
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;msg_id&#39;: &#39;0616032D8FE8469780CA0A4A89D578AD&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;msg_type&#39;: &#39;execute_request&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;session&#39;: &#39;6DDDE94601B247779637A3F3A0F2F573&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;username&#39;: &#39;username&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#39;version&#39;: &#39;5.0&#39;},
+</span></span></span><span class="line"><span class="cl"><span class="s1"> &#39;tracker&#39;: &lt;zmq.sugar.tracker.MessageTracker at 0x10b266f50&gt;}
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>上面的应答消息并非代码的执行结果，代码的输出在执行代码时已经经由sys.stdout-&gt;iopub_socket发送给Web服务器了。</p>
+<h1 id="手写一jupyter">手写一jupyter</h1>
+<p>jupyter已经演变得非常庞大，许多的代码都在打磨细节，如此一来直接阅读源码，会陷入各种细枝末节里，不大好一眼看到核心逻辑。为了理解原理，溯本求源是一个好方法，一种策略是翻到早起的版本或者commit</p>
+<p>另一种策略是看一些类似的小项目(专注在原理实现)，<a href="https://github.com/fperez/zmq-pykernel">zmq-pykernel</a>是一个不错的实验，它基于ZeroMQ来实现，非常小巧</p>
+<h1 id="写一个自己的kernel">写一个自己的kernel</h1>
+<p>尽管官方文档有相应教程,不过直接从<a href="https://github.com/Calysto/metakernel">metakernel</a>开始是个不错的选择,metakernel为我们做了许多起步阶段的工作，具体可以参考<a href="https://github.com/Calysto/metakernel#features">metakernel features</a></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://jupyter.org/">jupyter.org</a></li>
+<li><a href="https://jupyter.readthedocs.io/en/latest/architecture/content-architecture.html">doc jupyter Architecture</a></li>
+<li><a href="http://jupyter-client.readthedocs.io/en/latest/messaging.html">Messaging in Jupyter</a></li>
+<li><a href="http://hyry.dip.jp/tech/slice/slice.html/36">IPython Notebook架构之Kernel</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-03-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/architecture/">architecture</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%95%B0%E6%8D%AE/how-to-get-started-with-data-science-in-containers/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译]如何在容器中开始你的数据科学之旅</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/publish-site-2-qiniu/">
+            <span class="next-text nav-default">将网站发布到七牛云</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

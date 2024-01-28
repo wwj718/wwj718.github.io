@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在 Roblox 中探索自主 Agent - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 详细的中央规划是不可能的，甚至都不要去尝试。 &amp;ndash; 《栖息地: 来自一个在线社区的报告》 近期, 我们(DynaLab)在 Roblox 中探索自主 Agent。 我" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/autonomous-agent-in-roblox/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="在 Roblox 中探索自主 Agent" />
+<meta property="og:description" content="前言 详细的中央规划是不可能的，甚至都不要去尝试。 &ndash; 《栖息地: 来自一个在线社区的报告》 近期, 我们(DynaLab)在 Roblox 中探索自主 Agent。 我" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/autonomous-agent-in-roblox/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-08-12T00:00:00+00:00" />
+
+<meta itemprop="name" content="在 Roblox 中探索自主 Agent">
+<meta itemprop="description" content="前言 详细的中央规划是不可能的，甚至都不要去尝试。 &ndash; 《栖息地: 来自一个在线社区的报告》 近期, 我们(DynaLab)在 Roblox 中探索自主 Agent。 我"><meta itemprop="datePublished" content="2023-08-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-08-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="13011">
+<meta itemprop="keywords" content="AI,Agent,LLM,Roblox,ChatGPT," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在 Roblox 中探索自主 Agent"/>
+<meta name="twitter:description" content="前言 详细的中央规划是不可能的，甚至都不要去尝试。 &ndash; 《栖息地: 来自一个在线社区的报告》 近期, 我们(DynaLab)在 Roblox 中探索自主 Agent。 我"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">在 Roblox 中探索自主 Agent</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-08-12 </span>
+        <div class="post-category">
+            <a href="/categories/essays/"> essays </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#agent-是什么">Agent 是什么</a></li>
+    <li><a href="#斯坦福小镇generative-agents-与-批处理风格">斯坦福小镇(Generative Agents) 与 批处理风格</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#游戏环境">游戏环境</a></li>
+    <li><a href="#智能的幻觉">智能的幻觉</a></li>
+    <li><a href="#狼来了">狼来了</a>
+      <ul>
+        <li><a href="#小镇">小镇</a></li>
+        <li><a href="#从-npc-到-aic-和-naic">从 NPC 到 AIC 和 NAIC</a></li>
+        <li><a href="#aic-的能力">AIC 的能力</a></li>
+      </ul>
+    </li>
+    <li><a href="#bootstrapping-研究方式">bootstrapping 研究方式</a></li>
+    <li><a href="#基础设施">基础设施</a></li>
+    <li><a href="#dynatalk">DynaTalk</a>
+      <ul>
+        <li><a href="#actor-模型">Actor 模型</a></li>
+        <li><a href="#消息传递架构的回报">消息传递架构的回报</a></li>
+        <li><a href="#dynatalk-与-roblox-环境的对接">DynaTalk 与 Roblox 环境的对接</a></li>
+        <li><a href="#dynatalk-的特性">DynaTalk 的特性</a></li>
+        <li><a href="#困惑与未来">困惑与未来</a></li>
+      </ul>
+    </li>
+    <li><a href="#dynabrain">DynaBrain</a></li>
+    <li><a href="#里程碑">里程碑</a>
+      <ul>
+        <li><a href="#里程碑-1">里程碑-1</a></li>
+        <li><a href="#里程碑-2">里程碑-2</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#llm--ai">LLM &amp; AI</a></li>
+        <li><a href="#价值危机">价值危机</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/dynalab-team-Habitat.jpg" alt="栖息地合影"></p>
+<h1 id="前言">前言</h1>
+<blockquote>
+<p>详细的中央规划是不可能的，甚至都不要去尝试。 &ndash; 《栖息地: 来自一个在线社区的报告》</p>
+</blockquote>
+<p>近期, 我们(DynaLab)在 Roblox 中探索自主 Agent。</p>
+<p>我们想把自主 Agent 引入像 <a href="https://en.wikipedia.org/wiki/Habitat_(video_game)">Habitat(栖息地)</a> 这样的虚拟世界, 让自主 Agent 与人类玩家一同生活，彼此影响。</p>
+<p>LLM 提供了一个构建自主 Agent 有前途的方向。</p>
+<blockquote>
+<p>以 LLM（大型语言模型）为核心控制器构建 Agent 是一个很酷的概念。AutoGPT、GPT-Engineer 和 BabyAGI 等概念验证演示，都是鼓舞人心的例子。LLM 的潜力不仅限于生成流畅的文本、故事、论文和程序；它也可以被视为一个强大的通用问题解决器。 &ndash;<a href="https://lilianweng.github.io/posts/2023-06-23-agent/">LLM 驱动的自主 Agent</a></p>
+</blockquote>
+<h2 id="agent-是什么">Agent 是什么</h2>
+<blockquote>
+<p>在计算机科学领域，&ldquo;Agent&rdquo;（代理、智能体）通常指一种具有自主行为和决策能力的实体，能够感知环境并采取行动来实现其预定的目标。 &ndash; <a href="https://chat.openai.com/share/47f28ce2-bb6e-4eb6-95a6-f2471e5e3fda">ChatGPT: Agent in Computer Science</a></p>
+</blockquote>
+<blockquote>
+<p>在人工智能(AI)中，智能 Agent(IA) 是以智能方式行事的 Agent；它感知环境，自主采取行动以实现目标，并可以通过学习或获取知识来提高其能力。 &ndash;<a href="https://en.wikipedia.org/wiki/Intelligent_agent">wikipedia: Intelligent agent</a></p>
+</blockquote>
+<p>AI 社区对 Agent 有着长期兴趣(<a href="https://en.wikipedia.org/wiki/Intelligent_agent">Intelligent agent</a>)。</p>
+<p>我们对马文·明斯基（Marvin Minsky）在<a href="https://en.wikipedia.org/wiki/Society_of_Mind">《心智社会(Society of Mind)》</a>一书中提到的架构尤为感兴趣: 智能从这些彼此独立，相互协作的 Agent 构成的 &ldquo;心智社会&rdquo; 中涌现出来。</p>
+<blockquote>
+<p>Agent 是思维中的任一组件或程序，它自身非常简单，容易理解， &ndash; 马文·明斯基 《心智社会》</p>
+</blockquote>
+<h2 id="斯坦福小镇generative-agents-与-批处理风格">斯坦福小镇(Generative Agents) 与 批处理风格</h2>
+<p>在我们开始的时候, <a href="https://arxiv.org/abs/2304.03442">斯坦福小镇(Generative Agents)论文</a> 刚发布不久, 它立刻引起了 AI 社区和大众媒体的广泛讨论。</p>
+<p>25 个生成式 Agents 共同生活在一个小镇上。 它们清晨醒来、享受早餐然后进行工作: 画家画画、作家写作&hellip;它们独立思考、相互观察、彼此交流, 它们善于反思&hellip;</p>
+<blockquote>
+<p>这些生成式 Agent 不仅有可信的个人行为，还涌现出一定的社会行为：比如，最开始用户只是为其中一个智能体指定了举办情人节派对的概念，但是它在接下来两天内自动发出了派对邀请、结识新朋友、相互邀约并协商在合适的时机一起出现在派对上。</p>
+</blockquote>
+<p><img src="/post/img/ai-agent-in-Roblox-1.png" alt=""></p>
+<p>这篇论文发布时，源代码并未立即公开(目前<a href="https://github.com/joonspk-research/generative_agents">已经开源</a>)。当时社区里不少人试图复现它，如<a href="https://python.langchain.com/docs/use_cases/agent_simulations/characters">Generative Agents in LangChain</a>。</p>
+<p>起初, 我们也想复现它, 经过几次讨论，我们发现论文中的场景，实质上是一种<a href="https://zh.wikipedia.org/zh-cn/%E6%89%B9%E5%A4%84%E7%90%86%E4%BB%BB%E5%8A%A1">&ldquo;批处理风格&rdquo;</a>(我们也称其为&quot;录制&quot;风格): 完成&quot;初始设置&quot;之后, 游戏就一帧一帧生成，最后输出一部可供观赏的电影。</p>
+<p>这样做的好处是明显的: LLM(大语言模型)实时性不好，且有<a href="https://platform.openai.com/docs/guides/rate-limits">访问速率限制</a>。批处理风格可以做到逐帧生成游戏画面，不论每一帧实际花费了多少时间。即使中间发生意外，也可以修复后再发布。假设同一帧里有 10 个人，他们按顺序调用 LLM ，一共花了 1 分钟。采用批处理风格，可以把这 1 分钟里发生的 LLM 调用，收集起来，放到游戏的同一帧里。批处理的过程用户看不到，用户看到的是最终的漂亮作品。</p>
+<p>我们不想要这种&quot;批处理风格&quot;，而想要&quot;实时行动和交互式的 Agent&quot;。 类似于<a href="https://en.wikipedia.org/wiki/Douglas_Engelbart">恩格尔巴特</a>发明的&quot;交互式图形界面&quot;那样的东西。</p>
+<p>于是我们放弃了复现 &ldquo;斯坦福小镇&rdquo;, 但这篇文章依然给了我们深刻的印象(<strong>观察、规划和反思</strong>)。</p>
+<img src="/post/img/enhanced-Roblox-Studio-interoperability-11.png"/>
+<center>"斯坦福小镇"的生成式 Agent 架构。 Agent **感知**他们的环境，所有感知都保存在 Agent 经验的综合记录中，称为**记忆流**。 根据他们的感知，该架构检索相关记忆并使用这些检索到的动作来确定**动作**。 这些检索到的记忆还用于形成**长期计划**并创建更高级别的**反思**，这两者都被输入到记忆流中以供将来使用。</center>
+<h1 id="冒险之旅">冒险之旅</h1>
+<p><img src="/post/img/ai-agent-in-Roblox-9.png" alt=""></p>
+<blockquote>
+<p>你期待结束旅程的你，不再是出发时的自己</p>
+</blockquote>
+<h2 id="游戏环境">游戏环境</h2>
+<p><a href="https://arxiv.org/abs/2304.03442">&ldquo;斯坦福小镇&rdquo; 论文</a> 中游戏环境使用 <a href="https://github.com/photonstorm/phaser">phaser</a> 构建。 这是一个 2D 游戏框架，运行在浏览器里。</p>
+<p>由于我们之前在 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/croqueta-collaboration-system-architecture/">Croquet</a> 上工作，我们渴望在 3D 环境里构建虚拟世界。</p>
+<p><a href="https://www.minecraft.net/en-us">Minecraft</a> 和 <a href="https://www.roblox.com">Roblox</a> 成为两个备选项。为了获得更高的自由度，我们决定采用 Roblox。</p>
+<h2 id="智能的幻觉">智能的幻觉</h2>
+<blockquote>
+<p>我们实际上必须认为思维所做的所有事都是无意识的。 &ndash; 马文·明斯基《心智社会》</p>
+</blockquote>
+<p>Alan Kay 在 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/computer-software/">计算机软件</a> 中提到， &ldquo;图形用户界面(GUI)&rdquo; 是一种幻觉。 对于用户而言，呈现在他们感官上的东西就是他们的计算机。这种幻觉可以帮助用户理解和猜测系统的行动和接下来应该做什么。</p>
+<p>我们想在 Roblox 中构建自主 Agent 的幻觉: 它以游戏角色的形象出现在 Roblox 游戏场景中，拥有记忆、感知和决策能力。以一个整体的形象出现在用户面前: 一个拥有自主行动能力的游戏角色。</p>
+<p>Roblox 是我们临时的计算环境，长期来看，我们想要将自主 Agnet 集成到<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/personal-computing/">个人计算环境</a>中，这便是我们构建智能幻觉的原因: 我们希望将它用作一种交互界面，用于增强用户的心智力量。</p>
+<blockquote>
+<p>让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay</p>
+</blockquote>
+<h2 id="狼来了">狼来了</h2>
+<p>&ldquo;自主 Agent +游戏&rdquo; 这个方向有不少探索者:</p>
+<ul>
+<li><a href="https://inworld.ai/">Inworld: Bring games to life with AI NPCs</a></li>
+<li><a href="https://developer.nvidia.com/omniverse/ace">NVIDIA ACE for Games</a></li>
+<li><a href="https://centralcasting.ai/">Central Casting AI: Cast your next game with Central Casting AI</a></li>
+<li><a href="https://unity.com/ai">Unity AI</a></li>
+<li><a href="https://www.playlumari.com/">Lumari</a></li>
+<li><a href="http://minedojo.org/">MineDojo: building Open-Ended Embodied Agents with Internet-Scale Knowledge</a></li>
+<li>&hellip;</li>
+</ul>
+<p>我们最初不知如何切入这个方向, &ldquo;在 Roblox 中探索自主 Agent&rdquo;, 听起来是一个定义相当模糊的目标。 <!--我们打算采用 Bootstraping research --></p>
+<p>由于缺少在游戏领域的工作经验，我们打算以一个简单的场景开始: <a href="https://zh.wikipedia.org/zh-cn/%E7%8B%BC%E4%BE%86%E4%BA%86">狼来了</a></p>
+<p>《狼来了》是《伊索寓言》中的一则故事:</p>
+<blockquote>
+<p>故事发生在一个小镇，一天，父亲让小男孩去放羊。他感到无聊，便以撒谎取乐。经常喊叫“狼来了”，引起村民们的注意。看着村民们因虚假的警报奔跑而来，他自己则在笑声中躲藏起来。<br>
+由于他频繁撒谎，村民们不再相信他的话。有一天，狼真的来了，袭击羊群。男孩大呼 “狼来了”，但这一次，没人相信他&hellip;</p>
+</blockquote>
+<p>我们希望 AI 驱动的角色们，能够协同表演这个故事场景。</p>
+<p>可是我们发现故事性和自主性似乎会导致冲突，当我们渴望角色按照剧本演戏的时候，它的自主性就不强。当我们希望它自主性强的时候，它就不一定会遵从剧本。</p>
+<p>我们<strong>没有解决这个问题，而是消除了这个问题</strong>: 我们意识到，故事主要作为一种脚手架，帮助我们起步，给予我们可供讨论的角色，告诉我们游戏场景大致如何&hellip; 有了这些基本设定，就可以开展工作了。 一旦起步之后，故事就不再重要。 我们希望，随着事情的进行，会出现一些意料之外的行为(但要<strong>可信</strong>)，而不是束缚于原本的剧情。</p>
+<p>和&quot;斯坦福小镇&quot;一样，狼来了的故事也发生在一个小镇。</p>
+<h3 id="小镇">小镇</h3>
+<p>我找来老家小镇的的地形图:</p>
+<p><img src="/post/img/ai-agent-in-Roblox-xiaohuzhen.png" alt=""></p>
+<p>@David 据此构建了最初的游戏世界:</p>
+<p><img src="/post/img/ai-agent-in-Roblox-xiaohuzhen-2.png" alt=""></p>
+<p>不久他又往里添加了游戏角色、屋舍、动物、昼夜生长的农作物、随风飘舞的花草&hellip;</p>
+<p>Roblox 开箱可用性非常棒. 不到一周时间，我们就有一个体面可用 3D 游戏环境了！团队成员可以通过化身(Avatar)一同进入这个虚拟世界，在田间山头展开讨论，规划门要如何摆放，树要种在哪里，河的上游有座桥坏了得修一下&hellip;</p>
+<!--Roblox 的liveness 也非常令人满意-->
+<h3 id="从-npc-到-aic-和-naic">从 NPC 到 AIC 和 NAIC</h3>
+<p>在这个项目的场景下，我们想要实现由 AI 操控的角色，于是我们对角色的种类进行了更加细致的区分。</p>
+<ul>
+<li>NPC - Non-player character，是游戏设计里常用的术语，用于形容非人类玩家操控的角色</li>
+<li>AIC - Artificial Intelligence Character，人工智能角色，比如故事里面的村民</li>
+<li>NAIC - Non-Artificial Intelligence Character，非人工智能角色，比如故事里面的狼和羊</li>
+</ul>
+<p>AIC 和 NAIC 都无法被人类玩家直接控制， 所以都属于 NPC 的一种。</p>
+<h3 id="aic-的能力">AIC 的能力</h3>
+<p>从技术方面我们想要探索自主 Agent 的可能性，而通过自主 Agent 方面的工作我们想要实现具有高度拟人性的非人类玩家角色。</p>
+<p>这意味着 Agent 需要具备玩家角色具备的行为以及能力。</p>
+<p>这方面的工作的实施主要有两个部分：</p>
+<ol>
+<li>在表现层 - Roblox 环境内实现 AIC 角色的能力以及动画</li>
+<li>将 Roblox 环境里面实现的能力以及环境内的信息反馈与 LLM 对接，从而使 LLM 可以通过这些能力操控 Roblox 里面对应的 AIC 以及理解 Roblox 内部发生的事情</li>
+</ol>
+<p>这个部分会主要讲解在 Roblox 环境内 AIC 角色能力的类别以及实现。关于 Roblox 环境与 LLM 的对接会在后文讲解（DynaTalk）。</p>
+<h4 id="对话功能">对话功能</h4>
+<p>对话功能是我们在 Roblox 中最初实现的功能之一，它很简单，Roblox 游戏引擎中包含了主要功能。</p>
+<p>在 Roblox 游戏引擎内，所有的角色都属于 <code>Humanoid</code> ，可以直接使用 Roblox 自带的文字对话功能 - <code>game:GetService(&quot;Chat&quot;)</code>。</p>
+<p>该功能会将玩家或者 LLM 输入的文本以文字冒泡的形式显示在对应角色的头顶上:</p>
+<img width=500 src="/post/img/ai-agent-in-Roblox-david-1.png"/>
+<h4 id="角色的基本控制">角色的基本控制</h4>
+<p>在一般 3D 游戏场景下，玩家控制的角色还具备移动、跳跃等基本控制能力。</p>
+<p>为了能使 AIC 的行为更加接近真实玩家所操控的角色，我们也将 Roblox 内原本带有的角色控制的功能进行了封装和适配。</p>
+<p>Roblox内的 <code>Humanoid</code> 可以使用 <code>MoveTo(x, y, z)</code> 来将角色移动到指定的坐标；其他还包括 <code>Jump</code> 来进行跳跃、<code>LoadAnimation(animation)</code> 来控制角色的动作。</p>
+<p>同时还具有自动寻路的模块 <code>game:GetService(&quot;PathfindingService&quot;)</code>。环境内还具有对不同路面材质的判断功能，比如草、泥地、平地等等，假如我们希望 AIC 尽量不走泥地，我们可以在寻路模块内进行对应的调整：</p>
+<img width=500 src="/post/img/ai-agent-in-Roblox-david-2.png"/>
+<h4 id="感官能力">感官能力</h4>
+<p>为了让 LLM 知道 Roblox 内部发生的事情, 从而能对事件进行反应，AIC 还要具备感官能力，比如视觉和听觉。</p>
+<p>在这个方面，Roblox 本身并没有带有完整的感官信息模拟的模块。</p>
+<p>在听觉方面我们利用了Roblox内部的 <code>Event</code> 的功能来实施。比如，当一只羊被狼吃掉的时候游戏引擎的后端会将这个事件广播给处在这个事件坐标附近的 AIC，然后接受到这个事件的 AIC 会再将这个事件转发给LLM从而实现对听觉感官的模拟。</p>
+<p>在视觉方面我们使用了 <code>GetPartsBoundsInBox(box, size, ...)</code> 的功能。这个功能可以获取在3D环境内定义的一个三维空间内的所有模型（比如环境内的房子，工具，其他AIC也属于模型）。我们将该三维空间设计成类似人类视觉范围的锥形并将其坐标设为跟随 AIC 角色头部朝的方向，这样一来AIC可以获取视觉范围内所有的模型同时将这些模型反馈给 LLM。</p>
+<img width=600 src="/post/img/ai-agent-in-Roblox-david-3.jpeg"/>
+<h4 id="交互能力">交互能力</h4>
+<p>这个能力包括 AIC 对 Roblox 环境内其他模型的操作。比如，将门打开或者关闭、拿起或者放下工具等等。</p>
+<p>由于 Roblox 本身并不是为了自主 Agent 而设计的，这方面的功能 Roblox 官方并没有进行太多的实现。于是我们借鉴了“模拟人生”（sims）内部的机制给 Roblox 内 AIC 可以操控的模型和工具附加了属性和状态并给予 AIC 改变这些属性从而改变模型状态的能力。最终实现了 AIC 的交互能力。</p>
+<img width=500 src="/post/img/ai-agent-in-Roblox-david-4.png"/>
+<h2 id="bootstrapping-研究方式">bootstrapping 研究方式</h2>
+<p>这种走到游戏中去规划游戏世界的体验，我们非常熟悉，它很像个人计算环境(Scratch、MicroBlocks、Squeak、Etoys、Lively&hellip;)。我们想到个人计算社区偏好的 <a href="https://www.youtube.com/watch?v=eJm44LJDU44">bootstrapping 研究方式</a>: 生活在自己构建的系统里，持续改进它。<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a>对此有更好的表述:</p>
+<ul>
+<li>在当前系统内构建一个应用程序（进行观察）</li>
+<li>根据经验，重新设计语言（形成一种理论）</li>
+<li>基于新设计构建新系统（做出可测试的预测）</li>
+</ul>
+<p>这是<a href="https://en.wikipedia.org/wiki/Douglas_Engelbart">恩格尔巴特</a>发明交互式图形界面的方式; <a href="https://en.wikipedia.org/wiki/Alan_Kay">Alan Kay</a> 团队在施乐实验室，构建 Smalltalk 的方式; 也是 <a href="http://worrydream.com/">Bret Victor</a> 在 <a href="https://dynamicland.org/">Dynamicland</a> 里构建 Realtalk 的方式。bootstrapping 研究方式在计算机历史上产生了许多有趣成果。</p>
+<p>我们之前在 <a href="https://www.codelab.club/blog/2020/09/25/about-codelab-2020">CodeLab</a> 也学习这种工作方式: 生活在自己构造的系统里。通过这种方式，我们构建了 <a href="https://adapter.codelab.club/">CodeLab Adapter</a> 和 <a href="https://codelab.club/blog/2020/04/29/%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/">Neverland</a>。</p>
+<p>由于过去在个人计算领域的工作经验，我们渴望在一个高度灵活可塑的计算环境里工作。我们打算先建造一些基础设施来支持我们更好的做事。</p>
+<h2 id="基础设施">基础设施</h2>
+<blockquote>
+<p>我们需要先造出一个合适的筏子，这样我们就可以一边学习航海，一边设计一艘船。我们将设计出正确的船，因为它是我们将要居住的船 &hellip; 创造工具，以便于创造更好的工具 &ndash; David Smith <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/why-ar-will-win/">AR/VR 为何将获胜？它将如何获胜为何重要？</a></p>
+</blockquote>
+<p>很快我们的愿望清单上就出现了两个基础设施:</p>
+<ul>
+<li>DynaBrain</li>
+<li>DynaTalk</li>
+</ul>
+<p>起初我们打算以 DynaBrain(&ldquo;大脑&rdquo;) 为中心，大脑以 LLM（大型语言模型）为核心控制器。Roblox 中的角色像是一个木偶，每个角色都有对应的大脑在幕后提着线操控它。架构上，我们把 Roblox 看作视觉表现层。为这个木偶赋予灵魂的则是 DynaBrain。</p>
+<p><strong>起初的架构图</strong>是这样的:</p>
+<p><img src="/post/img/ai-agent-in-Roblox-3.png" alt=""></p>
+<p>更精细的版本:</p>
+<p><img src="/post/img/ai-agent-in-Roblox-4.png" alt=""></p>
+<p>&ldquo;起初的架构图&rdquo; 和 <a href="https://arxiv.org/abs/2210.03629">ReAct 论文</a> 展示的架构很相似。</p>
+<p><img src="/post/img/ai-agent-in-Roblox-6.png" alt=""></p>
+<p>很自然地，我们打算采用 <a href="https://github.com/langchain-ai/langchain">LangChain</a> 作为 DynaBrain 的核心。 LangChain 作者好像提过， LangChain 项目最初是为了复现 ReAct 论文的想法。</p>
+<p>在思考 DynaBrain 如何设计的同时，我们也在考虑架构的其他部分。我们需要回答的一个关键问题是: 系统的不同部分如何协同工作？</p>
+<blockquote>
+<p>构建优秀且可扩展的系统的关键更多的是设计模块之间如何通信，而不仅仅是设计其内部属性和行为。 &ndash; Alan Kay</p>
+</blockquote>
+<p>如何让 LLM 驱动的 &ldquo;大脑&rdquo; 与 Roblox 环境中的角色 &ldquo;身体&rdquo; 协调起来? 我们最初想在身体里安装一个通信组件，临时叫做 <code>dynabrain adapter</code>。 这个名字反映了我们<strong>以大脑为中心</strong>的想法。</p>
+<p>我们不想在 Roblox 中构建大脑(理论上行得通)，而把 Roblox 当作临时计算环境，未必是最终的计算环境。我们希望从探索中得到一些通用的架构组件，未来可以在各种地方使用它(我们最终得到了!)。</p>
+<p>即便我们弱化了 Roblox 计算环境的职责，它依然有一些不令我们满意的地方，其中最重要的一点是: Roblox 不容易与其他系统进行双向通信，Roblox 社区里没有令我们满意的解决方案。我们最终动手打造了自己的方案。这个话题，会在另一篇文章里单独讨论，我们相信它对 Roblox 社区有独特的价值。</p>
+<p>有一天，@hidaris 在工作小组提议说:</p>
+<blockquote>
+<p>我比较期待 dynabrain adapter 能够被设计成一个基于消息的行为协调组件，它本身不关心两边是 Roblox，还是 Langchain。<br>
+它能够像 realtalk 那样, 即使后面技术或者产品形态有一些调整，也可以持续作为项目的基石? 或者说我们有没有必要在这里设计一个 dynatalk 这样的东西？</p>
+</blockquote>
+<h2 id="dynatalk">DynaTalk</h2>
+<blockquote>
+<ul>
+<li>一切都是对象</li>
+<li>对象通过消息进行沟通</li>
+<li>对象解释它所理解的消息</li>
+</ul>
+</blockquote>
+<p>我们对 Agent 协同工作的&quot;心智社会&quot;感兴趣。希望 Agent 之间的耦合足够低，Agent 们能够自由加入和退出系统，它们能够发现彼此并协同工作，这个系统要足够灵活和健壮，而且是动态生长的，最好像互联网一样&hellip;</p>
+<p>这些愿望把我们带向了<a href="https://en.wikipedia.org/wiki/Message_passing">消息传递(Message passing)</a>架构。</p>
+<blockquote>
+<p>我们关心的是在对象之间发送消息（通信行为而非表现）的协议 &ndash; 《栖息地: 来自一个在线社区的报告》</p>
+</blockquote>
+<p>差不多就在这时，我们在 Github 上发现了 agency, 它刚起步，足够小巧，以至于可以将它捏造成任何我们想要的形状; 它又足够完整，具备了大多数我们想要的特性。</p>
+<p>我们喜欢这个采用 <a href="https://en.wikipedia.org/wiki/Actor_model">Actor 模型</a> 的 Agent 框架。打算基于它来构建 DynaTalk。很快我们就开始在开源社区为它贡献代码，成为这个项目的主要贡献者之一，并与作者围绕消息结构等关键问题展开讨论。</p>
+<h3 id="actor-模型">Actor 模型</h3>
+<blockquote>
+<p>Agent 的概念可以追溯到 Hewitt 的 Actor 模型（Hewitt，1977）—— &ldquo;一个独立的、交互式的、并发执行的对象，拥有内部状态和通信能力&rdquo;。 &ndash;<a href="https://en.wikipedia.org/wiki/Software_agent">Software agent</a></p>
+</blockquote>
+<p>引自维基百科的这段话，很好说明了为何我们想要基于 Actor 模型的 Agent。</p>
+<p>我们希望 Agent 拥有这些特性:</p>
+<ul>
+<li>能够接收外部信息(事件)</li>
+<li>能够与其他 Agent 通信</li>
+<li>拥有独立的生命进程</li>
+</ul>
+<p>这样的系统不可能是集中式的，得是分布式的。Actor 模型正是我们需要的。 一个 Actor 可以:</p>
+<ul>
+<li>响应收到的消息</li>
+<li>发送消息</li>
+<li>创建更多 Actor</li>
+</ul>
+<p>如此简单、干净、正交 !</p>
+<blockquote>
+<p>OOP(面向对象) 对我来说仅意味着消息传递、局部保留、状态过程的保护和隐藏，以及所有事物的极端晚绑定(late-binding) &ndash; Alan Kay</p>
+</blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Actor_model">Actor 模型</a> 与 Alan Kay 对 OOP(面向对象)的看法非常相似。 他对 Actor 模型的最著名实现&ndash;Erlang 语言表示赞赏，Alan Kay 曾与 Erlang 作者 Joe Armstrong 有过一段对话 <a href="https://www.youtube.com/watch?v=fhOHn9TClXY">Joe Armstrong &amp; Alan Kay</a>。</p>
+<p>马文·明斯基构想 Agent 组成的&quot;心智社会&quot;, Alan Kay 构想对象构成的可生长系统，Joe Armstrong 构想能够对抗失败的编程语言&hellip; 他们有许多共同的上下文，以至于 Agent、Object、Actor 看起来像同一个东西的不同侧面。</p>
+<p>我们认为 Actor 模型是构建 Agent 的正确计算模型。</p>
+<p>于是，我们得到 Actor 风格的架构设计:</p>
+<p><img src="/post/img/ai-agent-in-Roblox-8.png" alt=""></p>
+<h3 id="消息传递架构的回报">消息传递架构的回报</h3>
+<p>基于消息传递的新架构，很快让我们尝到了甜头.</p>
+<p>有了新的架构，我们开始对整个系统进行重构，之前想不明白的许多问题，现在变得容易了，这得益于消息传递机制的灵活性。基于 Actor 的 Agent， 和 Alan Kay 的对象一样, 它是&quot;递归的计算机&quot;，局部拥有整体的所有能力。许多问题，我们不再需要一开始想明白，可以推迟机制方面的决策(晚绑定), 这让我们得以在不确定中前进。</p>
+<p>我们之前难以解决的问题有两个，其一是 DynaBrain 的&quot;生命周期问题&quot;; 其二是与 Roblox(Studio) 的双向通信问题。在新的架构下，它们都变得没那么困难。</p>
+<p>有一个周末，为了实现第二个里程碑，@hidaris 基于 DynaTalk 的消息架构重构 DynaBrain。我当时想要一些基础设施来提高开发效率。于是花了半个上午的时间，完成了 Roblox 模拟器、Roblox 双向消息转发器。 模拟器和双向消息转发器让我们看到消息传递的强大能力: 我们可以在集成调试中，随时停下来查看消息，拦截它，再播放它，这仿佛我们可以操控系统逻辑时间(进程在逻辑时间中演进)。我们可以在系统层面上打断点，所需的一切工作都只是摆弄消息！</p>
+<p>之后 @hidaris 与我讨论 DynaBrain 基于消息传递的设计时，我提到模拟器和转发器，他说这正是他想让我做的，结果我已经做出来了！</p>
+<p>基于消息传递的架构，也让我们很快得到期待很久的另一个基础设施: 事件观测器。</p>
+<p>对于一个复杂系统来说，可理解性和可观测性是很重要的，否则，随着系统成长和变得复杂，很快我们就无法理解系统里边发生了什么。</p>
+<p>我们几乎不费力就得到了 &ldquo;事件观测器&rdquo;， 可以随时往系统里插入探针，实时看到任何 Agent 之间的&quot;交谈&quot;。这对于理解和调试系统非常有帮助。随着系统变得复杂，它会更加重要。</p>
+<p><img src="/post/img/ai-agent-in-Roblox-10.png" alt=""></p>
+<blockquote>
+<p>困难不在于如何构建它，而是如何理解它 &ndash; Bret Victor</p>
+</blockquote>
+<!--
+
+异步系统
+
+希望接收事件 内在的 loop 动机
+
+Dynatalk 的架构非常适合驱动 BDI 风格的 Agent
+
+但我们想探索 LLM
+
+-->
+<h3 id="dynatalk-与-roblox-环境的对接">DynaTalk 与 Roblox 环境的对接</h3>
+<p>为了实现自主 Agent 的拟人性我们在 Roblox 环境内部实现了许多用于 LLM 操控 AIC 角色的功能，并且将这些功能与 DynaTalk 对接让 LLM 可以调用这些功能。</p>
+<p>上文提到的对 AIC 赋予的各种功能以可以被 LLM 调用的编程方法（Function Call）的形式集成进了 DynaTalk 通信架构里面。</p>
+<p>这使 LLM 可以通过 DynaTalk 调用这些能力从而实现对于 AIC 角色的操作。</p>
+<p>这些能力包括，移动角色到某一个坐标、让角色说话、让角色操控物品等等。</p>
+<img width=600 src="/post/img/ai-agent-in-Roblox-david-5.png" />
+<h3 id="dynatalk-的特性">DynaTalk 的特性</h3>
+<!--特性与案例展示-->
+<h4 id="并发运行">并发运行</h4>
+<p>多个 Agent 是并发运行的，它们可以分布在不同机器上。</p>
+<h4 id="异步消息">异步消息</h4>
+<p>Agent 发出消息(诸如请求)后，不需要等待接收方立即响应，而是可以继续执行其他任务。接收方在适当的时候处理消息或请求，并在处理完成后进行响应。</p>
+<p>异步消息通信模式在许多场景下非常有用，特别是在处理复杂或耗时的操作时。它也非常适合用于构建事件驱动的系统。</p>
+<p>在异步消息之上，要构建经典同步机制(类似 LangChain 的大多数案例)是很容易的: <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/">建立在异步消息之上的同步指令</a>, 我们已经在异步消息的基础上，构建了拥有同步语义的 Agent。</p>
+<p>以下是一个探索 Agent 视觉能力的原型实验，我们希望 AI 能够观察环境里的东西， &ldquo;观察环境&rdquo; 是一个&quot;语义同步&quot;的行为。</p>
+<p><video width=80% src="/post/img/1eaec6ee564cd01086ecc5cb8880d1.MP4" controls="controls"></video></p>
+<h4 id="可理解性与可观测性">可理解性与可观测性</h4>
+<p>前头提到:</p>
+<blockquote>
+<p>可以随时往系统里插入探针，看到任何 Agent 之间的&quot;交谈&quot;。</p>
+</blockquote>
+<p>这为我们提供了 Agent 之间的协作视图。有了这个视图，我们就能够在&quot;社会&quot;层面弄清楚 Agent 之间是如何协作的。出了问题时，我们也能够弄清楚，是消息传递的哪个环节出了问题，是因为某个 Agent 没收到预期的消息，还是因为它收到了某个消息，却没有完成后续的工作，导致了智能链条在它这一环断开了 &hellip;</p>
+<p><img src="/post/img/ai-agent-in-Roblox-10.png" alt=""></p>
+<h4 id="多处运行">多处运行</h4>
+<p>前头提到，Roblox 只是我们临时的计算环境，我们希望架构是通用的。</p>
+<p>我们可以在各种计算环境中构建 Agent， 这些不同计算环境的 Agent 可以协同工作。</p>
+<ul>
+<li>Python</li>
+<li>Roblox(Lua)</li>
+<li>MicroPython</li>
+<li>Snap!</li>
+<li>JavaScript (正在构建中&hellip;)</li>
+<li>&hellip;</li>
+</ul>
+<p>目前，我们主要在 Python 和 Roblox 中构建 Agent。我们也在探索在 JavaScript 环境中构建 Agent(MQTT over websocket)，以下是我们在 Snap!(Javascript) 中构建的 Agent:</p>
+<p><video width=80% src="/post/img/df65d348c229e2065dff76898e83de.MP4" controls="controls"></video></p>
+<p>DynaTalk 主要支持两种消息协议: AMQP 和 MQTT。对可靠性和安全性有很高要求的 Agent，建议使用 AMQP。而对于具身智能(Embodied AI)的研究, 尤其是有硬件身体的 Agent, 推荐 MQTT，因为大量 硬件系统/Iot 都支持 MQTT 协议。</p>
+<p><video width=80% src="/post/img/dynatalk-mqtt-fan-light.mp4" controls="controls"></video></p>
+<p>通过 MQTT over websocket，支持在 JavaScript 环境中构建 Agent，浏览器是新的操作系统，以及最强大的软件分发平台，@David 提议探索这个方向，将 AI Agent 与浏览器中的个人计算环境结合。希望帮助终端用户按需构建软件。关于这方面，我们受到<a href="https://karpathy.medium.com/software-2-0-a64152b37c35">软件 2.0</a>(Andrej Karpathy) 和 <a href="https://www.geoffreylitt.com/2023/03/25/llm-end-user-programming">大语言模型时代的可塑软件</a>(Geoffrey Litt) 的影响。</p>
+<p>我们甚至可以基于消息传递机制，将图形化编程环境用作 Roblox 游戏的控制器(或解释器)，这让我们很容易实现 teamlab 的<a href="https://www.teamlab.art/w/programming/">这个场景</a></p>
+<p><img src="/post/img/teamlab-play-programming.jpeg" alt=""></p>
+<p><video width=80% src="/post/img/snap-client-roblox.mp4" controls="controls"></video></p>
+<h4 id="人机共生">人机共生</h4>
+<p>人类用户、计算环境、智能 Agent 能够协同工作。在系统层面，他们都只是对外收发消息。这里边有很大的设计空间，我们对此还不怎么理解，目前处于早期探索阶段。</p>
+<p>我们倾向于对系统中不同的角色(无论是人类还是 AI)持不可知论，以此来提高系统的一致性，AI、人类、计算环境，可以以任何方式在系统中交互，甚至彼此欺骗(安全性可以通过一个独立的层添加进去, <a href="https://en.wikipedia.org/wiki/Capability-based_security">Capability-based security</a>可能是个好想法)。这种不可知论的另一个益处是增加系统的动态性，以便于环境和 Agent 都可以动态生长。我们希望保持消息网络的愚蠢，采用<a href="https://en.wikipedia.org/wiki/End-to-end_principle">端到端原则</a>, 互联网的成功很大程度受益于端到端原则。</p>
+<blockquote>
+<p>端到端原则（End-to-End Principle）是一种设计思想，强调在网络中，核心部分应该保持简单，而复杂性应该移动到网络的边缘，即端点（endpoints）。该原则强调网络的核心部分不应该过于依赖于具体应用程序，而应该专注于提供基本的传输功能，而将更高级的功能留给端点进行处理。 &ndash;<a href="https://chat.openai.com/share/6059280d-8c16-4b84-8821-48fe05b1e142">ChatGPT</a></p>
+</blockquote>
+<p>我们希望通过 DynaTalk(以及 DynaBrain)，终端用户可以轻松与 AI 以及计算环境协同工作。</p>
+<p><video width=80% src="/post/img/b77d6b162e07bc48e45d3e119908d1.MP4" controls="controls"></video></p>
+<h4 id="性能">性能</h4>
+<p>Dynatalk 在很多方面和 <a href="https://adapter.codelab.club/">CodeLab Adapter</a> 相似，但更加健壮和工业化。我们相信，它可以服务于许多企业级场景。</p>
+<p>在普通笔记本电脑上，Dynatalk 每秒处理数以万计的消息，如有需要，很容易进行横向扩展。</p>
+<h3 id="困惑与未来">困惑与未来</h3>
+<blockquote>
+<p>大多数想法来自过去的旧想法。 &ndash; Alan Kay 《The Early History Of Smalltalk》</p>
+</blockquote>
+<p>Agent 之间如何对话的问题，进一步说是如何协作的问题，给我们造成困扰。 @David 对这个问题进行了梳理: <a href="https://gist.github.com/wwj718/7a2925b9da42b1ebb8283453539e2218">沟通、互动和协作问题</a>。 @hidaris 与 ChatGPT 围绕<strong>互动性规划</strong>有一段<a href="https://chat.openai.com/share/4599b0c7-7730-43e2-bf6a-a55b7937c13e">精彩的讨论</a> 。 团队目前在工作上大量使用 ChatGPT 和 Claude，这或许也可以视为 bootstrapping 研究方式的一种体现: 借助 AI 来探索 AI。</p>
+<p>我们近期视图弄清楚 Agent 之间如何交流，需要建立哪些规范。打算最终将这些想法实现在消息结构和消息解释器(实现在 Agent 的结构中)里。关于 Agent 的协作方面，@neolay 为团队找到了许多有价值的方向。我们目前对 <a href="https://gist.github.com/neolay/02a7f2dfaa35905e26bccd43549d8f9b">FIPA</a> 很感兴趣。</p>
+<blockquote>
+<p>FIPA 成立于 1996 年，是一家瑞士非营利组织，其雄心勃勃的目标是为 Agent 可以执行的实施系统（Agent 平台）定义一整套标准，并指定 Agent 本身应如何在标准中进行通信和互操作方式 &ndash;<a href="https://en.wikipedia.org/wiki/Foundation_for_Intelligent_Physical_Agents">Foundation for Intelligent Physical Agents</a></p>
+</blockquote>
+<p>LLM(大语言模型)像是 Agent 的<a href="https://zh.wikipedia.org/zh-cn/%E5%A4%A7%E8%84%91%E7%9A%AE%E8%B4%A8">大脑皮质</a>(功能上最为高阶的一部分), 它功能强大，但是反应慢。 我们想要赋予 Agent 像本能一样的原始机制(基本的生理需求，安全需求&hellip;)。这些机制简单而迅速。</p>
+<blockquote>
+<p>最生动的思维也比不上最迟钝的感觉。 &ndash; 大卫·休谟</p>
+</blockquote>
+<p>@David 向团队介绍了 <a href="https://en.wikipedia.org/wiki/Belief%E2%80%93desire%E2%80%93intention_software_model">BDI(Belief–desire–intention software model)</a> ，它可能可以为 Agent 提供类似本能的内在内驱力。并分享了一个相当<a href="https://www.youtube.com/watch?v=9gf2MT-IOsg">有趣的视频</a> 展示了类似 BDI 的简单机制如何赋予<a href="https://zh.wikipedia.org/zh-cn/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E7%94%9F%E7%B3%BB%E5%88%97">模拟人生</a>的游戏角色强大生命力。Dynatalk 的架构设计，似乎非常适合实现视频里提到的游戏机制: &ldquo;可交互对象在环境中主动广播&rdquo;。</p>
+<blockquote>
+<p>如果想要系统能够发展，那么随着时间的推移添加新的对象类型的能力至关重要。 &ndash;《栖息地:来自一个在线社区的报告》</p>
+</blockquote>
+<p>@neolay 进一步整理了 <a href="https://gist.github.com/neolay/075bb2afc9a037f2ff15746b9e6f6dce">BDI 相关的资料</a></p>
+<p>我们在最近的里程碑-2 中也视图弄清 Agent 如何与环境中的物体进行互动，@neolay 也为此找到了一些看起来有前途的方向:</p>
+<ul>
+<li><a href="http://virtual-home.org/">VirtualHome: A Multi-Agent Household Simulator</a></li>
+<li><a href="https://ai2thor.allenai.org/">ai2thor iTHOR</a></li>
+</ul>
+<p>这方面还处于探索阶段。</p>
+<!--Agent 一些行为，个体行为(智能行为、本能行为)，社会行为(协作机制)-->
+<h2 id="dynabrain">DynaBrain</h2>
+<blockquote>
+<p>记忆器(memorizer)是一个智能体，它可以重置一个智能组，让它回到某种以前的有用状态。&ndash; 《心智社会》</p>
+</blockquote>
+<p><a href="https://lilianweng.github.io/posts/2023-06-23-agent/">LLM 驱动的自主 Agent</a> 提到:</p>
+<blockquote>
+<p>在一个由 LLM 驱动的自主 Agent 系统中，LLM 充当 Agent 的大脑，辅以几个关键组件：</p>
+<ul>
+<li>计划</li>
+<li>记忆</li>
+<li>工具使用</li>
+</ul>
+</blockquote>
+<img src="/post/img/ai-agent-in-Roblox-7.png"/>
+<center>LLM 支持的自主 Agent 系统概述</center>
+<p>在我们几次讨论 Agent&quot;生命周期问题&quot;（计算模型）之后，我们意识到最初以大脑为中心的设计不令人满意。</p>
+<p>将 LLM 驱动的大脑作为中央调度器，会出现很多问题，尽管它也可以制作许多有趣的用例，但我们很难获得&quot;真正交互式/可生长的 Agent&quot;。</p>
+<p>随后，我们发现 Actor 计算模型是正确的方向。这极大影响了 DynaBrain 的设计。</p>
+<p>我们最初也采用上图中集中式的设计。后来，我们放弃了这个方向，正在以消息传递为核心重构大脑。并不存在一个&quot;中央大脑&quot;, &ldquo;大脑&quot;的能力，分散在不同的 Agent 之中，这些分散而简单的 Agent，共同构成&quot;心智社会&rdquo;，整个&quot;心智社会&quot;共同承担&quot;大脑&quot;的功能。</p>
+<p>以下是我们(@hidaris)对 DynaBrain 设计和期待:</p>
+<blockquote>
+<p>我们关注机器智能与人类智能的交叉研究，最早可以追溯到 20 世纪 40 年代的控制论之父维纳。他将控制和反馈回路的理念应用于生物系统的神经肌肉反馈，并引领沃伦·麦卡洛克和沃尔特·皮茨加入麻省理工学院，开展了世界上第一个人工神经网络的研究。我们深受马文·闵斯基关于心智社会的启示，他主张心智是由无意识的简单“智能体”相互作用而成。David Eagleman 对人类大脑功能的解读也给我们带来了很多灵感。当看到斯坦福的 generative agents 和像 babyagi 这样的项目出现时，我们意识到，构建类人智能的时刻已经来临。<br>
+过去在个人计算领域的研究使我们团队达成一项共识：应该构建一个由简单多 agent 组成的类人智能的心智社会，而其基础应该是基于消息的系统架构。我们意识到，在现有的 LLM 上构建类人智能，首先需要为其构建观察机制，使其能观察世界的物体和事件。我们采用了 David Eagleman 的感官替代理论（在多模态之前，LLM 相当于盲人）。构建观察机制后，还需引入基于时间衰退因子的长期记忆模块来储存记忆，使类人智能在新观察到达时能根据长期记忆中的相关信息做出反应。反应产生后，类人智能需判断是否需进行短期规划，若是，则进入反馈循环（采纳维纳的观点，即世界应通过信息来理解，复杂系统由相互关联的反馈回路组成，导致复杂而稳定的行为）。<br>
+在反馈循环中，类人智能会根据环境的反馈调整短期规划，逐步实现最终目标。同时，类人智能还需能做长期规划，这些规划在整个生命周期中由新的观察、互动和反思更新。除了个体的感知-行动，我们还在探索多个类人智能的协同问题。狭义上，我们研究他们如何协作完成任务、对齐目标、分享经验；广义上，我们试图探究他们能否完成创造性任务，能否进行新颖性探索，为其他类人智能的长期目标创造足够多的“踏脚石”。<br>
+最终，我们期望这个类人智能的机制足够通用，以便当底层模型进一步发展时，它能够与艾伦·凯所说的指数增长的力量同步增强。</p>
+</blockquote>
+<p>接下来，我们将探讨大型语言模型为何无法像人类那样独立行动。首先，大型语言模型，是一个自回归的文本生成模型，这意味着它主要是用于生成连续的文本。它并不具备主动观察和解读环境的能力。虽然其上下文窗口可以视为短期记忆，有助于生成连贯的回复，但这个窗口是有限的。因此，LLM 无法在长时间跨度上维持或建立一个稳定的“自我”意识。</p>
+<p>此外，LLM并不处于一个持续的行动循环中。这意味着，除非有人类用户为它提供指引或提示，否则它是被动的，不能主动采取任何行动。</p>
+<p>最后，GPT这样的大型语言模型是在大量的互联网数据上进行训练的。它所展现出的信息和回答其实是基于人类互联网数据的平均或集合，而不是任何独立的思考或意识。但是当通过提示工程对它提出要求，如何表现，会帮助 GPT 在一个不同的轨迹上行动。</p>
+<p><strong>DynaBrain</strong></p>
+<p>我们构建了一个名为“DynaBrain”的 Agent 系统，该系统基于 LLM 作为其思维中心。它的设计目的是为了更好地实现功能和与 Roblox 环境进行交互。</p>
+<p><strong>核心组件与架构</strong>：</p>
+<ol>
+<li>
+<p><strong>思维核心</strong>：</p>
+<ul>
+<li>使用GPT-3.5，为了更好地处理和生成有意义的输出。</li>
+<li>采用RAG设计，解决了上下文窗口的大小问题和长期一致性的挑战。</li>
+</ul>
+</li>
+<li>
+<p><strong>模块化设计</strong>：</p>
+<ul>
+<li>包括观察、反应、规划和行动等模块。</li>
+<li>模块间存在循环与反馈机制，确保流畅的操作。</li>
+</ul>
+</li>
+<li>
+<p><strong>记忆流机制</strong>：</p>
+<ul>
+<li>动态记录来自 Roblox 环境的所有感知信息，如视觉、听觉等。</li>
+<li>记忆流是一个向量数据库，它详细记录了 Agent 的经历。</li>
+</ul>
+</li>
+</ol>
+<p><strong>记忆检索与其度量标准</strong>：</p>
+<p>记忆流在被检索时，会基于以下三个主要标准进行评估：</p>
+<ul>
+<li><strong>新近度</strong>：使用小时级的指数衰减函数，使近期的记忆得分更高。</li>
+<li><strong>重要性</strong>：基于GPT的判断，对关键记忆给予更高的权重。</li>
+<li><strong>相关性</strong>：记忆的向量与当前查询文本向量间的余弦相似度。</li>
+</ul>
+<p><strong>Agent的策略与规划</strong>：</p>
+<ol>
+<li>
+<p><strong>反思</strong>：</p>
+<ul>
+<li>Agent 每天进行 2-3 次的自我反思。</li>
+<li>每次反思的主题都是基于 Agent 的近期经历选择的。</li>
+<li>在反思过程中，Agent 会检索“记忆流”以找到相关的过去经历。</li>
+</ul>
+</li>
+<li>
+<p><strong>长期计划与路线图</strong>：</p>
+<ul>
+<li>Agent 首先设定一个长期目标。</li>
+<li>然后为这些步骤制定一个详细的日程。</li>
+<li>最终将其日程细化到小时，甚至分钟级别。</li>
+</ul>
+</li>
+<li>
+<p><strong>短期响应与决策</strong>：</p>
+<ul>
+<li>当 Agent 感知到新事件时，会迅速评估其意义。</li>
+<li>基于评估，Agent 会设定短期目标。</li>
+<li>为实现目标，Agent 制定详细的短期行动计划。</li>
+</ul>
+</li>
+<li>
+<p><strong>互动与环境反馈</strong>：</p>
+<ul>
+<li>Agent 的响应分为非互动和互动两种。</li>
+<li>非互动行为仅与环境交互，而互动行为涉及其他 Agent 的交互。</li>
+<li>为了优化互动，Agent考 虑与其他 Agent 的协作，以达成共同目标。这需要 Agent 理解并预测其他 Agent 的行为和意图，从而形成有效的合作策略。</li>
+<li>协作行为包括共同解决问题、分工协作或交换资源等。</li>
+</ul>
+</li>
+</ol>
+<h2 id="里程碑">里程碑</h2>
+<p>团队采用远程工作的方式，我们鼓励在确定共识的情况下，最大化大家的探索自由。</p>
+<p>为了在自由探索和推进目标之间取得平衡。我们会定期制定里程碑。以此作为我们短期的共同目标，大家各自寻找有效推进这些里程碑的机制。</p>
+<p>里程碑由团队会议上共同制定出。</p>
+<h3 id="里程碑-1">里程碑-1</h3>
+<p>我们希望在里程碑-1 中实现以下场景:</p>
+<ol>
+<li>在 Roblox 中构建&quot;狼来了&quot;故事中的小镇。具备合适的地形、人物、动物、房屋&hellip;</li>
+<li>本杰明在山上放羊。狼来了，吃了羊，本杰明听到羊叫声(听觉事件)。他从<strong>记忆</strong>中想起遇到这种事情的应对方案，本杰明做出决策，跑到村口的店里求助。</li>
+</ol>
+<p>我们已经实现了里程碑-1。</p>
+<h3 id="里程碑-2">里程碑-2</h3>
+<p>详情参考: <a href="https://gist.github.com/wwj718/b7d817f267c08fccdacf7db9b92a9ad8">里程碑-2</a></p>
+<p>里程碑-2 聚焦的目标是:</p>
+<ul>
+<li>多个 AI 之间的对话</li>
+<li>Agent 使用道具，以及与环境交互</li>
+</ul>
+<p>具体而言，我们希望实现以下场景</p>
+<ol>
+<li>本杰明到达村口求助，与店老板展开 2 人对话</li>
+</ol>
+<ul>
+<li>对话在村子里传播
+<ul>
+<li>期待传递到更远范围(如抵达正在田里劳作的本杰明的爸妈)</li>
+<li>涌现出社会行为</li>
+</ul>
+</li>
+<li>有一个人拿起锄头 ⛏️(Agent 使用道具)</li>
+</ul>
+<ol start="2">
+<li>村民们在村口集合，一起上山驱逐狼 🐺</li>
+<li>到达山顶 ⛰️，把狼赶跑。发生讨论</li>
+</ol>
+<p>我们正在推动里程碑-2。</p>
+<p><video width=80% src="https://scratch3-files.just4fun.site/milestone2-new.mp4" controls="controls"></video></p>
+<!--
+## Agent 的生命周期问题
+
+响应事件，改变信念
+
+内在的 loop。闹钟，定时任务，检查自身状态
+
+获得回报，我们想要什么？不约而同
+
+可见性问题，权限，做“减法”
+
+# 思考的维度
+
+- 事情按时间演进顺序
+- 团队成员的观点
+
+
+# 未来
+
+疑问
+需要概念框架
+
+Agent 之间是否会组成层级结构, 如果是的话
+
+对象可以聚合 Agent
+
+    在消息层面，建立"护栏"(可见性，权限问题)
+    《心智社会》
+    Agent 可以自由彼此通信。 内部的，大脑的记忆Agent，从生物学的角度，只能够被大脑里的某些Agent使用。技术层面很简单，基于能力的模型
+    但真正的需求是概念框架
+
+    消息解释器，还是编程语言？ mojoscraft LLM 直接编写 tool，错误信息返回给 LLM
+    解释器可以建立护栏，EToys/squeak
+    TypeChat
+    何种程度上建立结构
+-->
+<h1 id="后记">后记</h1>
+<h3 id="llm--ai">LLM &amp; AI</h3>
+<p>LLM 的影响是巨大的，这是我们开始当前工作的原因之一。</p>
+<p>我们团队在工作中，大量使用 LLM(ChatGPT、Cloude) 帮助我们编写代码、概述/总结论文、整理会议纪要、讨论设计决策、一起头脑风暴&hellip;</p>
+<p>我们认为 AI 在不久会被广泛地使用，影响整个社会。</p>
+<h3 id="价值危机">价值危机</h3>
+<blockquote>
+<p>人本身就是目的，而不是工具 &ndash; 康德</p>
+</blockquote>
+<p>有天深夜，@hidaris 和 @David 在工作小组里讨论 AI 的进步可能造成的社会问题，一直聊到半夜 2 点。之后这个话题成为第二天团队会议的主要议题。</p>
+<p>我们一开始认为这个问题主要是关于经济和伦理的，但后来大家都认同在当前语境下，它很大程度上与政治有关。</p>
+<p>这次长时间的讨论，共识是，这一波的 AI 浪潮，可能不是&quot;狼来了&quot;的故事，炒作的成分虽然依旧很大，但实际的冲击力也是巨大的。泡沫是有，但它正在创造实际的价值，同时正在造成实际的破坏。如果我们参与其中，应该是负责任的，而不是草率的。</p>
+<p>我们希望是恩格尔巴特、Alan Kay 、Bret Victor 的后继者，让计算机/AI成为增强人类心智的力量。而不是用自动化来替代人。</p>
+<p>我们希望我们的工作（尽管它可能微不足道），能够促进技术民主化与数字赋权，而不是与数字极权有关。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Habitat_(video_game)">Wikipedia Habitat</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Society_of_Mind">《心智社会(Society of Mind)》</a></li>
+<li><a href="https://arxiv.org/abs/2304.03442">Generative Agents: Interactive Simulacra of Human Behavior</a></li>
+<li>《栖息地:来自一个在线社区的报告》(收录在<a href="https://book.douban.com/subject/1772786/">真名实姓</a>一书中)</li>
+<li><a href="https://gist.github.com/neolay/075bb2afc9a037f2ff15746b9e6f6dce">gist BDI model</a></li>
+<li><a href="https://gist.github.com/neolay/02a7f2dfaa35905e26bccd43549d8f9b">gist FIPA</a></li>
+<li><a href="https://gist.github.com/wwj718/b7d817f267c08fccdacf7db9b92a9ad8">里程碑 2</a></li>
+<li><a href="https://lilianweng.github.io/posts/2023-06-23-agent/">LLM Powered Autonomous Agents</a></li>
+<li><a href="http://www.fipa.org/specs/fipa00037/SC00037J.html">FIPA Communicative Act Library Specification</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Belief%E2%80%93desire%E2%80%93intention_software_model">Belief–desire–intention software model</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Actor_model">Actor model</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Message_passing">wikipedia Message passing</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Software_agent">Software agent</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Actor_model">Actor model</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Intelligent_agent">Intelligent agent</a></li>
+<li><a href="https://frandallfarmer.github.io/neohabitat-doc/docs/">Neohabitat</a></li>
+<li><a href="https://inworld.ai/">Inworld: Bring games to life with AI NPCs</a></li>
+<li><a href="https://centralcasting.ai/">Central Casting AI: Cast your next game with Central Casting AI</a></li>
+<li><a href="https://www.youtube.com/watch?v=9gf2MT-IOsg">The Genius AI Behind The Sims</a></li>
+<li><a href="https://www.youtube.com/watch?v=eJm44LJDU44">Bootstrapping Research &amp; Dynamicland &ndash; Bret Victor</a></li>
+<li><a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a></li>
+<li><a href="https://voyager.minedojo.org/">Voyager: An Open-Ended Embodied Agent with Large Language Models</a></li>
+<li><a href="https://developer.nvidia.com/omniverse/ace">NVIDIA ACE for Games</a></li>
+<li><a href="https://github.com/hwchase17/langchain">LangChain</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Late_binding">Late binding</a></li>
+<li><a href="https://www.youtube.com/watch?v=fhOHn9TClXY">Joe Armstrong &amp; Alan Kay</a></li>
+<li><a href="http://virtual-home.org/">VirtualHome: A Multi-Agent Household Simulator</a></li>
+<li><a href="https://ai2thor.allenai.org/">ai2thor iTHOR</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/computer-software/">计算机软件</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/">建立在异步消息之上的同步指令</a></li>
+<li><a href="https://karpathy.medium.com/software-2-0-a64152b37c35">Software 2.0</a></li>
+<li><a href="https://www.geoffreylitt.com/2023/03/25/llm-end-user-programming">Malleable software in the age of LLMs</a></li>
+<li><a href="https://en.wikipedia.org/wiki/End-to-end_principle">End to end principle</a></li>
+<li><a href="https://www.ea.com/games/the-sims">The Sims</a></li>
+<li><a href="https://github.com/Significant-Gravitas/Auto-GPT">Auto-GPT: An Autonomous GPT-4 Experiment</a></li>
+<li><a href="https://github.com/yoheinakajima/babyagi">BabyAGI</a></li>
+<li><a href="https://github.com/operand/agency">agency</a></li>
+<li><a href="https://python.langchain.com/docs/use_cases/agent_simulations/characters">Generative Agents in LangChain</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-08-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/ai/">AI</a>
+          <a href="/tags/agent/">Agent</a>
+          <a href="/tags/llm/">LLM</a>
+          <a href="/tags/roblox/">Roblox</a>
+          <a href="/tags/chatgpt/">ChatGPT</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/enhanced-roblox-studio-interoperability/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">增强 Roblox Studio 的互操作性</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/microblocks-roblox-neopanel/">
+            <span class="next-text nav-default">MicroBlocks ❤️ Roblox: 操场大小的像素屏</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

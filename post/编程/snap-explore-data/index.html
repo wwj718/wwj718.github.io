@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap! 使用笔记: 探索数据 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 Snap! 是出色的个人计算环境。 本文是在 Snap! 中探索数据的笔记。 之前一度喜欢在 Jupyterlab 中探索数据，因其出色的交互性。 Snap! 拥有更强的交互性, 数据几乎触手可及," /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-explore-data/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Snap! 使用笔记: 探索数据" />
+<meta property="og:description" content="前言 Snap! 是出色的个人计算环境。 本文是在 Snap! 中探索数据的笔记。 之前一度喜欢在 Jupyterlab 中探索数据，因其出色的交互性。 Snap! 拥有更强的交互性, 数据几乎触手可及," />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-explore-data/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-02-22T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-02-22T00:00:00+00:00" />
+
+<meta itemprop="name" content="Snap! 使用笔记: 探索数据">
+<meta itemprop="description" content="前言 Snap! 是出色的个人计算环境。 本文是在 Snap! 中探索数据的笔记。 之前一度喜欢在 Jupyterlab 中探索数据，因其出色的交互性。 Snap! 拥有更强的交互性, 数据几乎触手可及,"><meta itemprop="datePublished" content="2023-02-22T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-02-22T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1221">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! 使用笔记: 探索数据"/>
+<meta name="twitter:description" content="前言 Snap! 是出色的个人计算环境。 本文是在 Snap! 中探索数据的笔记。 之前一度喜欢在 Jupyterlab 中探索数据，因其出色的交互性。 Snap! 拥有更强的交互性, 数据几乎触手可及,"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Snap! 使用笔记: 探索数据</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-02-22 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#一个简单例子">一个简单例子</a></li>
+    <li><a href="#例子-每日名言quote-of-the-day">例子: 每日名言(Quote of the day)</a>
+      <ul>
+        <li><a href="#例子-snap-的-codelab-adapter-插件">例子: Snap! 的 CodeLab Adapter 插件</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<blockquote>
+<p>Snap! 是出色的个人计算环境。</p>
+</blockquote>
+<p>本文是在 <a href="https://snap.codelab.club/snap.html">Snap!</a> 中探索数据的笔记。</p>
+<p>之前一度喜欢在 <a href="https://jupyter.org/">Jupyterlab</a> 中探索数据，因其出色的交互性。</p>
+<p>Snap! 拥有更强的交互性, 数据几乎触手可及, 仿佛可以将手伸入计算机里把玩它们。</p>
+<p>现在, 每当有探索数据的需求(它们通常是 CSV 或者 JSON 格式), Snap! 是我的首选环境, 它能够轻松处理数以百万计的数据。由于其对<a href="https://snap.berkeley.edu/snap/help/SnapManual.pdf">函数式编程以及 hyperblock(操纵多维列表) 的强大支持</a>, 可以异常轻松而直观地操控结构化数据, 比我之前不停查阅 pandas/numpy 文档轻松许多。</p>
+<p>当需要对正在探索的数据进行可视化时, Snap! 总是给我惊喜, 其简易和直观性, 让我可以直接摆弄图形, 直到它们符合我脑子中对数据的看法。</p>
+<p>在 Jupyterlab 和 Snap! 中探索数据时，心态是不大一样的。</p>
+<p>在 Jupyterlab 中, 通常会处在一种寻找现有功能的状态, 花大量时间弄清楚有哪些操纵数据的方法, 有哪些可视化的典型图表(一些带有图示的 CheatSheet 通常很有帮助), 一旦我的想法与这些内置在库里的功能不完全一致，就需要去 Stack Overflow 和 Github 里寻找各种技巧，有时找不到现成的技巧，就得一头扎到很深的地方看看如何调整代码。我有大量的时间花在工具本身上边，而这些技巧在开始下一个项目时，又忘得差不多了。这是一种不断适应工具的状态，而且经常是一种削足适履的状态。</p>
+<p>这是我之前在 Python 生态里做的一些数据探索和可视化项目:</p>
+<ul>
+<li><a href="https://wwj718.github.io/post/%E6%95%B0%E6%8D%AE/jobsvisualization/">可视化筛选你中意的工作</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%A9%BA%E6%83%B3/a-generic-subscription-services/">一种通用的可视化订阅服务</a></li>
+<li><a href="https://www.codelab.club/blog/2020/02/19/codelab_insight_alpha">CodeLab Insight 发布 Alpha 版</a></li>
+</ul>
+<p>在 Snap! 里，探索数据和可视化充满了乐趣。我总是处在与数据的亲密关系中, 直观地摆弄和自由地思考它们。 所有的交互都是 lively(活性)的。Snap! 虽是我和数据之间的计算媒介，但我从不觉得它是负担，大多数时候几乎忘了它的存在，当我需要它提供计算能力时，总是凭直觉去做就好了。它小巧直观，所有的积木都在界面上，没有&quot;藏在深处&quot;的技巧，这些积木数量不多，但极为通用(来自 Lisp 的馈赠), 以至于没有了不停查阅文档的心智负担(这非常打断思绪)。</p>
+<h2 id="一个简单例子">一个简单例子</h2>
+<p>Snap! 主要使用列表操控数据, 这来自 Lisp 传统。</p>
+<p>以下是我早期使用 Snap! 列表积木探索 json 数据的例子。</p>
+<p>一篇博客文章的数据结构:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;auther&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;alan&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;blog&#34;</span><span class="p">:</span> <span class="s2">&#34;https://wwj718.github.io/&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;posts&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;post1&#34;</span><span class="p">,</span> <span class="s2">&#34;post2&#34;</span><span class="p">,</span> <span class="s2">&#34;post3&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;date&#34;</span><span class="p">:</span> <span class="s2">&#34;2023-02-11&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;title&#34;</span><span class="p">:</span> <span class="s2">&#34;hi Snap!&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;body&#34;</span><span class="p">:</span> <span class="s2">&#34;Snap! is a broadly inviting programming language for kids and adults that&#39;s also a platform for serious study of computer science...&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;Scratch&#34;</span><span class="p">,</span> <span class="s2">&#34;programming&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在 Snap! 中玩耍它:</p>
+<p><img src="/post/img/snap-play-with-json-a-post.png" alt=""></p>
+<p>这是<a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/play-with-json.xml">项目的在线地址</a></p>
+<h2 id="例子-每日名言quote-of-the-day">例子: 每日名言(Quote of the day)</h2>
+<p>Snap! 作者分享了在 Snap! 中使用探索 <a href="https://quotes.rest/qod">qod(Quote of the day)</a> RESTful api.</p>
+<p><img src="/post/img/Fn_kcruXgAIWt9.jpeg" alt=""></p>
+<p>这是这个 API 返回的 json 数据(每日的名言不同，但数据结构是一样的)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;success&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;total&#34;</span><span class="p">:</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;contents&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;quotes&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;quote&#34;</span><span class="p">:</span> <span class="s2">&#34;Your fears, your critics, your heroes, your villains: They are fictions you perceive as reality. Choose to see through them. Choose to let them go.&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;length&#34;</span><span class="p">:</span> <span class="s2">&#34;147&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;author&#34;</span><span class="p">:</span> <span class="s2">&#34;Isaac Lidsky&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;tags&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;fears&#34;</span><span class="p">,</span> <span class="s2">&#34;inspire&#34;</span><span class="p">,</span> <span class="s2">&#34;reality&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;category&#34;</span><span class="p">:</span> <span class="s2">&#34;inspire&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;language&#34;</span><span class="p">:</span> <span class="s2">&#34;en&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;date&#34;</span><span class="p">:</span> <span class="s2">&#34;2023-02-11&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;permalink&#34;</span><span class="p">:</span> <span class="s2">&#34;https://theysaidso.com/quote/isaac-lidsky-your-fears-your-critics-your-heroes-your-villains-they-are-fictions&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;9Ei2A7a5uDzoPiF4u8FhCgeF&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;background&#34;</span><span class="p">:</span> <span class="s2">&#34;https://theysaidso.com/img/qod/qod-inspire.jpg&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;title&#34;</span><span class="p">:</span> <span class="s2">&#34;Inspiring Quote of the day&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;baseurl&#34;</span><span class="p">:</span> <span class="s2">&#34;https://theysaidso.com&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;copyright&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;year&#34;</span><span class="p">:</span> <span class="mi">2025</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;url&#34;</span><span class="p">:</span> <span class="s2">&#34;https://theysaidso.com&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="例子-snap-的-codelab-adapter-插件">例子: Snap! 的 CodeLab Adapter 插件</h3>
+<p>我近期将 <a href="https://adapter.codelab.club/">CodeLab Adapter</a> 插件，陆续迁移到了 Snap! 中。</p>
+<p><img src="/post/img/Snap-explore-data-02.png" alt=""></p>
+<p>对 Snap! 而言， CodeLab Adapter 是一个本地 web 服务(提供 websocekt 服务), 采用 json 作为数据传输格式。为了给  CodeLab Adapter 下发命令、获取信息(功能实现在消息的语义里)，需要在 Snap! 中操纵 json 数据。你可以通过查看 CodeLab Adapter 相关积木的定义, 来查看这些 json 数据的处理过程:</p>
+<p><img src="/post/img/Snap-explore-data-03.png" alt=""></p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://twitter.com/moenig/status/1621266170153209857">Jens Mönig Twitter thread Snap! 8.1</a></li>
+<li><a href="https://quotes.rest">They Said So Quotes API</a></li>
+<li><a href="https://snap.berkeley.edu/snap/help/SnapManual.pdf">SnapManual</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-02-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/snap-mqtt/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Snap! 使用笔记: MQTT 插件</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/stable-diffusion-my-verse/">
+            <span class="next-text nav-default">将诗句想象为图像</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

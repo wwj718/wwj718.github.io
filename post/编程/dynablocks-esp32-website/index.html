@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MicroBlocks 编程案例: 在 ESP32 里运行网站 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="上周六在 CodeLab 候车群 里提到: 下周我打算做一个实验，在 ESP32 板子上，运行一个网站和一个聊天服务器, 然后通过端口映射，提供出公网服务。由于 ESP32 的廉价和低功" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/dynablocks-esp32-website/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MicroBlocks 编程案例: 在 ESP32 里运行网站" />
+<meta property="og:description" content="上周六在 CodeLab 候车群 里提到: 下周我打算做一个实验，在 ESP32 板子上，运行一个网站和一个聊天服务器, 然后通过端口映射，提供出公网服务。由于 ESP32 的廉价和低功" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/dynablocks-esp32-website/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-01-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-01-10T00:00:00+00:00" />
+
+<meta itemprop="name" content="MicroBlocks 编程案例: 在 ESP32 里运行网站">
+<meta itemprop="description" content="上周六在 CodeLab 候车群 里提到: 下周我打算做一个实验，在 ESP32 板子上，运行一个网站和一个聊天服务器, 然后通过端口映射，提供出公网服务。由于 ESP32 的廉价和低功"><meta itemprop="datePublished" content="2022-01-10T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-01-10T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1617">
+<meta itemprop="keywords" content="MicroBlocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MicroBlocks 编程案例: 在 ESP32 里运行网站"/>
+<meta name="twitter:description" content="上周六在 CodeLab 候车群 里提到: 下周我打算做一个实验，在 ESP32 板子上，运行一个网站和一个聊天服务器, 然后通过端口映射，提供出公网服务。由于 ESP32 的廉价和低功"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MicroBlocks 编程案例: 在 ESP32 里运行网站</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-01-10 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#技术细节">技术细节</a>
+      <ul>
+        <li><a href="#公网访问">公网访问</a></li>
+        <li><a href="#页面信息">页面信息</a></li>
+      </ul>
+    </li>
+    <li><a href="#太阳能电池">太阳能电池</a></li>
+    <li><a href="#聊天服务器">聊天服务器</a></li>
+    <li><a href="#后记">后记</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>上周六在 CodeLab 候车群 里提到:</p>
+<blockquote>
+<p>下周我打算做一个实验，在 ESP32 板子上，运行一个网站和一个聊天服务器, 然后通过端口映射，提供出公网服务。由于 ESP32 的廉价和低功耗, 意味着可以使用太阳能来驱动这个 10 多块钱的 web 后端服务器。打算在 microblocks 里开发。</p>
+</blockquote>
+<p>心急等不到下周，周六下午去实务学堂上完课，从小洲村回到公司，取了一块 ESP32 板子回家做实验，由于 microblocks 提供了强大的沉浸式编程体验(类似 Smalltalk，放大心智的力量)，一会儿就搞出了原型。</p>
+<p><video width=80% src="https://adapter.codelab.club/video/1641644601520772.mp4" controls="controls"></video></p>
+<p>视频的后半段，十分有趣, 当我在浏览器里请求 <code>/hi</code> 时，web 服务已经被我中止了，我临时创建了响应内容:<code>hello esp32</code>, 并立刻用它响应来自浏览器的请求, 在我点击 <code>响应</code>  积木的瞬间，浏览器才收到回复。我们在请求和响应之间进行交互式编程！这过程极大增强了 web 编程的可理解性，我们可以在 microblocks 里交互式地观察请求的细节，并随时手动给出响应，换句话说，我们的大脑和双手成了后端运行时(runtime)的一部分！</p>
+<p>之后，我有个想法，考虑到这个太阳能驱动的网站，可能因太阳暴晒导致芯片温度升高，于是想构建一个自动降温装置: 当温度太高时，打开风扇</p>
+<p><video width=80% src="https://adapter.codelab.club/video/d394a5677121477a7fe76600511f54.mp4" controls="controls"></video></p>
+<p>通过 microblocks 的通用实时图表功能，可以很快看出代码中的临界参数应该选什么值（当温度超过预设的临界值，就打开风扇）。大多数编译型编程环境，是&quot;闭着眼睛排列代码/积木&quot;。</p>
+<p>家庭作坊，就地取材，为了压住风扇不乱跑，用的是橘子, 为了模拟阳光暴晒，用的是电吹风 ：）</p>
+<h2 id="技术细节">技术细节</h2>
+<p><a href="/post/img/esp32-website.ubp">esp32-website.ubp</a></p>
+<p><img src="/post/img/1641810100488.jpg" alt=""></p>
+<p>代码简洁清晰，无需过多解释。</p>
+<p>来看看 microblocks 的 HTTP server 库，<code>http server request</code> 积木用于获取客户端请求，<code>response</code> 积木用于给出响应。 编程模型与大多数 web 后端语言一致: 接受客户端的请求，然后给予响应，一直循环上述过程。microblocks 构建出的是动态网站！</p>
+<p>有一处值得注意，在每次循环中，<code>http server request</code> 与 <code>response</code> 应该都只出现一次(成对出现)，如果你想多次使用<code>http server request</code>，应该把它保存到变量里，然后多次使用这个变量。</p>
+<h3 id="公网访问">公网访问</h3>
+<p>由于 ESP32 连接到局域网 WIFI， 我打算使用 <a href="https://ngrok.com/">ngrok</a>(也可使用 frp 之类的工具) 将其 web 服务端口映射到公网上。如果你直接在 ESP32 上接了网线，且有公网地址，则不需要使用 ngrok。</p>
+<p>正好桌面上有一个树莓派，我将 <code>ngrok</code> 运行在树莓派里（树莓派和 ESP32 在同个网络下），这样就不需要关机了。</p>
+<p>首先需要获得 ESP32 的 IP 地址，这简单，microblocks 的 WIFI 库有对应积木，交互式地查看它即可，我们<a href="/post/%E7%BC%96%E7%A8%8B/dynablocks-esp32/">之前</a>提到 microblocks 交互式的环境可以充当硬件的“屏幕”！ 不像许多数编译式的环境，代码一旦烧录，就不懂它在内部干嘛了，随然串口输出有用，但你需要事先知道该输出什么调试信息，这是很讽刺的，因为意外的问题，正好是你事先不知道的，好的环境应该允许你与系统进行深层次的实时交互，让你不断解决意外的问题，并加深对它的理解，所有这些都发生在行进过程中。正如 Alan Kay 喜欢说的: 在飞行中改进系统。</p>
+<p>拿到 ESP32 的地址后（如<code>10.0.0.49</code>）, 我们就可以把它映射到公网了: <code>./ngrok http http://10.0.0.49</code></p>
+<p><img src="/post/img/1641811386329.jpg" alt=""></p>
+<h3 id="页面信息">页面信息</h3>
+<p>当你访问映射出的公网地址时，会看到如下页面。</p>
+<p><img src="/post/img/1641811517583.jpg" alt=""></p>
+<p>你可以修改前边的代码，写任何你喜欢的 html 代码，我喜欢 markdown，所以采用 markdown 来写页面，这是从 <a href="https://tinlizzie.org/ohshima/">Yoshiki Ohshima</a> 那儿学来的。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">## path 
+</span></span><span class="line"><span class="cl">* light 
+</span></span><span class="line"><span class="cl">    * [on](/lighton) 
+</span></span><span class="line"><span class="cl">    * [off](/lightoff) 
+</span></span><span class="line"><span class="cl">* fans 
+</span></span><span class="line"><span class="cl">    * [on](/fanson) 
+</span></span><span class="line"><span class="cl">    * [off](/fansoff) 
+</span></span><span class="line"><span class="cl">* [codelab](/codelab)
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">style</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;fallback&#34;</span><span class="p">&gt;</span><span class="nt">body</span> <span class="p">{</span><span class="k">visibility</span><span class="p">:</span> <span class="kc">hidden</span><span class="p">;</span><span class="k">white-space</span><span class="p">:</span> <span class="kc">pre</span><span class="p">;</span><span class="k">font-family</span><span class="p">:</span> <span class="kc">monospace</span><span class="p">;}&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://casual-effects.com/markdeep/latest/markdeep.min.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">window</span><span class="p">.</span><span class="nx">alreadyProcessedMarkdeep</span> <span class="o">||</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">visibility</span> <span class="o">=</span> <span class="s2">&#34;visible&#34;</span><span class="p">);&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>你也可以把 html 文件和其他静态文件永久托管在 ESP32 ESP32 能存几 MB 的文件！使用 microblocks 提供的文件库即可。</p>
+<h2 id="太阳能电池">太阳能电池</h2>
+<p>我目前使用移动电源驱动网站。</p>
+<p><img src="/post/img/WechatIMG5365.jpeg" alt=""></p>
+<p>由于 ESP32 的低功耗, 意味着可以使用太阳能来驱动它。最近广州阴雨天，太阳能电池还没到, 以后有时间再测试。</p>
+<p>如果你有兴趣来做，电路方面可以参考<a href="https://mc.dfrobot.com.cn/thread-271789-1-1.html">这篇文章</a></p>
+<h2 id="聊天服务器">聊天服务器</h2>
+<p>在 ESP32 里构建聊天服务器完全没有问题，由于 ESP32 带有文件系统，可以在服务器端保留消息，为离线用户存储历史消息。</p>
+<p>我之前想使用 websocket 来构建聊天服务器，目前 microblocks 作者没写 websocket 的用例，我还没摸索出用法。之后有空再折腾，我本来还打算使用 <a href="https://htmx.org/">htmx</a> 构建客户端。</p>
+<p>你也可以使用 HTTP server 库构建聊天服务器，应该很简单。</p>
+<h2 id="后记">后记</h2>
+<p>下班之前运行的网站，12小时之后，依然稳定运行。</p>
+<!--
+htmx
+
+web 服务
+
+markdown html
+https://github.com/croquet/virtual-dom/blob/main/docs/en/vdom.md.html
+
+## 树莓派
+
+Chromium 开箱可用 microblocks
+-->
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/dynablocks-esp32/">Microblocks 编程案例: ESP32</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-01-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/dynablocks-sonoff-s20/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">MicroBlocks 编程案例: sonoff 智能插座</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/dynablocks-esp32/">
+            <span class="next-text nav-default">MicroBlocks 编程案例: ESP32</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

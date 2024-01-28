@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap! 蓝牙驱动库 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="编程的未来可能是大语言模型与个人计算环境的结合。 前言 近期需要把 Scratch 的一些蓝牙(BLE)插件迁移到 Snap! 里. 思路 做这件事有两种方法。 尽可能在 JavaScript 做事情" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-ble-library/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Snap! 蓝牙驱动库" />
+<meta property="og:description" content="编程的未来可能是大语言模型与个人计算环境的结合。 前言 近期需要把 Scratch 的一些蓝牙(BLE)插件迁移到 Snap! 里. 思路 做这件事有两种方法。 尽可能在 JavaScript 做事情" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-ble-library/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-11-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-11-12T00:00:00+00:00" />
+
+<meta itemprop="name" content="Snap! 蓝牙驱动库">
+<meta itemprop="description" content="编程的未来可能是大语言模型与个人计算环境的结合。 前言 近期需要把 Scratch 的一些蓝牙(BLE)插件迁移到 Snap! 里. 思路 做这件事有两种方法。 尽可能在 JavaScript 做事情"><meta itemprop="datePublished" content="2023-11-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-11-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="4696">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! 蓝牙驱动库"/>
+<meta name="twitter:description" content="编程的未来可能是大语言模型与个人计算环境的结合。 前言 近期需要把 Scratch 的一些蓝牙(BLE)插件迁移到 Snap! 里. 思路 做这件事有两种方法。 尽可能在 JavaScript 做事情"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Snap! 蓝牙驱动库</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-11-12 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#如何构建合适的-primitives">如何构建合适的 primitives?</a></li>
+    <li><a href="#如何调试">如何调试？</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#hello-world">hello world</a>
+      <ul>
+        <li><a href="#ble-echo-server">BLE echo server</a></li>
+        <li><a href="#测试它">测试它</a></li>
+      </ul>
+    </li>
+    <li><a href="#在浏览器中构建-ble-client">在浏览器中构建 BLE client</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#构建-ble-primitives">构建 BLE primitives</a>
+      <ul>
+        <li><a href="#学习-snap-microblocks-库">学习 Snap! MicroBlocks 库</a></li>
+        <li><a href="#开发方式">开发方式</a></li>
+        <li><a href="#让-chatgpt-构建-ble-primitives">让 ChatGPT 构建 BLE primitives</a></li>
+        <li><a href="#获取-ble-设备数据的-2-种方式">获取 BLE 设备数据的 2 种方式</a></li>
+        <li><a href="#围绕-notify-构建-primitive">围绕 NOTIFY 构建 primitive</a></li>
+        <li><a href="#ble-echo-client插件">BLE echo client插件</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#nordic-uart-service-nus">Nordic UART Service (NUS)</a></li>
+    <li><a href="#使用-bytes-而不是-utf8-文本">使用 bytes 而不是 utf8 文本</a></li>
+    <li><a href="#设备过滤">设备过滤</a></li>
+    <li><a href="#chrome-调试工具">Chrome 调试工具</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>编程的未来可能是<strong>大语言模型</strong>与<strong>个人计算环境</strong>的结合。</p>
+</blockquote>
+<h1 id="前言">前言</h1>
+<p>近期需要把 Scratch 的一些蓝牙(BLE)插件迁移到 Snap! 里.</p>
+<h1 id="思路">思路</h1>
+<p>做这件事有两种方法。</p>
+<ol>
+<li>尽可能在 JavaScript 做事情。复用原先 Scratch 插件的大部分 JavaScript 代码, 积木只在最后作为薄薄的一层，用于将 JavaScript API 暴露到用户界面。<a href="https://snap.berkeley.edu/snap/snap.html#present:Username=birdbraintech&amp;ProjectName=MicrobitStarterProject&amp;editMode&amp;noRun">birdbraintech/MicrobitStarterProject</a> 采用这种方式。</li>
+<li>尽可能在积木里做事情。这是 Snap! 如此强大的主要原因之一。如果能够把 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API">Web Bluetooth API</a> 包装为合适的 primitives , 剩下的所有工作都能够在图形环境里完成， 以后引入新的 BLE 设备，就非常方便了。</li>
+</ol>
+<p>第 1 种方案似乎能够快速完成短期迁移目标。 第 2 种方案似乎更看重长期，为以后的工作打下通用基础, 但似乎更耗时。</p>
+<p>开始时，第 1 种方案对我有吸引力，我想快速做事情。但我发现 BLE 设备的 Scratch 插件，与 Scratch 框架有较多耦合，能够直接复用的部分似乎不多。如此一来，第二种方案就显得有吸引力了。由于在 Snap!中开发的效率高于 JavaScript, 所用的时间可能会更少。</p>
+<p>由于准备迁移的 BLE 插件有不同类型, 我估计这两种方法都会用到。</p>
+<p>需要注意的是一些非常&quot;重&quot;的项目，诸如使用了<a href="https://github.com/scratchfoundation/scratch-vm/blob/develop/src/io/ble.js">Scratch ble.js</a>的项目(如toio), 第 1 种会省力很多。</p>
+<p>对于未来的新设备，我偏好使用第二种方法接入。</p>
+<!--
+
+-->
+<h2 id="如何构建合适的-primitives">如何构建合适的 primitives?</h2>
+<p>将 Web Bluetooth API 抽象为合适的 Snap! primitives 不是件容易的事儿，好在 Snap! 有一个绝佳的参考案例: 包装了 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API">Web Serial API</a> 的 <a href="https://github.com/jmoenig/Snap/blob/ba6ef0a4d0467f5a787ef12bab315fadaf97efda/src/extensions.js#L1176">primitives</a>。Snap! 中的<a href="https://wiki.microblocks.fun/en/snap/microblocks_snap_messaging">MicroBlocks 库</a>便是以此为基础来做的。</p>
+<p>Web Bluetooth API 和 Web Serial API 非常相似，我们完全可以模仿后者 primitives 的设计方式。</p>
+<h2 id="如何调试">如何调试？</h2>
+<p>调试常规的 JavaScript 相对容易，只需要在浏览器中工作即可。调试 Web Bluetooth API 和 Web Serial API 相关工作较难，它需要与外部设备通信。</p>
+<p>这与调试 HTTP API 颇为相似。调试 HTTP API 时，我们经常需要弄清楚，客户端代码是否按照接口的要求，发送了正确的数据。达成目标的一种方法是构建一个 echo server, 它将我们发送消息原样返回，如一面镜子一样，让客户端知道自己做了什么。 <a href="https://github.com/postmanlabs/httpbin">httpbin</a> 是这个领域的出色工具。</p>
+<p>我想在调试 BLE 客户端(BLE 主机)时，拥有类似的东西，它能够原样返回我发出的数据。我需要构建一个 BLE echo  server。有 2 个不错的方案可供选择:</p>
+<ul>
+<li>使用 MicroBlocks 对 esp32 编程制作做 BLE echo  server</li>
+<li>使用Adafruit 开源的 <a href="https://github.com/adafruit/Adafruit_CircuitPython_BLE/blob/main/examples/ble_uart_echo_test.py">ble_uart_echo_test.py</a> 来做(ESP32 S3 和 micro:bit V2 应该都可以运行它)。</li>
+</ul>
+<p>我更喜欢第一种方案，因为可以工作在 liveness 编程环境中。</p>
+<h1 id="开发">开发</h1>
+<h2 id="hello-world">hello world</h2>
+<p>我打算先走通 BLE 的 hello world。</p>
+<p>我将这里的 hello world 定义为: 在浏览器 JavaScript 代码中发送一个蓝牙消息，并且原样收到它。</p>
+<h3 id="ble-echo-server">BLE echo server</h3>
+<!--
+MicroBlocks 的蓝牙需要升级，我最近没时间弄，暂时使用 [ble_uart_echo_test.py](https://github.com/adafruit/Adafruit_CircuitPython_BLE/blob/main/examples/ble_uart_echo_test.py) 制作 BLE echo server
+
+使用最新版本 Thonny , 往 esp32-s3(esp32-s3-devkitc-1) 刷入 CircuitPython 固件
+-->
+<p>使用 MicroBlocks 对 esp32 编程, 构建一个 BLE echo server.</p>
+<!--固件 28000 OBJSTORE_BYTES-->
+<!--
+esp32-ble 目前不支持基于 services 的filter，因为没有广播数据
+microbit v2 运行ble_uart_echo_test.py, 也没有广播数据
+
+esp32-ble-20231115.bin 支持 read
+-->
+<p>首先将 esp32-ble 固件(<code>https://wwj718.github.io/post/img/esp32-ble-nus-20231202.bin</code>) 刷入 ESP32 板子(我用的是 ESP32 DEVKIT V1, 你也可以在其他 ESP32 板子上使用)。</p>
+<p>通过 MicroBlocks(1.2.44及以上版本) 的 <code>显示高级积木 &gt; 从 URL 安装 ESP 固件</code> 来刷入固件。</p>
+<p><img src="https://wwj718.github.io/post/img/Snap-BLE-library-01.png" alt=""></p>
+<p>运行 <a href="https://microblocksfun.cn/run/microblocks.html#project=projectName%20%27BLE%20UART%20demo%27%0A%0Amodule%20main%0Aauthor%20%27wwj718%20%26%20CWEIB%27%0Aversion%201%200%20%0Adescription%20%27%27%0Avariables%20last_ble_message%20%0A%0Ascript%20111%2040%20%7B%0AwhenStarted%0A%27start%20BLE%20UART%20server%27%20%27BLE%20echo%20server%27%0AwaitMicros%20500%0Aforever%20%7B%0A%20%20if%20%28%27BLE%20Device%20connected%27%29%20%7B%0A%20%20%20%20sayIt%20%27Client%20is%20connected%27%0A%20%20%20%20last_ble_message%20%3D%20%28%27last%20BLE%20UART%20message%27%29%0A%20%20%20%20if%20%28last_ble_message%20%21%3D%20%28booleanConstant%20false%29%29%20%7B%0A%20%20%20%20%20%20comment%20%27echo%27%0A%20%20%20%20%20%20sayIt%20last_ble_message%0A%20%20%20%20%20%20%27BLE%20UART%20write%27%20last_ble_message%0A%20%20%20%20%7D%0A%20%20%7D%20else%20%7B%0A%20%20%20%20sayIt%20%27Wait%20for%20a%20client...%27%0A%20%20%7D%0A%20%20waitMillis%2050%0A%7D%0A%7D%0A%0A%0Amodule%20%27BLE%20UART%20server%27%20Comm%0Aauthor%20%27wwj718%20%26%20CWEIB%27%0Aversion%201%201%20%0Adescription%20%27BLE%20UART%20server.%20Firmware%20URL%3A%20https%3A%2F%2Fwwj718.github.io%2Fpost%2Fimg%2Fesp32-ble-nus-20231202.bin%27%0Avariables%20_oldname%20%0A%0A%20%20spec%20%27%20%27%20%27start%20BLE%20UART%20server%27%20%27start%20BLE%20UART%20server%20_%27%20%27auto%27%20%27MicroBlocks%20BLE%20UART%20server%27%0A%20%20spec%20%27r%27%20%27BLE%20Device%20connected%27%20%27BLE%20UART%20connected%27%0A%20%20spec%20%27r%27%20%27last%20BLE%20UART%20message%27%20%27last%20BLE%20UART%20message%27%0A%20%20spec%20%27%20%27%20%27BLE%20UART%20write%27%20%27BLE%20UART%20write%20_%27%20%27auto%27%20%27hello%27%0A%20%20spec%20%27%20%27%20%27stop%20BLE%20UART%20server%27%20%27stop%20BLE%20UART%20server%27%0A%0Ato%20%27BLE%20Device%20connected%27%20%7B%0A%20%20return%20%28callCustomReporter%20%27%5Bnet%3ABLE_UART_Connected%5D%27%29%0A%7D%0A%0Ato%20%27BLE%20UART%20write%27%20message%20%7B%0A%20%20callCustomCommand%20%27%5Bnet%3ABLE_UART_Write%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20message%29%0A%7D%0A%0Ato%20%27last%20BLE%20UART%20message%27%20%7B%0A%20%20local%20%27tmp%27%20%28callCustomReporter%20%27%5Bnet%3ABLE_UART_LastEvent%5D%27%29%0A%20%20if%20%28tmp%20%21%3D%20%28booleanConstant%20false%29%29%20%7B%0A%20%20%20%20return%20%28at%201%20tmp%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20return%20%28booleanConstant%20false%29%0A%20%20%7D%0A%7D%0A%0Ato%20%27start%20BLE%20UART%20server%27%20name%20%7B%0A%20%20callCustomCommand%20%27%5Bnet%3ABLE_UART_Start%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20name%29%0A%7D%0A%0Ato%20%27stop%20BLE%20UART%20server%27%20%7B%0A%20%20callCustomCommand%20%27%5Bnet%3ABLE_UART_Stop%5D%27%0A%7D%0A%0A">这个程序</a></p>
+<p><img src="/post/img/Snap-BLE-library-02.png" alt=""></p>
+<h3 id="测试它">测试它</h3>
+<p>运行起来之后，你就可以使用各种 BLE 客户端测试它了。从客户端发送的消息都会被原样返回。</p>
+<p>如果使用苹果设备做实验, 如果之前连接过 esp32 板子的蓝牙, 请先<code>忽略此设备</code>，不然可能无法连上。</p>
+<p>使用 NRF Connect 的测试结果:</p>
+<p><img src="/post/img/Snap-BLE-library-03.png" alt=""></p>
+<p>使用 <a href="chrome://bluetooth-internals/#devices">Chrome bluetooth-internals</a> 的测试结果(似乎无法 read 消息):</p>
+<p><img src="/post/img/Snap-BLE-library-04.png" alt=""></p>
+<p><img src="/post/img/Snap-BLE-library-05.png" alt=""></p>
+<p>当然你也可以使用其他你喜欢的蓝牙客户端(<a href="https://github.com/hbldh/bleak">bleak</a>, <a href="https://punchthrough.com/lightblue/">lightBlue</a>&hellip;)测试它。</p>
+<h2 id="在浏览器中构建-ble-client">在浏览器中构建 BLE client</h2>
+<p>Web Bluetooth API 有很多样板代码, 我打算将脏活累活丢给了ChatGPT(GPT4), 这是<a href="https://chat.openai.com/share/5c0a592b-1413-4ae0-86e0-4d12df161f5c">我与ChatGPT的对话过程</a>，中间只有一个小错误(大小写)，我反馈错误之后它理解修复了。另有一个问题是，它没有考虑 html 的编码(<code>&lt;meta charset=&quot;UTF-8&quot;&gt;</code>), 这些都是小问题。</p>
+<p>它相当出色地完成了一个可用的 <a href="https://gist.github.com/wwj718/2d2cefbd496561af4b8f78918c1cde29">BLE echo client</a>, 而且带有简单UI.</p>
+<h1 id="在-snap-中编程">在 Snap! 中编程</h1>
+<p>有了可用的 <a href="https://gist.github.com/wwj718/2d2cefbd496561af4b8f78918c1cde29">BLE echo client</a>, 就可以思考如何在 Snap! 中实现这个用例了。</p>
+<h2 id="构建-ble-primitives">构建 BLE primitives</h2>
+<p>前边提到:</p>
+<blockquote>
+<p>好在 Snap! 有一个绝佳的参考案例: 包装了 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API">Web Serial API</a> 的 <a href="https://github.com/jmoenig/Snap/blob/ba6ef0a4d0467f5a787ef12bab315fadaf97efda/src/extensions.js#L1176">primitives</a>。Snap! 中的<a href="https://wiki.microblocks.fun/en/snap/microblocks_snap_messaging">MicroBlocks 库</a>便是以此为基础来做的。<br>
+Web Bluetooth API 和 Web Serial API 非常相似，我们完全可以模仿后者 primitives 的设计方式。</p>
+</blockquote>
+<p>我们已经有了<a href="https://gist.github.com/wwj718/2d2cefbd496561af4b8f78918c1cde29">BLE echo client</a>, 它是一个真实 BLE 设备(BLE echo server)的客户端。我们未来将在 Snap! 里固件的 BLE 设备库，正是这样功能的东西，所以可以把 BLE echo client 视为第一个实现目标，它足够简单，但足够典型，这是再好不过的原型项目了。BLE primitives 是否提供了合适粒度的抽象， 在制作 BLE echo client 的过程中，由于依赖于 BLE primitives ，我们也能评估它。</p>
+<h3 id="学习-snap-microblocks-库">学习 Snap! MicroBlocks 库</h3>
+<p>由于 Snap! <a href="https://wiki.microblocks.fun/en/snap/microblocks_snap_messaging">MicroBlocks 库</a> 构建在 web serial primitives 之上，通过阅读 MicroBlocks 库的实现，我们能够学到极其有价值的东西。</p>
+<p><img src="/post/img/Snap-BLE-library-06.png" alt=""></p>
+<p>继续进入下一层积木，我们将抵达 web serial primitives, 这是积木的最底层:</p>
+<p><img src="/post/img/Snap-BLE-library-07.png" alt=""></p>
+<p>如果希望继续往下，我们就需要进入 primitives 的实现层, Snap! 目前的实现语言是 JavaScript(未来似乎可以实现在WebAssembly里), <a href="https://github.com/jmoenig/Snap/blob/ba6ef0a4d0467f5a787ef12bab315fadaf97efda/src/extensions.js#L1176">web serial primitives的实现</a>非常简单: 格式化代码之后一共也才 147 行 !</p>
+<p>前边提到:</p>
+<blockquote>
+<p>Web Bluetooth API 和 Web Serial API 非常相似，我们完全可以模仿后者 primitives 的设计方式。</p>
+</blockquote>
+<p>既然我们知道这两种 API 非常非常相似，又有了 Snap! 中的 web serial primitives，似乎就可以要求 ChatGPT 来做这个模仿工作, 处理 API 的细节差异问题，应该在它的能力范围之内。</p>
+<p>让 ChatGPT 工作之前，我们先来配置下开发环境，以便于测试和调整 ChatGPT 给出的代码。</p>
+<h3 id="开发方式">开发方式</h3>
+<p><a href="https://github.com/jmoenig/Snap">Snap! 代码</a>只是一堆的<strong>静态文件</strong>。</p>
+<p>开发它只需要编写普通 JavaScript 即可，无须任何打包工具。</p>
+<p>你可以直接打开 <code>snap.html</code> 文件测试你正在开发的代码。更推荐的方式是在项目根目录运行一个静态服务器: <code>python -m http.server</code>, 然后打开 http://127.0.0.1:8000/。 相比于直接打开 <code>snap.html</code> 能够获得更完整的功能: 插件和精灵图片、音乐都可使用。</p>
+<p>一般而言，要访问硬件(serial, 蓝牙, 摄像头, 麦克风&hellip;), 浏览器会要求页面需要部署为<code>https</code>。但对于本地开发环境(127.0.0.1), 无须 https， 也可访问这些 API。</p>
+<p>如果你在本地开发 CodeLab Adapter 插件，则需要将页面部署为 <code>https</code>。</p>
+<h3 id="让-chatgpt-构建-ble-primitives">让 ChatGPT 构建 BLE primitives</h3>
+<p>ChatGPT 是绝佳的实习生，它细心，耐心，拥有丰富的知识，并乐于听取反馈。 我喜欢让它来编写具体的代码。</p>
+<p>万事开头难。 我想可能降低开始的工作难度, 我打算一开始只实现<strong>连接设备</strong>和<strong>写入数据</strong>这两个接口。 由于 MicroBlocks 提供了出色的实时编程界面，在我们可以在那儿看到客户端写入了什么数据，这避免了我们一开始需要在客户端中实现读取服务端返回数据的功能。</p>
+<p>ChatGPT 并没有给出一次可用的代码, 但完全符合我的预期。我期待它帮助我编写 API 相关的代码, 这里有许多细节和样板代码，它做得很好。</p>
+<p>我并不假设它对 Snap! 有充分了解, 我也不打算在上下文中把 Snap! 相关的知识都抛给它, 那会让对话失去重点，我想要的是 Copilot , 我在边上监督和检验。</p>
+<p>我调整了两处涉及 JavaScript 与 Snap! 的数据交换接口:</p>
+<ul>
+<li><code>bt_connect(options)</code>: ChatGPT 以为可以从 Snap! 传递 object 给 js ，这个猜测是完全合理的。但 Snap! 使用内部的数据结构来传递(定制过的list)。</li>
+<li><code>acc.result = {device, server}</code>:  Snap! 一般使用自定义的 List 来传递多个数据, 更好的做法是: <code>acc.result = new List([device, server])</code></li>
+</ul>
+<p>此外， 大多数代码都是可用的，对于原型制作，非常令人满意，这远比我自己编程来得高效。</p>
+<p><img src="/post/img/Snap-BLE-library-08.png" alt=""></p>
+<p>给蓝牙设备发送数据:</p>
+<p><img src="/post/img/Snap-BLE-library-10.png" alt=""></p>
+<p>由于我工作在个人计算风格的 liveness 环境中，我可以实时地理解和修复系统。</p>
+<p><img src="/post/img/Snap-BLE-library-09.png" alt=""></p>
+<p>之后我又让 ChatGPT 帮我完成了<strong>读取数据</strong>和<strong>断开连接</strong> primitives:</p>
+<p><img src="/post/img/Snap-BLE-library-11.png" alt=""></p>
+<h3 id="获取-ble-设备数据的-2-种方式">获取 BLE 设备数据的 2 种方式</h3>
+<p>有了这 4 个模仿 serial primitives 的 BLE primitives, 我们确实可以构建出类似 MicroBlocks 的库:</p>
+<img width=400 src="/post/img/Snap-BLE-library-12.png" />
+<p>但需要注意, 这是一种<strong>拉(pull)模式</strong>: 蓝牙客户端主动发起读取(READ)操作。</p>
+<p>获取 BLE 设备信息的更典型方式是<strong>推(push)模式</strong>: 蓝牙设备根据特性值的变化自动推送(NOTIFY)。</p>
+<p>(与 ChatGPT 的<a href="https://chat.openai.com/share/487046b4-1f81-4710-86e6-e28d77cb04c0">这段对话</a>, 让我意识到上述区分)</p>
+<p>我们之前在 Scratch 中使用的大多数 BLE 插件都是推(push)模式(NOTIFY):</p>
+<p><img src="/post/img/Snap-BLE-library-13.png" alt=""></p>
+<p><a href="https://snap.berkeley.edu/snap/snap.html#present:Username=birdbraintech&amp;ProjectName=MicrobitStarterProject&amp;editMode&amp;noRun">birdbraintech/MicrobitStarterProject</a>  也是这种风格:</p>
+<img width=400 src="/post/img/Snap-BLE-library-14.png" />
+<h3 id="围绕-notify-构建-primitive">围绕 NOTIFY 构建 primitive</h3>
+<p>记住我们之前的偏好:</p>
+<blockquote>
+<p>尽可能在积木里做事情</p>
+</blockquote>
+<p>往这个目标前进的一种方式是构建尽可能通用的 primitive。</p>
+<p>我们想要这样一个 primitive: 它能够获取 BLE 设备中 Characteristic NOTIFY 的消息，并进一步分发它。理想的方式是直接分发给其他 reporter 积木。 退而求其次, 存储到某个js容器里(Scratch中基本是这样做的), reporter 积木根据这些容器里的数据，报告自身状态。</p>
+<!--
+## 边缘问题
+是否会消耗，get_and_delete
+寄存器
+还是
+两次按下是相同的怎么办
+
+在Scratch 的积木中我们已经有了很多经验
+
+在Snap 处理这些很简答，它们只是js，没有when
+
+when，只需要 reporter
+
+参考adapter eim积木
+-->
+<!--
+与外部系统通信结构是相似的
+
+Snap 与外系统的交互，就数据层面而言，无非三种模式，read/write/notify，这三种模式都在Adapter EIM插件里体现了
+-->
+<p>我在 <strong>Snap! USB micro:bit</strong> 插件里展示了一种 &ldquo;尽可能在积木里做事情&rdquo; 的技巧:</p>
+<p><img src="/post/img/Snap-BLE-library-15.png" alt=""></p>
+<p>你可以将一个积木&quot;闭包&quot;作为回调函数抛到 primitive(js函数) 里,  primitive(只是js函数) 可以决定何时调用这些积木，并且可以给它传递参数。</p>
+<p>这个例子也展示了，甚至可以在回调函数中动态修改积木(运行中修改积木可能不是最佳实践，不推荐使用)。</p>
+<p>我们让 ChatGPT 帮我们添加一个 bt_notify primitive(它一次就做对了!)，然后我们调整成 callback 风格。再让 ChatGPT 写一个 bt_connected primitive. 我们基本得到令人满意的所有 BLE primitives 了! 再做个收尾工作，将所有的 <code>bt_</code> 改为 <code>ble_</code>。</p>
+<p><img src="/post/img/Snap-BLE-library-16.png" alt=""></p>
+<h3 id="ble-echo-client插件">BLE echo client插件</h3>
+<p>有了上边的 primitives, 要构建我们的测试用例(BLE echo client插件)是轻而易举的。</p>
+<p><img src="/post/img/Snap-BLE-library-17.png" alt=""></p>
+<p>值得的注意的是，我们构建了一个容器变量(echo_notify_datas), 用来存放 notify 的数据，在 Scratch 中，开发者通常在 js 里将 notify 数据映射为 reporter 积木。由于 Snap! 有强大的 list 积木，数据映射到积木的工作要比在 js 里容易得多，尤其是可以动态实时调试！</p>
+<p>当然可能还需要修剪一下粗糙的边缘，诸如多次 connect 会怎样 ? 这些边缘问题通常与状态管理有关，由于我们在 Snap 拥有所有的能力，而且是完全活性的，所以这些问题比起在 js 里处理要轻松得多。</p>
+<hr>
+<h1 id="附录">附录</h1>
+<h2 id="nordic-uart-service-nus">Nordic UART Service (NUS)</h2>
+<p>前边说到:</p>
+<blockquote>
+<p>Web Bluetooth API 和 Web Serial API 非常相似，我们完全可以模仿后者 primitives 的设计方式。</p>
+</blockquote>
+<p>这个类比是有问题的，更确切的表述是 <a href="https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/libraries/bluetooth_services/services/nus.html">Nordic UART Service (NUS)</a> 与 Web Serial API 非常相似。</p>
+<p>在与ChatGPT 的<a href="https://chat.openai.com/share/8b884411-85aa-417e-bcfc-86a6efbd9365">这段对话</a>，它提到:</p>
+<blockquote>
+<p>BLE UART 服务（Bluetooth Low Energy Universal Asynchronous Receiver/Transmitter Service）是一种在蓝牙低功耗(BLE)技术上实现的串行通信服务。这种服务模拟了传统的UART通信
+UART是实现串行(Serial)通信的一种技术或设备。当我们谈论串行通信时，特别是在微控制器和计算机之间，我们通常是指使用UART的通信方式。</p>
+</blockquote>
+<p>由于本文的 BLE 测试设备，是一个 BLE echo  server(运行着Nordic UART Service), 所以我们学习 serial primitives 是合适的。</p>
+<p>但需要注意, Nordic UART Service 只是使用 BLE 构建服务的一种方式, 当然它是一种强大的方式，但很多蓝牙设备并不一定提供 Nordic UART Service。由于 BLE API 主要围绕对 Characteristic 进行 read/write/notify 来操作而构建, 所以我们以Nordic UART Service 为用例而构建的 primitives 基本是通用的。</p>
+<p>对于任何自定义的 BLE 设备，我推荐使用 Nordic UART Service，因为它足够简单和通用。它使得与蓝牙设备的通信， 与串口或websockets 相似。</p>
+<h2 id="使用-bytes-而不是-utf8-文本">使用 bytes 而不是 utf8 文本</h2>
+<p>为了提高 primitives 的通用性, 与蓝牙通信的积木 (read/notify/write) 都直接操作 bytes 数据(在Snap! 中表示为列表(元素取值范围 0-255))。 这样一来, 对 BLE 设备的任何操作都完全可以在 Snap! 中实现了, 不再需要进入下一层。</p>
+<p>这部分的具体实现没有在本文中体现。</p>
+<h2 id="设备过滤">设备过滤</h2>
+<p>由于设备过滤有多种可能性, 我们允许用户直接传递 JSON 字符串，来指定<a href="https://developer.chrome.com/articles/bluetooth/#request">过滤规则</a>，具体规则与 JavaScript 中的 API 一致:</p>
+<p><img src="/post/img/Snap-BLE-library-18.png" alt=""></p>
+<h2 id="chrome-调试工具">Chrome 调试工具</h2>
+<p>迁移 <a href="https://github.com/bricklife/scratch-lego-bluetooth-extensions">Scratch 的社区乐高插件</a>遇到一些困难。</p>
+<p>这些乐高插件试图实现通用的<a href="https://lego.github.io/lego-ble-wireless-protocol-docs/">乐高蓝牙协议</a>, 同时代码压缩在单一文件里, 导致阅读困难。</p>
+<p>Scratch 插件系统设计得非常糟糕, 臃肿不堪。 相比于阅读弄清楚代码，更简单的方式是观察积木运行时，到底发出了什么蓝牙信号。</p>
+<p>使用 Chrome 调试工具可以很容易做到这点，策略是: 打断点。</p>
+<p>找到积木相关的代码, 打上断点, 然后跟踪代码的运行, 在 console 中打印出发送的蓝牙数据。</p>
+<p><img src="/post/img/Snap-BLE-library-19.png" alt=""></p>
+<p>单步运行, 直到进入这里:</p>
+<p><img src="/post/img/Snap-BLE-library-20.png" alt=""></p>
+<p>这里的 command 就是实际发给蓝牙设备的数据(this.send 没有处理数据)。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://github.com/jmoenig/Snap">github/Snap</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API">Web Bluetooth API</a></li>
+<li><a href="https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/libraries/bluetooth_services/services/nus.html">Nordic UART Service (NUS)</a></li>
+<li>ChatGPT:
+<ul>
+<li><a href="https://chat.openai.com/share/8b884411-85aa-417e-bcfc-86a6efbd9365">ChatGPT: UART, serial, BLE UART Service</a></li>
+<li><a href="https://chat.openai.com/share/5c0a592b-1413-4ae0-86e0-4d12df161f5c">ChatGPT/BLE js client demo</a></li>
+<li><a href="https://gist.github.com/wwj718/2d2cefbd496561af4b8f78918c1cde29">ble-test.html </a></li>
+</ul>
+</li>
+<li><a href="https://developer.chrome.com/articles/bluetooth/">Communicating with Bluetooth devices over JavaScript</a></li>
+<li><a href="https://googlechrome.github.io/samples/web-bluetooth/index.html">Web Bluetooth Samples</a>
+<ul>
+<li><a href="https://googlechrome.github.io/samples/web-bluetooth/watch-advertisements.html">Web Bluetooth / Watch Advertisements Sample</a>: 可用于监听 OctoStudio beam?</li>
+</ul>
+</li>
+<li><a href="https://snap.berkeley.edu/snap/snap.html#present:Username=birdbraintech&amp;ProjectName=MicrobitStarterProject&amp;editMode&amp;noRun">Snap birdbraintech MicrobitStarterProject</a>
+<ul>
+<li><a href="https://snap.berkeley.edu/snap/snap.html#present:Username=alan_russell&amp;ProjectName=MicrobitStarterProject&amp;editMode&amp;noRun">remix by alan_russell</a>
+<ul>
+<li>固件是用 <a href="https://circuitpython.org/board/microbit_v2/">circuitpython</a> 写的？</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://www.newyorker.com/magazine/2023/11/20/a-coder-considers-the-waning-days-of-the-craft">the Waning Days of the Craft</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API">Web Serial API</a></li>
+<li><a href="https://wiki.microblocks.fun/en/snap/microblocks_snap_messaging">MicroBlocks and Snap! Communication with Messages</a></li>
+<li><a href="https://github.com/postmanlabs/httpbin">httpbin</a></li>
+<li><a href="https://github.com/adafruit/Adafruit_CircuitPython_BLE/blob/main/examples/ble_uart_echo_test.py">ble_uart_echo_test.py</a></li>
+<li><a href="https://github.com/MicroBlocksCN/microblocks-site/wiki/%E6%9D%82%E9%A1%B9">microblocks BLE wiki</a></li>
+<li><a href="https://esp.huhn.me/">ESPWebTool</a></li>
+<li><a href="chrome://bluetooth-internals/#devices">Chrome bluetooth-internals</a></li>
+<li>nRF Connect
+<ul>
+<li>可在 iOS 和 Android 中使用</li>
+</ul>
+</li>
+<li><a href="https://punchthrough.com/lightblue/">lightBlue</a>
+<ul>
+<li>可在 MacOS, iOS 和 Android 中使用</li>
+</ul>
+</li>
+<li>Python BLE 库
+<ul>
+<li><a href="https://github.com/hbldh/bleak">bleak</a></li>
+<li><a href="https://github.com/ukBaz/python-bluezero">python-bluezero</a>: A simple Python interface to Bluez
+<ul>
+<li>可以将 linux 作为蓝牙客户端或蓝牙服务器</li>
+</ul>
+</li>
+<li><a href="https://github.com/adafruit/Adafruit_CircuitPython_BLE">Adafruit_CircuitPython_BLE</a></li>
+<li><a href="https://github.com/OpenBluetoothToolbox/SimpleBLE">SimpleBLE</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/virtualabs/btlejack">btlejack</a></li>
+<li><a href="https://github.com/bricklife/scratch-lego-bluetooth-extensions">scratch-lego-bluetooth-extensions</a></li>
+<li><a href="https://lego.github.io/lego-ble-wireless-protocol-docs/">Welcome to LEGO Wireless Protocol 3.0.00 documentation!</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Bluetooth_Low_Energy">wikipedia: Bluetooth Low Energy</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-11-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/microblocks-mouse-keyboard-library/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">MicroBlocks 编程案例: 模拟 USB 键盘</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/extend-octostudio/">
+            <span class="next-text nav-default">破解 OctoStudio</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

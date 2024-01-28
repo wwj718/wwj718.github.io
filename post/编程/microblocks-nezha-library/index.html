@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MicroBlocks 编程案例: 创建哪吒扩展板库 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="你无法用制造问题的思路解决问题 前言 英荔和恩孚联合举办的火星资源挑战赛，去年(月球资源挑战赛)全国有数百支队伍参加，赛事使用了哪吒扩展板来驱动" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-nezha-library/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MicroBlocks 编程案例: 创建哪吒扩展板库" />
+<meta property="og:description" content="你无法用制造问题的思路解决问题 前言 英荔和恩孚联合举办的火星资源挑战赛，去年(月球资源挑战赛)全国有数百支队伍参加，赛事使用了哪吒扩展板来驱动" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-nezha-library/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-01-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-01-25T00:00:00+00:00" />
+
+<meta itemprop="name" content="MicroBlocks 编程案例: 创建哪吒扩展板库">
+<meta itemprop="description" content="你无法用制造问题的思路解决问题 前言 英荔和恩孚联合举办的火星资源挑战赛，去年(月球资源挑战赛)全国有数百支队伍参加，赛事使用了哪吒扩展板来驱动"><meta itemprop="datePublished" content="2022-01-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-01-25T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1071">
+<meta itemprop="keywords" content="MicroBlocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MicroBlocks 编程案例: 创建哪吒扩展板库"/>
+<meta name="twitter:description" content="你无法用制造问题的思路解决问题 前言 英荔和恩孚联合举办的火星资源挑战赛，去年(月球资源挑战赛)全国有数百支队伍参加，赛事使用了哪吒扩展板来驱动"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MicroBlocks 编程案例: 创建哪吒扩展板库</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-01-25 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#思路">思路</a></li>
+    <li><a href="#困境">困境</a></li>
+    <li><a href="#microblocks-平台提供的强大支持">MicroBlocks 平台提供的强大支持</a></li>
+    <li><a href="#演示">演示</a></li>
+    <li><a href="#尝鲜">尝鲜</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="https://www.elecfreaks.com/learn-cn/_images/03444_01.png" alt=""></p>
+<blockquote>
+<p>你无法用制造问题的思路解决问题</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<!--
+todo
+    AILens: https://github.com/lionyhw/EF_Produce_MicroPython/blob/master/AILens.py
+-->
+<p>英荔和恩孚联合举办的火星资源挑战赛，去年(月球资源挑战赛)全国有数百支队伍参加，赛事使用了<a href="https://www.elecfreaks.com/learn-cn/microbitExtensionModule/Nezha.html"><strong>哪吒扩展板</strong></a>来驱动小车， @Leeyve 和 @Jackson 希望基于 MicroBlocks 平台来开展赛事(替代 MakeCode 平台)。于是我这两天试着在 MicroBlocks 里接管哪吒扩展板以及小车使用到的其他传感器/执行器。</p>
+<h2 id="思路">思路</h2>
+<p>哪吒扩展板来自恩孚公司, 恩孚的产品在海外很受欢迎(MicroBlocks 官方的例子有些就用了恩孚的扩展板)。我喜欢恩孚这家公司的开放作风，他们的<a href="http://www.elecfreaks.com/learn-cn/">产品文档</a>开放又出色。之前我们在 CodeLab 有一些新的脑洞，恩孚的 CPO @song兄 都非常乐意提供支持。</p>
+<p>哪吒扩展板相关的驱动代码，都在 Github 上: <a href="https://github.com/lionyhw/PlanetX_MicroPython/blob/master/nezha.py">PlanetX_MicroPython/nezha.py</a></p>
+<p>我打算将这些代码翻译到 MicroBlcoks，和<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-sphero-rvr-library/">MicroBlocks 编程案例: 创建 Sphero RVR 代码库</a>的思路一样。</p>
+<h2 id="困境">困境</h2>
+<p>结果遇到了困难。</p>
+<p>比赛小车驱动的设备，基本都采用 I2C 通信。当前工作的实质是变着花样摆弄 I2C。将电机和舵机接入 MicroBlcoks 相当简单，翻译<a href="https://github.com/lionyhw/PlanetX_MicroPython/blob/master/nezha.py">这部分 MicroPython 代码</a>即可，只用了一会儿功夫, 第一次运行就成功了！</p>
+<p><img src="/post/img/1643103244669.jpg" alt=""></p>
+<p><video width="80%" src="https://adapter.codelab.club/video/1643013747408674.mp4" controls="controls"></video></p>
+<p><video width="80%" src="https://adapter.codelab.club/video/1643014813058195.mp4" controls="controls"></video></p>
+<p>但接入颜色传感器花了我好几个小时！</p>
+<p><a href="https://github.com/lionyhw/PlanetX_MicroPython/blob/master/color.py">颜色传感器 MicroPython 驱动</a> 比较复杂，但也只是摆弄 I2C 而已，但与电机/舵机这类执行器不同，颜色传感器需要从 I2C 地址获取数据（不只是写入数据）。</p>
+<p>驱动的代码量很大:</p>
+<p><img src="/post/img/1643103996047.jpg" alt=""></p>
+<p>代码始终没有按照预期运行。我猜测错误的最大可能是大量 16 进制数造成的（诸如粗心导致的输入错误之类的），反复检查了 5-10 遍代码，始终没找到这方面的任何错误。</p>
+<h2 id="microblocks-平台提供的强大支持">MicroBlocks 平台提供的强大支持</h2>
+<!--展开定义的力量-->
+<p>一筹莫展之下，我想了个主意，先缩小错误的范围，不想每次都检查一大堆的代码。 策略是对比 <a href="https://github.com/lionyhw/PlanetX_MicroPython/blob/master/color.py">颜色传感器 MicroPython 驱动</a> 和 MicroBlocks 的代码中间结果的差别，定位出最早的异常。</p>
+<p>很快我将异常定位到了 <code>_i2cread_color</code>:</p>
+<p><img src="/post/img/1643104919512.jpg" alt=""></p>
+<p>虽然定位到了错误区域，始终看不出哪儿出了问题。</p>
+<blockquote>
+<p>你无法用于制造问题的思路解决问题。</p>
+</blockquote>
+<p>我试着直接操控 register， 也没有搞定(我是 I2C 新手)。</p>
+<p>无奈之下，我放弃了自己折腾。 准备看看 MicroBlocks 其他使用 I2C 的驱动是怎么写的。</p>
+<p>我找到了一个其他型号的颜色传感器: <code>TCS34725</code></p>
+<p><img src="/post/img/1643105327627.jpg" alt=""></p>
+<p>MicroBlocks 平台强大的功能之一是允许用户深入到积木底下: 展开定义！通过不停地展开定义，我不断进入到更深层的地方。我终于弄懂了原因！</p>
+<p><img src="/post/img/1643106027617.jpg" alt=""></p>
+<p>于是我修复了代码。</p>
+<p><img src="/post/img/1643104802020.jpg" alt=""></p>
+<p>若不是 MicroBlocks 平台提供的强大支持，我不知要多久才能解决这个问题，或者根本解决不了。</p>
+<h2 id="演示">演示</h2>
+<p>我们来看看使用 nezha 代码库驱动的 demo:</p>
+<p><video width="80%" src="https://adapter.codelab.club/video/1643103240854776.mp4" controls="controls"></video></p>
+<p>nezha 代码库还未完成，完成后我会提交到官方。有一些比赛会使用的设备没有接入，诸如 AI 摄像头和 4 路灰度传感器，但它们都采用 I2C 通信，复杂度也不如颜色传感器，问题应该不大。</p>
+<h2 id="尝鲜">尝鲜</h2>
+<p>愿意尝鲜的同学可以下载使用它: <a href="/post/img/nezha.ubl">nezha.ubl</a></p>
+<p>可以从这里加载自定义的代码库:</p>
+<p><img src="/post/img/1643008474077.jpg" alt=""></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="http://wiki.microblocks.fun/create_a_library">How to create a library</a>
+<ul>
+<li><a href="https://microblocks.zhubai.love/posts/2088166608488710144">如何在 MicroBlocks 中创建代码库</a></li>
+</ul>
+</li>
+<li><a href="https://wiki.microblocks.fun/reference_manual/myblocks">My Blocks</a>
+<ul>
+<li><a href="https://microblocks.zhubai.love/posts/2094173059597713408">MicroBlocks 积木块使用说明 &ndash; 自定义积木</a></li>
+</ul>
+</li>
+<li><a href="https://www.elecfreaks.com/learn-cn/microbitExtensionModule/Nezha.html">哪吒扩展板</a></li>
+<li><a href="https://www.elecfreaks.com/learn-cn/microbitExtensionModule/Nezha.html">哪吒扩展板</a></li>
+<li><a href="https://github.com/lionyhw/PlanetX_MicroPython/blob/master/nezha.py">PlanetX_MicroPython/nezha.py</a></li>
+<li><a href="https://github.com/lionyhw/PlanetX_MicroPython/blob/master/color.py">PlanetX_MicroPython/color.py</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-01-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/microblocks-ailens-library/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">MicroBlocks 编程案例: 创建 AI 摄像头库</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/microblocks-sphero-rvr-library/">
+            <span class="next-text nav-default">MicroBlocks 编程案例: 创建 Sphero RVR 代码库</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

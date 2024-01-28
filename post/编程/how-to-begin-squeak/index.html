@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译]如何开启Squeak之旅 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 前些时候，我使用 SqueakJS 读了一篇用动态媒介写的文章。 近期继续借助 SqueakJS 挖掘 Squeak 社区里尘封的宝藏。最近挖掘到的一个宝藏是Squeak News, 这是第一份致力于" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/how-to-begin-squeak/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译]如何开启Squeak之旅" />
+<meta property="og:description" content="前言 前些时候，我使用 SqueakJS 读了一篇用动态媒介写的文章。 近期继续借助 SqueakJS 挖掘 Squeak 社区里尘封的宝藏。最近挖掘到的一个宝藏是Squeak News, 这是第一份致力于" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/how-to-begin-squeak/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-09-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-09-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译]如何开启Squeak之旅">
+<meta itemprop="description" content="前言 前些时候，我使用 SqueakJS 读了一篇用动态媒介写的文章。 近期继续借助 SqueakJS 挖掘 Squeak 社区里尘封的宝藏。最近挖掘到的一个宝藏是Squeak News, 这是第一份致力于"><meta itemprop="datePublished" content="2022-09-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-09-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="8981">
+<meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译]如何开启Squeak之旅"/>
+<meta name="twitter:description" content="前言 前些时候，我使用 SqueakJS 读了一篇用动态媒介写的文章。 近期继续借助 SqueakJS 挖掘 Squeak 社区里尘封的宝藏。最近挖掘到的一个宝藏是Squeak News, 这是第一份致力于"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译]如何开启Squeak之旅</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-09-03 </span>
+        <div class="post-category">
+            <a href="/categories/smalltalk/"> Smalltalk </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#译文">译文</a>
+      <ul>
+        <li><a href="#我的动机">我的动机</a></li>
+        <li><a href="#目标受众">目标受众</a></li>
+        <li><a href="#如何接近-squeak">如何接近 Squeak</a></li>
+        <li><a href="#什么是-squeak">什么是 Squeak？</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>前些时候，我使用 <a href="https://squeak.js.org/">SqueakJS</a> 读了<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/morph-layout-article/">一篇用动态媒介写的文章</a>。</p>
+<p>近期继续借助 SqueakJS 挖掘 Squeak 社区里尘封的宝藏。最近挖掘到的一个宝藏是<a href="https://smalltalkzoo.thechm.org/SqueakNews/index.html#toc4">Squeak News</a>, 这是第一份致力于 Squeak 的杂志，一份动态杂志。</p>
+<p>杂志主编是 Tansel Ersavas。Tansel Ersavas 现居悉尼，是一位复杂系统/深度学习专家，也是一位热情的 Squeak 爱好者，他为 Squeak 写了很多有趣的文章，接下来的这篇文章便由他撰写。</p>
+<p>以下内容翻译自 Tansel Ersavas 的《How to Begin Squeak》，原文刊登在 <a href="https://smalltalkzoo.thechm.org/SqueakNews/index.html#toc4">Squeak News</a> 的 <a href="https://smalltalkzoo.thechm.org/SqueakNews/index.html#2">第二期</a></p>
+<h2 id="译文">译文</h2>
+<h3 id="我的动机">我的动机</h3>
+<p>我想写关于 Squeak 的文章已有很长时间。其原因是: 我相信 Squeak 注定会成为世界上最强大的软件开发环境。在很多意义上，它已经是了。我可以写其他编程语言，但它们都没有让我兴奋，更不用说吸引我在它们上面开发系统了。Squeak 是一个例外。它如此清新，即使只是玩玩，也让我觉得自己变年轻了。</p>
+<p>现在我终于有机会写点东西了。我已经签署了一份合同，要写一本关于 Squeak 的书。这些文章的详细版本将在剑桥大学出版社发行的书中出现，希望在 2002 年 5 月左右。感谢我的编辑 Lothlorien Homet 的慷慨，允许我在 Squeak News 电子杂志上刊登一些章节的浓缩版。这本书将有一个电子版伴随着它，就像你现在看到的网页一样，由 Squeak News 提供。</p>
+<p>我为什么喜欢 Squeak？嗯，有一些实实在在的东西，如复杂的图形用户界面（GUI）、集成开发环境（IDE）、声音、音乐和其他多媒体支持、网络和互联网支持，以及一个可供研究和修改的虚拟机。它是完全免费和开源的，许可条款非常宽松，这是一个很大的激励因素。还有一些动机，如 Squeak 是一个非常便携的系统，能够在各种硬件和平台上运行，包括大多数主流操作系统；它甚至已经成功地被移植到没有操作系统的裸芯片上；它可以在小型手持设备上运行，也可以在有大量内存和磁盘空间的大型系统上运行。</p>
+<p>但在所有这些原因之上，还有一种难以言表的情感，我不会试图用 &ldquo;Squeak 是用爱创造的&rdquo; 这样的话语来解释，尽管我相信它正是如此。我希望你跟随这趟旅程，自己去寻找答案。</p>
+<h3 id="目标受众">目标受众</h3>
+<p>如果你是作为一个初学者学习 Squeak，这个系列应该对你有用。我希望达到的一个目标是，让这个系列能被初学者接受，甚至是那些想了解面向对象编程，或刚入门编程的绝对初学者。这个系列不是一个传统的 &ldquo;初学者&rdquo; 系列，我相信使用 Squeak 可以让用户快速从初级水平发展到高级(相比于大多数其他开发环境和语言所要求的时间而言)。如果你是一个绝对的初学者，在阅读这些文章时，如果遇到完全不明白的部分，请继续保持阅读，之后你会弄明白它们。</p>
+<p>如果你熟悉其他语言，关于如何快速学习 Squeak 的关键信息就藏在这篇文章中，尽管根据经验，我知道可能需要一段时间来适应。</p>
+<p>如果你熟悉 Smalltalk 的其他方言，那么你就不会在这里发现很多惊喜。但我还是希望你能关注整个系列的内容。</p>
+<p>虽然这些文章不能为有经验的 Squeak 程序员提供太多的学习方法，但我还是建议有经验的 Squeaks 阅读这些文章，希望你们可以给我宝贵的反馈。我也相信这将是一个有趣的阅读，可以对选择 Squeak 起到积极的促进作用。你甚至可能从未来的文章中概述的某些高级概念中获益，并从前面的文章中获得一些教学想法。最重要的是，如果没有所有读者（从初学者到大师）的反馈，这个系列将是不完整的。</p>
+<p>这篇文章是为整个系列做的思想准备工作。由于这个原因，我将集中讨论一件事，虽然我冒着成为一个大嘴巴的风险，但我相信这对学习 Squeak 是相当必要的。因此，我在这一期的重点是，给你一个关于如何接近 Squeak 的建议。</p>
+<p>在下一篇文章中，我将介绍 Squeak 中使用的某些面向对象的基本概念和 Squeak 的介绍。稍后我们将讨论用户交互、图形、声音和音乐、网络、Squeak 内部、元对象、元 Squeak、系统交付以及更多。</p>
+<h3 id="如何接近-squeak">如何接近 Squeak</h3>
+<p>这里有一个关键，可以大大加快你学习 Squeak 的速度:</p>
+<p><strong>即使你有其他编程语言的经验，也要把 Squeak 看成是非常不同的东西。</strong></p>
+<p>这听起来好像是一个过于简单的建议，像是一个愚蠢的说法，让人无法立即接受，但如果你坚持下去，迟早会知道我这句话的意思。</p>
+<p>在过去的十年中，在我努力向组织和个人介绍 Smalltalk/Squeak 的过程中，我注意到，对这些系统感到最困难的人恰是那些来自现有计算背景的人，他们对计算是什么有着僵化的想法。他们试图根据自己以前的经验来看待 Squeak。在 Squeak 中，有很多东西似乎与当前的许多编程语言和系统相对应，这些可能有助于你快速入门。 然而这并不意味着 Squeak 只是又一个新的编程语言。Smalltalk 语言家族和 Squeak 是突破性的，开发者需要清楚地了解这些差异，以便在突破性项目中使用 Squeak 作为突破性的开发环境。</p>
+<p>Edward B. Lindeman 在他 1978 年的作品 《用未来时态思考问题(Thinking in Future Tense)》 中这样描述突破性的时刻:</p>
+<blockquote>
+<p>生命中最充实的时刻之一发生在那一瞬间，熟悉的事物突然转变为全新的耀眼光环。这些突破太少见了，少见多于常见；而我们大部分时间都陷在平凡和琐碎中，令人震惊的是：看似平凡和琐碎的东西正是发现的素材。唯一的区别是我们的视角，我们准备以一种全新的方式将碎片拼凑在一起，并看到仅在片刻之前出现的阴影的模式。</p>
+</blockquote>
+<p>从这个不同的视角看待 Squeak 对于理解它是至关重要的。Squeak 和它的直系祖先与大多数其他编程语言的区别就像飞机与汽车的区别一样。</p>
+<h4 id="squeak-初体验">Squeak 初体验</h4>
+<p>想象一下，你人生中第一次看到一架小型螺旋桨飞机。在此之前，你只熟悉汽车，你不知道什么是飞机。你对这台机器的最初反应可能是：&ldquo;看起来多么有趣的交通工具！&rdquo; 当你走进飞机时，你对仪器和控制装置的反应可能是：&ldquo;为什么它如此不同？&rdquo;</p>
+<p>想象一下，乘坐飞机去购物中心。那将是一种怎样的体验啊，一个大而笨拙的野兽跑在道路，两边都粘着巨大的拍打物，噪音大，耗油多，而且你可能无法克服你必须用脚来操纵它的事实！你认为你会走进飞机吗？你会再次踏上飞机去任何地方吗？ 我非常怀疑。问题是，你会错过整个飞行体验。</p>
+<p>然而，如果没有适当的指导，很多 Squeak 用户的经历可能正是这样！多么花哨的陌生环境啊! 只有那些学习如何使用 Squeak 并认识到 Squeak 的不同之处的人，才能享受到 Squeak 的最大好处。</p>
+<p>对于已经在使用其他编程语言的人，我觉得我有责任在这里真诚地警告你们。一旦你掌握了 Squeak，再回到你以前的编程语言中去，可能就不是一个快乐的经历了。这个旅程可能会让你付出沉重的代价，因为你的观点会对你目前的编程语言和环境产生不利的影响。但我坚信，对于那些耐心学习 Squeak 的人来说，你手中的力量将达到一个新的高度，这将使你在开发系统方面的熟练程度提升到你从未想过的水平。</p>
+<h3 id="什么是-squeak">什么是 Squeak？</h3>
+<p>什么是 Squeak ？Squeak 是一个创造性的开发环境。
+它是 Smalltalk 的一个全新实现。Squeak 的创造者之一，Dan Ingalls 说 Squeak 项目的目的是 &ldquo;为每个人的创造性精神提供计算机支持&rdquo;。Squeak 旨在迎合那些将计算机视作<strong>帮助拓展思维的工具</strong>的人。Squeak 是 25 年来思想和经验的结晶。</p>
+<h4 id="squeak-背后的隐喻">Squeak 背后的隐喻</h4>
+<p>Squeak 的背后是一群才华横溢的人，他们中的许多人来自最初的 Xerox PARC 小组，该小组创造了第一台个人电脑，第一个图形用户界面，并发明了许多用于现代电脑和软件的概念。在以后的文章中，我们将看看 Squeak 的历史，这对理解 Squeak 背后的愿景很重要。简而言之，Squeak 的早期祖先从 Smalltalk 72 开始，不仅受到 Dynabook 的影响，也受到 ARPANET 和分布式计算概念的影响。这个系统和它的后继者是如此彻底地领先于他们的时代，以至于我们花了四分之一世纪以上的时间才了解它们。</p>
+<p>Squeak 为我们提供了一种描述计算机中系统的方法。它还允许我们以一种定义明确的方式与计算机互动。在 1981 年发表在 Byte 杂志 Smalltalk 特刊上的 &ldquo;Smalltalk 背后的设计原则&rdquo; 一文中，Dan Ingalls 将其称为 &ldquo;描述的语言&rdquo; 和 &ldquo;交互的语言&rdquo;。 在以后的文章中，我将重点讨论这些内容。</p>
+<p>在 Smalltalk 的发展过程中，某些原则适用于 Squeak。Dan Ingalls 在 Byte 文章中所说的这些原则有以下几点:</p>
+<p><strong>可理解性原则</strong>:</p>
+<blockquote>
+<p>如果一个系统要为创造精神服务，它必须能被个体完全理解。</p>
+</blockquote>
+<p>Squeak 无疑是为数不多的能让一个人完全理解的系统之一。当然，Squeak 有很多东西，要想获得高水平的熟练度，就必须花很多时间（比如几年）在 Squeak 上，但这是可能的。Squeak 最初可能会让人不知所措，这是因为 Squeak 提供了一个 &ldquo;白盒&rdquo; 方法，在这里所有的东西都是可见的，同时也允许 &ldquo;黑盒分析&rdquo;，在这里你可以看到从他们的界面点到其他对象的一切。你可以使用黑盒方法快速学习 Squeak，做出简单的项目，你也可以选择使用白盒方法花费大量时间深入了解系统，在白盒方法中，每一行代码都可以供你检查，你可以停止运行的系统，检查在任何时间点发生了什么。你现在就可以中断阅读这本电子杂志并浏览正在发生的事情，然而我现在还不打算向你展示如何做。</p>
+<p><strong>良好设计的原则</strong></p>
+<p>Ingalls 指出:</p>
+<p>用户和系统某些部分之间存在的任何障碍， 最终都会成为创造性表达的障碍。系统中任何无法更改或通用性不足的部分都可能是障碍。如果系统的一部分工作方式与所有其他部分不同，该部分将需要付出更多的努力来掌握。</p>
+<p>因此，就可以推断出良好设计的原则:</p>
+<blockquote>
+<p>系统应以最少的不可变零件组成；这些部分应尽可能通用；系统的所有部分都应聚拢在一个统一的框架中。</p>
+</blockquote>
+<p>在 Squeak 的背景下，Ingalls 指出该语言的目的是:</p>
+<blockquote>
+<p>提供一个交流的框架</p>
+</blockquote>
+<p>这种对语言的描述超越了大多数计算机语言。Squeak 语言的目的是描述两个智能生物之间的交流。两个交流的人和一个人与一台计算机之间的差别应该是最小的。</p>
+<p>为了实现人和计算机之间的无缝交流，Squeak 使用了一个 &ldquo;统一隐喻&rdquo;:</p>
+<blockquote>
+<p>应该围绕一种强大的隐喻设计一种语言，该隐喻可以统一应用于所有领域。</p>
+</blockquote>
+<p>Squeak 中的这种隐喻是基于两个结构: 对象和消息。Ingalls 对这些描述如下:</p>
+<blockquote>
+<p>对象：计算机语言应支持对象的概念，并提供一种统一的方式来引用其宇宙中的对象。
+消息：应将计算视为对象的固有功能，可以通过发送消息统一调用它们。</p>
+</blockquote>
+<p>例如，在 Squeak 中，你在屏幕(原文右边的配图)上看到的一切就是一个对象。Byte 杂志封面图片就是一个对象。我们可以通过按下下面的按钮向该对象发送一条信息:</p>
+<p><code>send a message to the picture on the right</code> (译者注: 按下原文的按钮，图像会震动)</p>
+<p><video width="80%" src="https://adapter.codelab.club/video/9e20f478899dc29eb19741386f9343c8_683886684120_v_1662193884125319.mp4" controls="controls"></video></p>
+<p>用对象和消息进行计算的概念是一个非常有力的隐喻。Alan Kay 在一次采访中描述了这个隐喻:</p>
+<blockquote>
+<p>现在我们不再只有一台计算机，而是有小的、自主的、像细胞一样的实体，通过消息相互交流。在某种程度上，我们有许多小计算机在相互交流。</p>
+</blockquote>
+<p>一旦我们理解了这个简单但非常强大的隐喻，就可以更容易地理解 Squeak。</p>
+<h4 id="绕道而行-冯-诺伊曼架构">绕道而行: 冯-诺伊曼架构</h4>
+<p>为了理解这个隐喻与当前的计算范式有什么不同，我们需要了解当前主导编程的范式。</p>
+<p>几乎所有现有的编程系统都深受当前计算机架构的影响，我们通常将其称为 &ldquo;冯-诺依曼架构&rdquo;。 这个架构随着 ENIAC 的发展过程开始演变。ENIAC 是由 J.Presper Eckert 和 John Mauchly 在 1943 年至 1946 年间在宾夕法尼亚大学设计的。冯-诺伊曼博士是这个项目的顾问。他知道当时正在建造的另一台名为 EDVAC 的计算机的缺点，他给 ENIAC 团队写了一份备忘录，解释了 EDVAC 的缺陷，并为 ENIAC 提出了一个架构。这份写于 1945 年的备忘录 &ldquo;关于 EDVAC 的报告初稿&rdquo; 成为一篇传奇性的论文，影响了大多数现代计算机。建造 ENIAC 的动机是因为美国陆军需要一些东西来进行高要求计算，如弹道计算。这些计算是由被称为 &ldquo;计算机&rdquo; 的人进行的。&ldquo;计算机&rdquo; 使用机械计算器按照一步步的指示进行这些计算。这项工作很繁琐，错误的代价太大。ENIAC 最重要的设计目标之一是使这些人类 &ldquo;计算机&rdquo; 的工作自动化。</p>
+<p>冯-诺伊曼对 ENIAC 和随后的计算机的设计做出了重大贡献。他的想法的核心是将人类 &ldquo;计算机&rdquo; 自动化，用中央控制单元（CCU）取代她/他，用中央算术逻辑单元（ALU）取代机械计算器。 CCU 和 ALU 组成了 &ldquo;中央处理单元&rdquo;(CPU)。人类操作者能记在脑海中的有限数量的数字和事实用 &ldquo;寄存器&rdquo; 表示。纸张成为 &ldquo;存储器&rdquo;。 与外界的联系是通过一个输入和一个输出单元实现的。</p>
+<p>冯-诺伊曼的想法之一是 &ldquo;存储程序&rdquo; 的概念，但未能被纳入 ENIAC。这是在后来的计算机中引入的最重要的进步之一。存储程序的概念使 &ldquo;软件&rdquo; 的概念成为实际的解决方案，而不是用 &ldquo;硬接线&rdquo; 的指令序列来为机器编程。有了 &ldquo;软件&rdquo;，计算机将加载不同的指令集以执行不同的任务。</p>
+<p>这种简单的架构现在被称为冯-诺依曼架构。无论多么先进，大多数现代计算机的核心仍然使用相同或类似的概念。</p>
+<p>请花点时间把鼠标移到右边的图上，指着一些区域（不需要点击），看看解释。 (译者注: 原图是一个 Morph 交互应用，以下用视频展示)</p>
+<p><video width="80%" src="https://adapter.codelab.club/video/6c324eb57ba5c7a602ffce0d7d4f31.mp4" controls="controls"></video></p>
+<p>冯-诺伊曼架构是一个非常简单和优雅的架构，其目的是：做重复的繁琐计算，可以用简单的一系列命令来定义。</p>
+<p>冯-诺依曼架构有五个关键概念:</p>
+<ol>
+<li>中央控制单元。这个单元是系统的核心。在最简单的意义上，它基本上是人类处理器的自动化。</li>
+<li>算术-逻辑单元。该单元处理算术和逻辑操作。中央控制单元利用该单元获取指令并处理计算。这两个单元集成在一起，形成中央处理单元。</li>
+<li>内存。该单元是人类处理器读取数据并将中间和最终结果写入的纸张的替代品。它还用于存储被称为 &ldquo;程序&rdquo; 的命令集。</li>
+<li>输入和输出单元。这些单元用于将初始命令和数据输入存储器，并将结果从存储器返回到外部世界。</li>
+<li>顺序可执行的 &ldquo;存储程序&rdquo; 的概念。这些只需加载一个新程序就能替换的程序对 ENIAC 的后继者的成功至关重要。</li>
+</ol>
+<p>在这种结构中，一条指令是由一个操作码（简称 op-code）和零个或多个操作数(operands)组成。操作码是告诉 CPU 要执行什么的命令，而操作数则告诉数据在哪里。CPU 只是遵循一系列指令，从内存中逐一取回，就像人类计算机遵循纸张上的一系列指令一样。CPU 确定需要什么类型的操作，然后继续获取操作数，或完成操作所需的数据。有时，这些数据隐含在操作代码中，例如它存在于 CPU 有限的寄存器中。最后 CPU 完成指令并继续执行下一条指令。</p>
+<img width=400 src="/post/img/how-to-begin-squeak-01.png" />
+<p>另外两种类型的指令让 CPU 拥有一套完整的指令，形成一个完整的计算模型。这些是条件指令和分支指令。条件指令用于比较操作的结果，并根据比较的结果采取行动。分支指令用于改变流程并跳到另一个位置，并在新的位置执行一组新的指令。</p>
+<p>使用这些指令的程序是 &ldquo;例程&rdquo;(routines) 或 &ldquo;过程&rdquo;(procedures) 的形式。 CPU 从内存中获取指令，并将其应用于数据，这些数据必须存储在内存的其他地方，因为指令必须一个接一个地连续执行。</p>
+<p>冯-诺依曼架构的一个主要改进是引入了子程序调用。这些调用使一个被称为子程序的小段程序可以从主程序的不同位置被使用。</p>
+<p>此架构的重点是过程(procedure)，唯一发生的事情是 CPU 将过程应用于驻留在内存中其他位置的被动数据。 这是当今占主导地位的软件范式“面向过程的编程”的基础。</p>
+<p>冯-诺伊曼架构及其编程风格最初用于简单的重复计算，然后人们开始开发越来越复杂的程序，以至于机器语言和汇编程序都不够用。更高级的语言开始出现，使这个架构可以做得更多。</p>
+<p>大多数高级语言将基于命令的编程扩展到更高的层次，将许多指令组合成允许做更多事情的命令。这些命令是以命令式句子的形式出现的。增强的条件语句和循环可以很容易地转化为比较和跳跃(jump)指令。参数化的函数和子程序调用允许从程序的不同部分重复使用程序。</p>
+<p>面向过程的范式是冯诺依曼风格指令与这些高级语言的编程技术之间对应的直接结果。从 Fortran 开始的大多数高级语言本质上都致力于:</p>
+<ul>
+<li>提高命令级别以简化学习和用更少的命令执行更多操作</li>
+<li>从底层硬件的微小细节中获得一定程度的独立性</li>
+</ul>
+<p>这些早期的语言都没有试图改变范式，相反，它们是范式的反映。</p>
+<p>当冯-诺伊曼意识到人们想要开发什么类型的系统时，他做了两件事:</p>
+<ul>
+<li>他警告不要将这种架构用于更通用的问题（其中大多数警告从未对主流文献提出过）</li>
+<li>他开始设计另一种与最初的计算机完全不同的计算机</li>
+</ul>
+<p>这位 20 世纪杰出塑造者的最后努力可以在他的最后一本（未完成的）著作《计算机与大脑》中找到。</p>
+<h4 id="结构对人类思维的影响">结构对人类思维的影响</h4>
+<p>在《第五项修炼(The Fifth Discipline)》中，Peter Senge 总结了结构对人类思维的三个后果。</p>
+<ol>
+<li>结构影响行为</li>
+<li>人类系统中的结构是微妙的</li>
+<li>杠杆作用往往来自于新的思维方式</li>
+</ol>
+<p>不管我们是否注意到，目前占主导地位的架构影响着我们的编程方式。只要我们把对软件的思考限制在现有硬件的范围内，我们就无法开发出能够利用更好的范式的系统。冯-诺依曼架构充斥着现有的大多数已知的编程语言。这方面很少有例外。</p>
+<p>在为数不多的开发主流计算风格之外的语言和架构的尝试中，最重要的尝试来自 XEROX-PARC 的 Smalltalk 72。正如我之前提到的，Smalltalk 72 不仅受到 Dynabook 的影响，而且还受到 ARPANET 和分布式计算概念的影响。这种遗产在一定程度上贯穿了 Squeak 的所有祖先，并使其成为与当今许多其他编程系统明显不同的系统。</p>
+<p>与那些为冯-诺依曼式计算机编写的程序相比，Squeak 有什么不同？让我们听听最初的 Smalltalk 背后的策划者的意见。</p>
+<blockquote>
+<p>今天的大多数编程语言都是作为 1950 年代的硬件级概念的符号化方式开发的。这种方法导致了两种被动的构件：数据结构，或惰性的建筑材料，以及程序，或操作数据的逐步配方。基于这些概念的语言（如 BASIC、FORTRAN、ALGOL 和 APL）以严格的顺序方式遵循其描述。&hellip; 随着越来越复杂的系统被尝试，需要精心组合的程序，让整个系统工作的难度也呈几何级数增长。尽管大多数程序员仍在学习数据过程语言，但现在人们已经普遍认识到了它们的不足。一个更有希望的方法是设计出具有更大通用性的构建模块。数据和程序都被 &ldquo;活动(activities)&rdquo; 这个单一的概念所取代，这些实体在被发送适当的消息时表现出行为。在这样一种语言中，没有名词和动词 &ndash;Alan Kay 《微电子学和个人计算机》 1978</p>
+</blockquote>
+<p>Alan Kay 在这篇文章中所描述的是一种深刻的开发系统的新方法。这种方法在几个不同的方面与主流的范式不同:</p>
+<p>在面向过程的范式中，唯一的对象（CPU）从内存中获取一组顺序的指令。在这种环境下，编程是一个从程序员到 CPU 的独白。此外，我们假设有一个单一的实体（CPU）对程序进行中央控制。这个实体一个接一个地获取命令，执行它们，并根据命令的类型决定将控制更改为程序的另一部分。以这种方式开发的程序本质上是一个串行程序。</p>
+<p>另一方面，Squeak 的工作方式与 Alan Kay 在上述文章中描述的一样。在 Squeak 中，所有操作都是由对象向其他对象发送消息来完成的。接收方对象可以自由地以任何方式解释这些消息；它甚至可以丢弃该消息。在这种环境下，一个对象甚至可以查询另一个对象，以了解它是否可以回答某个消息。这种方法与冯-诺伊曼指令处理有根本的不同。在 Squeak 方法中，每个对象都明确选择并寻址将处理消息的目标单元。理论上，其他对象单元可以用硬件实现，也可以用软件模拟，可以与发送者对象存在于同一环境中，或者可以只是驻留在某个其他系统中的另一个对象的外观。这种区别是 Squeak 和其他大多数编程环境之间最重要的区别之一。</p>
+<p>一个 Squeak 系统由许多对象组成，每个对象都可以被看作是一个封装单元。你可以把一个 Squeak 对象看作是一个黑盒子。这个黑盒子有一个接口。你只能通过它的接口与这个对象进行交互。这种交互是通过向这个对象发送消息来实现的。收到消息的对象会对其进行处理，并回复发送者。从某种意义上说，Squeak 系统是由许多具有独特协议的模拟处理器组成的。这些对象中的每一个都能够向其他对象发送消息。在这种环境中编程是许多对象的互动和协作。</p>
+<p>Squeak 消息发送是 Squeak 中所有计算的基础。这个结构显式地寻址消息的接收者。消息包含一个 &ldquo;消息选择器&rdquo; 或一个消息标识符，以及对处理该消息所需的其他对象的引用。</p>
+<p>这种方法与经典的冯-诺依曼式编程有很大不同:</p>
+<ol>
+<li>（冯-诺依曼式编程）命令隐含地寻址一个对象 &ldquo;CPU&rdquo;，而 Squeak 则明确地寻址每个对象，向它们发送信息。Squeak 没有一个隐含的全控制对象的概念。</li>
+<li>对 CPU 的命令是固定的。这些命令是在 CPU 的硬件实现时确定的。高高级语言再次具有在编译器设计时确定的相应高级命令。这些语言的用户不能修改这些编译器。Squeak 没有命令集的概念。对象的接口基本上是由定义它们的对象（它们的类）决定的。系统对象和用户对象之间没有区别。</li>
+<li>基于 CPU 的编程是基于 CPU 可以理解的 &ldquo;命令&rdquo; 或指令的概念。这种基于命令的架构指定了 &ldquo;操作符&rdquo;，它们作用于 &ldquo;操作数&rdquo; 或被动数据。Squeak 中没有运算符。操作符是对 CPU 的命令或一系列命令，它们被暗示为由 CPU 处理。编译器知道这些操作数。它处理这些操作数的所有方面，包括它们的优先级。Squeak 不知道操作数的情况。它只是把它们委托给相应的对象来处理。它不知道也不关心某些操作数是否应该在其他操作数之前应用。Squeak 唯一知道的是消息优先级和极少数结构体。这在熟悉其他语言的人中是一个常见的混乱来源。</li>
+<li>Squeak 的语法没有控制流语句的概念，如条件或循环。这些都是委托对象的职责。传统语言中的条件和循环语句假定有一个中央和序列化的程序控制。</li>
+</ol>
+<img width=400 src="/post/img/how-to-begin-squeak-02.png" />
+<h4 id="squeak-是如何将冯-诺依曼架构的影响降到最低的">Squeak 是如何将冯-诺依曼架构的影响降到最低的？</h4>
+<p>Squeak 通过拒绝了解这个架构来尽量减少它的影响。Squeak 之所以能将自己与底层架构隔离开来，是通过利用 &ldquo;虚拟机(VM)&ldquo;来实现的。 虚拟机是一种在现实中不存在的机器，在各种环境中被模拟为一种软件抽象。理论上，它也可以作为一个真实的机器来实现，但由于各种原因，这样做并不实际，至少现在是这样。</p>
+<p>虚拟机的实现是否使 Squeak 不受架构的影响？我不能说它完全如此。尽管这些因素在一定程度上影响了 Squeak，但这种影响通常只限于 Squeak 的虚拟机的实现。另一方面，Squeak 的虚拟机在很大程度上受到当前架构的影响，因为它必须在该架构上正常工作，而且必须工作得很好，才能使整个 Squeak 系统在它上面无缝运行。</p>
+<p>右边是一张解释 Squeak 架构的图片。通过在上面移动你的鼠标来玩它，尽可能多地了解它。下个月我们将更详细地解释这张图片，并开始学习 Squeak 的工作原理。</p>
+<p><video width="80%" src="https://adapter.codelab.club/video/1662192770542169.mp4" controls="controls"></video></p>
+<p>欢迎来到 Squeak!</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-09-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/squeak-news-interview-with-john-maloney/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译]Squeak News 采访 John Maloney</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/traits-composable-units-of-behaviour/">
+            <span class="next-text nav-default">使用 Traits 复用行为</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

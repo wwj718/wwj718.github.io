@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>进程间通信一例 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="背景 我最近在折腾blockly4pi，这是一个教育项目，致力于将编程带入到基础教育，通过使用blockly,我们将原子操作封装为积木块，学生" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/iot/ipc_on_blockly4pi/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="进程间通信一例" />
+<meta property="og:description" content="背景 我最近在折腾blockly4pi，这是一个教育项目，致力于将编程带入到基础教育，通过使用blockly,我们将原子操作封装为积木块，学生" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/iot/ipc_on_blockly4pi/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-04-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-04-28T00:00:00+00:00" />
+
+<meta itemprop="name" content="进程间通信一例">
+<meta itemprop="description" content="背景 我最近在折腾blockly4pi，这是一个教育项目，致力于将编程带入到基础教育，通过使用blockly,我们将原子操作封装为积木块，学生"><meta itemprop="datePublished" content="2017-04-28T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2017-04-28T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2283">
+<meta itemprop="keywords" content="rpi," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="进程间通信一例"/>
+<meta name="twitter:description" content="背景 我最近在折腾blockly4pi，这是一个教育项目，致力于将编程带入到基础教育，通过使用blockly,我们将原子操作封装为积木块，学生"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">进程间通信一例</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-04-28 </span>
+        <div class="post-category">
+            <a href="/categories/iot/"> iot </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#进程二中的server可以使用web-server吗">进程二中的server可以使用web server吗</a></li>
+        <li><a href="#为何不用zeromq">为何不用zeromq</a></li>
+        <li><a href="#下一步打算如何改进">下一步打算如何改进</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/blockly4pi391b0c97.png" alt=""></p>
+<h1 id="背景">背景</h1>
+<p>我最近在折腾blockly4pi，这是一个教育项目，致力于将编程带入到基础教育，通过使用<a href="https://developers.google.com/blockly/">blockly</a>,我们将原子操作封装为积木块，学生只需要操作积木块就能做到程序能做到的事</p>
+<p>已经封装为积木的原子操作，除了blockly提供的基本编程要素(循环、条件、逻辑等)，我们还积木化了虚拟角色的操作以及硬件操作。</p>
+<p>硬件的积木化不只是对硬件的操作积木化，硬件本身也被设计为积木</p>
+<p>用户通过拖拽web试验平台拖拽积木块，将生成对应程序代码(我目前选择生成python，其实js也是很棒的选择)，之后这些代码在树莓派里运行以操控硬件。</p>
+<p>我们的硬件积木与树莓派之间采用wifi通信，硬件积木自然是李老师做的(对李老师有兴趣的可以参考我之前的文章),目前的原型机便是文章开头的那张图</p>
+<p>我们之前为了省心采用了类似http(实际是socket)的通信机制(请求-答复-中断)来做树莓派和积木节点之间的通信，虽然架构简单，不过带来了一个麻烦，实时性不高的问题,近期重新调整为长链接</p>
+<h1 id="问题">问题</h1>
+<p>我们最初放弃长链接的一个原因是：对硬件积木的操作指令是用户生成的，用户每次在web界面搭建好积木点击运行，树莓派里新起python进程。如此一来长连接就不能建立在动态生成的脚本里。因为脚本是动态执行的，随时可能因为用户新的提交而中断（执行新的）.</p>
+<h1 id="思路">思路</h1>
+<p>于是我想到用ipc(进程间通信)来解决这个问题: 在树莓派中使用两个进程来做这件事（分别以进程一和进程二表示）:</p>
+<ul>
+<li>用户在web页面拖拽积木块生成代码，之后代码作为脚本运行在树莓派中，此为进程一，它是动态的 （为了保证清晰和教学方便，只允许在单次提交中使用多线程，不允许多次脚本并行）</li>
+<li>进程二运行在后台(不中断),负责与硬件节点保持长连接，该进程同时作为server，等待进程二传递的控制硬件节点的消息,同时将消息传递给硬件积木</li>
+</ul>
+<p>也就是说进程二是用户动态生成的脚本与硬件积木的中间人，使用这个中间人的目的是保持长链接不中断</p>
+<p>从数据的视角来看，进程一只是个管道，它只负责传递消息，管道本是静态的，我们使用载荷来承载变化的消息</p>
+<h1 id="实现">实现</h1>
+<p>一旦进入实现部分，岔路就多了，尽管可能都通往罗马，但有些路荆棘遍布，有些路一马平川，如何选择，感觉有时候比分析重要，这可能是工程问题中偏艺术的一环</p>
+<p>就我而言，在不熟悉的领域，我便好走人多的一条路，即便迷路的话，指路人也多</p>
+<p>尽管进程间通信的方法很多，我选择Socket(套接口),Socket为目前Linux上最为广泛使用的一种的进程间通信机制，与其他的Linux通信机制不同之处在于除了它可用于单机内的进程间通信以外，还可用于不同机器之间的进程间通信</p>
+<h1 id="代码">代码</h1>
+<p>考虑到这部分可能对其他同学也有帮助，我将这部分的具体实现放过来(只展示原理)</p>
+<p>进程二为</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/env python</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># encoding: utf-8</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">socket</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">os.path</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">settings</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">sockfile</span> <span class="o">=</span> <span class="s2">&#34;./communicate.sock&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">sockfile</span> <span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span> <span class="n">sockfile</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s2">&#34;Opening socket...&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">server</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span> <span class="n">socket</span><span class="o">.</span><span class="n">AF_UNIX</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">server</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">sockfile</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">server</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">host_li</span><span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">HOST_LI</span><span class="c1"># 硬件积木的host，从setting里读</span>
+</span></span><span class="line"><span class="cl"><span class="n">port_li</span><span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">PORT_LI</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 关于为了硬件积木当server，有空再谈</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># todo : 连接失败处理机制</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">socket2li</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl"><span class="n">socket2li</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">host_li</span><span class="p">,</span> <span class="n">port_li</span><span class="p">))</span> 
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s2">&#34;Listening...&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">send_message2server_li</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">socket2li</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="n">socket2li</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">data</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">datagram</span> <span class="o">=</span><span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">datagram</span> <span class="o">==</span> <span class="s1">&#39;exit&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span>
+</span></span><span class="line"><span class="cl">        <span class="n">result</span> <span class="o">=</span> <span class="n">send_message2server</span><span class="p">(</span><span class="n">datagram</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">  <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span> <span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>进程一与进程二通信部分为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">send_message</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&#34;s01d&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">client</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span> <span class="n">socket</span><span class="o">.</span><span class="n">AF_UNIX</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span> <span class="s2">&#34;./communicate.sock&#34;</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">client</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">data</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从这里我们可以看到，我们实际把中断进行了转移，把与远程主机的中断移到了本地。如此一来延迟变得非常小</p>
+<h1 id="扫尾">扫尾</h1>
+<p>细心的小伙伴可能会看到，我们这里没有做掉线重连、启动顺序、错误处理之类的机制，这些保证健壮性的工作我放到源码里，有兴趣的同学可以自行阅读</p>
+<p>需要说明的是<code>等待机器上线后连接</code>部分的代码我用的是《python network programming cookbook》中<a href="https://github.com/lovexiaov/learn-python/blob/master/python-network-programming-cookbook/sorce_code/chapter3/3_3_wait_for_remote_service.py">第三章的源码</a>，周末逛书店看到这部分代码很漂亮，就直接拿过来用，替换了我之前自己写的</p>
+<h1 id="faq">FAQ</h1>
+<h3 id="进程二中的server可以使用web-server吗">进程二中的server可以使用web server吗</h3>
+<p>可以的，不采用的原因是web server比socket啰嗦太多</p>
+<h3 id="为何不用zeromq">为何不用zeromq</h3>
+<p>我其实偏好zeromq,关于zeromq的优点，我之前笔记里又记录:<a href="http://blog.just4fun.site/mq-note.html">消息队列中间件学习笔记</a> ,zeromq 是个野心勃勃而欣欣向荣的项目</p>
+<p>没用它的主要原因是，硬件开发者，包李老师，偏好用socket</p>
+<p>尽管我可以在进程二与硬件积木中使用socket连接(迁就硬件这边)，在进程一与进程二之间使用zeromq，不过获得的好处并不明显，还导致了不一致，感觉不划算</p>
+<h4 id="2017-04-29补充">2017-04-29补充</h4>
+<p>目前能想到使用zeromq的一个场景是:多个用户能一起用浏览器来控制我们的硬件积木(我们在此只关注通信部分，其他方面暂不关注) ,也就是说需要1-N连接(1是server，N是client),直接使用REQUEST/RESPONSE模型就行</p>
+<p>这里给个示例代码(照抄<a href="http://www.firefoxbug.com/index.php/archives/2755/">这里</a>):</p>
+<p>客户端</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">zmq</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="n">context</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="c1">#  Socket to talk to server  </span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span> <span class="s2">&#34;Connecting to hello world server...&#34;</span>  
+</span></span><span class="line"><span class="cl"><span class="n">socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REQ</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">socket</span><span class="o">.</span><span class="n">connect</span> <span class="p">(</span><span class="s2">&#34;tcp://localhost:5555&#34;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="c1">#  Do 10 requests, waiting each time for a response  </span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">):</span>  
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span> <span class="s2">&#34;Sending request &#34;</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span><span class="s2">&#34;...&#34;</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">socket</span><span class="o">.</span><span class="n">send</span> <span class="p">(</span><span class="s2">&#34;Hello&#34;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl">      
+</span></span><span class="line"><span class="cl">    <span class="c1">#  Get the reply.  </span>
+</span></span><span class="line"><span class="cl">    <span class="n">message</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>  
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span> <span class="s2">&#34;Received reply &#34;</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="s2">&#34;[&#34;</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="s2">&#34;]&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>服务端:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">zmq</span>  
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>  
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl"><span class="n">context</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>  
+</span></span><span class="line"><span class="cl"><span class="n">socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REP</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&#34;tcp://*:5555&#34;</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>  
+</span></span><span class="line"><span class="cl">    <span class="c1">#  Wait for next request from client  </span>
+</span></span><span class="line"><span class="cl">    <span class="n">message</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>  
+</span></span><span class="line"><span class="cl">    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span> <span class="s2">&#34;Received request: &#34;</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">count</span> 
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="c1">#  Do some &#39;work&#39;  </span>
+</span></span><span class="line"><span class="cl">    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>        <span class="c1">#   Do some &#39;work&#39;  </span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="c1">#  Send reply back to client  </span>
+</span></span><span class="line"><span class="cl">    <span class="n">socket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&#34;World&#34;</span><span class="p">)</span>  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>client可以在server没有启动的时候上线（不会报错），只要服务端上线就不会丢消息,如此一来启动问题变得十分轻松，不必保证server先上线</p>
+<p>其次client可以有多个，server能同时处理它们，不会引起混乱</p>
+<p>单是以上两点就省下我们许多工作</p>
+<h3 id="下一步打算如何改进">下一步打算如何改进</h3>
+<p>使用websocket，目前已经在开发环境里用了，具体原因之后有机会说</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E8%A1%8C%E7%A8%8B%E9%96%93%E9%80%9A%E8%A8%8A">wikipedia https://zh.wikipedia.org/wiki/%E8%A1%8C%E7%A8%8B%E9%96%93%E9%80%9A%E8%A8%8A</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Unix%E5%9F%9F%E5%A5%97%E6%8E%A5%E5%AD%97">Unix域套接字</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/l-socket-ipc/">在 Linux 上实现基于 Socket 的多进程实时通信</a></li>
+<li><a href="http://stackoverflow.com/questions/11597284/how-do-i-create-a-python-socket-server-that-listens-on-a-file-descriptor">How do I create a Python socket server that listens on a file descriptor?</a></li>
+<li><a href="http://stackoverflow.com/questions/6920858/interprocess-communication-in-python">interprocess communication in python</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-04-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/rpi/">rpi</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/zen-and-the-art-of-motorcycle-maintenance/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">禅与摩托车维修艺术</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B7%A5%E5%85%B7/websocketd/">
+            <span class="next-text nav-default">websocketd:一个小而美的管道工具</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

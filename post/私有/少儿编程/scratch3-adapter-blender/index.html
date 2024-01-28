@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>codelab-adapter接入blender - 爱自由</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Alan Russell" /><meta name="description" content="提醒: 我们为blender写了新的插件, 支持最新的blender版本(2.8), 参考codelab❤️blender 我在积木化编程与3D场景" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.56.3 with theme even" />
+
+
+<link rel="canonical" href="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-blender/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="codelab-adapter接入blender" />
+<meta property="og:description" content="提醒: 我们为blender写了新的插件, 支持最新的blender版本(2.8), 参考codelab❤️blender 我在积木化编程与3D场景" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.just4fun.site/post/%E7%A7%81%E6%9C%89/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-blender/" />
+<meta property="article:published_time" content="2018-09-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-09-29T00:00:00+00:00" />
+<meta itemprop="name" content="codelab-adapter接入blender">
+<meta itemprop="description" content="提醒: 我们为blender写了新的插件, 支持最新的blender版本(2.8), 参考codelab❤️blender 我在积木化编程与3D场景">
+
+
+<meta itemprop="datePublished" content="2018-09-29T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-09-29T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1475">
+
+
+
+<meta itemprop="keywords" content=" scratch," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="codelab-adapter接入blender"/>
+<meta name="twitter:description" content="提醒: 我们为blender写了新的插件, 支持最新的blender版本(2.8), 参考codelab❤️blender 我在积木化编程与3D场景"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">某行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">某行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">codelab-adapter接入blender</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-29 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#开发笔记">开发笔记</a>
+<ul>
+<li>
+<ul>
+<li><a href="#debug">debug</a></li>
+<li><a href="#逻辑积木">逻辑积木</a></li>
+<li><a href="#消息">消息</a></li>
+<li><a href="#导出游戏">导出游戏</a></li>
+<li><a href="#bge">BGE</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#实际操作">实际操作</a></li>
+<li><a href="#参考">参考</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<p><img src="/post/img/blender-adapter_2e1cc54a.png" alt="" /></p>
+
+<p><strong>提醒</strong>:  我们为blender写了新的插件, 支持最新的blender版本(2.8), 参考<a href="https://blog.just4fun.site/codelab-love-blender">codelab❤️blender</a></p>
+
+<p>我在<a href="https://blog.just4fun.site/blockly-3D.html">积木化编程与3D场景</a>写道:</p>
+
+<blockquote>
+<p>我近期会将codelab-adapter接入blender中！如此一来就建立了现实世界与虚拟世界的连接，你甚至可以和电影中的角色打交道。很多著名的电影都使用了blender来创作。<br />
+一旦codelab-adapter与Blender连接完成，你可以徒手创作minecraft中的世界(借助leapmotion，而minecraft的资源包社区里已经有了:<a href="http://theduckcow.com/dev/blender/mcprep/">BLENDER MINECRAFT ADDON</a>。你也可以使用micro:bit制作的魔法棒与虚拟世界的哈利波特一决高下。</p>
+</blockquote>
+
+<video width="800" src="http://scratch3-files.just4fun.site/blender-adapter.mp4" controls="controls"></video>
+
+<p>这部分的工作已经完成。做些笔记</p>
+
+<h1 id="开发笔记">开发笔记</h1>
+
+<h3 id="debug">debug</h3>
+
+<p>blender有多种方式可以运行Python脚本，参考<a href="https://docs.blender.org/api/current/info_overview.html#script-loading">Script Loading</a>。 运行text editor中的代码，我们无法看到输出，为了调试方便，我们可以这样启动blender:<code>blender --python /tmp/test.py  /tmp/test_bge.blend</code>,如此一来项目中运行python程序时，输出会显示在命令行。</p>
+
+<p>上边的blender命令其实是:<code>alias blender=/Applications/Blender/blender.app/Contents/MacOS/blender</code></p>
+
+<h3 id="逻辑积木">逻辑积木</h3>
+
+<p>blender的逻辑积木与<a href="https://github.com/node-red/node-red">node-red</a>很像。使用方式也基本一样，</p>
+
+<p><img src="/post/img/blender-adapter_14597542.png" alt="" /></p>
+
+<p>值得注意的是blender运行python的方式。注意程序的生命周期。从上图可以看出，Python程序由传感器触发。每当设置的sensor发现了某个事件(event),python脚本则运行一次，在脚本中可以拿到传感器(sensor)的信息，以此决定如何影响触动器(actuator)。由此可以看出，我们的脚本是被动运行的，它被多次促发。所以你不能在脚本中跑守护进程。我只好将zmq rep socket改为NOBLOCK风格。</p>
+
+<h3 id="消息">消息</h3>
+
+<p>blender有两类逻辑积木:传感器(sensor)和触动器(actuator)都支持消息(message)</p>
+
+<p>使用消息，可以实现跨场景控制，这个scratch很像。和adapter也很像。</p>
+
+<blockquote>
+<p>everything is message</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">bge</span>
+<span class="n">cont</span> <span class="o">=</span> <span class="n">bge</span><span class="o">.</span><span class="n">logic</span><span class="o">.</span><span class="n">getCurrentController</span><span class="p">()</span>
+<span class="n">own</span> <span class="o">=</span> <span class="n">cont</span><span class="o">.</span><span class="n">owner</span>
+<span class="c1"># send message</span>
+<span class="n">own</span><span class="o">.</span><span class="n">sendMessage</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1"># 会激活messge sensor</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="导出游戏">导出游戏</h3>
+
+<p>使用blender插件可以将制作的游戏导出为独立应用，参考<a href="https://blender.stackexchange.com/questions/95481/how-to-export-correctly-a-standalone-game">How to Export correctly a standalone Game?</a></p>
+
+<p>需要注意的是，如果你使用了自己安装的python第三方包，导出为游戏时会出错，错误原因是第三方包没有到打包进应用。我使用pyzmq，就遇到相应问题。</p>
+
+<p>由于导出的应用没办法看到调试信息，你可以简单打个log</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">try:
+    from test import run_server
+except  Exception as e:
+    # export to log
+    with open(&#34;/tmp/error.log&#34;,&#34;a+&#34;) as f:
+        f.write(str(e))</pre></td></tr></table>
+</div>
+</div>
+<h3 id="bge">BGE</h3>
+
+<ul>
+<li>blender在暂停BGE引擎之后需要重启，否则zmq端口没有释放</li>
+<li>重启blender, adapter和scratch3.0插件不需要重启</li>
+<li>记得连接逻辑积木，<code>always</code>作为触发器</li>
+<li>被触发的Python脚本在进程中，当心阻塞blender</li>
+</ul>
+
+<h1 id="实际操作">实际操作</h1>
+
+<p>我将操作录了个屏</p>
+
+<p><img src="/post/img/adapter_blender_v1.gif" /></p>
+
+<p>简而言之分以下几步:</p>
+
+<ul>
+<li>在<a href="https://codelab-adapter-docs.codelab.club/user_guide/install/">codelab-adapter(建议使用最新版本v0.2.2)</a>中下载blender插件:<a href="https://github.com/Scratch3Lab/scratch3_adapter_extensions/raw/master/extension_blender.py">extension_blender</a>。点击<code>菜单栏 &gt; 插件 &gt; 下载</code></li>
+<li>重启codelab-adapter，选择运行extension_blender</li>
+<li>下载<a href="http://scratch3-files.just4fun.site/adapter_bge_v1.blend">adapter_bge_v1.blend</a>，在blender中打开。点击<code>菜单栏 &gt; 游戏引擎 &gt; 启动游戏引擎</code>。需要注意，每次重新启动游戏引擎，都需要重启blender。</li>
+<li>打开<a href="https://scratch3.codelab.club/">scratch3.codelab.club</a>，选择EIM插件，发送<code>up</code>和<code>down</code>消息，即可控制3D物体移动。</li>
+</ul>
+
+<p>注意，以上只是一个最小原型，可以随意修改，enjoy yourself：）</p>
+
+<h1 id="参考">参考</h1>
+
+<ul>
+<li><a href="http://bgepython.tutorialsforblender3d.com/GameLogic/sendMessage">Game Logic: sendMessage</a></li>
+<li><a href="https://blender.stackexchange.com/questions/80971/blender-game-controller-using-arduino-not-working-properly">Blender game controller using arduino not working properly</a></li>
+<li><a href="https://blender.stackexchange.com/questions/95481/how-to-export-correctly-a-standalone-game">How to Export correctly a standalone Game?</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Alan Russell</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-09-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/"> scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/richie-cms-openedx/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用richie作为open edx主页</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/wugong-mountain/">
+            <span class="next-text nav-default">徒步武功山</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="https://blog.just4fun.site/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Ablog.just4fun.site%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Alan Russell</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>以最佳实践开始你的Django项目 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="“How long will it take to fix that?” One person, who’d been at the company for years, said, “Three months.” A new person, who’d just come from a world of rapidly provisioned cloud microservices, said, “Three m" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%9E%B6%E6%9E%84/cookiecutter-django/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="以最佳实践开始你的Django项目" />
+<meta property="og:description" content="“How long will it take to fix that?” One person, who’d been at the company for years, said, “Three months.” A new person, who’d just come from a world of rapidly provisioned cloud microservices, said, “Three m" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%9E%B6%E6%9E%84/cookiecutter-django/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-06-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-06-21T00:00:00+00:00" />
+
+<meta itemprop="name" content="以最佳实践开始你的Django项目">
+<meta itemprop="description" content="“How long will it take to fix that?” One person, who’d been at the company for years, said, “Three months.” A new person, who’d just come from a world of rapidly provisioned cloud microservices, said, “Three m"><meta itemprop="datePublished" content="2018-06-21T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-06-21T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2194">
+<meta itemprop="keywords" content="django," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="以最佳实践开始你的Django项目"/>
+<meta name="twitter:description" content="“How long will it take to fix that?” One person, who’d been at the company for years, said, “Three months.” A new person, who’d just come from a world of rapidly provisioned cloud microservices, said, “Three m"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">以最佳实践开始你的Django项目</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-06-21 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%9E%B6%E6%9E%84/"> 架构 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#featureshttpsgithubcompydannycookiecutter-djangofeatures"><a href="https://github.com/pydanny/cookiecutter-django#features">Features</a></a></li>
+        <li><a href="#documentationhttpscookiecutter-djangoreadthedocsioenlatest"><a href="https://cookiecutter-django.readthedocs.io/en/latest/">Documentation</a></a></li>
+        <li><a href="#optional-integrationshttpsgithubcompydannycookiecutter-djangooptional-integrations"><a href="https://github.com/pydanny/cookiecutter-django#optional-integrations">optional-integrations</a></a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#创建项目">创建项目</a></li>
+        <li><a href="#运行项目">运行项目</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#用户系统">用户系统</a></li>
+        <li><a href="#开发者协同">开发者协同</a></li>
+        <li><a href="#表单">表单</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>“How long will it take to fix that?” One person, who’d been at the company for years, said, “Three months.” A new person, who’d just come from a world of rapidly provisioned cloud microservices, said, “Three minutes.” They were both correct. That’s how change enters into this world  &ndash; <a href="https://www.bloomberg.com/graphics/2015-paul-ford-what-is-code/">what is code</a></p>
+</blockquote>
+<h1 id="前言">前言</h1>
+<p>我近年写过的Django项目基本都采用<a href="https://github.com/pydanny/cookiecutter-django">cookiecutter-django</a>来启动</p>
+<blockquote>
+<p>Cookiecutter Django is a framework for jumpstarting production-ready Django projects quickly.</p>
+</blockquote>
+<p><a href="https://github.com/pydanny/cookiecutter-django">cookiecutter-django</a>将帮助你快速构建一个生产可用的项目骨架，通过初始化项目时回答几个问题，你将开箱得到许多常用的东西(往往遵循最佳实践)，而避免配置</p>
+<p><a href="https://github.com/pydanny/cookiecutter-django">cookiecutter-django</a>由<a href="https://github.com/pydanny">pydanny</a>构建，<a href="https://github.com/pydanny">pydanny</a>写过一本Django最佳实践相关的书《Two Scoops of Django》</p>
+<h1 id="cookiecutter-django介绍">cookiecutter-django介绍</h1>
+<p>cookiecutter-django相关的信息，项目readme里写的很清楚，我简单做些脚注</p>
+<h3 id="featureshttpsgithubcompydannycookiecutter-djangofeatures"><a href="https://github.com/pydanny/cookiecutter-django#features">Features</a></h3>
+<ul>
+<li>For Django 2.0
+<ul>
+<li>Django 2.0的新特性可以看<a href="https://docs.djangoproject.com/en/2.0/releases/2.0/">这里</a>
+<ul>
+<li><a href="https://docs.djangoproject.com/en/2.0/releases/2.0/#simplified-url-routing-syntax">Simplified URL routing syntax</a></li>
+<li><a href="https://docs.djangoproject.com/en/2.0/releases/2.0/#mobile-friendly-contrib-admin">Mobile-friendly contrib.admin</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Works with Python 3.6
+<ul>
+<li><a href="https://docs.python.org/3/whatsnew/3.6.html">What’s New In Python 3.6</a>
+<ul>
+<li><a href="https://docs.python.org/3/whatsnew/3.6.html#pep-498-formatted-string-literals">PEP 498: Formatted string literals</a></li>
+<li><a href="https://docs.python.org/3/whatsnew/3.6.html#pep-526-syntax-for-variable-annotations">Syntax for variable annotations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Renders Django projects with 100% starting test coverage</li>
+<li>Twitter Bootstrap v4.0.0 (maintained Foundation fork also available)
+<ul>
+<li>使用的是: <a href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css</a></li>
+</ul>
+</li>
+<li>12-Factor based settings via <a href="https://github.com/joke2k/django-environ">django-environ</a></li>
+<li>Secure by default. We believe in SSL.</li>
+<li>Optimized development and production settings</li>
+<li>Registration via <a href="https://github.com/pennersr/django-allauth">django-allauth</a>
+<ul>
+<li>可以很轻松做到第三方登陆/绑定(oauth)</li>
+<li>关于这个项目致力于解决的问题可以看<a href="https://github.com/pennersr/django-allauth#rationale">这里</a></li>
+</ul>
+</li>
+<li>Comes with custom user model ready to go</li>
+<li>Grunt build for compass and livereload
+<ul>
+<li>前后端分离，不需要这个</li>
+</ul>
+</li>
+<li>Send emails via <a href="https://github.com/anymail/django-anymail">Anymail</a> (using <a href="http://www.mailgun.com/">Mailgun</a> by default, but switchable)
+<ul>
+<li>邮件发送的调试是个繁琐的问题，<a href="http://www.mailgun.com/">Mailgun</a>堪称完美的解决方案</li>
+</ul>
+</li>
+<li>Media storage using Amazon S3
+<ul>
+<li>国内使用S3可能有坑，我偏向使用七牛云</li>
+</ul>
+</li>
+<li>Docker support using docker-compose for development and production (using Caddy with LetsEncrypt support)
+<ul>
+<li>尽管这个项目不强制使用docker，但我十分偏好docker</li>
+</ul>
+</li>
+<li>Procfile for deploying to Heroku
+<ul>
+<li>国内用不到</li>
+</ul>
+</li>
+<li>Instructions for deploying to PythonAnywhere
+<ul>
+<li>国内用不到</li>
+</ul>
+</li>
+<li>Run tests with unittest or py.test</li>
+<li>Customizable PostgreSQL version
+<ul>
+<li>PostgreSQL支持json，参考<a href="https://docs.djangoproject.com/zh-hans/2.0/ref/contrib/postgres/fields/">PostgreSQL specific model fields</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="documentationhttpscookiecutter-djangoreadthedocsioenlatest"><a href="https://cookiecutter-django.readthedocs.io/en/latest/">Documentation</a></h3>
+<p>我倾向于使用docker，文档在<a href="https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html">Getting Up and Running Locally With Docker</a></p>
+<p>建议有空多翻阅文档，文档里把开发和部署的大多数问题都谈论了</p>
+<p>一些docker命令偏长，可以自行写个makefile</p>
+<p>服务器的远程管理，推荐使用<a href="http://fabric-chs.readthedocs.io/zh_CN/chs/tutorial.html">fabric</a>，<a href="http://ansible-tran.readthedocs.io/en/latest/">ansible</a>比较重</p>
+<h3 id="optional-integrationshttpsgithubcompydannycookiecutter-djangooptional-integrations"><a href="https://github.com/pydanny/cookiecutter-django#optional-integrations">optional-integrations</a></h3>
+<ul>
+<li>Serve static files from Amazon S3 or <a href="https://whitenoise.readthedocs.io/">Whitenoise</a>
+<ul>
+<li>我偏向把文件存于本地，之后使用七牛云做镜像到本地，来分发(CDN),使用Whitenoise就不必使用nginx来处理静态文件了</li>
+<li>关于文件管理可以看下Caddy的插件<a href="https://github.com/filebrowser/filebrowser">filebrowser</a></li>
+</ul>
+</li>
+<li>Configuration for <a href="http://www.celeryproject.org/">Celery</a></li>
+<li>Integration with <a href="https://github.com/mailhog/MailHog">MailHog</a> for local email testing</li>
+<li>Integration with <a href="https://sentry.io/welcome/">Sentry</a> for error logging
+<ul>
+<li>错误提醒及时(邮件通知)，错误信息详细</li>
+<li>可以直接使用官方的云平台，不必自己搭建，目前国内可以正常使用</li>
+</ul>
+</li>
+</ul>
+<h1 id="使用笔记">使用笔记</h1>
+<h3 id="创建项目">创建项目</h3>
+<p>我们使用cookiecutter替代<code>django-admin startproject</code>来初始化项目.</p>
+<p>首先安装依赖<code>pip3 install &quot;cookiecutter&gt;=1.4.0&quot;</code></p>
+<p>接着开始创建项目<code>cookiecutter https://github.com/pydanny/cookiecutter-django</code>，你讲被要求回答几个问题，关于项目的信息，以及你需要的组件，我的回答见: <a href="https://gist.github.com/wwj718/ff9ae7fcf268359ac69abf83ff2f53ac">start_django_project.md</a></p>
+<h3 id="运行项目">运行项目</h3>
+<p>我使用docker来运行项目，我们需要安装：</p>
+<ul>
+<li><a href="https://docs.docker.com/install/#supported-platforms">Docker</a></li>
+<li><a href="https://docs.docker.com/compose/install/">Docker Compose</a>: <code>pip3 install docker-compose</code></li>
+</ul>
+<h4 id="build-the-stack">Build the Stack</h4>
+<p><code>docker-compose -f local.yml build</code></p>
+<p>生产环境使用<code>production.yml</code>替代<code>local.yml</code></p>
+<p>第一次build需要一断时间</p>
+<p>如果你添加了python库，需要重新build，不过所花时间要少很多</p>
+<h4 id="run-the-stack">Run the Stack</h4>
+<p><code>docker-compose -f local.yml up</code></p>
+<p>或者</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">export COMPOSE_FILE=local.yml
+</span></span><span class="line"><span class="cl">docker-compose up 
+</span></span><span class="line"><span class="cl"># docker-compose up -d # 后台运行
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="execute-management-commands">Execute Management Commands</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">docker-compose -f local.yml run --rm django python manage.py migrate
+</span></span><span class="line"><span class="cl">docker-compose -f local.yml run --rm django python manage.py createsuperuser # django django123
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上每个进程都跑在一个单独的容器中（无状态），进程结束即销毁，数据库使用公共的(由<code>docker-compose up</code>之前启动的)</p>
+<h4 id="其他">其他</h4>
+<ul>
+<li>Mailhog跑在<code>http://127.0.0.1:8025</code></li>
+<li><a href="https://cookiecutter-django.readthedocs.io/en/latest/docker-postgres-backups.html">数据备份</a>
+<ul>
+<li>备份: <code>docker-compose -f local.yml exec postgres backup</code></li>
+<li>列出: <code>docker-compose -f local.yml exec postgres backups</code></li>
+<li>复制到本地: <code>docker cp 9c5c3f055843:/backups/backup_2018_03_13T09_05_07.sql.gz .</code></li>
+<li>从本地恢复: <code>docker-compose -f local.yml exec postgres restore backup_2018_03_13T09_05_07.sql.gz</code></li>
+</ul>
+</li>
+</ul>
+<h1 id="一些个人意见">一些个人意见</h1>
+<p>下边是一些围绕构建一个django项目，我个人所采取的一些策略</p>
+<h3 id="用户系统">用户系统</h3>
+<p>使用<a href="https://django-allauth.readthedocs.io/en/latest/overview.html">django-allauth</a></p>
+<p>用户账号相关的页面由后端做(django-allauth基本都做了，这部分逻辑考虑步骤可能会有安全问题），此外部分前后端分离</p>
+<p>如果希望注册和登陆更灵活(提供REST接口),可以使用<a href="https://github.com/Tivix/django-rest-auth">django-rest-auth</a>。django-rest-auth做的主要工作是让django-allauth暴露出API。</p>
+<h4 id="关于user-model">关于User model</h4>
+<p>如果你对django自带的User model感到满意, 只是想额外增加field的话, 你可以扩展AbstractUser类，<a href="https://github.com/pydanny">pydanny</a>在《Two Scoops of Django》讨论过这块，提到有几种策略。扩展AbstractUser是第一种，目前<a href="https://github.com/pydanny/cookiecutter-django">cookiecutter-django</a>用的也是这种</p>
+<h4 id="添加django-rest-auth">添加django-rest-auth</h4>
+<p>添加依赖之后，记得<code>docker-compose -f local.yml build</code></p>
+<p><a href="https://github.com/Tivix/django-rest-auth">django-rest-auth</a>暴露出以下<a href="http://django-rest-auth.readthedocs.io/en/latest/api_endpoints.html">API</a></p>
+<ul>
+<li><code>http://127.0.0.1:8000/rest-auth/user/</code> 将允许你在web页面调试获取用户数据和注册用户</li>
+<li><code>http://127.0.0.1:8000/rest-auth/registration/</code> 中注册成功之后，验证邮箱会<a href="https://github.com/Tivix/django-rest-auth/issues/15">出错</a>,解决方案参考<a href="https://stackoverflow.com/questions/29725369/improperlyconfigured-at-rest-auth-registration-account-confirm-email">ImproperlyConfigured at /rest-auth/registration/account-confirm-email</a>,直接使用allauth提供的confirm_email即可</li>
+<li>登陆(换取token): http POST http://127.0.0.1:8000/rest-auth/login/ username=django password=django123</li>
+</ul>
+<h4 id="github登陆">github登陆</h4>
+<p>记录一下，配置github登陆的流程</p>
+<ul>
+<li>添加INSTALLED_APPS : <a href="http://django-allauth.readthedocs.io/en/latest/installation.html">Installation</a></li>
+<li>到github注册client: <a href="http://django-allauth.readthedocs.io/en/latest/providers.html#github">providers github</a></li>
+<li>在admin中配置github信息: http://127.0.0.1:8000/admin/socialaccount/socialapp/</li>
+</ul>
+<p><img src="/post/img/github_f63bc856.png" alt="oauth github"></p>
+<h3 id="开发者协同">开发者协同</h3>
+<ul>
+<li>git pull</li>
+<li>docker build</li>
+<li>数据库分发备份</li>
+</ul>
+<h3 id="表单">表单</h3>
+<ul>
+<li>采集数据的表单，可以由后端来做，然后放在django admin里管理
+<ul>
+<li>admin + 表单十分迅速</li>
+</ul>
+</li>
+</ul>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://github.com/pydanny/cookiecutter-django">cookiecutter-django</a></li>
+<li><a href="https://cookiecutter-django.readthedocs.io/en/latest/developing-locally-docker.html">Getting Up and Running Locally With Docker</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-06-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/django/">django</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/screenly-rpi/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Screenly--用树莓派让任何屏幕变为可编程的数字标牌</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/microbit-event-driven/">
+            <span class="next-text nav-default">micro:bit与事件驱动</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

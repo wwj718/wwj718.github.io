@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Unity 学习笔记之消息传递 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 上一篇文章提到: @Lounsen 上周末向我展示了 Unity Visual Scripting 出色的面向对象设计，使我对 Unity 产生强烈兴趣。我们预计很快就可以在 Unity 中制作兼容于 DynaTalk 的 Agent。 我们" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/learn-unity-message-passing/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Unity 学习笔记之消息传递" />
+<meta property="og:description" content="前言 上一篇文章提到: @Lounsen 上周末向我展示了 Unity Visual Scripting 出色的面向对象设计，使我对 Unity 产生强烈兴趣。我们预计很快就可以在 Unity 中制作兼容于 DynaTalk 的 Agent。 我们" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/learn-unity-message-passing/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-08-20T00:00:00+00:00" />
+
+<meta itemprop="name" content="Unity 学习笔记之消息传递">
+<meta itemprop="description" content="前言 上一篇文章提到: @Lounsen 上周末向我展示了 Unity Visual Scripting 出色的面向对象设计，使我对 Unity 产生强烈兴趣。我们预计很快就可以在 Unity 中制作兼容于 DynaTalk 的 Agent。 我们"><meta itemprop="datePublished" content="2023-08-20T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-08-20T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1986">
+<meta itemprop="keywords" content="Agent,Unity," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Unity 学习笔记之消息传递"/>
+<meta name="twitter:description" content="前言 上一篇文章提到: @Lounsen 上周末向我展示了 Unity Visual Scripting 出色的面向对象设计，使我对 Unity 产生强烈兴趣。我们预计很快就可以在 Unity 中制作兼容于 DynaTalk 的 Agent。 我们"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Unity 学习笔记之消息传递</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-08-20 </span>
+        <div class="post-category">
+            <a href="/categories/essays/"> essays </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#visual-scripting">Visual Scripting</a>
+      <ul>
+        <li><a href="#visual-scripting-与-c-之间的消息传递">Visual Scripting 与 C# 之间的消息传递</a></li>
+      </ul>
+    </li>
+    <li><a href="#unity-与外部系统之间的消息传递">Unity 与外部系统之间的消息传递</a></li>
+    <li><a href="#dynatalk-unity-sdk">DynaTalk Unity SDK</a></li>
+    <li><a href="#架构设计">架构设计</a>
+      <ul>
+        <li><a href="#面向对象采用-alan-kay-赋予它的含义">面向对象(采用 Alan Kay 赋予它的含义)</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p><a href="/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/">上一篇文章</a>提到:</p>
+<blockquote>
+<p>@Lounsen 上周末向我展示了 Unity <a href="https://unity.com/features/unity-visual-scripting">Visual Scripting</a> 出色的面向对象设计，使我对 Unity 产生强烈兴趣。我们预计很快就可以在 Unity 中制作兼容于 DynaTalk 的 Agent。</p>
+</blockquote>
+<p>我们打算让 DynaTalk 支持 Unity 的一个主要原因是: 对项目有更多控制权。我们之前的探索环境&ndash;Roblox 是一个云端优先的软件，你无法部署自己的作品，它必须运行在 Roblox 的云端设施上。</p>
+<!--通过写作来学习和思考-->
+<h2 id="visual-scripting">Visual Scripting</h2>
+<p><img src="/post/img/learn-unity-message-passing-02.jpeg" alt=""></p>
+<p>在 Unity 中编程，比预想的愉快。Unity 中编程体验，是强烈的面向对象风格, 场景(Scene)中所有实体的基类都是 GameObject。Unity 甚至有不错的 Liveness(活性)，支持 Live Coding。</p>
+<p>最惊艳我的是 Visual Scripting, Visual Scripting 是 Unity 的图形化编程环境。</p>
+<p>我们来看看官方对它的介绍:</p>
+<blockquote>
+<p>Visual scripting 支持创作者使用图形环境开发游戏机制或交互逻辑，而不是编写传统代码。</p>
+</blockquote>
+<blockquote>
+<p>实现程序员、艺术家和设计师之间更加无缝的协作，更快地进行原型制作和迭代</p>
+</blockquote>
+<blockquote>
+<p>Visual scripting 是设计师和艺术家的绝佳选择，他们可以通过它来测试想法、进行修改或更直接地控制自己的工作。非程序员也可以利用技术成员创建的自定义节点和图。</p>
+</blockquote>
+<blockquote>
+<p>程序员可以赋予团队力量。使用 Visual scripting 创建自定义节点，可以让团队成员（从艺术家到设计师）之间的协作更加高效。无论他们编程知识水平如何，都可以方便地在原型设计或生产过程中共同合作。</p>
+</blockquote>
+<p>Visual Scripting 相当强大，几乎涵盖 Unity 引擎的大部分功能，你在 C# 脚本中能够做到的事情，在 Visual Scripting 基本都能做到。</p>
+<p>有过 Scratch 编程经验的用户，其心智模型可以轻松应用于 Visual Scripting。 如果你有过 Scratch 编程经验，<a href="https://www.youtube.com/watch?v=G9TP2OHBq28&amp;list=PLBBRLwJVhEhOBMNBVX6kIEzPMkhILFy7k">Unity from Scratch</a> 系列视频能够帮助你快速起步。</p>
+<p>Visual Scripting 相当面向对象(和 Scratch 相似，友好性和一致性比 Scratch 差些):</p>
+<ul>
+<li>通过拼搭积木块，编写当前对象的行为</li>
+<li>对象之间通过消息进行通信</li>
+</ul>
+<p><img src="/post/img/learn-unity-message-passing-03.png" alt=""></p>
+<h3 id="visual-scripting-与-c-之间的消息传递">Visual Scripting 与 C# 之间的消息传递</h3>
+<p>尽管我打算将大多数工作都放在 Visual Scripting 里做，但有些工作，在代码中做起来会轻松很多。</p>
+<p>所以我们需要让 Visual Scripting 与 C# 双向传递消息。</p>
+<p>我喜欢将彼此通信的 C# 脚本和 图形化脚本 视为 2 个对象，这样一来，就可以使用&quot;对象之间通过消息进行通信&quot;进行思考。</p>
+<p>有许多方式可以在 Visual Scripting 与 C# 之间传递消息，最简单、通用的一种可能是 <a href="https://docs.unity3d.com/Packages/com.unity.visualscripting@1.8/manual/vs-custom-events.html">CustomEvent</a>。</p>
+<p>CustomEvent 支持以下方向的消息传递:</p>
+<ul>
+<li><code>Visual Scripting -&gt; Visual Scripting</code></li>
+<li><code>C# -&gt; Visual Scripting</code></li>
+</ul>
+<p>但不支持:</p>
+<ul>
+<li><code>Visual Scripting -&gt; C#</code></li>
+</ul>
+<p>查看 Visual Scripting(1.8.0) 源代码，发现这部分功能官方目前还没实现。</p>
+<p>通过与 ChatGPT 的合作，我在没有入门 C# 的情况下实现了这个方向的通信:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C#" data-lang="C#"><span class="line"><span class="cl"><span class="c1">// Visual Scripting -&gt; C#</span>
+</span></span><span class="line"><span class="cl"><span class="n">EventBus</span><span class="p">.</span><span class="n">Register</span><span class="p">&lt;</span><span class="n">CustomEventArgs</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">EventHook</span><span class="p">(</span><span class="n">EventHooks</span><span class="p">.</span><span class="n">Custom</span><span class="p">,</span> <span class="n">gameObject</span><span class="p">),</span> <span class="n">HandleCustomEvent</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><!--
+与ChatGPt 合作 推理
+
+            // Trigger(GameObject target, string name, params object[] args)
+            // EventBus.Trigger(EventHooks.Custom, target, new CustomEventArgs(name, args));
+            // Trigger(new EventHook(name, target), args);
+            // 订阅 Custom 事件
+            EventBus.Register<CustomEventArgs>(new EventHook(EventHooks.Custom, gameObject), HandleCustomEvent);
+            // new EventHook(EventHooks.Custom, gameObject)
+
+-->
+<p>以下是一个更完整的例子，展示了如何在 Visual Scripting 与 C# 之间双向传递消息:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C#" data-lang="C#"><span class="line"><span class="cl"><span class="c1">// Message Passing Manager</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="nn">Unity.VisualScripting</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">CodeTriggerCustomEvent</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">private</span> <span class="k">void</span> <span class="n">Start</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">            <span class="n">EventBus</span><span class="p">.</span><span class="n">Register</span><span class="p">&lt;</span><span class="n">CustomEventArgs</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">EventHook</span><span class="p">(</span><span class="n">EventHooks</span><span class="p">.</span><span class="n">Custom</span><span class="p">,</span> <span class="n">gameObject</span><span class="p">),</span> <span class="n">HandleCustomEvent</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="k">void</span> <span class="n">Update</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">GetKeyUp</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">C</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">         <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Debug</span><span class="p">.</span><span class="n">Log</span><span class="p">(</span><span class="s">&#34;C# Trigger...&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">CustomEvent</span><span class="p">.</span><span class="n">Trigger</span><span class="p">(</span><span class="n">gameObject</span><span class="p">,</span> <span class="s">&#34;test&#34;</span><span class="p">,</span> <span class="s">&#34;C# trigger&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">         <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="k">private</span> <span class="k">void</span> <span class="n">HandleCustomEvent</span><span class="p">(</span><span class="n">CustomEventArgs</span> <span class="n">eventData</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">         <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">Debug</span><span class="p">.</span><span class="n">Log</span><span class="p">(</span><span class="s">$&#34;C# Received event data: {eventData.name} {eventData.arguments[0]}&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">         <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/post/img/learn-unity-message-passing-01.png" alt=""></p>
+<h2 id="unity-与外部系统之间的消息传递">Unity 与外部系统之间的消息传递</h2>
+<p>为了</p>
+<blockquote>
+<p>在 Unity 中制作兼容于 DynaTalk 的 Agent</p>
+</blockquote>
+<p>我们需要在 Unity 中寻找消息传递机制，与 DynaTalk 通信。 Unity 提供了很多消息传递机制与外部系统通信, 诸如 <a href="https://docs.unity.cn/ScriptReference/Networking.UnityWebRequest.html">HTTP</a>、 <a href="https://docs-multiplayer.unity3d.com/transport/current/minimal-workflow-ws/">websocket</a>, 社区里有更过的第三方插件, 支持 MQTT 等消息传递机制。</p>
+<p>我们打算采用之前探索得到的<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/enhanced-roblox-studio-interoperability/">架构设计</a>，以尽可能保持简单，同时尽可能复用我们的基础设施: 转发器、观察器、模拟器&hellip;</p>
+<p>在我们之前的设计中，只需要使用 HTTP request, 就能完成与 DynaTalk 的双向通信。 在 Unity 中，这带来一个额外好处，编译为 WebGL 的游戏(运行在浏览器里！)，也可以与 DynaTalk 通信。</p>
+<p><img src="/post/img/learn-unity-message-passing-05.png" alt=""></p>
+<h2 id="dynatalk-unity-sdk">DynaTalk Unity SDK</h2>
+<p>以下是一个简单演示:</p>
+<p><video width=80% src="/post/img/unity-dynatalk-snap.mp4" controls="controls"></video></p>
+<p>以上演示使用了 DynaTalk Unity SDK(目前只是两个简单的C#文件)</p>
+<p>DynaTalk Unity SDK 会将 DynaTalk 消息接口暴露给 C# 脚本 和 Unity <a href="https://unity.com/features/unity-visual-scripting">Visual Scripting</a></p>
+<p>以上演示视频，对应的 Visual Scripting 脚本如下所示(完全在 Unity 可视化编程环境中完成):</p>
+<p><img src="/post/img/learn-unity-message-passing-06.png" alt=""></p>
+<h2 id="架构设计">架构设计</h2>
+<p>架构的核心想法来自 Smalltalk:</p>
+<blockquote>
+<ul>
+<li>一切都是对象</li>
+<li>对象解释它所理解的消息</li>
+<li>对象通过消息进行沟通</li>
+</ul>
+</blockquote>
+<p>它在 Actor 模型被表述为, 一个 Actor 可以:</p>
+<blockquote>
+<ol>
+<li>响应收到的消息</li>
+<li>发送消息</li>
+<li>创建更多 Actor</li>
+</ol>
+</blockquote>
+<h3 id="面向对象采用-alan-kay-赋予它的含义">面向对象(采用 Alan Kay 赋予它的含义)</h3>
+<blockquote>
+<p>Point of View is worth 80 IQ points &ndash; Alan Kay</p>
+</blockquote>
+<p>面向对象不只是组织和编写代码的范式，更是一种强大隐喻和世界观。</p>
+<blockquote>
+<ul>
+<li>一切都是对象</li>
+<li>对象解释它所理解的消息</li>
+<li>对象通过消息进行沟通</li>
+</ul>
+</blockquote>
+<p>这些观点，提供了强大的视角来看待和思考系统。很遗憾，现代面向对象(OOP)，只看到了第一点。</p>
+<p>一切都是对象。Unity 已经很好地支持了这点。我们无需再做什么。</p>
+<p>对象解释它所理解的消息。 通过编写 Visual Scripting 与 C# 脚本，让对象使用 UnityEngine API 来合理地响应消息，实现消息所搭载的语义。</p>
+<p>对象通过消息进行沟通。Unity 在这点上做的也不错。 Unity 支持很多消息通信的机制, 也许太多了:</p>
+<ul>
+<li>Event</li>
+<li>UnityEvent</li>
+<li>EventBus</li>
+<li>send message</li>
+<li>CustomEvent</li>
+<li>&hellip;</li>
+</ul>
+<p>CustomEvent 足够通用和简单，我们将其用作内部的消息传递机制。而将 <a href="https://docs.unity3d.com/Manual/UnityWebRequest.html">UnityWebRequest</a> 用作 Unity 与外部系统的消息传递机制。</p>
+<!--
+https://chat.openai.com/share/07ce2f10-7035-44d7-a8ac-5c7e320053d9
+
+ChatGPT, 提示词
+
+写一段脚本，使用 UnityWebRequest 不断请求 127.0.0.1 ，解析请求到的 json 数据。妥善处理失败等意外情况，如果请求失败，则隔2秒再重新发起请求
+-->
+<!--
+外部消息
+
+[Unity/UnityWebRequest](https://docs.unity3d.com/Manual/UnityWebRequest.html)
+
+```C#
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Networking;
+
+public class JSONRequestScript : MonoBehaviour
+{
+    private const string targetURL = "http://127.0.0.1:7863/forwarder/get_message"; // Change to your actual URL
+    private const float retryInterval = 2.0f; // Retry interval in seconds
+
+    private void Start()
+    {
+        StartCoroutine(RequestLoop());
+    }
+
+    private IEnumerator RequestLoop()
+    {
+        while (true)
+        {
+            UnityWebRequest request = UnityWebRequest.Get(targetURL);
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError ||
+                request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogWarning("Request failed: " + request.error);
+                yield return new WaitForSeconds(retryInterval);
+                continue; // Retry the request
+            }
+
+            if (!string.IsNullOrEmpty(request.downloadHandler.text))
+            {
+                try
+                {
+                    // Parse JSON data
+                    // JSONData jsonData = JsonUtility.FromJson<JSONData>(request.downloadHandler.text);
+                    // Debug.Log("Received JSON data: " + jsonData.ToString());
+                    Debug.Log(request.downloadHandler.text);
+
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError("Error parsing JSON data: " + e.Message);
+                }
+            }
+
+            yield return null; // Optional delay before making the next request
+        }
+    }
+}
+
+[System.Serializable]
+public class JSONData
+{
+    // Define your JSON data structure here
+    // Example: public string playerName;
+}
+```
+
+-->
+<!--
+
+弄清event和request，内部和外部，其他都只是局部问题，对象解释消息
+
+做实验用Python? requests，但不好build到 webgl
+-->
+<!--
+-   强大的广播系统
+-   使用事件而不是委托
+
+todo Unity 学习笔记之入门
+
+C# 实时测试环境 repl
+在线，replit
+1 分钟 C#
+图形化编程环境
+如何在 scene 中导航
+旋转
+移动
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=XtQMytORBmM">The Unity Tutorial For Complete Beginners</a></li>
+<li><a href="https://www.youtube.com/watch?v=G9TP2OHBq28&amp;list=PLBBRLwJVhEhOBMNBVX6kIEzPMkhILFy7k">Unity from Scratch</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/">为 Future Park(teamLab) 的交互艺术设计一个通用架构</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/enhanced-roblox-studio-interoperability/">增强 Roblox Studio 的互操作性</a>
+<ul>
+<li><a href="https://create.roblox.com/docs/reference/engine/classes/HttpService">Roblox HttpService</a></li>
+<li><a href="https://create.roblox.com/docs/cloud/open-cloud/usage-messaging">Roblox Messaging Service API</a></li>
+</ul>
+</li>
+<li><a href="https://en.wikipedia.org/wiki/Message_passing">wikipedia Message passing</a></li>
+<li><a href="https://www.youtube.com/watch?v=lUtoiPwUR98&amp;t=1415s">How to use Events in Unity Visual Scripting</a></li>
+<li><a href="https://docs.unity3d.com/Packages/com.unity.visualscripting@1.8/manual/vs-create-custom-node.html">Unity/visualscripting@1.8/Custom C# nodes</a>
+<ul>
+<li><a href="https://youtu.be/nEin6I46uG8?t=182">How to Add custom Nodes, Scripts, &amp; Classes to Bolt - [ unity Bolt tutorial ]</a></li>
+<li><a href="https://docs.unity3d.com/Packages/com.unity.visualscripting@1.7/manual/vs-custom-events.html">Custom Events</a></li>
+<li><a href="https://docs.unity3d.com/Packages/com.unity.visualscripting@1.8/manual/vs-create-custom-node-empty.html">Create a new simple Custom C# node</a></li>
+<li><a href="https://docs.unity3d.com/Packages/com.unity.visualscripting@1.8/manual/vs-create-custom-node-add-ports.html">Add ports to a Custom C# node</a></li>
+<li><a href="https://docs.unity3d.com/Packages/com.unity.visualscripting@1.8/manual/vs-create-own-custom-event-listen-code.html">Listen to a Custom Scripting Event from a C# script</a></li>
+<li><a href="https://docs.unity3d.com/Packages/com.unity.visualscripting@1.8/manual/vs-create-own-custom-event-node-trigger-code.html">Trigger a Custom Scripting Event from a C# script</a></li>
+<li><a href="https://docs.unity3d.com/Packages/com.unity.visualscripting@1.8/manual/vs-events-reference.html#events-api">Triggering API</a></li>
+<li><a href="https://docs.unity3d.com/Packages/com.unity.visualscripting@1.8/manual/vs-create-own-custom-event-send-node.html">Create a Custom Scripting Event Sender node</a></li>
+</ul>
+</li>
+<li><a href="https://docs.unity3d.com/Manual/UnityWebRequest.html">Unity/UnityWebRequest</a>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=8GtiOct3Fkk">[ Unity/Bolt ] Visual Script - UnityWebRequest Tutorial</a></li>
+<li><a href="https://www.youtube.com/watch?v=Yp8uPxEn6Vg">Unity3d - UnityWebRequest Get async tutorial</a></li>
+</ul>
+</li>
+<li><a href="https://docs.unity3d.com/ScriptReference/Events.UnityEvent.html">Unity/UnityEvent</a>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=k4JlFxPcqlg">C# Events in Unity! - Intermediate Scripting Tutorial</a></li>
+<li><a href="https://youtu.be/OuZrhykVytg?t=164">What are Events? (C# Basics)</a></li>
+</ul>
+</li>
+<li><a href="https://docs.unity3d.com/2020.1/Documentation/Manual/JSONSerialization.html">Unity/JSON Serialization</a></li>
+<li><a href="https://docs.unity3d.com/Manual/webgl-building.html">Build your WebGL application</a></li>
+<li><a href="https://github.com/endel/NativeWebSocket">NativeWebSocket</a></li>
+<li><a href="https://docs-multiplayer.unity3d.com/transport/current/minimal-workflow-ws/">Unity/Client and server over WebSocket</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-08-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/agent/">Agent</a>
+          <a href="/tags/unity/">Unity</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E9%9A%8F%E7%AC%94/meditation/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">冥想</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/">
+            <span class="next-text nav-default">为 Future Park(teamLab) 的交互艺术设计一个通用架构</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

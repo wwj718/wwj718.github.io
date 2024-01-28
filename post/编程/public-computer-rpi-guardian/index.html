@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>公共树莓派案例: 树莓派守护者! - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="在一个线下公共空间里，放置一些计算设备，参与者在这个环境里，用编程表达自己的想法，构建自己感兴趣的项目。大家的探索过程和成果都置于公共视野，" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/public-computer-rpi-guardian/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="公共树莓派案例: 树莓派守护者!" />
+<meta property="og:description" content="在一个线下公共空间里，放置一些计算设备，参与者在这个环境里，用编程表达自己的想法，构建自己感兴趣的项目。大家的探索过程和成果都置于公共视野，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/public-computer-rpi-guardian/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-09-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-09-01T00:00:00+00:00" />
+
+<meta itemprop="name" content="公共树莓派案例: 树莓派守护者!">
+<meta itemprop="description" content="在一个线下公共空间里，放置一些计算设备，参与者在这个环境里，用编程表达自己的想法，构建自己感兴趣的项目。大家的探索过程和成果都置于公共视野，"><meta itemprop="datePublished" content="2021-09-01T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2021-09-01T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1164">
+<meta itemprop="keywords" content="Python," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="公共树莓派案例: 树莓派守护者!"/>
+<meta name="twitter:description" content="在一个线下公共空间里，放置一些计算设备，参与者在这个环境里，用编程表达自己的想法，构建自己感兴趣的项目。大家的探索过程和成果都置于公共视野，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">公共树莓派案例: 树莓派守护者!</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-09-01 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#树莓派守护者">树莓派守护者！</a></li>
+    <li><a href="#在公共树莓派中构建它">在公共树莓派中构建它</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>在一个线下公共空间里，放置一些计算设备，参与者在这个环境里，用编程表达自己的想法，构建自己感兴趣的项目。大家的探索过程和成果都置于公共视野，想法和经验持续流动，彼此启发，就像 Scratch 线上社区。 &ndash; <a href="/post/%E7%BC%96%E7%A8%8B/public-computer-rpi/">《公共树莓派》</a></p>
+</blockquote>
+<p>本文是 <a href="/post/%E7%BC%96%E7%A8%8B/public-computer-rpi/">《公共树莓派》</a> 的第一个案例。</p>
+<h2 id="树莓派守护者">树莓派守护者！</h2>
+<p><img src="/post/img/pi_swzbe54be0b.png" alt=""></p>
+<p>树莓派守护者是我在2016年做的一个项目。 那时刚玩树莓派不久。</p>
+<p><strong>树莓派守护者！</strong> 的想法是: 使用树莓派 + 超声波传感器，构建一个小偷报警器，解决我童年时候遇到的一个问题:</p>
+<blockquote>
+<p>老板说自己早便发现他们入室盗窃，为了证据确凿，设计了一套精巧的陷阱：在柜台入口，近地面处系一根绳子，绳子一直连到老板睡觉的卧室，在卧室里系上易拉罐。少年们再次登门，触发开关，弄倒老板卧室的易拉罐，老板醒后，有备而来，少年们毫无知觉，来个瓮中捉鳖.  &ndash; <a href="/post/iot/pi-guardian/">树莓派守护者!</a></p>
+</blockquote>
+<p>我觉得这计划稍有不足:</p>
+<blockquote>
+<p>有一处不够优美:报警器竟是绳子做的！如果少年们更警觉些，看到绳子，或是踩到之后便逃离，老板恐怕要竹篮打水一场空。</p>
+</blockquote>
+<p>我想用树莓派作为解决方案:</p>
+<blockquote>
+<p>将超声波传感器（或者红外线）放在柜台下边，当有人路过时，树莓派给老板手机发送一条短信（或邮件），这个隐形的卫士几乎没有破绽</p>
+</blockquote>
+<p>后来我发现，这装置可以用来<strong>守护私密空间</strong>: 当树莓派检测到有人进入房间，给电脑发送信号，将屏幕切换到阅读状态。</p>
+<p><video src="https://adapter.codelab.club/video/python_neverland.mp4" autoplay controls="controls"></video></p>
+<h2 id="在公共树莓派中构建它">在公共树莓派中构建它</h2>
+<p>我在<strong>公共树莓派</strong>中构建的这个项目，希望能通过这些项目分享我的经验，并希望团队成员能 remix 它，去构建自己的项目。</p>
+<p>也想借此分享我喜欢怎样使用树莓派（Linux）.</p>
+<p>整个项目在一个 notebook:<a href="https://github.com/aimaker-space/Public_RPI_PBL/blob/main/AlanRussell_Lab/distance.ipynb">distance.ipynb</a>里， 在局域网里打开树莓派的 jupyterlab 地址，就可以发现并运行这个项目，当然也可以通过 SSH/VNC 进入树莓派运行它。</p>
+<p><img src="/post/img/3ec09f955d4ceba7ceb7e3947cc522c4.png" alt=""></p>
+<p>项目的开头使用 markdown 对项目做了基本描述：从想法的来源到使用到的核心库。</p>
+<p>今早，我给团队成员分享我的这个项目，演示完抓小偷的功能，我邀请大家进入 jupyterlab 里与我结对编程，通过修改 notify 函数，将通知推送给自己。</p>
+<p>接下来演示了如何使用 git 管理这个项目，以及如何将 jupyterlab 当作主要的编程环境： 文件上传与管理以及系统管理(terminal)都可以在 jupyterlab 里完成。</p>
+<p>分享结束之后大家各自都有想实现的新想法，并希望我给出进一步学习 Git/Linux 的新资料，我把它们放在了<a href="https://github.com/aimaker-space/Public_RPI_PBL#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">这里</a>。</p>
+<h2 id="小结">小结</h2>
+<p>项目中的好几个部分是通用的:</p>
+<ul>
+<li>展示树莓派社区最好的<a href="https://gpiozero.readthedocs.io">GPIO驱动</a>的用法，用于与各类传感器交互</li>
+<li>展示如何推送通知（展示了2种方式），这在大多数项目中都很有用</li>
+<li>展示如何在 jupyterlab 中使用 terminal
+<ul>
+<li>在terminal里使用 ngrok 将 jupyterlab 投射到公网</li>
+</ul>
+</li>
+<li>分享到 Github: <a href="https://github.com/aimaker-space/Public_RPI_PBL">Public_RPI_PBL</a>
+<ul>
+<li>使用 Git 做版本管理</li>
+<li>使用项目wiki写博客</li>
+</ul>
+</li>
+<li>讨论了开机自启的思路（暂未实现）</li>
+</ul>
+<p>大家的热情是超出我的预期的，几乎每个人都觉着过去这些令人生畏的东西非常有意思。</p>
+<p>我们希望这个<strong>公共计算空间</strong>随着时间的演进，会持续产生新项目新想法，彼此启发与混合。</p>
+<p>就像你家阳台的花盆里所发生的事情。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/public-computer-rpi/">公共树莓派</a></li>
+<li><a href="/post/iot/pi-guardian/">树莓派守护者!</a></li>
+<li><a href="https://gpiozero.readthedocs.io/en/stable/recipes.html#distance-sensor">超声波传感器</a></li>
+<li><a href="https://github.com/aimaker-space/Public_RPI_PBL">Public_RPI_PBL</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-09-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/">Python</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/ledbag/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">可编程书包</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/public-computer-rpi/">
+            <span class="next-text nav-default">公共树莓派</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

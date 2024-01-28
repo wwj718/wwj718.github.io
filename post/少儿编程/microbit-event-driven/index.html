@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>micro:bit与事件驱动 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="在微软的makecode编辑器中，我们可以轻松为micro:bit写出这种事件驱动风格的代码:当按钮A被按下的时候打印字符A，当按钮B被按下" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/microbit-event-driven/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="micro:bit与事件驱动" />
+<meta property="og:description" content="在微软的makecode编辑器中，我们可以轻松为micro:bit写出这种事件驱动风格的代码:当按钮A被按下的时候打印字符A，当按钮B被按下" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/microbit-event-driven/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-06-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-06-19T00:00:00+00:00" />
+
+<meta itemprop="name" content="micro:bit与事件驱动">
+<meta itemprop="description" content="在微软的makecode编辑器中，我们可以轻松为micro:bit写出这种事件驱动风格的代码:当按钮A被按下的时候打印字符A，当按钮B被按下"><meta itemprop="datePublished" content="2018-06-19T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-06-19T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1497">
+<meta itemprop="keywords" content="microbit," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="micro:bit与事件驱动"/>
+<meta name="twitter:description" content="在微软的makecode编辑器中，我们可以轻松为micro:bit写出这种事件驱动风格的代码:当按钮A被按下的时候打印字符A，当按钮B被按下"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">micro:bit与事件驱动</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-06-19 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>在微软的<a href="https://makecode.microbit.org/">makecode</a>编辑器中，我们可以轻松为micro:bit写出这种事件驱动风格的代码:<code>当按钮A被按下的时候打印字符A，当按钮B被按下的时候打印字符B</code></p>
+<p><img src="/post/img/microbit_30bab0ff.png" alt="makecode"></p>
+<p>生成的代码(javascript)十分简单:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">input</span><span class="p">.</span><span class="nx">onButtonPressed</span><span class="p">(</span><span class="nx">Button</span><span class="p">.</span><span class="nx">A</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">basic</span><span class="p">.</span><span class="nx">showString</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="nx">input</span><span class="p">.</span><span class="nx">onButtonPressed</span><span class="p">(</span><span class="nx">Button</span><span class="p">.</span><span class="nx">B</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">basic</span><span class="p">.</span><span class="nx">showString</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当我们使用Python来为micro:bit编程时，却很难写出这种事件驱动风格的代码，如果我们要做到上边类似的事，一般的教程里会让你用<code>while+if/else</code>来做。尽管可以做到类似的事，但思维方式/语义其实并不相同。</p>
+<h1 id="why">Why</h1>
+<p>makecode将积木映射为JavaScript代码，JavaScript是一个事件驱动型语言，所以在makecode可以很轻松进行事件驱动风格的编程。而Python对事件驱动的关注主要集中在网络编程方面，在Python中做事件驱动风格的编程，并不是那么常见。</p>
+<p>要在图形化中，自动生成事件驱动风格的代码，自然就更不易了</p>
+<p>我们看到micro:bit官方的<a href="https://github.com/bbcmicrobit/PythonEditor">bbcmicrobit/PythonEditor</a>中积木化界面(blockly)就不支持:<code>当按钮A被按下的时候打印字符A，当按钮B被按下的时候打印字符B</code></p>
+<p><img src="/post/img/microbit_4110fba9.png" alt="microbit site"></p>
+<h1 id="how">how</h1>
+<p>由于目前micro:bit的<a href="https://github.com/bbcmicrobit/micropython">micropython固件</a>并不支持多线程(pyboard倒是有个固件支持<code>_thread</code>)，要实现事件驱动，可能只有协程供你选择了。</p>
+<p>micro:bit官方对此并没有很好的解决方案</p>
+<p><a href="http://www.mblock.cc/zh-home/">mblock/makeblock</a>的方案倒是十分漂亮，值得我们好好学习（ps:mblock在工程上十分出色，有许多聪明的做法值得学习）</p>
+<p>我们先在mblock中来为micro:bit编写事件驱动风格的程序</p>
+<p><img src="/post/img/mblock_05c523d5.png" alt="mblock 积木"></p>
+<p>接着我们来看看积木generate出的Python代码:</p>
+<p><img src="/post/img/mblock_fdfa7d4f.png" alt="mblock 代码"></p>
+<p>代码十分规整，规整的好处是从积木到代码的转化将很简单。这种从积木generate出代码的方式，是典型的blockly app风格，尽管长着scratch3.0的样子，关于两者的差异可以参考我此前的文章:<a href="/scratch3-blockly.html">Blockly与Scratch3.0的比较分析及选型建议</a></p>
+<p>观察这个代码（注意<code>yeild</code>），如果你熟悉python的协程，应该可以轻松猜到，mblock很聪明地使用协程来做事件驱动风格的编程</p>
+<p>至于为何不用async/await，是因为MicroPython是Python 3.4的一个实现，在python3.4中，你不能使用async/await关键字，直到Python在3.5版本才引入关于协程的语法糖async和await</p>
+<p>这段代码尽管十分工整，但它并不能运行，它需要一个调度器来调度它们。</p>
+<p>经过预处理之后，可运行代码为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">from microbit import *
+</span></span><span class="line"><span class="cl">import music
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def on_callback_button_a():
+</span></span><span class="line"><span class="cl">    display.scroll(str(&#39;A&#39;), wait=False, loop=False)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def on_coroutine_button_a():
+</span></span><span class="line"><span class="cl">    while True:
+</span></span><span class="line"><span class="cl">        if button_a.is_pressed():
+</span></span><span class="line"><span class="cl">            yield on_callback_button_a()
+</span></span><span class="line"><span class="cl">        else:
+</span></span><span class="line"><span class="cl">            yield
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def on_callback_button_b():
+</span></span><span class="line"><span class="cl">    display.scroll(str(&#39;B&#39;), wait=False, loop=False)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def on_coroutine_button_b():
+</span></span><span class="line"><span class="cl">    while True:
+</span></span><span class="line"><span class="cl">        if button_b.is_pressed():
+</span></span><span class="line"><span class="cl">            yield on_callback_button_b()
+</span></span><span class="line"><span class="cl">        else:
+</span></span><span class="line"><span class="cl">            yield
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def coroutine_start_go(coroutine_v0,coroutine_v1):
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    coroutine_v0.send(None)
+</span></span><span class="line"><span class="cl">    coroutine_v1.send(None)
+</span></span><span class="line"><span class="cl">    n = 0
+</span></span><span class="line"><span class="cl">    while True:
+</span></span><span class="line"><span class="cl">       coroutine_v0.send(n)
+</span></span><span class="line"><span class="cl">       coroutine_v1.send(n)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">coroutine_init0 = on_coroutine_button_a()
+</span></span><span class="line"><span class="cl">coroutine_init1 = on_coroutine_button_b()
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">coroutine_start_go(coroutine_init0,coroutine_init1)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当然，在进入micro:bit之前，它要连同内核一同被编译为hex文件。</p>
+<p>可以看出，mblock在generate出代码之后，还有一个预处理的过程（实际上webduino也干过类似的事，我之前的分析有分析过，他们的做法如出一辙）。</p>
+<p>尽管我们可以用一些hack的手段拿到这部分的源码，但我们不打算在此讨论细节（mblock这部分并未开源，出于尊重和规避法律风险的考虑，我们不准备公开他们这部分的代码。大家自己动手去实现吧，按照以上分析，这部分实现起来十分简单，mblock是个很酷的团队，也许之后会开放）</p>
+<p>mblock对程序进行预处理的部分使用js来做，如下图，大家把这个转化器当黑盒来看吧</p>
+<p><img src="/post/img/makecode_21978b84.png" alt="预处理"></p>
+<p>通过简单的正则，你很快可以写出来:)</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="/microbit-notes.html">micro:bit使用笔记</a></li>
+<li><a href="/micropython-notes.html">MicroPython使用笔记</a></li>
+<li><a href="https://github.com/micropython/micropython">micropython</a></li>
+<li><a href="https://github.com/bbcmicrobit/micropython">bbcmicrobit/micropython</a></li>
+<li><a href="https://github.com/bbcmicrobit/PythonEditor">bbcmicrobit/PythonEditor</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-06-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microbit/">microbit</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%9E%B6%E6%9E%84/cookiecutter-django/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">以最佳实践开始你的Django项目</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/the-structure-of-scientific-revolutions/">
+            <span class="next-text nav-default">科学革命的结构</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

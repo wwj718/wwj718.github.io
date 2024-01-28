@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>整合canvas lms和Open edX - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="canvas lms是什么 Canvas被Black Duck标榜为&amp;quot;唯一的一款商业开源学习管理系统，而且是唯一的一款部署在云端的学习管理系统LM" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/canvas-and-open-edx/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="整合canvas lms和Open edX" />
+<meta property="og:description" content="canvas lms是什么 Canvas被Black Duck标榜为&quot;唯一的一款商业开源学习管理系统，而且是唯一的一款部署在云端的学习管理系统LM" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/canvas-and-open-edx/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-05-24T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-05-24T00:00:00+00:00" />
+
+<meta itemprop="name" content="整合canvas lms和Open edX">
+<meta itemprop="description" content="canvas lms是什么 Canvas被Black Duck标榜为&quot;唯一的一款商业开源学习管理系统，而且是唯一的一款部署在云端的学习管理系统LM"><meta itemprop="datePublished" content="2016-05-24T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-05-24T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1102">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="整合canvas lms和Open edX"/>
+<meta name="twitter:description" content="canvas lms是什么 Canvas被Black Duck标榜为&quot;唯一的一款商业开源学习管理系统，而且是唯一的一款部署在云端的学习管理系统LM"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">整合canvas lms和Open edX</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-05-24 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#教师视角">教师视角</a></li>
+        <li><a href="#学生视角">学生视角</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#lti-provider-and-consumer">LTI provider and consumer</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="canvas-lms是什么">canvas lms是什么</h1>
+<p>Canvas被Black Duck标榜为&quot;唯一的一款商业开源学习管理系统，而且是唯一的一款部署在云端的学习管理系统LMS&quot;</p>
+<p>Black Duck又是什么，如果你关注开源软件，想必对Black Duck也很熟悉了</p>
+<blockquote>
+<p>Black Duck Software helps the world&rsquo;s most innovative companies streamline, safeguard, and manage their use of open source software.</p>
+</blockquote>
+<p>Black Duck对开源软件的评价还是相对靠谱的</p>
+<p>Canvas的确是一款优秀的lms，界面美观/功能完备/丰富的API，尤其适合校内教学使用，有班级/小组/学期的概念</p>
+<h1 id="几张截图">几张截图</h1>
+<h3 id="教师视角">教师视角</h3>
+<p><img src="http://7kttuq.com1.z0.glb.clouddn.com/canvas_teacher.jpg" alt="canvas_teacher.jpg"></p>
+<h3 id="学生视角">学生视角</h3>
+<p><img src="http://7kttuq.com1.z0.glb.clouddn.com/student.png" alt="student.png"></p>
+<h1 id="功能特色">功能/特色</h1>
+<ul>
+<li>支持多种认证
+<ul>
+<li>cas</li>
+<li>oauth2</li>
+<li>and so on</li>
+</ul>
+</li>
+<li>支持LTI 2</li>
+<li>Open api(RESTful)</li>
+<li>国际化</li>
+</ul>
+<h1 id="课程主体">课程主体</h1>
+<ul>
+<li>主页</li>
+<li>通告</li>
+<li>作业</li>
+<li>讨论</li>
+<li>评分</li>
+<li>人员</li>
+<li>页面</li>
+<li>文件</li>
+<li>大纲</li>
+<li>成果</li>
+<li>测验</li>
+<li>单元</li>
+<li>设置</li>
+</ul>
+<h1 id="online-and-on-campus">online and on-campus</h1>
+<p>学校可能有这样一种需求，既需要针对校内的教学，由想有自己的online平台，这两种教学场景天生有其不同的地方，很难靠一套系统来满足，校内教学可能需要教学辅助的功能，需要有对学习资料的管理，需要有班级/学期的概念，需要更多的师生交流</p>
+<p>canvas是解决这个问题的绝佳工具，可能是目前最好的工具</p>
+<p>而online的平台，更多的是mooc的概念，风格上更偏向互联网，架构上优先考虑高并发，所以设计上自然是分布式的</p>
+<p>而由于考虑到一个课堂容纳的众多人数，online的系统设计上不会考虑丰富的教/学互动，诸如主观题在Open edx中并不存在，除非使用AI，否则教师没有精力对每个学生的答案进行人工点评</p>
+<p>online and on-campus需求的不同，以至于我们很难拓展一个系统来满足两种需求，如果你试图这样做，打造出来的&quot;大而全&quot;工具，可能会显得臃肿而不够灵活，更好的选择，是选两个独立的工具，每一个do one thing and do it
+well，那么如何打通两者，使课程内容能在两者中流通，就是问题的关键了</p>
+<h1 id="先例">先例</h1>
+<p>哈弗大学遇到过这个问题，他们将Open edX用作online系统，而将canvas用作针对校内的on-campus系统，之后试图在这两者中共享资源</p>
+<h1 id="哈佛的做法">哈佛的做法</h1>
+<h3 id="lti-provider-and-consumer">LTI provider and consumer</h3>
+<ul>
+<li>Open edx同时作为LTI provider and consumer</li>
+<li>Canvas 以及其他的系统作为LTI consumer</li>
+</ul>
+<p>需要注意的是Canvas支持LTI2，而Open edx只支持LTI1.1</p>
+<h1 id="学习记录">学习记录</h1>
+<ul>
+<li>单点登录</li>
+<li>资源呈现：只呈现资源内容</li>
+<li>成绩： 使用LTI 1.1来传递得分情况</li>
+</ul>
+<h1 id="整合案例">整合案例</h1>
+<p>以下是我的整合案例
+首先为Open edX做好LTI相关的配置，记得同步数据库</p>
+<p>接着到admin中生成consumer key</p>
+<p>之后我们在Open edx的studio中创建一门课程资源</p>
+<p><img src="http://7kttuq.com1.z0.glb.clouddn.com/canvas_edx.png" alt="canvas_edx"></p>
+<p>取得课程的资源，拼凑为适合分享的连接，将连接粘贴到canvas中即可</p>
+<p><img src="http://7kttuq.com1.z0.glb.clouddn.com/edx2canvas1.png" alt="edx2canvas1"></p>
+<p>我们就可以在canvas中做任何能在Open edx中做的操作</p>
+<p><img src="http://7kttuq.com1.z0.glb.clouddn.com/edx2canvas2.png" alt="edx2canvas2"></p>
+<p>下面是讨论</p>
+<p><img src="http://7kttuq.com1.z0.glb.clouddn.com/edx2canvas3.png" alt="edx2canvas3"></p>
+<h1 id="后记">后记</h1>
+<p>用同样的方式，我们可以把Open edX的资源整合到任何支持LTI协议的系统中</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-05-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/open-edx-note-system/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Open edx笔记系统探究</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/open-edx-test-platform/">
+            <span class="next-text nav-default">一个Open-edX的实验平台</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

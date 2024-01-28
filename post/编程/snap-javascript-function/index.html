@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap! 使用笔记: JavaScript function - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="让简单的事情保持简单，让困难的事情变得可能 &amp;ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Snap! 使用笔记: JavaScript function" />
+<meta property="og:description" content="让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-02-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-02-28T00:00:00+00:00" />
+
+<meta itemprop="name" content="Snap! 使用笔记: JavaScript function">
+<meta itemprop="description" content="让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出"><meta itemprop="datePublished" content="2023-02-28T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-02-28T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1986">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! 使用笔记: JavaScript function"/>
+<meta name="twitter:description" content="让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Snap! 使用笔记: JavaScript function</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-02-28 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#javascript-function-积木"><strong>JavaScript function</strong> 积木</a>
+      <ul>
+        <li><a href="#怎么用">怎么用?</a></li>
+      </ul>
+    </li>
+    <li><a href="#我的用例">我的用例</a>
+      <ul>
+        <li><a href="#使用-javascript-function-开发-snap-插件">使用 <strong>JavaScript function</strong> 开发 Snap! 插件</a></li>
+        <li><a href="#使用-javascript-function-探索-javascript-api">使用 <strong>JavaScript function</strong> 探索 JavaScript API</a></li>
+      </ul>
+    </li>
+    <li><a href="#一些技巧">一些技巧</a>
+      <ul>
+        <li><a href="#全局对象">全局对象</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p>和 Scratch 3.0 一样, <a href="https://snap.codelab.club/snap.html">Snap!</a> 也基于 JavaScript 构建，运行在浏览器中。</p>
+<p>由于<a href="/post/%E7%BC%96%E7%A8%8B/should-web-browsers-have-stuck-to-being-document-viewers/">浏览器正在成为新的操作系统</a>, 新的能力层出不穷:</p>
+<ul>
+<li>Web Serial</li>
+<li>Web Bluetooth</li>
+<li>WebGPU</li>
+<li>WebAssembly</li>
+<li>The File System Access API</li>
+<li>&hellip;</li>
+</ul>
+<p>如何将这些强大的能力暴露给最终用户, 是我长期感兴趣的话题。Snap! 是我目前探索这些想法时最喜欢的的实验环境。</p>
+<p>开篇引用的 Alan Kay 的话，是我最喜欢的系统设计原则之一, Snap! 在这方面做得相当出色。</p>
+<h2 id="javascript-function-积木"><strong>JavaScript function</strong> 积木</h2>
+<blockquote>
+<p>良好的设计：系统应以最少的不可变零件组成；这些部分应尽可能通用；系统的所有部分都应聚拢在一个统一的框架中。 &ndash; <a href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">Smalltalk 背后的设计原则</a></p>
+</blockquote>
+<p>Snap! 只通过一个通用的积木，就将浏览器的所有能力暴露了出来! 这个积木就是: <strong>JavaScript function</strong> 积木。</p>
+<img width=500 src="/post/img/Snap-JavaScript-function-block.png" />
+<p><strong>JavaScript function</strong> 积木允许你在 Snap! 里<strong>构建</strong>JavaScript 匿名函数, 然后在 Snap! 中<strong>调用</strong>它, 调用的过程中, 会自动转换 Snap! 和 JavaScript 的数据类型。由于函数在 JavaScript 是<strong>一等公民</strong>, 而积木(block)在 Snap! 也是<strong>一等公民</strong>, 所以这一个积木就将 JavaScript 的所有能力释放给了 Snap!</p>
+<p>简单解释下什么是<strong>一等公民</strong>(摘自 <a href="https://snap.berkeley.edu/snap/help/SnapManual.pdf">SnapManual</a>)。</p>
+<blockquote>
+<p>如果一种数据类型可以作为以下事物, 则它在编程语言中是一等公民(first class):</p>
+<ul>
+<li>变量的值</li>
+<li>程序的输入</li>
+<li>函数返回的值</li>
+<li>数据聚合的成员</li>
+<li>匿名（未命名）</li>
+</ul>
+</blockquote>
+<h3 id="怎么用">怎么用?</h3>
+<p>为了使用 <strong>JavaScript function</strong> 积木, 你需要做 3 件事:</p>
+<ol>
+<li>打开权限</li>
+<li>编写 JavaScript 函数</li>
+<li>调用 JavaScript 函数</li>
+</ol>
+<h4 id="1-打开权限">1. 打开权限</h4>
+<p>出于安全的考虑, Snap! 默认不允许你在积木 IDE 里使用 JavaScript, 要使用 <strong>JavaScript function</strong> 积木, 你需要先打开权限:</p>
+<img width=800 src="/post/img/Snap-JavaScript-function-01.png" />
+<h4 id="2-编写-javascript-函数">2. 编写 JavaScript 函数</h4>
+<img width=800 src="/post/img/Snap-JavaScript-function-02.png" />
+<p>开启权限之后，就可以在 <code>运算</code> 积木组里找到 <strong>JavaScript function</strong> 积木。上图编写了一个匿名函数, 参数是 <strong>what</strong>, 函数体是弹出提示这个参数值。</p>
+<h4 id="3-调用-javascript-函数">3. 调用 JavaScript 函数</h4>
+<p>接下来我们就可以调用它。</p>
+<img width=800 src="/post/img/Snap-JavaScript-function-03.png" />
+<p><strong>控制</strong>积木组有两个积木可用于执行 <strong>JavaScript function</strong>:</p>
+<ul>
+<li>运行</li>
+<li>调用</li>
+</ul>
+<p>两者的区别是前者没有返回值, 后者有返回值(正是 command 与 reporter 的区别, 与直觉一致)。</p>
+<p>更复杂的例子, 可以右键查看 <strong>JavaScript function</strong> 的帮助:</p>
+<p><img src="/post/img/Snap-JavaScript-function-04.png" alt=""></p>
+<h2 id="我的用例">我的用例</h2>
+<h3 id="使用-javascript-function-开发-snap-插件">使用 <strong>JavaScript function</strong> 开发 Snap! 插件</h3>
+<p>Snap! 内置了很多插件(积木库)来扩展 Snap! 的能力:</p>
+<p><img src="/post/img/Snap-mqtt-01.png" alt=""></p>
+<p>在 Snap! 里你可以在 IDE 里创建积木库(和 <a href="https://microblocksfun.cn/run">MicroBlocks</a> 类似)。</p>
+<p>有时候你定义的新积木, 无法通过组合已有的积木来构建, 这时就需要在 JavaScript 先构建 primitive(原语) , 然后在 Snap! 中调用它。 MQTT 插件 就是通过调用 <a href="https://github.com/jmoenig/Snap/blob/master/libraries/mqttExtension.js">mqttExtension.js</a> 中定义的 primitive 来构建的。 <strong>CodeLab Adapter EIM</strong> 插件里也有很多积木用到了底层 primitive , 可供参考。</p>
+<p>当我构建第一个 Snap 插件: <strong>Home Assistant 插件</strong> (使用 Snap! 驱动可编程空间), 频繁地在 JavaScript 修改代码、刷新页面，让我非常厌烦, 我更喜欢在 Snap!(和其他个人计算环境, 如 Smalltalk、MicroBlocks)中的编程体验: 一切都是活的(liveness)! 没有重载和刷新, 整个系统的状态都是连续的! 这是个人计算环境的传统。</p>
+<p>我当时想，要是能够在 Snap! 里直接编写 primitive 就好了, 于是我尝试使用 <strong>JavaScript function</strong> 来做，发现一切都非常愉快!</p>
+<p>具体的开发流程是这样的: 我尽可能使用 Snap! 已有的积木来定义新的积木, 当发现有些事情无法做到, 需要底层新的原语提供支持时，我就使用<strong>JavaScript function</strong>编写一个最小的匿名函数来达成我的目标，这个过程，我可以随时重新定义这个函数，只需要点击积木而无需刷新页面！等我完成整个插件，我就将这些使用 <strong>JavaScript function</strong> 编写的 JavaScript 代码移到专门放置 primitive 代码的文件里。</p>
+<p>尽可能少地引入 primitive 是 Smalltalk 社区编写 primitive 遵循的风格, 关于 primitive 的 big ideas, 我在<a href="https://www.bilibili.com/video/BV18j411F7wh?t=3676.0">MicroBlocks 与 Snap!的互操作里(视频)</a>提到过一些</p>
+<p>这是开发 <strong>CodeLab Adapter EIM</strong> 插件时，使用 <strong>JavaScript function</strong> 写的原型，它提供了巨大的灵活性:</p>
+<p><img src="/post/img/Snap-JavaScript-function-07.png" alt=""></p>
+<p>这是重构为 primitive 之后:</p>
+<p><img src="/post/img/Snap-JavaScript-function-08.png" alt=""></p>
+<p>之后所有与 <strong>CodeLab Adapter</strong> 相关的插件都是这样开发的，整个插件的开发过程中，我不需要刷新一次页面! 这样意味着我的思绪总是连贯的，没有被<strong>编写、刷新</strong>模式打算。它带来了数量级的开发效率提升。</p>
+<h3 id="使用-javascript-function-探索-javascript-api">使用 <strong>JavaScript function</strong> 探索 JavaScript API</h3>
+<p>有了前边愉快而高效的插件开发经验, 我打算走得再远一点, 将 Snap! 看作一个挖掘浏览器潜力的实验环境。 所以 Snap! 现在成了我编写实验性 JavaScript 代码的环境。</p>
+<p>这方面很好的一个案例是将 Web Serial 封装成通用积木。</p>
+<img width=500 src="/post/img/Snap-JavaScript-function-05.png" />
+<p>一旦完成这项工作, 之后的一切探索都可以在 Snap! 中完成，这是巨大的杠杆！</p>
+<p>MicroBlocks 插件就完全在 IDE 里完成, 无需针对性地编写任何 JavaScript 代码, MicroBlocks 串口通信协议完全在 Snap! 里实现。只需使用 JavaScipt 编写好 Web Serial 积木，之后就可以完全工作在 Snap! 环境里了。</p>
+<img width=800 src="/post/img/Snap-JavaScript-function-06.png" />
+<p>我目前试着对 Web Bluetooth 做类似的事， 之后也准备在 WebGPU/WebAssembly 上这样做。</p>
+<p>采用这种方式，可以将个人计算环境的好处用于探索任何的 <a href="https://developer.mozilla.org/en-US/docs/Web/API">Web APIs</a>, 这对研究性工作有巨大好处, 诸如你可以将当前的研究工作整个保存下来(存为项目, 类似 Smalltalk 的 image), 下次加载的时候，就好像你从未离开。</p>
+<h2 id="一些技巧">一些技巧</h2>
+<h3 id="全局对象">全局对象</h3>
+<p>我喜欢使用对象来组织代码，当我开发一个复杂插件的时候(诸如<code>CodeLab Adapter EIM</code>插件)，会把它的主体包装在一个对象里。开发期间，我会将这个对象暴露到全局, 诸如 <code>CodeLab Adapter EIM</code> 插件的主要对象 <code>window.eim_client</code>。 这样有两个好处:</p>
+<ul>
+<li>随时在 <a href="https://developer.chrome.com/docs/devtools/">Chrome DevTools</a> 里探索它们。</li>
+<li>不同的匿名函数(<strong>JavaScript function</strong>)可以共同操作一个全局对象，这使得许多事情变得简单，诸如在不同的函数之间交换信息。</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/should-web-browsers-have-stuck-to-being-document-viewers/">[译]web 浏览器是否应该坚持成为文档查看器？</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/design-principles-behind-smalltalk/">[译]Smalltalk 背后的设计原则</a></li>
+<li><a href="https://snap.berkeley.edu/snap/help/SnapManual.pdf">SnapManual</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-02-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/snap-personal-computing/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Snap! 使用笔记: 将 Snap! 用作个人计算环境</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/snap-microblocks/">
+            <span class="next-text nav-default">Snap! 使用笔记: MicroBlocks 插件</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

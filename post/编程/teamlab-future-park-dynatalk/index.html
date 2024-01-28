@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>为 Future Park(teamLab) 的交互艺术设计一个通用架构 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 Learn &amp;amp; Play &amp;ndash; teamLab⭐️Future Park 去了一次上海的 teamLab, 对里边的许多交互艺术印象深刻。 和许多游客一样，被Future Park(未来公园)" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="为 Future Park(teamLab) 的交互艺术设计一个通用架构" />
+<meta property="og:description" content="前言 Learn &amp; Play &ndash; teamLab⭐️Future Park 去了一次上海的 teamLab, 对里边的许多交互艺术印象深刻。 和许多游客一样，被Future Park(未来公园)" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-08-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-08-17T00:00:00+00:00" />
+
+<meta itemprop="name" content="为 Future Park(teamLab) 的交互艺术设计一个通用架构">
+<meta itemprop="description" content="前言 Learn &amp; Play &ndash; teamLab⭐️Future Park 去了一次上海的 teamLab, 对里边的许多交互艺术印象深刻。 和许多游客一样，被Future Park(未来公园)"><meta itemprop="datePublished" content="2023-08-17T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-08-17T00:00:00+00:00" />
+<meta itemprop="wordCount" content="6828">
+<meta itemprop="keywords" content="Agent,Roblox," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="为 Future Park(teamLab) 的交互艺术设计一个通用架构"/>
+<meta name="twitter:description" content="前言 Learn &amp; Play &ndash; teamLab⭐️Future Park 去了一次上海的 teamLab, 对里边的许多交互艺术印象深刻。 和许多游客一样，被Future Park(未来公园)"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">为 Future Park(teamLab) 的交互艺术设计一个通用架构</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-08-17 </span>
+        <div class="post-category">
+            <a href="/categories/essays/"> essays </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#关于-teamlab">关于 teamLab</a></li>
+    <li><a href="#关于-future-park">关于 Future Park</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#玩吧天才编程师play-programming-for-geniuses">玩吧！天才编程师！(Play! Programming for Geniuses)</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#1-纸上绘制">1. 纸上绘制</a></li>
+    <li><a href="#2-公共虚拟世界">2. 公共虚拟世界</a>
+      <ul>
+        <li><a href="#roblox-适合用于部署吗">Roblox 适合用于部署吗？</a></li>
+        <li><a href="#2d-风格的世界">2D 风格的世界</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-图形化编程">3. 图形化编程</a>
+      <ul>
+        <li><a href="#架构图">架构图</a></li>
+        <li><a href="#用身体互动">用身体互动</a></li>
+        <li><a href="#离线与联网">离线与联网</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#ai-角色">AI 角色</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-03.jpeg" alt=""></p>
+<blockquote>
+<p>Learn &amp; Play &ndash; teamLab⭐️Future Park</p>
+</blockquote>
+<p>去了一次上海的 <a href="https://www.teamlab.art/">teamLab</a>, 对里边的许多交互艺术印象深刻。</p>
+<p>和许多游客一样，被<a href="https://futurepark.teamlab.art/en/">Future Park(未来公园)</a>深深吸引。它鼓励人们将绘制的角色，释放到巨大的公共虚拟空间里。这些角色栩栩如生，仿佛生活在另一个平行世界&hellip;</p>
+<p>从 teamLab 回来后, 想复现 Future Park 的项目，发现没有想象的容易。为了制作这类项目，需要让异构的系统相互协作，协调不同的计算环境，处理并发性, 同步, 异步等问题。</p>
+<p>最近<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/autonomous-agent-in-roblox/">在 Roblox 中探索自主 Agent</a>，经常得处理类似问题，我们得到了一个通用架构(DynaTalk)，意外地，可以用它轻松制作 Future Park 里的体验项目。</p>
+<h2 id="关于-teamlab">关于 teamLab</h2>
+<blockquote>
+<p>teamLab（2001 年成立于日本东京）是一个国际艺术团体。他们的合作实践旨在探索艺术、科学、技术和自然世界的交汇点。这个跨学科的团队，包括艺术家、程序员、工程师、CG 动画师、数学家和建筑师，通过艺术，旨在探索自我与世界之间的关系，以及新的感知形式。<br>
+为了理解周围的世界，人们将其分割成独立的实体，并在它们之间感知到边界。teamLab 试图超越这些边界，超越我们对世界的感知，对自我与世界之间的关系以及时间的连续性的理解。一切存在于一个漫长、脆弱而又奇迹般的无边界连续性中。<br>
+teamLab 展览已在世界各地的城市举办，包括纽约、伦敦、巴黎、新加坡、硅谷、北京和墨尔本等&hellip;</p>
+</blockquote>
+<h2 id="关于-future-park">关于 Future Park</h2>
+<blockquote>
+<p>这是一个以<strong>共同的创造性，共创</strong>为概念的教育项目，也是一个能够享受与他人一同自由地创造游乐世界的<strong>未来公园</strong>。</p>
+</blockquote>
+<p>为了进一步阐述 <a href="https://futurepark.teamlab.art/zh-hans/about/">什么是 Future Park</a>, teamLab 进一步写道(内容十分精彩，以至我亦步亦趋地逐字摘抄):</p>
+<blockquote>
+<p><strong>今天的工作会消失</strong>。人工智能(AI)和机器可能会取代我们今天所知的大部分工作。未来的社会中，人类拥有的特质，比如创造力，将变得越来越重要。我们相信协同创造力将成为人们最重要的特质之一。<br>
+<strong>人类生而具有创造力</strong>。人类天生具有协作和创造能力。然而，如今的教育过分强调唯一正确的答案，抑制了创造力。自由思考和特立独行的行为被压制。学生们害怕犯错，失去了他们天生的创造能力。现实世界中，问题往往不会只有唯一答案，十年前的正确答案现在可能行不通了。通过以不同方式解决问题并在过程中给人们带来乐趣，我们会创造出新的正确答案。正是创造力使我们能够克服那些无法定义为对错的问题。<br>
+<strong>人类通过与他人的创造性活动共同创造了这个世界</strong>。 大量的人沉迷于智能手机。他们的大脑可能互相连接，身体却处于孤立状态。培养共同创造的机会正在减少。人类通过与他人的互动和经验分享来了解世界。人们在世界中行动时用身体思考，社会通过合作产生的创造性活动来发展。<br>
+<strong>享受共创的体验</strong>。通过探索teamLab的一个概念<strong>改变人与人之间的关系：使他人的存在成为积极的体验</strong>。我们希望通过共同创造的体验，人们能够在日常生活中探索更多的共享创意。正是出于这样的愿望，&ldquo;未来公园&quot;项目诞生了。</p>
+</blockquote>
+<h1 id="future-park-的体验项目">Future Park 的体验项目</h1>
+<p>Future Park 主题下有许多<a href="https://futurepark.teamlab.art/zh-hans/playinstallations/">体验项目</a>，在不同的 teamLab 场馆，体验项目各有不同。<!--也可能同个场馆，不同时间，有不同体验项目，由于我只去过一次，对此不够了解。--></p>
+<p>teamLab 把这些项目都放到网上了: <a href="https://futurepark.teamlab.art/zh-hans/playinstallations/">点击这儿</a></p>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk.png" alt=""></p>
+<p>我在上海的 teamLab, 体验到的 Future Park 项目是 <a href="https://futurepark.teamlab.art/zh-hans/playinstallations/sketch_aquarium_connected_world/">彩绘水族馆-与世界相连</a>。</p>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-02.jpeg" alt=""></p>
+<p>这是一段视频演示:</p>
+<p><video width=80% src="https://scratch3-files.just4fun.site/Sketch-Aquarium-Connected-World.mp4" controls="controls"></video></p>
+<!--
+<iframe width="1333" height="750" src="https://www.youtube.com/embed/5CTr5BqaOQ0?list=TLGGX5GXINrCNk0xNzA4MjAyMw" title="Sketch Aquarium: Connected World" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+-->
+<blockquote>
+<p>这个水族馆能够让大家所创造的鱼儿尽情遨游。<br>
+在纸上随意描绘鱼的图案，随之被描绘的图案，像被注入了生命一样, 游入眼前巨大的水族馆中。<br>
+当你触碰到游泳的鱼时，被触碰的鱼儿会马上逃跑。当触碰到饵食的袋子时，袋子里的饵食会让鱼儿们饱餐一顿。<br>
+其中，金枪鱼将越过这个作品的边界，游到位于世界其他地方的《彩绘水族馆》和《彩绘海洋》的展览中去。 同时，世界各地被创造出来的金枪鱼，也有可能会游到眼前的《彩绘水族馆》的海洋中来。</p>
+</blockquote>
+<p>看着自己绘制的鱼儿，在&quot;海洋&quot;里游动。创作者们会情不自禁跟随自己的鱼儿四处走动，像是在公园里遛狗。当鱼儿们聚在一起，作者们自然也在周围聊起来，解释自己所绘图标的含义, 赞美对方的奇思妙想&hellip;</p>
+<p>通常，虚拟世界把人们从现实世界抽离，让人们对身边真实的人视而不见，奇怪的是，这个项目却通过虚拟世界拉近了现实世界人与人的距离。</p>
+<!--
+有 Scratch 背景的人，可能会想用 Scratch 制作类似的项目，原理上似乎是可行的，即使让鱼儿对手的触摸做出反应，也可以用 Scratch 配合激光雷达来实现，我们之前在 Neverland 里已经做过[相关探索](https://www.codelab.club/projects#Neverland%202.0%20%E5%8E%9F%E5%9E%8B--%E7%8E%BB%E7%92%83%E7%A2%8E%E7%89%87)。至于如何将手绘鱼儿投入到"海洋舞台"里，我们留待后文讨论。
+-->
+<p>Future Park 里还有许多其他有趣的项目，他们都秉持 Future Park 最初的精神: <strong>体验共同创造的乐趣</strong></p>
+<p>彩绘城镇:</p>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-04.jpeg" alt=""></p>
+<p>小人儿所居住的音乐墙:</p>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-06.jpeg" alt=""></p>
+<p>彩绘人与人:</p>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-05.jpeg" alt=""></p>
+<h2 id="玩吧天才编程师play-programming-for-geniuses">玩吧！天才编程师！(Play! Programming for Geniuses)</h2>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-03.jpeg" alt=""></p>
+<p>&ldquo;玩吧!天才编程师!&rdquo; 是我最感兴趣的 Future Park 项目。</p>
+<p>它看起来是在 &ldquo;彩绘人与人&rdquo; 项目基础上加入了图形化编程功能，让玩家通过程序可以创造人物的不同行为。</p>
+<p>通过视频看看它是个怎样的项目:</p>
+<p><video width=80% src="https://scratch3-files.just4fun.site/Play-Programming-for-Geniuses.mp4" controls="controls"></video></p>
+<!--
+<iframe width="1333" height="750" src="https://www.youtube.com/embed/2eH6dSyVvPM?list=TLGGxgxxvlbuhN4xNzA4MjAyMw" title="Play! Programming for Geniuses" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+-->
+<p>teamLab 这样介绍它:</p>
+<blockquote>
+<p>一边玩一边学习程序设计，用自己创造的程序让自己画的人儿动起来。<br>
+观赏者可以在纸张上自由地描绘人（男孩, 女孩）。通过平板电脑来编写程序。如此一来，画中人就被赋予了生命，在眼前这片巨大的草原中行走。画中行走的人儿还会与其他人儿交流。当观赏者触碰画中人时，他们会吓一跳或是做出各式各样的反应。</p>
+</blockquote>
+<p>项目充满童趣，对孩子的吸引力不言而喻: 不仅可以绘制独特的小人，还可以驱使它探索世界、与人交流&hellip;</p>
+<h1 id="怎么制作">怎么制作?</h1>
+<p>之前想要制作类似的项目, 不过 teamLab 的项目没有开源。只好自己动手。</p>
+<p>先来分析一下 &ldquo;天才编程师&rdquo; 的构成, 我将它拆解为 3 个部分:</p>
+<ol>
+<li>纸上绘制: 创作者在纸上绘制角色(涂色), 扫描之后，角色会进入到公共虚拟世界</li>
+<li>公共虚拟世界: 虚拟世界是一个&quot;公共世界&rdquo;, 所有角色都生活在其中</li>
+<li>图形化编程: 创作者通过图形化编程赋予绘制的角色不同行为</li>
+</ol>
+<p>这 3 个部分要如何实现呢？</p>
+<h2 id="1-纸上绘制">1. 纸上绘制</h2>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-08.png" alt=""></p>
+<p>在纸张上绘制，相比于使用电子设备，好处是明显的，纸张和彩笔比任何的绘图软件都易用，无需在现场学习。</p>
+<p>在同一个桌子上绘画，会鼓励人们交流: 你可能正在等待别人手中的粉色画笔🖌️!</p>
+<p>teamLab 还有一个精妙的设计: <strong>让体验者给人物涂色而不是在空白的纸上绘制人物</strong>。</p>
+<p>在白纸上作画是困难的，许多人会望而却步(我肯定会😂)。但从一堆备选人物中挑一个自己喜欢的，然后涂色，这可难不倒我!</p>
+<p>学校门口小卖铺的畅销货品里肯定有涂色本。淘宝上这类东西也好卖得很。</p>
+<img width=600 src="/post/img/teamLab-futrue-park-DynaTalk-09.png" />
+<p>采用<strong>预定义人物</strong>的另一个好处是, 角色在虚拟世界中的模型是预先制作好的。这允许预先制作有趣的角色动画。</p>
+<p>当创作者给人物上色之后，teamLab 的工作人员会对角色进行扫描:</p>
+<img width=600 src="/post/img/teamLab-futrue-park-DynaTalk-10.png" />
+<p>这个过程产生的彩色图片，可以用于给人物模型进行纹理贴图（Texture Mapping）。 teamLab 选择了合适的艺术风格，使得 2D 绘画投射到 3D 人物身上十分协调。</p>
+<p>如果我们没有 teamLab 的专业扫描仪(好像是富士通的产品)，使用普通 USB 摄像头 + OpenCV 应该也能很容易从白纸上分割出人物。</p>
+<p>今天的技术或许可以支持更加自由的绘制创作。</p>
+<p>使用 Meta 开源的 <a href="https://github.com/facebookresearch/AnimatedDrawings">Animated Drawings</a>, 可以为绘制的人物制作动画:</p>
+<p><img src="/post/img/219223438-2c93f9cb-d4b5-45e9-a433-149ed76affa6.gif" alt=""></p>
+<p>你甚至可以利用 <a href="https://huggingface.co/">huggingface</a> 上的 AI 模型，将 2D 图片转化为 3D 模型。</p>
+<p>但需要注意的是，更加自由的绘制过程，并不一定产生更好的产品体验，给预定义人物 &ldquo;涂色&rdquo; 正是 teamLab 这个项目出色体验的原因之一。</p>
+<h2 id="2-公共虚拟世界">2. 公共虚拟世界</h2>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-12.png" alt=""></p>
+<p>teamLab 使用投影仪在房间里投射出了一个巨大的虚拟世界，仿佛与现实平行的时空。创作者绘制的角色在这个世界中行动与社交。</p>
+<p>为了复现出墙上的虚拟世界，需要做 2 件事:</p>
+<ol>
+<li>制作一个虚拟的 3D 世界</li>
+<li>将这个世界投影到现实中</li>
+</ol>
+<p>关于第 1 点，有许多解决方案，市面上有许多 3D 设计软件(如 <a href="https://www.blender.org/">Blender</a>)，都能制作这样的 3D 世界。</p>
+<p>我们不仅需要制作一个 3D 世界模型，还要让这个世界 &ldquo;动起来&rdquo;，这通常是游戏引擎(如<a href="https://unity.com/">Unity</a>)发挥作用的地方。所以虚拟世界实际上是一个 <strong>3D 游戏</strong>。</p>
+<!--
+babylonjs https://www.babylonjs.com/
+r3d: https://github.com/pmndrs/react-three-fiber
+playcanvas: https://playcanvas.com/ 游戏引擎
+spline https://spline.design/ https://github.com/splinetool/react-spline 在线页面 快速原型
+-->
+<p>我选择使用 <a href="https://create.roblox.com/">Roblox</a> 作为原型工具，它可以快速创造一个 &ldquo;3D 游戏世界&rdquo;。选择 Roblox 作为原型工具的原因, <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/autonomous-agent-in-roblox/">在 Roblox 中探索自主 Agent</a>做了阐述。</p>
+<p>关于第 2 点，主要是如何选择投影仪的问题，这方面的解决方案大多是现成的。如果希望这些投影区域具有交互能力，则需要增加传感器，我在现场看到 teamLab 使用的是激光雷达。 我们之前在 CodeLab Neverland 里已经做过<a href="https://www.codelab.club/projects#Neverland%202.0%20%E5%8E%9F%E5%9E%8B--%E7%8E%BB%E7%92%83%E7%A2%8E%E7%89%87">相关探索</a>.</p>
+<h3 id="roblox-适合用于部署吗">Roblox 适合用于部署吗？</h3>
+<p>近期有公司对我们做的事情感兴趣，讨论如何落地到他们的线下体验店。</p>
+<p>讨论中发现，Roblox 适合用于快速制作圆形，但不适合用于实际部署。首当其冲的问题是，Roblox 需要翻墙才能使用，这使它几乎无法在国内落地，除非代理商(目前是腾讯)恢复 Roblox 在国内的运营。</p>
+<p>Unity 是不错的选项。 我们做了简单的实验，让我们目前的架构支持 Unity 是简单的。 我们的架构设计完全适用于 Unity。 @Lounsen 上周末向我展示了 Unity <a href="https://unity.com/features/unity-visual-scripting">Visual Scripting</a> 出色的面向对象设计，导致我对 Unity 产生强烈兴趣。我们预计很快就可以在 Unity 中制作兼容于 DynaTalk 的 Agent。</p>
+<h3 id="2d-风格的世界">2D 风格的世界</h3>
+<p><a href="https://futurepark.teamlab.art/zh-hans/playinstallations/sketch_aquarium_connected_world/">彩绘水族馆</a> 和 &ldquo;天才编程师&rdquo; 画风上更接近 2D 或 2.5D。</p>
+<p>如果虚拟世界是 2D 风格的，就不需要使用 Unity 或 Roblox 这类 3D 游戏引擎 ，完全可以使用 <a href="http://snap.codelab.club/snap.html">Snap!</a> 来制作。制作成本将非常低。</p>
+<p>Snap! 的舞台分辨率是可调的!  可以调整为适合墙面大小。</p>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-11.png" alt=""></p>
+<p>如果你想让制作出角色在不同投影墙面上穿梭，基于 DynaTalk 的消息通信机制来做，是非常容易的。一切都可以在 Snap! 内完成。</p>
+<p>通过 DynaTalk，我们可以将一个 Snap! 舞台作为&quot;公共世界&quot;, 并投影到房间里。创作者使用平板电脑上的 Snap! 各自控制&quot;公共世界&quot;中的角色.</p>
+<!--
+只需要 Snap 解释器，而无需舞台
+
+Snap Python 例子
+
+手机客户端，投掷东西
+-->
+<h2 id="3-图形化编程">3. 图形化编程</h2>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-13.png" alt=""></p>
+<p>这部分最为困难，几年前曾困住我。</p>
+<p>&ldquo;天才编程师&rdquo; 像一个多人在线游戏, 和普通的这类游戏不同，在teamLab 里，玩家们共用一个大型屏幕。</p>
+<p>所以设计这个系统时，会遇到多人在线游戏的典型问题。设计一款多人在线游戏的工作量，往往多出同等内容单机游戏的一倍以上。</p>
+<p>直接搬运线程的多有游戏开源框架似乎是可行的，但这类代码通常巨大，难以定制。</p>
+<p>我想要更轻量和灵活的架构设计。如本文开篇提到的:</p>
+<blockquote>
+<p>最近<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/autonomous-agent-in-roblox/">在 Roblox 中探索自主 Agent</a>，经常得处理类似问题，我们得到了一个通用架构(DynaTalk)，意外地，可以用它轻松制作 Future Park 里的体验项目。</p>
+</blockquote>
+<p>主要想法是，将游戏世界中的角色看作一个 Agent，它是一个 Actor 模型。一个 Actor 可以:</p>
+<ul>
+<li>响应收到的消息</li>
+<li>发送消息</li>
+<li>创建更多 Actor</li>
+</ul>
+<p>如此一来，问题就变得非常简单了，不同计算环境中的 Actor 通过收发消息来进行协作。</p>
+<p>我们可以在游戏环境中构建角色模型、角色动画，让角色受到物理引擎的影响，诸如碰撞检测、障碍阻挡等，角色接收游戏世界的环境信息，如果身边有其他角色喊它，它可以决定是否做出回应&hellip; 制作虚拟世界的开发者，完全不必关心用户最终如何对他编程。制作角色时， 只要让角色得体地响应收到的消息即可。</p>
+<p>同时，用户可以在平板电脑上，通过图形化编程，赋予角色不同的行为。图形化客户端的开发者无需了解游戏世界是如何运作的。</p>
+<p><strong>游戏角色既要参与游戏引擎驱动的计算，又要被用户以编程的方式控制</strong>。&ldquo;以编程的方式控制&rdquo; 意味着不知道用户会如何控制。如果用户编写的代码是个死循环(诸如让角色一直绕圈)会怎样？我们不能禁止用户这样做，因为这样的行为是完全是合理的。如果我们连用户会编写什么代码都不知道，如何让用户编写的的程序与游戏世界相协调呢？</p>
+<p>这个问题的更大版本是，如何让异构系统里的进程协同工作？ 这是困扰主流软件工程的一个问题。</p>
+<p>我们讨厌软件工程领域流行的&quot;锁&quot;、&ldquo;共享状态&quot;等机制。这些机制不但丑陋、复杂，而且脆弱。</p>
+<blockquote>
+<p>如果说我们从 30 多年的并发编程中汲取了什么教训，那便是：不要共享状态。共享状态就像两个酒鬼试图共享啤酒。他们就算是好友，迟早也会打架。你添加到桌上的酒鬼越多，他们在啤酒上的争斗就严重。大多数多线程应用程序的悲剧性看起来就像是醉酒的打架。 &ndash; ZeroMQ</p>
+</blockquote>
+<p>我们深受 Alan Kay 启发，使用 &ldquo;消息传递&rdquo; 架构轻松地解决了前头的问题。&ldquo;消息传递&rdquo; 架构最终实现在 DynaTalk 里，它具有工业强度，跑在树莓派里的 DynaTalk 便足以轻松支撑本文的项目需求。</p>
+<blockquote>
+<p>我们倾向于对系统中不同的角色(无论是人类还是 AI)持不可知论，以此来提高系统的一致性，AI、人类、计算环境，可以以任何方式在系统中交互</p>
+</blockquote>
+<p>正是因此，所得到的架构是通用的。</p>
+<p>起初我们以为，不需要实现 Actor 的完整特性: &ldquo;创建更多 Actor&rdquo; 似乎是不必要的，后来发现，这个特性非常适合用于动态生成游戏角色。只需在游戏开始时，创建一个环境Agent(EnvironmentAgent)，当工作人员扫描用户涂色的角色时，将消息发送到虚拟世界，环境 Agent 响应这条消息，并&quot;创建新的 Actor&rdquo;。我们完全在 Actor 的原语中叙述了所有工作！Actor 的简洁、优雅与强大是惊人的！</p>
+<p>以下是一个原型演示，展示用户如果通过图形化编程，驱动&quot;公共世界&quot;中的角色:</p>
+<p><video width=80% src="https://scratch3-files.just4fun.site/teamlab-roblox-dynatalk-snap.mp4" controls="controls"></video></p>
+<p>每个用户可以手持不同的平板电脑，对&quot;共同世界&quot;的不同角色进行编程。 值得一提的是，图形化编程中的所有积木都是可用的! 诸如循环、条件、变量&hellip;甚至是自定义积木，我们可以充分复用图形化编程环境的所有能力。这便是 &ldquo;消息传递&rdquo; 架构的力量，它可以轻松地与不同的系统兼容。程序就地解释，它运行在客户端！系统之间的协作，完全由&quot;消息传递&quot;架构提供支持。</p>
+<p>这是一种非常通用的架构，你可以选择任意客户端，我们偏好 Snap! 作为编程环境，你也可以选择 Scratch 或者 Blockly。 如果你打算支持文本语言(诸如Python)，也是没有问题的，甚至可以让一些用户使用图形化编程语言，而另一些用户使用Python，他们编程驱动的角色，生活在同一个&quot;公共世界&quot;里&hellip;</p>
+<p><video width=80% src="https://scratch3-files.just4fun.site/roblox-python-client.mp4" controls="controls"></video></p>
+<h3 id="架构图">架构图</h3>
+<p>以上演示对应架构图是这样的:</p>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-14.png" alt=""></p>
+<p>修改自我们之前探索 Agent 得到的架构:</p>
+<p><img src="https://wwj718.github.io/post/img/enhanced-Roblox-Studio-interoperability-03.png" alt=""></p>
+<p>由于一切都只是异步消息传递，所以你可以轻松在任何系统之间建立连接，如果需要同步语义，之后在 Actor/Agent 内部建立即可，系统对此保持无知。</p>
+<!--
+使用 MQTT 的好处坏处:
+
+https://www.nuget.org/packages/MQTTnet/
+https://github.com/gpvigano/M2MqttUnity
+
+好处
+    得到一个简单的双向通信管道，部署简单/通用，不依赖 forwarder
+
+坏处
+    原则上可以支持浏览器(MQTT.js)，但可能需要特别调整
+    相关资料很少，C#生态可能更多
+-->
+<h3 id="用身体互动">用身体互动</h3>
+<p>装置艺术爱好者，通常使用 <a href="https://www.tuio.org/">TUIO协议</a> 将激光雷达接入到他们的交互装置里，让体验者用身体与作品互动。我们之前在 Neverland 也是这样做的:</p>
+<img src="/post/img/teamLab-futrue-park-DynaTalk-16.png" />
+<center>体验者在 CodeLab Neverland 里用身体作画</center>
+<p>我在 <a href="https://mp.weixin.qq.com/s/ZXSMxnp87YPE7uTLkrzJxA">《触 Catalog》</a> (由独立杂志<strong>二十面体</strong>发行) 书中简单介绍了 TUIO 协议以及我们在 Neverland 里用它做的事情:</p>
+<img width=350 src="/post/img/teamLab-futrue-park-DynaTalk-15.JPG" />
+<p>由于我们的架构已经基于&quot;消息传递&quot;，所以不再需要借助 TUIO 来传递事件消息, 这可能带来更多的灵活性。</p>
+<p>&ldquo;消息传递&quot;架构能够很好地支持&quot;事件驱动系统&rdquo;, 而人机交互设备(鼠标,键盘等)通常是事件驱动的。Smalltalk 的 <a href="https://wiki.squeak.org/squeak/714">HandMorph</a> 展示了这种架构的简单优雅，以及惊人的灵活性。</p>
+<p>激光雷达可以轻松融入到我们当前的&quot;消息传递&quot;架构中，只需把它视为一个不断往外发送消息的 Actor 即可，而游戏中的角色(也是Actor) 解释它所理解的消息。</p>
+<p>让我们在场景中描述它: 当体验者用手触碰墙壁的某个位置, 激光雷达感知到这个信息，往外发送消息说这个位置被触碰了，游戏世界的鱼接收到这条消息，有一条鱼正好处在被触碰的位置，它立刻响应这条消息，身体转个圈逃走了。如此一来，就制造了这样一种幻觉: 体验者觉得自己碰到了鱼，把它吓跑了。</p>
+<blockquote>
+<p>&ldquo;图形用户界面(GUI)&rdquo; 是一种操控与制造幻觉的艺术</p>
+</blockquote>
+<p>让我们用架构图来表达以上想法:</p>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-17.png" alt=""></p>
+<h3 id="离线与联网">离线与联网</h3>
+<p>基于&quot;消息传递&quot;的架构(DynaTalk), 可以轻松让角色穿梭于不同的墙面(即使它们分别运行在 2 台计算机里)，所要做的，只是在不同设备上收发消息。</p>
+<p>同时也很容易做到 teamLab 设计的这个有趣场景:</p>
+<blockquote>
+<p>在世界的其他地方被创造出来的金枪鱼，也有可能会游到眼前的《彩绘水族馆》的海洋中来。</p>
+</blockquote>
+<p>只需要将一个 DynaTalk 部署到公共网络，本地局域网里的 DynaTalk 与之连接即可。</p>
+<p>DynaTalk 默认运行在局域网里，可完全离线运行(为了避免场馆内网络不好)。</p>
+<p>我们将联网功能设计为可插拔的。</p>
+<!--
+Unity scratch/Python
+
+unity 使用一个有角色的小世界。开始工作，是需要 http 而已！
+
+python teamlab client
+
+### 复用 Snap! UI
+
+只需要禁止某些特定功能角色被操控即可，代码相当简单
+-->
+<h1 id="超越-天才编程师">超越 &ldquo;天才编程师!&rdquo;</h1>
+<p>正如 &ldquo;天才编程师!&rdquo; 是在 &ldquo;彩绘人与人&rdquo; 项目基础上构建的。我们也可以将新的创意构建在 &ldquo;天才编程师!&rdquo; 之上。</p>
+<p>有许多有趣的新想法值得探索。其中一个有趣的方向是，<strong>往公共世界中添加 AI 角色</strong>。</p>
+<h2 id="ai-角色">AI 角色</h2>
+<p>想象在&quot;公共虚拟世界&quot;中，生活了一群有自主行动能力的人物, 它们由 AI 驱动，它们在里边读书、远足、发呆、社交&hellip;它们有自己的<a href="https://en.wikipedia.org/wiki/Belief%E2%80%93desire%E2%80%93intention_software_model">信念、欲望和意图(Belief–desire–intention)</a>&hellip;</p>
+<p>现实世界的人们可以伸手触摸与它们交互，它们会害羞，好奇，或逃跑&hellip;</p>
+<p>也可以通过 &ldquo;天才编程师!&rdquo; 中的机制，为自己绘制的小人儿编程，让这些小人儿进入虚拟世界，与 AI 小人儿互动&hellip;</p>
+<p>由于目前的架构来自 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/autonomous-agent-in-roblox/">在 Roblox 中探索自主 Agent</a>, 所以我们之前探索得到的 DynaBrain 可用于驱动公共虚拟世界中的 AI 小人儿。</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://www.teamlab.art/about/">关于 teamLab</a></li>
+<li><a href="https://en.wikipedia.org/wiki/TeamLab_(art_collective)">teamLab (art collective)</a></li>
+<li><a href="https://futurepark.teamlab.art/en/about/">teamLab ⭐️ Future Park</a></li>
+<li><a href="https://futurepark.teamlab.art/zh-hans/about/">关于 Future Park</a></li>
+<li><a href="https://futurepark.teamlab.art/zh-hans/playinstallations/">Future Park 游乐装置</a></li>
+<li><a href="https://futurepark.teamlab.art/zh-hans/playinstallations/sketch_aquarium_connected_world/">Future Park 彩绘水族馆 -与世界相连</a></li>
+<li><a href="https://futurepark.teamlab.art/zh-hans/playinstallations/sketch_people/">Future Park 彩绘人与人</a></li>
+<li><a href="https://www.teamlab.art/w/programming/">Future Park 玩吧! 天才编程师!</a></li>
+<li><a href="https://huggingface.co/">huggingface</a></li>
+<li><a href="https://github.com/facebookresearch/AnimatedDrawings">AnimatedDrawings</a></li>
+<li><a href="https://unity.com/features/unity-visual-scripting">Unity Visual Scripting </a></li>
+<li><a href="https://en.wikipedia.org/wiki/Massively_multiplayer_online_role-playing_game">MMORPG</a></li>
+<li><a href="https://www.youtube.com/watch?v=9gf2MT-IOsg">The Genius AI Behind The Sims</a></li>
+<li><a href="https://mp.weixin.qq.com/s/ZXSMxnp87YPE7uTLkrzJxA">《触 Catalog》</a></li>
+<li><a href="https://www.tuio.org/">TUIO</a></li>
+<li><a href="https://wiki.squeak.org/squeak/714">Squeak/HandMorph</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Belief%E2%80%93desire%E2%80%93intention_software_model">Belief–desire–intention software model</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-08-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/agent/">Agent</a>
+          <a href="/tags/roblox/">Roblox</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/learn-unity-message-passing/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Unity 学习笔记之消息传递</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/enhanced-roblox-studio-interoperability/">
+            <span class="next-text nav-default">增强 Roblox Studio 的互操作性</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

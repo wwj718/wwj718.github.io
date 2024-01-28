@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>从xblock插件生成器说起 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="偷懒是程序员的美德 这是我最近的一个业余项目。用了两个周末午后的时间 我对插件机制一直饱含兴趣，这种东西,技术上关系到系统的灵活性，而商业上关系" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/xblock-generator-and-others/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="从xblock插件生成器说起" />
+<meta property="og:description" content="偷懒是程序员的美德 这是我最近的一个业余项目。用了两个周末午后的时间 我对插件机制一直饱含兴趣，这种东西,技术上关系到系统的灵活性，而商业上关系" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/xblock-generator-and-others/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-09-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-09-15T00:00:00+00:00" />
+
+<meta itemprop="name" content="从xblock插件生成器说起">
+<meta itemprop="description" content="偷懒是程序员的美德 这是我最近的一个业余项目。用了两个周末午后的时间 我对插件机制一直饱含兴趣，这种东西,技术上关系到系统的灵活性，而商业上关系"><meta itemprop="datePublished" content="2015-09-15T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-09-15T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2558">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="从xblock插件生成器说起"/>
+<meta name="twitter:description" content="偷懒是程序员的美德 这是我最近的一个业余项目。用了两个周末午后的时间 我对插件机制一直饱含兴趣，这种东西,技术上关系到系统的灵活性，而商业上关系"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">从xblock插件生成器说起</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-09-15 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>偷懒是程序员的美德</p>
+</blockquote>
+<p>这是我最近的一个业余项目。用了两个周末午后的时间</p>
+<p>我对插件机制一直饱含兴趣，这种东西,技术上关系到系统的灵活性，而商业上关系到对需求的适应能力</p>
+<p>对edX的扩展，官方给出了<a href="https://open.edx.org/extending-edx">四种手段</a>，最令我激动的是xblock。关于xblock我此前有写过<a href="http://wwj718.github.io/about-XBlocks.html">介绍文章</a></p>
+<p>#缘起
+前前后后，我自己写的xblock加上fork自国外的一些，合计有十几个了。写多了你会发现，xblock是极其强大的扩展机制，它比LTI的扩展性好，又比djangoapp来得简易，以至于大多数教育相关的商业点子，很适合以edX为基础平台，利用xblock作为定制机制，对很多需求就足够了。</p>
+<p>写多了xblock又发现，每个插件的结构是大同小异的，无非是改改存储字段名（字段类型大多都不要动，多是String），改下项目名称，许多其他的命名都以项目名称为前缀，以至于我每回开始写新的xblock，都是先cp旧的，然后使用<code>rename 's/old_repo_name/new_repo_name/'</code>，<code>grep -rl &quot;old_repo_name&quot; ./ | xargs sed -i 's/old_repo_name/new_repo_name/g'</code>以及<code>grep -rl &quot;old_field_name&quot; ./ | xargs sed -i 's/old_field_name/new_field_name/g'</code>来作为新xblock的基本框架，以省去复制粘贴</p>
+<p>这样又写了几个插件后发现依然有不少重复劳动，于是就想为何不写一个xblock插件生成器呢。</p>
+<p><code>当我们陷入重复劳动的时候，可能就是合适的时机来考虑如何自动化这项工作了，以便能省下时间来喝咖啡。而且我们知道，重复乏味的劳动中，人是容易出错的，而机器不知疲倦，所以偷懒是程序员的美德</code></p>
+<p>#思路
+我的设想里，xblock插件生成器做的是这样的工作：开发者将项目名，所需存储字段，字段属性，，项目依赖的外部静态文件等写入config.json配置文件（或者config.yml/config.py），而后自动生成xblock，而后只需要做些微调以及在指定位置加入自己的业务代码,一个插件便可用了。</p>
+<p>这里的主要工作是将琐碎的工作自动化，然后提供一个通用的模板，给出大多的备选功能（属性或函数，默认以注释掉的方式存在于生成的xblock中），尽量按照现有的xblock组件布局方式，现有的xblock组件可以参考<a href="https://github.com/edx/edx-platform/wiki/List-of-XBlocks">这里</a>，这样一来，熟练的开发者不需要参考文档，仅需要取消注释，做些微调，就足以快速地完成工作，没错，眼尖的你可能已经看出来了，这是ROR中致力于鼓吹的<code>convention over configuration</code></p>
+<p>此外，说到设计原则，关于灵活性部分，我喜欢<code>Open Closed Principle</code>原则（也就是著名开放封闭原则），对扩展开放，对修改关闭。xblock满足这点,我很喜欢</p>
+<p>#设计原则</p>
+<ul>
+<li>Open Closed Principle（开放封闭原则）</li>
+<li>convention over configuration （约定优于配置）</li>
+</ul>
+<p>#技术细节
+剩下的就是技术细节的工作了。</p>
+<p>我最初想以<a href="https://github.com/mitsuhiko/jinja2">jinja2</a>模板为基础,
+我们知道ansible之类的大型项目也够选择了jinja2，这的确是个优秀的模板引擎。而后发现了<a href="https://github.com/audreyr/cookiecutter">cookiecutter</a>,这个工具进一步简化了工作，于是决定基于它来写xblock插件生成器，这样一来根据配置文件来自动生成文件名的问题都解决了</p>
+<p>#遇到的问题
+这里存在一个很有意思的问题，它和正则相关，cookiecutter用的是标准的jinja2模板，jinja2模版的语法和django相似，而xblock中的模板我用的是django而不是mako，这样一来就导致xblock中有一部分<code>{{var}}</code>，我们是想等xblock来渲染，结果却被cookiecutter先渲染了。这个问题可以通过更改jinja2语法风格来解决，或是通过使用mako模板来解决。我是quick and dirty的方式解决的。用到了正则</p>
+<p>#此类问题
+此类问题，或者说代码生成器问题(generator),十分吸引人,它本质上是字符处理问题（我觉得<code>宏</code>的本质也是这个），这类问题的极致形态是写一个parser，而一般形态是使用正则，当然使用模板往往是个捷径。</p>
+<p>#xblock市场的构想
+个人而言，我很看好edX，我一直相信xblock本身足以形成插件市场，我觉得以此作为出发点，构建一个咨询/定制/服务型的公司是很有意思的，我喜欢《黑客与画家》第六章提到的观点：<code>财富就是创造人们需要的东西</code>，我们可以看到即便是国内，这个需求也已经越来越膨胀却没有找到出口。我们今天可以看到，edx这个项目本身是很诱人的，许多教育业内人士与公司都跃跃欲试，而edx的技术门槛确实个拦路虎，那么提供edx相关的技术/开发咨询/培训，提供定制化的服务（插件定制），降低开发的门槛等等，是许多企业客户期待的，当然也是对推广edx本身很有价值的，我的兴趣点之一可能在这里吧，<code>让技术变得易用使用，能方便地用来应对现实问题</code>，我此前折腾docker，折腾云服务，折腾LTI，此次写的xblock生成器，可能都是受此观念的驱动吧</p>
+<p>有了xblock插件生成器，我们尤其适合做一些为课程深度定制的组件，快速完成插件的基础上，又可以据此作为模板生成其他组件。</p>
+<p>前段时间给公司展示了我业余时间折腾的d3组件,<a href="http://jaredforsyth.com/treed/">treed</a>,十分适合结合到edx中，作为呈现知识的方式，类似思维导图 ,d3的案例千千万:<a href="http://bl.ocks.org/mbostock">bl.ocks.org</a>，如果能将此领域与教育领域结合,首先市场部势必会很兴奋，有了xblock插件生产器，将d3组件移植到xblock就变得十分迅速。而这些还仅仅是d3。类似的组件还有许多，这里的核心想法是，<code>通过xblock这种插件机制，我们可以将其他领域的成果（好比数据可视化），轻易得整合到教育中，所谓学科融合</code></p>
+<p>如此一来，结合具体学科，快速打造易用性的组件就变得容易，易用性很可能造成高度的定制化，由此带来通用性的损失，而有了插件生成器，大量打造定制化的插件，时间成本也不至于太高，成本一旦降低，作为商业性的服务就容易被接受。</p>
+<p>该组件可能暂时不会开源，想先进一步优化它，可能的话想以此试水xblock市场</p>
+<p>#花絮
+在写完大体框架的时候，打了个 v0.1 tag，觉得后续的改良还很多，出于谦虚的姿态，版本号慢慢来，而后又花了一个周末的下午，觉得妈蛋好像主要的事都做完了，直接打了个v1.0的tag。而后顺便把将MTV中的T（Template）换成了mako，于是mako/v1.0也出来了</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-09-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/edx/use-notes-in-cypress/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">在edX Cypress中启用notes功能</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/lazy-technology-dream/">
+            <span class="next-text nav-default">偷懒,技术与理想</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

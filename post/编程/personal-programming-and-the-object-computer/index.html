@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译]个人编程和对象计算机 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 原文: Trygve M. H. Reenskaug Personal programming and the object computer 以下是译文: 摘要 我的目标, 是为那些想超越预制应用程序, 并创建程序来控制他们的电子环境的普通人, 创造出一种直观的" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/personal-programming-and-the-object-computer/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译]个人编程和对象计算机" />
+<meta property="og:description" content="前言 原文: Trygve M. H. Reenskaug Personal programming and the object computer 以下是译文: 摘要 我的目标, 是为那些想超越预制应用程序, 并创建程序来控制他们的电子环境的普通人, 创造出一种直观的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/personal-programming-and-the-object-computer/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-11-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-11-17T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译]个人编程和对象计算机">
+<meta itemprop="description" content="前言 原文: Trygve M. H. Reenskaug Personal programming and the object computer 以下是译文: 摘要 我的目标, 是为那些想超越预制应用程序, 并创建程序来控制他们的电子环境的普通人, 创造出一种直观的"><meta itemprop="datePublished" content="2022-11-17T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-11-17T00:00:00+00:00" />
+<meta itemprop="wordCount" content="23729">
+<meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译]个人编程和对象计算机"/>
+<meta name="twitter:description" content="前言 原文: Trygve M. H. Reenskaug Personal programming and the object computer 以下是译文: 摘要 我的目标, 是为那些想超越预制应用程序, 并创建程序来控制他们的电子环境的普通人, 创造出一种直观的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译]个人编程和对象计算机</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-11-17 </span>
+        <div class="post-category">
+            <a href="/categories/smalltalk/"> Smalltalk </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#摘要">摘要</a></li>
+    <li><a href="#介绍">介绍</a></li>
+    <li><a href="#独立的对象">独立的对象</a></li>
+    <li><a href="#作为对象宇宙的单一全局机器">作为对象宇宙的单一全局机器</a></li>
+    <li><a href="#数据data-上下文context-交互interaction-dci范式">数据(Data)-上下文(Context)-交互(Interaction) (DCI)范式</a></li>
+    <li><a href="#模型model-视图view-控制器controller-mvc-范式">模型(Model)-视图(View)-控制器(Controller) (MVC) 范式</a></li>
+    <li><a href="#文章的其余部分">文章的其余部分</a></li>
+    <li><a href="#新手编程">新手编程</a></li>
+    <li><a href="#ellen-的智能闹钟">Ellen 的智能闹钟</a></li>
+    <li><a href="#dci-是-ellen-的计算心智模型">DCI 是 Ellen 的计算心智模型</a></li>
+    <li><a href="#ellen-的数据">Ellen 的数据</a></li>
+    <li><a href="#ellen-的上下文">Ellen 的上下文</a></li>
+    <li><a href="#ellen-的新编程方式">Ellen 的新编程方式</a></li>
+    <li><a href="#loke个人对象计算机">Loke：个人对象计算机</a></li>
+    <li><a href="#个人分布式计算">个人分布式计算</a></li>
+    <li><a href="#loke-概念模型和机器">Loke 概念模型和机器</a></li>
+    <li><a href="#dci-loke-编程范式">DCI: Loke 编程范式</a></li>
+    <li><a href="#可靠性安全性隐私性">可靠性、安全性、隐私性</a></li>
+    <li><a href="#通过思考来编程">通过思考来编程</a></li>
+    <li><a href="#通过合作来编程">通过合作来编程</a></li>
+    <li><a href="#我们需要范式转变">我们需要范式转变</a></li>
+    <li><a href="#loke-计算机的梦想">Loke 计算机的梦想</a></li>
+    <li><a href="#教孩子计算">教孩子计算</a></li>
+    <li><a href="#进一步的工作">进一步的工作</a></li>
+    <li><a href="#相关工作">相关工作</a>
+      <ul>
+        <li><a href="#dci-范式的实现">DCI 范式的实现</a></li>
+        <li><a href="#其他举措">其他举措</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结和结论">总结和结论</a></li>
+    <li><a href="#致谢">致谢</a></li>
+    <li><a href="#附录">附录</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>原文: Trygve M. H. Reenskaug <a href="https://link.springer.com/article/10.1007/s10270-019-00768-3">Personal programming and the object computer</a></p>
+<p>以下是译文:</p>
+<hr>
+<h2 id="摘要">摘要</h2>
+<p>我的目标, 是为那些想超越预制应用程序, 并创建程序来控制他们的电子环境的普通人, 创造出一种直观的计算机。我提出了 Loke，一种新型计算机，它是一个由对象组成的宇宙，在这个宇宙里，一切皆是对象。我称它为对象计算机。Loke 采用 Squeak （Smalltalk 的一个变体） 来实现，Loke 是一种用于运行、检查(inspection)和探索的可扩展概念模型。它首先被用来演示一个新手( Ellen)如何通过一个适合她能力、需求和偏好的 GUI 来编写一个智能闹钟。非正式的演示表明，非专业人士立即掌握了通信对象(communicating objects)的想法，这些对象代表了他们环境中的真实事物。他们还打算将其用于自己的目的。他们创造性地看到 Loke 的个人机遇并草拟了他们的实施方案。有趣的是，参加演示的专家程序员并没有看到 Loke 的意义。我已经完成了 Loke 作为概念模型的编程。该模型潜在地支持安全和隐私，并维持其对象和消息模型。Loke 作为编程环境仍在起步阶段，其固有的安全和隐私属性在实践中尚未实现。未来的 Loke 设备可以从任何地方访问，并嵌入到自己的硬件里来实现它们。Loke IDE 依赖于数据(Data)-上下文(Context)-交互(Interaction)（DCI），这是一种新的编程范式，可以带来具有清晰架构的可读代码。我提出 Loke 是为了享受 <strong>个人编程(personal programming)</strong> 的乐趣。</p>
+<h2 id="介绍">介绍</h2>
+<p>本文献给物联网拥有者、业余程序员、科普读者和普通感兴趣的人(专家程序员可能会找到更适合他们需要的论文和文章)。本文是一个正在进行的项目的中期报告。 概念模型和概念验证实施已经完成，但要将其作为产品交付还有很多工作要做。</p>
+<p>2018.6.21 是现代计算机的白金纪念日。70 年前，世界上第一个程序员编写了第一个程序，将其存储, 并在世界上第一台电子、数字、存储程序计算机中执行 (英国曼彻斯特大学)。 这台计算机被亲切地称为 Baby，它的架构遵循了当时著名的冯·诺依曼模型（图 1）。 Baby 正演变为数十亿的通信计算机，其中许多计算机连接成一个单一的全局机器。</p>
+<img width=800 src="/post/img/personal-programming-loke-1.png" />
+<center>图1: 冯·诺依曼模型是一个孤立系统</center>
+<p>我的目标是让普通人能够用他们自己编写的程序控制他们的电子环境。专业程序员是受过严格训练的专家，而 <strong>个人程序员(personal programmer)</strong> 编写的程序是供个人使用的，他们重视简单和方便，而不是编程的复杂性。未来将有数以百万计的个人程序员，我把 Ellen 视为他们中的一员，而且是位新手。我们面临的问题是创造一种新的编程方式，这种方式既直观又简易，同时能够提供 Ellen 所需要的安全和隐私。我的答案是一台个人对象计算机，我把它命名为 Loke（发音为 &ldquo;Loukeh&rdquo;），以北欧神话中一位强大的但有点诡诈的神为名。他有时协助众神，有时与他们作对。</p>
+<p>个人计算机诞生于 1968.12.9 星期一, 在旧金山举行的秋季联合计算机会议上，道格拉斯·恩格尔巴特(Douglas Engelbart) 展示了一种&quot;思维工具&quot;和&quot;思维的延伸&quot;:</p>
+<blockquote>
+<p>当一切结束时，人群起身欢呼，神魂颠倒，陶醉其中。恩格尔巴特不仅向世界介绍了计算机作为个人助手的概念: 由鼠标、键盘和光标所控制; 他还向人们展示了图形用户界面(构成了他一直在操纵的 &ldquo;窗口&rdquo;)、超链接和 在线网络世界（后来成为 Web）。</p>
+</blockquote>
+<p>这个演示的众多后代之一便是本文的主题: Loke。我建议个人程序员最好使用一个多媒体集成开发环境（IDE），如 Loke IDE。统一使用对象的概念；对象代表了所有感兴趣的东西，一切皆是对象。这个程序模型通过 DCI 编程范式实现了强烈的关注点分离。Loke IDE 使用文本来指定算法，用图形来定义协作对象的结构。MVC 是 IDE 用户界面背后的概念模型，在用它创建的 <strong>个人程序(personal programs)</strong> 中通常也是如此。</p>
+<p>Loke 建立在几个概念之上，有些是新的，有些是众所周知的想法的修改版。我在这里描述其中一些，作为文章其余部分的介绍。</p>
+<h2 id="独立的对象">独立的对象</h2>
+<p>对象的概念是由 Dahl 和 Nygaard 提出的。他们的对象构成了 Alan Kay 的面向对象的一部分基础: &ldquo;&hellip;&hellip;它的语义有点像成千上万的计算机被一个非常快的网络连接在一起。&rdquo;</p>
+<p>像计算机一样，对象是一个逻辑实体，它封装了状态和行为，并有一个全局唯一的身份。对象的状态以引用其他对象的形式存在。对象行为与过程调用并不一样。传统的 **调用过程(calling a procedure)**被 <strong>向对象发送消息</strong> 所取代。这其中有一个重要的语义差异。 <strong>过程调用(procedure call)</strong> 是过程主体的简称，它是一种压缩。Loke 的 <strong>消息发送(message send)</strong> 则是一种抽象；要执行的方法在编译时是未知的，其正确性必须基于信任。</p>
+<p>收到消息会触发对象的行为。这种行为可能引起对象状态的改变，也可能使对象向其他对象发送消息。一个对象既不&quot;知道&quot;为何收到这个消息，也不 &ldquo;知道&rdquo; 消息的接收者将如何处理它。对象是独立的，对其环境并不了解。</p>
+<p>在软件工程和计算机科学中，抽象是指去除物理、空间或时间的细节或属性的过程，以便专注于其他感兴趣的部分。编程和计算机科学中对象的常见抽象是类抽象。 Java 和 Ruby 等语言都支持它：</p>
+<ol>
+<li>对象是类的实例。</li>
+<li>类公开了对象的内部结构。</li>
+<li>类的实例形成一个隐藏其成员身份的无序集。</li>
+<li>类的实例没有关于它的环境的信息，即它的上下文。</li>
+</ol>
+<h2 id="作为对象宇宙的单一全局机器">作为对象宇宙的单一全局机器</h2>
+<p>就像发条装置中的单个齿轮一样，一个对象本身并不有趣。 面向对象的本质是对象协作以实现目标。 另一种角色(Role)抽象在其合作者的上下文中描述了一个对象：</p>
+<ol>
+<li>对象是一个实体，它具有不可变的和全局唯一标识，并且封装了状态和行为。</li>
+<li>对象的封装从外部隐藏了它的内部构造。</li>
+<li>对象提供了一个消息接口，可以被来自其他对象的消息调用。对象还可以通过 webhook（自定义回调）向其他对象发送消息。 <!--为了与网络对象交互？--></li>
+<li>对象在与其他对象协作时扮演角色(Role)。</li>
+</ol>
+<p>类(Class)抽象和角色(Role)抽象是互补的：类抽象公开了对象的状态和行为。它的身份隐藏在类实例的无序集合中。角色抽象则相反， 对象具有不变且全局唯一的标识，而其状态和行为隐藏在其封装中。</p>
+<p>这些抽象的存在理由是它们帮助人类大脑创建复杂现实的模型。 我所有的研究都有相似的目标； 它必须产生对人类有用的东西才会引起兴趣。 我的研究风格是实验性的。 当我有了一个想法时，下一步就是用代码表达它以便在现实中检验。 在早期，我使用汇编和 Fortran ，必须在设计的形状上建造一个模板，然后把代码倒进去。 今天，我有了 Smalltalk，可以直接从想法到代码。</p>
+<p>经过 60 年的编程和软件研究，我已经有不少想法。它们中的大多数寿命都很短，从几小时、几周到几个月不等。其中一些幸存至今，构成了 Loke 和本文的基础。</p>
+<p>我创建了一个实验室来试验对象和对象计算机。我确实考虑过将它基于冯·诺依曼机器来实现，但最终放弃了这个方案，因为它缺乏现代计算所必需的点对点通信。我决定将我的实验室建立在 Squeak(Smalltalk 方言) 之上，因为它是一个通信对象的宇宙，很像单一的全局机器。</p>
+<p>图 2 说明了我如何将我的 Squeak 对象世界与在网络上找到的对象合并。结果是 <strong>个人对象计算机</strong> Loke。 Loke 是个人的和私密的，就像智能手机是个人的和私密的一样。它是一个通用平台，当它的拥有者使用地址簿、书签、信件和个人程序等个人数据来扩充它时，它就会变得个性化。</p>
+<img width=800 src="/post/img/personal-programming-loke-2.png" />
+<center>图2: Ellen 的 Loke 和她的个人和共享物品</center>
+<p>个人对象计算机的基本规则是：</p>
+<ul>
+<li>一切都由对象表示</li>
+<li>对象有自己的状态（由对象表示）</li>
+<li>对象通过发送和接收消息(由对象表示)进行通信。</li>
+<li>对象的行为(方法、脚本或服务器行为)定义了所接收消息的含义。</li>
+</ul>
+<p>在冯·诺依曼计算机中，程序是执行特定任务的指令集。在角色抽象中，程序是为实现特定目标的消息集合。</p>
+<h2 id="数据data-上下文context-交互interaction-dci范式">数据(Data)-上下文(Context)-交互(Interaction) (DCI)范式</h2>
+<p>在<a href="https://link.springer.com/article/10.1007/s10270-006-0005-0">这篇论文里</a>， 我提议程序应该以通信组件的结构来组织，其中组件是封装其他对象的对象。 这个想法对某些用例很有效，但事实证明它在其他情况下适得其反。 问题是结构是静态的； 一种结构必须适合所有人。 在 DCI 中，思路虽相同，但结构是动态的； 每个用例都有自己的在运行时构建的对象结构。</p>
+<p><em>数据、上下文、交互</em>(DCI) 编程范例包含这样的编程概念：系统状态在类抽象中声明为数据; 系统行为在角色(Role)抽象中声明为上下文和交互:</p>
+<ul>
+<li>数据(Data)是独立的对象，例如代表 Ellen 世界中事物的对象。</li>
+<li>上下文(Context)是选定的一组对象共同构成的结构，这些对象发挥作用以满足 Ellen 的目标（用例）。</li>
+<li>交互(Interaction)是上下文中的代码，它增强参与对象的行为以使事情发生。</li>
+</ul>
+<p>计算的 DCI 模型是在冯·诺依曼模型及其操作系统和编程语言之上的一个抽象层次，并保护个人程序员不受底层特性的影响。</p>
+<h2 id="模型model-视图view-控制器controller-mvc-范式">模型(Model)-视图(View)-控制器(Controller) (MVC) 范式</h2>
+<p>曼彻斯特 Baby 计算机的操作员通过像电视遥控器一样的控制面板来操作它。该面板已演变为图形用户界面 (GUI)。其后果对个人和社会都是非常激进的。图 3 展示了模型-视图-控制器 (MVC)，它是 GUI 的一个概念模型。 用户将 MVC 视为恩格尔巴特(Douglas Engelbart)的 &ldquo;思维的延伸&rdquo;。 MVC 使用两个工件来实现图 3 的&quot;魔力&quot;。首先，数字模型对象应忠实地代表用户的心智模型。其次，MVC 在视图对象中使用众所周知的图形表示，以一种用户很容易理解的方式呈现模型对象中包含的信息。一个不可见的控制器对象在屏幕的一个窗口中设置视图，通过将用户的选择显示在所有视图中来协调它们。用户不再觉得他们在运行冯·诺依曼计算机，而是通过视图直接与他们的心智模型交互来实现他们的目标。成功的 GUI 的一个重要副作用是底层机器在用户的脑海中逐渐淡出。</p>
+<img width=800 src="/post/img/personal-programming-loke-3.png" />
+<center>图3: MVC 在计算机和人类用户之间架起桥梁</center>
+<p>BabyIDE 是 Loke 的概念验证实现，采用 MVC 架构。MVC 模型(Model)是程序的抽象表示。模型上的视图让程序员可以使用在不同投影中看到的程序。视图就像工程投影，带有实体的平面图和侧视图（图 4）。每个视图都讲述了故事的一部分；所有视图合在一起讲述完整的故事。</p>
+<img width=800 src="/post/img/personal-programming-loke-4.png" />
+<center>图4: 三投影中的实体工程图</center>
+<p>BabyIDE 的变体是为不同类别的用户设计的。 新手用户可以通过预定义的模型和自动生成的视图享受低入门门槛。 专家级用户需要控制所有 模型、视图、控制器。两者建立在相同的概念模型上。在个人程序员不断增长的经验和需求的引导下，从新手到专家的转变是一个平稳的成长过程。</p>
+<h2 id="文章的其余部分">文章的其余部分</h2>
+<p>本文的其余部分分为七个部分和三个附录：</p>
+<ul>
+<li>第 2 部分：新手编程。Ellen 是一名新手程序员，她通过在程序上编辑几个简单的视图来解决一个简单的问题。</li>
+<li>第 3 部分：Loke：个人对象计算机。我讨论了 Loke 的性质、模型和使用。</li>
+<li>第 4 部分：进一步的工作。还有很长的路要走。</li>
+<li>第 5 部分：相关工作。与个人编程相关的其他工作。</li>
+<li>第 6 部分：总结和结论</li>
+<li>第 7 部分：致谢。注明图片来源等</li>
+</ul>
+<p>附录一共有三个部分：</p>
+<ul>
+<li>附录 1：ProkonPlan 示例 (一个综合的 BabyIDE 编程示例，其架构结合了 MVC 和 DCI)</li>
+<li>附录 2：BabyIDE，Loke 集成开发环境（LokeIDE 用户界面）</li>
+<li>附录 3：BabyIDE，第一个 Loke 实现（程序文档）</li>
+</ul>
+<h2 id="新手编程">新手编程</h2>
+<p>我最近观察到一个两岁女孩，戳着电视屏幕，因屏幕没有回应她的操作而变得非常沮丧（她在幼儿园玩过 iPad）。学会说话之前先学会操作计算机，是我们这个时代的标志。我希望她以后会发现调整设备来满足自己的需求是自然而然的。个人编程 (Personal Programming, PP) 是一个人为满足个人需求所做的事情。这是一些例子: 智能家居的主人将整合家里的各种设备来自定义自己的家; 孩子将指挥他们的玩具; 学生将创建自己的模拟程序以更好地理解物理现象; 计算化学家将编写个人程序，将多个化学模拟合并为连贯的整体; 投资者将创建个人程序来操作股票市场; 工业 5.0 时代的人类的可以创建个人程序来弥合人与机器之间的差距。他们都想通过设备和服务来控制他们的环境：他们需要成为个人程序员。</p>
+<p>我不知道将来世界上会有多少 <strong>个人程序员</strong> ，但我选择将我的设计瞄准几千万人。我挑出 Ellen 来代表新手。用主流编程语言对她进行正式培训是不切实际的，所以我用 Loke 代替了冯·诺依曼计算机，这是一种新的更直观的替代方案。 Loke 是个人对象计算机，其抽象级别在冯·诺依曼模型之上。 Loke 是一个对象的宇宙。有些对象是 Ellen 的私人物品，有些物品是她与别人共享的。</p>
+<p>Ellen 通过用户界面体验她的应用程序，用户界面就像程序一样。我已经试着为这个世界的 Ellen 们做了一个 IDE(集成开发环境)，并将其称为 Loke/Novice。我有三个需求：</p>
+<ol>
+<li>Loke/Novice 应建立在 Ellen 一开始就知道的想法上，提供低入门门槛。IDE 应通过在高抽象水平上工作来保护她不受硬件及其编程语言复杂性的影响。</li>
+<li>Loke/Novice 应从新手的第一个小项目扩展到 Ellen 可以处理的较大项目（当她学得更多，成为专家时）。关键是在整个过程都要始终建立在 Loke 计算模型上。</li>
+<li>Loke/Novice 让 Ellen 混合使用图形和文本输入来创建程序。该界面通过显示她的操作所产生的代码，帮助 Ellen 建立一个全面的计算心理模型。</li>
+</ol>
+<p>我已经创建了 Loke 的概念验证实现，体现了其概念模型。本节介绍 Ellen 如何使用 Loke 直观的 IDE 创建一个简单的程序。我使用新手的术语，但其内容针对的是教她的导师。</p>
+<h2 id="ellen-的智能闹钟">Ellen 的智能闹钟</h2>
+<p>人们面临被颠覆性的智能家居技术所淹没的危险。Ellen 拥有一套智能家居，它的物联网(IoT)与她的许多东西相连接。她的物联网又与 Web 相连，然后与整个互联网相连，这样，Ellen 就可以获得大量资源，她可以召集这些资源来满足她的需求。</p>
+<p>Ellen 用她的第一个简单例子来挑战我们。她计划明天去远足，但前提是明天不下雨。Ellen 将学习如何给一个闹钟编程，让闹钟在唤醒她之前先查看天气预报。丹麦哲学家克尔凯郭尔给出了很好的建议:</p>
+<blockquote>
+<p>如果你想将一个人带到某个特定的地方，首先必须注意在他所在的地方找到他并从那里开始。</p>
+</blockquote>
+<p>我们的克尔凯郭尔问题是: &ldquo;在哪里可以找到这个世界的 Ellen 们？&quot;。 我试图找到全人类的共同点，并查阅了对婴儿行为的心理学研究。 但没有找到任何满意的答案。 研究似乎没有达成共识，而且只针对非常小的特定婴儿群体。 我降低了目标，想要了解一些对大量不同人群来说都是直观的想法。 <strong>用较小的部分组成一些东西</strong> 的想法是一个很好的方向。 大多数孩子可能通过在一块粘土上插四个针来创造一头牛。 将乐高积木组合成乐高项目是许多人的共同经历。</p>
+<img width=800 src="/post/img/personal-programming-loke-5.png" />
+<center>图5: 孩子们将乐高积木拼成项目</center>
+<p>Ellen 的乐高积木玩具为她提供了一桶不同形状和颜色的积木。 她一一挑选并将它们组合在一起创建她的项目。 Ellen 以同样的方式编写她的程序。 乐高积木成为她的资源对象，代表她世界中的对象。 她一个一个地挑选他们，并将它们组成项目: 她的程序。(在此处查看该过程的动画： <a href="http://folk.uio.no/trygver/themes/Personal/PersonalProgramming.mp4">PersonalProgramming</a> )</p>
+<p>在 Ellen 的 IDE 中，Ellen 的对象以图标形式出现在名为 &ldquo;资源&rdquo; 的窗口中(图 6, 右)。 她逐个浏览，然后将选中的对象拖到名为&quot;上下文&quot;的工作区窗口中（图 6, 左）。 根据它在项目中扮演的角色来命名它，并通过将它连接到其他对象来创建线路图。 正如大多数物联网通信标准所假定的那样，连接是客户端-服务器路径。 了解 Ellen 只使用对象是很重要的(和其他事物一样，对象的集合也是对象)。她不知道类，也不需要它们，所以她把它们留给了专家。</p>
+<img width=800 src="/post/img/personal-programming-loke-6.png" />
+<center>图6: 带有资源对象和程序组合的 Ellen IDE</center>
+<p>Ellen 首先选择了取代闹钟的智能扬声器。 她拿起它，将其移动到项目中，并根据它在程序中扮演的角色将其命名为 WAKERUPPER。 乐高积木是死气沉沉的塑料，而 Ellen 的物品却很灵活又聪明；它们可以做任何计算机可以做的事情。 因此，她使用角色脚本(RoleScript)来增强 WAKERUPPER 角色，告诉它该做什么:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">WAKERUPPER&gt;&gt;wakeMe
+</span></span><span class="line"><span class="cl">    WAKERUPPER soundAlarm.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>她测试了一下，一切正常。接下来，她需要一个天气服务，在的对象箱中找到了它，拖进来，起个名字，连接起来，并告诉它告诉该做什么：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">FORECASTER&gt;&gt;checkWeather
+</span></span><span class="line"><span class="cl">    FORECASTER expectedRainfall = 0
+</span></span><span class="line"><span class="cl">        ifTrue: [WAKERUPPER wakeMe]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后，她选择了一个定时器对象，将在早上执行她的程序。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">TIMER&gt;&gt;waitTillMorning
+</span></span><span class="line"><span class="cl">    TIMER WaitUntil: &#39;06:00&#39;.
+</span></span><span class="line"><span class="cl">    FORECASTER checkWeather.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>就这样，程序完成了，Ellen 通过激活其第一个角色脚本(RoleScript)来设置她的闹钟。</p>
+<p>角色脚本的概念对 Ellen 来说是新的，她可能会觉得很难理解这个概念。 我选择以两级菜单形式(代码模板)为 Ellen 提供一个菜单驱动的输入界面（图 7）。 它只需要她能够阅读代码，使其成为她被动词汇的一部分。 当鼠标悬停在菜单项上时，气泡文本会帮助 Ellen。</p>
+<img width=800 src="/post/img/personal-programming-loke-7.png" />
+<center>图7: Ellen 的用户界面与气泡帮助的例子</center>
+<p>这种形式的可视化编程的一个好处是，Ellen 可以看到生成的代码，并逐渐将文本编程纳入她的主动词汇表。</p>
+<h2 id="dci-是-ellen-的计算心智模型">DCI 是 Ellen 的计算心智模型</h2>
+<p>你可能已经注意到, Ellen 的编程很不传统。 Ellen 的 IDE 将现代人机交互技术引入编程，她的 IDE 遵循 MVC 架构模式。 模型对 Ellen 来说是不可见的; 它由代码片段组成，在运行过程中将这些代码片段放在一起，构成了 Ellen 的程序。 她的三个视图（图 8）帮助她建立心智模型，同时她使用它们来创建闹钟。 一个不可见的控制器将视图联系在一起以创建一个连贯的工具。</p>
+<img width=800 src="/post/img/personal-programming-loke-8.png" />
+<center>图8: Ellen 的个人编程 DCI 窗口</center>
+<p>还有一个报告生成器，将程序呈现为文本。</p>
+<p>与剧院进行类比将帮助 Ellen 内化 DCI 编程范例: 数据对象就像演员; 他们可能正在工作或休息。 DCI 角色就像剧院里&quot;在特定情况下由人或物扮演的角色&rdquo;。 DCI 上下文就像一个演员演绎角色的舞台。 DCI 交互就像演员的脚本：</p>
+<blockquote>
+<p>牛津英语词典 role(角色): &ldquo;17 世纪初：来自法语 rôle，来自过时的法语 &lsquo;roll&rsquo;，最初指的是写有演员角色的纸卷&rdquo;</p>
+</blockquote>
+<p>在 DCI 中，纸卷称为 角色脚本(RoleScript)（图 9）。</p>
+<img width=800 src="/post/img/personal-programming-loke-9.png" />
+<center>图9: 演员和交互角色执行他们的角色脚本</center>
+<p>演员(Actors)在舞台上与其他演员一起扮演他们的角色(Roles); 对象与上下文中的其他对象一起发挥作用。演员接收到提示他们行为的信号; 角色接收提示其脚本的消息。</p>
+<h2 id="ellen-的数据">Ellen 的数据</h2>
+<p>在简介中，我主张将 Ellen 的计算心智模型建立在 Loke 计算机上。 关键的基本规则是&quot;一切都由对象表示&quot;，这意味着 Ellen 的数据是对象，而且只是对象。</p>
+<p>Ellen 的数据对象是 Loke 中的对象。 每个对象都提供了一个不言自明的消息接口，她利用该接口来编写她的程序。 有些是一般的服务对象(如天气服务); 其他则代表智能家居中的设备。 对象也可以是类的实例。 等她熟练后可以自己写这样的类，也可以请专家代写。</p>
+<p>Ellen 的程序需要回答三个问题：</p>
+<ul>
+<li>对象是什么？</li>
+<li>它们是如何相互联系的？</li>
+<li>它们在做什么？</li>
+</ul>
+<p>这些问题是开放的，许多专业程序员会发现它们很难回答。 <a href="https://canvas.gu.se/files/5128309/download?download_frd=1">这篇文章</a>讨论了帮助找到好答案的各种技术。 对 Ellen 来说这并不难，因为她所有的对象都是预先定义的，她的目标是满足当下的需求。她察觉到一种需要，在她现有的对象列表中四处寻找，选择那些可以帮助她的对象，然后编写一个程序来满足她的需要。 与她必须从头开始并必须创建对象相比，这项工作要具体得多。 Ellen 只对对象能为她做什么感兴趣，即对对象提供的接口感兴趣。 至于它们是用类或以其他方式实现的，她不关心。</p>
+<h2 id="ellen-的上下文">Ellen 的上下文</h2>
+<p>个人程序涉及多个在 DCI 上下文中扮演角色的对象。 在交互图中（图 8 左上角），一个椭圆代表一个角色。 箭头表示连接，即用于传递消息的通信路径。</p>
+<p>在剧院里，导演挑选演员来扮演角色。 类似地，Ellen 通过将对象移动到她的上下文中来让对象来扮演闹钟角色。 Ellen 可以将任何对象映射到角色，只要它具有该角色所需的能力。 例如，任何天气服务只要能正确处理 <code>expectedRainfall</code> 消息，就可以在 Ellen 的程序中扮演 FORECASTER 的角色。</p>
+<p>Ellen 选择的天气服务在她的智能闹钟中发挥作用。 该天气服务可以在其信息系统内的另一个上下文中实施 <code>expectedRainfall</code> 操作。 通常，任何对象都可以在上下文中扮演角色。 由此可见，由于一个 DCI 上下文是由一个对象来表示的，它可以递归地在外部上下文中扮演一个角色。</p>
+<blockquote>
+<p>DCI 上下文是递归的。</p>
+</blockquote>
+<p>Ellen 的编程工具 Loke/Novice 通过生成将对象转换为角色的代码来记录 Ellen 的操作：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">TIMER
+</span></span><span class="line"><span class="cl">    ^ResourceDictionary at: #clock
+</span></span><span class="line"><span class="cl">FORECASTER
+</span></span><span class="line"><span class="cl">    ^ResourceDictionary at: #weather
+</span></span><span class="line"><span class="cl">WAKERUPPER
+</span></span><span class="line"><span class="cl">    ^ResourceDictionary at: #speaker
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>作为新手，Ellen 不会看到这段代码。 Anton(专家 Loke 程序员) 将使用 Loke/expert 将其替换为更复杂的方法，以将对象映射到角色。</p>
+<h2 id="ellen-的新编程方式">Ellen 的新编程方式</h2>
+<p>我在这里展示的编程工具是 Loke/Novice，这是一个实验性的概念验证实现。 我向一位农民（我的女儿）演示了智能闹钟的编程。 她使用计算机多年，但从未编写过程序。 我们正在集思广益地讨论 Ellen 的技术在她的农场上的一些可能应用，这时她提出了一个中肯的观察：&ldquo;这根本不像是编程。&rdquo; 当然，她是对的。 Ellen 对她的智能时钟的编程更像在音乐服务器中设置播放列表，而不像传统意义上的编程。 没有独立的源文件，也没有可辨识的编译阶段。 相反，Ellen 在她的上下文中组合了需要的对象，并编写了角色脚本来控制满足她需要的消息流（图 10）。</p>
+<img width=800 src="/post/img/personal-programming-loke-10.png" />
+<center>图10: Ellen 的 activateAlarm 应用程序的消息序列图</center>
+<p>角色脚本的想法对 Ellen 来说是新的，我努力介绍它。 我为脚本选择了 Squeak 作为默认语言，因为对于新手来说它很容易阅读。但对于大多数有经验的程序员来说却很难阅读，这是因为 Squeak 与他们习惯的不同。 主要的障碍是消息的语法。 过程调用的主流语法是：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">fileDirectory.copy (london, paris);
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Squeak 的消息发送语法信息量更大:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">fileDirectory copyFrom: paris to: london.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我优先考虑新手，希望阅读本文的专家有耐心阅读我的简单示例。 有关 Squeak 语言的更多信息，请访问 <a href="https://squeak.org/">Squeak 主页</a>。</p>
+<p>LokeIDE 是 Loke 的编程接口。 它存储了 Ellen 的个人对象和一些共享对象，并且 Ellen 会根据需要添加更多对象。 这扩展了语言的表现力，但没有改变基本计算模型，也没有改变她的 IDE。 我设想 Ellen 的导师将在她需要时为她提供带有消息接口的新对象。 当她变得更熟练时，她将学会自己做。</p>
+<p>Ellen 的编程方式，预示着从硬件和冯·诺依曼机器，提升到人类用户和 Ellen 的 Loke 计算机中的对象宇宙。 这一根本性进步是下一节的主题。</p>
+<h2 id="loke个人对象计算机">Loke：个人对象计算机</h2>
+<p>我们正在进入互联社会。每件事情、每个人和每个 Loke 都将被连接到一个通信网络。这些网络中有些将是孤立的；有些将通过互联网连接。物联网是由物理设备、车辆、家用电器和其他嵌入电子零件、软件、传感器、执行器和连接性的物品组成的网络，它使这些东西能够交换信息。互联网和与之连接的物联网，可以被视为一个单一的、全球性的机器，由通信对象组成的宇宙。它是一个由硬件和软件创造的人工制品，没有物理或逻辑中心。这种单一的全球机器仍处于起步阶段。没有人知道它最终会是什么样子，没有人知道它到底会被用来做什么。也没有人知道它是否会在自身复杂性的重负下垮掉。</p>
+<h2 id="个人分布式计算">个人分布式计算</h2>
+<p>个人分布式计算的概念并不新鲜。 在 20 世纪 70 年代初期，Prokon 项目是在商业组织中推动具有分散命令和控制的参与式工作结构的一部分。 这个想法是为了反映组织在其信息系统的分布式架构中的责任和能力分配。 近期目标是创建一个支持分散规划同时保持整体控制的系统。 该项目引入了一个愿景，即每个经理都拥有一台个人计算机，用于处理个人任务以及与其他经理进行交流（图 11）。 经理们还将他们的部分点对点通信委托给他们的计算机：Anton 提出问题、请求更改或向其他经理发送报告。 当 Kari 的计算机收到请求或报告时，她可以自动接受或拒绝，也可以让它等待个人干预。</p>
+<img width=800 src="/post/img/personal-programming-loke-11.png" />
+<center>图11: Prokon的分布式个人计算（图中，粗线表示计算机通信，细线表示人类通信）</center>
+<p>Anton 的任务之一是为他的部门制定一个计划，并与他同事的计划进行协调。 不同的部门有不同的职责：一个负责设计一个零件，另一个负责制造它。 他们可能以不同的方式制定计划，但都了解个人计划程序的逻辑，并且最好自己编写。</p>
+<p>经理们不时开会以同步他们的个人计划。 他们的个人计算机在图 12 中的桌子下方运行，并进行通信以支持在桌子上方亲自谈判的用户。</p>
+<img width=800 src="/post/img/personal-programming-loke-12.png" />
+<center>图12: 人类协调他们的计划，由彼此通信的 Lokes 提供支持</center>
+<p>Prokon 项目的主要发起人不幸破产，项目突然终止。</p>
+<p>与此同时，1970 年代的施乐 PARC，在创造力、影响力和资金方面处于不同的规模。这一发展的主要推动者之一是 Alan Kay，他提出了 Dynabook 的想法和他的面向对象的概念：</p>
+<blockquote>
+<p>用计算机术语来说，Smalltalk 是对计算机本身概念的递归。不是将&quot;计算机的东西&quot;分成比整体更弱的东西,比如数据结构、过程和函数，它们是编程语言的常用工具, 每个 Smalltalk 对象都是对计算机全部可能性的递归。因此，它的语义有点像让成千上万台计算机都通过一个非常快速的网络连接在一起。因此，具体表示的问题几乎可以无限期地推迟，因为我们主要关心的是计算机的行为是否适当，并且只有在结果不理想或返回速度太慢时才对特定策略感兴趣。<br>
+尽管它确实有高贵的祖先，但 Smalltalk 的贡献是一种新的设计范式, 我称之为面向对象, 用于解决专业程序员的大问题，并使新手用户可以解决小问题。面向对象设计是一种成功的尝试，它定性地提高了动态系统和用户关系建模的效率(摩尔定律使得它们日益复杂)。</p>
+</blockquote>
+<p>Loke 建立在 Prokon 的开放式人员结构与协作以及 Kay 的面向对象之上。 Loke 的对象包括 Squeak 对象世界和在网络上找到的对象。 它用对象计算机取代了冯·诺依曼计算机，使其像智能手机一样个性化。 结果是 Loke: 个人对象计算机。</p>
+<p>Squeak 是 Smalltalk 的一个变体，是一个对象的宇宙，并且它始终在运行。它模仿新兴的单一全球机器，因为两者都是通信对象的宇宙。两者始终运行， 并服从在运行时识别的参与对象中分散的程序：没有封闭形式的可识别程序。两者之间的主要区别在于，从某种意义上说，全球机器是一个开放系统，即使它们没有连接到网络，它的对象也具有独立的存在和所有权。相比之下，Squeak 对象的宇宙是封闭的，因为它的对象在 Squeak 之外不存在。</p>
+<p>从概念上讲，Smalltalk（和 Squeak）在遥远过去的某个时间开始运行，我的实例是它的一个分支。当我将我的对象（我的 image）存储在一个文件中时，会暂停运行，并在我加载该文件时恢复运行。可以复制 image 文件，并且在加载该副本时开始运行新的分支。结果是 Anton 不仅拥有他个人的程序副本，而且拥有他个人对象、程序和运行线程的独占所有权。</p>
+<h2 id="loke-概念模型和机器">Loke 概念模型和机器</h2>
+<p>Loke 在简介中被介绍为个人计算机，它是将单个全局机器的共享对象与 Smalltalk/Squeak 分支的个人对象合并的结果。 图 2 说明了 Loke 的合并对象； 图 13 显示了更详细的图片。</p>
+<img width=800 src="/post/img/personal-programming-loke-13.png" />
+<center>图13: Loke 的世界</center>
+<p>我创建的 Loke 在不损失表达能力的情况下尽可能直观，以便数百万用户无需事先接受过正式的编程培训即可使用它。</p>
+<blockquote>
+<p>Loke 是一个对象的宇宙，一切都是对象。<br>
+每个对象都有一个不可变且全局唯一的标识符。<br>
+每个对象都以其 RESTful 消息接口为特征。<br>
+对象可以是共享的，也可以是私人的。<br>
+这些对象可能具有不同的所有者、表示和访问限制。<br>
+传统的编写代码、编译、加载、运行的编程方式被选择和修改 Loke 对象所取代。没有传统的源代码(封闭式)。</p>
+</blockquote>
+<p>Ellen 通过对 Loke 进行编程来完善她对 Loke 的理解。 就像智能手机用户积累应用程序一样，Ellen 积累了涵盖她各个兴趣领域的个人和共享对象的。特定领域的语言专门针对特定领域的计算机; 而 Ellen 使用她的 Loke 专门针对她自己的领域、需求和偏好。</p>
+<h2 id="dci-loke-编程范式">DCI: Loke 编程范式</h2>
+<p>当 Ellen 为她的智能闹钟编程时, 她用菜单命令启动时钟，该菜单命令向交互中的 TIMER 角色发送消息。 这条消息标志着从一个参考系到另一个参考系的转变; 从带有对象、方法和类的 Squeak 到带有上下文、角色和角色脚本的 DCI。 图 14 说明了它们如何在 Squeak 之上形成新的抽象级别。 角色只能向自己、它所链接的角色以及它所代表的对象发送消息。 对象没有对扮演它们的角色的引用。 这种受限的可见性是 DCI 强大的关注点分离的一个基本特征，它使 Ellen 免受 Squeak 底层特性的影响。</p>
+<img width=800 src="/post/img/personal-programming-loke-14.png" />
+<center>图14: Loke 中的通信角色处于一个新的抽象层次上</center>
+<h2 id="可靠性安全性隐私性">可靠性、安全性、隐私性</h2>
+<p>人们越来越关注信息系统（尤其是物联网）的可靠性、安全性和隐私性。我对众多挑战和解决方案的不算了解，但我可以观察自己的 PC。我的硬件是带有 CPU 和内存的冯·诺依曼机器（图 1）。程序驻留在内存中，CPU 会执行它在内存中找到的任何内容；我的计算机本质上是不安全的。我使用只有两个安全级别(用户和系统)的流行操作系统 (OS)。各种安全措施为我的的冯·诺依曼机器和操作系统提供了多层保护。由于几乎每周都会出现新的安全补丁，因此保护不可能是完美的。弱点似乎是入侵者在防御机制中发现漏洞，并用 CPU 忠实执行的恶意代码污染内存。</p>
+<p>例如，我曾经发现 X 公司提供了一个令人兴奋的免费试用计划。在下载过程中，我的操作系统询问: &ldquo;你允许 X 访问你的系统?&rdquo; 我不得不回答是，同时想知道为什么必须允许 X 秘密地将任何恶意软件植入我的系统，以及为什么不用细粒度的许可。我拥有的是一个内在不安全的 CPU，上面有一个在安全方面十分天真的操作系统。难怪有那么多 PC（包括我的）感染了特洛伊木马和其他恶意软件。 （当然，另一种方法是不使用 Web 上令人着迷的软件产品。）</p>
+<p>Loke 通过用更安全的对象计算机替代品取代冯·诺依曼计算机来解决问题的根源。 Loke 旨在在硬件之上的抽象级别上运行，协作对象的集合取代了操作系统。我在介绍中定义了 Loke 对象的本质：&ldquo;就像一台计算机，一个对象是一个封装了状态和行为并具有全局唯一身份的实体。&rdquo; 封装是关键: 它在理论上将对象的外部与其内部分开。外部是一个可能无知或邪恶的世界，只能通过其提供的消息接口访问对象。内部可以将每个传入消息作为传递给参与对象集合的内部消息序列来处理。只要封装是从外部到内部的唯一路径，封装就为每个对象提供了安全屏障。当以其他方式处理了传入消息时，递归和保护就结束。</p>
+<p>Bran Selic 做了如下评论:</p>
+<blockquote>
+<p>我们之前讨论过这个：我认为你没有为 Loke 的安全性提供一个很好的理由，原因如下：<br>
+大多数安全漏洞不是通过 API 发生的，而是通过对底层机器的后门访问发生的。 例如，Anton 可以（恶意或无意地）将资源字典配置为恶意软件设备，这会破坏 Loke 虚拟机。<br>
+这是因为，在 Loke 等高级软件系统中，总是存在另一个隐式接口：应用程序抽象（例如，Loke 对象）与底层软件（例如，虚拟机）或执行硬件之间的接口，使这行得通。 通常在这个较低层植入安全陷阱。<br>
+封装仅适用于与 Loke 平面/抽象级别内的 Loke 对象交互的实体。 不幸的是，Loke 对象与其支持的硬件/软件层之间没有封装。</p>
+</blockquote>
+<p>我在这些事情上既天真又无知，而 Bran 的论点是有说服力的。然而，我不禁想知道它们的有效性是否有限制。目前，我使用的计算机安装了许多应用程序，这些应用程序共享许多支持性的硬件/软件层。我想知道如果这些应用程序是远程应用程序，使用独立的支持性硬件/软件层，威胁是否会相同？换句话说：在我们的计算模型中增加通信能否缓解这些问题？ （我在第 3.7 节中称之为从以 CPU 为中心的范式转变为以通信为中心的范式。）我希望答案是肯定的。 3.8 节将 Loke 计算机构建为可访问远程应用程序的信息亭。</p>
+<p>我在某处读到，所有物联网相关程序的开发人员都应该了解隐私、安全和其他问题。我相信这个世界上的 Ellen 和 Anton 们已经受够了他们自己的问题，而不去承担本应在基础设施中解决的问题。尽管如此，Loke 必须能够在不混淆其所有者的情况下处理异常。一个简单的解决方案是以或多或少幽默的形式告诉用户出了什么问题，中止执行，并向 Loke 实施者发送错误报告。因此，Ellen 可能会在早上 10 点钟在美丽的阳光下醒来，并收到一条错误消息：我没有叫醒你，因为出了点问题。</p>
+<h2 id="通过思考来编程">通过思考来编程</h2>
+<p>程序可靠性的先决条件是程序只做它应该做的事情，而不做其他事情。 我在 1957 年使用第一代计算机编写了我的第一个程序。 我的程序只有几行二进制代码。 然而这些程序太复杂了，我无法全神贯注: 它们不可读。 我在 1960 年开始了我的第一个主要编程项目。我的&quot;通过灵感来编程&quot;的旧方法显然必须被更好的方法所取代。 由于找不到更好的主意，我不得不审视自己的编程习惯。 我首先考虑 &ldquo;通过测试来编程&rdquo; ，并在信封背面写了一个循环内的短循环。 对所有可能的执行进行详尽的测试需要几百年的时间，所以我很快放弃了这种方法, 并以&quot;通过思考编程&quot;结束：</p>
+<blockquote>
+<p>任何阻止程序员编写代码的方法都是好方法</p>
+</blockquote>
+<p>这些考虑导致了一个简单的体系结构，具有明确的关注点分离：一个由应用程序包围的中央数据库。 每个应用程序都进一步分解为调用树中的子程序。 我现在可以将我的思想集中在整体和每个部分上。 在此基础上，我的团队构建了 Autokon，这是一个用于船舶计算机辅助设计和制造的 50.000 行装配程序。 它于 1963 年首次部署，并于 1965 年作为软件产品出售。该软件部署在世界上大多数主要造船厂的大量不同计算机上，并且错误相对较少。 多年来，该程序在同一体系结构中扩展了许多新的应用程序。</p>
+<p>很久以后，Ellen 根据 DCI 范式对她的智能闹钟进行编程，这是一种 &ldquo;通过思考来编程&rdquo; 的范式。 她的数据是独立开发的独立对象。 上下文及其角色、角色脚本和交互与数据正交。 在他的硕士论文中，Hector 发现 DCI 编程范式及其关注点分离有助于使代码更易于理解，因此看起来比同类 Java 代码更简单。 使用 DCI 来提高简单性的其他示例是 Bluemke 和一个用于管理图书馆图书借阅的 DCI 结构程序。</p>
+<p>在 1991 年的图灵奖演讲中，Tony Hoare 简明扼要地阐述了简洁的价值:</p>
+<blockquote>
+<p>有两种构建软件设计的方法。一种方法是使其简单到明显没有缺陷，另一种方法是使其复杂到没有明显缺陷。前者方法要困难得多。</p>
+</blockquote>
+<h2 id="通过合作来编程">通过合作来编程</h2>
+<p>同行评审是一种众所周知的早期发现错误的技术。 我第一次读到它是在大约 1969 年的 Byte 杂志上。那篇文章主张对代码进行同行评审，认为这是一种非常有效的方法，可以消除程序中的缺陷，同时代码的编写者和审阅者都可以从经验中学习。当时，我的团队正在创建一个小程序，该程序具有以数据库为中心的体系结构和用 Fortran 编写的应用程序。 该项目通过每周进度会议取得进展，确保整个团队吸收当前版本的数据库模式和程序调用树。</p>
+<p>审查的单元是子例程：团队将子例程分配给设计子例程的团队成员，编写代码并让它通过编译器以消除语法错误。然后将将其返还给进度会议，进度会议其分配给另一名团队成员进行审查。团队容忍甚至期望人们在编码时犯错误。他们还希望审阅者能够找到所有这些。因此，审阅者全权负责代码的正确性，而作者不在其中。在单元测试中，4 个子程序中有 3 个没有发现缺陷。其余例程中只有小错误。在系统测试期间或程序的生命周期中没有发现任何缺陷。该过程及其同行评审非常耗时，需要每周召开进度会议、评审和单元测试。许多项目没有时间和人力资源来进行如此复杂的开发过程，但他们确实有时间进行冗长的测试和返工。</p>
+<p>我们只做了一个实验，程序很小。 体验很有希望，并且团队有动力在更广泛的示例中进行尝试。 与此同时，我们从 Fortran 语言发展到面向对象语言。 代码审查不再可行，因为我们无法再识别孤立的代码块进行审查。 我们对对象的唯一抽象是类抽象，唯一可用的块是类规范。 一个类在两个维度上具有依赖关系：在类继承树上以及在协作实例的类之间。 我们找不到可以独立指定、编写、审查、记录和测试的代码块。 我们不得不放弃同行评审。</p>
+<p>软件工程是工程学的一个特殊分支。 工程文档通常至少标注两个签名：创建者（日期和首字母）和检查者（日期和首字母）。 面向对象的程序可以有第一个签名，但它们是不可读的，无法检查。 引用《设计模式》一书</p>
+<blockquote>
+<p>面向对象程序的运行时结构通常与其代码结构几乎没有相似之处。 代码结构在编译时被冻结； 它由具有固定继承关系的类组成。 &ldquo;运行时结构由快速变化的通信对象网络组成……很明显，代码不会揭示有关其系统工作方式的所有信息&rdquo;。</p>
+</blockquote>
+<p>这种令人不寒而栗的观察结果是，主流程序员只剩下&quot;通过测试编程&quot;作为标准的编程方式。 此外，他们的代码并未揭示有关其系统如何工作的所有信息。</p>
+<p>今天，在我第一次体验面向对象的 50 年后，代码审查再次变得可行，将它用于实际问题会很有趣。 我们现在有两个对象抽象来识别代码块以供审查。 类抽象为数据提供了代码块，即独立对象。 正交的角色抽象为角色抽象提供了独立的代码块，即系统行为。 同行评审再次可行。 Dijkstra 是这样说的：</p>
+<blockquote>
+<p>如果你想要更高效的程序员，你会发现他们不应该浪费时间调试，他们不应该一开始就引入错误。</p>
+</blockquote>
+<p>如果我们将目光从编码(coding)转移到编程(programming)，我们的兴趣领域就会变得更加广阔。 除其他外，它包括利益相关者：</p>
+<blockquote>
+<p>利益相关者是对某事特别是企业有兴趣或关注的人。 利益相关者可能：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>使用系统</li>
+<li>为系统提供支持</li>
+<li>从系统中实现收益。</li>
+<li>为系统付费的组织或个人</li>
+</ul>
+</blockquote>
+<p>这种对编程过程的广泛看法超出了本文的范围，我建议感兴趣的读者参阅 Coplien</p>
+<h2 id="我们需要范式转变">我们需要范式转变</h2>
+<p>西方天文学的历史显示了一系列范式的转变，从以静止的地球为宇宙中心的地心范式及其基本的复杂性开始， 天文学通过日心说演变为当前的分布式范式，其质量块由引力连接。 在一个范例中看似本质的复杂性在下一个范例中很容易解决：</p>
+<p>在计算中寻找类似的范式转变是很诱人的。 主流编程的大部分理论和实践都基于以冯·诺依曼机器以 CPU 为中心的范例。 对我来说，以内存为中心的范式出现在 1960 年的 Autokon 中央数据库中。 解决方案是显而易见的，并且一定有许多类似的举措，而我却没有意识到。</p>
+<p>是时候认识到前两种范式无法应对我们当前的挑战了: 我们被巨大、复杂和不安全的系统所困扰，这些系统很久以前就超出了人类的理解范围。 最近的一个例子: 客户发现他们的银行对同一笔交易收取了两次费用。 问题被发现几周后，该银行公开承认他们仍然不明白问题是如何产生的：他们系统的复杂性显然超出了人类的理解范围。 该银行拥有一支非常称职的专家团队，但他们需要更好的基础来建模和实施其复杂的需求。</p>
+<p>计算机可以转换、存储和传输数据（图 15）。 以 CPU 为中心的范式的本质是计算机主要用于转换数据; 它们计算。以内存为中心的范式的本质是计算机主要用于存储数据; 他们围绕共享数据库组织应用程序。 以通信为中心的范式的本质是，计算机主要用于与其他计算机交换消息，使它们协作以实现共同目标。 值得注意的是，虽然天文学家的新范式取代了旧范式，但新计算范式扩展了旧范式，如图所示。</p>
+<img width=800 src="/post/img/personal-programming-loke-15.png" />
+<center>图15: 计算的三种范式</center>
+<p>是时候听从 Tony Hoare 的简单请求，并找到更好的分离关注点的方法了。 主流编程应该将以通信为中心的范式作为其计算的基本模型。 它以作为本文基础的对象计算机为例，甚至 MVC 也属于这里，其模型和用户界面作为通信实体。</p>
+<p>以通信为中心的范式已经出现多年。 我第一次遇到它是在 Prokon 的分布式计算机的想法中，但肯定还有很多其他的倡议。一个较新的例子是面向服务的架构 (SOA)，它本质上是以通信为中心的。 它没有立即取得成功，可能是因为人们试图将它应用到它不属于的以 CPU 为中心的范例中。 还有许多其他示例，例如分布式计算。当然，根据定义，DCI 和物联网本身是以通信为中心的。</p>
+<h2 id="loke-计算机的梦想">Loke 计算机的梦想</h2>
+<p>最初的想法是，Loke 计算机应该是一个硬件，就像 Alan Kay 的 Dynabook 一样，应该满足其所有者的所有计算需求。 该计算机是独立的，包括运行 Loke 个人计算机所需的硬件和软件。 我放弃了这个想法。 像 Ellen 这样的潜在用户在日常生活中依赖于她的智能手机。 她将它用于许多目的，从支付杂货费到寻找 astrobleme 这个词的含义。 在专用的 Loke 设备上重新编程所有这些服务是不切实际的。 因此，第一个 Loke 设备必须像现有的智能设备一样，叠加在其上。</p>
+<p>Ellen 拥有许多设备，她想在所有设备上运行她的 Loke。 因此，Loke 应该作为远程应用程序部署在合适的服务器上：</p>
+<blockquote>
+<p>远程应用程序是一种应用程序交付解决方案，其中实际应用程序安装在中央服务器上并从远程设备使用。 最终用户收到应用程序的屏幕截图，同时能够提供键盘、拇指点击和鼠标输入。 远程应用程序有很多名称：远程应用程序、服务器-客户端应用程序、应用程序远程处理、应用程序虚拟化和虚拟应用程序。 RDP 协议是用于将数据从数据中心托管的应用程序传输到远程设备的更流行的协议之一。</p>
+</blockquote>
+<p>Ellen 可能仍然拥有一个类似 Dynabook 的设备，并用它来访问网络上的任何可用程序，包括她个人的 Loke。 该设备将像一个程序亭：</p>
+<blockquote>
+<p>&ldquo;信息亭软件是为交互式信息亭或互联网信息亭设计的系统和用户界面软件, 是一种封闭系统，以防止用户在软件执行范围之外的设备上进行交互和活动&rdquo;</p>
+</blockquote>
+<p>网络上的一些资源是专供人类使用的应用程序，例如绘图程序、文字处理器和 Web 浏览器。 其他资源用于机器对机器 (M2M) 使用，可以在 Loke IDE 桌面上显示为资源图标。 Ellen 可以使用她的 Loke 来创建和部署新的资源对象，这些资源对象既可以是个人的也可以是共享的，并且可以供人类或机器使用。</p>
+<p>Loke 设备只需要一个最小的操作系统，例如 microkernel 或 Squeak 本身。 这将使其不易收到恶意攻击，也将使得终端和远程应用程序之间的安全屏障变得更坚固。 Loke 设备是一个外壳，一切都发生在别处。</p>
+<h2 id="教孩子计算">教孩子计算</h2>
+<p>人们普遍对教授儿童计算机和编程感兴趣，从自愿的&quot;教孩子们编码&quot;倡议到将其正式纳入学校课程。 例如，英国政府在英格兰建立了一个国家课程： <strong>学习的计算程序</strong> ，规定了涵盖孩子 11 年学校教育的必修课程。</p>
+<p>许多这些举措的共同点是单人计算机是关注的焦点; 通信机器的编程通常是缺失的。 就好像对司机的教育应该专注于汽车的构造而不提及交通。</p>
+<p>我认为这些举措是错误的，因为它们过于抽象并且与人类的思维格格不入。 与 Ellen 的组合式编程进行比较。 Ellen 不需要遵循固定的课程，但她会在需要时学到更多。 随着她获得 Loke 编程经验，她将从 Loke/Novice 进步到 Loke/Expert。 更重要的是将个人编程和 Loke 与她不同的学校科目相结合。 在老师的帮助下，Ellen 将使用她的 Loke 构建课题的可执行模型，使用可用的资源对象来填充细节。 传统编程教学的一个限制因素是缺乏具有相关能力的教师。 组合式编程的入门门槛低，大大减少了这个问题，老师可以边教边学。</p>
+<p>Ellen 对智能闹钟的编程是一个简单的例子，它通过简单的演示说明了 Loke 的基本概念。 另一个极端是 Hans Rosling 的 TED 演讲：<a href="https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen?language=en">你见过的最好的统计数据</a>. Rosling 通过将可用的官方统计数据与复杂的图形演示工具相结合来创建这个演示文稿。 像 Anton 这样的专家应该能够从他的 Loke 中的相同资源中编写类似的演示文稿，从而通过探索官方统计数据来了解世界。</p>
+<p>学校课程的开发者将获得一个新的教学维度：通过建模和探索来学习。</p>
+<h2 id="进一步的工作">进一步的工作</h2>
+<p>我认为没有理由修改 Loke 的概念模型。 它当前的实现,BabyIDE, 是 &ldquo;灵感编程&rdquo; 风格的，其架构和代码还有很多不足之处。 当前的 BabyIDE 是一个 alpha 版本。 它缺少几个重要的特征，但足以证明概念，因为它支持两个基本的 Loke 幻觉：</p>
+<ul>
+<li>Loke 内存(memory)表现为一个统一的对象宇宙，独立于它们的位置、访问机制和实现细节的多样性。</li>
+<li>无论用于消息传输的协议和接收方的性质如何，所有消息都以相同的方式处理。</li>
+</ul>
+<p>BabyIDE 理论上可以抵御某些攻击，但必须重新实施才能将其应用到实践中。 当前的实现具有高级 Loke 编程所需的功能，例如重新实现 BabyIDE 本身。 该实现具有分布式编程所需的钩子，但这无法演示，因为 BabyIDE 尚未连接到网络。</p>
+<p>我希望有人会为感兴趣且有勇气的人提供测试版。 这个版本应该基于重新实现的 BabyIDE。 它的启动画面会像图 6 那样，很多 Squeak 的功能会像 Etoys 一样被隐藏起来。重新实现的 BabyIDE 在我的老版本 Squeak 中仍然可以运行，必须移植到最新版本。</p>
+<h2 id="相关工作">相关工作</h2>
+<p>如果要将我在 60 年的编程生涯所学的一切都收集在一本书中，那么我所不知道的东西将需要一个庞大的图书馆才装得下。 我非常清楚我错过了重要的举措，并为没有发现它们而深表歉意。 下面是我找到的一些相关工作。</p>
+<h3 id="dci-范式的实现">DCI 范式的实现</h3>
+<h4 id="cope-的-trygve-语言">Cope 的 trygve 语言</h4>
+<p>DCI 编程范例已由 James O.Coplien (Cope) 在他称为 trygve 的研究语言中具体化:</p>
+<ul>
+<li>trygve 语言只是支持最终用户心智模型的系统设计的一部分。 最后，trygve 的主要贡献在于左脑计算&ndash;脚本的执行。 用户在执行程序期间仍然会使用他们的右脑，但在现代计算中，这种活动通常与视觉皮层有关。识别正确的实体（对象）发生在屏幕上，模型-视图-控制器（MVC）被设计为最终用户和计算机之间的桥梁。 MVC 和 trygve 可以强大地结合起来，以在最终用户和机器之间提供最具表现力的连接。</li>
+</ul>
+<p>trygve 程序的源代码具有以下结构:</p>
+<p><img src="/post/img/10270_2019_768_Figl_HTML.webp" alt=""></p>
+<p>trygve 语法有点像 Java，但它的语义是基于 DCI 的。 它有两个重要的关键字，context 和 role，具有的 DCI 含义。 trygve 源代码是声明整个程序的文本。 这使得编译器可以分析程序并支持其类型系统。</p>
+<h4 id="rune-funch-的-marvin-语言">Rune Funch 的 Marvin 语言</h4>
+<p>Marvin 是 Rune 为 DCI 设计的一种编程语言。 它在很大程度上建立在 C# 之上。 Marvin 的第一个版本可以看作是 C# 的扩展，计划中的版本很可能会重塑一些基础部分，以便为 DCI 提供更好的支持。</p>
+<h3 id="其他举措">其他举措</h3>
+<h4 id="objectteams">ObjectTeams</h4>
+<p>Stephan Hermann 的 ObjectTeams 有一个类似于 DCI 角色的概念，但他们将角色扮演者包装在一个单独的对象中。 这意味着一个角色扮演对象至少有两个身份: 对象本身的身份和包装器的身份。 因此，ObjectTeams 违反了 Loke Role 抽象中对象的定义：&ldquo;对象是具有不可变且全局唯一标识符的实体。&rdquo; 双重身份可能导致难以追查的对象矛盾行为问题</p>
+<p>许多人发现很难将注意力集中在并行过程上，这降低了 Actor 模型对 Ellen 和 Anton 的适用性。 也许 Actor 模型将成为以通信为中心的范式的图灵机？</p>
+<h4 id="actor-模型">Actor 模型</h4>
+<blockquote>
+<p>计算机科学中的 actor 模型是一个并发计算的数学模型，它将 &ldquo;actors&rdquo; 视为并发计算的通用基元。为了响应它收到的消息，actor 可以：做出本地决策，创建更多的 actor，发送更多的消息，并决定如何响应收到的下一个消息。actor 可以修改自己的私有状态，但只能通过消息传递间接地影响对方（避免了基于锁的同步）。</p>
+</blockquote>
+<h4 id="主流语言的扩展">主流语言的扩展</h4>
+<p>DCI 范式已在许多主流语言（如 Ruby、C++、Scala 和 Java）中实现了构造。使用主流语言有明显的优势。缺点是， DCI 概念不是语言的一部分，必须最大限度地强调其高级功能。 结果是代码不像 BabyIDE 代码那样组织清晰。 尽管如此，与传统的替代方案相比，DCI 与其中一些语言的应用已经显示出程序架构的改进。</p>
+<h4 id="星际文件系统ipfs">星际文件系统（IPFS）</h4>
+<blockquote>
+<p>星际文件系统(IPFS) 是一种点对点 (p2p) 文件共享系统，旨在从根本上改变信息在全球范围内和全球范围之外的分布方式。 IPFS 由通信协议和分布式系统方面的多项创新组成，这些创新组合在一起产生了一个与众不同的文件系统。 因此，要了解 IPFS 试图实现的全部广度和深度，了解使其成为可能的技术突破非常重要。</p>
+</blockquote>
+<p>Loke 可能会使用类似这样的东西来存储 Ellen 的个人数据。</p>
+<h4 id="微服务">微服务</h4>
+<blockquote>
+<p>微服务是一种软件开发技术&ndash;面向服务的架构(SOA)架构风格的一种变体，它将应用程序构建为松耦合服务的集合。 在微服务架构中，服务是细粒度的，协议是轻量级的。 将应用程序分解为不同的较小服务的好处是提高了模块化程度。 它使应用程序更容易理解、开发、测试，并对架构的侵蚀变得更有弹性。 它通过使小的自主团队独立开发、部署和扩展各自的服务来并行开发。它还允许通过持续的重构出现单个服务的架构。基于微服务的架构支持持续交付和部署。</p>
+</blockquote>
+<p>微服务看起来像原始对象，它们的细粒度和轻量级协议可以使它们在 Loke 中用作资源对象。</p>
+<h4 id="可信平台模块">可信平台模块</h4>
+<p>在 3.8 节中，我假设 Loke 设备需要硬件支持来实现所需的安全和隐私。可信的平台模块似乎提供了所需的东西。</p>
+<ul>
+<li>可信平台模块(TPM，也称为 ISO/IEC 11889)是安全加密处理器的国际标准，这是一种专用微控制器，旨在通过集成加密密钥保护硬件。</li>
+<li>TPM 的主要范围是确保平台的完整性。在这种情况下，&ldquo;完整性&rdquo; 意味着 &ldquo;按预期运行&rdquo;，&ldquo;平台&rdquo; 是任何计算机设备，无论其操作系统如何。 这是为了确保启动过程从受信任的硬件和软件组合开始，并一直持续到操作系统完全启动且应用程序运行为止。</li>
+<li>硬件 TPM 是专用芯片，可在其自身的防篡改半导体封装中实现 TPM 功能。 它们在理论上是最安全的 TPM 类型，因为在硬件中实现的例程与在软件中实现的例程相比应该更能抵抗错误，并且它们的封装需要实现一些防篡改。</li>
+<li>TPM 用于平台完整性的一个示例是可信执行技术(TXT)，它创建了一个信任链。 它可以远程证明计算机正在使用指定的硬件和软件。</li>
+</ul>
+<h4 id="ifttt">IFTTT</h4>
+<p>IFTTT 是新兴的以通信为中心的编程时代的早期商业产品：&ldquo;IFTTT 是一个免费平台，可帮助您使用你所有的应用程序和设备做更多事情。&rdquo;</p>
+<p>图 16 显示了一个小型应用程序的架构，一个 IFTTT 程序片段。盒子代表了被称为服务的资源对象。它们有两种类型：触发器和执行器。触发器服务创建 webhooks（自定义回调），以响应一些外部事件，如图书馆中新书的到来或气象服务对降雨的观测。</p>
+<img width=800 src="/post/img/personal-programming-loke-16.png" />
+<center>图16: "如果这样就那样"的应用程序 UML 图</center>
+<p>执行器服务是一个对象，它像资源对象一样，响应其提供的接口中的消息。 一些服务既可以作为触发器也可以作为执行器。 要创建一个程序，程序员选择一个触发器服务并将其链接到一个执行器服务，如图所示。</p>
+<p>IFTTT 产品由 IFTTT Inc 拥有和销售。它对实现对象计算机的主要贡献是，有许多供应商将其产品作为服务在 IFTTT 环境中使用。IFTTT 公司声称已经将 IFTTT 连接到 600 多个服务，包括亚马逊 Alexa、Facebook、Instagram、Twitter、Fitbit、Slack 等。我不清楚这些改编是否是专有的，还是开放的，可供 Loke 使用。</p>
+<p>IFTTT 概念简单，目标群体易于学习。 目前，我只看到了一个编程结构; 显然没有顺序也没有循环。 正如我所看到的，IFTTT 提供了在以通信为中心的范式下进行编程的早期一瞥，但还有更多的事情要做。</p>
+<h4 id="工业-50">工业 5.0</h4>
+<p>工业 5.0 是一个术语，用于表示一长串工业生产技术的当前阶段。 它始于现在所谓的工业 1.0； 第一次工业革命使技术成为可能。 我们现在已经迈出了下一步，将人类作为工业生产的重要组成部分。 欧洲经济和社会委员会组织的会议对工业 5.0 的这一介绍，说明了它的意义所在:</p>
+<blockquote>
+<p>第 4 次工业革命(工业 4.0)的特点是集成了智能、互联和自主的数字和物理技术，如物联网和机器人技术。虽然这带来了一系列好处和机会，但研究表明，许多人仍然担心机器人会抢走他们的工作。这就是为什么这次关于工业 5.0 的会议很重要，因为它可以阐明我们如何更好地将人融入越来越多地基于数字技术的社会。<br>
+有些人认为工业 4.0 是在浪费人类解决问题的能力，浪费人类增值的创造力，浪费人类深入了解客户的关键和专属能力，而工业 5.0 的重点是将人类的创造力和工艺与机器人的速度、生产力和一致性相结合。工业 5.0 意味着通过结合机器人和人类的不同优势，更好地理解它们之间的合作，以创造一个更加包容和以人为本的未来。
+本次会议将设有两个讨论小组，涉及以下主题：<br>
+工业 5.0 背后的技术，可以帮助人类和机器人更好地协同工作。这需要更多地了解协作机器人和人机界面。</p>
+</blockquote>
+<p>大多数机器人可能会以 RESTful 服务或类似的方式交付，而有些则可能为机器人协作提供特殊用途的机器对机器（M2M）语言。在我看来，对象计算机的概念可以将机器人技术和人类参与者联系在一起，形成一个共同的参考框架。此外，人类参与者可以使用个人编程对他们的系统进行配置和编程。</p>
+<h2 id="总结和结论">总结和结论</h2>
+<p>这篇文章关于人和他们的对象。 原因是双重的。 首先，我的研究一直针对人类用户。 他们有的是程序员，有的来自其他各行各业。 其次，我的计算参考框架是基于对象的：系统内存分布在对象之间，系统行为采用消息在对象之间流动的形式。 &ldquo;对象&quot;一词在文章的 20 页左右的篇幅里出现超过 300 次，而&quot;子类&quot;一词则完全没有出现。</p>
+<p>心理参考框架是根深蒂固的，而且通常是潜意识的，很难改变。 在我 60 年的编程生涯中，我只改变了两次我的计算参考系。 第一次是在 1968 年，当时 Dijkstra &ldquo;认为 goto 语句是有害的&rdquo;。 对我来说，我有十年的专业编程经验，这听起来完全是胡说八道。 但我回顾我的代码，发现它令人困惑且不可读。 也许 Dijkstra 说的有道理？（他通常有道理） 我花了六个月艰而痛苦的工作来完成过渡。 有一天，我的大脑突然&quot;咔嚓&quot;一声。 在点击之前，程序是一系列指令。 突然间，程序变成了模块结构，旧的参考框架消失了。 我不再需要 goto 并且从未想念它。</p>
+<p>第二个变化是在不知不觉中逐渐发生的。 它是由我的最终用户在 Prokon 项目中需要分布式个人计算机触发的。 基于对象的参照系在我脑海中已经悄然成长，但直到本文我才明确表达出来。 一个系统是一个对象的宇宙，一切皆是对象。 系统内存分布在对象之间。 系统行为是通过对象的消息流。 1978 年，当我作为访问科学家来到 Xerox PARC 时，我发现它已经在 Smalltalk 中实现了。Smalltalk 是一个对象的宇宙，一个 image。 系统状态分布在对象之间； 系统行为采用消息从一个对象流向另一个对象的形式。 我的对象思维的第一个具体成果是 MVC（&ldquo;太明显了，不值得写&rdquo;）。 后来出现了角色建模、DCI 和 Loke。</p>
+<p>令我完全惊讶的是，对于 PARC 的大多数人来说，面向对象是关于类的，而不是关于对象。 一个例子是 CRC 卡，这是一种用于头脑风暴和教学程序设计的流行工具。 这些卡片（通常是索引卡片）分为三个字段：类、职责和合作者。 该工具的根本缺陷是混淆了类和实例：类不彼此协作，它们的实例彼此协作。 我听到有人说：&ldquo;这个类向那个类发送消息。&rdquo; 这让我不寒而栗。 这根本是错误的，可能会阻止说话者将基于对象的参照系内化的机会。</p>
+<p>我在改变自己的参照系方面的艰难经历是本文第二句话的动机：（专家程序员可能会找到更适合他们需求的论文和文章。）我将这篇文章瞄准了外行，他们没有根深蒂固的编程参考框架。</p>
+<p>我大胆地说，基于对象的心理参考框架比基于 CPU 的框架更接近于普通人类的思维方式。 我建议你首先查看图 1 中的冯·诺依曼模型，观察它如何引出程序是抽象指令序列的概念。 然后，查看图 6 中 Ellen 的编程界面，可以看到 Ellen 可以将其符号解释为她的程序组合中的具体组件。(我没有说明类层次结构，但希望你明白这一点。)</p>
+<p>Loke 的概念基础在引言中进行了简要总结，并在文章正文中进行了详细讨论。 对于具有基于对象的参考框架的人来说，这一切都非常简单, 几乎显而易见：</p>
+<ul>
+<li>对象是封装了状态和行为的实体。封装将对象分为外部和内部。它的外部对其环境是可见的，并且以其不变的和全球唯一的身份而被认识。它可以响应一组消息(称之为它的接口)。它还可以通过对象接口向其环境中的对象发送消息。这些接口是粘合剂，可以将它们组合成一个对象计算机，或者 Kelly 所说的伟大的全球机器。隐藏在封装屏障后面的对象， 内部包含了传入消息时将触发的行为的具体实现。实现可以通过类、Fortran 或汇编程序来做，或者使用像气象学家的天气预报模型这样的大型系统来实现。难怪类对 Ellen 来说是次要的。只有她想创建自己的资源对象时，才需要类。当然，大多数对象都可以在 Web 上找到或由产品供应商提供。</li>
+<li>模型-视图-控制器(MVC)要求使用简单的对象结构来弥合人脑和计算机之间的鸿沟。 模型是一个对象或对象的结构，它忠实地反映了 Ellen 对主题的心智模型。 一个或多个 Views 将抽象的模型转化为 Ellen 可以直观感知的形式; 这通常意味着一些众所周知的演示文稿，例如图表或文本。（多年前，我创建了一个显示执行期间消息流的视频剪辑视图，但从来没有创建过音频视图。）控制器设置视图并协调共享功能，如选择(selection)。</li>
+<li>数据-上下文-交互(DCI)是计算机编程中关注点分离的新范例。 数据是非常简单的独立对象。上下文是一个工件，Ellen 在其中收集实现用例所需的对象，将它们组合成一个通信对象的结构，并根据它们将扮演的角色来命名它们。交互使用控制它们协作的脚本来增强参与对象。</li>
+</ul>
+<p>在撰写本文的过程中，隐私和安全在我们社会中的重要性呈指数级增长。即使是最复杂的组织，也会受到邪恶的渗透者的严重攻击。这似乎是一场善恶之间永无休止的战斗，而邪恶似乎正在获胜。我做梦也不会想到要去解决这个挑战我们行业最优秀大脑的问题。但 Ellen 是我的责任，我或许可以帮助她。或许，我可以在专家工作的基础上，创造出一种对攻击具有极强抵抗力的 Loke 设备。我在 3.8 节中对方法和手段进行了推测。主要的安全屏障是对象外部和内部之间的封装屏障：邪恶的外部只能通过对象的消息接口到达内部，始终假设在可能共享的支持软件中没有安全漏洞。我建议采用分布式解决方案，以便 Loke 可以在其支持软件的私有副本上运行。 Ellen 的个人 Loke 变成了一个信息亭，我将其安全和隐私的责任推给了服务提供商。在安全和隐私方面，我是一个无知的人，但我想探索分布式对象模型是否有助于缓解挑战。</p>
+<p>我在介绍中写道，Loke 是一个正在进行的项目。在写这篇文章的时候，我们仍然要报告它的现状。我已经建立了 BabyIDE-1，一个 Loke 的概念验证实现。在这个实现中嵌入了一个 Loke 的概念模型，用于探索和实验。我认为 Loke 作为一个概念模型已经完成。该模型支持其固有的安全性和隐私性，并维持其对象和消息模型。</p>
+<p>Loke 作为一个计算机程序还有很多不足之处。它是&quot;通过灵感来编程&quot;的，并作为我的软件实验室。概念模型和 Ellen 的 IDE 是通过该实验室的实验式编程形成的。此实现足以演示简单的个人编程：&ldquo;Ellen 想要创建一个智能闹钟，通过适合她的能力、需求和偏好的 GUI 对其进行编程。&rdquo; 该实现已用于演示新手 Ellen 如何对她的智能闹钟进行编程。向外行人进行的六次非正式演示表明，他们立即掌握了对象代表其环境中有形事物的想法。他们创造性地看到 Loke 的个人机遇，并勾勒出可以实现这些机会的信息流。有趣的是，两名观看演示的训练有素的程序员，觉得用他们现有的技术可以很好地服务这些目标，并没有看到 Loke 的意义。</p>
+<p>Loke 作为编程环境仍处于起步阶段: 它没有连接到网络，最值得注意的是，它固有的安全和隐私属性在实践中尚未实现。 嵌入自身硬件的未来 Loke 机器可以实现 Loke 的安全和隐私，并将以客户端-服务器架构连接到网络。</p>
+<p>自 2015 年以来，Loke 的一直是一个单人项目。 单人项目的一个好处是很容易随时放弃一项研究并重新开始一项新研究（经常发生）。 缺点是它仅限于一个人可以做的事情。</p>
+<p>我是一个 90 多岁的老人，缺乏必要的时间和精力来实现 Loke。 用更多的人和更好的资金来扩大项目的时机已经成熟。 因此，我正在寻找能够认同目标并实现其潜力的创新者。</p>
+<p>在 70 年代后期，我实现了第一个采用 MVC 架构的程序。 后来发现，这种实现可以看作是人类使用计算机的概念模型。 也许在未来，Loke 可以被视为人类使用互联事物的概念模型。</p>
+<h2 id="致谢">致谢</h2>
+<p>导致 DCI 范式、BabyIDE 和个人编程的工作经历了多年的风风雨雨。如果不是因为从我非常尊重的人那里得到的鼓励，我不可能坚持到现在，最重要的是 Dave Thomas 和 Bran Selic。我很早就认识 James O. Coplien（Cope），感谢他多年来进行的许多有益的讨论。我们的共同点是我们对人的关注。系统的价值是它对用户的价值。用户可以是应用程序的最终用户或使用编程环境的开发人员。在寻找一个我们都认为一定存在于某个地方的共同真理时，我们各行其道。 2008 年 8 月，我推出了一种新的编程范式，我称之为 DCI &ndash; 数据、上下文和交互。它伴随着 BabyIDE 一起出现，这是一个用 Squeak 编写的交互式开发环境。我通过网络向很多人传播了这个好消息。但没有得到回应，只有 Cope 写道：&ldquo;恭喜你，Trygve。一个人在一生中获得两项伟大成就并不常见。”最后，我们联手推进 DCI 理念。我感谢 Cope 对这项工作的宝贵贡献。此外，对于 DCI 范式的传播，没有他就不可能发生。我也衷心感谢以  object–composition@googlegroups.com 邮件列表为中心的活跃社区，感谢他们对 DCI 范式及其传播所做的贡献。第一个 BabyIDE 角色脚本是使用 Traits 实现， 我真诚地感谢 Nathanael Schärli、Stéphane Ducasse、Andrew Black 和 Adrian Lienhard 提供了 Squeak 类范例的这个非常强大的扩展，为通过行为增强角色铺平了道路。 Traits 的使用是朝着当前类和上下文之间的关注点强分离迈出的关键一步。个人编程和 Ellen 的 Loke 计算机的概念部分源于 Alan Kay、Dan Ingalls、Adele Goldberg 和 Learning Research Group 在 Xerox PARC 创建的 Smalltalk。他们颠覆性想法的价值怎么估计都不过分。最后，我衷心感谢 Bran Selic，他对本文的一系列草稿进行了深思熟虑且始终具有建设性的审阅。</p>
+<h2 id="附录">附录</h2>
+<p>暂未翻译。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-11-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/geb/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">哥德尔、艾舍尔、巴赫</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/digital-nomads-sanya/">
+            <span class="next-text nav-default">数字游民 -- 三亚笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

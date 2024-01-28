@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap! 使用笔记: Python function - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="制造伟大的、可成长的系统的关键是设计出模块之间的沟通机制，而不是关于内部属性和行为应该是什么。 &amp;ndash; Alan Kay 前言 Snap! 的 JavaScript function 设计得极为出色, 仅通过一个积" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-function/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Snap! 使用笔记: Python function" />
+<meta property="og:description" content="制造伟大的、可成长的系统的关键是设计出模块之间的沟通机制，而不是关于内部属性和行为应该是什么。 &ndash; Alan Kay 前言 Snap! 的 JavaScript function 设计得极为出色, 仅通过一个积" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-function/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-03-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-03-01T00:00:00+00:00" />
+
+<meta itemprop="name" content="Snap! 使用笔记: Python function">
+<meta itemprop="description" content="制造伟大的、可成长的系统的关键是设计出模块之间的沟通机制，而不是关于内部属性和行为应该是什么。 &ndash; Alan Kay 前言 Snap! 的 JavaScript function 设计得极为出色, 仅通过一个积"><meta itemprop="datePublished" content="2023-03-01T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-03-01T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2160">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! 使用笔记: Python function"/>
+<meta name="twitter:description" content="制造伟大的、可成长的系统的关键是设计出模块之间的沟通机制，而不是关于内部属性和行为应该是什么。 &ndash; Alan Kay 前言 Snap! 的 JavaScript function 设计得极为出色, 仅通过一个积"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Snap! 使用笔记: Python function</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-03-01 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#目标">目标</a></li>
+      </ul>
+    </li>
+    <li><a href="#先前的工作">先前的工作</a></li>
+    <li><a href="#重构">重构</a></li>
+    <li><a href="#python-function-插件"><strong>Python function</strong> 插件</a>
+      <ul>
+        <li><a href="#怎么用">怎么用?</a></li>
+      </ul>
+    </li>
+    <li><a href="#我的用例">我的用例</a></li>
+    <li><a href="#一些技巧">一些技巧</a>
+      <ul>
+        <li><a href="#安装第三方库">安装第三方库</a></li>
+        <li><a href="#类型转化">类型转化</a></li>
+        <li><a href="#全局变量">全局变量</a></li>
+        <li><a href="#已知限制">已知限制</a></li>
+        <li><a href="#编程风格">编程风格</a></li>
+      </ul>
+    </li>
+    <li><a href="#未来">未来</a></li>
+    <li><a href="#后记">后记</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>制造伟大的、可成长的系统的关键是设计出模块之间的沟通机制，而不是关于内部属性和行为应该是什么。 &ndash; Alan Kay</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p><a href="https://snap.codelab.club/snap.html">Snap!</a> 的 <strong>JavaScript function</strong> 设计得极为出色, 仅通过一个积木就将浏览器的所有能力带给了 Snap! 。 它给了我巨大冲击。 关于这点我们在 <a href="/post/%E7%BC%96%E7%A8%8B/snap-javascript-function">Snap! 使用笔记: JavaScript function</a> 做了讨论。</p>
+<h3 id="目标">目标</h3>
+<p>为了将 Snap! 用作日常计算/编程环境，需要突破浏览器的限制，使其得到操作系统的所有能力。我打算沿着<a href="https://github.com/jmoenig">Jens Mönig</a>(Snap! 创始人)的设计思路, 来做这件事。</p>
+<h2 id="先前的工作">先前的工作</h2>
+<p>之前我基于 CodeLab Adapter 的消息系统为 Snap! 接入 Python 来达成这个目标。想法是: 如果我们能够完成 Snap! 与 Python 的互操作，就能在 Snap! 中完成任何工作, 因为 Python 解释器封装了底层操作系统的所有接口(Python 通常被认为是更好的 Bash), 如此一来我们就可以在 Snap! 里进行 系统 io 编程、管理远程服务器、渗透测试、与其他进程互操作&hellip;</p>
+<p>以下是一些我渴望在 Snap! 中获得的系统能力:</p>
+<ul>
+<li>处理文件/文件夹/路径
+<ul>
+<li>Python 库: pathlib</li>
+<li>以 GUI 的方式打开文件/软件/目录: <code>from codelab_adapter.utils import open_path_in_system_file_manager</code></li>
+</ul>
+</li>
+<li>调用命令行工具
+<ul>
+<li>Python 库: subprocess、<a href="https://github.com/amoffat/sh">sh</a></li>
+</ul>
+</li>
+<li>与网络交互
+<ul>
+<li>Python 库:
+<ul>
+<li>HTTP: <a href="https://github.com/psf/requests">requests</a></li>
+<li>SSH: <a href="https://github.com/paramiko/paramiko">Paramikossh</a></li>
+<li>TCP、UDP、ZeroMQ&hellip;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>接管鼠标键盘
+<ul>
+<li>Python 库: <a href="https://github.com/asweigart/pyautogui">pyautogui</a></li>
+</ul>
+</li>
+<li>&hellip;</li>
+</ul>
+<p>由于接入了 Python, 我们不仅得到了与浏览器之外的系统交互的能力, 还得到了 Python 的巨大生态库:</p>
+<ul>
+<li>计算机视觉
+<ul>
+<li>OpenCV</li>
+</ul>
+</li>
+<li>神经网络
+<ul>
+<li>PyTorch、TensorFlow</li>
+</ul>
+</li>
+<li>各类机器人驱动库&hellip;</li>
+</ul>
+<p>最初我们在 <a href="https://create.codelab.club/projects/editor/">CodeLab Scratch</a> 里实现了这些想法, 它体现为 Python 插件:</p>
+<p><img src="/post/img/Snap-Python-function-02.png" alt=""></p>
+<p>我最近将其移植到了 Snap! 中:</p>
+<p><img src="/post/img/Snap-Python-function-01.png" alt=""></p>
+<p>所以它的使用方式和<a href="https://adapter.codelab.club/extension_guide/extension_python_kernel/">最初的文档</a>记录的使用方式，完全一致:</p>
+<h2 id="重构">重构</h2>
+<p>先前的插件存在一个问题: 不够 lively。 它类似于<a href="/post/%E7%BC%96%E7%A8%8B/snap-javascript-function">Snap! 使用笔记: JavaScript function</a>里提到的使用 primitive 扩展 Snap! : 需要先在 Jupyterlab 中编写 Python 代码, 然后重启 extension_python 插件, 之后在 Snap! 里调用它, 虽然无需刷新 Snap! 页面，但切换到 Jupyterlab、重启插件, 依然打断我的思路。</p>
+<p>由于受到 <strong>JavaScript function</strong> 的强烈冲击, 我打算以类似的方式来做这件事: 将操作系统的所有能力带给 Snap! (通过与 Python 互操作)。</p>
+<h2 id="python-function-插件"><strong>Python function</strong> 插件</h2>
+<p>这些想法的最终产物是 <strong>Python function</strong> 插件:</p>
+<p><img src="/post/img/Snap-Python-function-03.png" alt=""></p>
+<p><strong>Python function</strong> 并没有设计成单个积木, 而是设计成了一个插件, 里边多了一些辅助类积木。</p>
+<h3 id="怎么用">怎么用?</h3>
+<p>为了使用 <strong>Python function</strong> 积木, 你需要做 3 件事(与<strong>JavaScript function</strong>一致):</p>
+<ol>
+<li>打开权限<br>
+1.1. 开启 CodeLab Adapater<br>
+1.2. 开启 extension_python 插件<br>
+1.3. 设置 token(出于安全考虑)</li>
+<li>编写 Python 函数</li>
+<li>调用 Python 函数</li>
+</ol>
+<h4 id="1-打开权限">1. 打开权限</h4>
+<ul>
+<li>1.1. 开启 CodeLab Adapater</li>
+</ul>
+<p>下载最新的 <a href="https://adapter.codelab.club/get_start/gs_install/#download">CodeLab Adapater</a>, 并运行它。</p>
+<p>CodeLab Adapater 正常运行之后，你会在 <a href="https://snap.codelab.club/snap.html">CodeLab Snap!</a> 页面里看到这个绿色的圆点(和 CodeLab Scratch 类似)</p>
+<p><img src="/post/img/Snap-Python-function-04.png" alt=""></p>
+<p>如果 CodeLab Adapater 没有启动或出了问题，这个原点就会是灰色的。</p>
+<ul>
+<li>1.2. 开启 extension_python 插件</li>
+</ul>
+<p><img src="/post/img/Snap-Python-function-05.png" alt=""></p>
+<ul>
+<li>1.3. 设置 token (出于安全考虑)</li>
+</ul>
+<p><img src="/post/img/Snap-Python-function-07.png" alt=""></p>
+<h4 id="2-编写-python-函数">2. 编写 Python 函数</h4>
+<p><img src="/post/img/Snap-Python-function-06.png" alt=""></p>
+<p>在 <strong>Python function</strong> 插件中找到 <strong>Python function</strong> 积木。上图编写了一个匿名函数, 参数是 path, 函数体是打开它(可能是目录、文件或系统里的 GUI 软件)。</p>
+<p>附上相应 Python 代码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">codelab_adapter.utils</span> <span class="kn">import</span> <span class="n">open_path_in_system_file_manager</span>
+</span></span><span class="line"><span class="cl"><span class="n">open_path_in_system_file_manager</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="3-调用-python-函数">3. 调用 Python 函数</h4>
+<p>接下来我们就可以调用它。</p>
+<p><img src="/post/img/Snap-Python-function-08.png" alt=""></p>
+<p>和 <strong>JavaScript function</strong> 一样, 有两个积木可用于执行 <strong>JavaScript function</strong>:</p>
+<ul>
+<li>运行(没有返回值)</li>
+<li>调用(有返回值)</li>
+</ul>
+<p>这两个积木都内置在 <strong>Python function</strong> 插件里(底层实现与<strong>控制</strong>组里的同名积木并不相同)</p>
+<p>更复杂的例子, 可以右键查看<strong>examples</strong>积木的定义:</p>
+<p><img src="/post/img/Snap-Python-function-09.png" alt=""></p>
+<h2 id="我的用例">我的用例</h2>
+<p>与 <a href="/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/#%E6%88%91%E7%9A%84%E7%94%A8%E4%BE%8B">Snap! 使用笔记: JavaScript function</a> 提到的用例类似。</p>
+<p>我不仅使用 <strong>Python function</strong> 来增强 Snap!, 也借助 Snap! 的个人计算环境来探索 Python 以及背后的操作系统。</p>
+<p>此外有一个有趣的用例是, 使用 <strong>Python function</strong> 来执行 Codification 示例自动生成的 Python 代码:</p>
+<p><img src="/post/img/Snap-Python-function-15.png" alt=""></p>
+<h2 id="一些技巧">一些技巧</h2>
+<h3 id="安装第三方库">安装第三方库</h3>
+<p>我喜欢使用 <a href="https://github.com/amoffat/sh">sh</a> 库来在 Python 里使用 linux 工具箱。</p>
+<p>CodeLab Adapter 没有内置这会库, 但你可以自行安装它:</p>
+<p><img src="/post/img/Snap-Python-function-10.png" alt=""></p>
+<p>安装完成之后，就可以使用它了:</p>
+<p><img src="/post/img/Snap-Python-function-11.png" alt=""></p>
+<p>按行分割，将它们转化为列表:</p>
+<p><img src="/post/img/Snap-Python-function-12.png" alt=""></p>
+<p>由于 Snap! 从 Lisp 那里继承了处理列表的强大能力， 又从 Smalltalk 那里继承了 liveness 的特质, 现在你就可以以 lively 方式随意摆弄它们了！</p>
+<h3 id="类型转化">类型转化</h3>
+<p>从 Snap! 中调用 Python 函数时, Snap! 的数据类型会自动转化为 Python 类型, 随意你可以随意使用内置积木调用 Python 函数。</p>
+<p>从 Python 中返回的简单数据类型(字符串、数字), 会自动转化为 Snap! 数据类型. 当你想将复杂数据结构 return 到 Snap! 里时，建议使用 json 序列化你的数据(<strong>examples</strong>积木里有例子), 然后<a href="/post/%E7%BC%96%E7%A8%8B/snap-explore-data/">在 Snap 中处理 json</a> 即可。</p>
+<h3 id="全局变量">全局变量</h3>
+<p>这些匿名函数转瞬即逝，有时，你希望让计算的结果贮存在全局空间，可以在不同函数里读写它</p>
+<p><img src="/post/img/Snap-Python-function-14.png" alt=""></p>
+<p>这使得许多事情变得简单</p>
+<h3 id="已知限制">已知限制</h3>
+<p><a href="https://adapter.codelab.club/extension_guide/extension_python_kernel/">extension_python</a> 以线程的方式启动, 有一些库需要在独立进程里启动(非常罕见)。如果你遇到这类问题，可以发邮件跟我讨论。</p>
+<p>由于 extension_python 是开源的，你可以自行修补它，使用一些 hack 技巧，总是可以绕过限制。</p>
+<p>我目前还没有遇到过这些限制。</p>
+<h3 id="编程风格">编程风格</h3>
+<blockquote>
+<p>尽可能少地引入 primitive 是 Smalltalk 社区编写 primitive 遵循的风格, 关于 primitive 的 big ideas, 我在 MicroBlocks 与 Snap!的互操作里(视频)提到过一些 &ndash; <a href="/post/%E7%BC%96%E7%A8%8B/snap-javascript-function">Snap! 使用笔记: JavaScript function</a></p>
+</blockquote>
+<p>当我在 Snap! 中使用 Python 时，我也遵循类似的风格, 尽可能少地引入底层的能力(除非必要), 尽可能多地使用 Snap! 积木来编程。</p>
+<p>我希望涉及 Python 的部分足够小, 一般而言是为了补充浏览器没有的能力(本地系统功能、网络)，我将多数的计算过程放在 Snap! 里，借助 Snap! 这样的个人计算环境，我可以直观触摸到数据，以及充分利用个人计算环境的其他杠杆力量。</p>
+<h2 id="未来">未来</h2>
+<p><strong>Python function</strong> 的 Python 代码，最终运行在 CodeLab Adapater 内置的 Python 解释器里。未来我们也可能支持基于 WebAssembly 的 Python 解释器(如<a href="https://pyodide.org/">Pyodide</a>)。</p>
+<h2 id="后记">后记</h2>
+<p>递归是我之前最恐惧的领域之一，但在 Snap! 里玩耍它几乎是一种消遣。 因为你可以&quot;看见&quot;并把玩程序与数据结构。</p>
+<p><img src="/post/img/Snap-Python-function-13.png" alt=""></p>
+<p>这一段代码，使用递归将 Snap! 数据类型递归转化为 Python 数据类型, 它可以处理任意深度的 Snap! 列表。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/snap-javascript-function">Snap! 使用笔记: JavaScript function</a></li>
+<li><a href="https://adapter.codelab.club/extension_guide/extension_python_kernel/">CodeLab Adapter docs: extension_python_kernel</a></li>
+<li><a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_python.py">extension_python.py v1.2</a></li>
+<li><a href="/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/">建立在异步消息之上的同步指令: 分别在 JavaScript、Python、Squeak 上实现</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-03-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/snap-ai-assistant/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">图形化编程中的 AI 助手</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/from-scratch-to-snap/">
+            <span class="next-text nav-default">Snap! 使用笔记: 从 Scratch 进入 Snap! 的时机</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch 中的 dotPack 模拟器 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="打算在 Scratch 里构建一个 dotPack 模拟器。 我们在之前的文章里提到: 就可编程部分来说， dotPack 是一个由 ESP32 驱动的 16x16 NeoPixel 点阵屏。 思路 如果把 dotPack 看作 16x16 个拼成正方形的彩色方块" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/scratch-dotpack-simulator/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch 中的 dotPack 模拟器" />
+<meta property="og:description" content="打算在 Scratch 里构建一个 dotPack 模拟器。 我们在之前的文章里提到: 就可编程部分来说， dotPack 是一个由 ESP32 驱动的 16x16 NeoPixel 点阵屏。 思路 如果把 dotPack 看作 16x16 个拼成正方形的彩色方块" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/scratch-dotpack-simulator/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-05-31T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-05-31T00:00:00+00:00" />
+
+<meta itemprop="name" content="Scratch 中的 dotPack 模拟器">
+<meta itemprop="description" content="打算在 Scratch 里构建一个 dotPack 模拟器。 我们在之前的文章里提到: 就可编程部分来说， dotPack 是一个由 ESP32 驱动的 16x16 NeoPixel 点阵屏。 思路 如果把 dotPack 看作 16x16 个拼成正方形的彩色方块"><meta itemprop="datePublished" content="2022-05-31T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-05-31T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1635">
+<meta itemprop="keywords" content="Scratch,MicroBlocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch 中的 dotPack 模拟器"/>
+<meta name="twitter:description" content="打算在 Scratch 里构建一个 dotPack 模拟器。 我们在之前的文章里提到: 就可编程部分来说， dotPack 是一个由 ESP32 驱动的 16x16 NeoPixel 点阵屏。 思路 如果把 dotPack 看作 16x16 个拼成正方形的彩色方块"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch 中的 dotPack 模拟器</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-05-31 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#思路">思路</a></li>
+    <li><a href="#在社区里探索">在社区里探索</a></li>
+    <li><a href="#复习-克隆-相关知识">复习 <code>克隆</code> 相关知识</a></li>
+    <li><a href="#制作项目">制作项目</a>
+      <ul>
+        <li><a href="#像素颜色列表">像素颜色列表</a></li>
+        <li><a href="#像素颜色">像素颜色</a></li>
+        <li><a href="#排列方式">排列方式</a></li>
+        <li><a href="#编程接口api">编程接口(API)</a></li>
+      </ul>
+    </li>
+    <li><a href="#一些例子">一些例子</a>
+      <ul>
+        <li><a href="#点亮对角线">点亮对角线</a></li>
+        <li><a href="#snow-crash">Snow Crash</a></li>
+      </ul>
+    </li>
+    <li><a href="#其他">其他</a>
+      <ul>
+        <li><a href="#开机画面">开机画面</a></li>
+      </ul>
+    </li>
+    <li><a href="#项目源码">项目源码</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><video width="80%" src="https://adapter.codelab.club/video/7351086f33fccd37d5e7457431a518.mp4" controls="controls"></video></p>
+<p>打算在 Scratch 里构建一个 dotPack 模拟器。</p>
+<p>我们在之前的文章里提到:</p>
+<blockquote>
+<p>就可编程部分来说， dotPack 是一个由 ESP32 驱动的 16x16 NeoPixel 点阵屏。</p>
+</blockquote>
+<h2 id="思路">思路</h2>
+<p>如果把 dotPack 看作 16x16 个拼成正方形的彩色方块，在 Scratch 模拟它好像不难。</p>
+<p>似乎只需创建一个彩色方块角色，然后复制 256 次，再将它们排列成一个正方形即可。</p>
+<h2 id="在社区里探索">在社区里探索</h2>
+<p>在开始项目之前，喜欢在 Scratch 社区淘宝，看看是不是有可以 remix 的项目，于是尝试使用 <code>pixel</code>、<code>NeoPixel</code>、<code>16x16</code>之类的关键字在 Scratch 社区里搜索一番:</p>
+<p><img src="/post/img/scratch-dotpack.png" alt=""></p>
+<p>结果找到许多有趣的东西:</p>
+<ul>
+<li><a href="https://scratch.mit.edu/projects/18224849/">ドットお絵かき コード化可 remix</a></li>
+<li><a href="https://scratch.mit.edu/projects/157676382/">Pixel(16x16)</a></li>
+<li><a href="https://scratch.mit.edu/projects/512254088/">16x16 Pixel Art (Save Codes!)</a></li>
+<li><a href="https://scratch.mit.edu/projects/84225710/">NeoPixel Base motion sensor</a></li>
+<li><a href="https://scratch.mit.edu/projects/128938707/">Launchpad LED Lightshow Maker</a></li>
+<li><a href="https://scratch.mit.edu/projects/129262018/">Microbit Animator</a></li>
+</ul>
+<h2 id="复习-克隆-相关知识">复习 <code>克隆</code> 相关知识</h2>
+<p>通过浏览以上项目，发现 <code>克隆</code> 是完成这项任务的关键策略。</p>
+<p>我在 <code>克隆</code> 上经验不丰富。曾与 CodeLab 成员在 Neverland 里讨论过 <code>克隆</code> 的一些怪癖，我们站在面向对象层面，谈论了 <code>克隆</code> 一些反直觉、不一致的地方。</p>
+<p>由于不够熟悉，我需要复习一下 <code>克隆</code> 相关知识。<a href="https://en.scratch-wiki.info/wiki">Scratch Wiki</a> 是深入学习 Scratch 相关知识的好地方。花了几分钟复习一下与<a href="https://en.scratch-wiki.info/wiki/Cloning"><code>克隆</code></a>有关的知识之后，再开始项目，就没有遇到什么障碍了。</p>
+<h2 id="制作项目">制作项目</h2>
+<h3 id="像素颜色列表">像素颜色列表</h3>
+<p>我们使用一个列表变量(<code>np-pixels</code>)来记录 256 个像素的颜色，我是从 MicroBlocks 的 NeoPixels 库里学来的技巧（MicroBlocks 的作者 John Maloney 也是 Scratch 的首席架构师）。</p>
+<p>颜色值以文本的形式存储在列表的每个 item 里。</p>
+<h3 id="像素颜色">像素颜色</h3>
+<p>大部分的代码都在 <code>pixel</code> 角色中。这个角色是所有 256 个克隆体的本体，它自身处于隐藏状态（可能是 Scratch 社区的最佳实践）。</p>
+<p><code>pixel</code> 角色有 6 种造型，分别表示六种颜色:</p>
+<ul>
+<li>black</li>
+<li>white</li>
+<li>red</li>
+<li>green</li>
+<li>blue</li>
+</ul>
+<p>如有需要，可以添加更多造型，以支持更多颜色。</p>
+<p>每个克隆体负责管理自身的颜色(面向对象风格)，它不断观察 <code>np-pixels</code> 中与自己相关的位置（每个克隆体在<code>np-pixels</code>里都有一个与之对应的 item 存储它的颜色），如果颜色值发生了变化，就立刻调整自身的颜色（切换造型）。</p>
+<p><img src="/post/img/scratch-dotpack4.png" alt=""></p>
+<hr>
+<p>我目前想不出以任意 RGB 颜色填充方块的策略，所以对每种颜色的支持是通过枚举实现的。一种可能的方向是使用画笔来实现这个项目。颜色特效也是引入更多颜色的方法，但它的数值我还没有弄清楚。如果未来有更好的方案，只需要修改存储到 <code>np-pixels</code> 里的内容即可。</p>
+<h3 id="排列方式">排列方式</h3>
+<p>为了模拟 dotPack，我们需要把 <code>pixel</code> 角色克隆 256(16x16) 次, 然后将克隆体<code>从左到右，从上到下</code>排列成一个正方形。</p>
+<p><img src="/post/img/scratch-dotpack5.png" alt=""></p>
+<p>这些工作使用<code>初始化</code>自定义积木完成的。关于这个积木，重要的一点是: 在创建时，勾选 <code>运行时不刷新屏幕</code>, 这样就能在<strong>瞬间</strong>排列好 256 个积木.</p>
+<p><img src="/post/img/scratch-dotpack2.png" alt=""></p>
+<p>根据我们采用的排列方式(<code>从左到右，从上到下</code>)，可以将 <code>np-pixels</code> 的一维坐标与 <code>set pixel x _ y _ color _</code> 的二维坐标进行转化。</p>
+<p><img src="/post/img/scratch-dotpack3.png" alt=""></p>
+<h3 id="编程接口api">编程接口(API)</h3>
+<p>dotPack 最重要的编程接口是设置像素颜色(<code>set pixel x _ y _ color _</code>)，它的具体代码已经在上边一张图片里。我们将颜色值存储在<code>np-pixels</code>列表里，每个克隆体会通过观察列表相应位置，来更新自己。</p>
+<p>其他的 API 基本都可以通过包装<code>set pixel x _ y _ color _</code>来实现，我只实现了一些简单的 API:</p>
+<ul>
+<li>set background</li>
+<li>clean</li>
+</ul>
+<p>如果你想实现更多编程接口(API)，应该不是什么难事。</p>
+<p>接下来我们展示使用这些编程接口(API)做的一些小练习。</p>
+<h2 id="一些例子">一些例子</h2>
+<h3 id="点亮对角线">点亮对角线</h3>
+<p><img src="/post/img/scratch-dotpack7.png" alt=""></p>
+<p>我之前喜欢使用这个例子来介绍如何搭配使用条件与循环: <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/ledbag/">可编程书包</a>。</p>
+<h3 id="snow-crash">Snow Crash</h3>
+<p><img src="/post/img/scratch-dotpack8.png" alt=""></p>
+<p><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/dotpack-snow-crash/">更多内容</a>。</p>
+<h2 id="其他">其他</h2>
+<h3 id="开机画面">开机画面</h3>
+<img width=600 src="/post/img/f47c5de20763bc44faf8c955893afd44.jpg" />
+<img width=600 src="/post/img/FlatPanel.jpeg" />
+<p>Alan Kay 在 1968 年，从这个 16x16 像素的早期平板显示器里，看到现代个人计算机的形态: 在像素显示器上制造图形幻觉。</p>
+<p>为了绘制 Alan Kay 制作上边这张点阵图, 我先是在 Scratch 里构造出了一个点阵悬停显示器，然后与这个悬停显示器一起工作(人机共生)，用它在点阵上辅助导航位置，再利用这些由交互获得的信息来便捷绘制像素图，而不是逐个去数像素。</p>
+<p>以下是在 Scratch 里构建点阵悬停显示器的源码，它也被视为克隆体的职责（面向对象又一次帮助了我们）:</p>
+<p><img src="/post/img/scratch-dotpack6.png" alt=""></p>
+<p>采用个人计算风格来编程真是太有趣了，几乎任何材料都会因此变得灵活与强大。</p>
+<p>个人计算社区的风格之一是 bootstrapping，“如果要造一艘大船，先造出一个竹筏，到海上去生活，之后在海上造船”。</p>
+<h2 id="项目源码">项目源码</h2>
+<p><a href="https://create.codelab.club/projects/26828/">dotPack 模拟器(在线)</a></p>
+<p><a href="/post/img/dotPack-%E6%A8%A1%E6%8B%9F%E5%99%A8.sb3">dotPack-模拟器.sb3</a></p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://dotpack.fun/">dotPack</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/dotpack-snow-crash/">在 dotPack 上制造「雪崩」的 N 种方法</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-dotpack/">MicroBlocks 编程案例: dotPack</a></li>
+<li><a href="https://en.scratch-wiki.info/wiki/Cloning">Scratch wiki Cloning</a></li>
+<li><a href="https://scratch.mit.edu/search/projects?q=16x16">Scratch search 16x16</a></li>
+<li><a href="https://scratch.mit.edu/projects/18224849/">ドットお絵かき コード化可 remix</a></li>
+<li><a href="https://scratch.mit.edu/projects/157676382/">Pixel(16x16)</a></li>
+<li><a href="https://scratch.mit.edu/projects/512254088/">16x16 Pixel Art (Save Codes!)</a></li>
+<li><a href="https://scratch.mit.edu/projects/84225710/">NeoPixel Base motion sensor</a></li>
+<li><a href="https://scratch.mit.edu/projects/128938707/">Launchpad LED Lightshow Maker</a></li>
+<li><a href="https://scratch.mit.edu/projects/129262018/">Microbit Animator</a></li>
+<li><a href="http://worrydream.com/ABriefRantOnTheFutureOfInteractionDesign/">A Brief Rant On The Future Of Interaction Design</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-05-31
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">Scratch</a>
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%97%E8%AF%8D/dadonghai/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">大东海 晚风</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/dotpack-snow-crash/">
+            <span class="next-text nav-default">在 dotPack 上制造「雪崩」的 N 种方法</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

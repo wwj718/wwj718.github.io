@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>教育信息化、信息孤岛与身份认证 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="Design programs to be connected to other programs &amp;ndash;Unix philosophy #缘起 最近接触的项目和需求中，统一身份认证的问题反复出现，花了不少功夫去了解身份认证这块相关的标准和协议。 身份认证/授权" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/educational-information-information-island-authentication/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="教育信息化、信息孤岛与身份认证" />
+<meta property="og:description" content="Design programs to be connected to other programs &ndash;Unix philosophy #缘起 最近接触的项目和需求中，统一身份认证的问题反复出现，花了不少功夫去了解身份认证这块相关的标准和协议。 身份认证/授权" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/educational-information-information-island-authentication/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-12-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-12-25T00:00:00+00:00" />
+
+<meta itemprop="name" content="教育信息化、信息孤岛与身份认证">
+<meta itemprop="description" content="Design programs to be connected to other programs &ndash;Unix philosophy #缘起 最近接触的项目和需求中，统一身份认证的问题反复出现，花了不少功夫去了解身份认证这块相关的标准和协议。 身份认证/授权"><meta itemprop="datePublished" content="2015-12-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-12-25T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2322">
+<meta itemprop="keywords" content=" 技术," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="教育信息化、信息孤岛与身份认证"/>
+<meta name="twitter:description" content="Design programs to be connected to other programs &ndash;Unix philosophy #缘起 最近接触的项目和需求中，统一身份认证的问题反复出现，花了不少功夫去了解身份认证这块相关的标准和协议。 身份认证/授权"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">教育信息化、信息孤岛与身份认证</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-12-25 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>Design programs to be connected to other programs  &ndash;Unix philosophy</p>
+</blockquote>
+<p>#缘起
+最近接触的项目和需求中，统一身份认证的问题反复出现，花了不少功夫去了解身份认证这块相关的标准和协议。</p>
+<p>身份认证/授权这部分涉及的概念真是五花八门，一度把我搞得七荤八素，相关概念包括但不限于：session，cookie，OpenID，OAuth2，CAS,JWT,SSO,Token，SAML，Shibboleth（以上这些概念并不都在同一层面）</p>
+<p>其中一些属于协议，一些属于实现，一些属于通用的概念。</p>
+<p>最近在和某高校合作的项目中，校方也痛下决心要把校园内各个系统进行打通（教育部有要求避免信息孤岛），在交流中发现，信息孤岛在国内高校中广泛存在，而我自己目前折腾的东西属于教育信息化这个领域，所以觉得相比于技术细节，理清这些问题是更有意义的。</p>
+<p>#问题描述
+我们首先来看看我们面临的问题</p>
+<p>许多高校每年采购若干教育信息化系统，再加上内部自建的，积年累月，大浪淘下之后，学校里运行着若干异构系统，他们都有一套自己的认证机制，自己的用户系统，某天学校有了新需求，需要若干系统协同合作，却发现整合他们的成本已经高于购置一套新系统的成本（包括时间成本）。</p>
+<p>于是他们用新购的系统解决眼前的业务问题，接着这个新系统风风火火地奔往下一个信息孤岛</p>
+<p>这些教育信息化系统/教务系统进校之初，往往需要先与教务相关的数据中心整合，同步用户以及其他关系，和许多工程项目一样，为了进度采用一种dirty and quick的方案。不同公司的不同系统，与学校数据中心的整合又往往不一样，于是校方整出许多数据视图和接口，应对一直只需，没精力做长期打算，这些临时接口往往是滋生bug，产生臃肿代码，引起错误和需要大量重复劳动的地方。</p>
+<p>#问题分析
+这些问题的出现，几乎是一种必然。我们知道几乎所有的系统都需要登录访问，访问是有状态的，所以各个系统需要与数据中心整合（获取用户信息），而整合过程中，由于业务的压力，人们往往倾向于一种quick的方案，dirty与否并不再考量范围，更遑论架构上的长远考虑。</p>
+<p>缺乏标准，临时方案，追赶进度，于是盐水越喝越多，越来越渴。</p>
+<p>我觉得解开这团乱码的关键是身份认证与授权，放弃临时方案，而采用一些被广泛采用而健壮灵活的开放标准。在初期架构上花些精力，一劳永逸地解决这些问题。当然由于这些设计的完备和周到，他们也允许最大非侵入式地整合既有系统，尽可能少地干预以及投入使用的系统，是认证层尽量透明。前提是校方真的有决心去推荐这件事</p>
+<p>当然，这个问题倒并不只在高校出现了，企业中也是广泛存在的。实际上只要纯在异构系统，统一身份的需求就很可能出现，由于<code>懒惰是程序员的美德</code>（这是个玩笑，程序员三大美德里的懒惰当然不是这种愚蠢的懒惰啦），dirty and quick的临时方案就层出不穷</p>
+<p>#思路
+我认为上述的这些问题，可以把它们视为分布式系统的身份认证问题。</p>
+<p>而在高校中，教务系统（数据库）往往作为认证权威，不同于OAuth解决的分布式认证问题（去中心化），高校信息化系统的身份认证问题可以被简化为集中式身份认证</p>
+<p>#标准和协议的意义
+有了标准和协议，我们就避免了不必要的争论，而将精力放到真正的问题上。</p>
+<p>比如在大括号是否换行这类问题上，你很难说谁的做法更好，所以换行的一派对待不换行的一派，一贯的做法就是手持火把以异教徒的眼光看待对方。但各执己见的结果是项目整体上的一致性很差。一旦有了标准，许多无谓的争论（而且不可能有结果）就可以避免，这在公司之间的协作上很有意义，否则谁也不愿服谁的方案，而且是任意一方的方案逻辑上都能救得一时之急。</p>
+<p>在选择标准和协议的时候，我们最好尽量选择被业界广泛使用的，这样一来，不仅易于整合进其他优秀的系统（国外许多优秀的系统都会特意说明兼容这些标准，国内这种做法还不多，但据我所知最近已经有一些教育行业的公司开始或准备这么做了）</p>
+<p>采用标准和协议的另一个好处是，许多常见的漏洞可以被避免，这些协议经过广泛的使用，大多的坑都被踩过了，后来者们不仅容易免费获得优秀的实现（诸如CAS有<a href="https://github.com/Jasig/cas">Jasig/cas</a>）。我们不必重造车轮，就能获得安全可靠的解决方案，这要比拍脑袋的临时方案健壮得多</p>
+<p>想想我自己之前踩过的坑，多数时候都可以用</p>
+<blockquote>
+<p>读书太少而想得太多来</p>
+</blockquote>
+<p>来解释</p>
+<p>同时标准和协议是一种可增量式改良的实体，由于这些协议和标准的开放性，用户在使用过程遇到的任何问题，都能被收集与反馈，最后标准和协议被不断完善。它们像生命体一样不断地成长与健壮</p>
+<p>#解决方案
+顺着身份认证的思路，具体的解决方案倒有很多可选的，诸如CAS,JWT,SAML等，这些具体的协议与解决方案就留在后续文章里来讨论啦。</p>
+<p>在下篇文章里，我们会关注耶鲁大学贡献了CAS协议（CAS是一个协议，并不限于具体语言实现），该协议在国外高校中广泛使用，Open edX就天然支持这种协议，通过该协议，我们轻松就将Open edX与教务系统整合了</p>
+<p>也正是这个经历，让我尝到了标准和协议的甜头，才决定写这一系列的文章</p>
+<p>#另外
+身份认证并不足以消除信息孤岛，但会是关键的一步</p>
+<p>在折腾Open edX的过程中，我发现RESTful API也是极其有力的工具，通过让系统对外暴露RESTful风格的接口，系统之间变得协作友好，它们如同有了生命体一般，这正是《Unix编程艺术》里建议的，考虑尽量让程序彼此之间能通信，让程序具有组合性，用清晰的接口把若干简单的模块组合成一个复杂的软件。这样是应对复杂度极好的策略</p>
+<p>系统之间的协作，如同你培育的生态球一般，各个生物既互相依存/共生又彼此独立，能量和物质顺着食物链流动，它们形成一个生态系统</p>
+<p>在协作紧密的地方，信息是流通顺畅的，系统之间分工协作，友好相处。信息孤岛就被打破了</p>
+<p>而系统之间的协作，统一的身份往往是最初需要迈出的一步</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-12-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/"> 技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/wu-ai-ji/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">无爱纪</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%8A%80%E6%9C%AF/static-file-cdn/">
+            <span class="next-text nav-default">国内静态文件CDN整理</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

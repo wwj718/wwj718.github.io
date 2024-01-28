@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译]Lisp、Smalltalk 和对称性的力量 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 原文: Lisp, Smalltalk, and the Power of Symmetry 译文 和许多黑客一样，我第一门真正爱上的编程语言是 Lisp。保罗·格雷厄姆（Paul Graham）激发了我对这种语言的" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/lisp-smalltalk-and-the-power-of-symmetry/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译]Lisp、Smalltalk 和对称性的力量" />
+<meta property="og:description" content="前言 原文: Lisp, Smalltalk, and the Power of Symmetry 译文 和许多黑客一样，我第一门真正爱上的编程语言是 Lisp。保罗·格雷厄姆（Paul Graham）激发了我对这种语言的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/lisp-smalltalk-and-the-power-of-symmetry/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-08-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-12T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译]Lisp、Smalltalk 和对称性的力量">
+<meta itemprop="description" content="前言 原文: Lisp, Smalltalk, and the Power of Symmetry 译文 和许多黑客一样，我第一门真正爱上的编程语言是 Lisp。保罗·格雷厄姆（Paul Graham）激发了我对这种语言的"><meta itemprop="datePublished" content="2022-08-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-08-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2192">
+<meta itemprop="keywords" content="Smalltalk,Metaverse," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译]Lisp、Smalltalk 和对称性的力量"/>
+<meta name="twitter:description" content="前言 原文: Lisp, Smalltalk, and the Power of Symmetry 译文 和许多黑客一样，我第一门真正爱上的编程语言是 Lisp。保罗·格雷厄姆（Paul Graham）激发了我对这种语言的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译]Lisp、Smalltalk 和对称性的力量</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-08-12 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#译文">译文</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>原文: <a href="https://insearchofsecrets.com/2014/08/04/lisp-smalltalk-and-the-power-of-symmetry/">Lisp, Smalltalk, and the Power of Symmetry</a></p>
+<h2 id="译文">译文</h2>
+<p>和许多黑客一样，我第一门真正爱上的编程语言是 Lisp。保罗·格雷厄姆（Paul Graham）激发了我对这种语言的探索，他是个特别的 Lisp 倡导者，写了<a href="http://www.paulgraham.com/lisp.html">很多关于 Lisp 的文章</a>，谈论<a href="http://www.paulgraham.com/diff.html">是什么让它与众不同</a>。那么，是什么让 Lisp 与众不同呢？尽管 Lisp 发明于 1958 年，是世界上第二古老的高级编程语言，为什么 Lisp 仍然是现存最强大、最灵活、最简洁的编程语言之一？</p>
+<p>保罗·格雷厄姆的回答是<a href="http://www.paulgraham.com/avg.html">宏(macro)</a>：</p>
+<blockquote>
+<p>许多语言都有一个叫做宏的东西。但 Lisp 的宏是独一无二的。[&hellip;]<br>
+Lisp 代码是由 Lisp 数据对象组成的。这并不是在琐碎的意义上说，源文件包含字符串，字符串是语言支持的数据类型之一。Lisp 代码，在被解析器(parser)读取后，是由你可以遍历的数据结构组成的。<br>
+如果你了解编译器(compilers)是如何工作的，实际发生的事情并不是 Lisp 有一个奇怪的语法，而是 Lisp 根本没有语法。当其他语言被解析时，你在编译器内生成的解析树中编写程序。但是这些解析树对于你的程序来说是完全可以访问的。你可以写程序来操作它们。在 Lisp 中，这些程序被称为宏。它们是编写程序的程序。</p>
+</blockquote>
+<p>保罗的论点里，隐藏着一个有趣的暗示。他说，宏使 Lisp 变得强大，因为它们允许你编写本身就能编写程序的程序。但是，这就是宏，而不是使宏成为可能的东西&ndash;Lisp 的宏不是它强大的原因，而是它的一个症状。使 Lisp 强大的不是它的宏，而是这一事实: Lisp 运行在编写它的上下文中。至始至终都是 <a href="http://en.wikipedia.org/wiki/S-expression">S-表达式</a>。这导致了一种有趣的可能性：是否有其他方法来实现类似的功能？宏是让程序编写程序的唯一方式吗？还是有其他的方式？</p>
+<p>当我在大学学习计算机语言时，我们在 Lisp 之后研究的第二种语言是 <a href="http://en.wikipedia.org/wiki/Smalltalk">Smalltalk</a>。我对 Lisp 的力量和灵活性印象深刻，所以那天我的第一个问题是：&ldquo;Smalltalk 有宏吗？&rdquo; 教授在思考了一会儿之后，回答说：&ldquo;Smalltalk 不需要宏&rdquo;。嗯？Smalltalk 不需要宏？为什么不需要？那它有什么？我花了三年时间才搞清楚。Smalltalk 不需要宏，因为它有类(class)。</p>
+<p>将面向对象的类与 Lisp 的宏相提并论似乎有些奇怪。类和类结构不是出了名的<a href="http://en.wikipedia.org/wiki/Circle-ellipse_problem">僵化</a>、<a href="http://en.wikipedia.org/wiki/Fragile_base_class">脆弱</a>，而且容易产生<a href="http://en.wikipedia.org/wiki/Spaghetti_code">意大利面条代码</a>吗？这些不都是 Lisp 宏的反面吗？</p>
+<p>当 OOP 指的是 &ldquo;我在设计这个类的层次结构时在想什么&rdquo; 时，面向对象编程(&ldquo;OOP&rdquo;)的一般风味确实如此。Java、C++、甚至 Python 等语言似乎认为 &ldquo;面向对象&rdquo; 主要意味着 &ldquo;类和继承&rdquo;。这有点像说 &ldquo;开车&rdquo; 主要意味着 &ldquo;按钮和踏板&rdquo;。大多数这些语言都忽略了一点，那就是 Smalltalk 的类系统，就像 Lisp 的宏系统一样，是语言中已经存在的力量的一个症状，而不是其原因。如果它不具备这些功能，那么自己添加这些功能并不难。</p>
+<p>如果没有 Smalltalk 的底层基础，类的继承只不过是一种代码重用的工具。在这类工具，它既不是唯一也不一定是最好的。Smalltalk <a href="http://www.smalltalk.org/articles/article_20100320_a3_Getting_The_Message.html">对象系统</a>的真正力量(包括类)，不是继承，而是反射(reflection)。正如 Lisp 宏之所以强大，是因为它们可以对任何 Lisp 代码进行操作，包括它们自己，Smalltalk 类之所以强大，是因为它们本身就是对象。Smalltalk 和 Lisp 一样，<strong>都是在其编写的上下文中运行的</strong>。<a href="http://onsmalltalk.com/domain-specific-languages-ruby-a-sign-post-on-the-road-to-smalltalk">一路往下都是对象</a>。</p>
+<p>Lisp 之所以强大，是因为所有的 Lisp 程序也是 Lisp 数据&ndash;所有可以运行的东西都可以被写成/读<code>S-表达式</code>。Lisp 中的宏只是当你归纳应用这种关系时发生的事情：它们是操作数据的代码，而数据本身就是代码。</p>
+<p>Smalltalk 之所以强大，是因为所有的 Smalltalk 数据都是程序&ndash;所有的信息都是由运行的、活生生的对象体现出来的。Smalltalk 中的类编程只是操作本身就是数据的程序&ndash;这是 Lisp 哲学的反面，但最终结果是一样的。正是它使 Smalltalk 调试器能够冻结、剖析、修改和恢复正在执行的程序。它使浏览器(browser)能够立即找到所有响应给定消息的对象，或找到给定对象的所有超类和子类，或找到给定类的每个运行实例。这就是为什么 Smalltalk 集成开发环境不仅仅是用这种语言编写的，它实际上就是这种语言。</p>
+<p>正如保罗在前头提到的，Lisp 实际上没有语法: 因为 Lisp 源代码、运行中的 Lisp 代码、Lisp 数据 表达形式相同，三者是可以互换的。程序可以改写数据，而这些数据可以作为程序运行，这些程序可以改写数据&hellip;</p>
+<p>Smalltalk 比 Lisp 更进一步：并不是说 Smalltalk 的源代码没有语法，而是 Smalltalk 没有源代码。毕竟，&ldquo;源代码&rdquo; 只是意味着 &ldquo;没有运行的程序&rdquo;，而<a href="http://onsmalltalk.com/domain-specific-languages-ruby-a-sign-post-on-the-road-to-smalltalk">没有运行</a>的 Smalltalk 程序是不存在的。因为在 Smalltalk 中，除了 &ldquo;运行的数据&rdquo;(对象)之外，别无他物，所以在 Smalltalk 中没有数据和程序的区别。数据(对象)可以编写程序(对象)，程序(对象)可以编写数据(对象)&hellip;</p>
+<p>所以 Lisp 宏并不是让程序写程序的唯一方式。一种语言要允许这样做，似乎唯一需要的是程序和数据之间普遍存在的对称性。如果一种语言允许程序和数据被视为同一事物，那么这种语言就会变得容易和无限扩展&ndash;<a href="http://onsmalltalk.com/languages-of-the-gods">一种上帝的语言</a>。事实证明，<code>S-表达式</code>并不是做到这点的唯一方法&ndash;你也可以用对象来做到这点。我想知道是否还有我们尚未尝试过的其他方法，能做到这点呢？</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-08-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          <a href="/tags/metaverse/">Metaverse</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/squeak-dotpack-simulator/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Squeak 中的 dotPack 模拟器</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/the-theory-of-democracy-revisited/">
+            <span class="next-text nav-default">民主新论</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

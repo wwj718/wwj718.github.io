@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Home Assistant 与 Yeelight彩光灯泡的通信过程分析 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="Awaken your home. 前言 Home Assistant是一个隐私优先的智慧家庭系统，支持本地化部署，甚至允许在没有断网的情况下使用。 我是Home Assistant的" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/home-assistant-yeelight/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Home Assistant 与 Yeelight彩光灯泡的通信过程分析" />
+<meta property="og:description" content="Awaken your home. 前言 Home Assistant是一个隐私优先的智慧家庭系统，支持本地化部署，甚至允许在没有断网的情况下使用。 我是Home Assistant的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/home-assistant-yeelight/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-06-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-06-12T00:00:00+00:00" />
+
+<meta itemprop="name" content="Home Assistant 与 Yeelight彩光灯泡的通信过程分析">
+<meta itemprop="description" content="Awaken your home. 前言 Home Assistant是一个隐私优先的智慧家庭系统，支持本地化部署，甚至允许在没有断网的情况下使用。 我是Home Assistant的"><meta itemprop="datePublished" content="2019-06-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-06-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2891">
+<meta itemprop="keywords" content="programming," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Home Assistant 与 Yeelight彩光灯泡的通信过程分析"/>
+<meta name="twitter:description" content="Awaken your home. 前言 Home Assistant是一个隐私优先的智慧家庭系统，支持本地化部署，甚至允许在没有断网的情况下使用。 我是Home Assistant的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Home Assistant 与 Yeelight彩光灯泡的通信过程分析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-06-12 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#本文焦点">本文焦点</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#实验环境">实验环境</a></li>
+        <li><a href="#运行-homeassistant">运行 homeassistant</a></li>
+        <li><a href="#将灯泡信息添加到configurationyaml">将灯泡信息添加到<code>configuration.yaml</code></a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#意外发现">意外发现</a></li>
+        <li><a href="#分析工具">分析工具</a></li>
+        <li><a href="#程序入口">程序入口</a></li>
+        <li><a href="#彩灯设备的发现和加载">彩灯设备的发现和加载</a></li>
+        <li><a href="#控制指令如何生效通信细节">控制指令如何生效(通信细节)</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/yeelight_ha_02482416.png" alt=""></p>
+<blockquote>
+<p>Awaken your home.</p>
+</blockquote>
+<h1 id="前言">前言</h1>
+<p><a href="https://www.home-assistant.io/">Home Assistant</a>是一个隐私优先的智慧家庭系统，支持本地化部署，甚至允许在没有断网的情况下使用。</p>
+<p>我是<a href="https://www.home-assistant.io/">Home Assistant</a>的铁杆粉，用它构建了一些好玩的东西，正打算基于它创建一些更有想象力的项目。</p>
+<p>近期基本读完了<a href="https://www.home-assistant.io/">Home Assistant</a>所有的<a href="https://www.home-assistant.io/docs/">文档</a>，喜欢它的架构设计。在架构上，<a href="https://adapter.codelab.club">codelab-adapter</a>和它有许多相似之处。</p>
+<p><a href="https://www.home-assistant.io/">Home Assistant</a>的核心源码此前也大体上读了一遍，代码写得非常漂亮，堪称<a href="https://docs.python.org/3/library/asyncio.html">Python Asyncio</a>的典范案例。</p>
+<p><a href="https://www.home-assistant.io/">Home Assistant</a>近期发布了<a href="https://www.home-assistant.io/blog/2019/06/05/release-94/">0.94</a>版本, 为1.0版本做好了准备，预计今年发布1.0版本。</p>
+<p>考虑到项目已经基本上稳定下来，API不会再有大的变动。于是我近期准备重新审视一遍<a href="https://www.home-assistant.io/">Home Assistant</a>，在源码和架构层面对其做一些解读和梳理。</p>
+<h3 id="本文焦点">本文焦点</h3>
+<p>将硬件接入<a href="https://www.home-assistant.io/">Home Assistant</a>有许多种方式。正如大多数物联网项目一样，接入一款硬件是很容易的。MQTT这类的基础协议提供了充分的自由度。</p>
+<p>但我们要知道此类系统往往会随着业务而发展，不断生长，如果没有精心设计的架构，很容易被后期的复杂度压垮。在操作系统的发展史上，太多这样的先烈了。</p>
+<p><a href="https://www.home-assistant.io/">Home Assistant</a>已经展示出其架构的高度灵活性(至今已经接入了1400+设备)，也许有望成为物联网领域的linux。</p>
+<p>往系统中硬编码接入一款硬件总是容易的，但随着系统的生长，这种生态十分容易溃败。所以本文关注<a href="https://www.home-assistant.io/">Home Assistant</a>社区是如何考虑设备接入这件事的，如何应对组件增长带来的复杂度升高。</p>
+<p>我们将分析<a href="https://www.home-assistant.io/">Home Assistant</a>接入Yeelight彩光灯泡的细节，以此为例，对系统做深入了解。</p>
+<p>本文将通过实验来跟踪通信的细节。</p>
+<h1 id="yeelight彩光灯泡">Yeelight彩光灯泡</h1>
+<p><video width=600 src="http://wwj-tmp-video2.just4fun.site/yeelight.mp4" controls="controls"></video></p>
+<p>Yeelight彩光灯泡搭载了wifi芯片。为了将其接入WiFi，你需要使用官方APP来为它配网。</p>
+<p>由于我们准备用<a href="https://www.home-assistant.io/">Home Assistant</a>控制它，所以需要在APP中做些设置，使其接受来自局域网的控制指令。</p>
+<h1 id="实验">实验</h1>
+<h3 id="实验环境">实验环境</h3>
+<ul>
+<li>MacOS 10.13.5</li>
+<li>Python 3.7.2</li>
+<li>homeassistant==0.94.2</li>
+</ul>
+<h3 id="运行-homeassistant">运行 homeassistant</h3>
+<p>我在虚拟环境里安装homeassistant，为了不与系统中的homeassistant冲突，我选择在当前的虚拟python环境下运行homeassistant: <code>python -m homeassistant</code></p>
+<h4 id="配置目录">配置目录</h4>
+<p>第一次运行，会创建配置目录</p>
+<p><code>Config directory: /Users/wuwenjie/.homeassistant</code></p>
+<p>目录内容为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">➜  ~ ls /Users/wuwenjie/.homeassistant
+</span></span><span class="line"><span class="cl">automations.yaml     customize.yaml       groups.yaml          home-assistant_v2.db secrets.yaml
+</span></span><span class="line"><span class="cl">configuration.yaml   deps                 home-assistant.log   scripts.yaml         tts
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从命名可以看出<code>configuration.yaml</code>是配置文件。</p>
+<p>值得一提的是，如果你采用<a href="https://www.home-assistant.io/hassio/installation/">hass.io</a>安装homeassistant，那么你永远不需要在命令行里进入配置目录，可以直接在网页上编辑，这对非技术用户很友好。</p>
+<p>由于防火墙的存在，在国内安装<a href="https://www.home-assistant.io/hassio/installation/">hass.io</a>非常痛苦，由于防火墙的存在，技术/科研人员的日常大多时候都是痛苦的。</p>
+<p>fuck the GFW.</p>
+<h4 id="其他依赖">其他依赖</h4>
+<p>运行<code>python -m homeassistant</code>的时候，还将安装其他依赖，一些值得留意的依赖包括<code>netdisco==2.6.0</code>.</p>
+<h3 id="将灯泡信息添加到configurationyaml">将灯泡信息添加到<code>configuration.yaml</code></h3>
+<p>重启时，发现安装了<code>yeelight==0.5.0</code>。</p>
+<p>在Yeelight APP找到Yeelight彩光灯泡的IP地址，将其配置到<code>configuration.yaml</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">yeelight</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">devices</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">192.168.31.30</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">test light</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>重启home-assistant服务，即可看到灯泡已经出现在用户面板里。控制开关和调节色温一切正常。</p>
+<p><img src="/post/img/yeelight_ha_2cbe2480.png" alt=""></p>
+<h1 id="开始分析">开始分析</h1>
+<p>在接下来的分析里，我们关注</p>
+<ul>
+<li>彩灯设备的发现和加载</li>
+<li>控制指令如何生效(通信细节)</li>
+</ul>
+<!--关注下官方如何添加新的硬件。-->
+<h3 id="意外发现">意外发现</h3>
+<p>Yeelight是home-assistant支持的<a href="https://www.home-assistant.io/components/">components</a>之一，home-assistant目前支持1400+设备。</p>
+<p>技术层面，components的代码见<a href="https://github.com/home-assistant/home-assistant/tree/dev/homeassistant/components">components</a>。在探索如何接入新的components时，意外发现<a href="https://developers.home-assistant.io/docs/en/dev_101_services.html">Integration Services</a>已经完美解决了我们前头提到的<code>home-assistant如何接入新设备</code>的问题。</p>
+<p>但我们仍然准备继续分析，深入到代码层面的细节。</p>
+<h3 id="分析工具">分析工具</h3>
+<p>我使用<a href="https://sourcegraph.com">sourcegraph</a>的<a href="https://chrome.google.com/webstore/detail/sourcegraph/dgjhfomjieaadpoljlnidmbgkdffpack?hl=zh_CN">chrome插件</a>来阅读和跟踪源码，这个工具让我们在代码森林中穿梭变得自如。</p>
+<h3 id="程序入口">程序入口</h3>
+<p>从<a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/setup.py">setup.py</a>中可以看到程序的入口点: <code>hass = homeassistant.__main__:main</code></p>
+<p>其中<a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/__main__.py#L285">ensure_config_file</a>值得关注，这个函数的指责是确保配置文件的正常。如果不存在配置文件则帮助我们创建所需的配置文件(默认),后文提及的configuration.yaml就是由它创建的，如果你对初始化的配置文件感兴趣，从它入手可能是个好主意。更多细节:</p>
+<ul>
+<li><a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/config.py#L191">async_ensure_config_exists</a></li>
+<li><a href="https://github.com/home-assistant/home-assistant/blob/0.94.2//homeassistant/config.py#L208">hass.async_add_executor_job(_write_default_config, config_dir)</a></li>
+<li><a href="https://github.com/home-assistant/home-assistant/blob/0.94.2//homeassistant/config.py#L215">hass.async_add_executor_job</a>是个很棒的通用函数。</li>
+<li><a href="https://github.com/home-assistant/home-assistant/blob/0.94.2///homeassistant/config.py#L218">_write_default_config</a></li>
+</ul>
+<p>此外，<a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/__main__.py#L311">try_to_restart</a>的机制怪有趣的，home-assistant是生产级的代码，很多细节考虑得非常周到，很有借鉴价值。</p>
+<h3 id="彩灯设备的发现和加载">彩灯设备的发现和加载</h3>
+<p>我们进入到前头提到的分析目标之一:<code>彩灯设备的发现和加载</code></p>
+<p>在<a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/components/yeelight/__init__.py">components/yeelight/<strong>init</strong>.py</a>中发现了<a href="https://developers.home-assistant.io/docs/en/dev_101_services.html">Integration Services</a>文档描述的内容:<a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/components/yeelight/__init__.py#L113">def setup(hass, config)</a>, 由此可知官方默认支持的components，与用户临时接入的组件，都遵循同一套接入机制。系统的同构性有利于健壮性和灵活性。</p>
+<p>还记得我们在<code>configuration.yaml</code>做的设置吗？</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">yeelight</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">devices</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">192.168.31.30</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">test light</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个设置是如何被源码使用的呢？在<a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/components/yeelight/__init__.py#L113">def setup(hass, config)</a>中看得很清楚:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">hass</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Set up the Yeelight bulbs.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">conf</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">DOMAIN</span><span class="p">,</span> <span class="p">{})</span>
+</span></span><span class="line"><span class="cl">    <span class="n">yeelight_data</span> <span class="o">=</span> <span class="n">hass</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">DATA_YEELIGHT</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">device_discovered</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&#34;Adding autodetected </span><span class="si">%s</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">device_type</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;device_type&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">name</span> <span class="o">=</span> <span class="s2">&#34;yeelight_</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="n">device_type</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                   <span class="n">info</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;mac&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ipaddr</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">CONF_HOST</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="n">device_config</span> <span class="o">=</span> <span class="n">DEVICE_SCHEMA</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="n">CONF_NAME</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">CONF_MODEL</span><span class="p">:</span> <span class="n">device_type</span>
+</span></span><span class="line"><span class="cl">        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">_setup_device</span><span class="p">(</span><span class="n">hass</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">ipaddr</span><span class="p">,</span> <span class="n">device_config</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">discovery</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">hass</span><span class="p">,</span> <span class="n">SERVICE_YEELIGHT</span><span class="p">,</span> <span class="n">device_discovered</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">yeelight_data</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">device</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">track_time_interval</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">hass</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">CONF_SCAN_INTERVAL</span><span class="p">,</span> <span class="n">SCAN_INTERVAL</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">DOMAIN</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">ipaddr</span><span class="p">,</span> <span class="n">device_config</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="n">CONF_DEVICES</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&#34;Adding configured </span><span class="si">%s</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">device_config</span><span class="p">[</span><span class="n">CONF_NAME</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="n">_setup_device</span><span class="p">(</span><span class="n">hass</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">ipaddr</span><span class="p">,</span> <span class="n">device_config</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kc">True</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>彩灯设备的发现和加载机制，这段代码已经很清晰展示了。</p>
+<p><code>def setup(hass, config)</code>中的细节(如track_time_interval)值得深入学习，留待之后有空进一步追踪。</p>
+<h3 id="控制指令如何生效通信细节">控制指令如何生效(通信细节)</h3>
+<p>为了理解控制指令如何生效，我们可以跟踪用户操作过程中发生的交互。</p>
+<p>从控制台可以看出开关等过程中并不发生http(ajax)交互，于是可以断定是使用websocket交互。</p>
+<p>通过观察过程中发生的交互，我们可以使用其他客户端来模拟。下边使用Pharo来替代网页，与Yeelight进行交互。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="nv">webSocket</span> <span class="o">:=</span> <span class="nc">ZnWebSocket</span> <span class="nf">to:</span> <span class="err">&lt;</span><span class="nc">URI</span><span class="nf">&gt;</span>.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[ <span class="nv">webSocket</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">sendMessage:</span> <span class="s">&#39;{&#34;type&#34;:&#34;auth&#34;,&#34;access_token&#34;:&#34;&lt;access_token&gt;&#34;}&#39;</span><span class="p">.</span>] <span class="nf">value</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[ (<span class="nv">webSocket</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">readMessage</span>) <span class="nf">logCr</span> ]  <span class="nf">schedule</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[ <span class="nv">webSocket</span>
+</span></span><span class="line"><span class="cl">   <span class="nf">sendMessage:</span> <span class="s">&#39;{&#34;type&#34;:&#34;call_service&#34;,&#34;domain&#34;:&#34;light&#34;,&#34;service&#34;:&#34;turn_on&#34;,&#34;service_data&#34;:{&#34;entity_id&#34;:&#34;light.test_light&#34;},&#34;id&#34;:27}&#39;</span><span class="p">.</span>] <span class="nf">value</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>让我们进一步跟踪websocket消息是如何生效的。</p>
+<p>追踪代码可以发现<a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/components/websocket_api/__init__.py">websocket_api</a>竟是作为components在homeassistant中运行！homeassistant的同构性太惊人了，我非常喜欢这种高度一致的设计。</p>
+<p>我们前头发送了开灯命令:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;call_service&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;domain&#34;</span><span class="p">:</span> <span class="s2">&#34;light&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;service&#34;</span><span class="p">:</span> <span class="s2">&#34;turn_on&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;service_data&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;entity_id&#34;</span><span class="p">:</span> <span class="s2">&#34;light.test_light&#34;</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="mi">27</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>handle这份命令的<a href="https://github.com/home-assistant/home-assistant/blob/0.94.2/homeassistant/components/websocket_api/commands.py#L102">代码</a>为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nd">@decorators</span><span class="o">.</span><span class="n">async_response</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@decorators</span><span class="o">.</span><span class="n">websocket_command</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vol</span><span class="o">.</span><span class="n">Required</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">):</span> <span class="s1">&#39;call_service&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vol</span><span class="o">.</span><span class="n">Required</span><span class="p">(</span><span class="s1">&#39;domain&#39;</span><span class="p">):</span> <span class="nb">str</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vol</span><span class="o">.</span><span class="n">Required</span><span class="p">(</span><span class="s1">&#39;service&#39;</span><span class="p">):</span> <span class="nb">str</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vol</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="s1">&#39;service_data&#39;</span><span class="p">):</span> <span class="nb">dict</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">handle_call_service</span><span class="p">(</span><span class="n">hass</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Handle call service command.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Async friendly.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">blocking</span> <span class="o">=</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s1">&#39;domain&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">HASS_DOMAIN</span> <span class="ow">and</span>
+</span></span><span class="line"><span class="cl">            <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;service&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;restart&#39;</span><span class="p">,</span> <span class="s1">&#39;stop&#39;</span><span class="p">]):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">blocking</span> <span class="o">=</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">await</span> <span class="n">hass</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">async_call</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;domain&#39;</span><span class="p">],</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;service&#39;</span><span class="p">],</span> <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;service_data&#39;</span><span class="p">),</span> <span class="n">blocking</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">connection</span><span class="o">.</span><span class="n">context</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">connection</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">result_message</span><span class="p">(</span><span class="n">msg</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="n">ServiceNotFound</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">domain</span> <span class="o">==</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;domain&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">err</span><span class="o">.</span><span class="n">service</span> <span class="o">==</span> <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;service&#39;</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">connection</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">error_message</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">const</span><span class="o">.</span><span class="n">ERR_NOT_FOUND</span><span class="p">,</span> <span class="s1">&#39;Service not found.&#39;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">connection</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">error_message</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">const</span><span class="o">.</span><span class="n">ERR_HOME_ASSISTANT_ERROR</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="n">HomeAssistantError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">connection</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">connection</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">error_message</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">const</span><span class="o">.</span><span class="n">ERR_HOME_ASSISTANT_ERROR</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
+</span></span><span class="line"><span class="cl">        <span class="n">connection</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">connection</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">messages</span><span class="o">.</span><span class="n">error_message</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">const</span><span class="o">.</span><span class="n">ERR_UNKNOWN_ERROR</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>至此我们弄清楚了本文感兴趣的所有问题。</p>
+<h1 id="todo">todo</h1>
+<ul>
+<li>对多个组件的并行机制做了解</li>
+</ul>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://www.home-assistant.io/">Home Assistant</a></li>
+<li><a href="https://esphome.io">esphome</a></li>
+<li><a href="/scratch3-smart-home.html">积木化编程与智能家居</a></li>
+<li><a href="https://www.home-assistant.io/docs/">home-assistant user docs</a></li>
+<li><a href="https://developers.home-assistant.io/">home-assistant developers</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-06-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/programming/">programming</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/home-assistant-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Home Assistant 折腾笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/from-pyautogui-to-automagica/">
+            <span class="next-text nav-default">让智能技术服务于日常工作: 从PyAutoGUI到automagica</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

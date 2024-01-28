@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>论坛机器人的技术实现 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 @张俊同学有天晚上邀我写一期文章，介绍论坛机器人的技术实现。登时诚惶诚恐，群里大神云集，我此前写的这个粗陋的机器人实在难登大雅之堂。考虑" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/paperweekly-forum-bot/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="论坛机器人的技术实现" />
+<meta property="og:description" content="前言 @张俊同学有天晚上邀我写一期文章，介绍论坛机器人的技术实现。登时诚惶诚恐，群里大神云集，我此前写的这个粗陋的机器人实在难登大雅之堂。考虑" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/paperweekly-forum-bot/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-11-05T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-11-05T00:00:00+00:00" />
+
+<meta itemprop="name" content="论坛机器人的技术实现">
+<meta itemprop="description" content="前言 @张俊同学有天晚上邀我写一期文章，介绍论坛机器人的技术实现。登时诚惶诚恐，群里大神云集，我此前写的这个粗陋的机器人实在难登大雅之堂。考虑"><meta itemprop="datePublished" content="2016-11-05T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2016-11-05T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2907">
+<meta itemprop="keywords" content="code," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="论坛机器人的技术实现"/>
+<meta name="twitter:description" content="前言 @张俊同学有天晚上邀我写一期文章，介绍论坛机器人的技术实现。登时诚惶诚恐，群里大神云集，我此前写的这个粗陋的机器人实在难登大雅之堂。考虑"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">论坛机器人的技术实现</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-11-05 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#微信群与paperweekly论坛的双向通信">微信群与paperweekly论坛的双向通信</a>
+      <ul>
+        <li><a href="#思路与实现">思路与实现</a></li>
+      </ul>
+    </li>
+    <li><a href="#群消息转发">群消息转发</a></li>
+    <li><a href="#问题检索">问题检索</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="https://raw.githubusercontent.com/wwj718/gif_bed/master/paperweekly_all.jpg" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>@张俊同学有天晚上邀我写一期文章，介绍论坛机器人的技术实现。登时诚惶诚恐，群里大神云集，我此前写的这个粗陋的机器人实在难登大雅之堂。考虑到机器人还在群里头用，就献丑来简单介绍下技术层面的实现，方便大家日后改进它 ：）</p>
+<p>本文侧重谈论整体的设计和实现，至于细节，大家可以看<a href="https://github.com/wwj718/paperweekly_forum">源码</a>和文档(文档在doc目录下)  ：）</p>
+<h1 id="功能">功能</h1>
+<p>论坛机器人目前实现了三个功能：</p>
+<ol>
+<li>微信群与<a href="http://paperweekly.club">paperweekly论坛</a>的双向通信(发帖/回复)</li>
+<li>paperweekly1群和2群的消息转发（当前只支持文本和表情）
+<ul>
+<li>更多功能(图片/链接/跨群@)在todo list中</li>
+</ul>
+</li>
+<li>问题检索
+<ul>
+<li>支持中文提问</li>
+</ul>
+</li>
+</ol>
+<p>以上三个功能按实现的先后排序。下边分别简述这三个功能的实现</p>
+<h2 id="微信群与paperweekly论坛的双向通信">微信群与paperweekly论坛的双向通信</h2>
+<p>先贴上实际使用的截图：</p>
+<p><img src="/post/img/paperweekly_bbsc5fb270e.png" alt=""></p>
+<p>这个功能是最初的需求，@张俊同学觉得群聊消息归档不便，不利于深入讨论问题。为了更加高效的分类和管理大家讨论的精华（QA对），想做个bot，与外部论坛打通，便于归档优质的讨论内容。大家群聊的时候只要按照特定格式发言，机器人就能将信息转发到论坛中，用论坛来保存这些讨论信息</p>
+<p>关于最初我们试图解决的问题，@张俊同学在<a href="http://mp.weixin.qq.com/s?__biz=MzIwMTc4ODE0Mw==&amp;mid=2247483940&amp;idx=1&amp;sn=554573482078e34e8909eeaa4030adec&amp;chksm=96e9dda4a19e54b2f518759b214bd503c245991c40a3315a6daa3bb62aa7a455f54d62bdf050&amp;scene=4#wechat_redirect">PaperWeekly十期总结</a>的Issue 2里写的很详细，对项目背景有兴趣的同学可以参考</p>
+<p>最初的需求描述如下（来自@张俊）:</p>
+<p><img src="/post/img/paperweeklyae5df2dd.png" alt=""></p>
+<p>我觉得这个想法很有趣，决定一试。用了一个晚上实现了微信与论坛的通信机制（大半时间在熟悉Misago）。次日早起，调试完成，后来也没空去重构代码，<a href="https://github.com/wwj718/paperweekly_forum/blob/master/wechat_bot/paperweeklybot.py">这部分代码</a>很丑陋（quick and dirty），欢迎有兴趣的小伙伴帮忙重构</p>
+<h3 id="思路与实现">思路与实现</h3>
+<p>微信群与paperweekly论坛双向通信问题，实际上是个消息转发问题。消息无非两种流向:</p>
+<ul>
+<li>来自群聊的消息发往论坛</li>
+<li>来自论坛的讨论发往微信群</li>
+</ul>
+<p>消息的流向可以从这张图里看出:（这张图也描述了项目的结构和数据流）</p>
+<p><img src="https://raw.githubusercontent.com/wwj718/gif_bed/master/paperweekly_architecture.png" alt=""></p>
+<p>我们先来看看从微信群发往论坛的消息。</p>
+<p>当微信群的讨论（成员的发言）匹配预先设定的模式时，将触发机器人特定行为，诸如往论坛发帖或回答问题。（这实际是CLI风格，如果你熟悉*nix，会觉得很亲切），所以机器人并没有处理自然语言，更多的是正则匹配，哈哈这有点小尴尬，如@张俊所言</p>
+<blockquote>
+<p>我们整天都在用机器学习，也都想通过人工智能来改变这个世界，来改变我们的生活，很多时候模型和工具都有，但缺少数据和需求，这次有了数据和需求，我们却无能为力了，感觉有一点点小讽刺</p>
+</blockquote>
+<p>机器人士如何把消息发往论坛的呢。我hack了Misago（论坛所用的框架），使其对外提供RESTful API，允许使用http请求来做常见操作（发帖/回复之类）</p>
+<p>以发帖为例，我们跟着消息走，看到的是这样一个流程：微信群里某些消息匹配固定模式，机器人被激活，进而携带着token往论坛发送特定http请求，消息作为请求参数。于是消息从微信群流到了论坛</p>
+<p>接着我们来看看论坛发往微信群的消息。在论坛这块，我hack了源码里的发帖函数，使其具有webhook output功能，你很可能已经用过github的webhook output。当论坛产生帖子时，将对外发起一个web请求（output），外部系统收到请求便知道事件的发生，同时也能获取事件的细节（请求参数），如此一来这个钩子（hook）就把两个异构系统勾连起来。</p>
+<p>webhook是我偏好的异构系统间通信的解决方案，灵活性高，耦合度低。</p>
+<p>我将论坛的web请求发往一个消息服务（我选择kinto，至于原因我在开发文档里也有描述），而在机器人这边，会不断向消息服务轮询。这实际上是经典的发布/订阅模型（至于为何不采用redis和rabbitmq的原因我在开发文档里也有说明）。</p>
+<p>使用发布订阅模型考虑的主要是扩展性，我手头有nlp相关的 QQ群，当时觉得paperweekly的讨论内容很棒，也许其他nlp小组也会感兴趣，使用发布订阅模型，我只要在任何group里（QQ/wechat/telegram/whatapp）放上机器人，就可以订阅paperweekly的动态，我这边做了两个具体实现，其一是在微信群中订阅消息，源码见<a href="https://github.com/wwj718/paperweekly_forum/blob/master/wechat_bot/paperweeklybot.py">paperweeklybot.py</a>，其二是QQ群中订阅消息：源码见<a href="https://github.com/wwj718/SmartQQBot">SmartQQBot</a></p>
+<p>至于论坛的选型（最终选择了Misago），大家在群里讨论的结果倾向选择基于python的论坛框架。因为大家对python更为熟悉，方便维护</p>
+<h2 id="群消息转发">群消息转发</h2>
+<p><img src="/post/img/group2ca9e5a54.png" alt=""></p>
+<p>关于这个需求的背景，引述@张俊的说明（<a href="http://mp.weixin.qq.com/s?__biz=MzIwMTc4ODE0Mw==&amp;mid=2247483940&amp;idx=1&amp;sn=554573482078e34e8909eeaa4030adec&amp;chksm=96e9dda4a19e54b2f518759b214bd503c245991c40a3315a6daa3bb62aa7a455f54d62bdf050&amp;scene=4#wechat_redirect">PaperWeekly十期总结</a>）：</p>
+<blockquote>
+<p>一个群很快就到了500人，出现了一个棘手的问题，第二个群的人如果太少，几乎没有讨论意义，所以就想用什么办法可以打通两个群，让两个群的童鞋在同一时空内进行交流</p>
+</blockquote>
+<p>@碱馒头同学用了一个中午时间写了群消息转发机器人，我觉得很妙，功能干净利落、十分实用。后来我们觉得两个机器人可以合并成一个，本来计划由馒头兄来实现这块，后来因为我的微信机器人框架和馒头兄不同（我偏好<a href="https://github.com/littlecodersh/ItChat">itchat</a>），我就自己用itchat实现了这块</p>
+<p>这部分的实现比较简单，机器人同时在两个群里，当机器人接收到A群消息时，立马转发到B群。至于机器人如何得到群消息，就是微信机器人框架（itchat）做的事了，大家可以自行读文档</p>
+<p>目前只转发文本和表情，下一步准备支持图片/链接分享和跨群@</p>
+<h2 id="问题检索">问题检索</h2>
+<p><img src="/post/img/qa_bot2af8f456.png" alt=""></p>
+<p>国庆去白洋淀玩，路上，@张俊同学提到一个有趣的想法：</p>
+<blockquote>
+<p>有人提问之后，能否直接从quora或者知乎检索相应的答案</p>
+</blockquote>
+<p>我想到之前玩过的一个叫做<a href="https://github.com/gleitz/howdoi">howdoi</a>的项目，于是以此为原型给bot添加了<code>问题检索</code>的功能,源码见<a href="https://github.com/wwj718/paperweekly_forum/blob/master/wechat_bot/qa_bot.py">qa_bot.py</a></p>
+<p>目前用户可以在微信群向机器人提问，它会返回stackoverflow里最佳的答案</p>
+<p>原理很简单，howdoi的源码很短，大体思路是利用google的site特性，在指定的站点搜索问题（默认是stackoverflow），得到相关连接，然后打开连接，用pyquery提取内容，返回干净的答案给用户</p>
+<p>从howdoi的原理我们可以看出：实际上<code>问题搜索</code>是利用了google强大的搜索能力，同时我们看到，这是一个易于扩展的框架，只要改变site对应的网址，理论上可以检索任何网址。最初的需求里提到的知乎和quora当然没有问题，剩下的工作只剩对答案做html清洗。惭愧的是我近来挖的坑太多，业余时间被分散在各个坑里，这个坑暂时还没填，等待小伙伴加入</p>
+<p>因为howdoi不支持中文（用中文从stackoverflow里基本搜不出有价值的东西），后来我们添加了一个翻译层，先做翻译，然后再检索，这样一来，就可以直接在微信群里用中文向机器人提问</p>
+<p>于是你就看到了上边一张图片里的问答</p>
+<h1 id="下一步">下一步</h1>
+<p>接下来除了填完上文提到的坑（todolist）</p>
+<p>还准备先把群消息存下，诸如（groupname，username，content，time），然后pandas做些简单统计，可做的事包括：</p>
+<ul>
+<li>添加一些小彩蛋，诸如@机器人可以返回该用户的历史参与情况</li>
+<li>统计得出年度热心群友（举个栗子：）,莫当真)</li>
+</ul>
+<p>进一步，可以用bokeh作可视化展示</p>
+<p>当然也可以把语料开放给群成员，供大家使用nlp来做一步的分析和挖掘，诸如挖出</p>
+<ul>
+<li>近期焦点问题</li>
+<li>冷场话题排行版</li>
+</ul>
+<p>或者用来训练一只paperweekly风格的机器人 ：）</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-11-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/code/">code</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B7%A5%E5%85%B7/from-finder-to-ranger/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">从Finder迁往ranger</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%95%B0%E6%8D%AE/apartment-finding-bot/">
+            <span class="next-text nav-default">写一个租房机器人</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>搭建私有 GitLab 代码托管服务器 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="最近正使用docker给公司内部搭建 GitLab 代码托管服务器 #Gitlab 按照维基百科的说法 GitLab实现了一个自托管的Git项目仓库，可通过Web界面进行访" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/gitlab-install/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="搭建私有 GitLab 代码托管服务器" />
+<meta property="og:description" content="最近正使用docker给公司内部搭建 GitLab 代码托管服务器 #Gitlab 按照维基百科的说法 GitLab实现了一个自托管的Git项目仓库，可通过Web界面进行访" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/gitlab-install/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-07-28T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-07-28T00:00:00+00:00" />
+
+<meta itemprop="name" content="搭建私有 GitLab 代码托管服务器">
+<meta itemprop="description" content="最近正使用docker给公司内部搭建 GitLab 代码托管服务器 #Gitlab 按照维基百科的说法 GitLab实现了一个自托管的Git项目仓库，可通过Web界面进行访"><meta itemprop="datePublished" content="2015-07-28T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-07-28T00:00:00+00:00" />
+<meta itemprop="wordCount" content="625">
+<meta itemprop="keywords" content="技术," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="搭建私有 GitLab 代码托管服务器"/>
+<meta name="twitter:description" content="最近正使用docker给公司内部搭建 GitLab 代码托管服务器 #Gitlab 按照维基百科的说法 GitLab实现了一个自托管的Git项目仓库，可通过Web界面进行访"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">搭建私有 GitLab 代码托管服务器</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-07-28 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>最近正使用docker给公司内部搭建 GitLab 代码托管服务器</p>
+<p>#Gitlab
+按照维基百科的说法</p>
+<blockquote>
+<p>GitLab实现了一个自托管的Git项目仓库，可通过Web界面进行访问公开的或者私人项目。<br>
+它拥有与GitHub类似的功能，能够浏览源代码，管理缺陷和注释。可以管理团队对仓库的访问，它非常易于浏览提交过的版本并提供一个文件历史库。团队成员可以利用内置的简单聊天程序（Wall）进行交流。它还提供一个代码片段收集功能可以轻松实现代码复用，便于日后有需要的时候进行查找。</p>
+</blockquote>
+<p>#install docker gitlab</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1">#安装docker（国内）</span>
+</span></span><span class="line"><span class="cl">curl -sSL https://get.daocloud.io/docker <span class="p">|</span> sh
+</span></span><span class="line"><span class="cl">sudo pip install docker-compose
+</span></span><span class="line"><span class="cl">wget https://raw.githubusercontent.com/sameersbn/docker-gitlab/master/docker-compose.yml
+</span></span><span class="line"><span class="cl"><span class="c1">#vim docker-compose.yml 可以自己更改参数，所有可选参数在这里：https://github.com/sameersbn/docker-gitlab#available-configuration-parameters</span>
+</span></span><span class="line"><span class="cl">sudo docker-compose up
+</span></span><span class="line"><span class="cl"><span class="c1">#之后可以把GITLAB_PORT，用ngrok映射到公网。这样不在同个局域网内也可以访问了</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###一些值得注意的参数</p>
+<ul>
+<li>GITLAB_TIMEZONE = &ldquo;Asia/Shanghai&rdquo;</li>
+<li>GITLAB_HOST</li>
+<li>GITLAB_PORT</li>
+<li>GITLAB_ROOT_PASSWORD,默认是5iveL!fe</li>
+<li>GITLAB_BACKUP_DIR，默认是<code>/home/git/data/backups</code></li>
+<li>GITLAB_BACKUPS,备份周期，可选disable, daily, weekly or monthly</li>
+</ul>
+<p>#git学习资料
+以下列出一些我个人觉得比较好的学习资料</p>
+<p>###入门参考</p>
+<ul>
+<li><a href="https://github.com/Mark24Code/15minGit/blob/master/15minGit.md">15分钟学会使用Git</a></li>
+<li><a href="http://rogerdudler.github.io/git-guide/index.zh.html">git - 简明指南</a></li>
+<li><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">Git教程 廖雪峰</a></li>
+<li><a href="http://backlogtool.com/git-guide/cn/intro/intro1_1.html">猴子都能懂的GIT入门</a></li>
+<li><a href="http://zhengkun.info/2014/10/09/git_usage.html">Git 常用命令用法：程序员的场景</a></li>
+</ul>
+<p>###权威参考</p>
+<ul>
+<li><a href="https://git-scm.com/book/zh/v1">Pro Git</a></li>
+</ul>
+<p>#参考</p>
+<ul>
+<li><a href="https://github.com/sameersbn/docker-gitlab#installation">github docker-gitlab</a></li>
+<li><a href="http://www.damagehead.com/docker-gitlab/">www.damagehead.com docker-gitlab</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-07-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/discourse-install/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">搭建公司内部论坛discourse</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/edx/opensource-community-prisoner-dilemma-and-others/">
+            <span class="next-text nav-default">开源、社区、囚徒困境及其他</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

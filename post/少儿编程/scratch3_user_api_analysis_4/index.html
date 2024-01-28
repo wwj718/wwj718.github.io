@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Scratch3技术分析之User API(第4篇) - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="我们关心以下User API: 注册 登陆 验证邮件 用户消息 注册 1 2 username: api_test2 password: api_test2llk 第1步 GET https://scratch.mit.edu/accounts/check_username/api_test2/ 返回: [{&amp;quot;username&amp;quot;: &amp;quot;api_test2&amp;quot;, &amp;quot;msg&amp;quot;: &amp;quot;valid username&amp;quot;}] 第2步 没有数据交互 第3步 接收来自 Scratch 团队的更新通知可勾" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_user_api_analysis_4/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Scratch3技术分析之User API(第4篇)" />
+<meta property="og:description" content="我们关心以下User API: 注册 登陆 验证邮件 用户消息 注册 1 2 username: api_test2 password: api_test2llk 第1步 GET https://scratch.mit.edu/accounts/check_username/api_test2/ 返回: [{&quot;username&quot;: &quot;api_test2&quot;, &quot;msg&quot;: &quot;valid username&quot;}] 第2步 没有数据交互 第3步 接收来自 Scratch 团队的更新通知可勾" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_user_api_analysis_4/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-01-15T15:00:00+00:00" />
+<meta property="article:modified_time" content="2019-01-15T15:00:00+00:00" />
+
+<meta itemprop="name" content="Scratch3技术分析之User API(第4篇)">
+<meta itemprop="description" content="我们关心以下User API: 注册 登陆 验证邮件 用户消息 注册 1 2 username: api_test2 password: api_test2llk 第1步 GET https://scratch.mit.edu/accounts/check_username/api_test2/ 返回: [{&quot;username&quot;: &quot;api_test2&quot;, &quot;msg&quot;: &quot;valid username&quot;}] 第2步 没有数据交互 第3步 接收来自 Scratch 团队的更新通知可勾"><meta itemprop="datePublished" content="2019-01-15T15:00:00+00:00" />
+<meta itemprop="dateModified" content="2019-01-15T15:00:00+00:00" />
+<meta itemprop="wordCount" content="804">
+<meta itemprop="keywords" content="scratch," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Scratch3技术分析之User API(第4篇)"/>
+<meta name="twitter:description" content="我们关心以下User API: 注册 登陆 验证邮件 用户消息 注册 1 2 username: api_test2 password: api_test2llk 第1步 GET https://scratch.mit.edu/accounts/check_username/api_test2/ 返回: [{&quot;username&quot;: &quot;api_test2&quot;, &quot;msg&quot;: &quot;valid username&quot;}] 第2步 没有数据交互 第3步 接收来自 Scratch 团队的更新通知可勾"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Scratch3技术分析之User API(第4篇)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-01-15 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#第1步">第1步</a></li>
+        <li><a href="#第2步">第2步</a></li>
+        <li><a href="#第3步">第3步</a></li>
+        <li><a href="#第4步">第4步</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#消息详情">消息详情</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/scratch-api_2a5ba63a.png" alt=""></p>
+<p>我们关心以下User API:</p>
+<ul>
+<li>注册</li>
+<li>登陆</li>
+<li>验证邮件</li>
+<li>用户消息</li>
+</ul>
+<h1 id="注册">注册</h1>
+<p><img src="/post/img/scratch-api_a0dab332.png" alt=""></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">username: api_test2
+</span></span><span class="line"><span class="cl">password: api_test2llk
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="第1步">第1步</h3>
+<p><code>GET https://scratch.mit.edu/accounts/check_username/api_test2/</code></p>
+<p>返回:  <code>[{&quot;username&quot;: &quot;api_test2&quot;, &quot;msg&quot;: &quot;valid username&quot;}]</code></p>
+<h3 id="第2步">第2步</h3>
+<p>没有数据交互</p>
+<h3 id="第3步">第3步</h3>
+<p><code>接收来自 Scratch 团队的更新通知</code>可勾选。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">GET https://scratch.mit.edu/accounts/check_email/?email=wuwenjie718%40gmail.com
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>返回<code>[{&quot;msg&quot;: &quot;valid email&quot;, &quot;email&quot;: &quot;wuwenjie718@gmail.com&quot;}]</code></p>
+<h3 id="第4步">第4步</h3>
+<p><code>POST  https://scratch.mit.edu/accounts/register_new_user/</code></p>
+<p>以Form Data提交</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">username=api_test2&amp;password=api_test2llk&amp;birth_month=1&amp;birth_year=2001&amp;gender=male&amp;country=China&amp;email=wuwenjie718%40gmail.com&amp;subscribe=true&amp;is_robot=false&amp;csrfmiddlewaretoken=f33VDWVgfOhFVK3nwDK4hNEDVFmjHOO3
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中csrfmiddlewaretoken是通过<code>GET https://scratch.mit.edu/csrf_token/</code>请求得到(set-cookie)</p>
+<h1 id="验证邮件">验证邮件</h1>
+<p><img src="/post/img/scratch-emil_073b6139.png" alt=""></p>
+<p>邮件验证链接为:</p>
+<p><code>https://scratch.mit.edu/accounts/email_verify/WzQwNDQ2ODAxLCJ3dXdlbmppZTcxOEBnbWFpbC5jb20iLHRydWVd:1gjHzZ:N5Rkcd9rnux1qFAVQtExCFV06gw/?isRegistration=true</code></p>
+<p>验证完成之后:</p>
+<p><img src="/post/img/scratch-emial_f6a80289.png" alt=""></p>
+<p>Scratch的易用性做得非常好。整个产品逻辑很清晰。点击<code>ok,let's go</code> 则进入<code>https://scratch.mit.edu/</code>社区。</p>
+<p>验证完邮件后，我们还会收到一封邮件:</p>
+<p><img src="/post/img/scratch-api_88550923.png" alt=""></p>
+<h1 id="登陆">登陆</h1>
+<p><code>POST https://scratch.mit.edu/accounts/login/</code></p>
+<p>请求的json数据为:<code>{&quot;username&quot;:&quot;api_test2&quot;,&quot;password&quot;:&quot;api_test2llk&quot;,&quot;useMessages&quot;:true}</code></p>
+<p>后端返回: <code>[{&quot;username&quot;: &quot;api_test2&quot;, &quot;num_tries&quot;: 1, &quot;success&quot;: 1, &quot;msg&quot;: &quot;&quot;, &quot;messages&quot;: [], &quot;id&quot;: 40446801}]</code></p>
+<p>登陆之后会立刻请求<code>GET https://scratch.mit.edu/session/</code></p>
+<p>返回:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;user&#34;</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">40446801</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;banned&#34;</span><span class="o">:</span>  <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;username&#34;</span><span class="o">:</span> <span class="s2">&#34;api_test2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;token&#34;</span><span class="o">:</span> <span class="s2">&#34;12b89f5b950549ef927c2df5f5ee6fa3:u1PE_y4qIYis1GA2VY_D-RWWndw&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;thumbnailUrl&#34;</span><span class="o">:</span> <span class="s2">&#34;//cdn2.scratch.mit.edu/get_image/user/default_32x32.png&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;dateJoined&#34;</span><span class="o">:</span> <span class="s2">&#34;2019-01-15T06:14:28&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;email&#34;</span><span class="o">:</span> <span class="s2">&#34;wuwenjie718@gmail.com&#34;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;permissions&#34;</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;admin&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;scratcher&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;new_scratcher&#34;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;social&#34;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;educator&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;educator_invitee&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;student&#34;</span><span class="o">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;flags&#34;</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;must_reset_password&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;must_complete_registration&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;has_outstanding_email_confirmation&#34;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;show_welcome&#34;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;confirm_email_banner&#34;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;unsupported_browser_banner&#34;</span><span class="o">:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里包含了更为全面的用户画像信息。</p>
+<p>如果登陆失败，则返回403错误:</p>
+<p><code>[{&quot;username&quot;: &quot;api_test2&quot;, &quot;num_tries&quot;: 1, &quot;success&quot;: 0, &quot;msg&quot;: &quot;\u8d26\u53f7\u6216\u5bc6\u7801\u9519\u8bef\u3002&quot;, &quot;messages&quot;: [], &quot;id&quot;: null}]</code></p>
+<h1 id="用户消息">用户消息</h1>
+<p>Scratch的新用户引导是做得非常好的。</p>
+<p><img src="/post/img/scratch-api_5af8ba54.png" alt=""></p>
+<p><code>欢迎来到Scratch!</code>标签栏给出了新用户入门引导链接。</p>
+<p>新用户会收到一条消息：<code>GET https://api.scratch.mit.edu/users/api_test2/messages/count</code></p>
+<p>后台返回: <code>{&quot;count&quot;:1}</code></p>
+<p>消息接口目前是定时轮询。</p>
+<h3 id="消息详情">消息详情</h3>
+<p><code>GET https://api.scratch.mit.edu/users/api_test2/messages?limit=40&amp;offset=0</code></p>
+<p>后台返回:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[{&#34;id&#34;:20423966,&#34;datetime_created&#34;:&#34;2019-01-15T06:14:28.000Z&#34;,&#34;actor_username&#34;:&#34;api_test2&#34;,&#34;actor_id&#34;:40446801,&#34;type&#34;:&#34;userjoin&#34;}]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>目前我们的消息还很少，不好分析，之后我们再来专门分析这部分。</p>
+<h1 id="用户相关的其他api">用户相关的其他API</h1>
+<p>由于个人中心之类的页面，Scratch团队还没有迁移到新版的前端中，所以我们暂不分析。为了追求接口稳定性，我们待官方完成这部分工作后，再做分析。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-01-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_community_analysis_5/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Scratch3技术分析之社区 API(第5篇)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_project_homepage_analysis_3/">
+            <span class="next-text nav-default">Scratch3技术分析之项目主页API(第3篇)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

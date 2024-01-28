@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>使用 Traits 复用行为 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="Traits 是什么 Traits 是面向对象编程中使用的概念，它表示一组用于扩展类的功能的方法 &amp;ndash; wikipedia Trait Traits 最初在 Smalltalk 里被发明出来，后来有不少编程语言都实现了它: Rust Traits Scala Traits Fortress" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/traits-composable-units-of-behaviour/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="使用 Traits 复用行为" />
+<meta property="og:description" content="Traits 是什么 Traits 是面向对象编程中使用的概念，它表示一组用于扩展类的功能的方法 &ndash; wikipedia Trait Traits 最初在 Smalltalk 里被发明出来，后来有不少编程语言都实现了它: Rust Traits Scala Traits Fortress" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/traits-composable-units-of-behaviour/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-08-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-26T00:00:00+00:00" />
+
+<meta itemprop="name" content="使用 Traits 复用行为">
+<meta itemprop="description" content="Traits 是什么 Traits 是面向对象编程中使用的概念，它表示一组用于扩展类的功能的方法 &ndash; wikipedia Trait Traits 最初在 Smalltalk 里被发明出来，后来有不少编程语言都实现了它: Rust Traits Scala Traits Fortress"><meta itemprop="datePublished" content="2022-08-26T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-08-26T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2729">
+<meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="使用 Traits 复用行为"/>
+<meta name="twitter:description" content="Traits 是什么 Traits 是面向对象编程中使用的概念，它表示一组用于扩展类的功能的方法 &ndash; wikipedia Trait Traits 最初在 Smalltalk 里被发明出来，后来有不少编程语言都实现了它: Rust Traits Scala Traits Fortress"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">使用 Traits 复用行为</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-08-26 </span>
+        <div class="post-category">
+            <a href="/categories/smalltalk/"> Smalltalk </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#traits-是什么">Traits 是什么</a></li>
+    <li><a href="#最佳读物">最佳读物</a>
+      <ul>
+        <li><a href="#abstract">Abstract</a></li>
+        <li><a href="#1-introduction">1 Introduction</a></li>
+        <li><a href="#3-traits">3 Traits</a></li>
+        <li><a href="#4-discussion-and-evaluation">4 Discussion and Evaluation</a></li>
+      </ul>
+    </li>
+    <li><a href="#squeak-中的-traits">Squeak 中的 Traits</a>
+      <ul>
+        <li><a href="#简单例子">简单例子</a></li>
+        <li><a href="#常见问题">常见问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录">附录</a>
+      <ul>
+        <li><a href="#扩展类对象的行为的机制">扩展类/对象的行为的机制</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="traits-是什么">Traits 是什么</h2>
+<blockquote>
+<p>Traits 是面向对象编程中使用的概念，它表示一组用于扩展类的功能的方法 &ndash; <a href="https://en.wikipedia.org/wiki/Trait_(computer_programming)">wikipedia Trait</a></p>
+</blockquote>
+<p>Traits 最初在 Smalltalk 里被发明出来，后来有不少编程语言都实现了它:</p>
+<ul>
+<li><a href="https://doc.rust-lang.org/book/ch10-02-traits.html">Rust Traits</a></li>
+<li><a href="https://docs.scala-lang.org/tour/traits.html">Scala Traits</a></li>
+<li><a href="https://www.ccs.neu.edu/home/samth/fortress-spec.pdf">Fortress Traits</a></li>
+</ul>
+<blockquote>
+<p>Traits 是由 Nathanael Schärli 和他的合作者设计和实施的，时间发生在 2000 年 他在 Alan Kay 手下的实习期间。我在同一时间也在那儿实习。我有机会看到这项工作的进展情况。<br>
+这个版本的 Traits 最初是在 Smalltalk 的背景下构思的，但是它简洁的特性吸引了很多其他的语言设计者 &ndash; Yoshiki Ohshima</p>
+</blockquote>
+<h2 id="最佳读物">最佳读物</h2>
+<p>理解 Traits 的最佳读物是 <a href="https://www.cs.cmu.edu/~aldrich/courses/819/Scha03aTraits.pdf">Traits: Composable Units of Behaviour</a>, 这篇论文清晰而详细讨论了 Traits 试图解决的问题和它的基本想法。 以下是我阅读时做的摘录。</p>
+<p>这些摘录主要供我自己日后复习用，如果你想获得对 Traits 的全面认识，建议去阅读论文原文。</p>
+<h3 id="abstract">Abstract</h3>
+<ul>
+<li>
+<blockquote>
+<p>尽管继承作为面向对象编程语言的基本重用机制具有无可争议的重要性，但其主要变体&ndash;单继承、多继承和混合继承&ndash;都存在着概念层面和实际层面的问题。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>Traits 是一个简单的用于构造面向对象程序的组合模型。Traits 本质上是一组纯方法(译者注: 不包含状态(如实例变量))，作为类的构建模块，是代码重用的原始单元。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="1-introduction">1 Introduction</h3>
+<ul>
+<li>
+<blockquote>
+<p>单继承的表现力不足以将复杂层次结构中的类所共享的共同特征（即实例变量和方法）考虑进去。因此，语言设计者们提出了各种形式的多重继承, 以及其他机制，如 mixins, 允许类从特征集中逐步组成。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>类经常不是最合适的重用代码的元素，因为类扮演着两个相互竞争的角色。类的主要作用是作为实例的生成者：因此它必须是完整的。但作为一个重用的单位，类应该是小的。这些特性经常发生冲突。此外，类作为实例生成器的作用要求每个类在类的层次结构中有一个独特的位置，而重用的单位应该在任意的位置适用。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>继承要求 mixins 以线性方式组成；这严重限制了人们指定 &ldquo;胶水代码&rdquo; 的能力，而 &ldquo;胶水代码&rdquo; 是调整混合体以使它们适合在一起所必需的。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>Traits 的设计始于这样的观察：重用和可理解性之间的冲突比实际情况更明显。一般来说，我们认为，如果能够以多种形式来看待一个程序，那么理解该程序就会更容易。即使一个类可能是由一个复杂的层次结构中的小 Traits 组成的，也没必要要求以同样的方式来看待它。我们应该可以把类看作是一个扁平的方法集合，或者看作是一个由 Traits 构成的组合实体。扁平化的观点促进理解；组合的观点促进重用。只要这两种观点能够共存，就不会有冲突，这就要求组合只作为一种结构化工具，对类的意义没有影响。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>Traits 有以下特性:</p>
+</blockquote>
+<ul>
+<li>
+<blockquote>
+<p>一个 Trait 提供了一套实现行为的方法。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>一个 Trait 需要一组方法来作为它(Trait)所提供的行为的参数</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>Traits 不指定任何状态变量，Traits 提供的方法也从不直接访问状态变量。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>类和 Traits 可以由其他 Traits 组成，但组成顺序是不相关的。冲突的方法必须被明确解决。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>Traits 组合不影响类的语义：如果从 Traits 中获得的所有方法都直接在类中定义，那么类的意义是一样的。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>同样地，Traits 的组合也不影响 Traits 的语义：一个复合 Traits 等同于一个包含相同方法的扁平化 Traits。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-traits">3 Traits</h3>
+<h4 id="32-specifying-traits">3.2 Specifying Traits</h4>
+<ul>
+<li>
+<blockquote>
+<p>Traits 可能需要一组方法来作为它(Trait)所提供的行为的参数。Traits 不能指定任何状态，也不能直接访问状态。Traits 方法可以间接地访问状态，使用最终由访问器(accessors)（getter 和 setter 方法）满足的依赖方法(required methods)。</p>
+</blockquote>
+</li>
+</ul>
+<img width=500 src="/post/img/traits-01.png" />
+<center>图3. Traits TDrawing 和 TCircle，左栏是提供的方法，右栏是依赖的方法(required methods)。</center>
+<ul>
+<li>
+<blockquote>
+<p>在我们的例子中，每个图形对象可以被分解成两个方面&ndash;它的几何形状，以及它在画布上的绘制方式。对于一个圆，我们用 trait TCircle 表示其几何形状，用 trait TDrawing 表示其绘制行为。</p>
+</blockquote>
+</li>
+</ul>
+<img width=500 src="/post/img/traits-03.png" />
+<h4 id="33-composing-classes-from-traits">3.3 Composing Classes from Traits</h4>
+<ul>
+<li>
+<blockquote>
+<p>Traits 是对单一继承的补充，而不是对单一继承的取代。 继承是用来从另一个类中派生出一个类，而 Traits 是用来实现类定义中的结构和重用性</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>Class = Superclass + State + Traits + Glue</p>
+</blockquote>
+</li>
+</ul>
+<img width=500 src="/post/img/traits-02.png" />
+<center>图4. Circle 类由 traits TCircle 和 TDrawing 组成。`TDrawing>>bounds` 的要求由 trait TCircle 来实现。所有其他的要求都由该类的访问器方法来实现。</center>
+<ul>
+<li>
+<blockquote>
+<p>这意味着类从超类中派生出来，通过添加必要的状态变量，使用一组 traits，并实现连接 traits 的胶合方法，作为状态变量的访问器。为了使类变得完整，必须满足 traits 的所有要求，即必须提供具有适当名称的方法。这些方法可以在类本身、直接或间接的超类中实现，或者由类所使用的另一个 trait 实现。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>在类中定义的方法和由并入的 traits 定义的方法之间的冲突是通过以下两条优先规则解决的</p>
+</blockquote>
+<ul>
+<li>
+<blockquote>
+<p>类方法优先于 trait 方法。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>trait 方法优先于超类方法。这源于扁平化属性，它指出 traits 方法的行为就像它们被定义在类本身中一样。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="34-composite-traits">3.4 Composite Traits</h4>
+<ul>
+<li>
+<blockquote>
+<p>就像类是由 traits 组成的一样，traits 也可以由其他 traits 组成。与类不同的是，大多数 traits 并不完整，这意味着它们没有定义其子 traits 所要求的所有方法。子 traits 中未满足的要求只是成为复合 trait 的必要方法。同样，组合顺序并不重要，复合 traits 中定义的方法优先于其子 traits 的方法。</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p>trait TCircle 包含两个不同的方面：比较运算符和几何函数。为了分离这些方面并提高代码的重用性，我们把这个 trait 重新定义为 trait TMagnitude 和 TMGeometry 的组合</p>
+</blockquote>
+</li>
+</ul>
+<img width=500 src="/post/img/traits-04.png" />
+<h3 id="4-discussion-and-evaluation">4 Discussion and Evaluation</h3>
+<ul>
+<li>
+<blockquote>
+<p>细粒度的重用很重要，因为整个类和单个方法之间的差距太大。traits 允许通过组合可重用的行为来构建类，而不是通过实现大量非结构化的方法集。层次独立是很重要的，因为它可以最大限度地提高重用性。因为类的主要作用是作为实例生成器，它们必须是完整的，因此通常被嵌入到一个层次结构中。这一特性使得类不适合于它们在传统语言中扮演的次要角色：可重用的方法库。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="squeak-中的-traits">Squeak 中的 Traits</h2>
+<p>翻译自 <a href="https://github.com/hpi-swa-lab/SqueakByExample-english/releases/download/5.3.1/SBE-5.3.pdf">Squeak by Example &gt; 5.4 &gt; Traits</a></p>
+<h3 id="简单例子">简单例子</h3>
+<p>要定义一个新的 trait，只需将子类的创建模板替换为发送给 Trait 类的消息。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Trait named: #TAuthor
+</span></span><span class="line"><span class="cl">uses: { }
+</span></span><span class="line"><span class="cl">category: &#39;Trait-Demo&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Traits 可以包含方法，但不能包含实例变量</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">TAuthor»author
+</span></span><span class="line"><span class="cl">&#34;Returns author initials&#34;
+</span></span><span class="line"><span class="cl">^ &#39;taa&#39; &#34;the anonymous author&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在我们可以在一个普通类中使用这个 trait</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Morph subclass: #TestBook
+</span></span><span class="line"><span class="cl">uses: TAuthor
+</span></span><span class="line"><span class="cl">instanceVariableNames: &#39;&#39;
+</span></span><span class="line"><span class="cl">classVariableNames: &#39;&#39;
+</span></span><span class="line"><span class="cl">poolDictionaries: &#39;&#39;
+</span></span><span class="line"><span class="cl">category: &#39;Trait-Demo&#39;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>实例化 TestBook 之后，就可以发送 author 消息</p>
+<p><code>TestBook new author −→ 'taa'</code></p>
+<h3 id="常见问题">常见问题</h3>
+<ol>
+<li>怎样找到系统中的所有 Traits ?</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Smalltalk allTraits
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>怎样找到哪些类使用 Traits？</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Smalltalk allClasses select: [:each | each hasTraitComposition]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="附录">附录</h2>
+<h3 id="扩展类对象的行为的机制">扩展类/对象的行为的机制</h3>
+<p>值得注意的是, Yoshiki 提到大约在 Traits 正在设计的时候, Etoys 也启动了，Etoys 中可插拔的方法的理念类似于 Traits，但有一些关键的区别, 最重要的是，它是基于<strong>实例</strong>而不是基于类的机制；它用于增强用户关心的具体对象（即，这是用户自己的绘图），而不是你用来构建抽象结构然后从中创建实例的东西。 如果你对构建灵活的终端用户编程环境感兴趣，Etoys 非常值得学习，它可能是迄今为止最出色的终端用户编程环境之一，Squeak 6.0 非常好地整合了 Etoys。</p>
+<p>你可以从 Player 类入手来理解 Etoys 的设计, 这是我目前的做法。重要的不是阅读类的静态代码，这是极为低效的，抛弃过去在其他语言里养成的这些弱小习惯，试着融入 Smalltalk 文化，<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/swimming-with-the-fish/">去跟活的(live)对象一起玩耍</a>，然后深入它们。</p>
+<p><img src="/post/img/etoys-player01.png" alt=""></p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://wiki.squeak.org/squeak/3059">Squeak wiki Traits</a></li>
+<li><a href="https://github.com/hpi-swa-lab/SqueakByExample-english/releases/download/5.3.1/SBE-5.3.pdf">Squeak by Example &gt; 5.4 &gt; Traits </a></li>
+<li><a href="https://croquet.io/blog/april2022/microverse/">Croquet Microverse &amp; Collaborative, Live Programming</a></li>
+<li><a href="https://www.cs.cmu.edu/~aldrich/courses/819/Scha03aTraits.pdf">Traits: Composable Units of Behaviour</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Trait_(computer_programming)">wikipedia Trait</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-08-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/how-to-begin-squeak/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译]如何开启Squeak之旅</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/morph-layout-article/">
+            <span class="next-text nav-default">一篇用动态媒介写的文章</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

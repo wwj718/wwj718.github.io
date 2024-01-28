@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>日志系统与事件记录 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="谁控制过去,谁就控制未来 &amp;ndash; 奥威尔《1984》 日志(log)系统 日志是系统的历史。 让我们将运行着的大型程序视为一个运转着的社会(小型程序可以视" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%9E%B6%E6%9E%84/log-system-event/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="日志系统与事件记录" />
+<meta property="og:description" content="谁控制过去,谁就控制未来 &ndash; 奥威尔《1984》 日志(log)系统 日志是系统的历史。 让我们将运行着的大型程序视为一个运转着的社会(小型程序可以视" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%9E%B6%E6%9E%84/log-system-event/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-05-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-05-18T00:00:00+00:00" />
+
+<meta itemprop="name" content="日志系统与事件记录">
+<meta itemprop="description" content="谁控制过去,谁就控制未来 &ndash; 奥威尔《1984》 日志(log)系统 日志是系统的历史。 让我们将运行着的大型程序视为一个运转着的社会(小型程序可以视"><meta itemprop="datePublished" content="2018-05-18T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-05-18T00:00:00+00:00" />
+<meta itemprop="wordCount" content="5043">
+<meta itemprop="keywords" content="architecture," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="日志系统与事件记录"/>
+<meta name="twitter:description" content="谁控制过去,谁就控制未来 &ndash; 奥威尔《1984》 日志(log)系统 日志是系统的历史。 让我们将运行着的大型程序视为一个运转着的社会(小型程序可以视"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">日志系统与事件记录</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-05-18 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%9E%B6%E6%9E%84/"> 架构 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#历史">历史</a></li>
+        <li><a href="#事件">事件</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#也许你不需要构建自己的日志系统">也许你不需要构建自己的日志系统</a></li>
+        <li><a href="#open-edx中的日志系统">open edx中的日志系统</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#实现细节">实现细节</a></li>
+        <li><a href="#服务于其他系统">服务于其他系统</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/log_9c5306f2.png" alt=""></p>
+<blockquote>
+<p>谁控制过去,谁就控制未来  &ndash; 奥威尔《1984》</p>
+</blockquote>
+<h1 id="日志log系统">日志(log)系统</h1>
+<p>日志是系统的历史。</p>
+<p>让我们将运行着的大型程序视为一个运转着的社会(小型程序可以视为社区)，运转着的社会和运行着的程序，都是一种时间序列上的事件集合。</p>
+<p>发生在社会里的这些事件，被记录下之后，我们称其为历史。而发生在系统里的这些事件，被记录下之后，我们称之为日志。</p>
+<h3 id="历史">历史</h3>
+<p>那么我们先来谈谈历史吧。</p>
+<p>在银河系旋臂荒凉的一角，一个称为地球的蓝色行星上(where),一种由猿猴进化而来的的生物(who)在某个时间段里(when)生活其中，做着一些在柏拉图看来非常无关紧要的事(what)(柏拉图说<code>但凡是人的事，就没有一件真的非常重要</code>)。但我们都知道<code>彼之蜜糖 吾之砒霜</code>,彼之砒霜也可能是吾之蜜糖，柏拉图不屑的这些人间事，在另一些看来却值得大书特书。他们使用一种编码(文字)将发生过的事件(event)记录在某种存储介质中(竹简或是纸张中)(storage)。由于社会里人数如是此之多，事件发生得是如此的密集，这些记录者(历史学家)不得不拣选其中的一些事来记录，而抛弃另外一些。最初的挑选也许是被迫无奈，毕竟你不可能事无巨细得记录所发生的一切，否则记录历史所需的物质材料将大于构建世界的物质材料。这点很好论证，在你记录这段历史时， <code>你在记录历史</code>这件事本身也正在发生，这很像站在两面镜子之间的你看到的递归景象。如果事无巨细记录一切，光是记录你自己，就将耗尽所有的墨水。由于事件必须被拣选，于是你总是可以<code>客观</code>地记录历史的同时，挑挑拣拣，让历史呈现出你想要的样子。</p>
+<p>熟悉数据的人们都知道，如果你有挑选样本的权力，为了得出某些特定结论，你其实不必在数据上<code>造假</code> ：)</p>
+<h3 id="事件">事件</h3>
+<p>写上边的一段，倒不是为了调侃历史学家。我其实想说，对于一个程序员而言，如何记录日志，记录哪些事件，怎样安全地存储它，是至关重要的，这和历史之于现实社会一样重要，关于这点《1984》已经给我们论述过了。日志虽是对过往发生的事件的记录，但它影响到系统的未来。从日志中，你能看到系统的很多特性(可视化)，你可以了解到使用系统的人的特质(数据分析)，出了问题能够快速定位与修复(sentry)。</p>
+<p>我们回到历史的比喻。在写作历史时，记录事件所用的纸和笔当然是重要的，但要成为一个好的历史学家，你大多的时间可不是在练字或选纸上，如何挑选以及如何记录所发生事件，才是你需要用心之处</p>
+<p>对于构建程序/网站的日志系统也是一样，日志如何写入，如何存储，这些只是基本工作，这些工作并不怎么花时间，你大多的事件需要花在如何挑选事件，如何记录这些事件，之后如何分析处理它们。而之后如何使用它们，又反过来决定了你需要记录哪些事件，以及事件中的哪些信息</p>
+<p>如何在一个程序语言/框架中写入和存储日志，这方面社区已经有大量的讨论，这个问题往往不必重复解决，很多最佳实践都在语言层(如Python)或者框架层(Django)做完了。稍加配置即可</p>
+<p>构建日志系统，我们大量的事件需要花在考虑如何描述事件，以及哪些是我们关心的事件(这是一个业务相关的问题)。关于如何描述事件，尽管我们最终会用代码实现它，但这其实不是一个编程问题，一个事件无非是某些人(who)在某个时间段(when)在某些场合(where)做了某些事(what),至于他为何要做(why)，就是数据挖掘需要做的事了。写作一篇新闻你常常也要考虑这些要素，所以，对事件的描述，本质上和编程无关。</p>
+<blockquote>
+<p>功夫在诗外</p>
+</blockquote>
+<h1 id="日志中的事件">日志中的事件</h1>
+<p>在日志这个话题下，技术社区聊到日志系统，关心的主要是系统的架构，用了什么组件，组件之间如何协同。至于如何描述日志，则谈的不多。对于一个初次使用日志的新手，弄懂怎么将日志文本写入系统并不难，此后的存储、备份、归并、分析也多有现成解决方案或最佳实践。工程师在日志记录这件事上能感受到极大的自由，就像你拿着笔在A4纸面前那种自由，似乎什么都能记下，但该记录些什么，又如何表述它们，往往令人不知所措</p>
+<p>本文将论述日志系统的构建，以网站系统为例，其中记录的日志主要围绕与<code>网站用户</code>相关的事件，至于<code>系统日志</code>则不在讨论的范围内。我们也将论述以及如何让日志系统服务于其他系统。架构之外，如何描述日志将是这篇文章的重心所在</p>
+<p>文中，我们将以<a href="https://github.com/edx/edx-platform">open edx</a>和我们在<a href="http://www.paperweekly.site/">PaperWeekly</a>中的构建的网站后端系统为例来说明。</p>
+<p>这两个系统都基于<a href="https://github.com/django/django">Django</a>(一个Python web框架)构建，但阅读本文，并不假设你具备Django的知识，当然如果你懂Django最好不过，一些细节可能对你有用，但不懂也不影响阅读。</p>
+<h3 id="也许你不需要构建自己的日志系统">也许你不需要构建自己的日志系统</h3>
+<p>在我们正式开始之前，需要说明的是: 也许你并不需要专门构建一个完整的日志系统。</p>
+<p>这取决于你要干嘛。如果你关心网站的用户流量、Top10入口页面、Top10来源网站、访客停留时间&hellip;这些用户指标，<a href="https://www.google.com/analytics/">google analytics</a>、<a href="https://tongji.baidu.com/">Baidu统计</a>往往是更聪明的选择，花费一盏茶的事件，你就能将它集成到你的网站里。即便是一些自定义的事件跟踪，你也可以利用这些SDK插件来做</p>
+<p>如果你想做的是网站监控，事件告警，诸如你想知道为何每天深夜，网站都会无故崩溃，是昼夜温差变化还是狼人来袭。那么<a href="https://github.com/getsentry/sentry">Sentry</a>是你最佳的选择，集成它也只需要一盏茶的功夫。</p>
+<p>如果你还继续往下读，我们假设你有足够的理由构建日志系统了。</p>
+<h3 id="open-edx中的日志系统">open edx中的日志系统</h3>
+<p>如果你意识到构建日志系统时，要将事件的描述也包括在内，那么当你看到open edx复杂的日志系统，你就不会那么吃惊。其中的复杂之处，多是对事件的描述，他们为此构建了多层的抽象，而对事件的描述必然涉及到大量的业务逻辑和概念，所以读起来是十分晦涩的。我并不建议深挖这一块。即便你的系统以open edx为主体，我也不建议去拓展和hack它的日志系统。</p>
+<p>理由如下:</p>
+<p>首先成本高昂，关于edx日志系统，我在一篇文章里有细述:<a href="/explore-Open-edX-tracking-system.html">explore Open edX tracking system</a></p>
+<p>在架构层面，这里边并没有什么复杂性，无非是利用了Django的log机制(其实是对python logging模块的包装)，繁琐的是层层的包装。我觉得去理解和hack这些包装是痛苦且不必要的。原因是日志在存储层面无非是一种文本序列，你可以分别/分布式地存储它们。如果最终的分析需要合并，有很多优秀的工具帮你归并日志（诸如<a href="https://github.com/elastic/beats">Beats</a>、Logstash之类）。日志的聚合是最后考虑的问题，而且你大可放心。</p>
+<p>下边我们说说open edx中值得我们学习的地方，先说说open edx中对事件的描述。这部分是这块令人头疼的主要原因。而头疼的原因是这里牵扯到大量的业务逻辑和领域概念。</p>
+<p>典型的事件如:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;wwj&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;event_source&#34;</span><span class="p">:</span> <span class="s2">&#34;server&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;edx.course.enrollment.deactivated&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;referer&#34;</span><span class="p">:</span> <span class="s2">&#34;http:\/\/localhost:8001\/container\/i4x:\/\/edX\/DemoX\/vertical\/69dedd38233a46fc89e4d7b5e8da1bf4?action=new&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;accept_language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.8&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;time&#34;</span><span class="p">:</span> <span class="s2">&#34;2014-01-26T00:28:28.388782+00:00&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla\/5.0 (Windows NT 6.1; WOW64; Trident\/7.0; rv:11.0) like Gecko&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;page&#34;</span><span class="p">:</span> <span class="kc">null</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;host&#34;</span><span class="p">:</span> <span class="s2">&#34;courses.edx.org&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;session&#34;</span><span class="p">:</span> <span class="s2">&#34;a14j3ifhskngw0gfgn230g&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;context&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;user_id&#34;</span><span class="p">:</span> <span class="mi">9999999</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;org_id&#34;</span><span class="p">:</span> <span class="s2">&#34;edX&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;course_id&#34;</span><span class="p">:</span> <span class="s2">&#34;edX\/DemoX\/Demo_Course&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;path&#34;</span><span class="p">:</span> <span class="s2">&#34;\/change_enrollment&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;ip&#34;</span><span class="p">:</span> <span class="s2">&#34;NN.NN.NNN.NNN&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;event&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;course_id&#34;</span><span class="p">:</span> <span class="s2">&#34;edX\/DemoX\/Demo_Course&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;user_id&#34;</span><span class="p">:</span> <span class="mi">9999999</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;mode&#34;</span><span class="p">:</span> <span class="s2">&#34;honor&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;event_type&#34;</span><span class="p">:</span> <span class="s2">&#34;edx.course.enrollment.deactivated&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这是一条相对简单的事件。但我们可以看到基于json的日志，表现力极强(因为支持嵌套结构)，你可以轻松将你关心的信息，都组织在嵌套json结构中。但也别忘了<code>扁平优于嵌套</code>。这个例子里另一个具有参考价值的是对一些业务无关的信息，诸如username、event_source、referer这些都是通用的概念，这就是我们提到的事件描述相关的部分。</p>
+<p>如果你对细节有更多的兴趣，可以参考我之前的文章:<a href="/edx-tracking-logs-data-research.html">基于tracking logs的数据分析</a>.如果你的兴趣在open edx本身，那么我之前和同事一起翻译的<a href="/events-in-the-tracking-logs.html">Tracking Logs 中的事件(翻译)</a>你可能有兴趣。</p>
+<p>open edx中的日志系统给我的影响主要是:你可以直接使用django的日志系统并选择json作为日志格式，此外我们就不必深入了。当然，如果你对open edx本身熟悉，过一遍它的事件类型，作为案例学习，看看它是如何选择事件信息(这需要里理解业务)，也是很有益的</p>
+<h1 id="paperweekly中的日志系统">PaperWeekly中的日志系统</h1>
+<p>我们在PaperWeekly构建日志系统时，架构层面参考了open edx。我们日志系统同时服务于:推荐系统和数据可视化（对google analytics做些补充）</p>
+<p>我们先做个概览：在<a href="http://www.paperweekly.site/">PaperWeekly</a>网站后台我们首先将事件pub出去,对此感兴趣的订阅者自行订阅它(典型订阅者包括消息系统和日志系统)，每个订阅者都跑在一个task中(celery)</p>
+<p>我们最初是在构建通知系统时，发现我们需要考虑如何来描述事件(诸如我们要通知用户A:<code>你发表的文章B被用户C点赞了</code>)，为了描述这点，我们需要关心事件:<code>用户C点赞了文章B</code>， 而后在构建推荐系统时，发现我们同样需要关心这些事件。于是我们索性把这几块一并做了。利用pub/sub机制来解耦。</p>
+<p>通知系统和日志系统很大程度是重叠的。核心都是<code>事件</code>,那么怎么描述事件就摆到桌面来了。</p>
+<p>在关于通知系统的讨论中，这块被讨论得多些，我之前也专门整理了一篇文章：<a href="/notification-system-thinking-concept-and-Implementation.html">notification system思路、概念与实现</a>,我们在paperweekly，所做的基本是对这篇文章提到的概念做了实现，这块@izuo做了大量出色的工作。 最近@izuo将这块的工作梳理在<a href="http://monad.site/2018/05/30/notification-system/">消息系统的概念、设计与实现</a></p>
+<p>如何把你关心的事件结构化，一种好的策略是把它们描述为AVOT的结构（我们之所以需要AVOT是因为我们需要结构化事件，我们之所以需要结构化事件，是因为程序善于处理结构化数据，否则你就需要处理一堆脏数据了）。AVOT分别是:</p>
+<ul>
+<li>Actor</li>
+<li>Verb</li>
+<li>Object</li>
+<li>Target</li>
+</ul>
+<p>让我们举例说明: <code>用户C将文章B放入收藏夹D中</code>,让我们把对应关系写上:</p>
+<ul>
+<li>Actor: 用户C</li>
+<li>Verb: 放入</li>
+<li>Object: 文章B</li>
+<li>Target: 收藏夹D</li>
+</ul>
+<p>这其中可能引起疑惑的是Object和Target的区别，两者都是名词，如何决定两个名词中哪个对应Object，哪个对应Target。就功能而言你当然可以随意(它们本质只是4个容器)，但最好使用它们的语义，这样你不至于把自己搞乱了，target的意义你可以通过这个英文句子来理解:<code>Erik is pinning Hawaii to his Places to Visit board.</code>,在这里<code>his Places to Visit board</code>是Target。</p>
+<p>至于前边我们提到的<code>用户C点赞了文章B</code>，我们把它视为省略了Target</p>
+<p>你可以试试用AVOT去描述你所关心的事件，你会发现它具有极强的变现力！</p>
+<!--
+我们先试着把句子转为`把A当到/加到B`这种结构，B就是Target
+
+前边我们提到的`用户C点赞了文章B`,我们将它转化为:`用户C把他的赞给了文章B`，在此我们将`赞`作为名词使用，在系统里，我们也将它构建为实体，这样以来，我们就能同时直到一个人点赞了哪些文章，以及一篇文章被哪些人点赞了。
+-->
+<h3 id="实现细节">实现细节</h3>
+<p>最后我们来讨论一下实现细节</p>
+<p>PaperWeekly和open edx一样直接使用了Django的日志系统， 我们为用户日志，单独构建了一个handle，以区别与系统日志</p>
+<p>当然，关于日志的这些细节无关紧要，你可以参考你正在使用的框架，文档里论述应该都很全面</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">        &#39;track_log&#39;: {
+</span></span><span class="line"><span class="cl">            &#39;level&#39;: &#39;INFO&#39;,
+</span></span><span class="line"><span class="cl">            &#39;class&#39;: &#39;logging.handlers.RotatingFileHandler&#39;,
+</span></span><span class="line"><span class="cl">            &#39;maxBytes&#39;: 1024 * 1024 * 10,  # 10MB
+</span></span><span class="line"><span class="cl">            &#39;backupCount&#39;: 100,  # 10MB * 100 # 1G
+</span></span><span class="line"><span class="cl">            &#39;filename&#39;: os.path.join(TRACK_LOG_PATH,
+</span></span><span class="line"><span class="cl">                                     &#39;track_log.log&#39;), 
+</span></span><span class="line"><span class="cl">            &#39;formatter&#39;: &#39;track_log&#39;
+</span></span><span class="line"><span class="cl">        },
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>至于它的formatter则是:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">        &#39;track_log&#39;: {
+</span></span><span class="line"><span class="cl">            &#39;format&#39;: &#39;%(message)s&#39;
+</span></span><span class="line"><span class="cl">        },
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>track_log formatter只忠实地记录打印message，而message则由python中的类去构建,这些消息类就是对我们前边谈到的AVOB的实践，你需要使用AVOB去具体描述你所关心的事件(通常与业务相关)</p>
+<p>补充一些细节:我们前头说到日志系统主动去sub系统发布的事件，具体的实现利用了Django的signal机制。为了让这些记录不影响用户访问，我们将记录log的task放到了celery里</p>
+<h4 id="前端事件">前端事件</h4>
+<p>如果你同时还关心发生在前端的事件，有两个办法解决，其一是使用<a href="https://www.google.com/analytics/">google analytics</a>这类前端分析工具，它允许你自定义事件。其二是在后端写一个通用接口，前端构建好事件(json数据)，发送给后台，后台把它当作一般的事件数据，记录到日志中即可，最好加上<code>日志来源</code>这个属性:<code>event_source</code>,这点open edx考虑得很周到。</p>
+<h3 id="服务于其他系统">服务于其他系统</h3>
+<p>前边提到我们让日志系统服务于推荐系统和数据可视化</p>
+<p>推荐系统会根据用户的行为日志计算出用户的的feed流，实时更新。这部分的实现细节是：我们将日志同步到一台独立的计算机器上，分布式地算出用户feed流之后，回推到网站后端-&gt;用户主页.</p>
+<p>至于数据可视化我们则用了ELK来做，先用Logstash使json平坦化，然后根据业务需要，可视化这些数据。对于日志中不包含的数据，可以通过查询数据库得到，诸如日志中只要记录username，我们就可以还原出user对象(通过查询数据库)。这部分我们也是参考了open edx数据分析这块的的做法，这块的一个建议是，尽量不要再服务器运行高峰期去操作生产服务器。如果你的查询很少，可以直接查询生产服务器，如果查询多且耗性能的话，建议把数据库同步到计算节点上，做本地查询。</p>
+<!--
+# 事件
+
+# 事件记录
+
+物是人非
+
+新闻6要素 
+
+如何描述一个事件
+
+存储和分析，相比较而言更为简单
+
+如何描述一个event ， 我们可能想到新闻六要素
+
+功夫在诗外
+
+事件的触发
+事件的描述
+事件的存储
+
+最难在于事件的描述  使用avob
+
+于是消息系统 也可以用
+
+在paperweekly，我们是这样做的，知乎也是这样做，事件总线
+
+以一个典型的例子  
+
+我们最后，再切到技术的视角下，关心技术实现的问题
+
+### 基于django的实现
+你也可以使用其他语言来实现它
+
+我们在django下做的实现
+
+
+我们将其用于产生feed流，用户的消息通知，以及网站的log
+
+
+这一块和open edx很像，可以参考我之前的文章
+
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%97%A5%E5%BF%97">维基百科 服务器日志</a></li>
+<li><a href="http://blog.jobbole.com/89674/">The Log：每个程序员都应该知道有关实时数据的统一抽象（1）概念</a></li>
+<li><a href="http://blog.just4fun.site/notification-system-thinking-concept-and-Implementation.html">notification system思路、概念与实现</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-05-18
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/architecture/">architecture</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3_adapter/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">发布scratch3_adapter</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-blockly/">
+            <span class="next-text nav-default">Blockly与Scratch3.0的比较分析及选型建议</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

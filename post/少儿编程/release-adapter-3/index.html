@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>发布 CodeLab Adapter 3.0 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content=" real playing &amp;ndash; Alan Kay
+ 目标与理念 CodeLab Adapter 是 CodeLab 为编程教育构建的基础设施。
+CodeLab Adapter 3.0 的目标是成为继 Scratch/Etoys 之后，最有趣的编程学习启动平台。追随 Alan Kay &amp;ldquo;real playing&amp;rdquo; 的理念。
+CodeLab Adapter 经过之前两个大版本的迭代，历时两年多，我们对问题域有了更清晰的认识: 关于如何为编程入门、 AI 教育、 开源硬件、空间编程&amp;hellip; 提供一个理想的环境, 在这个环境中，创造成为一件稀疏平常的事情， 而不是先与糟糕的编程环境来个殊死搏斗。 这个问题背后是一个更大的母题， 它正是 Seymour Papert/Alan Kay/Marvin Minsky/Bret Victor 以及 Smalltalk 社区 同时关注的一个问题: 计算机如何为创造精神提供支持？
+对这个问题的理解，我们受以上先驱的强烈影响。 CodeLab Adapter 3.0 正是这些影响下的最近产物。
+" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/release-adapter-3/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="发布 CodeLab Adapter 3.0" />
+<meta property="og:description" content="
+real playing &ndash; Alan Kay
+
+目标与理念
+CodeLab Adapter 是 CodeLab 为编程教育构建的基础设施。
+CodeLab Adapter 3.0 的目标是成为继 Scratch/Etoys 之后，最有趣的编程学习启动平台。追随 Alan Kay &ldquo;real playing&rdquo; 的理念。
+CodeLab Adapter 经过之前两个大版本的迭代，历时两年多，我们对问题域有了更清晰的认识: 关于如何为编程入门、 AI 教育、 开源硬件、空间编程&hellip; 提供一个理想的环境, 在这个环境中，创造成为一件稀疏平常的事情， 而不是先与糟糕的编程环境来个殊死搏斗。 这个问题背后是一个更大的母题， 它正是 Seymour Papert/Alan Kay/Marvin Minsky/Bret Victor 以及 Smalltalk 社区 同时关注的一个问题: 计算机如何为创造精神提供支持？
+对这个问题的理解，我们受以上先驱的强烈影响。 CodeLab Adapter 3.0 正是这些影响下的最近产物。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/release-adapter-3/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-04-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-04-17T00:00:00+00:00" />
+
+<meta itemprop="name" content="发布 CodeLab Adapter 3.0">
+<meta itemprop="description" content="
+real playing &ndash; Alan Kay
+
+目标与理念
+CodeLab Adapter 是 CodeLab 为编程教育构建的基础设施。
+CodeLab Adapter 3.0 的目标是成为继 Scratch/Etoys 之后，最有趣的编程学习启动平台。追随 Alan Kay &ldquo;real playing&rdquo; 的理念。
+CodeLab Adapter 经过之前两个大版本的迭代，历时两年多，我们对问题域有了更清晰的认识: 关于如何为编程入门、 AI 教育、 开源硬件、空间编程&hellip; 提供一个理想的环境, 在这个环境中，创造成为一件稀疏平常的事情， 而不是先与糟糕的编程环境来个殊死搏斗。 这个问题背后是一个更大的母题， 它正是 Seymour Papert/Alan Kay/Marvin Minsky/Bret Victor 以及 Smalltalk 社区 同时关注的一个问题: 计算机如何为创造精神提供支持？
+对这个问题的理解，我们受以上先驱的强烈影响。 CodeLab Adapter 3.0 正是这些影响下的最近产物。"><meta itemprop="datePublished" content="2020-04-17T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-04-17T00:00:00+00:00" />
+<meta itemprop="wordCount" content="5198">
+<meta itemprop="keywords" content="codelab," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="发布 CodeLab Adapter 3.0"/>
+<meta name="twitter:description" content="
+real playing &ndash; Alan Kay
+
+目标与理念
+CodeLab Adapter 是 CodeLab 为编程教育构建的基础设施。
+CodeLab Adapter 3.0 的目标是成为继 Scratch/Etoys 之后，最有趣的编程学习启动平台。追随 Alan Kay &ldquo;real playing&rdquo; 的理念。
+CodeLab Adapter 经过之前两个大版本的迭代，历时两年多，我们对问题域有了更清晰的认识: 关于如何为编程入门、 AI 教育、 开源硬件、空间编程&hellip; 提供一个理想的环境, 在这个环境中，创造成为一件稀疏平常的事情， 而不是先与糟糕的编程环境来个殊死搏斗。 这个问题背后是一个更大的母题， 它正是 Seymour Papert/Alan Kay/Marvin Minsky/Bret Victor 以及 Smalltalk 社区 同时关注的一个问题: 计算机如何为创造精神提供支持？
+对这个问题的理解，我们受以上先驱的强烈影响。 CodeLab Adapter 3.0 正是这些影响下的最近产物。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">发布 CodeLab Adapter 3.0</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-04-17 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#简易">简易</a>
+      <ul>
+        <li><a href="#彻底采用-web-ui">彻底采用 Web UI</a></li>
+        <li><a href="#增强反馈">增强反馈</a></li>
+        <li><a href="#自省">自省</a></li>
+        <li><a href="#更多开箱可用的开源硬件">更多开箱可用的开源硬件</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#重构消息结构">重构消息结构</a></li>
+        <li><a href="#重构插件系统">重构插件系统</a></li>
+        <li><a href="#插件市场">插件市场</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#codelab-adapter-30-与-scratch-30">CodeLab Adapter 3.0 与 Scratch 3.0</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#后记">后记</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>real playing &ndash; Alan Kay</p>
+</blockquote>
+<h1 id="目标与理念">目标与理念</h1>
+<p><a href="https://adapter.codelab.club/">CodeLab Adapter</a> 是 <a href="https://www.codelab.club/">CodeLab</a> 为编程教育构建的基础设施。</p>
+<p>CodeLab Adapter 3.0 的目标是成为继 <a href="https://scratch.mit.edu/">Scratch</a>/<a href="http://www.squeakland.org/">Etoys</a> 之后，最有趣的编程学习启动平台。追随 <a href="https://zh.wikipedia.org/zh-hans/%E8%89%BE%E4%BC%A6%C2%B7%E5%87%AF">Alan Kay</a> &ldquo;real playing&rdquo; 的理念。</p>
+<p>CodeLab Adapter 经过之前两个大版本的迭代，历时两年多，我们对问题域有了更清晰的认识: 关于如何为编程入门、 AI 教育、 开源硬件、空间编程&hellip; 提供一个理想的环境, 在这个环境中，创造成为一件稀疏平常的事情， 而不是先与糟糕的编程环境来个殊死搏斗。 这个问题背后是一个更大的母题， 它正是 Seymour Papert/Alan Kay/Marvin Minsky/Bret Victor 以及 Smalltalk 社区 同时关注的一个问题: 计算机如何为创造精神提供支持？</p>
+<p>对这个问题的理解，我们受以上先驱的强烈影响。 CodeLab Adapter 3.0 正是这些影响下的最近产物。</p>
+<h1 id="先睹为快">先睹为快</h1>
+<p>CodeLab Adapter 3.0 的升级主要围绕 <strong>简易</strong> 、<strong>灵活</strong>、<strong>健壮</strong> 三大特性，以下逐条陈述。</p>
+<h2 id="简易">简易</h2>
+<h3 id="彻底采用-web-ui">彻底采用 Web UI</h3>
+<p><img src="https://adapter.codelab.club/img/c5b2b84e3b0ab411e7d7342104c5bba3.png" alt="Web UI"></p>
+<p>3.0 彻底放弃了之前的桌面 UI (它们曾分别基于 <a href="https://github.com/lawsie/guizero">guizero</a> 和 PyQt5(主要由 CodeLab 志愿者 @liheng @Bilikyar 设计，由 @wangshub 实现) )。</p>
+<p>彻底采用 Web UI 之后提升了 3 个方面的 <strong>简易性</strong> :</p>
+<ol>
+<li>对于用户而言，所有的控制都在浏览器的一个界面中。用户无需在浏览器和 GUI 之间切换。对易用性的关注并移除无关的干扰元素，主要受到 @曾老师 的影响。</li>
+<li>对于开发者/第三方公司而言，由于一切都从 Web UI 控制, 意味着 CodeLab Adapter 只是纯服务，由 websocket/REST 接口完全控制，如此一来，它可以与任何软件(如 Electron)或 web 网站进行集成，这让它可以配合任何编程语言使用，学习者在一开始就可以做些真实而有趣的事。由于 Web UI 只是 html 和 js，所以可以由第三方公司任意定制！目前 Longan 项目将其用于扩展 <strong>machine learning for kids</strong> 和 龙眼盒(用于空间编程), 让 AI 和物联网 变得更有趣。</li>
+<li>简化 CodeLab Adapter 的 UI 体系，跨平台将变得容易，因为没有任何系统 UI 依赖，它可以轻松运行在所有主流操作系统上，甚至包括安卓！我们也支持了 headless 模式，headless 模式对集成到其他软件至关重要，CodeLab Adapter 3.0 可以方便集成到硬件产品里。</li>
+</ol>
+<h3 id="增强反馈">增强反馈</h3>
+<p>这是之前许多用户在有邮件里提到的功能增强需求， 用户希望在使用时，收到清晰明确的反馈信息，诸如</p>
+<ul>
+<li>CodeLab Adapter 是否已经成功接入 Scratch</li>
+</ul>
+<p><img src="http://adapter.codelab.club/img/8411bbdd83b202de10e04fab510a8f1e.png" alt=""></p>
+<ul>
+<li>硬件设备(诸如 micro:bit, Arduino, Cozmo)是否已经连接成功</li>
+</ul>
+<p><img src="http://adapter.codelab.club/img/e18c522106b8f904795a1e092aee6cf8.png" alt=""></p>
+<ul>
+<li>环境依赖不满足或者设备掉线之类的提示信息</li>
+</ul>
+<p><img src="http://adapter.codelab.club/img/9854c0e4addbf48bcf438fca45b5cd6d.png" alt=""></p>
+<p>以及更多的信息提示，这对于诊断问题和自助使用很重要。</p>
+<h3 id="自省">自省</h3>
+<p>自省的意思是说事物理解它自身的状态，当我们说一个事物 <strong>智能</strong> 的时候，很多时候和它的自省能力有关。</p>
+<p>CodeLab Adapter 拥有自省能力，它理解自身内部以及自身所处环境的状态，并将这些信息反馈给使用者。</p>
+<p>以下是 CodeLab Adapter 报告的运行时信息，以及它所处环境的信息 (你可以在 Web UI 右边栏菜单里打开它)。</p>
+<p><img src="https://adapter.codelab.club/img/5d00c1e6ee237fe95671d791a54805e5.png" alt="env"></p>
+<p>自省信息有多种用途，诸如服务于 Python 教育或者插件开发者。如果你希望让 Python 做些真实世界里的事情，处理你的照片或者自动化你的 word 文档。那么你就很难使用基于云端的环境来做。此时用户需要在本地安装 Python。CodeLab Adapter 将让 Python 入门教育变得容易，对于入门者，在命令行里安装依赖库，是令人生畏的。</p>
+<p>由于有了自省能力，假设我们想为用户构建一个 jupyterlab 插件，当发现用户本地没有安装 Python，则给 Ta 安装引导提醒，如果发现 Ta 已经安装了 Python，但没有安装 jupyterlab，我们可以利用环境自省信息，在插件里决策，帮助用户安装 jupyterlab , 安装完成后运行它，这个假想的插件，我们已经完成，你可以拿到它的源码，以便于构建你自己的插件，为用户打造新的学习环境。</p>
+<p><video src="https://adapter.codelab.club/video/1587120471271045.mp4" controls="controls"></video></p>
+<p>所有这一切在 CodeLab Adapter 里，只需要写 100 行不到的代码，跨所有平台！源代码在这儿: <a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_jupyterlab.py">extension_jupyterlab.py</a>。</p>
+<h3 id="更多开箱可用的开源硬件">更多开箱可用的开源硬件</h3>
+<p>目前最流行的三大开源硬件是:</p>
+<ul>
+<li>micro:bit</li>
+<li>Raspberry Pi</li>
+<li>Arduino</li>
+</ul>
+<p>CodeLab Adapter 对 micro:bit 的支持是开箱可用的。</p>
+<p>CodeLab Adapter 可运行在树莓派上。</p>
+<p>但对 Arduino 的支持颇为曲折，一方面，是重视程度不够，我们认为 micro:bit 是未来，它正在替代 Arduino，至少在教育领域如此。但 Arduino 在全球依然拥有海量的用户和庞大生态，许多用户在邮件和 Github 里提议我们为 Arduino 构建驱动，在 3.0 版本中，这项工作终于完成，做到了开箱可用, 我们依赖于开源社区的许多已有工作, 我们把教程和感谢信息都放在<a href="https://adapter.codelab.club/extension_guide/arduino_UNO/">文档页</a>里了。</p>
+<p>至此，对全球 3 大开源硬件的支持已经完成。</p>
+<p>未来我们会持续加入更多的开源硬件支持，如 esp8266 等。</p>
+<h1 id="灵活">灵活</h1>
+<p>3.0 中，为灵活性所做的工作主要包括以下几个:</p>
+<ul>
+<li>重构消息结构</li>
+<li>重构插件系统</li>
+<li>插件市场</li>
+</ul>
+<p>分别论述。</p>
+<h3 id="重构消息结构">重构消息结构</h3>
+<p>在 3.0 中，我们基于著名开源项目 &ndash; <a href="https://jupyter.org/">Jupyter</a>的消息结构，重构了 CodeLab Adapter 的消息结构。当然关于消息系统的实现机制，我们没有采用 Jupyter 的策略，而是受 Dynamicland 影响，采用 &ldquo;one world&rdquo; 的概念，所有事件发生在一个消息通道里，一切都是异步消息，同步消息只是异步消息的一个特例，这点和 ROS 的策略相同。关于同步异步的细节，参考 <a href="https://github.com/CodeLabClub/scratch3_eim">EIM 插件源码</a>。</p>
+<blockquote>
+<p>世界是事实的总和，而非事物的总和 &ndash;维特根斯坦《逻辑哲学论》</p>
+</blockquote>
+<p>在 CodeLab Adapter 中，所发生的一切都是消息。所有发生的事都被描述为事件( event )，之后异步地软件世界里传播它。每条消息的逻辑结构为:</p>
+<ul>
+<li>parent_header</li>
+<li>header
+<ul>
+<li>version</li>
+<li>message_id</li>
+<li>message_type</li>
+<li>token</li>
+<li>username</li>
+<li>sender</li>
+<li>node_id</li>
+</ul>
+</li>
+<li>content</li>
+</ul>
+<h3 id="重构插件系统">重构插件系统</h3>
+<p>重构了插件系统，这是 3.0 最大的改进之一，对于开发者来说可能没有之一。</p>
+<p>在 2.0 中, 有以下 4 种方式来扩展 CodeLab Adapter :</p>
+<ol>
+<li><a href="https://adapter.codelab.club/extension_guide/eim/">EIM</a>
+<ul>
+<li><a href="https://adapter.codelab.club/extension_guide/eim_monitor/">eim_monitor</a></li>
+<li><a href="https://adapter.codelab.club/extension_guide/eim_trigger/">eim_trigger</a></li>
+</ul>
+</li>
+<li><a href="https://adapter.codelab.club/dev_guide/helloworld/">Adapter extension</a></li>
+<li><a href="https://adapter.codelab.club/dev_guide/Adapter-Node/">Adapter Node</a></li>
+<li><a href="https://adapter.codelab.club/dev_guide/system_command/">跨语言支持</a></li>
+</ol>
+<p>其中 <strong>3.Adapter Node</strong> 允许将 Python 生态里的海量的第三方库接入到 CodeLab Adapter 里, 这也是开发者最喜欢的一种接入方式。在 3.0 中，我们将 <strong>Adapter Node</strong> 与 <strong>Adapter Server</strong> 合并，这意味着 <strong>任何</strong> 的 Python 程序都可以成为 CodeLab Adapter 的插件！如此一来写一个 AI 拓展就是轻而易举的事，因为大多数的 AI 项目都发生在 Python 社区！而且允许你使用 CodeLab Adapter API 来控制这些自定义插件，甚至，我们在下文里会提到，你可以发布到插件市场，供用户下载使用！具体细节，可以看 3.0 里已有的 node， 它们的源码都在<a href="https://github.com/CodeLabClub/codelab_adapter_extensions/tree/master/nodes_v3">nodes_v3</a>目录里。</p>
+<p>将一款自研硬件或一个 AI 服务引入 Scratch，进而作为教育产品发布，不再需要经历过去漫长的周期，发布一款 CodeLab Adapter 插件即可。CodeLab 将大疆(DJI)的 RoboMaster EP 接入 Scratch 用了不到一个 10 分钟的时间，所有的源码不超过 100 行，源码在这里:<a href="https://github.com/CodeLabClub/codelab_adapter_extensions/blob/master/extensions_v3/extension_RoboMaster.py">extension_RoboMaster.py</a>。</p>
+<p><video src="https://adapter.codelab.club/video/1587120578222179.mp4" controls="controls"></video></p>
+<p>一旦一款新设备接入进来，它将得到其他许多好处 &ndash; 获得与体系里任何事物连接的能力: 所有主流编程语言，主流 AI 应用(语音/视觉)，所有主流开源硬件，以及与玩家已有的有趣产品(cozmo/toio/乐高)连接并互动。让它们彼此增强，扩大创造的可能性和可玩性，而不局限在任何单一厂商设备已有的能力里。</p>
+<p>此外，市面上最好的 Python 学习环境<a href="https://adapter.codelab.club/extension_guide/jupyterlab/">Jupyterlab 已成为内置的插件</a>，你甚至可以使用 Adapter Jupyterlab 插件来阅读和修改它本身的代码！CodeLab Adapter 3.0 也将负责 Python 的环境管理，能帮你完成 JupyterLab 本身的安装之类的事情，不需要进入不友好的命令行，这对于减少入门者掉眼泪很有帮助。</p>
+<p>此外值得一提的是，插件发布者，在插件里可以附带插件的文档信息，它可以链接到任何第三方网站里。这也是我们为了提高易用性而做的努力，并且以开放的方式来做。</p>
+<p><img src="https://adapter.codelab.club/img/1efc4c2cf4dcba42d009f78f4343e8f0.png" alt=""></p>
+<h3 id="插件市场">插件市场</h3>
+<p>这是用户多次反馈的另一个问题，他们希望有一个统一的插件市场，可以方便下载到新的插件，就像我们在 vscode 或 sublime text 里的体验的那种插件系统，有个体面的 UI，而不是使用 curl 或者 wget 去 github 里手动下载。</p>
+<p><img src="https://adapter.codelab.club/img/4c48b29253b1923ce61ba104e5ef21fa.png" alt=""></p>
+<p>作为演示我们下载了插件市场里的一个番茄工作法插件，这个插件的功能很简单(源码也是公开的): 每 25 分钟提醒编程者起来看看窗外风景。</p>
+<p><img src="https://adapter.codelab.club/img/06be05f915263f36d4663074d6147cb5.png" alt=""></p>
+<p>下载完成之后，不需要重启软件，即可在 Scratch 和 Web UI 中看到新下载的插件，点击运行它：每 25 分钟，你就会收到一条信息提示你做个短途休息。</p>
+<p><img src="https://adapter.codelab.club/img/b6d455988e421b05e1aa9eb593957c6a.png" alt=""></p>
+<p>值得注意的是, Scratch 里的积木也是实时更新的，它与 Adapter 实时同步，没有中断和刷新！</p>
+<p><img src="https://adapter.codelab.club/img/117126c46882c9d1122868519d0ad066.png" alt=""></p>
+<p>为了追求连贯的编程体验，一切都是动态的！这是我们从 Smalltalk 和 Lively 那儿得到的观念：提供一个活的编程环境(Live Programming)。</p>
+<p>利用这个特性，你可以做非常多有趣的事，<a href="https://github.com/CodeLabClub/scratch3_eim/blob/v3/index.js#L535">这些源码</a>，我们都开放在 Github 了，</p>
+<p>Scratch 内积木的动态机制，主要由 @shenyu 完成。</p>
+<h1 id="健壮">健壮</h1>
+<p>3.0 修复了很多之前版本的稳定性问题，这些都在源码中记录了。</p>
+<p>其中最重要的一点值得一提，CodeLab Adapter 的心脏是消息系统，其他的一切都建立在它们之上。</p>
+<p>此次的版本我们重点对此做了加固和保护，使其不大可能崩溃，即便消息本身错误或不完整的，消息内核也不会崩溃，它会向你指出问题所在。这样一来，错误就被限制在外围插件中，而 CodeLab Adapter 的内部组件也是插件！所以理论上，它将随着时间演化，越来越坚固。</p>
+<h1 id="开始使用">开始使用</h1>
+<p>CodeLab Adapter 3.0 的<a href="https://adapter.codelab.club/user_guide/install/">下载地址</a>与之前相同，它是免安装的。运行之后，记得更新插件。</p>
+<p>有任何问题，欢迎与我们联系。</p>
+<h1 id="写在后边">写在后边</h1>
+<h2 id="codelab-adapter-30-与-scratch-30">CodeLab Adapter 3.0 与 Scratch 3.0</h2>
+<p>Scratch 最初来自 Smalltalk 社区。尽管 Scratch 3.0 改由 JavaScript 实现（为了更好地支持网络社区），但其编程风格和体系设计依然保持 Smalltalk 风格， 消息(message)和对象/角色 是其一等公民，也是它的思考方式。 这也正是熟悉传统编程语言的开发者/教育者，觉得 Scratch 非常奇怪的一个原因。</p>
+<p>以 C 或 Java 的风格理解和教学 Scratch ，会觉得使用它是一种将就, 带着疲弱感, 希望快快从中逃离，进入<code>真正</code>的编程世界里( Python/C/C++&hellip; ), 人们无法发挥它继承自 Smalltalk 的灵活性，这令人遗憾，但正是今天围绕编程入门教育的现状。</p>
+<p>Scratch 全球社区有 5430.8 万用户, 还不包括国内各类 Scratch 的改编版的用户。如何赋予这个人群更强大的力量，让它们在其中理解 AI、物联网、开源硬件&hellip; 所有这些在 Scratch 创建之初，并未被考虑进来。这些东西，我们认为对于未来社会的公民至关重要，这正是今天各国教育看中 STEM 和编程教育的原因之一。如何将这些新事物与孩子们已经熟悉的工具 &ndash; Scratch 结合起来，让新的知识从已经掌握的知识中自然生长出来，而不是造成更多割裂，是 CodeLab Adapter 最初的目标之一。 当然，今天 CodeLab Adapter 已经独立于 Scratch 可以支持其他 34+ 编程语言。</p>
+<p>由于 CodeLab Adapter 最初是为增强 Scratch 3.0 ，所以 2019.04.06 我们前往 MIT Scratch Team 与他们分享了我们在这方面的工作（我们在之前的博客里有记录此次行程）。</p>
+<p><img src="https://adapter.codelab.club/img/codelab_mit.jpg" alt=""> <!--Scratch mit--></p>
+<p>和 Scratch 3.0 类似，虽然在软件体系设计上，大量从 Smalltalk 汲取营养，但其实现语言，并未采用 Smalltalk, 对于 CodeLab Adapter， 实现语言是 Python 。原因是 Python 生态在今天高度成熟，允许我们以最小的代价实现它。而 Smalltalk 更偏向研究和学习，对于工程实践，生态很小，</p>
+<p>由于两者的核心都是消息和对象，都是 Smalltalk 风格，它们背后的隐喻和思考方式是相似的，这点对于学习者的意义在于，Ta 们在不需要切换心理模型的情况下，可以扩展自身能力的范围。</p>
+<p>在 CodeLab Adapter 3.0 中，我们将更多外部世界的能力引入 Scratch，同时我们重构了整个插件体系， 允许第三方公司像我们一样能够轻松扩展它以匹配自己的业务模型。</p>
+<h1 id="致敬">致敬</h1>
+<p>CodeLab Adapter 3.0 受到以下项目启发:</p>
+<ul>
+<li>Smalltalk</li>
+<li>Dynamicland</li>
+<li>ZeroMQ</li>
+<li>Jupyter</li>
+<li>Lively</li>
+<li>ROS</li>
+<li>Cozmo/Vector SDK</li>
+</ul>
+<p>关于系统设计方面，致敬 Alan kay，3.0 做了大量调整。所有这些变化之所以能够连贯地进行，而不至于坍塌，是因为它本质上一个消息系统，这正是 Alan Kay 一直坚持的更好&quot;旧&quot;事物，消息系统拥有惊人的灵活性，这类系统在演化过程中，并不是在重塑某种结构，更恰当的隐喻是，它像生物一样生长。</p>
+<p>正是 Alan Kay <a href="http://lists.squeakfoundation.org/pipermail/squeak-dev/1998-October/017019.html">关于<code>面向对象</code>的异端见解</a>， 让我们得以如此愉快地编程。</p>
+<p>此外， 年初的 Dynamicland 之行，对我们的影响也很大 ，我们在<a href="/post/%E7%BC%96%E7%A8%8B/the-next-big-thing-is-a-room/">奥克兰的一间屋子里</a>亲眼见识了真正伟大的项目，如 Alan Kay 所说，Bret 在 Dynamicland 里延续恩格尔巴特的理想。今天如果有什么地方像 80 年代的施乐实验室一样令人惊叹和热血沸腾，Dynamicland 肯定是其一(如果不是唯一的话) &ndash; 奥克兰街角处的一间屋子，午后透窗的阳光和 Bret 本人一样安静，像一个赶工的忙碌木匠。</p>
+<p>感谢 志愿者 @Finn 和 @实习生 David 的同行和一路讨论。</p>
+<p>Dynamicland 对 &ldquo;one world&rdquo; 的坚持是奇怪的，仿佛在使用全局变量之类的东西。那其实是消息。</p>
+<p>我们从 Dynamicland 带回了一些他们的资料，资料里提到今年年底， Dynamicland 将离开实验室， CodeLab 希望在国内第一个实践它，并将其核心系统 realtalk 接入到 CodeLab Adapter 。 在 3.0 中，我们之所以致力于提升灵活性并扩展消息结构， 是为今年年底，接入 Dynamicland 作准备。</p>
+<h2 id="后记">后记</h2>
+<p>写完这篇东西，以及发布完软件新版本，如释重负。</p>
+<p>原本计划上周发布它，拖了一周，有点抱歉，简单做个解释。</p>
+<p>围绕这个项目，前后思考了 2 年有余，关于 messaging 的许多问题，也持续困扰了我两年多，这些问题有时让人恼火，有时让人沮丧，有时令人热血沸腾（它发生在洗澡、爬山或睡醒时），但从不让人平静。它有时造成睡眠不好，神经衰弱，尤其在每次重构的时候，对之前自己的愚蠢都感到触目惊心。</p>
+<p>由于疫情，有大把时间读其他采用了消息的优秀项目源码。这段时间，大体上读完 Jupyter、ROS1/ROS2 client 源码、Vector SDK 源码、Pieter Hintjens 混合了吐槽和奇妙洞见的 ZeroMQ 引导、以及 Smalltalk 几位作者的早期论文，把过去积累的困惑差弄懂了许多，但造成的问题是，想不停推翻之前写的东西。</p>
+<p>原本计划上周发布，发布前发现很多地方需要重写，一开始试图安慰自己说那些可以在以后的迭代里做，可越想越不对，有些体系设计缺陷，如果不现在处理，以后的代价会很大。原本想假装没看见，以后的烦恼留给以后，想快点发布它，好睡个好觉。但第二天一早醒来问题还在那里。上周有一天，早上 6 点多醒来，决定把几个大的模块彻底重写，因为里边有几个严重问题，包括消息 channel 的命名，而糟糕的命名又会混淆概念，让体系越来越混乱。那天在屏幕前待太久，导致这一周视力还有点问题， 希望快点恢复。</p>
+<p>好歹它现在完成了, 接下来软件肯定还会有很多 bug，但我相信不会是结构性的问题，新的问题，可以在迭代中优化，期待你的反馈，让我们在迭代里一起改进它。</p>
+<p>最后希望，我们的工作，为你带来乐趣 :)</p>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-04-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/codelab/">codelab</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-adapter-as-python-interpreter/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">将CodeLab Adapter用作Python解释器</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+            <span class="next-text nav-default">aboutme</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

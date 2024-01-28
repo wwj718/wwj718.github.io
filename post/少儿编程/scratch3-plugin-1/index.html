@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>为Scratch3.0设计的插件系统(上篇) - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="我们每个人在内心深处都怀有一个梦想: 希望创造出一个鲜活的世界，一个宇宙。处在我们生活的中间、被训练为架构师的那些人，拥有这样的渴望: 在某一天" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-plugin-1/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="为Scratch3.0设计的插件系统(上篇)" />
+<meta property="og:description" content="我们每个人在内心深处都怀有一个梦想: 希望创造出一个鲜活的世界，一个宇宙。处在我们生活的中间、被训练为架构师的那些人，拥有这样的渴望: 在某一天" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-plugin-1/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-03-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-03-20T00:00:00+00:00" />
+
+<meta itemprop="name" content="为Scratch3.0设计的插件系统(上篇)">
+<meta itemprop="description" content="我们每个人在内心深处都怀有一个梦想: 希望创造出一个鲜活的世界，一个宇宙。处在我们生活的中间、被训练为架构师的那些人，拥有这样的渴望: 在某一天"><meta itemprop="datePublished" content="2018-03-20T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-03-20T00:00:00+00:00" />
+<meta itemprop="wordCount" content="4697">
+<meta itemprop="keywords" content="scratch," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="为Scratch3.0设计的插件系统(上篇)"/>
+<meta name="twitter:description" content="我们每个人在内心深处都怀有一个梦想: 希望创造出一个鲜活的世界，一个宇宙。处在我们生活的中间、被训练为架构师的那些人，拥有这样的渴望: 在某一天"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">为Scratch3.0设计的插件系统(上篇)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-03-20 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/"> 少儿编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#scratch30">Scratch3.0</a></li>
+        <li><a href="#scratch30的插件机制">Scratch3.0的插件机制</a></li>
+        <li><a href="#官方的尝试">官方的尝试</a></li>
+        <li><a href="#社区的尝试">社区的尝试</a></li>
+        <li><a href="#我的设计">我的设计</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>我们每个人在内心深处都怀有一个梦想: 希望创造出一个鲜活的世界，一个宇宙。处在我们生活的中间、被训练为架构师的那些人，拥有这样的渴望: 在某一天，在某一个地方，因为某种原因，创造出了一个不可思议的、美丽的、摄人心魄的场所，在那里人们可以漫步，可以梦想，历经很多世纪绵延不绝.  &ndash;Christopher Alexander</p>
+</blockquote>
+<h1 id="scratch是一个游乐场">Scratch是一个游乐场</h1>
+<p>在我心目中，Scratch便是这样的一个美丽的场所，孩子们和保持着童真的成年孩子们在其中漫步、游戏以及梦想。Ta们在Scratch这个游乐场中创造并分享着乐趣</p>
+<p><a href="https://scratch.mit.edu/">Scratch</a>是一个伟大的项目，无论从它最初的愿景(在<a href="http://web.media.mit.edu/~mres/papers/scratch-proposal.pdf">A Networked, Media-Rich Programming Environment to Enhance Technological Fluency at After-School Centers in Economically-Disadvantaged Communities</a>这篇提案中有详述最初的构想和愿景），还是它后来的实现，无论就它的软件设计，还是项目影响力而言，都堪称杰作。</p>
+<p>如果你对Scratch的前世今生感兴趣，可以翻翻我之前的这篇文章:<a href="http://blog.just4fun.site/scratch.html">Scratch的前世今生</a>, 当时刚读完《爆裂》，借助《爆裂》一书提供的线索和借助互联网，我沿着理念传承这条线，从雷斯尼克的Scratch追溯到派珀特的Logo语言，之后抵达皮亚杰的认知论（再往前甚至将追溯到洛克的经验论）</p>
+<p>将于今年8月发布的Scratch3.0无疑将延续这个传统，继续做出振奋人心的东西。</p>
+<p>Scratch是个游乐场，而且是一个设施完善的游乐场，你可以在其中发挥天马行空的想象力，创造出属于你的世界。</p>
+<h1 id="scratch是个像素世界">Scratch是个像素世界</h1>
+<p>唯一的遗憾是，这个世界以像素的形式出现。当然你可能觉得这哪是什么遗憾，像素世界比身边这个原子世界广阔多了。去过四维空间的人，回到三维空间，即便漂浮于太空，外面是浩瀚的星空，仍会觉得逼仄得很，一些人的星辰大海只不过是囚禁另一些人的牢笼。这是一种患有幽闭恐惧症的感受。同样，如果你在虚拟世界浪荡久了，回到现实中来，可能也会觉得匮乏，饭居然是要一口一口吃的！我明明都已经完整吃了一口了，这个世界甚至都不提供一个for循环积木块！</p>
+<p>但现在是三月，江南的三月，鸡鸣寺樱花盛开的三月，站在鸡鸣寺下、玄武湖前的樱花树下，无论阴雨还是春风，你都很难不被这个由原子而非像素构成的世界所打动。</p>
+<p>虽然这个原子世界的确可能就是像素构成的&hellip;anyway，先抛开你的怀疑论，让我们进入正题。</p>
+<p>我们说了这个多科幻的内容，正题并不是你期待的《三体》，这篇文章准备讨论的是如何为Scratch3.0构建一个通用的插件系统，让Scratch3.0能与来自物理世界的硬件打交道</p>
+<p>我们准备构建一个通道，连接原子和像素世界</p>
+<h1 id="来自物理世界的硬件">来自物理世界的硬件</h1>
+<p>物理世界有许多参数，诸如温度、湿度、磁场、速度、光照强度&hellip;以及，你喜欢的姑娘身上特有的香味</p>
+<p>这些参数可以被各种各样的传感器所捕获(你身上的绅士风度属于不可知论范畴，不能被物理参数描述)，一旦你能捕捉到现实世界的各种参数，你就能做出许许多多好玩的东西，诸如，通过捕捉楼道的声音，你可以做到: 当楼道里有声响时，把楼道里的灯打开，这样一来你就做出了声控灯。可是你不想白天楼道里也亮着灯，怎么办呢？ 你可以把光照的信息也捕捉了，这样一来你就可以在光线不足且有人经过的时候才开灯,这样一来就节约了电力。注意我说的是光线不足就开灯，而不是晚上，为什么呢，因为我们希望光线昏暗的时候，都能为行人提供照明，而不只是晚上，我们通过获取光线而不是根据昼夜时间来决定是否亮灯。这样系统可以在大白天里黑云压城的时候，也能贴心地为行人亮起灯，这便是所谓的&quot;科技以人为本&quot;</p>
+<p>Scratch是个教育项目，如果它能更多地和现实发生关联，一个孩子在Scratch中创作的作品，能对接到各种硬件，在Ta现实中被使用，这些作品帮助了Ta的父母和邻居解决生活问题，Ta的学习热情将将被噼里啪啦点燃。关于这方面的描述，PC之父Alan Curtis Kay和LOGO语言之父Papert都有过精彩论述</p>
+<p>我们结下来要做的，就是实现这样一种架构，在这个架构之下，各种硬件(小车、四轴飞行器、cozmo、microbit、Circuit Playground Express)都能与Scratch3.0交互，而且这个架构将基于消息，利用pub/sub的机制，降低构件的耦合，提高系统健壮性和可重用性</p>
+<h1 id="为scratch30设计的插件系统">为Scratch3.0设计的插件系统</h1>
+<blockquote>
+<p>Make everything as simple as possible, but not simpler</p>
+</blockquote>
+<h3 id="scratch30">Scratch3.0</h3>
+<p>Scratch3.0基于html5构建，能轻松支持多平台运行，十分可期，而且带来了多项有趣的改进。目前的开发版可以在<a href="https://llk.github.io/scratch-gui/">这儿尝鲜</a>. 对源码有兴趣的小伙伴，想围观或者参与，都可以<a href="https://github.com/LLK">戳这里</a></p>
+<p>社区里不少公司已经用Scratch3.0作出了许多令人惊叹的东西，Cozmo是其中的佼佼者</p>
+<p>Scratch3.0原计划在今年春季正式发布，春天来了，樱花如期盛开，Scratch3.0却跳票了，推迟到8月份发布</p>
+<p>人面不知何处去，桃花依旧笑春风</p>
+<h3 id="scratch30的插件机制">Scratch3.0的插件机制</h3>
+<blockquote>
+<p>自由有时候是一种负担</p>
+</blockquote>
+<p>我们的目标是为Scratch3.0做一个插件系统，准确地说是做一个连接Scratch3.0与外围硬件的插件系统.</p>
+<p>Scratch3.0已经有它自己的插件机制。Scratch3.0的插件机制比较简单，它允许你写一个自己的插件，这个插件在UI层面表现为自定义的积木块，你在积木块中定义好自己的原语(opcode),之后这个积木块和Scratch中默认的积木块一样，可以被用户拿来拼拼搭搭。用户拼搭的过程中，积木块的组合形式也就是<code>程序</code>将语义以json的形式传到<a href="https://github.com/LLK/scratch-vm">scratch-vm</a>,它们在vm中被解释运行，至于你在页面上看到的小猫的运动和声音，则是scratch-vm中程序的output：output的具体实现是<a href="https://github.com/LLK/scratch-audio">scratch-audio</a>和<a href="https://github.com/LLK/scratch-render">scratch-render</a>的东西.这些属于实现细节，跟着官方的插件走一遍就行。</p>
+<p>如果你熟悉scratch2和<a href="https://github.com/LLK/scratchx">scratchx</a>项目，你会发现，scratch3.0的插件机制和之前相似</p>
+<p>从上边的描述中，我们可以发现，Scratch3.0的插件机制对于你应该如何与外部硬件设备交互，啥都没说。</p>
+<p>在官方的插件机制中，你有极大的自由，因为它无为而治。有时候自由是一种负担，自由意味着你自己得作出选择，并承担所有的风险。</p>
+<h3 id="官方的尝试">官方的尝试</h3>
+<p>说官方对Scratch3.0如何与外部硬件设备交互只字未提，可能会遭到官方的反驳，毕竟他们为乐高的wedo2机器人写了一个Scratch3.0插件（目前源码已经基本完成了，只是官方没有启用这个插件），通过这个插件，我们可以在Scratch3.0中操控wedo2机器人。这个插件的源码向你展示了Scratch3.0是如何与硬件交互的，但这个插件也还是缄默多于言说，目前开发文档几乎保持空白，Scratch官方似乎在有一种向维特根斯坦的恶意模仿</p>
+<p>wedo2的源码很好读，写的也漂亮，虽说乐高赞助了mit media lab一个教授席位，但wedo2的源码并没有获得特殊待遇，而是用了标准的插件机制。如前所述，插件提供了wedo2的编程积木块，这些积木块的语义将传递到scratch-vm中执行，其中最关键的一步是通过socketio将语义传递给硬件。当然上边的说法过于笼统，我跟踪了这个过程，websocket管道的那端并不是直接连着wedo2机器人，而是连着一个本地插件，这个本地插件接着通过蓝牙连接wedo2. 这个本地插件本质上是个代理。</p>
+<p>我之前的的blockly4pi和wedo2的设计几乎一样，这个项目之后我应该会开源出来，之前在jupyter的架构分析的文章中提到过，如果你有兴趣可以翻阅我之前的文章</p>
+<h3 id="社区的尝试">社区的尝试</h3>
+<p>在说我的设计之前，我们来看看社区上已有的方案</p>
+<p>目前把Scratch3.0玩得很溜的，国外有Cozmo，而国内有makeblock和kittenbot</p>
+<p>我去年长途旅行经过深圳时，和makeblock和kittenbot在Maker Faire上碰过面，两个团队都非常优秀</p>
+<h4 id="cozmo">Cozmo</h4>
+<p>先从Cozmo说起，Cozmo一骑绝尘，从产品、sdk源码到体验都惊艳之极。Cozmo的目前只公开了python SDK源码，从源码中我们可以看出，Cozmo的server里藏有一个ROS（Robot Operating System），这个ROS应该在它的APP里，这也是它为何如此依赖于APP的原因以及APP如此臃肿的原因。而它的Scratch3.0界面与它的ROS通信，我接下来准备提出的插件架构，本质上是我对Cozmo架构的猜想，因为它的源码未开放，我暂时没办法验证，但我们可以断言的是，cozmo的scratch是以消息的方式与硬件交互的（这是ROS系统的核心），这和wedo2很像，实际上在这一类项目目前只有两种架构风格。大分类下，wedo2和cozmo属于一类，下边我们要说的makeblock和kittenbot是另一类</p>
+<p>我最近花了1.5个周末读完《ROS机器人编程实践》才理解了Cozmo的架构设计（至少在逻辑上），这里边的很多问题，并不是Scratch图形化编程的问题，而是ROS的问题，所以至今Cozmo并无对手。毫无疑问，Cozmo对Scratch3.0的应用上也是一骑绝尘的。这让人想起那句称赞约翰·麦卡锡的那句话</p>
+<blockquote>
+<p>巨人随手丢下的鹅软石都是巨石</p>
+</blockquote>
+<h4 id="mblock">mblock</h4>
+<p>接下来我们说说makeblock对Scratch3.0的应用，这里我们只关心mblock操作程小奔（硬件机器人）相关的部分，AI和DL部分有空再说</p>
+<p>插个题外话，mblock中有许多精彩的工作，其中我最喜欢的一个部分是，他们顺利做到让microbit支持多任务(甚至事件)，这个microbit官方目前都还做不到（在python中），实现机制十分精巧，经过逆向分析，我们可以看到具体的代码实现（实际是用正则做预处理），不过即便不通过逆向分析，我们通过观察积木块生成的python代码，也能猜到预编译的机制，关于这块我们之后有空再说</p>
+<p>mblock对硬件的操作是通过将scratch3.0积木generate出python代码来做的，之后将代码灌入他们的硬件机器人（程小奔）中，也就是说在mblock中，Scratch3.0被当作blockly来使用(典型的blcokly app风格)。此外值得一提的是，mblock中有一个叫做<code>通讯变量</code>的概念，这个概念很有趣，它能把硬件和scratch连通。限于篇幅和我困了，也之后再说</p>
+<p>程小奔使用micropython构建，可能是目前最大的micropython项目之一，关于硬件这块，这里也没空多说，前头废话说了太多，对不起诸位。我们之后找个时间来说说mblock是如何使用esp32板子做出程小奔的，当然很多部分是我的实验加猜测，毕竟源码mblock还没有开放。</p>
+<p>mblock和程小奔在工程上都是漂亮的作品，给工程团队打call！</p>
+<h4 id="kittenbot">kittenbot</h4>
+<p>小喵家的公众号我一直是关注的，小喵们做了许多geek且有趣的工作。团队人不多，但做出的东西却很赞！此处星星眼</p>
+<p>kittenbot之前是open source，新的版本似乎没开放，不过mblock和kittenbot对开源社区都很友好，之后会开放也未可知。</p>
+<p>kittenblcok中之前对microbit的操作也是generate成python再灌入的，这点和mblock相似。最近我没怎么用kittenblcok，不知道最近是不是有调整，等我有空试完再补充。</p>
+<h3 id="我的设计">我的设计</h3>
+<p>写到这里都半夜了，只好把这篇文章拆分为二了，有空再来补上我的自己的插件架构设计</p>
+<p>在这个设计之上，我们已经作出了一个具体的实现(scratch3.0和microbit的互操作)，准备以软件包的形式发布(正在制作)，可见我们是吃自己的狗粮的</p>
+<p>架构层面主要受ROS和jupyter的影响</p>
+<p>我们下篇里见</p>
+<blockquote>
+</blockquote>
+<!--
+如果你对Scratch3.0已有的插件机制不熟悉，恐怕这篇文章无法教会你用Scratch3.0来驱动硬件
+
+why
+
+在这个架构之下 scratch也仅是一个组件而已
+
+raspberry4pi
+
+vm的延迟
+
+就像很多人会怀念忙碌的高中一样
+如果你不知道要干嘛
+
+关注是差异的开始
+
+驯服 建立联系
+订阅
+
+一些你可能会遇到的坑
+
+如果你的硬件和cozmo一样复杂
+
+mblock的做法  通讯变量
+你需要ros
+
+‌你不能指望一本书能把傅立叶讲解得和天线宝宝的情节一样简单
+‌如果作者说它能
+‌要么他是个骗子 要么他是个疯子  要么他是波特兰罗素
+‌
+‌
+scratch源码是复杂的 
+
+它复杂到 甚至发了izuo不短的一段时间去理解它
+‌要么这个作者是罗素
+‌要么
+-->
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-03-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/scratch/">scratch</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-plugin-2/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">为Scratch3.0设计的插件系统(下篇)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%95%B0%E6%8D%AE/ocr-example/">
+            <span class="next-text nav-default">OCR应用一例</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

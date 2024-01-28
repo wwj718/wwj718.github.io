@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Screenly--用树莓派让任何屏幕变为可编程的数字标牌 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="对计算机的访问应该是完全不受限制的。任何人都有动手尝试的权利. 黑客们相信，通过将东西拆开，了解它们的工作原理，并根据这种理解创造新奇的甚至更" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/screenly-rpi/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Screenly--用树莓派让任何屏幕变为可编程的数字标牌" />
+<meta property="og:description" content="对计算机的访问应该是完全不受限制的。任何人都有动手尝试的权利. 黑客们相信，通过将东西拆开，了解它们的工作原理，并根据这种理解创造新奇的甚至更" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E5%B7%A5%E5%85%B7/screenly-rpi/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2018-06-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2018-06-30T00:00:00+00:00" />
+
+<meta itemprop="name" content="Screenly--用树莓派让任何屏幕变为可编程的数字标牌">
+<meta itemprop="description" content="对计算机的访问应该是完全不受限制的。任何人都有动手尝试的权利. 黑客们相信，通过将东西拆开，了解它们的工作原理，并根据这种理解创造新奇的甚至更"><meta itemprop="datePublished" content="2018-06-30T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2018-06-30T00:00:00+00:00" />
+<meta itemprop="wordCount" content="4147">
+<meta itemprop="keywords" content="tools," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Screenly--用树莓派让任何屏幕变为可编程的数字标牌"/>
+<meta name="twitter:description" content="对计算机的访问应该是完全不受限制的。任何人都有动手尝试的权利. 黑客们相信，通过将东西拆开，了解它们的工作原理，并根据这种理解创造新奇的甚至更"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Screenly--用树莓派让任何屏幕变为可编程的数字标牌</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-06-30 </span>
+        <div class="post-category">
+            <a href="/categories/%E5%B7%A5%E5%85%B7/"> 工具 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#角色和功能">角色和功能</a></li>
+        <li><a href="#行业概览">行业概览</a></li>
+        <li><a href="#数字内容">数字内容</a></li>
+        <li><a href="#显示内容控制软件">显示内容控制软件</a></li>
+        <li><a href="#技术">技术</a></li>
+        <li><a href="#标准">标准</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#screenly社区版httpswwwscreenlyioose介绍"><a href="https://www.screenly.io/ose/">screenly社区版</a>介绍</a></li>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#使用">使用</a></li>
+        <li><a href="#api">API</a></li>
+        <li><a href="#互动实例">互动实例</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/screenly_6bf7ab10.png" alt=""></p>
+<blockquote>
+<p>对计算机的访问应该是完全不受限制的。任何人都有动手尝试的权利. 黑客们相信，通过将东西拆开，了解它们的工作原理，并根据这种理解创造新奇的甚至更有趣的东西，可以学习到关于系统的重要知识。他们痛恨一切试图阻止他们这么做的人、物理障碍或者法律。  &ndash;《黑客: 计算机革命的英雄》</p>
+</blockquote>
+<h1 id="关于screenly">关于screenly</h1>
+<p><a href="https://www.screenly.io/">screenly</a>是个很酷的项目，它让制作数字标牌（<a href="https://en.wikipedia.org/wiki/Digital_signage">Digital signage</a>）变得简单，并且它推出了开源版本！在我们开始介绍screenly之前，我们先来了解一下数字标牌（<a href="https://en.wikipedia.org/wiki/Digital_signage">Digital signage</a>）是什么。</p>
+<p>如果你对数字标牌行业兴趣不大，只对动手用树莓派构建它感兴趣，那你只需要知道数字标牌就是<code>可以播放内容的屏幕</code>就行了，然后直接跳到screenly部分.</p>
+<h1 id="数字标牌digital-signagehttpsenwikipediaorgwikidigital_signage">数字标牌（<a href="https://en.wikipedia.org/wiki/Digital_signage">Digital signage</a>）</h1>
+<p>当你在肯德基里点了一对辣翅、一份土豆泥、一杯玉米饮，拿到2099编号的小票，等待柜台前的屏幕告知你领餐;<br>
+当你在招商银行取号排队办理挂失，看着柜台前的红色数字从20慢慢变到30;<br>
+当你在盛夏的午后，站在奶茶店门口，看着屏幕上琳琅满目的新品，犯了选择困难症;<br>
+当你拉着漂亮小姐姐，在电影开始前最后1分钟，奔往5号厅，在影院长廊里，身边飞过一个个播着不通预告片的屏幕;</p>
+<p>上边出现的这些屏幕，都是数字标牌</p>
+<p>数字标牌有些像一个小电脑，店家将它们希望呈现给用户的内容投射到屏幕上。</p>
+<p>我们来看看维基百科上更为专业的介绍（这个词条写得十分精彩，我对数字标牌行业的理解，主要也是基于这个词条，目前这个词条还没有中文版本，在阅读的时候，顺便也翻译一下，做了些微调，引述如下）：</p>
+<p>数字标牌是<a href="https://en.wikipedia.org/wiki/Electronic_signage">电子标牌</a>的一个子概念。数字显示器使用诸如LCD，LED，投影和电子纸等技术来显示数字图像、视频、网页、天气数据、或文本。它们可以在交通系统、博物馆、体育场馆、零售店、酒店、餐馆等地方找到，以提供路标、展览、营销和户外广告。</p>
+<p>数字标牌被定义为:</p>
+<blockquote>
+<p>通常与销售、广告和营销紧密相关的数字显示器</p>
+</blockquote>
+<h3 id="角色和功能">角色和功能</h3>
+<p>数字标牌有许多功能与目标，最常见的包括：</p>
+<ul>
+<li>公共信息 - 新闻、天气、交通和本地（特定位置）信息，如地图、火警出口和旅客信息等。</li>
+<li>内部信息 - 公司信息，如健康和安全项目、新闻等。</li>
+<li>产品信息 - 定价、产品照片、原材料或配料等 - 特别适用于食品营销，其中标牌可能包括营养成分或建议的用途、配方。</li>
+<li>提高客户服务体验的信息 - 博物馆、画廊、动物园、公园和花园，展览，旅游和文化景点的解说标牌。</li>
+<li>广告和促销 - 宣传产品或服务</li>
+<li>品牌建设 - 店内数字标牌，以促进品牌和建立品牌标识。</li>
+<li>影响顾客的行为 - 导航，指导顾客到不同的地方，增加店面的“停留时间”，以及为这种影响服务的其他用途。</li>
+<li>影响产品或品牌决策 - 在销售点设计影响选择的标牌，例如标牌，以帮助购物者选择时装店内的服装或帮助顾客找到产品、查看价格、访问产品信息</li>
+<li>增强客户体验 - 应用包括餐厅、银行等候区提示客户等待时间</li>
+<li>导航 - 交互式屏幕的屏幕</li>
+<li>预约 - 墙壁或桌面上的小型互动屏幕，与资源调度平台相集成。</li>
+</ul>
+<h3 id="行业概览">行业概览</h3>
+<p>全球有200多家不同的公司销售数字标牌解决方案，数字标牌市场预计到2020年将增长到219.2亿美元。美国占据市场份额的大部分。亚太和欧洲地区已经显示出前景，欧洲的德国和英国，亚太地区的日本和韩国。预计这四个国家到2020年的增长率最高</p>
+<p>数字标牌的主要目标客户是餐馆、零售商、办公楼、地方规划机构、公共交通服务等。这些行业对数字标牌的具体应用，就不一一引述了，参考:<a href="https://en.wikipedia.org/wiki/Digital_signage">Digital signage</a></p>
+<h3 id="数字内容">数字内容</h3>
+<p>数字内容通过显示控制软件进行管理。控制软件可以是独立的专用程序，也可以与硬件集成。程序可以从音频、视频、图像、文本清单中创建新消息，这些消息以不同的组合和排列组合以实时产生新消息。</p>
+<p>数字标牌上显示的数字内容往往属于以下形式之一：</p>
+<ul>
+<li>文本 - 滚动文本。滚动固定的文本或动态更新的文本。</li>
+<li>图像 - 滚动图像，通常是广告海报</li>
+<li>视频 - 可自定义视频</li>
+<li>交互式界面 - 将标牌与触摸屏、传感器、RFID技术集成，以便与用户进行双向通信。交互式数字标牌有助于吸引用户，也可以帮助广告商了解客户行为。</li>
+<li>上下文感知接口 - 将标牌与摄像头、传感器集成，以监控周围环境，根据观众信息、天气状况或其他外部因素更新标牌内容。</li>
+</ul>
+<h3 id="显示内容控制软件">显示内容控制软件</h3>
+<p>对于小面积区域内使用的设备，可以采用U盘和SD来更新内容。对于分布在不同区域的大型网络，往往使用DAN（数字广告网络）播放器，它们直接连到监视器和互联网，允许最终用户从任何位置管理多个DAN播放器</p>
+<h3 id="技术">技术</h3>
+<ul>
+<li>在<code>互动</code>层面，交互式数字标牌允许用户通过触摸屏，体感设备或手机扫码与数字内容交互</li>
+<li>上下文感知数字标牌利用传感器、摄像头、RFID技术、物联网（IoT）等硬件设施来观察周围环境，处理信息并根据环境决定展示的内容。许多数字标牌产品携带摄像头，通过估算路人的年龄、性别和经济状况来收集购物者的统计数据，并使用这些信息更新标牌内容或进行数据分析</li>
+</ul>
+<h3 id="标准">标准</h3>
+<p>JPEG图像和MPEG4视频仍然是数字标牌行业的主流数字内容格式。对于交互式内容，HTML5和Unity3D由于其在Web开发人员和多媒体设计人员中的流行而广泛使用。</p>
+<h1 id="screenlyhttpswwwscreenlyio提供的解决方案"><a href="https://www.screenly.io/">screenly</a>提供的解决方案</h1>
+<blockquote>
+<p>Digital signage made easy.</p>
+</blockquote>
+<p>前边的部分里，维基百科对数字标牌进行了多视角的介绍和分析，我们对这个行业也有了整体的了解。这是一个非常有趣的行业，计算机技术是数字标牌的基础(从名字我们就可以看出)，借助技术和想象力，有很多有趣的事情可以做。</p>
+<p>但如何介入这个领域呢？毕竟我们不可能从硬件开始制作一个数字标牌。即便我们购买了一个数字标牌的解决方案，在应用它的时候，某天灵机一动，想对其它做些改进，也基本是不可能的。除非它们开放源代码。我们才可能改进它，把创意融入其中。</p>
+<p>我喜欢《黑客: 计算机革命的英雄》中的这段话：</p>
+<blockquote>
+<p>对计算机的访问应该是不受限制的、完全的。任何人都有动手尝试的权利. 黑客们相信，通过将东西拆开，了解它们的工作原理，并根据这种理解创造新奇的甚至更有趣的东西，可以学习到关于系统的重要知识。他们痛恨一切试图阻止他们这么做的人、物理障碍或者法律。</p>
+</blockquote>
+<p><a href="https://www.screenly.io/">screenly</a>给了我们这种机会，<a href="https://www.screenly.io/">screenly</a>是数字标牌的解决方案，他们除了推出商业版本之外，也推出了<a href="https://www.screenly.io/ose/">社区版</a>，将<a href="https://github.com/screenly/screenly-ose/">源代码</a>开放了出来。</p>
+<p><a href="https://www.screenly.io/">screenly</a>提供的商业版本在此不多介绍，感兴趣的小伙伴可以到他们主页去看，下边重点说说开源的<a href="https://www.screenly.io/ose/">社区版</a></p>
+<h3 id="screenly社区版httpswwwscreenlyioose介绍"><a href="https://www.screenly.io/ose/">screenly社区版</a>介绍</h3>
+<p>Screenly OSE/Open Source Edition是由社区支持并由Screenly维护的免费数字标牌软件。</p>
+<p>介绍视频在这里:<a href="https://youtu.be/FQte5yP0azE">这里</a>,你也可以直观地体验<a href="http://ose.demo.screenlyapp.com/">线上demo</a></p>
+<p><img src="/post/img/screenly_bc612fca.png" alt="线上demo"></p>
+<p>Screenly OSE使用树莓派作为它们的载体，由于树莓派有HDMI接口，所以你可以将任何支持HDMI接口的屏幕变为可编程的数字标牌！成本低到令人震惊！以至于我觉得Screenly是来搅局的哈哈</p>
+<p>技术上，Screenly OSE在树莓派中只是作为一个普通的软件存在，你依然可以在操作系统中做任何你想做的事。诸如你可以让Screenly OSE与opencv结合，做出一些令人惊叹的交互式数字标牌，诸如我在<a href="/lab/scratch3-adapter-docs/user_guide/gallery/">scratch3-adapter文档</a>中写的：</p>
+<blockquote>
+<p>当穿着裙子的姑娘走近屏幕，屏幕立马给她安利新款纪梵希，而穿着格子衬衫的大叔靠近时，屏幕则以机械键盘蛊惑他</p>
+</blockquote>
+<p>事实上<a href="/lab/scratch3-adapter-docs/user_guide/gallery/">scratch3-adapter文档</a>中屏幕与门的互动例子，就是用Screenly OSE + <a href="https://github.com/home-assistant/home-assistant">home assistant</a>+ scratch3.0实现的</p>
+<p>Screenly OSE中有很多有趣的技术工作。诸如它集成了<a href="https://github.com/resin-io/resin-wifi-connect">resin-wifi-connect</a>, 如此一来Screenly OSE的无线连接将变得极其简易。对于面向非技术的用户的产品，简单的初始化无线连接至关重要</p>
+<h3 id="安装">安装</h3>
+<p>Screenly OSE的安装十分简单，与安装普通树莓派镜像几乎无差别。我们在此假设你对树莓派并不熟悉，你需要以下清单里的东西:</p>
+<ul>
+<li>一个树莓派，推荐3B</li>
+<li>一个大于4GB的SD卡</li>
+<li>一根HDMI高清线</li>
+<li>一个无线网络(不是必须的，你也可以离线使用它)</li>
+<li>一个支持HDMI的屏幕(可以直接用电视)</li>
+</ul>
+<p>结下来我们有两种方式使用Screenly OSE，一种方法是直接烧录官方提供的<a href="https://github.com/screenly/screenly-ose/releases">镜像</a>，这种方式最为简单，如何烧录镜像我就不赘述了，可以google一下。</p>
+<p>另一种方式需要你有技术背景，由于Screenly OSE只是一个软件，所以你可以在raspbian中手动安装它，安装已经一键化了,切换到root用户(<code>sudo -i</code>),然后在tmux里运行:</p>
+<p><code>bash &lt;(curl -sL https://www.screenly.io/install-ose.sh)</code></p>
+<p>如果中途失败(国内网络你懂的)，重新执行就行</p>
+<p>安装完成之后，配置好wifi，将树莓派用高清线连接屏幕，重启，连上Screenly OSE发射的热点(名字里包含Screenly)，屏幕会显示web控制平台的入口地址(默认是:http://raspberrypi.local/)</p>
+<h3 id="使用">使用</h3>
+<p>登陆web控制平台，你就进入了前头<a href="http://ose.demo.screenlyapp.com/">线上demo</a>展示的页面，你可以上传需要展示的内容啦！</p>
+<p><img src="/post/img/screenly_bc612fca.png" alt="线上demo"></p>
+<p>在web控制平台里，你可以设置内容的展示时间和可见性等属性，使用简单，页面基本是自说明的。</p>
+<p>enjoy it！</p>
+<h3 id="api">API</h3>
+<p>Screenly OSE提供了RESTful风格的API，文档参考:<a href="http://ose.demo.screenlyapp.com/api/docs/">api/docs</a></p>
+<p>有了API，你可以轻松做出交互式的数字标牌，大多数时候不需要入侵 Screenly OSE的源码。如果你想对Screenly OSE做二次开发，建议使用docker，具体参考<a href="https://github.com/Screenly/screenly-ose#dockerized-development-environment">项目主页</a></p>
+<p>由于源码是开放的，所以</p>
+<blockquote>
+<p><a href="https://zh.wikipedia.org/zh-hans/WTFPL">Do What The Fuck You Want To</a></p>
+</blockquote>
+<h3 id="互动实例">互动实例</h3>
+<p>我们前段时间布置了一个展厅，展厅内使用了很多智能设备，整个空间可以使用scratch3.0来编程，关于这个想法参考我之前的文章:<a href="/scratch3-smart-home.html">积木化编程与智能家居</a></p>
+<p>在这个展厅里，我们准备实践空间编程的概念,通过拖拽积木，我们可以赋予一个空间以智能</p>
+<p>其中有一个场景是: 使用scratch3.0 + Screenly OSE制作一个互动的数字标牌，当门被打开，有人进入房间的时候，标牌上由休眠背景图片切到宣传片播放；当人们离开，门被关上的时候,屏幕切换到休眠状态.演示如下</p>
+<p><video src="https://scratch3-files.just4fun.site/door_tv.mp4" controls="controls"></video></p>
+<p>技术上的实现十分简单，我们使用门窗感应器来感知门的开闭，根据门的开闭状态来决定屏幕播放的内容。</p>
+<p>具体而言用到如下三个api接口:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">curl -s &#34;http://localhost:8080/api/v1/assets&#34;  # 列出所有资源
+</span></span><span class="line"><span class="cl">curl -s &#34;http://localhost:8080/api/v1/assets/control/asset&amp;fddd611fc45844788d9cbad32d761f82&#34;  # 切换到背景图片
+</span></span><span class="line"><span class="cl">curl -s &#34;http://localhost:8080/api/v1/assets/control/asset&amp;e19c9e1525cd4e968c5433199dcf24ac&#34;  # 切换到视频
+</span></span><span class="line"><span class="cl"># 注意: 目前接口只能在树莓派内部访问(安全性)，如果你要把它暴露出来，需要修改源码
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>《三体》有句名言</p>
+<blockquote>
+<p>给岁月以文明，而不是给文明以岁月</p>
+</blockquote>
+<p>我们模仿这句作为文章的结尾</p>
+<blockquote>
+<p>给空间以智能 ，而不是给智能以空间</p>
+</blockquote>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Digital_signage">Digital signage</a></li>
+<li><a href="https://www.screenly.io/">screenly</a></li>
+<li><a href="https://github.com/screenly/screenly-ose/">screenly-ose</a></li>
+<li><a href="/scratch3-smart-home.html">积木化编程与智能家居</a></li>
+</ul>
+<!--
+# 提供服务
+营销
+
+增长黑客
+
+本地化
+
+制作镜像
+
+
+
+# 学习
+看人家是怎么商业化的 学习
+
+# todo
+树莓派镜像的制作
+
+https://www.jianshu.com/p/c6055f9545fd
+
+https://codebeta.com/creating-a-raspberry-pi-image-81d5768b8a5d
+
+https://www.raspberrypi.org/forums/viewtopic.php?t=201517  How to create personal custom image
+
+https://www.linux.org/threads/create-your-own-pi-distro.4486/
+
+raspbian custom image
+
+
+https://github.com/Drewsif/PiShrink/  解决方案！ 备份出来之后压缩一下
+pishrnk将与任何img文件一起工作，retropie，recalbox，linux，raspbian等
+https://www.reddit.com/r/raspberry_pi/comments/4giomh/pishrink_make_your_pi_images_as_small_as_possible/ 说明
+
+
+Q：img怎么来的，备份镜像来的
+
+# 结论
+pishrink： 使用dd得到 MyImage.img ， 需要在linux下操作
+
+pishrink resize 
+有两种方法pishrink和pi-gen
+
+# ip
+
+
+
+# 切换资源api
+curl -s http://localhost:8080/api/v1/assets/control/next 需要在树莓派内部切换
+
+### 获取资源id
+curl -s http://localhost:8080/api/v1/assets | python -m json.tool
+
+e19c9e1525cd4e968c5433199dcf24ac 视频
+
+fddd611fc45844788d9cbad32d761f82 图片
+
+curl -s http://localhost:8080/api/v1/assets/control/e19c9e1525cd4e968c5433199dcf24ac
+
+  
+# 切换到资源 
+
+curl -s "http://localhost:8080/api/v1/assets/control/asset&fddd611fc45844788d9cbad32d761f82"  切换到图片
+
+curl -s "http://localhost:8080/api/v1/assets/control/asset&e19c9e1525cd4e968c5433199dcf24ac" 切换到视频
+
+需要用引号！ 否则bash会处理 &
+
+# 配置和数据库
+/home/pi/.screenly
+
+
+wifi的设置也十分完美！
+
+音箱的控制也是
+
+-->
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2018-06-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/tools/">tools</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/managing-the-non-profit-organization/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">非营利组织的管理</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E6%9E%B6%E6%9E%84/cookiecutter-django/">
+            <span class="next-text nav-default">以最佳实践开始你的Django项目</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

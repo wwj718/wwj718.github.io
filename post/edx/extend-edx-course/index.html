@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在edX中为course扩充字段 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="之前在edx code（edX google group）上问过如何为course扩充字段（如为课程添加category字段）。 得到的回复说直接往Coues" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/edx/extend-edx-course/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="在edX中为course扩充字段" />
+<meta property="og:description" content="之前在edx code（edX google group）上问过如何为course扩充字段（如为课程添加category字段）。 得到的回复说直接往Coues" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/edx/extend-edx-course/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-10-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2014-10-21T00:00:00+00:00" />
+
+<meta itemprop="name" content="在edX中为course扩充字段">
+<meta itemprop="description" content="之前在edx code（edX google group）上问过如何为course扩充字段（如为课程添加category字段）。 得到的回复说直接往Coues"><meta itemprop="datePublished" content="2014-10-21T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2014-10-21T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1628">
+<meta itemprop="keywords" content="edx," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在edX中为course扩充字段"/>
+<meta name="twitter:description" content="之前在edx code（edX google group）上问过如何为course扩充字段（如为课程添加category字段）。 得到的回复说直接往Coues"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">在edX中为course扩充字段</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-10-21 </span>
+        <div class="post-category">
+            <a href="/categories/edx/"> edx </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>之前在<a href="https://groups.google.com/forum/#!forum/edx-code">edx code</a>（edX google group）上问过如何为course扩充字段（如为课程添加category字段）。</p>
+<p>得到的回复说直接往CoueseFields里添加你要的字段就行。位置在<code>common/lib/xmodule/course_module.py</code>.之后该字段会自动显示在Advanced Settings里。我按照这种方法发现字段的确成为course的属性了（在shell里实验)。不过并没有自动显示在Advanced Settings里，不晓得是不是版本问题。</p>
+<p>此外还有回复说他是采用org字段来存储课程分类。因为他们是内部使用edx,不需要org。不过这种方式总归不大好。</p>
+<p>前两天收到一封邮件，说他也想扩充课程，和我之前需求类似，希望给与帮助。</p>
+<p>看来这还是个挺常见的需求。</p>
+<p>我就分享下自己的方法好了。也讲下具体流程，而不仅是给出方案，这样小伙伴们下回遇到类似的问题，可以按照类似思路自己解决啦。</p>
+<p>###需求描述
+常见的需求类似这样：给课程添加category字段，用于分类课程，在首页使用。</p>
+<p>###最初的方案</p>
+<ul>
+<li>自己写了个django app加入到lms/djangoapps里。app.models中有course_id字段</li>
+<li>自己写个首页</li>
+<li>在admin里管理首页的内容</li>
+</ul>
+<p>其实就像自己写了个小型内容管理系统，管理的核心对象是course。而我们知道课程的关键标志是course_id。我跟踪注册课程相关的代码，在代码执行路径上加上自定义的create_home_course函数。<br>
+在create_home_course函数中将新建的课程注册到我们自己的app.models里，关键是从中获得course_id，这样就能定位到课程。</p>
+<p>这种方式的好处是不需侵入CoueseFields</p>
+<hr>
+<p>我们今天重点说下面的方案</p>
+<p>###现在的方案
+其实思路也简单。就是跟踪<code>日程&amp;细节</code>里的字段是如何存储并与前端交互的。模仿它就行。</p>
+<p>好的，满上咖啡，我们开始。</p>
+<hr>
+<p>我选择跟踪这个字段：<code>每周投入课程学习的小时数</code>。</p>
+<p>使用chrome开发者工具，看到该表单字段的id是 <code>course-effort</code></p>
+<p>在<a href="https://github.com/edx/edx-platform">edx-platform</a>搜索effort。我们就可以看到所有与effort相关的代码及其所在文件。其实挺推荐使用github来研究代码的，可以参考我的<a href="http://wwj718.github.io/github-edx.html">这篇博客</a></p>
+<p><img src="img/github-search.png" alt="github-search.png"></p>
+<p>接下来就是依葫芦画瓢的工作了。据此添加我们需要的字段了。我们按照以下文件顺序修改:python&gt;js&gt;html&gt;Sass</p>
+<hr>
+<p>###0
+以下工作均在/edx/app/edxapp/edx-platform/目录里进行</p>
+<p>###python
+vim cms/djangoapps/models/settings/course_details.py</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">         self.effort = None  # int hours/week
+</span></span><span class="line"><span class="cl">+        self.category = None
+</span></span><span class="line"><span class="cl">         self.course_image_name = &#34;&#34;
+</span></span><span class="line"><span class="cl">         
+</span></span><span class="line"><span class="cl">         ...
+</span></span><span class="line"><span class="cl">         
+</span></span><span class="line"><span class="cl">+        temploc = course_key.make_usage_key(&#39;about&#39;, &#39;category&#39;)
+</span></span><span class="line"><span class="cl">+        try:
+</span></span><span class="line"><span class="cl">+            course_details.category = modulestore().get_item(temploc).data
+</span></span><span class="line"><span class="cl">+        except ItemNotFoundError:
+</span></span><span class="line"><span class="cl">+            pass
+</span></span><span class="line"><span class="cl">+
+</span></span><span class="line"><span class="cl">+
+</span></span><span class="line"><span class="cl">         temploc = course_key.make_usage_key(&#39;about&#39;, &#39;video&#39;)
+</span></span><span class="line"><span class="cl">         try:
+</span></span><span class="line"><span class="cl">             raw_video = modulestore().get_item(temploc).data
+</span></span><span class="line"><span class="cl">             
+</span></span><span class="line"><span class="cl">         ...
+</span></span><span class="line"><span class="cl">         
+</span></span><span class="line"><span class="cl">-        for about_type in [&#39;syllabus&#39;, &#39;overview&#39;, &#39;effort&#39;, &#39;short_description&#39;]:
+</span></span><span class="line"><span class="cl">+        for about_type in [&#39;syllabus&#39;, &#39;overview&#39;, &#39;effort&#39;,&#39;category&#39;, &#39;short_description&#39;]:
+</span></span><span class="line"><span class="cl">             cls.update_about_item(course_key, about_type, jsondict[about_type], descriptor, user)             
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>vim cms/templates/settings.html</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                        &#39;requirements&#39;, &#39;syllabus&#39;, &#39;textbook&#39;, &#39;faq&#39;, &#39;more_info&#39;,
+</span></span><span class="line"><span class="cl">                        &#39;number&#39;, &#39;instructors&#39;, &#39;overview&#39;,
+</span></span><span class="line"><span class="cl">-                       &#39;effort&#39;, &#39;end_date&#39;, &#39;prerequisites&#39;, &#39;ocw_links&#39;]:
+</span></span><span class="line"><span class="cl">+                       &#39;effort&#39;,&#39;category&#39;, &#39;end_date&#39;, &#39;prerequisites&#39;, &#39;ocw_links&#39;]:
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###js
+vim cms/static/js/views/settings/main.js</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">         this.$el.find(&#39;#&#39; + this.fieldToSelectorMap[&#39;effort&#39;]).val(this.model.get(&#39;effort&#39;));
+</span></span><span class="line"><span class="cl">+
+</span></span><span class="line"><span class="cl">+        //added by wwj
+</span></span><span class="line"><span class="cl">+        this.$el.find(&#39;#&#39; + this.fieldToSelectorMap[&#39;category&#39;]).val(this.model.get(&#39;category&#39;));
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		...
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">         &#39;effort&#39; : &#34;course-effort&#34;,
+</span></span><span class="line"><span class="cl">+        &#39;category&#39; : &#34;course-category&#34;,
+</span></span><span class="line"><span class="cl">         &#39;course_image_asset_path&#39;: &#39;course-image-url&#39;
+</span></span><span class="line"><span class="cl">         
+</span></span><span class="line"><span class="cl">         ...
+</span></span><span class="line"><span class="cl">         
+</span></span><span class="line"><span class="cl">         case &#39;course-effort&#39;:
+</span></span><span class="line"><span class="cl">             this.setField(event);
+</span></span><span class="line"><span class="cl">             break;
+</span></span><span class="line"><span class="cl">+        //added by wwj
+</span></span><span class="line"><span class="cl">+        case &#39;course-category&#39;:
+</span></span><span class="line"><span class="cl">+            this.setField(event);
+</span></span><span class="line"><span class="cl">+            break;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>vim cms/static/js/models/settings/course_details.js</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">         effort: null,  // an int or null,
+</span></span><span class="line"><span class="cl">+        category: null,
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###html
+vim cms/templates/settings.html</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">+          ##added by wwj
+</span></span><span class="line"><span class="cl">+          % if about_page_editable:
+</span></span><span class="line"><span class="cl">+            &lt;hr class=&#34;divide&#34; /&gt;
+</span></span><span class="line"><span class="cl">+
+</span></span><span class="line"><span class="cl">+            &lt;section class=&#34;group-settings requirements&#34;&gt;
+</span></span><span class="line"><span class="cl">+              &lt;header&gt;
+</span></span><span class="line"><span class="cl">+                &lt;h2 class=&#34;title-2&#34;&gt;课程分类&lt;/h2&gt;
+</span></span><span class="line"><span class="cl">+                &lt;span class=&#34;tip&#34;&gt;${_(&#34;Expectations of the students taking this course&#34;)}&lt;/span&gt;
+</span></span><span class="line"><span class="cl">+              &lt;/header&gt;
+</span></span><span class="line"><span class="cl">+
+</span></span><span class="line"><span class="cl">+              &lt;ol class=&#34;list-input&#34;&gt;
+</span></span><span class="line"><span class="cl">+                &lt;li class=&#34;field text&#34; id=&#34;field-course-category&#34;&gt;
+</span></span><span class="line"><span class="cl">+                  &lt;label for=&#34;course-category&#34;&gt;${_(&#34;course category&#34;)}&lt;/label&gt;
+</span></span><span class="line"><span class="cl">+                  &lt;input type=&#34;text&#34; class=&#34;short time&#34; id=&#34;course-category&#34; placeholder=&#34;Math&#34; /&gt;
+</span></span><span class="line"><span class="cl">+                  &lt;span class=&#34;tip tip-inline&#34;&gt;${_(&#34;course category&#34;)}&lt;/span&gt;
+</span></span><span class="line"><span class="cl">+                &lt;/li&gt;
+</span></span><span class="line"><span class="cl">+              &lt;/ol&gt;
+</span></span><span class="line"><span class="cl">+            &lt;/section&gt;
+</span></span><span class="line"><span class="cl">+          % endif
+</span></span><span class="line"><span class="cl">+
+</span></span><span class="line"><span class="cl">       &lt;/form&gt;
+</span></span><span class="line"><span class="cl">     &lt;/article&gt;
+</span></span><span class="line"><span class="cl">     &lt;aside class=&#34;content-supplementary&#34; role=&#34;complimentary&#34;&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>vim lms/templates/courseware/course_about.html</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">             &lt;li&gt;&lt;div class=&#34;icon effort&#34;&gt;&lt;/div&gt;&lt;p&gt;${_(&#34;Estimated Effort&#34;)}&lt;/p&gt;&lt;span class=&#34;start-date&#34;&gt;${get_course_about_section(course, &#34;effort&#34;)}&lt;/span&gt;&lt;/li&gt;
+</span></span><span class="line"><span class="cl">           % endif
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">+          % if get_course_about_section(course, &#34;category&#34;):
+</span></span><span class="line"><span class="cl">+            &lt;li&gt;&lt;div class=&#34;icon category&#34;&gt;&lt;/div&gt;&lt;p&gt;课程分类&lt;/p&gt;&lt;span class=&#34;start-date&#34;&gt;${get_course_about_section(course, &#34;category&#34;)}&lt;/span&gt;&lt;/li&gt;
+</span></span><span class="line"><span class="cl">+          % endif
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###Sass
+vim cms/static/sass/views/_settings.scss</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">       #field-course-effort {
+</span></span><span class="line"><span class="cl">         width: flex-grid(3, 9);
+</span></span><span class="line"><span class="cl">       }
+</span></span><span class="line"><span class="cl">+      #field-course-category {
+</span></span><span class="line"><span class="cl">+        width: flex-grid(3, 9);
+</span></span><span class="line"><span class="cl">+      }
+</span></span><span class="line"><span class="cl">     
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###扫尾</p>
+<ul>
+<li>将以上修改一次性commit到你自己的分支上，尽量不要合并到官方分支里</li>
+<li>update_assets</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">:::text
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo -H -u edxapp bash
+</span></span><span class="line"><span class="cl">source /edx/app/edxapp/edxapp_env
+</span></span><span class="line"><span class="cl">cd /edx/app/edxapp/edx-platform
+</span></span><span class="line"><span class="cl">paver update_assets cms --settings=aws
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>重启edxapp: <code>sudo /edx/bin/supervisorctl -c /edx/etc/supervisord.conf restart edxapp:</code></li>
+</ul>
+<p>###测试</p>
+<ul>
+<li>我们先到cms的<code>日程&amp;细节</code>里，填上课程分类</li>
+</ul>
+<p><img src="img/course_category.png" alt="course_category"></p>
+<ul>
+<li>再到课程的about页面即可看到</li>
+</ul>
+<p><img src="img/course-category-lms.png" alt="course-category-lms"></p>
+<p>搞定~</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-10-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/edx/">edx</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E8%AF%BB%E4%B9%A6/about-kindle/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">kindle相关</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E9%9A%8F%E7%AC%94/osx-note/">
+            <span class="next-text nav-default"> OS X使用笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

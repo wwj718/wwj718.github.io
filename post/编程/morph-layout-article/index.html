@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>一篇用动态媒介写的文章 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &amp;ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/morph-layout-article/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="一篇用动态媒介写的文章" />
+<meta property="og:description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/morph-layout-article/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-08-25T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-25T00:00:00+00:00" />
+
+<meta itemprop="name" content="一篇用动态媒介写的文章">
+<meta itemprop="description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经"><meta itemprop="datePublished" content="2022-08-25T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-08-25T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1532">
+<meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="一篇用动态媒介写的文章"/>
+<meta name="twitter:description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">一篇用动态媒介写的文章</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-08-25 </span>
+        <div class="post-category">
+            <a href="/categories/smalltalk/"> Smalltalk </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#遇到困难">遇到困难</a></li>
+    <li><a href="#救星">救星</a></li>
+    <li><a href="#加载动态文章">加载动态文章</a>
+      <ul>
+        <li><a href="#开始阅读">开始阅读</a></li>
+      </ul>
+    </li>
+    <li><a href="#尾声">尾声</a></li>
+    <li><a href="#附录">附录</a>
+      <ul>
+        <li><a href="#导出文件到本地">导出文件到本地</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p>近期重读 <a href="https://rmod-files.lille.inria.fr/FreeBooks/CollectiveNBlueBook/morphic.final.pdf">An Introduction to Morphic</a> 的时候，发现 Morphic 中用于自动布局的类 <code>AlignmentMorph</code> 已经被弃用:</p>
+<p><img src="/post/img/morphic-layout01.png" alt=""></p>
+<p>顺着类注释中的提示, 准备学习一下 layoutPolicy , 在 <a href="https://wiki.squeak.org/squeak">Squeak wiki</a> 里读了几篇与此相关的词条:</p>
+<ul>
+<li><a href="https://wiki.squeak.org/squeak/2141">How to lay out submorphs</a></li>
+<li><a href="https://wiki.squeak.org/squeak/2142">LayoutPolicy</a></li>
+<li><a href="https://wiki.squeak.org/squeak/2340">TableLayout</a></li>
+</ul>
+<p>也跟着做了不少例子:</p>
+<p><img src="/post/img/morphic-layout02.png" alt=""></p>
+<p>Morphic 新的布局系统有点像 CSS 里的 Flexbox，但早了 20 多年。</p>
+<p>在 Morphic 布局系统话题下，好几篇 Squeak wiki 词条都提到了 Ted kaehler 和 Andreas Raab 写的《Control Your Submorphs》一文。</p>
+<p><img src="/post/img/MorphLayoutArticle_a_simple_table.png" alt=""></p>
+<p>由于 Ted kaehler 和 Andreas Raab 都是 Squeak 的核心开发者，所以我想好好读读这篇文章，看看能否学到一些关于布局的强大想法。</p>
+<p>我最近在 Smalltalk 里弄懂了许多过去一知半解的概念，越来越喜欢和信任这个学习环境。在 Squeak 里，好像什么都能学会。正如 Alan Kay 承诺的那样，强大的系统能够增强学习者，帮助 Ta 更好的理解和学习复杂系统。我过去接触 HTML/CSS 时在排版布局问题上碰了很多壁，以至一直不愿再折腾它们。这次有点蠢蠢欲动，指不定 Squeak 能够帮助我，就像它曾帮助我理解了许多过去觉得困难的事情。</p>
+<h2 id="遇到困难">遇到困难</h2>
+<p>可是，始终无法在互联网上搜到《Control Your Submorphs》的电子版。</p>
+<p>重新阅读 <a href="https://wiki.squeak.org/squeak/2400">MorphLayoutArticle</a>词条，发现它是一篇动态文章:</p>
+<blockquote>
+<p>The <strong>dynamic essay</strong> MorphLayoutArticle describes how layout works in Morphic.</p>
+</blockquote>
+<p>或许 Ted kaehler 和 Andreas Raab 完全在 Squeak 里写作，压根没有发布 PDF 和 HTML 版本！</p>
+<p>这篇文章的格式是: <a href="/post/img/MorphLayoutArticle.pr">MorphLayoutArticle.pr</a></p>
+<p><code>.pr</code> 是 Squeak/Etoys 项目文件的后缀名。 <a href="https://wiki.squeak.org/squeak/2400">MorphLayoutArticle</a> 提到 它在 Squeak 3.2 中加载良好。但若要将其加载到 Squeak 3.8.1 中，需要参考<a href="https://wiki.squeak.org/squeak/2401">这些说明</a>。</p>
+<p>Squeak 3.2 <a href="https://files.squeak.org/3.2/">发行于 2002 年</a>, Squeak 3.8 则<a href="https://files.squeak.org/3.8/">发行于 2005 年</a>, 年代如此久远，在瞬息万变的计算机世界，仿佛远古时代的文物, 它们在我的 MacOS 12.3.1(M1) 都运行不了。</p>
+<h2 id="救星">救星</h2>
+<p>突然想到之前换电脑之后，无法运行 Etoys 的经历，后来的解决方案是使用 <a href="https://squeak.js.org/">SqueakJS</a> 虚拟机来<a href="https://squeak.js.org/etoys/#fullscreen">运行 Etoys 镜像(image)</a> (<a href="https://smalltalkzoo.thechm.org/HOPL-Squeak.html?etoys">Etoys Lively</a>)。</p>
+<p>SqueakJS 是由 Vanessa Freudenberg 使用纯 JavaScript 编写的 Squeak 虚拟机。</p>
+<p>我想起 SqueakJS 适用于许多与 OpenSmalltalk 兼容的 image！指不定就包括 Squeak 3.2 或 Squeak 3.8。 果真，Squeak 3.8 可用！</p>
+<p><img src="/post/img/morphic-layout03.png" alt=""></p>
+<h2 id="加载动态文章">加载动态文章</h2>
+<p><a href="/post/img/MorphLayoutArticle.pr">MorphLayoutArticle.pr</a> 是在 Squeak 3.2 里写的，为了将其加载到 <a href="https://squeak.js.org/run/#url=https://freudenbergs.de/vanessa/squeakjs&amp;files=%5BSqueak3.8.1-6747full.image,Squeak3.8.1-6747full.changes,SqueakV3.sources%5D&amp;swapButtons=true">Squeak 3.8</a> 里，需要 <a href="https://wiki.squeak.org/squeak/2401">做些修改</a>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> SmartRefStream&gt;&gt;#initKnownRenames
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        renamed
+</span></span><span class="line"><span class="cl">            at: #AlansTextPlusMorph put: #TextPlusMorph;
+</span></span><span class="line"><span class="cl">            at: #FlasherMorph put: #Flasher;
+</span></span><span class="line"><span class="cl">            yourself
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过将 SmartRefStream 类的<code>#initKnownRenames</code> 方法，修改为上述内容.成功加载了 MorphLayoutArticle.pr。</p>
+<p><img src="/post/img/morphic-layout-squeak38-essay.png" alt=""></p>
+<h3 id="开始阅读">开始阅读</h3>
+<p>这篇文章篇幅很小，读来十份轻松。</p>
+<p>不同于 Squeak wiki 里的文字和图片描述，这篇短文里，穿插了 6 个交互式的案例，作者每次在阐述一个控制布局的关键概念(参数)后，就让读者通过操控作者精心准备的交互案例，来把握这些参数。</p>
+<p>这是我第一次感受到布局的乐趣，它是如此清晰、浅显而直观！短短几分钟，就毫不费劲地掌握了它们，我心里十份清楚，我并不只是理解了作者通过静态媒介(文字)所表达的东西，要比这更多。通过按照自己的意志操控这些布局元素，我仿佛变成了元素本身，亲身参与到了布局之中！</p>
+<p>这就像 Seymour Papert 在《Mindstorms》里提到的童年的齿轮。</p>
+<h2 id="尾声">尾声</h2>
+<p>遗憾的是，计算机并没有像 Alan Kay 所期待的那样，作为一种动态媒介流行起来。今天计算机里边的内容主要是对旧媒介的模仿，它模仿书籍、电视、电影&hellip; 人们在计算机里写作，就像过去用纸笔写作。像 《Control Your Submorphs》 这样帮助读者更好地理解复杂事物的文章不仅不多见，而且连阅读它的工具都日渐式微，不易寻得。</p>
+<p>近年情况有所好转，Jupyter 这几年在科学界很流行，尤其是物理学、生物学和数据科学/AI 领域，人们甚至直接在里头写论文 &ndash; 一篇可运行的论文，一篇读者可以与作者的论点进行交互的论文。</p>
+<p>但相比于 Squeak，Jupyter 才刚刚起步，即使是 20 年前 的Squeak 也走得更远。</p>
+<p>差距是愿景上的。</p>
+<h2 id="附录">附录</h2>
+<h3 id="导出文件到本地">导出文件到本地</h3>
+<p>当你在 SqueakJS 中导出文件时(诸如<code>save morph in file</code>)，文件只是被存储在了浏览器页面的 IndexedDB 里(<a href="http://freudenbergs.de/bert/publications/Freudenberg-2014-SqueakJS.pdf">这篇论文</a>里有讨论 SqueakJS 的存储机制)。你需要 <a href="https://squeak.js.org/run/">到这儿下载到本地</a>。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://wiki.squeak.org/squeak/2141">How to lay out submorphs</a></li>
+<li><a href="https://wiki.squeak.org/squeak/2400">MorphLayoutArticle</a></li>
+<li><a href="https://squeak.js.org/">SqueakJS</a>
+<ul>
+<li><a href="https://squeak.js.org/run/#url=https://freudenbergs.de/vanessa/squeakjs&amp;files=%5BSqueak3.8.1-6747full.image,Squeak3.8.1-6747full.changes,SqueakV3.sources%5D&amp;swapButtons=true">Squeak 3.8 (2006)</a></li>
+</ul>
+</li>
+<li><a href="http://wiki.squeak.org/squeak/885">pr file</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2022-08-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/traits-composable-units-of-behaviour/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用 Traits 复用行为</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/how-morphic-works/">
+            <span class="next-text nav-default">[译] Morphic 的工作原理</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

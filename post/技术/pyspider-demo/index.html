@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>用pyspider写的爬虫几例 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="#爬虫 最初折腾爬虫还是在校期间，一个玩具项目，想把校内信息爬取下来，写一个小型校内搜索引擎，整合到公众号里 而后原理实现之后，就不想打磨细节了" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/pyspider-demo/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="用pyspider写的爬虫几例" />
+<meta property="og:description" content="#爬虫 最初折腾爬虫还是在校期间，一个玩具项目，想把校内信息爬取下来，写一个小型校内搜索引擎，整合到公众号里 而后原理实现之后，就不想打磨细节了" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E6%8A%80%E6%9C%AF/pyspider-demo/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-11-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2015-11-30T00:00:00+00:00" />
+
+<meta itemprop="name" content="用pyspider写的爬虫几例">
+<meta itemprop="description" content="#爬虫 最初折腾爬虫还是在校期间，一个玩具项目，想把校内信息爬取下来，写一个小型校内搜索引擎，整合到公众号里 而后原理实现之后，就不想打磨细节了"><meta itemprop="datePublished" content="2015-11-30T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2015-11-30T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1609">
+<meta itemprop="keywords" content="技术," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="用pyspider写的爬虫几例"/>
+<meta name="twitter:description" content="#爬虫 最初折腾爬虫还是在校期间，一个玩具项目，想把校内信息爬取下来，写一个小型校内搜索引擎，整合到公众号里 而后原理实现之后，就不想打磨细节了"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">用pyspider写的爬虫几例</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-11-30 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%80%E6%9C%AF/"> 技术 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>#爬虫
+最初折腾爬虫还是在校期间，一个玩具项目，想把校内信息爬取下来，写一个小型校内搜索引擎，整合到公众号里</p>
+<p>而后原理实现之后，就不想打磨细节了，急着跳入下一个坑。如那个笑话里的，程序员好不容易买齐了笔墨纸砚，写下<code>hello world</code>，就心满意足地离去了</p>
+<p>去年在知乎里答过一个爬虫题目，拿了1000来个赞，陆陆续续收到一些私信问有没有兴趣换工作啥的，当时的百度和美团还是蛮有吸引力的，哎谁知一年多工夫，局势变了好多，看来拒绝的还算有先鉴之明。如pyspider作者binux所言，爬虫就那点东西，有趣的部分并不多，所以也从未考虑过此类工作。</p>
+<p>闲暇时间，陆陆续续写过简易的几个爬虫玩具，帮朋友爬过1w枚种子，据说质量奇高，是xx中的艺术片。也爬过豆瓣知乎，数据拿来训练机器人。</p>
+<p>说要种子的，我也不会给你啦，代码有毒，身体要紧啊同学们</p>
+<p>写爬虫比较钟爱pyspider，选择器是jquery语法（用了pyquery），调试起来十分方便，而且又有web界面很是舒服</p>
+<p>以下几个demo，需求都来自小伙伴。</p>
+<p>#pyspider介绍
+<a href="https://github.com/binux/pyspider">pyspider</a>作者在在博客里说到</p>
+<blockquote>
+<p>pyspider 来源于以前做的一个垂直搜索引擎使用的爬虫后端。我们需要从200个站点（由于站点失效，不是都同时啦，同时有100+在跑吧）采集数据，并要求在5分钟内将对方网站的更新更新到库中。</p>
+</blockquote>
+<p>和大多开源项目一样，pyspider也始于作者自己真实的需求，而后发现这个解决方案对于其他人也是适用的，于是开源出来。正是自己最初真实的需求，使项目在细节方面十分周到贴心</p>
+<p>十分推荐有兴趣的小伙伴把作者博客里的几篇文章读完:<a href="http://blog.binux.me/">Binuxの杂货铺</a></p>
+<p>这是关于爬虫方面我读过最简易清晰的几篇文章了</p>
+<p>#安装
+##mac下安装与运行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">virtualenv env <span class="c1">#使用virtualenv建立虚拟环境</span>
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> env/bin/activate
+</span></span><span class="line"><span class="cl">pip install pyspider
+</span></span><span class="line"><span class="cl">brew install phantomjs <span class="c1">#运行js的环境（ajax）</span>
+</span></span><span class="line"><span class="cl">pyspider phantomjs <span class="c1">#开启服务在25555端口</span>
+</span></span><span class="line"><span class="cl">pyspider
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>##使用docker安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker pull binux/pyspider:master
+</span></span><span class="line"><span class="cl">sudo docker run -d -p 5000:5000 -v /opt/pyspider:/opt/pyspider binux/pyspider:master
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>之后在5000端口上就可以写爬虫逻辑啦，web本身作为控制面板</p>
+<p>参考<a href="http://docs.pyspider.org/en/latest/Running-pyspider-with-Docker/">Running-pyspider-with-Docker</a></p>
+<p>#demo
+###1
+爬取豆瓣8分以上书籍</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/env python</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -*- encoding: utf-8 -*-</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Created on 2015-09-17</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Project: douban_book</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pyspider.libs.base_handler</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Handler</span><span class="p">(</span><span class="n">BaseHandler</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">crawl_config</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="s1">&#39;http://book.douban.com/tag/&#39;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">index_page</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">index_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;a[href^=&#34;http&#34;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&#34;http://www.douban.com/tag/\w+&#34;</span><span class="p">,</span> <span class="n">each</span><span class="o">.</span><span class="n">attr</span><span class="o">.</span><span class="n">href</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">U</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">#print each.attr.href</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">#romantic novels tag ：  http://www.douban.com/tag/%E8%A8%80%E6%83%85/?focus=book</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">attr</span><span class="o">.</span><span class="n">href</span> <span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">list_page</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">list_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#print re.search(r&#39;http://www.douban.com/tag/[^/]*&#39;,response.url ,).group() + &#39;/book&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;http://www.douban.com/tag/[^/]*&#39;</span><span class="p">,</span><span class="n">response</span><span class="o">.</span><span class="n">url</span> <span class="p">,)</span><span class="o">.</span><span class="n">group</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/book&#39;</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">list_page_detail</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">list_page_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;a[href^=&#34;http&#34;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;http://book.douban.com/subject/\d+&#39;</span><span class="p">,</span><span class="n">each</span><span class="o">.</span><span class="n">attr</span><span class="o">.</span><span class="n">href</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">attr</span><span class="o">.</span><span class="n">href</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">page_detail</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;.next &gt; a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">#print each.attr.href</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">attr</span><span class="o">.</span><span class="n">href</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">list_page_detail</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">page_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">vote_average</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;strong[property=&#34;v:average&#34;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">vote_average</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">8</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;url&#34;</span><span class="p">:</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;http://book.douban.com/subject/\d+&#39;</span><span class="p">,</span><span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;title&#34;</span><span class="p">:</span><span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;h1 &gt; span&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;vote_average&#34;</span><span class="p">:</span><span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;strong[property=&#34;v:average&#34;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;vote_num&#34;</span><span class="p">:</span><span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;span[property=&#34;v:votes&#34;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###demo2
+爬取京东众筹数据</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/env python</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -*- encoding: utf-8 -*-</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Created on 2015-11-30</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Project: jdzc</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pyspider.libs.base_handler</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Handler</span><span class="p">(</span><span class="n">BaseHandler</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">crawl_config</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#手动输入最大页面，这部分有ajax很烦 手写吧</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#max_page = response.doc(&#39;a.next&#39;)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#print max_page</span>
+</span></span><span class="line"><span class="cl">        <span class="n">max_page</span><span class="o">=</span><span class="mi">218</span> <span class="c1">#当前是218，有了phantomjs后可以自动获取</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">page_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">max_page</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="s1">&#39;http://z.jd.com/bigger/search.html?&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">page_num</span><span class="p">),</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enter_item</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="s2">&#34;zhtj&#34;</span><span class="p">,</span> <span class="s1">&#39;page&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">page_num</span><span class="p">)})</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">enter_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#print response.doc(&#34;.lr-lists .link-pic&#34;)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s2">&#34;.lr-lists .link-pic&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">attr</span><span class="o">.</span><span class="n">href</span><span class="p">,</span> <span class="n">fetch_type</span><span class="o">=</span><span class="s1">&#39;js&#39;</span><span class="p">,</span><span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">item_detail</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">item_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">item_name</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;.project-tilte &gt; h1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="c1">#项目名称</span>
+</span></span><span class="line"><span class="cl">        <span class="n">item_owner</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;.font18 &gt; a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="c1">#项目发起人</span>
+</span></span><span class="line"><span class="cl">        <span class="n">item_status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;.icon_pag&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="c1">#项目状态</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#item_begintime =  response.doc(&#39;div.font14 &gt; .lh24 &gt; span:first&#39;).text()#发起日期，只有筹款中的才有发起日期，完成的没有</span>
+</span></span><span class="line"><span class="cl">        <span class="n">item_deadline</span> <span class="o">=</span>  <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;div.font14 &gt; .lh24 &gt; span&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="c1">#截止日期</span>
+</span></span><span class="line"><span class="cl">        <span class="n">item_target_fundraising</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;div.font14 &gt; .lh24 &gt; span&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="c1">#众筹目标</span>
+</span></span><span class="line"><span class="cl">        <span class="n">item_real_fundraising</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;.font45&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="c1">#已筹款数</span>
+</span></span><span class="line"><span class="cl">        <span class="n">supporter_num</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;.pr &gt; p &gt; strong&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="c1">#支持人数</span>
+</span></span><span class="line"><span class="cl">        <span class="n">topic_num</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;#topicBtn &gt; span&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="c1">#话题数，需要执行完js才得到，所以需要phantomjs</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;item_name&#34;</span><span class="p">:</span><span class="n">item_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;item_owner&#34;</span><span class="p">:</span><span class="n">item_owner</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;item_status&#34;</span><span class="p">:</span><span class="n">item_status</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;item_deadline&#34;</span><span class="p">:</span><span class="n">item_deadline</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;item_target_fundraising&#34;</span><span class="p">:</span><span class="n">item_target_fundraising</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;item_real_fundraising&#34;</span><span class="p">:</span><span class="n">item_real_fundraising</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="s2">&#34;supporter_num&#34;</span><span class="p">:</span><span class="n">supporter_num</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>###demo3
+爬取知乎指定用户收藏夹</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/env python</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># -*- encoding: utf-8 -*-</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Created on 2015-03-24 21:56:49</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Project: zhihu_collection</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pyspider.libs.base_handler</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Handler</span><span class="p">(</span><span class="n">BaseHandler</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">crawl_config</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@every</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">start_url</span> <span class="o">=</span> <span class="s2">&#34;http://www.zhihu.com/people/liu-shi-jiu-84/collections&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">start_url</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">index_page</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@config</span><span class="p">(</span><span class="n">age</span><span class="o">=</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">index_page</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">         <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s2">&#34;.zm-profile-fav-item-title&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">             <span class="n">collection_name</span> <span class="o">=</span> <span class="n">each</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">             <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">attr</span><span class="o">.</span><span class="n">href</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">all_answer_pages</span><span class="p">,</span><span class="n">save</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;collection_name&#34;</span><span class="p">:</span><span class="n">collection_name</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">all_answer_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">         <span class="n">pages</span><span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s2">&#34;.border-pager a&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">         <span class="n">max_pages</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pages</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="c1">#倒数第二个, 最大页数</span>
+</span></span><span class="line"><span class="cl">         <span class="n">all_collections_pages</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">)</span><span class="o">+</span><span class="s2">&#34;?page=&#34;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">page</span><span class="p">)</span> <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">max_pages</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">         <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">all_collections_pages</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">             <span class="nb">print</span> <span class="n">url</span>
+</span></span><span class="line"><span class="cl">             <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collection_page</span><span class="p">,</span><span class="n">save</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;collection_name&#34;</span><span class="p">:</span><span class="n">response</span><span class="o">.</span><span class="n">save</span><span class="p">[</span><span class="s2">&#34;collection_name&#34;</span><span class="p">]})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">collection_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">         <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s2">&#34;.toggle-expand&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">             <span class="bp">self</span><span class="o">.</span><span class="n">crawl</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">attr</span><span class="o">.</span><span class="n">href</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">detail_page</span><span class="p">,</span><span class="n">save</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;collection_name&#34;</span><span class="p">:</span><span class="n">response</span><span class="o">.</span><span class="n">save</span><span class="p">[</span><span class="s2">&#34;collection_name&#34;</span><span class="p">]})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@config</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">detail_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">             <span class="s2">&#34;collection_name&#34;</span><span class="p">:</span><span class="n">response</span><span class="o">.</span><span class="n">save</span><span class="p">[</span><span class="s2">&#34;collection_name&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">             <span class="s2">&#34;url&#34;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">             <span class="s2">&#34;title&#34;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s2">&#34;title&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">             <span class="s2">&#34;body&#34;</span><span class="p">:</span><span class="n">response</span><span class="o">.</span><span class="n">doc</span><span class="p">(</span><span class="s1">&#39;.autohide-false .zm-item-rich-text &gt; div&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()}</span>
+</span></span><span class="line"><span class="cl">             
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>#附录</p>
+<p>###Ubuntu 12.04 64bit 安装PhantomJS</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo wget https://phantomjs.googlecode.com/files/phantomjs-1.9.0-linux-x86_64.tar.bz2
+</span></span><span class="line"><span class="cl">sudo tar xjf phantomjs-1.9.0-linux-x86_64.tar.bz2
+</span></span><span class="line"><span class="cl">sudo ln -s /usr/local/share/phantomjs-1.9.0-linux-x86_64/bin/phantomjs /usr/local/share/phantomjs<span class="p">;</span> 
+</span></span><span class="line"><span class="cl">sudo ln -s /usr/local/share/phantomjs-1.9.0-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs<span class="p">;</span>
+</span></span><span class="line"><span class="cl">sudo ln -s /usr/local/share/phantomjs-1.9.0-linux-x86_64/bin/phantomjs /usr/bin/phantomjs
+</span></span><span class="line"><span class="cl">phantomjs --version
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-11-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E6%8A%80%E6%9C%AF/arrow-better-dates-and-times-for-python/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">更好的Python时间日期库 Arrow</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%AE%97%E6%B3%95/algorithm-foreword/">
+            <span class="next-text nav-default">算法.前言</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

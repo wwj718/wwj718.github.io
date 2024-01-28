@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap! 使用笔记: 动态添加 Snap! 造型 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 由于 Snap! 出色的可理解性和强大的灵活性/可扩展性, 我们的合作伙伴决定在 Snap! 投入资源。 DynaLab 正在为合作伙伴英荔构建增强版的 Snap! , 我们将 Scratch 社区最强大的一" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-add-costume-dynamically/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Snap! 使用笔记: 动态添加 Snap! 造型" />
+<meta property="og:description" content="前言 由于 Snap! 出色的可理解性和强大的灵活性/可扩展性, 我们的合作伙伴决定在 Snap! 投入资源。 DynaLab 正在为合作伙伴英荔构建增强版的 Snap! , 我们将 Scratch 社区最强大的一" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-add-costume-dynamically/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-01-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-01-16T00:00:00+00:00" />
+
+<meta itemprop="name" content="Snap! 使用笔记: 动态添加 Snap! 造型">
+<meta itemprop="description" content="前言 由于 Snap! 出色的可理解性和强大的灵活性/可扩展性, 我们的合作伙伴决定在 Snap! 投入资源。 DynaLab 正在为合作伙伴英荔构建增强版的 Snap! , 我们将 Scratch 社区最强大的一"><meta itemprop="datePublished" content="2024-01-16T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-01-16T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1406">
+<meta itemprop="keywords" content="MicroBlocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! 使用笔记: 动态添加 Snap! 造型"/>
+<meta name="twitter:description" content="前言 由于 Snap! 出色的可理解性和强大的灵活性/可扩展性, 我们的合作伙伴决定在 Snap! 投入资源。 DynaLab 正在为合作伙伴英荔构建增强版的 Snap! , 我们将 Scratch 社区最强大的一"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Snap! 使用笔记: 动态添加 Snap! 造型</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-01-16 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#思路">思路</a></li>
+    <li><a href="#动态添加-snap-造型">动态添加 Snap! 造型</a></li>
+    <li><a href="#预定义行为">预定义行为</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>由于 Snap! 出色的可理解性和强大的灵活性/可扩展性, 我们的合作伙伴决定在 Snap! 投入资源。</p>
+<p>DynaLab 正在为合作伙伴英荔构建增强版的 Snap! , 我们将 Scratch 社区最强大的一些插件移植到了 Snap! , 同时也为 Snap! 设计了一些强大的 primitives:</p>
+<ul>
+<li>BLE primitives</li>
+<li>websocket primitives</li>
+<li>EIM primitives</li>
+<li>&hellip;</li>
+</ul>
+<p>此外, 我们还为 Snap! 设计了全新的物理引擎:</p>
+<p><img src="/post/img/snap-add-costume-dynamically.png" alt=""></p>
+<p>Snap! 平台本身也在快速发展, 不久将推出 Snap! 10 , 它的可理解性和可扩展性将有进一步的飞跃。 用户可以 &ldquo;Blocks all the way&rdquo;, 你可以理解并修改最基础的积木:</p>
+<p><img src="/post/img/snap-add-costume-dynamically-4.png" alt=""></p>
+<p>Jens(Snap! 创始人) 为 Snap! 构建了强大的 Hyperblocks, 它将提供类似 numpy 的能力(和 numpy 一样, 也受到 APL 的启发), 这将有助于提升神经网络教学的可理解性。</p>
+<p><img src="/post/img/snap-add-costume-dynamically-1.png" alt=""></p>
+<p><img src="/post/img/snap-add-costume-dynamically-2.png" alt=""></p>
+<p>Snap! 拥有一流的数据结构(list), 也许是所有图形化语言中最优秀的, 它不仅有出色可理解性(非常适合用于教学复杂的算法), 而且具有出色的性能, 足以在浏览器页面处理超过 400 万的数据:</p>
+<p><img src="/post/img/snap-add-costume-dynamically-3.png" alt=""></p>
+<hr>
+<p>说回正题, 作为合作的一部分, 我们的合作伙伴希望基于 Snap! 实现 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/">Future Park</a> 那样的交互项目。</p>
+<p><img src="/post/img/teamLab-futrue-park-DynaTalk-03.jpeg" alt=""></p>
+<h2 id="思路">思路</h2>
+<p>要想基于 Snap! 实现上图中的交互项目, 需要完成以下几个工作:</p>
+<ul>
+<li>接入激光雷达用于互动</li>
+<li>允许用户绘制的图像动态地进入舞台</li>
+<li>为这些造型预定义行为(诸如被用户碰到就逃跑)</li>
+</ul>
+<p>由于我们在 Snap! 里完成了 CodeLab Adapter 插件(EIM primitives), 因此, 激光雷达的所有功能都可以在 Snap! 里实现, 没有写一行 js 代码。 这使得它支持用户继续扩展它。</p>
+<p><img src="/post/img/snap-add-costume-dynamically-5.png" alt=""></p>
+<p>后两项工作正是本文的主题: 动态添加 Snap! 造型, 并提供预定义行为。</p>
+<p>在个人计算环境中编程的一项出色体验是, 在用户环境里可以完成几乎所有的工作(包括开发工作), 不需要进入系统&quot;下一层&quot;。 这意味着 (a) 用户具有和开发者一样多的能力/权力, (b) 用户可以利用先前学到的技能做新的事情。</p>
+<p>很自然地, 我们希望尽可能在 Snap! 完成绝大多数工作, 逼不得已, 才引入尽可能少的 primitive。 在整个项目实施过程中, 我们最终只引入了一个 primitive, 用于将 base64 字符串(png 或 svg)转化为 Snap! 内部 costume 对象 。</p>
+<h2 id="动态添加-snap-造型">动态添加 Snap! 造型</h2>
+<p>Future Park 体验的一部分是用户拿着真实的彩笔给角色涂颜色, 然后角色被 &ldquo;投放&rdquo; 到虚拟舞台上, 栩栩如生地活动起来.</p>
+<p>为了将用户绘制的角色 &ldquo;投放&rdquo; 到舞台上, 需要进行以下工作:</p>
+<ol>
+<li>在纸张上沿着图案边缘 &ldquo;抽取&rdquo; 出角色, 可以使用 opencv 边缘检测之类的算法来做。
+<ul>
+<li>考虑到 Python 生态大量的视觉处理库, 使用 Python 来做比较省力</li>
+<li>随着 Snap! 社区对神经网络感兴趣, 估计 Snap! 也会有原生的视觉处理能力</li>
+</ul>
+</li>
+<li>将抽取的图案编码后传输到 Snap! , 可以使用 base64 来编码数据, 使用 MQTT 来传输数据</li>
+<li>在 Snap! 中将接收到的 base64 数据转化为 costume</li>
+</ol>
+<p>第 2 项工作的相关 Python 代码: <a href="https://gist.github.com/wwj718/95add9a9306cbdbe01ed02a5a869e15d">future-park-client.py</a></p>
+<p>第 3 项工作相关的 Snap 示例: <a href="/post/img/future-park-demo.xml">future-park-demo.xml</a> 。 示例中还包含了一个简单的模拟程序, 用于模拟Python客户端发送 base64 图像数据, 我喜欢尽可能地在 Snap! 这样具有 Smalltalk 特质的编程环境里工作, 它要比在 Python 中工作愉快很多。</p>
+<p><img src="/post/img/snap-add-costume-dynamically-6.png" alt=""></p>
+<h2 id="预定义行为">预定义行为</h2>
+<p>前边提到:</p>
+<blockquote>
+<p>为这些造型预定义行为(诸如被用户碰到就逃跑)</p>
+</blockquote>
+<p>我们使用 &ldquo;克隆&rdquo; 来做这件事。</p>
+<p>我们为每个精灵(sprite)预定义它的行为, 每当这个角色的造型传入系统的时候, 就根据传入的数据, 启动一个克隆体, 克隆体穿上传入的造型。克隆体的行为和它所属的精灵(sprite)是一样的。</p>
+<p>这可以类比面向对象编程，我们在类(Class)里预定义了行为(在 sprite 里编写行为代码), 不同的初始化参数进行实例化(在Snap!中是创建克隆体)。</p>
+<p>克隆是一个很大的话题, Snap! 的克隆改进自 Scratch, 易用性和一致性都更好。<a href="https://en.scratch-wiki.info/wiki/Cloning">Scratch 的克隆资料</a>大多适用于 Snap!</p>
+<!--
+https://codelabclub.github.io/Snap/snap.html#open:https://wwj718.github.io/post/img/base64-png-svg-demo.xml
+-->
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/">为 Future Park(teamLab) 的交互艺术设计一个通用架构</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-mqtt/">Snap! 使用笔记: MQTT 插件</a></li>
+<li><a href="https://adapter.codelab.club/extension_guide/iot/">Adapter MQTT 插件</a></li>
+<li><a href="https://en.scratch-wiki.info/wiki/Cloning">Scratch wiki Cloning</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-01-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/offline-microblocks-webapp/">
+            <span class="next-text nav-default">离线版 MicroBlocks webapp</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
