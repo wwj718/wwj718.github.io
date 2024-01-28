@@ -1,0 +1,247 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables legoremote 
+
+script 70 40 {
+legoremote = ('lego connect')
+}
+
+script 424 88 {
+'handle button press'
+}
+
+script 73 106 {
+'lego set color' 3
+}
+
+script 469 154 {
+whenBroadcastReceived 'left -'
+sayIt 'left -'
+}
+
+script 327 156 {
+whenBroadcastReceived 'left +'
+sayIt 'left +'
+}
+
+script 616 160 {
+whenBroadcastReceived 'left red'
+sayIt 'left red'
+}
+
+script 55 226 {
+'BLE disconnect' legoremote
+}
+
+script 332 276 {
+whenBroadcastReceived 'right +'
+sayIt 'right +'
+}
+
+script 483 280 {
+whenBroadcastReceived 'right -'
+sayIt 'right -'
+}
+
+script 640 283 {
+whenBroadcastReceived 'right red'
+sayIt 'right red'
+}
+
+script 62 299 {
+'BLE disconnect all'
+}
+
+
+module 'BLE client' Comm
+author wwj718
+version 1 0 
+description ''
+
+  spec ' ' 'BLE init' 'BLE init'
+  spec ' ' '_BLE Deinit' 'BLE Deinit'
+  spec 'r' '_BLE Get Initialized' 'BLE Get Initialized'
+  spec ' ' '_scan' 'BLE scan _ s' 'auto' 1
+  spec 'r' 'BLE connect' 'BLE connect serviceuuid _ timeout _ s' 'auto auto' '' 1
+  spec 'r' 'BLE connect name' 'BLE connect name _ timeout _ s' 'auto auto' '' 1
+  spec 'r' 'BLE Is Connected' 'BLE Is Connected _' 'auto' ''
+  spec 'r' 'BLE connected devices' 'BLE connected devices'
+  spec ' ' 'BLE disconnect' 'BLE disconnect _' 'auto' ''
+  spec ' ' 'BLE disconnect all' 'BLE disconnect all'
+  spec 'r' 'BLE read uuid' 'BLE read address _ serviceuuid _ uuid _ binary _' 'auto auto auto bool' '' '' '' true
+  spec ' ' 'BLE write' 'BLE write address _ serviceuuid _ uuid _ bytearray _' 'auto auto auto auto' '' '' '' ''
+  spec ' ' 'BLE notify' 'BLE notify address _ serviceuuid _ uuid _ binary _' 'auto auto auto bool' '' '' '' true
+  spec 'r' 'BLE notify data' 'BLE notify data'
+  spec 'r' '_is_target_device' 'is_target_device target _ device _' 'auto auto' '' ''
+
+to 'BLE Is Connected' address {
+  local 'connectedDevices' ('BLE connected devices')
+  if (and (isType connectedDevices 'list') (('[data:find]' address connectedDevices) != -1)) {
+    return (booleanConstant true)
+  }
+  return (booleanConstant false)
+}
+
+to 'BLE connect' uuid time {
+  comment '使用变量存下 address，这样同一个 library 可用于多个设备'
+  local 'begin' (millisOp)
+  local 'scan_device' ''
+  local 'find_device' (booleanConstant false)
+  local 'device_address' ''
+  '_scan' time
+  repeatUntil (((millisOp) - begin) > (1000 * time)) {
+    scan_device = (callCustomReporter '[ble:BLEClientGetAdvertisedMessage]')
+    comment 'deviceName, deviceAddress, serviceUUID'
+    if (and (scan_device != (booleanConstant false)) ((at 3 scan_device) != '-1')) {
+      if ('_is_target_device' uuid (at 3 scan_device)) {
+        find_device = (booleanConstant true)
+        device_address = (at 2 scan_device)
+      }
+    }
+  }
+  if find_device {
+    comment 'use deviceAddress to cocnect'
+    sayIt (callCustomReporter '[ble:BLEClientConnect]' ('[data:makeList]' device_address))
+    return device_address
+  } else {
+    sayIt 'timeout'
+  }
+  return 0
+}
+
+to 'BLE connect name' name time {
+  local 'begin' (millisOp)
+  local 'scan_device' ''
+  local 'find_device' (booleanConstant false)
+  local 'device_address' ''
+  '_scan' time
+  repeatUntil (((millisOp) - begin) > (1000 * time)) {
+    scan_device = (callCustomReporter '[ble:BLEClientGetAdvertisedMessage]')
+    comment 'deviceName, deviceAddress, serviceUUID'
+    if (and (scan_device != (booleanConstant false)) (('[data:find]' name (at 1 scan_device)) != -1)) {
+      find_device = (booleanConstant true)
+      device_address = (at 2 scan_device)
+    }
+  }
+  if find_device {
+    comment 'use deviceAddress to cocnect'
+    sayIt (callCustomReporter '[ble:BLEClientConnect]' ('[data:makeList]' device_address))
+    return device_address
+  } else {
+    sayIt 'timeout'
+  }
+  return 0
+}
+
+to 'BLE connected devices' {
+  return (callCustomReporter '[ble:BLEGetConnectedDevices]')
+}
+
+to 'BLE disconnect' address {
+  comment '需要在server里维护一个map，然后id放到前端'
+  if ('BLE Is Connected' address) {
+    callCustomCommand '[ble:BLEClientDisconnect]' ('[data:makeList]' address)
+  } else {
+    sayIt 'Device not connected'
+  }
+}
+
+to 'BLE disconnect all' {
+  for i ('BLE connected devices') {
+    sayIt i
+    'BLE disconnect' i
+    waitMillis 50
+  }
+}
+
+to 'BLE init' {
+  if (not (callCustomReporter '[ble:BLEClientGetInitialized]')) {callCustomCommand '[ble:BLEClientInit]'}
+}
+
+to 'BLE notify' address serviceuuid uuid binary {
+  callCustomCommand '[ble:BLEClientStartNotify]' ('[data:makeList]' address serviceuuid uuid binary)
+}
+
+to 'BLE notify data' {
+  return (callCustomReporter '[ble:BLEClientGetNotifyData]' ('[data:makeList]' (booleanConstant true)))
+}
+
+to 'BLE read uuid' address serviceuuid uuid binary {
+  return (callCustomReporter '[ble:BLEClientRead]' ('[data:makeList]' address serviceuuid uuid binary))
+}
+
+to 'BLE write' address serviceuuid uuid bytearray {
+  sayIt address serviceuuid uuid bytearray
+  callCustomCommand '[ble:BLEClientWrite]' ('[data:makeList]' address serviceuuid uuid bytearray)
+}
+
+to '_BLE Deinit' {
+  callCustomCommand '[ble:BLEClientDeinitBLE]'
+}
+
+to '_BLE Get Initialized' {
+  return (callCustomReporter '[ble:BLEClientGetInitialized]')
+}
+
+to '_is_target_device' uuid1 uuid2 {
+  if (('[data:copyFromTo]' uuid2 1 2) == '0x') {
+    comment ''
+    if (uuid1 == (hexToInt uuid2)) {
+      return (booleanConstant true)
+    }
+  } else {
+    if (uuid1 == uuid2) {return (booleanConstant true)}
+  }
+  return (booleanConstant false)
+}
+
+to '_scan' time {
+  'BLE init'
+  callCustomCommand '[ble:BLEClientScan]' ('[data:makeList]' time)
+}
+
+
+module 'LEGO remote'
+author wwj718
+version 1 0 
+depends 'BLE client' 
+description ''
+
+  spec 'r' 'lego connect' 'lego connect'
+  spec ' ' 'lego set color' 'lego set color _' 'auto' 3
+  spec ' ' 'handle button press' 'handle button press'
+
+to 'handle button press' {
+  comment 'LEGO remote'
+  local 'notify_data' ''
+  forever {
+    notify_data = ('BLE notify data')
+    if (and (notify_data != (booleanConstant false)) ((size notify_data) == 5)) {
+      if ((at 4 notify_data) == 0) {
+        if ((at 5 notify_data) == 1) {sendBroadcast 'left +'}
+        if ((at 5 notify_data) == (hexToInt '7F')) {sendBroadcast 'left red'}
+        if ((at 5 notify_data) == (hexToInt 'FF')) {sendBroadcast 'left -'}
+      } ((at 4 notify_data) == 1) {
+        if ((at 5 notify_data) == 1) {sendBroadcast 'right +'}
+        if ((at 5 notify_data) == (hexToInt '7F')) {sendBroadcast 'right red'}
+        if ((at 5 notify_data) == (hexToInt 'FF')) {sendBroadcast 'right -'}
+      }
+    }
+    waitMillis 100
+  }
+}
+
+to 'lego connect' {
+  local 'address' ('BLE connect' '00001623-1212-efde-1623-785feabcd123' 2)
+  'BLE write' address '00001623-1212-efde-1623-785feabcd123' '00001624-1212-efde-1623-785feabcd123' ('[data:asByteArray]' ('[data:makeList]' 10 0 65 0 0 1 0 0 0 1))
+  'BLE write' address '00001623-1212-efde-1623-785feabcd123' '00001624-1212-efde-1623-785feabcd123' ('[data:asByteArray]' ('[data:makeList]' 10 0 65 1 0 1 0 0 0 1))
+  'BLE notify' address '00001623-1212-efde-1623-785feabcd123' '00001624-1212-efde-1623-785feabcd123' 10
+  return address
+}
+
+to 'lego set color' num {
+  'BLE write' '' '00001623-1212-efde-1623-785feabcd123' '00001624-1212-efde-1623-785feabcd123' ('[data:asByteArray]' ('[data:makeList]' 8 0 (hexToInt '81') (hexToInt '34') (hexToInt '11') (hexToInt '51') 0 num))
+}
+

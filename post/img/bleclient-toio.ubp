@@ -1,0 +1,269 @@
+module main
+author unknown
+version 1 0 
+description ''
+
+script 89 40 {
+toio1 = ('toio connect')
+}
+
+script 64 87 {
+'toio set color r g b' 255 0 0
+}
+
+script 94 124 {
+'toio moveFor' 'forward' 50 500
+}
+
+script 90 183 {
+forever {
+  sayIt ('toio x') ('toio y')
+  waitMillis 100
+}
+}
+
+script 86 342 {
+'BLE disconnect' toio1
+}
+
+script 287 351 {
+'BLE disconnect all'
+}
+
+
+module 'BLE client' Comm
+author wwj718
+version 1 0 
+description ''
+
+  spec ' ' 'BLE init' 'BLE init'
+  spec ' ' '_BLE Deinit' 'BLE Deinit'
+  spec 'r' '_BLE Get Initialized' 'BLE Get Initialized'
+  spec ' ' '_scan' 'BLE scan _ s' 'auto' 1
+  spec 'r' 'BLE connect' 'BLE connect serviceuuid _ timeout _ s' 'auto auto' '' 1
+  spec 'r' 'BLE connect name' 'BLE connect name _ timeout _ s' 'auto auto' '' 1
+  spec 'r' 'BLE Is Connected' 'BLE Is Connected _' 'auto' ''
+  spec 'r' 'BLE connected devices' 'BLE connected devices'
+  spec ' ' 'BLE disconnect' 'BLE disconnect _' 'auto' ''
+  spec ' ' 'BLE disconnect all' 'BLE disconnect all'
+  spec 'r' 'BLE read uuid' 'BLE read address _ serviceuuid _ uuid _ binary _' 'auto auto auto bool' '' '' '' true
+  spec ' ' 'BLE write' 'BLE write address _ serviceuuid _ uuid _ bytearray _' 'auto auto auto auto' '' '' '' ''
+  spec ' ' 'BLE notify' 'BLE notify address _ serviceuuid _ uuid _ binary _' 'auto auto auto bool' '' '' '' true
+  spec 'r' 'BLE notify data' 'BLE notify data'
+  spec 'r' '_is_target_device' 'is_target_device target _ device _' 'auto auto' '' ''
+
+to 'BLE Is Connected' address {
+  local 'connectedDevices' ('BLE connected devices')
+  if (and (isType connectedDevices 'list') (('[data:find]' address connectedDevices) != -1)) {
+    return (booleanConstant true)
+  }
+  return (booleanConstant false)
+}
+
+to 'BLE connect' uuid time {
+  comment '使用变量存下 address，这样同一个 library 可用于多个设备'
+  local 'begin' (millisOp)
+  local 'scan_device' ''
+  local 'find_device' (booleanConstant false)
+  local 'device_address' ''
+  '_scan' time
+  repeatUntil (((millisOp) - begin) > (1000 * time)) {
+    scan_device = (callCustomReporter '[ble:BLEClientGetAdvertisedMessage]')
+    comment 'deviceName, deviceAddress, serviceUUID'
+    if (and (scan_device != (booleanConstant false)) ((at 3 scan_device) != '-1')) {
+      if ('_is_target_device' uuid (at 3 scan_device)) {
+        find_device = (booleanConstant true)
+        device_address = (at 2 scan_device)
+      }
+    }
+  }
+  if find_device {
+    comment 'use deviceAddress to cocnect'
+    sayIt (callCustomReporter '[ble:BLEClientConnect]' ('[data:makeList]' device_address))
+    return device_address
+  } else {
+    sayIt 'timeout'
+  }
+  return 0
+}
+
+to 'BLE connect name' name time {
+  local 'begin' (millisOp)
+  local 'scan_device' ''
+  local 'find_device' (booleanConstant false)
+  local 'device_address' ''
+  '_scan' time
+  repeatUntil (((millisOp) - begin) > (1000 * time)) {
+    scan_device = (callCustomReporter '[ble:BLEClientGetAdvertisedMessage]')
+    comment 'deviceName, deviceAddress, serviceUUID'
+    if (and (scan_device != (booleanConstant false)) (('[data:find]' name (at 1 scan_device)) != -1)) {
+      find_device = (booleanConstant true)
+      device_address = (at 2 scan_device)
+    }
+  }
+  if find_device {
+    comment 'use deviceAddress to cocnect'
+    sayIt (callCustomReporter '[ble:BLEClientConnect]' ('[data:makeList]' device_address))
+    return device_address
+  } else {
+    sayIt 'timeout'
+  }
+  return 0
+}
+
+to 'BLE connected devices' {
+  return (callCustomReporter '[ble:BLEGetConnectedDevices]')
+}
+
+to 'BLE disconnect' address {
+  comment '需要在server里维护一个map，然后id放到前端'
+  if ('BLE Is Connected' address) {
+    callCustomCommand '[ble:BLEClientDisconnect]' ('[data:makeList]' address)
+  } else {
+    sayIt 'Device not connected'
+  }
+}
+
+to 'BLE disconnect all' {
+  for i ('BLE connected devices') {
+    sayIt i
+    'BLE disconnect' i
+    waitMillis 50
+  }
+}
+
+to 'BLE init' {
+  if (not (callCustomReporter '[ble:BLEClientGetInitialized]')) {callCustomCommand '[ble:BLEClientInit]'}
+}
+
+to 'BLE notify' address serviceuuid uuid binary {
+  callCustomCommand '[ble:BLEClientStartNotify]' ('[data:makeList]' address serviceuuid uuid binary)
+}
+
+to 'BLE notify data' {
+  return (callCustomReporter '[ble:BLEClientGetNotifyData]' ('[data:makeList]' (booleanConstant true)))
+}
+
+to 'BLE read uuid' address serviceuuid uuid binary {
+  return (callCustomReporter '[ble:BLEClientRead]' ('[data:makeList]' address serviceuuid uuid binary))
+}
+
+to 'BLE write' address serviceuuid uuid bytearray {
+  sayIt address serviceuuid uuid bytearray
+  callCustomCommand '[ble:BLEClientWrite]' ('[data:makeList]' address serviceuuid uuid bytearray)
+}
+
+to '_BLE Deinit' {
+  callCustomCommand '[ble:BLEClientDeinitBLE]'
+}
+
+to '_BLE Get Initialized' {
+  return (callCustomReporter '[ble:BLEClientGetInitialized]')
+}
+
+to '_is_target_device' uuid1 uuid2 {
+  if (('[data:copyFromTo]' uuid2 1 2) == '0x') {
+    comment ''
+    if (uuid1 == (hexToInt uuid2)) {
+      return (booleanConstant true)
+    }
+  } else {
+    if (uuid1 == uuid2) {return (booleanConstant true)}
+  }
+  return (booleanConstant false)
+}
+
+to '_scan' time {
+  'BLE init'
+  callCustomCommand '[ble:BLEClientScan]' ('[data:makeList]' time)
+}
+
+
+module toio
+author wwj718
+version 1 0 
+depends 'BLE client' 
+description ''
+variables toio1 
+
+  spec 'r' 'toio connect' 'toio connect'
+  spec ' ' 'toio set color r g b' 'toio set color r _ g _ b _' 'auto auto auto' 255 0 0
+  spec ' ' '_toio move' 'toio move _ duration _' 'auto num' '' 0
+  spec ' ' 'toio stop' 'toio stop'
+  spec ' ' 'toio moveFor' 'toio move _ at _ speed for _ ms' 'auto num num' 'forward' 50 1000
+  spec ' ' 'play sound effect' 'toio play sound effect _ volume _' 'auto auto' 4 100
+  spec 'r' 'toio x' 'toio x'
+  spec 'r' 'toio y' 'toio y'
+
+to '_toio move' SPEED DURATION {
+  local 'data' ('[data:makeList]')
+  local 'speed' 0
+  if (DURATION != 0) {
+    '[data:addLast]' 2 data
+  } else {
+    '[data:addLast]' 1 data
+  }
+  for i (size SPEED) {
+    speed = (maximum (minimum (at i SPEED) 100) -100)
+    '[data:addLast]' i data
+    if (speed > 0) {
+      '[data:addLast]' 1 data
+    } else {
+      '[data:addLast]' 2 data
+    }
+    '[data:addLast]' (absoluteValue speed) data
+  }
+  if (DURATION != 0) {
+    '[data:addLast]' (100 * DURATION) data
+  }
+  'BLE write' toio1 '10b20100-5b3b-4571-9508-cf3efcd7bbae' '10b20102-5b3b-4571-9508-cf3efcd7bbae' ('[data:asByteArray]' data)
+}
+
+to 'play sound effect' effect volume {
+  'BLE write' toio1 '10b20100-5b3b-4571-9508-cf3efcd7bbae' '10b20104-5b3b-4571-9508-cf3efcd7bbae' ('[data:asByteArray]' ('[data:makeList]' 2 effect volume))
+}
+
+to 'toio connect' {
+  return {
+    'BLE connect' '10b20100-5b3b-4571-9508-cf3efcd7bbae' 3
+  }
+}
+
+to 'toio moveFor' DIRECTION SPEED DURATION {
+  local 'speed' 0
+  if (DIRECTION == 'forward') {
+    speed = (1 * SPEED)
+  } else {
+    speed = (-1 * SPEED)
+  }
+  '_toio move' ('[data:makeList]' speed speed) 0
+  waitMillis DURATION
+  'toio stop'
+}
+
+to 'toio set color r g b' r g b {
+  'BLE write' toio1 '10b20100-5b3b-4571-9508-cf3efcd7bbae' '10b20103-5b3b-4571-9508-cf3efcd7bbae' ('[data:asByteArray]' ('[data:makeList]' 3 (1 * 100) 1 1 r g b))
+}
+
+to 'toio stop' {
+  '_toio move' ('[data:makeList]' 0 0) 0
+}
+
+to 'toio x' {
+  local 'data' ('BLE read uuid' toio1 '10b20100-5b3b-4571-9508-cf3efcd7bbae' '10b20101-5b3b-4571-9508-cf3efcd7bbae' true)
+  if ((at 1 data) == 1) {
+    return ((at 2 data) | ((at 3 data) << 8))
+  } else {
+    return 0
+  }
+}
+
+to 'toio y' {
+  local 'data' ('BLE read uuid' toio1 '10b20100-5b3b-4571-9508-cf3efcd7bbae' '10b20101-5b3b-4571-9508-cf3efcd7bbae' true)
+  if ((at 1 data) == 1) {
+    return ((at 4 data) | ((at 5 data) << 8))
+  } else {
+    return 0
+  }
+}
+

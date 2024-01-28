@@ -1,0 +1,71 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables test 
+
+script 48 46 {
+whenCondition (('[sensors:touchRead]' 12) < 50)
+'press key' 'n'
+waitMillis 500
+}
+
+script 270 49 {
+whenStarted
+'start BLE Keyboard'
+}
+
+script 40 230 {
+forever {
+  printIt ('[sensors:touchRead]' 12)
+  waitMillis 50
+}
+}
+
+script 267 232 {
+sayIt 'touched' test
+sayIt ''
+test += 1
+}
+
+
+module 'BLE Keyboard' Comm
+author wwj718
+version 1 0 
+choices keyModifiers Shift Control 'Alt / ⌥' 'Logo / ⌘' AltGr 
+choices mouseButtons left right middle both 
+choices specialKeys 'enter:10' 'tab:179' 'backspace:178' 'delete:212' 'insert:209' 'home:210' 'end:213' 'PgUp:211' 'PgDown:214' '→:215' '←:216' '↓:217' '↑:218' 'F1:194' 'F2:195' 'F3:196' 'F4:197' 'F5:198' 'F6:199' 'F7:200' 'F8:201' 'F9:202' 'F10:203' 'F11:204' 'F12:205' 'CapsLock:193' 'NumLock:219' 'ScrollLock:207' 'PrintScreen:206' 'ESC:177' 
+description 'This library can send keyboard events to a computer over Bluetooth (i.e. it emulates a Bluetooth Keyboard device).
+It currently works on ESP32.
+'
+
+  spec ' ' 'start BLE Keyboard' 'start BLE Keyboard'
+  spec ' ' 'press key' 'press key _ : while holding _' 'str.specialKeys menu.keyModifiers' 'n' 'Shift'
+  spec ' ' '[net:holdKey]' 'hold key _' 'str.specialKeys' 'A'
+  spec ' ' '[net:releaseKey]' 'release key _' 'str.specialKeys' 'A'
+  spec ' ' '[net:releaseKeys]' 'release all keys'
+
+to 'press key' key modifier {
+  callCustomCommand '[net:PressKey]' ('[data:makeList]' key ('[data:find]' modifier ('[data:makeList]' 'Shift' 'Control' 'Alt / ⌥' 'Logo / ⌘' 'AltGr')))
+}
+
+to 'start BLE Keyboard' {
+  callCustomCommand '[net:startKeyboard]'
+}
+
+
+module 'Sensor Primitives' Input
+author MicroBlocks
+version 1 1 
+tags tilt acceleration light sensor capacitive button 
+description 'Provides blocks to read tilt in the three axes, acceleration, temperature and light level. Many boards come with this particular set of sensors, such as the micro:bit, the Circuit Playground Express, the Calliope or the Citilab ED1.'
+
+  spec 'r' '[sensors:tiltX]' 'tilt x'
+  spec 'r' '[sensors:tiltY]' 'tilt y'
+  spec 'r' '[sensors:tiltZ]' 'tilt z'
+  spec 'r' '[display:lightLevel]' 'light level'
+  spec 'r' '[sensors:temperature]' 'temperature (°C)'
+  space
+  spec 'r' '[sensors:touchRead]' 'capacitive sensor _' 'num' 1
+  space
+  spec ' ' '[sensors:i2cSetClockSpeed]' 'set i2c clock speed _' 'num' 400000

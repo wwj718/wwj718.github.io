@@ -1,0 +1,844 @@
+module main
+author wwj718
+version 1 0 
+description ''
+variables _dotPack_pixels _dotPack_cmd _ws_valid_event _free_var _client_set_filename _dotPack_animation_loop _wifi_connected _ws_event _dotPack_startup_filename 
+
+	spec ' ' '_clear' '_clear'
+	spec ' ' '_setPixel' '_setPixel'
+	spec ' ' '_setBackground' '_setBackground'
+	spec ' ' '_setBrightness' '_setBrightness'
+	spec ' ' '_displayChar' '_displayChar'
+	spec ' ' '_scrollText' '_scrollText'
+	spec ' ' '_DisplayBMPImage' '_displayBMPImage'
+	spec ' ' '_ListFileNames' '_listFileNames'
+	spec ' ' '_setFileMeta' '_setFileMeta'
+	spec ' ' '_uploadFile' '_uploadFile'
+	spec ' ' '_deleteFile' '_deleteFile'
+	spec ' ' '_displayAnimation' '_displayAnimation'
+	spec ' ' '_add cmd' '_add cmd _ to file _' 'auto auto' '' ''
+	spec ' ' '_cleanAnimation' '_cleanAnimation'
+	spec ' ' 'hande_binary_message' 'hande_binary_message'
+	spec ' ' 'handle_text_message' 'handle_text_message'
+
+to '_DisplayBMPImage' {
+  local 'filename' (at 2 _dotPack_cmd)
+  local 'startup' (at 3 _dotPack_cmd)
+  local 'result' 0
+  comment 'client should sleep to wait rendar'
+  if (('[data:find]' '.bmp' filename) == -1) {
+    result = 400
+    sayIt 'image 400'
+  } (0 == ('[file:fileSize]' filename)) {
+    result = 404
+    sayIt 'image 404'
+  } else {
+    drawBMPfile filename
+    result = 200
+    sayIt 'image 200'
+  }
+  if (startup == 'True') {
+    '_add cmd' ('ws event payload' _ws_valid_event) _dotPack_startup_filename
+  }
+  '[net:webSocketSendToClient]' ('[data:join]' result '') ('ws client id' _ws_valid_event)
+}
+
+to '_ListFileNames' {
+  local 'dirname' (at 2 _dotPack_cmd)
+  local 'file_names' 0
+  if (dirname == 'root') {
+    file_names = ('file names')
+  } else {
+    file_names = ('file names' dirname)
+  }
+  '[net:webSocketSendToClient]' ('[data:joinStrings]' file_names ',') ('ws client id' _ws_valid_event)
+}
+
+to '_add cmd' cmd filename {
+  if (('[file:fileSize]' filename) != 0) {'[file:delete]' filename}
+  '[file:open]' filename
+  '[file:appendLine]' cmd filename
+  '[file:close]' filename
+}
+
+to '_cleanAnimation' {
+  local 'name' (at 2 _dotPack_cmd)
+  for i ('file names') {
+    if (('[data:find]' ('[data:join]' name '-') i) != -1) {'[file:delete]' i}
+  }
+  '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+}
+
+to '_clear' {
+  clearDisplay
+  '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+}
+
+to '_deleteFile' {
+  local 'filename' (at 2 _dotPack_cmd)
+  if (('[file:fileSize]' filename) != 0) {
+    '[file:delete]' filename
+    '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+  } else {
+    '[net:webSocketSendToClient]' '404' ('ws client id' _ws_valid_event)
+  }
+}
+
+to '_displayAnimation' {
+  local 'loop' (at 4 _dotPack_cmd)
+  local 'startup' (at 5 _dotPack_cmd)
+  comment '关掉之前运行的动图'
+  _dotPack_animation_loop = (booleanConstant false)
+  waitMicros 200
+  if (loop == 'True') {
+    _dotPack_animation_loop = (booleanConstant true)
+  } else {
+    _dotPack_animation_loop = (booleanConstant false)
+  }
+  if (startup == 'True') {
+    '_add cmd' ('ws event payload' _ws_valid_event) _dotPack_startup_filename
+  }
+  '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+  sendBroadcast 'displayAnimation'
+}
+
+to '_displayChar' {
+  local 'char' (at 2 _dotPack_cmd)
+  local 'color' (at 3 _dotPack_cmd)
+  displayChar char (color + 0)
+  '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+}
+
+to '_scrollText' {
+  local 'text' (at 2 _dotPack_cmd)
+  local 'color' (at 3 _dotPack_cmd)
+  dotPackScrollText text (color + 0)
+  '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+}
+
+to '_setBackground' {
+  local 'color' (at 2 _dotPack_cmd)
+  setBrightness 15
+  setBackground (color + 0)
+  '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+}
+
+to '_setBrightness' {
+  local 'num' (at 2 _dotPack_cmd)
+  setBrightness (num + 0)
+  '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+}
+
+to '_setFileMeta' {
+  _client_set_filename = (at 2 _dotPack_cmd)
+  '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+}
+
+to '_setPixel' {
+  comment 'colorR, colorG, colorB, pointx, pointy'
+  setPixel ((at 5 _dotPack_cmd) + 1) ((at 6 _dotPack_cmd) + 1) (color_rgb ((at 2 _dotPack_cmd) + 0) ((at 3 _dotPack_cmd) + 0) ((at 4 _dotPack_cmd) + 0))
+  '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+  _dotPack_cmd = 0
+  _ws_valid_event = 0
+}
+
+to '_uploadFile' {
+  comment '先存到本地，再展示'
+  if (_client_set_filename == 'preview') {
+    comment '需要等到microblocsk支持操作bytes'
+    sayIt 'preview'
+  } else {
+    '[file:delete]' _client_set_filename
+    '[file:open]' _client_set_filename
+    comment '保存原始请求'
+    '[file:appendBytes]' ('ws event payload' _ws_valid_event) _client_set_filename
+    '[file:close]' _client_set_filename
+    '[net:webSocketSendToClient]' '200' ('ws client id' _ws_valid_event)
+    _ws_valid_event = 0
+  }
+}
+
+to hande_binary_message {
+  if (('ws event type' _ws_valid_event) == 'binary message') {
+    sayIt 'binary mesasge'
+    '_uploadFile'
+  }
+}
+
+to handle_text_message {
+  if (('ws event type' _ws_valid_event) == 'text message') {
+    sayIt 'text mesasge'
+    _dotPack_cmd = ('[data:split]' ('ws event payload' _ws_valid_event) ',')
+    if ((at 1 _dotPack_cmd) == 'listFileNames') {
+      '_ListFileNames'
+      return 'listFileNames'
+    }
+    if ((at 1 _dotPack_cmd) == 'setFileMeta') {
+      '_setFileMeta'
+      return 'setFileMeta'
+    }
+    if ((at 1 _dotPack_cmd) == 'displayBMPImage') {
+      '_DisplayBMPImage'
+      return 'displayBMPImage'
+    }
+    if ((at 1 _dotPack_cmd) == 'cleanAnimation') {
+      '_cleanAnimation'
+      return 'cleanAnimation'
+    }
+    if ((at 1 _dotPack_cmd) == 'displayAnimation') {
+      '_displayAnimation'
+      return 'displayAnimation'
+    }
+    if ((at 1 _dotPack_cmd) == 'deleteFile') {
+      '_deleteFile'
+      return 'deleteFile'
+    }
+    if ((at 1 _dotPack_cmd) == 'clear') {
+      '_clear'
+      return 'clear'
+    }
+    if ((at 1 _dotPack_cmd) == 'setPixel') {
+      '_setPixel'
+      return 'setPixel'
+    }
+    if ((at 1 _dotPack_cmd) == 'setBrightness') {
+      '_setBrightness'
+      return 'setBrightness'
+    }
+    if ((at 1 _dotPack_cmd) == 'setBackground') {
+      '_setBackground'
+      return 'setBackground'
+    }
+    if ((at 1 _dotPack_cmd) == 'scrollText') {
+      '_scrollText'
+      return 'scrollText'
+    }
+    if ((at 1 _dotPack_cmd) == 'displayChar') {
+      '_displayChar'
+      return 'displayChar'
+    }
+  }
+}
+
+script 50 50 {
+comment '支持 dotpack_pyclient(Python)  的主要 API: 
+     https://github.com/longan-link/dotpack_pyclient/blob/main/examples/hello_Microblocks.ipynb
+由于是标准 websocket 协议，理论上可以建立任何编程语言的客户端'
+}
+
+script 858 67 {
+whenBroadcastReceived 'displayAnimation'
+sayIt _dotPack_animation_loop
+waitMicros 50
+local 'name' (at 2 _dotPack_cmd)
+local 'pausing' (at 3 _dotPack_cmd)
+local 'index' 0
+forever {
+  local 'image_name' ('[data:join]' name '-' index '.bmp')
+  sayIt name pausing index image_name
+  if (('[file:fileSize]' image_name) == 0) {
+    sayIt 'image 404'
+    index = 0
+    if _dotPack_animation_loop {
+      sayIt 'loop'
+    } else {
+      sayIt 'stop!'
+      stopTask
+    }
+  } else {
+    drawBMPfile image_name
+    waitMicros (pausing + 0)
+    index += 1
+  }
+}
+}
+
+script 1314 68 {
+whenBroadcastReceived 'startup'
+clearDisplay
+if (('[file:fileSize]' _dotPack_startup_filename) == 0) {
+  sayIt '不存在启动文件'
+  stopTask
+} else {
+  '[file:open]' _dotPack_startup_filename
+  _dotPack_cmd = ('[data:split]' ('[file:readLine]' _dotPack_startup_filename) ',')
+  '[file:close]' _dotPack_startup_filename
+  if ((at 1 _dotPack_cmd) == 'displayBMPImage') {
+    '_DisplayBMPImage'
+    return 'displayBMPImage'
+  }
+  if ((at 1 _dotPack_cmd) == 'displayAnimation') {
+    '_displayAnimation'
+    return 'displayAnimation'
+  }
+}
+}
+
+script 508 141 {
+whenBroadcastReceived 'free memory'
+_free_var = (newList 1500)
+_free_var = 0
+}
+
+script 297 231 {
+whenStarted
+_dotPack_startup_filename = 'startup.conf'
+clearDisplay
+sendBroadcast 'connecting wifi'
+_wifi_connected = (booleanConstant false)
+wifiConnect 'ZMI_0066' '31790754'
+_wifi_connected = (booleanConstant true)
+'start WebSocket server'
+forever {
+  if (('[data:freeMemory]') < 1500) {
+    sayIt 'free memory'
+    sendBroadcast 'free memory'
+    waitMillis 50
+  } else {
+    _ws_event = ('[net:webSocketLastEvent]')
+    if (_ws_event != (booleanConstant false)) {
+      sendBroadcast 'process event'
+    }
+    waitMillis 40
+  }
+}
+}
+
+script 605 263 (getIPAddress)
+
+script 107 265 {
+whenStarted
+forever {
+  sayIt ('[data:freeMemory]')
+  waitMillis 50
+}
+}
+
+script 592 322 {
+whenBroadcastReceived 'connecting wifi'
+forever {
+  for i 16 {
+    if _wifi_connected {
+      if ((getIPAddress) == '0.0.0.0') {repeat 3 {
+        setPixel 1 1 (colorSwatch 190 8 54 255)
+        waitMillis 300
+        clearDisplay
+        waitMillis 300
+      }
+}
+      sendBroadcast 'startup'
+      stopTask
+    }
+    waitMillis 500
+    setPixel i 1 (colorSwatch 55 183 190 255)
+  }
+  clearDisplay
+}
+}
+
+script 292 781 {
+whenBroadcastReceived 'process event'
+comment '所有的handle都是同步的（ 除了 displayAnimation），完成后才reply'
+_ws_valid_event = _ws_event
+_dotPack_animation_loop = (booleanConstant false)
+hande_binary_message
+handle_text_message
+}
+
+
+module BMP4dotPack Output
+author 'José García Yeste'
+version 1 3 
+description 'Display BMP files on a dotPack screen.
+
+Files can be uploaded to the board using a variety of tools, including esptool, the Arduino IDE or PlatformIO. Search the web for "SPIFFS file upload" for details.
+
+If you want to stay 100% inside MicroBlocks, you can even set up a web server in MicroBlocks itself and, for example, send the file to the board with a multipart POST request.
+
+This library works with 16, 24 and 32 bpp BMP files
+'
+
+	spec ' ' 'drawBMPfile' 'display BMP file _' 'auto' ''
+	spec 'r' '_checkBMP' '_check BMP signature of file _' 'auto' ''
+	spec ' ' '_drawBMP from' '_draw BMP of file _ width _ height _ bpp _' 'auto auto auto auto' '' 0 0 24
+	spec 'r' '_readLineBMP' '_read BMPline of file _ width _ bpp _' 'auto auto auto' '' 0 24
+	spec ' ' '_ignoreBMP' '_ignore _ bytes of file _' 'auto auto' 0 ''
+	spec 'r' '_read int16 of BMP file' '_read int16 of file _' 'auto' ''
+	spec 'r' '_read int32 of BMP file' '_read int32 of file _' 'auto' ''
+
+to '_checkBMP' filename {
+  local 'signature' ''
+  local 'data' ('[file:readBytes]' 2 filename)
+  for i (size data) {
+    signature = ('[data:join]' signature ('[data:unicodeString]' (at i data)))
+  }
+  return (signature == 'BM')
+}
+
+to '_drawBMP from' filename width height bpp {
+  local 'y' (height - 1)
+  repeatUntil (y < 0) {
+    local 'line' ('_readLineBMP' filename width bpp)
+    for x (size line) {
+      setPixel x (y + 1) (at x line) false
+    }
+    y += -1
+  }
+  update
+}
+
+to '_ignoreBMP' bytes filename {
+  local 'buf' 0
+  repeatUntil (bytes == 0) {
+    if (bytes > 800) {
+      buf = ('[file:readBytes]' 800 filename)
+    } else {
+      buf = ('[file:readBytes]' bytes filename)
+    }
+    bytes = (bytes - (size buf))
+  }
+}
+
+to '_read int16 of BMP file' filename {
+  local 'data' ('[file:readBytes]' 2 filename)
+  return (((at 2 data) << 8) | (at 1 data))
+}
+
+to '_read int32 of BMP file' filename {
+  local 'data' ('[file:readBytes]' 4 filename)
+  return ((((at 4 data) << 24) | ((at 3 data) << 16)) | (((at 2 data) << 8) | (at 1 data)))
+}
+
+to '_readLineBMP' filename width bpp {
+  local 'result' ('[data:makeList]')
+  local 'i' (width * (bpp / 8))
+  local 'data' ('[data:newByteArray]' 0)
+  repeatUntil (i <= 0) {
+    data = ('[data:join]' data ('[file:readBytes]' (minimum 768 i) filename))
+    i += (0 - (minimum 768 i))
+  }
+  i = 1
+  repeatUntil (i >= (size data)) {
+    if (bpp == 16) {
+      '[data:addLast]' (((((at (i + 1) data) & 124) << 17) | (((((at (i + 1) data) & 3) << 3) | ((at i data) >> 5)) << 11)) | (((at i data) & 31) << 3)) result
+    } else {
+      '[data:addLast]' ((((at (i + 2) data) << 16) | ((at (i + 1) data) << 8)) | (at i data)) result
+    }
+    i += (bpp / 8)
+  }
+  local 'mod4' ((size data) % 4)
+  if (mod4 != 0) {
+    '_ignoreBMP' (4 - mod4) filename
+  }
+  return result
+}
+
+to drawBMPfile filename {
+  '[file:open]' filename
+  if ('_checkBMP' filename) {
+    '_ignoreBMP' 8 filename
+    local 'start' ('_read int32 of BMP file' filename)
+    '_ignoreBMP' 4 filename
+    local 'width' ('_read int32 of BMP file' filename)
+    local 'height' ('_read int32 of BMP file' filename)
+    '_ignoreBMP' 2 filename
+    local 'bpp' ('_read int16 of BMP file' filename)
+    '_ignoreBMP' (start - 30) filename
+    '_drawBMP from' filename width height bpp
+  }
+  '[file:close]' filename
+}
+
+
+module Files Data
+author MicroBlocks
+version 1 1 
+tags data esp 
+description 'Flash file system operations. Currently supports the SPIFFS file system on ESP8266 and ESP32 boards. The GnuBlocks virtual machine (Linux and Raspberry Pi) supports the native system.'
+
+	spec ' ' '[file:open]' 'open file _' 'str'
+	spec ' ' '[file:close]' 'close file _' 'str'
+	spec ' ' '[file:delete]' 'delete file _' 'str'
+	spec ' ' '[file:appendLine]' 'append line _ to file _' 'str str'
+	spec ' ' '[file:appendBytes]' 'append bytes _ to file _' 'str str'
+	spec 'r' '[file:endOfFile]' 'end of file _' 'str'
+	spec 'r' '[file:readLine]' 'next line of file _' 'str'
+	spec 'r' '[file:readBytes]' 'next _ bytes of file _ : starting at _' 'num str num' 100 '' 0
+	spec 'r' 'file names' 'file names : in directory _' 'str'
+	spec 'r' '[file:fileSize]' 'size of file _' 'str'
+	spec 'r' '[file:systemInfo]' 'file system info'
+
+to 'file names' dir {
+  '[file:startList]' dir
+  local 'result' ('[data:makeList]')
+  local 'fileName' ('[file:nextInList]')
+  repeatUntil (fileName == '') {
+    '[data:addLast]' fileName result
+    fileName = ('[file:nextInList]')
+  }
+  return result
+}
+
+
+module 'WebSocket server' Comm
+author MicroBlocks
+version 1 1 
+tags websockets network 
+description 'Blocks to build your own (very) simple websockets server. The websockets server runs on port 81.'
+
+	spec ' ' 'start WebSocket server' 'start WebSocket server'
+	spec 'r' '[net:webSocketLastEvent]' 'last WebSocket event'
+	spec 'r' 'ws client id' 'client ID for WebSocket event _' 'str' ''
+	spec 'r' 'ws event payload' 'payload for WebSocket event _' 'str' ''
+	spec 'r' 'ws event type' 'type of WebSocket event _' 'str' ''
+	spec ' ' '[net:webSocketSendToClient]' 'send _ to WebSocket client _' 'str num' 'Hello, Client!' 0
+
+to 'start WebSocket server' {
+  comment 'The websockets server runs on port 81.'
+  if ((getIPAddress) != '0.0.0.0') {
+    '[net:webSocketStart]'
+  } else {
+    sayIt 'Not Connected'
+  }
+}
+
+to 'ws client id' event {
+  if (and (isType event 'list') ((size event) > 1)) {
+    return (at 2 event)
+  } else {
+    return ''
+  }
+}
+
+to 'ws event payload' event {
+  if (and (isType event 'list') ((size event) > 2)) {
+    return (at 3 event)
+  } else {
+    return ''
+  }
+}
+
+to 'ws event type' event {
+  if (and (isType event 'list') ((size event) > 0)) {
+    return (at ((at 1 event) + 1) ('[data:makeList]' 'error' 'disconnected' 'connected' 'text message' 'binary message' 'text fragment start' 'binary fragment start' 'fragment' 'fragment end' 'ping' 'pong' 'waiting'))
+  } else {
+    return ''
+  }
+}
+
+
+module WiFi Comm
+author MicroBlocks
+version 1 5 
+tags communication network 
+description 'Connect to a WiFi network. Used in conjunction with other network libraries, such as HTTP client, HTTP server or Web Thing.
+'
+
+	spec ' ' 'wifiConnect' 'wifi connect to _ password _ : IP _ gateway _ subnet _' 'str str auto auto auto' 'Network_Name' '' '192.168.1.42' '192.168.1.1' '255.255.255.0'
+	spec ' ' 'wifiCreateHotspot' 'wifi create hotspot _ password _' 'str str' 'Network_Name' 'Network_Password'
+	spec 'r' 'getIPAddress' 'IP address'
+	spec 'r' '[net:myMAC]' 'MAC address'
+
+to getIPAddress {
+  return ('[net:myIPAddress]')
+}
+
+to wifiConnect ssid password fixedIP gatewayIP subnetIP {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:stopWiFi]'
+  if ((pushArgCount) < 5) {
+    '[net:startWiFi]' ssid password
+  } else {
+    '[net:startWiFi]' ssid password false fixedIP gatewayIP subnetIP
+  }
+  local 'startMSecs' (millisOp)
+  repeatUntil (('[net:myIPAddress]') != '0.0.0.0') {
+    comment 'Timeout after N seconds'
+    if (((millisOp) - startMSecs) > 10000) {
+      sayIt 'Could not connect'
+      return 0
+    }
+    comment 'Slow blink while trying to connect'
+    setUserLED true
+    waitMillis 300
+    setUserLED false
+    waitMillis 300
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+to wifiCreateHotspot ssid password {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:startWiFi]' ssid password true
+  if ('Connected' != ('[net:wifiStatus]')) {
+    sayIt 'Could not create hotspot'
+    return 0
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+
+module dotPack Output
+author '英荔教育'
+version 1 0 
+depends BMP4dotPack 
+choices size big small 
+description 'dotpack ( Eliteu Programable led matrix bag )'
+variables _stop_scrolling_text '_dotPack initialized' 
+
+	spec ' ' '_displayText' '_display text _ _ _ _ _ _' 'auto auto auto auto auto auto' 'hi' 0 0 65280 0 1
+	spec ' ' '_dotPackSetup' '_dotPack setup'
+	spec ' ' 'clearDisplay' 'clear display'
+	spec ' ' 'setBrightness' 'set brightness _' 'auto' '10'
+	spec ' ' 'setPixel' 'set pixel x _ y _ color _ : update _' 'auto auto color bool' 1 1 nil true
+	spec ' ' 'update' 'update'
+	spec ' ' 'setBackground' 'set background color _' 'color'
+	spec ' ' 'displayChar' 'display character _ color _ : size _' 'str color menu.size' 'A' nil 'big'
+	spec ' ' 'dotPackScrollText' 'scroll text _ color _ : pausing _ ms size _' 'str color auto menu.size' 'hello' nil 100 'big'
+	spec ' ' 'stopScrolling' 'stop scrolling'
+	spec ' ' 'drawLine' 'draw line x0 _ y0 _ x1 _ y1 _ color _' 'auto auto auto auto color' 1 1 8 8
+	spec ' ' 'drawTriangle' 'draw triangle x0 _ y0 _ x1 _ y1 _ x2 _ y2 _ color _ : fill _' 'auto auto auto auto auto auto color bool' 1 1 8 1 8 8 nil false
+	spec ' ' 'drawRect' 'draw rectangle x0 _ y0 _ w _ h _ color _ : fill _' 'auto auto auto auto color bool' 1 1 8 4 nil false
+	spec ' ' 'drawCircle' 'draw circle x0 _ y0 _ r _ color _ : fill _' 'auto auto auto color bool' 8 8 4 nil false
+	spec 'r' 'randomColor' 'random color'
+	spec 'r' 'color_rgb' 'color r _ g _ b _' 'auto auto auto' 255 0 0
+
+to '_displayText' text x0 y0 text_color bg_color size {
+  comment 'lock'
+  callCustomCommand '[display:dotPackDisplay]' ('[data:makeList]' text x0 y0 text_color bg_color size)
+  update
+}
+
+to '_dotPackSetup' {
+  if ((v '_dotPack initialized') == 0) {
+    '_dotPack initialized' = 1
+    _stop_scrolling_text = (booleanConstant true)
+    setBrightness 20
+  }
+}
+
+to clearDisplay {
+  setBackground (colorSwatch 0 0 0 255)
+}
+
+to color_rgb r g b {
+  comment ' (blue << 16) | (green << 8) | red;'
+  if (or (or (r < 0) (r > 255)) (or (or (g < 0) (g > 255)) (or (b < 0) (b > 255)))) {
+    sayIt 'r, g, b : 0-255'
+    return 0
+  }
+  return (((r << 16) | (g << 8)) | b)
+}
+
+to displayChar s color size {
+  local 'x0' 0
+  local 'y0' 0
+  local 'bg_color' 0
+  if ((pushArgCount) < 3) {
+    local '_size' 'big'
+  } else {
+    local '_size' size
+  }
+  if (_size == 'big') {
+    x0 = 3
+    y0 = 1
+    _size = 2
+  }
+  if (_size == 'small') {
+    x0 = 5
+    y0 = 4
+    _size = 1
+  }
+  if ((size s) == 0) {
+    comment 'clean'
+    clearDisplay
+  } else {
+    '_displayText' (at 1 s) x0 y0 color bg_color _size
+  }
+}
+
+to dotPackScrollText text color pausing size {
+  '_dotPackSetup'
+  if ((pushArgCount) < 4) {
+    local '_pausing' 100
+    local '_size' 'big'
+  } else {
+    local '_pausing' pausing
+    local '_size' size
+  }
+  local 'rows' 16
+  local 'column' 16
+  local 'size_pixels' 0
+  local 'bg_color' 0
+  local 'y0' 0
+  if (_size == 'small') {
+    _size = 1
+    y0 = 4
+    size_pixels = (5 + 1)
+  }
+  if (_size == 'big') {
+    _size = 2
+    y0 = 1
+    size_pixels = (10 + 3)
+  }
+  local 'i' rows
+  _stop_scrolling_text = (booleanConstant false)
+  repeat (((size text) * size_pixels) + rows) {
+    if (_stop_scrolling_text == (booleanConstant true)) {return 0}
+    '_displayText' text i y0 color bg_color _size
+    i += -1
+    waitMillis _pausing
+  }
+}
+
+to drawCircle x0 y0 r color fill {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x0 y0) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  if ((pushArgCount) < 5) {
+    local '_fill' (booleanConstant false)
+  } else {
+    local '_fill' fill
+  }
+  if _fill {
+    _fill = 1
+  } else {
+    _fill = 0
+  }
+  callCustomCommand '[display:dotPackDrawCircle]' ('[data:makeList]' (x0 - 1) (y0 - 1) r color _fill)
+  update
+}
+
+to drawLine x0 y0 x1 y1 color {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x0 y0 x1 y1) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  callCustomCommand '[display:dotPackDrawLine]' ('[data:makeList]' (x0 - 1) (y0 - 1) (x1 - 1) (y1 - 1) color)
+  update
+}
+
+to drawRect x0 y0 w h color fill {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x0 y0) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  if ((pushArgCount) < 6) {
+    local '_fill' (booleanConstant false)
+  } else {
+    local '_fill' fill
+  }
+  if _fill {
+    _fill = 1
+  } else {
+    _fill = 0
+  }
+  callCustomCommand '[display:dotPackDrawRect]' ('[data:makeList]' (x0 - 1) (y0 - 1) w h color _fill)
+  update
+}
+
+to drawTriangle x0 y0 x1 y1 x2 y2 color fill {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x0 y0 x1 y1 x2 y2) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  if ((pushArgCount) < 6) {
+    local '_fill' (booleanConstant false)
+  } else {
+    local '_fill' fill
+  }
+  if _fill {
+    _fill = 1
+  } else {
+    _fill = 0
+  }
+  callCustomCommand '[display:dotPackDrawTriangle]' ('[data:makeList]' (x0 - 1) (y0 - 1) (x1 - 1) (y1 - 1) (x2 - 1) (y2 - 1) color _fill)
+  update
+}
+
+to randomColor {
+  local 'n1' (random 100 200)
+  local 'n2' (random 0 100)
+  if (1 == (random 1 3)) {
+    return ((n1 << 16) | (n2 << 8))
+  } (1 == (random 1 2)) {
+    return ((n2 << 16) | n1)
+  } else {
+    return ((n1 << 8) | n2)
+  }
+}
+
+to setBackground color {
+  '_dotPackSetup'
+  callCustomCommand '[display:dotPackFillScreen]' ('[data:makeList]' color)
+  update
+}
+
+to setBrightness brightness {
+  comment '所有灯打开到最亮可能会导致重启，连接断开
+
+初始化的时候会设置初始亮度，被setup掉用'
+  if (brightness > 20) {
+    sayIt '亮度应当 <= 20'
+    return 0
+  }
+  callCustomCommand '[display:dotPackSetBrightness]' ('[data:makeList]' brightness)
+  update
+}
+
+to setPixel x y color update {
+  '_dotPackSetup'
+  for i ('[data:makeList]' x y) {
+    if (or (i > 16) (i < 1)) {
+      sayIt 'x,y 的取值范围为 1-16'
+      return 0
+    }
+  }
+  if ((pushArgCount) < 4) {
+    local '_update' (booleanConstant true)
+  } else {
+    local '_update' update
+  }
+  callCustomCommand '[display:dotPackDrawPixel]' ('[data:makeList]' (x - 1) (y - 1) color)
+  if _update {
+    update
+  }
+}
+
+to stopScrolling {
+  _stop_scrolling_text = (booleanConstant true)
+  waitMillis 10
+  comment 'clean'
+}
+
+to update {
+  callCustomCommand '[display:dotPackShow]' ('[data:makeList]')
+}
+

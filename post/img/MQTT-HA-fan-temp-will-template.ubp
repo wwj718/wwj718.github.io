@@ -1,0 +1,386 @@
+module main
+author wwj718
+version 1 0 
+description ''
+variables switch_fan sensor_temperature _event _topic _payload fan_pin 
+
+  spec ' ' 'connect_mqtt_broker' 'connect_mqtt_broker broker _ username _ password _' 'auto auto auto' 'host' 'name' 'pass'
+  spec ' ' 'config_device' 'config_device'
+  spec ' ' 'loop' 'loop'
+
+to config_device {
+  comment 'config fan'
+  'MQTT pub' ('[data:join]' switch_fan '/' 'config') ('[data:join]' '{"~": "' switch_fan '", "name": "Fan", "cmd_t": "~/set", "stat_t": "~/state", "avty_t":"~/available"}')
+  waitMillis 500
+  'MQTT pub' ('[data:join]' switch_fan '/' 'available') 'online'
+  'MQTT sub' ('[data:join]' switch_fan '/' 'set')
+  comment 'config temperature sensor'
+  'MQTT pub' ('[data:join]' sensor_temperature '/' 'config') ('[data:join]' '{"state_topic":"' ('[data:join]' sensor_temperature '/state') '","device_class": "temperature", "name": "Temperature", "unit_of_measurement": "°C", "value_template": "{{ value_json.temperature}}" }' '')
+  'MQTT pub' ('[data:join]' sensor_temperature '/' 'available') 'online'
+}
+
+to connect_mqtt_broker broker username password {
+  switch_fan = 'homeassistant/switch/fan'
+  sensor_temperature = 'homeassistant/sensor/sensorOfficeT'
+  '_MQTT set will' ('[data:join]' switch_fan '/' 'available') 'offline' false 0 256
+  'MQTT connect to' broker 256 '' username password
+}
+
+to loop {
+  comment 'receive mqtt message'
+  forever {
+    if ('MQTT connected') {
+      waitMillis 100
+      _event = ('[net:MQTTLastEvent]')
+      if (isType _event 'list') {
+        _topic = ('MQTT event topic' _event)
+        _payload = ('MQTT event payload' _event)
+        sayIt 'topic: ' _topic ', payload: ' _payload
+        if (('[data:find]' switch_fan _topic) != -1) {
+          local 'state_topic' ('[data:join]' switch_fan '/' 'state')
+          if (_payload == 'ON') {
+            analogWriteOp fan_pin 500
+            setUserLED true
+            'MQTT pub' state_topic 'ON'
+          }
+          if (_payload == 'OFF') {
+            analogWriteOp fan_pin 0
+            setUserLED false
+            'MQTT pub' state_topic 'OFF'
+          }
+        }
+      }
+    } else {
+      connect_mqtt_broker 'mqtt.longan.link' 'ha_mb' 'ha_mb'
+      sayIt 'try to connect ...'
+      waitMillis 500
+    }
+  }
+}
+
+script 50 50 {
+whenStarted
+comment '1. connect wifi'
+wifiConnect '' ''
+waitMillis 1000
+comment '2. connect MQTT broker'
+connect_mqtt_broker 'mqtt.longan.link' 'ha_mb' 'ha_mb'
+config_device
+fan_pin = 23
+sendBroadcast 'update_temp'
+sendBroadcast 'update_online_state'
+loop
+}
+
+script 299 234 {
+whenBroadcastReceived 'update_temp'
+forever {
+  waitMillis 3000
+  'MQTT pub' ('[data:join]' sensor_temperature '/' 'state') ('[data:join]' '{ "temperature": ' (temperature_DHT22 4) '}')
+}
+}
+
+script 48 469 {
+whenBroadcastReceived 'update_online_state'
+forever {
+  waitMillis 3000
+  'MQTT pub' ('[data:join]' switch_fan '/' 'available') 'online'
+}
+}
+
+
+module MQTT Comm
+author wwj718
+version 1 6 
+depends WiFi 
+tags mqtt network 
+description 'A simple MQTT client.
+'
+
+  spec ' ' 'MQTT connect to' 'MQTT connect to broker _ : buffer sizes _ client id _ : username _ password _' 'str num str str str' '' 128 '' '' ''
+  spec 'r' 'MQTT connected' 'MQTT connected'
+  spec ' ' 'MQTT disconnect' 'MQTT disconnect'
+  spec ' ' 'MQTT sub' 'MQTT sub _ : QoS _' 'str num' 'testTopic' 0
+  spec ' ' 'MQTT unsub' 'MQTT unsub _' 'str' 'testTopic'
+  spec ' ' 'MQTT pub' 'MQTT pub topic _ payload _ : retain _ QoS _' 'str auto bool num' 'testTopic' 'Hello!' false 0
+  spec 'r' '[net:MQTTLastEvent]' 'MQTT event : binary _' 'bool' false
+  spec 'r' 'MQTT event topic' 'topic for MQTT event _' 'str' ''
+  spec 'r' 'MQTT event payload' 'payload for MQTT event _' 'str' ''
+  spec ' ' '_MQTT set will' 'MQTT set will topic _ payload _ : retain _ QoS _ : buffer sizes _' 'str auto bool num num' 'testWill' 'Last will!' false 0 128
+  spec 'r' 'MQTT last event' 'obsolete obsolete MQTT event : binary _' 'bool' false
+
+to 'MQTT connect to' broker buffer_sizes client_id username password {
+  if ((getIPAddress) != '0.0.0.0') {
+    if ((pushArgCount) == 1) {
+      callCustomCommand '[net:MQTTConnect]' ('[data:makeList]' broker 128 ('[net:myMAC]'))
+    } ((pushArgCount) == 3) {
+      callCustomCommand '[net:MQTTConnect]' ('[data:makeList]' broker buffer_sizes client_id)
+    } else {
+      callCustomCommand '[net:MQTTConnect]' ('[data:makeList]' broker buffer_sizes client_id username password)
+    }
+    if ('MQTT connected') {
+      sayIt 'Connected!'
+    } else {
+      sayIt 'Not Connected'
+    }
+  } else {
+    sayIt 'Not Connected'
+  }
+}
+
+to 'MQTT connected' {
+  return (callCustomReporter '[net:MQTTIsConnected]')
+}
+
+to 'MQTT disconnect' {
+  callCustomCommand '[net:MQTTdisconnect]'
+}
+
+to 'MQTT event payload' event {
+  if (and (isType event 'list') ((size event) > 1)) {
+    comment 'Join to empty string converts byte array to string'
+    return ('[data:join]' '' (at 2 event))
+  } else {
+    return ''
+  }
+}
+
+to 'MQTT event topic' event {
+  if (and (isType event 'list') ((size event) > 1)) {
+    return (at 1 event)
+  } else {
+    return ''
+  }
+}
+
+to 'MQTT pub' topic payload retain qos {
+  if ((pushArgCount) < 4) {
+    okay = (callCustomReporter '[net:MQTTPub]' ('[data:makeList]' topic payload))
+  } else {
+    okay = (callCustomReporter '[net:MQTTPub]' ('[data:makeList]' topic payload retain qos))
+  }
+  if (not okay) {
+    sayIt 'pub failure!'
+  }
+}
+
+to 'MQTT sub' topic qos {
+  if ((pushArgCount) < 2) {
+    okay = (callCustomReporter '[net:MQTTSub]' ('[data:makeList]' topic))
+  } else {
+    okay = (callCustomReporter '[net:MQTTSub]' ('[data:makeList]' topic qos))
+  }
+  if (not okay) {
+    sayIt 'sub failure!'
+  }
+}
+
+to 'MQTT unsub' topic {
+  if ((callCustomReporter '[net:MQTTUnsub]' ('[data:makeList]' topic)) != (booleanConstant true)) {sayIt 'unsub failure!'}
+}
+
+to '_MQTT set will' topic payload retain qos buffer_sizes {
+  if ('MQTT connected') {
+    sayIt 'set will has to be called before calling connect'
+    return ''
+  }
+  if ((pushArgCount) < 4) {
+    okay = (callCustomReporter '[net:MQTTSetWill]' ('[data:makeList]' topic payload))
+  } ((pushArgCount) == 4) {
+    okay = (callCustomReporter '[net:MQTTSetWill]' ('[data:makeList]' topic payload retain qos))
+  } else {
+    okay = (callCustomReporter '[net:MQTTSetWill]' ('[data:makeList]' topic payload retain qos buffer_sizes))
+  }
+  if (not okay) {
+    sayIt 'set will failure!'
+  }
+}
+
+
+module 'Temperature Humidity (DHT11, DHT22)' Input
+author MicroBlocks
+version 1 2 
+tags sensor dht11 dht22 temperature humidity 
+description 'Support for the DHT11 and DHT22 environmental sensors. These sensors provide temperature and humidity readings.'
+variables _dht_temperature _dht_humidity _dhtData _dhtLastReadTime 
+
+  spec 'r' 'temperature_DHT11' 'temperature (Celsius) DHT11 pin _' 'auto' 4
+  spec 'r' 'humidity_DHT11' 'humidity DHT11 pin _' 'auto' 4
+  spec 'r' 'temperature_DHT22' 'temperature (Celsius) DHT22 pin _' 'auto' 4
+  spec 'r' 'humidity_DHT22' 'humidity DHT22 pin _' 'auto' 4
+  spec ' ' '_dhtReadData' '_dhtReadData pin _' 'auto any' 4
+  spec 'r' '_dhtChecksumOkay' '_dhtChecksumOkay' 'any'
+  spec ' ' '_dhtUpdate' '_dhtUpdate _ isDHT11 _' 'auto bool any' 4 true
+  spec 'r' '_dhtReady' '_dhtReady' 'any'
+
+to '_dhtChecksumOkay' {
+  if (not (isType _dhtData 'list')) {return (booleanConstant false)}
+  local 'checksum' 0
+  for i 4 {
+    checksum += (at i _dhtData)
+  }
+  checksum = (checksum & 255)
+  return (checksum == (at 5 _dhtData))
+}
+
+to '_dhtReadData' pin {
+  comment 'Create DHT data array the first time'
+  if (_dhtData == 0) {
+    _dhtData = (newList 5)
+  }
+  comment 'fill with 1''s set checksum will be bad if read fails'
+  atPut 'all' _dhtData 1
+  comment 'Pull pin low for >18msec to request data'
+  digitalWriteOp pin false
+  waitMillis 20
+  local 'useDHTPrimitive' (booleanConstant true)
+  if useDHTPrimitive {
+    result = ('[sensors:readDHT]' pin)
+    if ((booleanConstant false) != result) {
+      _dhtData = result
+    }
+    return 0
+  }
+  comment 'Read DHT start pulses (H L H L)'
+  waitUntil (digitalReadOp pin)
+  waitUntil (not (digitalReadOp pin))
+  waitUntil (digitalReadOp pin)
+  waitUntil (not (digitalReadOp pin))
+  local 'i' 1
+  local 'byte' 0
+  local 'bit' 1
+  comment 'Read 40 bits (5 bytes)'
+  repeat 40 {
+    waitUntil (digitalReadOp pin)
+    local 'start' (microsOp)
+    waitUntil (not (digitalReadOp pin))
+    if (((microsOp) - start) > 40) {
+      comment 'Long pulse - append a "1" bit'
+      byte += 1
+    }
+    if (bit == 8) {
+      atPut i _dhtData byte
+      i += 1
+      byte = 0
+      bit = 1
+    } else {
+      byte = (byte << 1)
+      bit += 1
+    }
+    waitUntil (not (digitalReadOp pin))
+  }
+}
+
+to '_dhtReady' {
+  local 'elapsed' ((millisOp) - _dhtLastReadTime)
+  return (or (elapsed < 0) (elapsed > 2000))
+}
+
+to '_dhtUpdate' pin isDHT11 {
+  if ('_dhtReady') {
+    _dht_temperature = 0
+    _dht_humidity = 0
+    '_dhtReadData' pin
+    _dhtLastReadTime = (millisOp)
+  }
+  if ('_dhtChecksumOkay') {
+    if isDHT11 {
+      _dht_temperature = (at 3 _dhtData)
+      _dht_humidity = (at 1 _dhtData)
+    } else {
+      local 'n' (((at 1 _dhtData) * 256) + (at 2 _dhtData))
+      _dht_humidity = ((n + 5) / 10)
+      n = ((((at 3 _dhtData) & 127) * 256) + (at 4 _dhtData))
+      if (((at 3 _dhtData) & 128) != 0) {
+        n = (0 - n)
+      }
+      _dht_temperature = ((n + 5) / 10)
+    }
+  }
+}
+
+to humidity_DHT11 pin {
+  '_dhtUpdate' pin true
+  return _dht_humidity
+}
+
+to humidity_DHT22 pin {
+  '_dhtUpdate' pin false
+  return _dht_humidity
+}
+
+to temperature_DHT11 pin {
+  '_dhtUpdate' pin true
+  return _dht_temperature
+}
+
+to temperature_DHT22 pin {
+  '_dhtUpdate' pin false
+  return _dht_temperature
+}
+
+
+module WiFi Comm
+author MicroBlocks
+version 1 5 
+tags communication network 
+description 'Connect to a WiFi network. Used in conjunction with other network libraries, such as HTTP client, HTTP server or Web Thing.
+'
+
+  spec ' ' 'wifiConnect' 'wifi connect to _ password _ : IP _ gateway _ subnet _' 'str str auto auto auto' 'Network_Name' '' '192.168.1.42' '192.168.1.1' '255.255.255.0'
+  spec ' ' 'wifiCreateHotspot' 'wifi create hotspot _ password _' 'str str' 'Network_Name' 'Network_Password'
+  spec 'r' 'getIPAddress' 'IP address'
+  spec 'r' '[net:myMAC]' 'MAC address'
+
+to getIPAddress {
+  return ('[net:myIPAddress]')
+}
+
+to wifiConnect ssid password fixedIP gatewayIP subnetIP {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:stopWiFi]'
+  if ((pushArgCount) < 5) {
+    '[net:startWiFi]' ssid password
+  } else {
+    '[net:startWiFi]' ssid password false fixedIP gatewayIP subnetIP
+  }
+  local 'startMSecs' (millisOp)
+  repeatUntil (('[net:myIPAddress]') != '0.0.0.0') {
+    comment 'Timeout after N seconds'
+    if (((millisOp) - startMSecs) > 10000) {
+      sayIt 'Could not connect'
+      return 0
+    }
+    comment 'Slow blink while trying to connect'
+    setUserLED true
+    waitMillis 300
+    setUserLED false
+    waitMillis 300
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+to wifiCreateHotspot ssid password {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:startWiFi]' ssid password true
+  if ('Connected' != ('[net:wifiStatus]')) {
+    sayIt 'Could not create hotspot'
+    return 0
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
