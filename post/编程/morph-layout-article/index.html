@@ -49,7 +49,7 @@
 <meta itemprop="name" content="一篇用动态媒介写的文章">
 <meta itemprop="description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经"><meta itemprop="datePublished" content="2022-08-25T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2022-08-25T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1532">
+<meta itemprop="wordCount" content="1734">
 <meta itemprop="keywords" content="Smalltalk," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="一篇用动态媒介写的文章"/>
 <meta name="twitter:description" content="如果嵌入和查看方法提供得足够好，作为媒介本身看待的计算机可以是所有其他媒介。 &ndash; Alan Kay 前言 近期重读 An Introduction to Morphic 的时候，发现 Morphic 中用于自动布局的类 AlignmentMorph 已经"/>
@@ -141,6 +141,7 @@
     <li><a href="#加载动态文章">加载动态文章</a>
       <ul>
         <li><a href="#开始阅读">开始阅读</a></li>
+        <li><a href="#在-squeak-上做实验">在 Squeak 上做实验</a></li>
       </ul>
     </li>
     <li><a href="#尾声">尾声</a></li>
@@ -209,14 +210,43 @@
 </span></span><span class="line"><span class="cl">            yourself
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>通过将 SmartRefStream 类的<code>#initKnownRenames</code> 方法，修改为上述内容.成功加载了 MorphLayoutArticle.pr。</p>
+</div><p>通过将 SmartRefStream 类的<code>#initKnownRenames</code> 方法，修改为上述内容. 然后将 MorphLayoutArticle.pr 文件拖入系统， 便可成功加载。</p>
 <p><img src="/post/img/morphic-layout-squeak38-essay.png" alt=""></p>
 <h3 id="开始阅读">开始阅读</h3>
 <p>这篇文章篇幅很小，读来十份轻松。</p>
 <p>不同于 Squeak wiki 里的文字和图片描述，这篇短文里，穿插了 6 个交互式的案例，作者每次在阐述一个控制布局的关键概念(参数)后，就让读者通过操控作者精心准备的交互案例，来把握这些参数。</p>
 <p>这是我第一次感受到布局的乐趣，它是如此清晰、浅显而直观！短短几分钟，就毫不费劲地掌握了它们，我心里十份清楚，我并不只是理解了作者通过静态媒介(文字)所表达的东西，要比这更多。通过按照自己的意志操控这些布局元素，我仿佛变成了元素本身，亲身参与到了布局之中！</p>
 <p>这就像 Seymour Papert 在《Mindstorms》里提到的童年的齿轮。</p>
-<h2 id="尾声">尾声</h2>
+<h3 id="在-squeak-上做实验">在 Squeak 上做实验</h3>
+<p>在最新的 Squeak 上(Squeak 6.0)。 &ldquo;对 submorphs 的控制&rdquo; 基本都可以在 morph 的 <code>menu &gt; layout</code> 菜单里完成。 我的工作习惯是:</p>
+<ol start="0">
+<li>心智模型: 布局是 owner 的职责(控制submorphs)</li>
+<li>从 table layout 开始 (正如动态文章里建议的)</li>
+<li>指定 layoutInset(submorphs 与 owner 的间隔) 和 cellInset (submorph 之间的间隔)。</li>
+<li>指定 wrap 方式(溢出时，如何换行来包住)</li>
+<li>在 menu 中复制手动完成的布局属性，方便之后复用(复用代码如下)</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-smalltalk" data-lang="smalltalk"><span class="line"><span class="cl"><span class="c">&#34;copy from layout menu&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">aLayoutProperties</span> <span class="o">:=</span> (<span class="nc">TableLayoutProperties</span> <span class="nb">new</span> <span class="nf">cellInset:</span> (<span class="m">8</span><span class="nf">@</span><span class="m">18</span>)<span class="p">;</span> <span class="nf">layoutInset:</span> (<span class="m">34</span><span class="nf">@</span><span class="m">28</span>)<span class="p">;</span> <span class="nf">wrapDirection:</span> <span class="ss">#leftToRight</span><span class="p">;</span> <span class="nf">yourself</span>)<span class="p">.</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">m</span> <span class="o">:=</span> <span class="nc">Morph</span> <span class="nb">new</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">m</span> <span class="nf">openInWorld</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">m</span> <span class="nf">layoutProperties:</span> <span class="nv">aLayoutProperties</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="nv">m</span> <span class="nf">layoutPolicy:</span> <span class="nc">TableLayout</span> <span class="nb">new</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="尾声">尾声</h2>
 <p>遗憾的是，计算机并没有像 Alan Kay 所期待的那样，作为一种动态媒介流行起来。今天计算机里边的内容主要是对旧媒介的模仿，它模仿书籍、电视、电影&hellip; 人们在计算机里写作，就像过去用纸笔写作。像 《Control Your Submorphs》 这样帮助读者更好地理解复杂事物的文章不仅不多见，而且连阅读它的工具都日渐式微，不易寻得。</p>
 <p>近年情况有所好转，Jupyter 这几年在科学界很流行，尤其是物理学、生物学和数据科学/AI 领域，人们甚至直接在里头写论文 &ndash; 一篇可运行的论文，一篇读者可以与作者的论点进行交互的论文。</p>
 <p>但相比于 Squeak，Jupyter 才刚刚起步，即使是 20 年前 的Squeak 也走得更远。</p>
