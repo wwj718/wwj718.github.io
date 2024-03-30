@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="Squeak 学习笔记 前言 近期重新进入 Squeak ,收获很大 ,学会了 debugger（右键debugger） 使用 Squeak 作为主环境 ，积累技能，理解其他东西 我将 Squeak 视为学习" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="" />
+<meta property="og:description" content="Squeak 学习笔记 前言 近期重新进入 Squeak ,收获很大 ,学会了 debugger（右键debugger） 使用 Squeak 作为主环境 ，积累技能，理解其他东西 我将 Squeak 视为学习" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" /><meta property="article:section" content="post" />
+
+
+
+<meta itemprop="name" content="">
+<meta itemprop="description" content="Squeak 学习笔记 前言 近期重新进入 Squeak ,收获很大 ,学会了 debugger（右键debugger） 使用 Squeak 作为主环境 ，积累技能，理解其他东西 我将 Squeak 视为学习">
+
+<meta itemprop="wordCount" content="1875">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="Squeak 学习笔记 前言 近期重新进入 Squeak ,收获很大 ,学会了 debugger（右键debugger） 使用 Squeak 作为主环境 ，积累技能，理解其他东西 我将 Squeak 视为学习"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title"></h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 0001-01-01 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#写作方式">写作方式</a></li>
+    <li><a href="#我的工作流程">我的工作流程</a>
+      <ul>
+        <li><a href="#初始化">初始化</a></li>
+        <li><a href="#第三方依赖">第三方依赖</a></li>
+      </ul>
+    </li>
+    <li><a href="#我的偏好">我的偏好</a></li>
+    <li><a href="#与更多系统互动">与更多系统互动</a>
+      <ul>
+        <li><a href="#备忘录笔记">备忘录笔记</a></li>
+        <li><a href="#其他互操作方式">其他互操作方式</a></li>
+      </ul>
+    </li>
+    <li><a href="#其他方向">其他方向</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="squeak-学习笔记">Squeak 学习笔记</h1>
+<h2 id="前言">前言</h2>
+<p>近期重新进入 Squeak ,收获很大 ,学会了 debugger（右键debugger）</p>
+<p>使用 Squeak 作为主环境 ，积累技能，理解其他东西</p>
+<p>我将 Squeak 视为学习和理解东西的环境， &ldquo;软件只是心智成熟的副产品&rdquo;</p>
+<p>我不喜欢跟着手册操作(squeak by example), 喜欢随意探索。 在系统里玩(alan kay, John, 不应该需要看完很多手册，直接进行有意义的交互(doing))。</p>
+<p>阅读 squeak swiki、系统内的 help</p>
+<hr>
+<p>beep 调试, 运行到哪儿</p>
+<h2 id="写作方式">写作方式</h2>
+<p>浏览 logseq #lively #squeak 标签</p>
+<h2 id="我的工作流程">我的工作流程</h2>
+<h3 id="初始化">初始化</h3>
+<p>下载稳定版 Squeak
+另存为 save as
+起点 Squeak6.0-22148-64bit</p>
+<ul>
+<li>
+<p>不保存主 image, 而是另存</p>
+</li>
+<li>
+<p>引导配置 wizard (完成后保存一份, zip)</p>
+<ul>
+<li>自动补全</li>
+<li>彩色窗口</li>
+<li>workspace 语法高亮</li>
+<li>更新git</li>
+<li>osprecess</li>
+<li>squeak dev list</li>
+<li>出现网络问题（配置http代理，会导致无法解析最初的域名.使用 clash pro 就好了）</li>
+</ul>
+</li>
+<li>
+<p>引导完成之后, 改名 Squeak6-wwj-init</p>
+<ul>
+<li>写一个 readme 都有什么</li>
+<li>之后启动时使用这个版本</li>
+<li>Squeak6-wwj-main 主分支，定期 release</li>
+<li>尽量不关闭，关闭之后启动要慎重</li>
+</ul>
+</li>
+<li>
+<p>主题实验放在 project 里做</p>
+<ul>
+<li>network lab</li>
+<li>xxx lab</li>
+</ul>
+</li>
+<li>
+<p>有一个工作目录 mylab, 方便快速开始实验。 同步到 Github(todo), 方便之后的镜像能够使用，长期积累</p>
+<ul>
+<li>Yard: 用于进行各种实验的院子</li>
+<li>Toy</li>
+<li>Dot</li>
+<li>Cat</li>
+<li>Zoo</li>
+<li>&hellip;</li>
+</ul>
+</li>
+</ul>
+<h3 id="第三方依赖">第三方依赖</h3>
+<ul>
+<li><a href="https://github.com/hpi-swa-lab/squeak-tracedebugger">squeak-tracedebugger</a>: 更好地调试。当作增强版的 debugger</li>
+</ul>
+<h2 id="我的偏好">我的偏好</h2>
+<ul>
+<li>使用 etoys 快速开始项目 (当作 Snap)</li>
+<li>在系统内查看help: terse squeak</li>
+<li>文字的功能: cmd+5 (do it) 文本介绍<expression></li>
+<li>pen 很强大!</li>
+<li>beeper (John 的简易)</li>
+</ul>
+<h2 id="与更多系统互动">与更多系统互动</h2>
+<p>使用 Python, Python 生态有大量的库, 但只使用薄薄一层，&ldquo;主环境&rdquo; 使用 Squeak。 将 Python 视为 FFI, 只是简单调用。为了学习。lively “提升的想法”，赋予它们更多动态性。</p>
+<p>有很多方式来做，基于消息通信: <strong>对象之间发送消息，对象解释自己理解的消息</strong></p>
+<ul>
+<li>
+<p><a href="https://github.com/LivelyKernel/lively.lang/blob/0.7.9/doc/messenger.md">lively messenger</a></p>
+<ul>
+<li>messenger 与 <a href="https://github.com/LivelyKernel/lively.next/tree/main/lively.2lively">lively2lively</a> 区别是什么</li>
+<li>livelykernel 的很多后端服务似乎没有使用 messenger</li>
+<li>lively next 呢？</li>
+</ul>
+</li>
+<li>
+<p><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/">建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak、Snap! 上实现</a>: 包含了 Squeak 实现</p>
+</li>
+<li>
+<p><a href="https://github.com/LivelyKernel/lively.py">lively.py</a>: 通过 websocket 的简易 eval</p>
+</li>
+<li>
+<p>dynatalk/agency</p>
+<ul>
+<li>agency 中构建 eval 消息很容易</li>
+</ul>
+</li>
+<li>
+<p>CodeLab Adapter</p>
+</li>
+<li>
+<p>像Snap一样，使用简单的mqtt，支持同步和异步</p>
+<ul>
+<li>统一使用mqtt，很容易让各个客户端随意通信。 信道使用mqtt是好的</li>
+<li>协议呢？ 使用 agency/dynatalk?  or messenger?
+<ul>
+<li>thread 版的 agency 是好的</li>
+</ul>
+</li>
+<li>snap 的 mqtt 同步基于订阅机制，不如 agency 可调试</li>
+</ul>
+</li>
+<li>
+<p>或者尝试基于 messenger 实现协议
+-   messenger好像多个 messager 在一个主机上。看看<a href="https://github.com/LivelyKernel/lively.lang/blob/0.7.9/lib/worker.js">网络的实现</a></p>
+<ul>
+<li><a href="https://github.com/search?q=repo:LivelyKernel/lively.next%20messenger&amp;type=code">lively.next messenger</a></li>
+</ul>
+</li>
+<li>
+<p>结论</p>
+<ul>
+<li>不使用 messenger。messenger更多用于worker，<a href="https://github.com/LivelyKernel/lively.py/blob/master/lively/ws_server.py#L91">lively.py</a>也只是简单的websocket。lively.next 也只有 worker 在用
+<ul>
+<li>livelykernel 的 PythonSubserver.js 也只是websokcet ，其余是处理eval 的stderr/stdout的技巧</li>
+</ul>
+</li>
+<li>信道用 MQTT （本地启动），有一个公共场</li>
+<li>thread 版 的 agency eval 是好的设计，分离关注点。并发问题，收到消息后自己决定</li>
+<li>dynatalk 的可观察性。使用<a href="https://github.com/dynalab-live/DynaTalk/commits/main/">最新的 dynatalk</a>, 不用 agency
+<ul>
+<li>js 中基于 mqtt 来做, 模仿 snap 的实现</li>
+<li>这样 squeak 也能利用浏览器的蓝牙能力, 而且都是liveness环境!</li>
+</ul>
+</li>
+<li>同步是客户端的职责</li>
+</ul>
+</li>
+<li>
+<p>todo</p>
+<ul>
+<li>
+<p>在 lively 先实现js版本的 dynatalk</p>
+</li>
+<li>
+<p>找到 ugot ，查看 eval 的写法，重构 adapter</p>
+</li>
+<li>
+<p>agency 的 agency 实现非常复杂，使用简易实现。看 micropython/snap 实现，或者参考 agency 早期版本。兼容消息, 只是收到消息，解释，返回而已！</p>
+</li>
+<li>
+<p>agency 只关心协议（消息结构一样就行！），内部实现是无关紧要的，试试1.6.1与 micropython 沟通</p>
+</li>
+<li>
+<p>禁用ai</p>
+</li>
+<li>
+<p>help 主要是为了兼容 ai</p>
+</li>
+<li>
+<p><a href="https://github.com/operand/agency/commit/00a2890e78c185e83259aa832405ca585241659e">parent_id</a></p>
+<ul>
+<li>1.5.0</li>
+</ul>
+</li>
+<li>
+<p>以协议为中心（从这里开始！）</p>
+<ul>
+<li>参考它的实现 agency 1.6.1. 分离进程线程等琐碎问题</li>
+<li>参考 messenger 命名</li>
+<li>使用两个 agency ，消息中心，说故事。以此理解它
+<ul>
+<li>space 职责是管理消息。agency对消息的进出一无所知</li>
+<li>在 lively 中实验</li>
+<li>观察各种消息
+<ul>
+<li>help</li>
+<li>加入的时候</li>
+<li>发送一个没有返回值</li>
+<li>发送一个有返回值</li>
+</ul>
+</li>
+<li>基于1.6.1，观察对象通信
+<ul>
+<li>挑战: 构建能以相似协议与之沟通的space/agent。尽可能简单
+<ul>
+<li>snap 已经完成</li>
+<li>microblocks 使其工作</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>objecttalk</p>
+<ul>
+<li>我记得我还去找过他里面提到的日文字
+一开始以为是 “細胞膜” 的“膜”（まく　maku）后来找到的好像是 “間”　(ま　ma）
+“间” 间隔的间
+我的理解是指“对象和对象之间” - 对象的行为和边界划分 来定义对象</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="备忘录笔记">备忘录笔记</h3>
+<p>对象解释消息风格</p>
+<p>让对象相互通信</p>
+<p>对象解释消息
+如果要影响 sender，通过副作用，microblocks</p>
+<p>vm与ide，需要通信协议</p>
+<p>使用lively协议？</p>
+<p><strong>基于 messager 协议实现</strong></p>
+<p>Lively2lively 什么关系？</p>
+<p>查看 worker 和 command 的实现</p>
+<p>实现squeak，Python，lively
+练手</p>
+<p>对象消息协议，可以over在各种信道上，websocket，mqtt，…</p>
+<p>在lively和squeak实现，可以实时调试</p>
+<p>使用 messenger 代替 agency</p>
+<h3 id="其他互操作方式">其他互操作方式</h3>
+<ul>
+<li>webclient
+<ul>
+<li>使用 Squeak help 里的文档</li>
+<li>http server/client</li>
+<li>websocket server/client</li>
+</ul>
+</li>
+<li>OSCommand
+<ul>
+<li>运行 python: <code>/Users/wwj718/env310/bin/python -c 'print(1)'</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="其他方向">其他方向</h2>
+<p>如果想要liveness, 又想有更多现代化功能。一种是调用其他工具。另一种是使用浏览器中的smalltalk:</p>
+<p>浏览器可以直接使用很多功能: 蓝牙、串口、webgpu</p>
+<ul>
+<li>squeakjs(js bridge)</li>
+<li>lively</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://wwj718.github.io/tags/smalltalk/">my blog tags: smalltalk</a>
+<ul>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak-microblocks-interoperability/">Squeak 与 MicroBlocks 互操作</a>
+<ul>
+<li><a href="https://github.com/wwj718/DotPack">Github DotPack</a></li>
+</ul>
+</li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/morph-layout-article/">一篇用动态媒介写的文章</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/from-python-to-pharo/">从 Python 转向 Pharo</a>
+<ul>
+<li>中文字体?</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>哲学/理论
+<ul>
+<li>smalltalk 设计原则</li>
+<li>从 smalltalk72 到 squeak</li>
+<li>alan doing image symbols</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        0001-01-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/snap%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default"></span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/ugot-agent/">
+            <span class="next-text nav-default"></span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
