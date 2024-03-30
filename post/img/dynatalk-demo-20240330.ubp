@@ -242,9 +242,9 @@ variables event _mqtt_conf
   spec ' ' '_process_promises' '_process_promises _' 'auto' 'aMessage'
   spec ' ' '_debugLog' '_debugLog _' 'auto' 'aString'
   spec 'r' '_debugging' '_debugging'
-  spec 'r' '_agentName' '_agentName'
   spec ' ' '_ping' '_ping'
   spec ' ' 'help' 'help'
+  spec 'r' 'agentName' 'agentName'
 
 to '_MessageLoop' {
   comment 'receive mqtt message'
@@ -254,7 +254,7 @@ to '_MessageLoop' {
       event = ('[net:MQTTLastEvent]')
       if (isType event 'list') {
         if ('_debugging') {sayIt 'topic' ('MQTT event topic' event) ', payload' ('MQTT event payload' event)}
-        if (('[data:find]' ('[misc:jsonGet]' ('MQTT event payload' event) 'to') ('[data:makeList]' '[broadcast]' ('_agentName'))) != -1) {'_interpret' ('MQTT event payload' event)}
+        if (('[data:find]' ('[misc:jsonGet]' ('MQTT event payload' event) 'to') ('[data:makeList]' '[broadcast]' ('agentName'))) != -1) {'_interpret' ('MQTT event payload' event)}
       }
     } else {
       sayIt 'connect to mqtt broker ...'
@@ -267,14 +267,14 @@ to '_MessageLoop' {
         'MQTT connect to' (at 1 _mqtt_conf) (at 2 _mqtt_conf) ('[data:join]' 'MicroBlocksClient-' (random 1 100000000)) (at 3 _mqtt_conf) (at 4 _mqtt_conf)
         comment 'subscribe topic: MicroBlocksAgent'
         waitMillis 500
-        'MQTT sub' ('_agentName')
+        'MQTT sub' ('agentName')
         'MQTT sub' '[broadcast]'
       }
     }
   }
 }
 
-to '_agentName' {
+to 'agentName' {
   return 'MicroBlocksAgent'
 }
 
@@ -287,7 +287,7 @@ to '_debugging' {
 }
 
 to '_generateMessage' parentID to actionName actionArgs {
-  return ('[data:join]' '{"meta": {"id": "' ('_agentName') '-' (random 0 100000000) '"' (ifExpression (parentID == '') '' ('[data:join]' ',"parent_id":"' parentID '"')) '},"to": "' to '","action": {"name": "' actionName '","args":' actionArgs '},"from": "' ('_agentName') '"}')
+  return ('[data:join]' '{"meta": {"id": "' ('agentName') '-' (random 0 100000000) '"' (ifExpression (parentID == '') '' ('[data:join]' ',"parent_id":"' parentID '"')) '},"to": "' to '","action": {"name": "' actionName '","args":' actionArgs '},"from": "' ('agentName') '"}')
 }
 
 to '_interpret' aMessage {
