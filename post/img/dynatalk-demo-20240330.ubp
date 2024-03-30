@@ -15,7 +15,7 @@ to echo content {
   respondWith content
 }
 
-script 46 46 {
+script 33 33 {
 whenStarted
 comment '1. connect wifi'
 wifiConnect 'Network_Name' ''
@@ -23,21 +23,21 @@ wifiConnect 'Network_Name' ''
 start
 }
 
-script 50 237 {
+script 37 224 {
 to echo {}
 }
 
-script 328 249 {
+script 315 236 {
 to functions {}
 }
 
-script 48 371 {
+script 35 358 {
 to add {}
 }
 
-script 296 405 (request 'MicroBlocksAgent' 'echo' '["hi"]' 3000)
+script 283 392 (request 'MicroBlocksAgent' 'echo' '["hi"]' 3000)
 
-script 302 447 (request 'MicroBlocksAgent' 'add' '[1, 2]' 3000)
+script 289 434 (request 'MicroBlocksAgent' 'add' '[1, 2]' 3000)
 
 
 module MQTT Comm
@@ -229,8 +229,9 @@ variables event _mqtt_conf
   spec ' ' 'start' 'start and loop'
   spec ' ' 'set mqtt broker' 'set mqtt broker _ buffer sizes _ username _ password _' 'auto auto auto auto' '192.168.1.3' 512 'guest' 'test'
   spec ' ' '_MessageLoop' '_MessageLoop'
-  spec 'r' 'request' 'request _ action _ args _ timeout _ ms' 'auto auto auto auto' 'PyDemoAgent' 'echo' '{"content":"hi"}' 3000
-  spec ' ' 'sendTo' 'sendTo _ action _ args _' 'auto auto auto' 'PyDemoAgent' 'echo' '{"content":"hi"}'
+  spec 'r' 'request' 'request _ action _ args _ timeout _ ms' 'auto auto auto auto' 'PyDemoAgent' 'echo' '["hi"]' 3000
+  spec ' ' 'sendTo' 'sendTo _ action _ args _' 'auto auto auto' 'PyDemoAgent' 'echo' '["hi"]'
+  spec ' ' 'broadcast' '广播 _ args _' 'auto auto' 'echo' '["hi"]'
   spec 'r' 'functions' 'actions'
   spec ' ' '_interpret' '_interpret _' 'auto' 'aMessage'
   spec ' ' '_send' '_send _' 'auto' 'aMessage'
@@ -242,7 +243,7 @@ variables event _mqtt_conf
   spec ' ' '_debugLog' '_debugLog _' 'auto' 'aString'
   spec 'r' '_debugging' '_debugging'
   spec 'r' '_agentName' '_agentName'
-  spec ' ' 'ping' 'ping'
+  spec ' ' '_ping' '_ping'
   spec ' ' 'help' 'help'
 
 to '_MessageLoop' {
@@ -312,7 +313,7 @@ to '_interpret' aMessage {
     '_process_promises' aMessage
   } (action == '[error]') {
     '_process_promises' aMessage
-  } (or (('[data:find]' action (functions)) != -1) (('[data:find]' action ('[data:makeList]' 'ping' 'help')) != -1)) {
+  } (or (('[data:find]' action (functions)) != -1) (('[data:find]' action ('[data:makeList]' '_ping' 'help')) != -1)) {
     callCustomCommand action args
   } else {
     raiseWith ('[data:join]' 'Message Not Understood: ' 'MicroBlocksAgent' '>>' action)
@@ -356,6 +357,10 @@ to '_send' aMessage {
   if ('MQTT connected') {'MQTT pub' ('[misc:jsonGet]' aMessage 'to') aMessage}
 }
 
+to broadcast actionName args {
+  sendTo '[broadcast]' actionName args
+}
+
 to functions {
   comment 'Exposed functions'
   return ('[data:makeList]' 'echo' 'add')
@@ -375,7 +380,7 @@ to help {
   respondWith ('[data:join]' '{"help":' help '}')
 }
 
-to ping {
+to _ping {
   respondWith 'pong'
 }
 
