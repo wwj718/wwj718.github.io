@@ -1,0 +1,426 @@
+module main
+author wwj718
+version 1 0 
+description ''
+variables _currentMessage _fakePromises _debuglog 
+
+  spec ' ' 'echo' 'echo _' 'auto' 'hello'
+  spec ' ' 'add' 'add _ _' 'auto auto' 1 2
+
+to add a b {
+  respondWith (a + b)
+}
+
+to echo content {
+  respondWith content
+}
+
+script 46 33 {
+whenStarted
+comment '1. connect wifi'
+wifiConnect 'Network_Name' ''
+'set mqtt broker' 'mqtt.aimaker.space' 512 'guest' 'test'
+start
+}
+
+script 50 224 {
+to echo {}
+}
+
+script 328 236 {
+to functions {}
+}
+
+script 48 358 {
+to add {}
+}
+
+script 296 392 (request 'MicroBlocksAgent' 'echo' '["hi"]' 3000)
+
+script 302 434 (request 'MicroBlocksAgent' 'add' '[1, 2]' 3000)
+
+
+module MQTT Comm
+author wwj718
+version 1 6 
+depends WiFi 
+tags mqtt network 
+description 'A simple MQTT client.
+'
+
+  spec ' ' 'MQTT connect to' 'MQTT connect to broker _ : buffer sizes _ client id _ : username _ password _' 'str num str str str' '' 128 '' '' ''
+  spec 'r' 'MQTT connected' 'MQTT connected'
+  spec ' ' 'MQTT disconnect' 'MQTT disconnect'
+  spec ' ' 'MQTT sub' 'MQTT sub _ : QoS _' 'str num' 'testTopic' 0
+  spec ' ' 'MQTT unsub' 'MQTT unsub _' 'str' 'testTopic'
+  spec ' ' 'MQTT pub' 'MQTT pub topic _ payload _ : retain _ QoS _' 'str auto bool num' 'testTopic' 'Hello!' false 0
+  spec 'r' '[net:MQTTLastEvent]' 'MQTT event : binary _' 'bool' false
+  spec 'r' 'MQTT event topic' 'topic for MQTT event _' 'str' ''
+  spec 'r' 'MQTT event payload' 'payload for MQTT event _' 'str' ''
+  spec ' ' '_MQTT set will' 'MQTT set will topic _ payload _ : retain _ QoS _ : buffer sizes _' 'str auto bool num num' 'testWill' 'Last will!' false 0 128
+
+to 'MQTT connect to' broker buffer_sizes client_id username password {
+  if ((getIPAddress) != '0.0.0.0') {
+    if ((pushArgCount) == 1) {
+      callCustomCommand '[net:MQTTConnect]' ('[data:makeList]' broker 128 ('[net:myMAC]'))
+    } ((pushArgCount) == 3) {
+      callCustomCommand '[net:MQTTConnect]' ('[data:makeList]' broker buffer_sizes client_id)
+    } else {
+      callCustomCommand '[net:MQTTConnect]' ('[data:makeList]' broker buffer_sizes client_id username password)
+    }
+    if ('MQTT connected') {
+      sayIt 'Connected!'
+    } else {
+      sayIt 'Not Connected'
+    }
+  } else {
+    sayIt 'Not Connected'
+  }
+}
+
+to 'MQTT connected' {
+  return (callCustomReporter '[net:MQTTIsConnected]')
+}
+
+to 'MQTT disconnect' {
+  callCustomCommand '[net:MQTTdisconnect]'
+}
+
+to 'MQTT event payload' event {
+  if (and (isType event 'list') ((size event) > 1)) {
+    comment 'Join to empty string converts byte array to string'
+    return ('[data:join]' '' (at 2 event))
+  } else {
+    return ''
+  }
+}
+
+to 'MQTT event topic' event {
+  if (and (isType event 'list') ((size event) > 1)) {
+    return (at 1 event)
+  } else {
+    return ''
+  }
+}
+
+to 'MQTT pub' topic payload retain qos {
+  if ((pushArgCount) < 4) {
+    okay = (callCustomReporter '[net:MQTTPub]' ('[data:makeList]' topic payload))
+  } else {
+    okay = (callCustomReporter '[net:MQTTPub]' ('[data:makeList]' topic payload retain qos))
+  }
+  if (not okay) {
+    sayIt 'pub failure!'
+  }
+}
+
+to 'MQTT sub' topic qos {
+  if ((pushArgCount) < 2) {
+    okay = (callCustomReporter '[net:MQTTSub]' ('[data:makeList]' topic))
+  } else {
+    okay = (callCustomReporter '[net:MQTTSub]' ('[data:makeList]' topic qos))
+  }
+  if (not okay) {
+    sayIt 'sub failure!'
+  }
+}
+
+to 'MQTT unsub' topic {
+  if ((callCustomReporter '[net:MQTTUnsub]' ('[data:makeList]' topic)) != (booleanConstant true)) {sayIt 'unsub failure!'}
+}
+
+to '_MQTT set will' topic payload retain qos buffer_sizes {
+  if ('MQTT connected') {
+    sayIt 'set will has to be called before calling connect'
+    return ''
+  }
+  if ((pushArgCount) < 4) {
+    okay = (callCustomReporter '[net:MQTTSetWill]' ('[data:makeList]' topic payload))
+  } ((pushArgCount) == 4) {
+    okay = (callCustomReporter '[net:MQTTSetWill]' ('[data:makeList]' topic payload retain qos))
+  } else {
+    okay = (callCustomReporter '[net:MQTTSetWill]' ('[data:makeList]' topic payload retain qos buffer_sizes))
+  }
+  if (not okay) {
+    sayIt 'set will failure!'
+  }
+}
+
+
+module WiFi Comm
+author MicroBlocks
+version 1 8 
+tags communication network 
+description 'Connect to a WiFi network. Used in conjunction with other network libraries, such as HTTP client, HTTP server or Web Thing.
+'
+
+  spec ' ' 'wifiConnect' 'wifi connect to _ password _ : IP _ gateway _ subnet _' 'str str auto auto auto' 'Network_Name' '' '192.168.1.42' '192.168.1.1' '255.255.255.0'
+  spec ' ' 'wifiCreateHotspot' 'wifi create hotspot _ password _' 'str str' 'Network_Name' 'Network_Password'
+  space
+  spec 'r' 'getIPAddress' 'IP address'
+  spec 'r' '[net:myMAC]' 'MAC address'
+  space
+  spec ' ' '[net:allowWiFiAndBLE]' 'allow WiFi while using BLE _' 'bool' true
+
+to getIPAddress {
+  return ('[net:myIPAddress]')
+}
+
+to wifiConnect ssid password fixedIP gatewayIP subnetIP {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:stopWiFi]'
+  if ((pushArgCount) < 5) {
+    '[net:startWiFi]' ssid password
+  } else {
+    '[net:startWiFi]' ssid password false fixedIP gatewayIP subnetIP
+  }
+  local 'startMSecs' (millisOp)
+  repeatUntil (('[net:myIPAddress]') != '0.0.0.0') {
+    comment 'Timeout after N seconds'
+    if (((millisOp) - startMSecs) > 30000) {
+      sayIt 'Could not connect'
+      return 0
+    }
+    comment 'Slow blink while trying to connect'
+    setUserLED true
+    waitMillis 300
+    setUserLED false
+    waitMillis 300
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+to wifiCreateHotspot ssid password {
+  if (not ('[net:hasWiFi]')) {return}
+  if ((size password) < 8) {
+    sayIt 'Password must be at least 8 characters'
+    return 0
+  }
+  '[net:startWiFi]' ssid password true
+  if ('Connected' != ('[net:wifiStatus]')) {
+    sayIt 'Could not create hotspot'
+    return 0
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+
+module dynatalk Comm
+author wwj718
+version 0 6 
+depends MQTT 
+description ''
+variables event _mqtt_conf 
+
+  spec ' ' 'start' 'start and loop'
+  spec ' ' 'set mqtt broker' 'set mqtt broker _ buffer sizes _ username _ password _' 'auto auto auto auto' '192.168.1.3' 512 'guest' 'test'
+  spec ' ' '_MessageLoop' '_MessageLoop'
+  spec 'r' 'request' 'request _ action _ args _ timeout _ ms' 'auto auto auto auto' 'PyDemoAgent' 'echo' '["hi"]' 3000
+  spec ' ' 'sendTo' 'sendTo _ action _ args _' 'auto auto auto' 'PyDemoAgent' 'echo' '["hi"]'
+  spec ' ' 'broadcast' 'broadcast _ args _' 'auto auto' 'echo' '["hi"]'
+  spec 'r' 'functions' 'actions'
+  spec ' ' '_interpret' '_interpret _' 'auto' 'aMessage'
+  spec ' ' '_send' '_send _' 'auto' 'aMessage'
+  spec ' ' 'respondWith' 'respondWith _' 'auto' 'aNumberOrAString'
+  spec ' ' 'raiseWith' 'raiseWith _' 'auto' 'aString'
+  spec 'r' '_generateMessage' '_generateMessage parentID _ to _ actionName _ actionArgs _' 'auto auto auto auto' '' 'User' 'aString' '{"value":10}'
+  spec ' ' '_mock' '_mock'
+  spec ' ' '_process_promises' '_process_promises _' 'auto' 'aMessage'
+  spec ' ' '_debugLog' '_debugLog _' 'auto' 'aString'
+  spec 'r' '_debugging' '_debugging'
+  spec ' ' '_ping' '_ping'
+  spec ' ' 'help' 'help'
+  spec 'r' 'agentName' 'agentName'
+
+to '_MessageLoop' {
+  comment 'receive mqtt message'
+  forever {
+    waitMillis 50
+    if ('MQTT connected') {
+      event = ('[net:MQTTLastEvent]')
+      if (isType event 'list') {
+        if ('_debugging') {sayIt 'topic' ('MQTT event topic' event) ', payload' ('MQTT event payload' event)}
+        if (('[data:find]' ('[misc:jsonGet]' ('MQTT event payload' event) 'to') ('[data:makeList]' '[broadcast]' (agentName))) != -1) {'_interpret' ('MQTT event payload' event)}
+      }
+    } else {
+      sayIt 'connect to mqtt broker ...'
+      waitMillis 500
+      comment '2. connect MQTT broker'
+      if (_mqtt_conf == 0) {
+        sayIt 'Please set mqtt'
+        stopTask
+      } else {
+        'MQTT connect to' (at 1 _mqtt_conf) (at 2 _mqtt_conf) ('[data:join]' 'MicroBlocksClient-' (random 1 100000000)) (at 3 _mqtt_conf) (at 4 _mqtt_conf)
+        comment 'subscribe topic: MicroBlocksAgent'
+        waitMillis 500
+        'MQTT sub' (agentName)
+        'MQTT sub' '[broadcast]'
+      }
+    }
+  }
+}
+
+to '_debugLog' aString {
+  if ('_debugging') {'[data:addLast]' aString _debuglog}
+}
+
+to '_debugging' {
+  return (booleanConstant false)
+}
+
+to '_generateMessage' parentID to actionName actionArgs {
+  return ('[data:join]' '{"meta": {"id": "' (agentName) '-' (random 0 100000000) '"' (ifExpression (parentID == '') '' ('[data:join]' ',"parent_id":"' parentID '"')) '},"to": "' to '","action": {"name": "' actionName '","args":' actionArgs '},"from": "' (agentName) '"}')
+}
+
+to '_interpret' aMessage {
+  comment '{
+  "meta": {
+    "id": "817411a0-cdd3-4372-a8d5-361e17440301"
+  },
+  "from": "User",
+  "to": "MicroBlocksAgent",
+  "action": {
+    "name": "echo",
+    "args": ["hi"]
+  }
+}'
+  _currentMessage = aMessage
+  local 'action' ('[misc:jsonGet]' aMessage 'action.name')
+  local 'args' ('[data:makeList]')
+  comment 'Convert json list to microblocks list'
+  for i ('[misc:jsonCount]' ('[misc:jsonGet]' aMessage 'action.args') '') {
+    '[data:addLast]' ('[misc:jsonGet]' ('[misc:jsonGet]' aMessage 'action.args') ('[data:convertType]' i 'string')) args
+  }
+  if (action == '[response]') {
+    '_process_promises' aMessage
+  } (action == '[error]') {
+    '_process_promises' aMessage
+  } (or (('[data:find]' action (functions)) != -1) (('[data:find]' action ('[data:makeList]' '_ping' 'help')) != -1)) {
+    callCustomCommand action args
+  } else {
+    raiseWith ('[data:join]' 'Message Not Understood: ' 'MicroBlocksAgent' '>>' action)
+  }
+}
+
+to '_mock' {
+  '_interpret' '{
+  "meta": {
+    "id": "817411a0-cdd3-4372-a8d5-361e17440301"
+  },
+  "from": "User",
+  "to": "MicroBlocksAgent",
+  "action": {
+    "name": "echo",
+    "args": ["hi"]
+  }
+}'
+}
+
+to '_ping' {
+  respondWith 'pong'
+}
+
+to '_process_promises' aMessage {
+  local 'action' ('[misc:jsonGet]' aMessage 'action.name')
+  local 'parentID' ('[misc:jsonGet]' aMessage 'meta.parent_id')
+  '_debugLog' parentID
+  for fakePromise _fakePromises {
+    if (parentID == (at 1 fakePromise)) {
+      if (action == '[response]') {
+        atPut 2 fakePromise '[response]'
+        atPut 3 fakePromise ('[misc:jsonGet]' aMessage 'action.args.value')
+      }
+      if (action == '[error]') {
+        atPut 2 fakePromise '[error]'
+        atPut 3 fakePromise ('[misc:jsonGet]' aMessage 'action.args.error')
+      }
+    }
+  }
+}
+
+to '_send' aMessage {
+  if ('_debugging') {sayIt 'send:' aMessage ' to ' ('[misc:jsonGet]' aMessage 'to')}
+  if ('MQTT connected') {'MQTT pub' ('[misc:jsonGet]' aMessage 'to') aMessage}
+}
+
+to agentName {
+  return 'MicroBlocksAgent'
+}
+
+to broadcast actionName args {
+  sendTo '[broadcast]' actionName args
+}
+
+to functions {
+  comment 'Exposed functions'
+  return ('[data:makeList]' 'echo' 'add')
+}
+
+to help {
+  local 'help' '{
+  "echo": {
+    "description": "echo the content",
+    "args": ["aString"]
+  },
+  "add": {
+    "description": "add a and b",
+    "args": ["aNumber","aNumber"]
+  }
+}'
+  respondWith ('[data:join]' '{"help":' help '}')
+}
+
+to raiseWith error {
+  '_send' ('_generateMessage' ('[misc:jsonGet]' _currentMessage 'meta.id') ('[misc:jsonGet]' _currentMessage 'from') '[error]' ('[data:join]' '{"error": ' (ifExpression (isType error 'number') value ('[data:join]' '"' error '"')) '}'))
+}
+
+to request agent action args timeout {
+  local 'message' ('_generateMessage' '' agent action args)
+  local 'megID' ('[misc:jsonGet]' message 'meta.id')
+  local 'fakePromise' ('[data:makeList]' megID '' '')
+  '[data:addLast]' fakePromise _fakePromises
+  '_send' message
+  comment 'todo timeout'
+  local 'begin' (millisOp)
+  waitUntil (or ((at 2 fakePromise) != '') (((millisOp) - begin) > timeout))
+  if ((at 2 fakePromise) == '[response]') {
+    return (at 3 fakePromise)
+  } ((at 2 fakePromise) == '[error]') {
+    return ('[data:join]' 'error: ' (at 3 fakePromise))
+  } else {
+    return ('[data:join]' 'Timeout(' timeout ' ms)')
+  }
+}
+
+to respondWith value {
+  '_send' ('_generateMessage' ('[misc:jsonGet]' _currentMessage 'meta.id') ('[misc:jsonGet]' _currentMessage 'from') '[response]' ('[data:join]' '{"value":' (ifExpression (or (isType value 'number') (('[data:find]' '{' value) != -1)) value ('[data:join]' '"' value '"')) '}'))
+}
+
+to sendTo agent action args {
+  '_send' ('_generateMessage' '' agent action args)
+}
+
+to 'set mqtt broker' broker size username password {
+  _mqtt_conf = ('[data:makeList]' broker size username password)
+}
+
+to start {
+  _debuglog = ('[data:makeList]')
+  _fakePromises = ('[data:makeList]')
+  '_MessageLoop'
+}
+
