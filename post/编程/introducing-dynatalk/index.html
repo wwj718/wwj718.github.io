@@ -49,7 +49,7 @@
 <meta itemprop="name" content="介绍 Dynatalk">
 <meta itemprop="description" content="Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。 &ndash; Dynatalk 前言 为什么制作这样一个东西? 我喜欢在 Squeak 进行探索性编程, 但 Squeak 第三方库不够丰富。"><meta itemprop="datePublished" content="2024-04-03T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-04-03T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1282">
+<meta itemprop="wordCount" content="1302">
 <meta itemprop="keywords" content="Python,Squeak,Smalltalk,MicroBlocks,Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="介绍 Dynatalk"/>
 <meta name="twitter:description" content="Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。 &ndash; Dynatalk 前言 为什么制作这样一个东西? 我喜欢在 Squeak 进行探索性编程, 但 Squeak 第三方库不够丰富。"/>
@@ -169,6 +169,7 @@
 <li>你想让分布在不同语言/环境之间的对象协同工作, 诸如<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/#3-%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%BC%96%E7%A8%8B">使用图形化环境或 Python 驱动 Roblox</a></li>
 <li>你尝试过 <a href="https://en.wikipedia.org/wiki/Remote_procedure_call">RPC</a> 之类的东西, 但渴望有更多的灵活性和控制权</li>
 <li>你希望有一个比 <a href="https://www.ros.org/">ROS</a> 更轻量级的通信系统, 来协调机器人的不同部分。它足够简单, 可以轻易被 hack 来满足特殊需求。 但又不至于简陋到只有 pub/sub, 它提供了基础的功能: 对 Services, Actions 的支持</li>
+<li>你想构建<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/">Future Park(teamLab)</a> 那样的交互艺术项目</li>
 <li>你有一个跟 <a href="https://www.codelab.club/projects#tag_Neverland2">CodeLab Neverland</a> 一样的可编程空间, 想让环境中的大量可编程对象协同工作</li>
 <li>&hellip;</li>
 </ul>
@@ -194,10 +195,10 @@
 <p>选择你正在使用的语言的客户端, 里边有具体的引导。</p>
 <h2 id="faq">FAQ</h2>
 <h3 id="目前有哪些局限">目前有哪些局限?</h3>
-<p>一些语言的 Dynatalk 客户端(诸如 Python)对并发的支持做得还不够(我们不打算把它列入核心中, 而将其视为可扩展的能力)。</p>
+<p>一些语言的 Dynatalk 客户端(诸如 Python)对并发的支持做得还不够(不打算把它列入核心中, 而将其视为可扩展的能力)。</p>
 <p>同一个 supervisor 里的 Agent 并不是并发执行的, 它们会彼此阻塞。</p>
 <p>dynatalk 将并发性作为<strong>关注点</strong>从核心中分离出来。如果你需要并发执行多个 agent, 可以继承 Agent 基类, 将  _commit 重写为多线程或多进程版本(dynatalk 可能需要在 supervisor 和 agent 之间架设一个 queue)。</p>
-<p>目前我还没有这个需求, 如果你确实并发功能，欢迎联系我。</p>
+<p>目前我还没有这个需求, 如果你确实需要并发功能，欢迎联系我。</p>
 <h3 id="我可以替换消息传输协议mqtt吗">我可以替换消息传输协议(MQTT)吗?</h3>
 <p>目前采用了 MQTT 作为底层的消息传输协议, 这部分被设计为可插拔的, 可以很容易替换成 RabbitMQ、ZeroMQ、websocket, 或任何你喜欢的其他消息协议&hellip;</p>
 <p>我甚至完全使用 HTTP 实现过它(因为 Roblox 服务器只支持 HTTP)。</p>
