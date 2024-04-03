@@ -49,7 +49,7 @@
 <meta itemprop="name" content="介绍 Dynatalk">
 <meta itemprop="description" content="Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。 &ndash; Dynatalk 前言 为什么制作这样一个东西? 我喜欢在 Squeak 进行探索性编程, 但 Squeak 第三方库不够丰富。"><meta itemprop="datePublished" content="2024-04-03T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-04-03T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1178">
+<meta itemprop="wordCount" content="1281">
 <meta itemprop="keywords" content="Python,Squeak,Smalltalk,MicroBlocks,Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="介绍 Dynatalk"/>
 <meta name="twitter:description" content="Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。 &ndash; Dynatalk 前言 为什么制作这样一个东西? 我喜欢在 Squeak 进行探索性编程, 但 Squeak 第三方库不够丰富。"/>
@@ -147,6 +147,7 @@
       <ul>
         <li><a href="#目前有哪些局限">目前有哪些局限?</a></li>
         <li><a href="#我可以替换消息传输协议mqtt吗">我可以替换消息传输协议(MQTT)吗?</a></li>
+        <li><a href="#强大而危险的-eval-agent">强大而危险的 eval agent</a></li>
         <li><a href="#设计理念是什么">设计理念是什么？</a></li>
         <li><a href="#它是如何开发的">它是如何开发的？</a></li>
       </ul>
@@ -201,6 +202,13 @@
 <p>目前采用了 MQTT 作为底层的消息传输协议, 这部分被设计为可插拔的, 可以很容易替换成 RabbitMQ、ZeroMQ、websocket, 或任何你喜欢的其他消息协议&hellip;</p>
 <p>我甚至完全使用 HTTP 实现过它(因为 Roblox 服务器只支持 HTTP)。</p>
 <p>只需要构建一个新的 Space 替换 MQTTSpace 即可(只有数十行代码)。</p>
+<h3 id="强大而危险的-eval-agent">强大而危险的 eval agent</h3>
+<blockquote>
+<p>能力越大，责任越大。</p>
+</blockquote>
+<p>我喜欢 eval agent(可以执行代码的 agent), 这是 JavaScript 实现的<a href="https://github.com/wwj718/dynatalk-js/blob/main/dynatalk.js#L294">一个例子</a>。</p>
+<p>通过与 eval agent 交互, 我们可以获得另一个编程语言的所有能力, 这对于探索性编程和构建原型非常方便。</p>
+<p>但在部署是请注意风险。</p>
 <h3 id="设计理念是什么">设计理念是什么？</h3>
 <p>参考 <a href="https://github.com/wwj718/Dynatalk/blob/main/docs/%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5.md">设计理念</a></p>
 <h3 id="它是如何开发的">它是如何开发的？</h3>
