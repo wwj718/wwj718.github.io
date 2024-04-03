@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="前言 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这件事的关键代码我们在下边有列出。 本文试图在 JavaScript 之" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="前言 2024-04-03更新: Dynatalk 实现了本文中的想法 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak、Snap! 上实现" />
-<meta property="og:description" content="前言 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这件事的关键代码我们在下边有列出。 本文试图在 JavaScript 之" />
+<meta property="og:description" content="前言 2024-04-03更新: Dynatalk 实现了本文中的想法 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2020-11-17T00:00:00+00:00" />
 <meta property="article:modified_time" content="2020-11-17T00:00:00+00:00" />
 
 <meta itemprop="name" content="建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak、Snap! 上实现">
-<meta itemprop="description" content="前言 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这件事的关键代码我们在下边有列出。 本文试图在 JavaScript 之"><meta itemprop="datePublished" content="2020-11-17T00:00:00+00:00" />
+<meta itemprop="description" content="前言 2024-04-03更新: Dynatalk 实现了本文中的想法 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这"><meta itemprop="datePublished" content="2020-11-17T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2020-11-17T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2121">
+<meta itemprop="wordCount" content="2144">
 <meta itemprop="keywords" content="essays," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="建立在异步消息之上的同步指令: 分别在JavaScript、Python、Squeak、Snap! 上实现"/>
-<meta name="twitter:description" content="前言 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这件事的关键代码我们在下边有列出。 本文试图在 JavaScript 之"/>
+<meta name="twitter:description" content="前言 2024-04-03更新: Dynatalk 实现了本文中的想法 在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。 解决这"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -138,6 +138,7 @@
 </div>
     <div class="post-content">
       <h1 id="前言">前言</h1>
+<p><strong>2024-04-03更新: <a href="https://github.com/wwj718/Dynatalk">Dynatalk</a> 实现了本文中的想法</strong></p>
 <p>在 CodeLab Scratch 有这样一个需求: Scratch 积木执行同步语义，积木背后的通信是采用异步的 pub/sub。</p>
 <p>解决这件事的关键代码我们在下边有列出。</p>
 <p>本文试图在 JavaScript 之外的语言中也实现这种想法。它看起来只是一个简易的 RPC client（实现上，确实也是参考了<a href="https://github.com/LLK/scratch-vm/blob/acc2e6dba2e5a32668f0b26f0b2c4dfdecbe1023/src/util/jsonrpc.js">Scratch jsonrpc</a>），如果你想寻找 RPC 库，市面上有大把实现，本文不值一读。</p>

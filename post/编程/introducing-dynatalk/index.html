@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>介绍 Dynatalk - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。 &amp;ndash; Dynatalk 前言 为什么制作这样一个东西? 我喜欢在 Squeak 进行探索性编程, 但 Squeak 第三方库不够丰富。" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="介绍 Dynatalk" />
+<meta property="og:description" content="Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。 &ndash; Dynatalk 前言 为什么制作这样一个东西? 我喜欢在 Squeak 进行探索性编程, 但 Squeak 第三方库不够丰富。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-04-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-04-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="介绍 Dynatalk">
+<meta itemprop="description" content="Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。 &ndash; Dynatalk 前言 为什么制作这样一个东西? 我喜欢在 Squeak 进行探索性编程, 但 Squeak 第三方库不够丰富。"><meta itemprop="datePublished" content="2024-04-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-04-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="822">
+<meta itemprop="keywords" content="Python,Squeak,Smalltalk,MicroBlocks,Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="介绍 Dynatalk"/>
+<meta name="twitter:description" content="Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。 &ndash; Dynatalk 前言 为什么制作这样一个东西? 我喜欢在 Squeak 进行探索性编程, 但 Squeak 第三方库不够丰富。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">介绍 Dynatalk</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-04-03 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#为什么制作这样一个东西">为什么制作这样一个东西?</a></li>
+        <li><a href="#什么情况下对你有用">什么情况下对你有用?</a></li>
+        <li><a href="#先前的经验">先前的经验</a></li>
+      </ul>
+    </li>
+    <li><a href="#开始使用">开始使用</a></li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#它是如何开发的">它是如何开发的？</a></li>
+      </ul>
+    </li>
+    <li><a href="#设计理念是什么">设计理念是什么？</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <blockquote>
+<p>Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。 &ndash; <a href="https://github.com/wwj718/Dynatalk">Dynatalk</a></p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<h3 id="为什么制作这样一个东西">为什么制作这样一个东西?</h3>
+<p>我喜欢在 <a href="https://squeak.org/">Squeak</a> 进行探索性编程, 但 Squeak 第三方库不够丰富。 渴望一个简单的跨语言的对象协作机制, 需要时, 可以在 Squeak 里使用 Python 或浏览器的 API。</p>
+<h3 id="什么情况下对你有用">什么情况下对你有用?</h3>
+<ul>
+<li>你想让分布在不同语言/环境之间的对象协同工作, 诸如<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/teamlab-future-park-dynatalk/#3-%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%BC%96%E7%A8%8B">使用图形化环境或 Python 驱动 Roblox</a></li>
+<li>你尝试过 RPC 之类的东西, 但渴望有更多的灵活性和控制权</li>
+<li>你希望有一个比 <a href="https://www.ros.org/">ROS</a> 更轻量级的通信系统, 来协调机器人的不同部分。它足够简单, 可以轻易被 hack 来满足特殊需求。 但又不至于简陋到只有 pub/sub, 它提供了基础的功能: 对 Services, Actions 的支持</li>
+<li>你有一个跟 <a href="https://www.codelab.club/projects#tag_Neverland2">CodeLab Neverland</a> 一样的可编程空间, 想让环境中的大量可编程对象协同工作</li>
+<li>&hellip;</li>
+</ul>
+<h3 id="先前的经验">先前的经验</h3>
+<blockquote>
+<p>把事情搞得困难是简单的, 把事情搞得简单是困难的</p>
+</blockquote>
+<p>Dynatalk 可以看作对 <a href="https://adapter.codelab.club/">CodeLab Adapter</a> 核心的重构。</p>
+<p>它们都试图提供基于消息的对象协作机制。</p>
+<p>CodeLab Adapter 的一个用例是用于驱动<a href="https://codelab.club/blog/2020/04/29/%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/">可编程空间</a>, 这方面引起过许多人的兴趣。</p>
+<p>CodeLab Adapter 在设计上有许多地方不令人满意, <strong>关注点的分离</strong>做得不好, 正交性不够, 最终导致项目变得复杂, 难以持续生长, 维护成了苦差事。</p>
+<p>Dynatalk 追求简单、一致和正交, 遵循<strong>关注点分离</strong>的原则。 它是易于理解并易于扩展的。</p>
+<p>所有的代码目前都<a href="https://github.com/wwj718/Dynatalk">开源在 Github</a>.</p>
+<h2 id="开始使用">开始使用</h2>
+<p>Dynatalk 目前支持的编编程语言客户端:</p>
+<ul>
+<li><a href="https://github.com/wwj718/dynatalk-js">dynatalk-js</a></li>
+<li><a href="https://github.com/wwj718/dynatalk-squeak">dynatalk-squeak</a></li>
+<li><a href="https://github.com/wwj718/dynatalk-py">dynatalk-py</a></li>
+<li><a href="https://github.com/wwj718/dynatalk-MicroBlocks">dynatalk-MicroBlocks</a></li>
+<li><a href="https://github.com/wwj718/dynatalk-snap">dynatalk-snap</a></li>
+</ul>
+<p>选择你正在使用的语言的客户端, 里边有具体的引导。</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="它是如何开发的">它是如何开发的？</h3>
+<p>和 <a href="https://github.com/codefrau/SqueakJS">SqueakJS</a> 类似, 最初的 Dynatalk 以探索性编程的风格在 LivelyKernel 中开发, 受益于 <a href="https://github.com/LivelyKernel/LivelyKernel">LivelyKernel</a> 强大的 liveness, 开发过程高效而愉快。</p>
+<p>最近的几个版本在 <a href="https://squeak.org/">Squeak</a> 中开发, 借助其强大的 debugger, 可以将手伸到运行堆栈的每个角落里。在 Smalltalk 中，测试驱动风格的开发充满了乐趣(在其他语言中通常是烦人的苦差事), 这种开发风格诞生自 Smalltalk 是不足为怪的。</p>
+<p>其他语言的版本(Python、Snap!、MicroBlocks) 从以上两者中翻译而来。</p>
+<h2 id="设计理念是什么">设计理念是什么？</h2>
+<p>参考 <a href="https://github.com/wwj718/Dynatalk/blob/main/docs/%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5.md">设计理念</a></p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://github.com/wwj718/Dynatalk">Dynatalk</a>
+<ul>
+<li><a href="https://github.com/wwj718/dynatalk-js">dynatalk-js</a></li>
+<li><a href="https://github.com/wwj718/dynatalk-squeak">dynatalk-squeak</a></li>
+<li><a href="https://github.com/wwj718/dynatalk-py">dynatalk-py</a></li>
+<li><a href="https://github.com/wwj718/dynatalk-MicroBlocks">dynatalk-MicroBlocks</a></li>
+<li><a href="https://github.com/wwj718/dynatalk-snap">dynatalk-snap</a></li>
+</ul>
+</li>
+<li><a href="https://createwith.agency/">Agency</a></li>
+<li><a href="https://github.com/LivelyKernel/lively.lang/blob/0.7.9/doc/messenger.md#messenger">lively messenger</a></li>
+<li>MicroBlocks IDE 与 VM 的通信机制</li>
+<li>Squeak 的对象/消息机制</li>
+<li><a href="https://adapter.codelab.club/">CodeLab Adapter</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/async-msg-sync-cmd/">建立在异步消息之上的同步指令</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/autonomous-agent-in-roblox/">在 Roblox 中探索自主 Agent</a></li>
+<li><a href="https://thiscontext.com/2016/10/30/tether-remote-messaging-between-smalltalks-with-websockets/">Tether: remote messaging between Smalltalks with WebSockets</a></li>
+<li><a href="https://www.bilibili.com/video/BV1Fr42187ip/?vd_source=bb63e646390f9ab36309f6557d342587">MicroBlocks 周末分享会 20240330</a></li>
+<li><a href="https://codelab.club/blog/2020/04/29/%E5%8F%AF%E7%BC%96%E7%A8%8B%E7%A9%BA%E9%97%B4/">CodeLab 可编程空间 背后的理念与设计原则</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-04-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/python/">Python</a>
+          <a href="/tags/squeak/">Squeak</a>
+          <a href="/tags/smalltalk/">Smalltalk</a>
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/microblocks-snap-wand/">
+            <span class="next-text nav-default">制作一根属于你自己的魔杖🪄</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
