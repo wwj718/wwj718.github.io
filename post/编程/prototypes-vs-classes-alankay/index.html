@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title> - 夜行人</title>
+  <title>[译] Alan Kay: prototypes vs classes - 夜行人</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="UGOT agent 展示 DynaTalk 是更好的 Adapter 也可以在 js 中构建 Agent" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="原文 prototypes vs classes was: Re: Sun&amp;rsquo;s HotSpot 译文 (由 ChatGPT 翻译, 种瓜校对和微调) 各位, 温和地提醒一下，我在上一次 OOPSLA 会议上费了些心思, 试图提醒大家, Smalltalk 不仅不是它的语法或类库" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -26,7 +26,7 @@
 <meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
-<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/ugot-agent/" />
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/prototypes-vs-classes-alankay/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -39,20 +39,20 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="" />
-<meta property="og:description" content="UGOT agent 展示 DynaTalk 是更好的 Adapter 也可以在 js 中构建 Agent" />
+<meta property="og:title" content="[译] Alan Kay: prototypes vs classes" />
+<meta property="og:description" content="原文 prototypes vs classes was: Re: Sun&rsquo;s HotSpot 译文 (由 ChatGPT 翻译, 种瓜校对和微调) 各位, 温和地提醒一下，我在上一次 OOPSLA 会议上费了些心思, 试图提醒大家, Smalltalk 不仅不是它的语法或类库" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/ugot-agent/" /><meta property="article:section" content="post" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/prototypes-vs-classes-alankay/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-04-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-04-03T00:00:00+00:00" />
 
-
-
-<meta itemprop="name" content="">
-<meta itemprop="description" content="UGOT agent 展示 DynaTalk 是更好的 Adapter 也可以在 js 中构建 Agent">
-
-<meta itemprop="wordCount" content="19">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="UGOT agent 展示 DynaTalk 是更好的 Adapter 也可以在 js 中构建 Agent"/>
+<meta itemprop="name" content="[译] Alan Kay: prototypes vs classes">
+<meta itemprop="description" content="原文 prototypes vs classes was: Re: Sun&rsquo;s HotSpot 译文 (由 ChatGPT 翻译, 种瓜校对和微调) 各位, 温和地提醒一下，我在上一次 OOPSLA 会议上费了些心思, 试图提醒大家, Smalltalk 不仅不是它的语法或类库"><meta itemprop="datePublished" content="2024-04-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-04-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="903">
+<meta itemprop="keywords" content="programming,smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译] Alan Kay: prototypes vs classes"/>
+<meta name="twitter:description" content="原文 prototypes vs classes was: Re: Sun&rsquo;s HotSpot 译文 (由 ChatGPT 翻译, 种瓜校对和微调) 各位, 温和地提醒一下，我在上一次 OOPSLA 会议上费了些心思, 试图提醒大家, Smalltalk 不仅不是它的语法或类库"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -119,11 +119,13 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title"></h1>
+      <h1 class="post-title">[译] Alan Kay: prototypes vs classes</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 0001-01-01 </span>
-        
+        <span class="post-time"> 2024-04-03 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
         
       </div>
     </header>
@@ -131,13 +133,32 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#原文">原文</a></li>
+    <li><a href="#译文">译文</a></li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      <h1 id="ugot-agent">UGOT agent</h1>
-<p>展示 DynaTalk 是更好的 Adapter</p>
-<p>也可以在 js 中构建 Agent</p>
+      <h2 id="原文">原文</h2>
+<p><a href="https://lists.squeakfoundation.org/pipermail/squeak-dev/1998-October/017019.html">prototypes vs classes was: Re: Sun&rsquo;s HotSpot</a></p>
+<h2 id="译文">译文</h2>
+<p>(由 ChatGPT 翻译, 种瓜校对和微调)</p>
+<p>各位,</p>
+<p>温和地提醒一下，我在上一次 OOPSLA 会议上费了些心思, 试图提醒大家, Smalltalk 不仅不是它的语法或类库，甚至不是关于类的。很抱歉我很久以前为这个主题创造了&quot;对象(objects)&ldquo;这个术语，它让很多人将注意力放在次要的想法上。</p>
+<p>重要的想法是&quot;消息传递(messaging)&rdquo; &ndash; 这是 Smalltalk/Squeak 的核心（我们在施乐帕克期间，这个想法从未完全完成）。日语中有一个小词 &ndash; &ldquo;ma&rdquo;&ndash; 意思是&quot;介于之间&quot; &ndash; 或许最接近的英文等价词是 &ldquo;interstitial&rdquo;。</p>
+<p>要制作出伟大且可扩展的系统, 关键在于设计模块之间如何通信，而不是它们的内部属性和行为应该是什么。想想互联网 &ndash; 为了存在，它必须做到:</p>
+<ul>
+<li>允许许多不同种类的想法和实现, 超越任何单一标准</li>
+<li>允许这些想法之间有不同程度的安全互操作性。</li>
+</ul>
+<p>如果你专注于消息传递, 并意识到一个良好的元系统可以动态绑定对象中使用的各种第二级架构, 那么本质上关于这个主题的语言、用户界面和操作系统的讨论都是无关紧要的。这就是为什么我在上一次 OOPSLA 会议上抱怨的原因 &ndash; 在施乐帕克，我们经常更改 Smalltalk，总是将其视为不断进化的工作 &ndash; 当 Smalltalk 进入更大的世界时，它基本上被看作“只是需要学习的东西”，就像是 Pascal 或 Algol。Smalltalk-80 从未真正进化成 OOP 的下一个更好的版本。鉴于目前编程的普遍低水平，我认为这是一个真正的错误。</p>
+<p>我记得我还指出过，不仅要有一个完整的元系统，拥有帮助保护元边界的栅栏也是至关重要的。其中一个最简单的就是我在六十年代末最初探索中的动机之一：意识到赋值是函数的元级别变化，因此不应在同一级别处理, 这是封装这些状态变化的动机之一，不要让它们随意进行。一个允许在普通编程过程中进行其他元事物的系统（比如改变继承的意义，或什么是实例）是一个糟糕的设计。（我相信系统应该允许这些事情发生，但设计应该是这样的，即在进行重大扩展时必须跨越明确的界限。）</p>
+<p>我建议，如果聪明而有才华的 Squeak 列表会更多地考虑元编程的下一步应该是什么 &ndash; 我们如何获得强大的力量、简洁性和意义的安全性？</p>
+<p>向大家致以问候，</p>
+<p>Alan</p>
 
     </div>
 
@@ -149,7 +170,7 @@
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        0001-01-01
+        2024-04-03
         
     </span>
   </p>
@@ -157,15 +178,14 @@
   
 </div>
 <footer class="post-footer">
-      
+      <div class="post-tags">
+          <a href="/tags/programming/">programming</a>
+          <a href="/tags/smalltalk/">smalltalk</a>
+          </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/squeakjs%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default"></span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/wot%E5%A4%87%E5%BF%98/">
-            <span class="next-text nav-default"></span>
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">
+            <span class="next-text nav-default">介绍 Dynatalk</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>
