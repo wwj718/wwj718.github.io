@@ -49,7 +49,7 @@
 <meta itemprop="name" content="SqueakJS 学习笔记">
 <meta itemprop="description" content="SqueakJS 是一个纯 JavaScript 实现的 Squeak 虚拟机, 能够运行未经修改的 Smalltalk image。 &ndash; SqueakJS 主页 前言 当我们说 &ldquo;在 Squeak 中编程&rdquo;, 通常指的是在 Squeak image 中编"><meta itemprop="datePublished" content="2024-04-09T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-04-09T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2887">
+<meta itemprop="wordCount" content="3021">
 <meta itemprop="keywords" content="programming,smalltalk," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="SqueakJS 学习笔记"/>
 <meta name="twitter:description" content="SqueakJS 是一个纯 JavaScript 实现的 Squeak 虚拟机, 能够运行未经修改的 Smalltalk image。 &ndash; SqueakJS 主页 前言 当我们说 &ldquo;在 Squeak 中编程&rdquo;, 通常指的是在 Squeak image 中编"/>
@@ -161,7 +161,11 @@
                 <li><a href="#pyodide">pyodide</a></li>
               </ul>
             </li>
-            <li><a href="#dynatalk">Dynatalk</a></li>
+            <li><a href="#dynatalk">Dynatalk</a>
+              <ul>
+                <li><a href="#添加依赖库">添加依赖库</a></li>
+              </ul>
+            </li>
           </ul>
         </li>
       </ul>
@@ -287,7 +291,8 @@
 <p>SqueakJS 是一个&quot;纯前端项目&quot;, 但却是一个操作系统级别的 &ldquo;纯前端项目&rdquo;。Smalltalk 在传统上充当自身的操作系统。</p>
 <p>要编写 SqueakJS 这样复杂的项目, 没有一个强大的开发环境, 是令人畏惧的。</p>
 <p><a href="https://github.com/LivelyKernel/LivelyKernel">Lively</a> 提供了类似 Smalltalk 的开发体验(&ldquo;将手伸到计算机中&rdquo;), 拥有出色的 &ldquo;liveness&rdquo;。</p>
-<p>SqueakJS 提供了一份<a href="https://github.com/codefrau/SqueakJS/tree/main/lively">在 lively 中开发</a>的教程, 但存在 2 个问题:</p>
+<p>SqueakJS 有一个 <a href="https://smalltalkzoo.thechm.org/HOPL-Squeak.html?etoys">在线的 lively 开发环境</a>。</p>
+<p>你也可以本地运行lively, SqueakJS 提供了一份<a href="https://github.com/codefrau/SqueakJS/tree/main/lively">在 lively 中开发</a>的教程, 但存在 2 个问题:</p>
 <ol>
 <li><code>start.sh</code> 无法运行, 原因是 docker 脚本年久失修</li>
 <li><code>squeak.html</code> 有个 bug</li>
@@ -338,7 +343,56 @@
 <p>浏览器生态中还有其他有趣的项目, 如 <a href="https://pyodide.org/en/stable/">pyodide</a>(运行在浏览器中的 Python)。 我有丰富的 Python 经验, 将其舍弃难免可惜, 尤其是考虑到 Python 庞大的生态, pyodide 将这些资源全部带到了浏览器生态里, 并提供了 JavaScript 接口。 这使得我们也可以通过 jsbridge 使用它们。</p>
 <h3 id="dynatalk">Dynatalk</h3>
 <p>我近期打算将 <a href="https://github.com/wwj718/dynatalk-squeak">dynatalk-squeak</a> 移植到 SqueakJS 中, 思路如下: 重写 MQTTSpace, 使其基于 <a href="https://github.com/mqttjs/MQTT.js">MQTT.js</a>, 通过 jsbridge 我们可以使用 MQTT.js.</p>
-<p>我打算将本地的 dynatalk 包 fileout 出来, 然后filein 到 Squeak4.5 里开发它。</p>
+<p>我打算将本地的 dynatalk 包 fileout 出来, 然后 filein 到 <a href="https://squeak.js.org/run/#image=/Squeak4.5-13680.image">Squeak4.5</a> 里开发它。</p>
+<h4 id="添加依赖库">添加依赖库</h4>
+<p>参考 jsbridge demo 里的做法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-st" data-lang="st"><span class="line"><span class="cl"><span class="c">&#34;Load MQTT.js&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">|</span><span class="nv"> script </span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">(<span class="nc">JS</span> <span class="nf">at:</span> <span class="ss">#mqtt</span>) <span class="nf">ifNil:</span> [
+</span></span><span class="line"><span class="cl">	<span class="nv">script</span> <span class="o">:=</span> <span class="nc">JS</span> <span class="nf">document</span> <span class="nf">createElement:</span> <span class="s">&#39;SCRIPT&#39;</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">script</span> <span class="nf">at:</span> <span class="s">&#39;src&#39;</span> <span class="nf">put:</span> <span class="s">&#39;https://unpkg.com/mqtt/dist/mqtt.min.js&#39;</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">script</span> <span class="nf">at:</span> <span class="s">&#39;type&#39;</span> <span class="nf">put:</span> <span class="s">&#39;text/javascript&#39;</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">	((<span class="nc">JS</span> <span class="nf">document</span> <span class="nf">getElementsByTagName:</span> <span class="s">&#39;head&#39;</span>) <span class="nf">at:</span> <span class="m">0</span>) <span class="nf">appendChild:</span> <span class="nv">script</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">]<span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>发送一条消息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-st" data-lang="st"><span class="line"><span class="cl"><span class="o">|</span><span class="nv">client</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">&#34;client := JS mqtt connect: &#39;wss://guest:test@mqtt.aimaker.space:8084/mqtt&#39;.&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">client</span> <span class="o">:=</span> <span class="nc">JS</span> <span class="nf">mqtt</span> <span class="nf">connect:</span> <span class="s">&#39;ws://guest:test@127.0.0.1:15675&#39;</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="c">&#34;JS console log: client.&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">client</span> <span class="nf">publish:</span><span class="s">&#39;squeakjs&#39;</span> <span class="nf">and:</span><span class="s">&#39;Hello mqtt&#39;</span><span class="p">.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在另一个 MQTT 客户端(<a href="https://mqttx.app/">MQTTX</a>)成功收到.</p>
+<p><img src="/post/img/SqueakJS-note-08.png" alt=""></p>
 <h1 id="faq">FAQ</h1>
 <h2 id="squeakjs-与-lively-的区别是什么">SqueakJS 与 lively 的区别是什么?</h2>
 <p>SqueakJS 基于 lively 开发。它们与 Smalltalk 有许多联系, 通过它们与Smalltalk的关系, 可以看到它们的区别与联系:</p>
