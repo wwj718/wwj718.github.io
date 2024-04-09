@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Squeak 学习笔记">
 <meta itemprop="description" content="前言 近期重新进入 Squeak, 收获颇丰, 学会了将 Debugger 作为主要的编程工具。 我将 Squeak 视为学习和理解事物的环境， &ldquo;软件只是心智成熟的副产品&rdquo"><meta itemprop="datePublished" content="2024-04-07T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-04-07T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2937">
+<meta itemprop="wordCount" content="3069">
 <meta itemprop="keywords" content="programming,smalltalk," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Squeak 学习笔记"/>
 <meta name="twitter:description" content="前言 近期重新进入 Squeak, 收获颇丰, 学会了将 Debugger 作为主要的编程工具。 我将 Squeak 视为学习和理解事物的环境， &ldquo;软件只是心智成熟的副产品&rdquo"/>
@@ -160,6 +160,11 @@
       <ul>
         <li><a href="#dynatalk">Dynatalk</a></li>
         <li><a href="#oscommand">OSCommand</a></li>
+      </ul>
+    </li>
+    <li><a href="#已知问题">已知问题</a>
+      <ul>
+        <li><a href="#音频功能损坏">音频功能损坏</a></li>
       </ul>
     </li>
     <li><a href="#faq">FAQ</a>
@@ -309,7 +314,8 @@ dynatalk-squeak/docs/note.md
 </span></span><span class="line"><span class="cl"><span class="nv">process</span> <span class="nf">resume</span><span class="p">.</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>使用 <code>cmd + .</code> 可以打断阻塞的界面.</p>
+</div><p>参考 Process 的测试用例。</p>
+<p>使用 <code>cmd + .</code> 可以打断阻塞的界面.</p>
 <h3 id="promise">Promise</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -334,6 +340,10 @@ dynatalk-squeak/docs/note.md
 <h3 id="dynatalk">Dynatalk</h3>
 <p>与 Python, JavaScript, MiroBlocks, Snap!, &hellip; 互操作</p>
 <p><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">介绍 Dynatalk</a></p>
+<p>Dynatalk 也可在 etoys script 中使用(需要先为 Player 打上[补丁](/post/img/Player-agent commands.st)):</p>
+<p><img src="/post/img/Squeak-note-02.png" alt=""></p>
+<p>与之互动的 <a href="https://codelabclub.github.io/Snap/snap.html#open:https://wwj718.github.io/post/img/dynatalk-move.xml">Snap 项目</a></p>
+<!--Snap! 目前的消息缓冲机制, 使其每秒只能处理十几条消息-->
 <h3 id="oscommand">OSCommand</h3>
 <ul>
 <li><code>APP -&gt; Command Shell</code>
@@ -349,6 +359,10 @@ dynatalk-squeak/docs/note.md
 </li>
 <li><code>OSProcess command: 'ls /tmp'</code> 没有返回值</li>
 </ul>
+<h2 id="已知问题">已知问题</h2>
+<h3 id="音频功能损坏">音频功能损坏</h3>
+<p>运行过  <code>Beeper beep</code> 或其他有声音的程序(如etoys)之后,保存镜像，再运行会没有声音. 与 SoundPlayer process 有关。</p>
+<p>解决方案: 镜像启动之后运行 <code>SoundPlayer startUp</code></p>
 <h2 id="faq">FAQ</h2>
 <h3 id="对象何时被回收">对象何时被回收？</h3>
 <p>参考 <code>Squeak help &gt; Tutorials &gt; The Squeak Image &gt; Working with the Squeak Image</code></p>
@@ -359,6 +373,7 @@ dynatalk-squeak/docs/note.md
 </ol>
 <p>执行垃圾收集时，将从内存中删除这两个根都无法访问到的对象。</p>
 <h3 id="重新进入-squeak-的原因是-snap-不够用吗-">重新进入 Squeak 的原因是 Snap! 不够用吗 ?</h3>
+<!--todo 在 Squeak 中构建stage/sprite 的基本属性， 类似第一代Scratch做的事？-->
 <p>我之前写过 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-personal-computing/">Snap! 使用笔记: 将 Snap! 用作个人计算环境</a></p>
 <p>我非常喜欢在 Snap! 中进行探索性编程。它依然是我最喜欢的编程环境之一(基本完全替代了 Scratch)。</p>
 <p>有时候, 我需要类结构和 morphic 的时候， 我就会希望离开 Snap! 进入到 Squeak。</p>
@@ -423,7 +438,11 @@ dynatalk-squeak/docs/note.md
           <a href="/tags/smalltalk/">smalltalk</a>
           </div>
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/squeakjs-note/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">SqueakJS 学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
         <a class="next" href="/post/%E7%BC%96%E7%A8%8B/prototypes-vs-classes-alankay/">
             <span class="next-text nav-default">[译] Alan Kay: 原型 vs 类</span>
             <span class="next-text nav-mobile">下一篇</span>
