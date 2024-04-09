@@ -135,28 +135,27 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#mini-squeak">Mini Squeak</a></li>
-    <li><a href="#jsbridge">JSBridge</a></li>
-    <li><a href="#持久化">持久化</a></li>
-  </ul>
-
-  <ul>
-    <li><a href="#本地开发">本地开发</a>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#使用笔记">使用笔记</a>
       <ul>
-        <li><a href="#在-lively-中开发">在 lively 中开发</a></li>
+        <li><a href="#mini-squeak">Mini Squeak</a></li>
+        <li><a href="#jsbridge">JSBridge</a></li>
+        <li><a href="#持久化">持久化</a></li>
       </ul>
     </li>
-    <li><a href="#jsbridge-1">jsbridge</a>
+    <li><a href="#开发笔记">开发笔记</a>
       <ul>
-        <li><a href="#jsbridge-的潜在用途">jsbridge 的潜在用途</a></li>
-        <li><a href="#dynatalk">Dynatalk</a></li>
+        <li><a href="#本地开发">本地开发</a></li>
+        <li><a href="#jsbridge-1">jsbridge</a></li>
       </ul>
     </li>
-  </ul>
-
-  <ul>
-    <li><a href="#squeakjs-与-lively-的区别是什么">SqueakJS 与 lively 的区别是什么?</a></li>
-    <li><a href="#squeakjs-的效率如何">SqueakJS 的效率如何</a></li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#squeakjs-与-lively-的区别是什么">SqueakJS 与 lively 的区别是什么?</a></li>
+        <li><a href="#squeakjs-的效率如何">SqueakJS 的效率如何</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
   </ul>
 </nav>
   </div>
@@ -165,7 +164,7 @@
       <blockquote>
 <p>SqueakJS 是一个<strong>纯 JavaScript 实现的 Squeak 虚拟机</strong>, 能够运行未经修改的 Smalltalk image。 &ndash; <a href="https://squeak.js.org/">SqueakJS 主页</a></p>
 </blockquote>
-<h1 id="前言">前言</h1>
+<h2 id="前言">前言</h2>
 <p>当我们说 &ldquo;在 Squeak 中编程&rdquo;, 通常指的是在 Squeak image 中编程, Squeak image 运行在 Squeak 虚拟机之上。 之前的 Squeak 虚拟机从 C 代码中生成, 在不同的操作系统上编译为不同的虚拟机。 这些虚拟机运行相同的 Squeak image, 用户编程发生在 image 中, 这使得不同的操作系统下拥有相同的 Squeak 编程体验。</p>
 <p>SqueakJS 是使用 JavaScript 实现 Squeak 虚拟机, 这使得我们在 Linux/MacOS/Windows 之外, 又多了一个可以运行 Squeak image 的平台: 浏览器平台, 我喜欢<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/should-web-browsers-have-stuck-to-being-document-viewers/">将浏览器看作新的操作系统</a>。</p>
 <p>由于 SqueakJS 运行的 image 与其他 Squeak 虚拟机完全相同, 因此我们在 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeak-note/">Squeak 学习笔记</a> 中积累的经验全都可以用在 SqueakJS 里。</p>
@@ -183,9 +182,9 @@
 <li>支持移动端。为移动端编译和发布 Squeak 是繁琐的, 在 iOS 麻烦尤其多。运行在浏览器中的 SqueakJS 使得这些问题变得简单, <a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps">PWA</a> 使其能够如原生程序那样运行。 浏览器内置了多点触控的 api, 这为 <a href="https://wiki.squeak.org/squeak/morphic">Morphic</a> 开启了新的交互可能。  <!--在windows 安卓虚拟机里实验--></li>
 <li>&hellip;</li>
 </ul>
-<h1 id="使用笔记">使用笔记</h1>
+<h2 id="使用笔记">使用笔记</h2>
 <p>官方部署了一个<a href="https://squeak.js.org/run/">启动器(Launcher)</a>。旅程从选择一个 image 开始。</p>
-<h2 id="mini-squeak">Mini Squeak</h2>
+<h3 id="mini-squeak">Mini Squeak</h3>
 <p><img src="/post/img/SqueakJS-note-01.png" alt=""></p>
 <p>Mini Squeak 是早期的 Squeak image, 非常精简, 只有 624KB, 是目前 SqueakJS 支持的最小 image。</p>
 <p>其 UI 风格类似 Smalltalk 80, 基于 MVC 构建。</p>
@@ -207,7 +206,7 @@
 </span></span><span class="line"><span class="cl"><span class="nc">JS</span> <span class="nf">console</span> <span class="nf">log:</span> <span class="s">&#39;Squeak says Hello World!&#39;</span><span class="p">.</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="jsbridge">JSBridge</h2>
+</div><h3 id="jsbridge">JSBridge</h3>
 <blockquote>
 <p>JSBridge 可以与 DOM 交互、访问 JavaScript 库以及使用 Smalltalk 代码创建交互式 HTML 界面。</p>
 </blockquote>
@@ -221,7 +220,7 @@
 <p>Caffeine 有一个名为 JSObject 的附加代理类, 它提供附加的反射功能, 例如枚举主体 JS 对象的属性。 &ndash;<a href="https://thiscontext.com/2017/06/22/caffeine-livecode-the-web/">Caffeine :: Livecode the Web!</a></p>
 </blockquote>
 <p><img src="/post/img/SqueakJS-note-03.png" alt=""></p>
-<h2 id="持久化">持久化</h2>
+<h3 id="持久化">持久化</h3>
 <blockquote>
 <p>所有 image 和相关文件都<strong>持久存储</strong>在浏览器内的数据库(IndexedDB)中。</p>
 </blockquote>
@@ -242,8 +241,8 @@
 <li>使用自己的 image: SqueakJS 只是一个虚拟机, 因此可以使用它加载自己的 Squeak image, 只需上传到 Launcher 即可打开</li>
 </ul>
 <p>有了持久化之后, SqueakJS 就可以提供接近本地应用的体验。 人们喜欢能够保存正在进行的工作, 不希望它是一个每次都从头开始的&quot;干净&quot;网络应用。</p>
-<h1 id="开发笔记">开发笔记</h1>
-<h2 id="本地开发">本地开发</h2>
+<h2 id="开发笔记">开发笔记</h2>
+<h3 id="本地开发">本地开发</h3>
 <p>SqueakJS 是一个&quot;纯前端项目&quot;, 要在本地运行它是很容易的:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -263,7 +262,7 @@
 </div>
 </div><p>本地启动器(Launcher): <code>http://localhost:3000/run/</code></p>
 <p>参考 <a href="https://github.com/codefrau/SqueakJS?tab=readme-ov-file#installing-locally">Installing locally</a></p>
-<h3 id="在-lively-中开发">在 lively 中开发</h3>
+<h4 id="在-lively-中开发">在 lively 中开发</h4>
 <p><img src="/post/img/SqueakJS-note-05.png" alt=""></p>
 <blockquote>
 <p>我(Vanessa Freudenberg)正在使用 &ldquo;Lively&rdquo; 开发 SqueakJS, 这是一个基于浏览器的 JavaScript 开发环境，受 Smalltalk 启发。我不必在每次源代码更改后重新加载页面，而是在我的 Lively SqueakJS 调试器中执行 Squeak 并在其运行时更改其代码。这就是为什么 SqueakJS 源代码具有一种略显不寻常的布局，它符合 Lively 的开发方式。如果你觉得更简单，你仍然可以使用纯文本编辑器。</p>
@@ -283,15 +282,15 @@
 <li>将 <code>squeak.html</code> 中的 <code>Global.Squeak.stopAudio()</code> 改为 <code>Global.Squeak.stopAudioIn()</code></li>
 <li>访问 <code>http://localhost:9001/users/SqueakJS/lively/squeak.html</code></li>
 </ol>
-<h4 id="reset">Reset</h4>
+<h5 id="reset">Reset</h5>
 <p>目前存在一个疑问, 修改了虚拟机代码(如<a href="https://github.com/codefrau/SqueakJS/blob/main/vm.plugins.javascript.js">vm.plugins.javascript.js</a>)之后, 需要点击 Reset 按钮才会生效, 不清楚为何不是立刻生效(常见的lively 对象都是修改完方法立刻生效)。</p>
 <p>Reset 按钮会做的事情:</p>
 <p><img src="/post/img/SqueakJS-note-06.png" alt=""></p>
 <!--reset 会 purge vm-->
-<h2 id="jsbridge-1">jsbridge</h2>
+<h3 id="jsbridge-1">jsbridge</h3>
 <p>在 lively 中从服务器加载 mini image, 其中的 jsbridge 包基本是空的(从 browser 和 FileList 可以看出), 但不清楚为何 <code>JS alert: 'Squeak says Hello World!'.</code> 可以正常运行。</p>
 <p>调试时, 我一般会上传 <a href="https://github.com/codefrau/SqueakJS/blob/main/demo/JSBridge.st">JSBridge.st</a>, 然后在 FileList filein.</p>
-<h3 id="jsbridge-的潜在用途">jsbridge 的潜在用途</h3>
+<h4 id="jsbridge-的潜在用途">jsbridge 的潜在用途</h4>
 <p>前边提到:</p>
 <blockquote>
 <p>现代浏览器拥有<a href="https://developer.mozilla.org/en-US/docs/Web/API">极其丰富的 API</a></p>
@@ -318,19 +317,19 @@
 <li>&hellip;</li>
 </ul>
 <p>关于 jsbridge 在 web 中各种潜在用途, Craig Latta 在<a href="https://thiscontext.com/">博客</a>里做了很多精彩分享。</p>
-<h4 id="pyodide">pyodide</h4>
+<h5 id="pyodide">pyodide</h5>
 <p>浏览器生态中还有其他有趣的项目, 如 <a href="https://pyodide.org/en/stable/">pyodide</a>(运行在浏览器中的 Python)。 我有丰富的 Python 经验, 将其舍弃难免可惜, 尤其是考虑到 Python 庞大的生态, pyodide 将这些资源全部带到了浏览器生态里, 并提供了 JavaScript 接口。 这使得我们也可以通过 jsbridge 使用它们。</p>
-<h3 id="dynatalk">Dynatalk</h3>
+<h4 id="dynatalk">Dynatalk</h4>
 <p>我近期打算将 <a href="https://github.com/wwj718/dynatalk-squeak">dynatalk-squeak</a> 移植到 SqueakJS 中, 思路如下: 重写 MQTTSpace, 使其基于 <a href="https://github.com/mqttjs/MQTT.js">MQTT.js</a>, 通过 jsbridge 我们可以使用 MQTT.js.</p>
 <p>我打算将本地的 dynatalk 包 fileout 出来, 然后filein 到 Squeak4.5 里开发它。</p>
-<h1 id="faq">FAQ</h1>
-<h2 id="squeakjs-与-lively-的区别是什么">SqueakJS 与 lively 的区别是什么?</h2>
+<h2 id="faq">FAQ</h2>
+<h3 id="squeakjs-与-lively-的区别是什么">SqueakJS 与 lively 的区别是什么?</h3>
 <p>SqueakJS 基于 lively 开发。它们与 Smalltalk 有许多联系, 通过它们与Smalltalk的关系, 可以看到它们的区别与联系:</p>
 <ul>
 <li>SqueakJS 是一个<strong>纯 JavaScript 实现的 Squeak 虚拟机</strong>, 理论上也可以<a href="https://thiscontext.com/2023/04/07/tactical-squeak-speedups-with-webassembly/">使用 WebAssembly 实现</a></li>
 <li>lively 试图成为一个自支持 web 开发环境, 拥有 Smalltalk 那样的开发体验, 但它并不是 Smalltalk, 它只是改造后的 JavaScript。</li>
 </ul>
-<h2 id="squeakjs-的效率如何">SqueakJS 的效率如何</h2>
+<h3 id="squeakjs-的效率如何">SqueakJS 的效率如何</h3>
 <blockquote>
 <p>Make it work, make it correct, make it fast, make it cheap &ndash;Alan Kay</p>
 </blockquote>
@@ -356,7 +355,7 @@
 <li>每秒发送的消息数量(sends/sec): <code>270,000,000/ 2,200,000 = 12</code></li>
 </ul>
 <p>浏览器性能大约只有本机的 1/10.</p>
-<h1 id="参考">参考</h1>
+<h2 id="参考">参考</h2>
 <ul>
 <li><a href="https://freudenbergs.de/bert/publications/Freudenberg-2014-SqueakJS.pdf">SqueakJS: A Modern and Practical Smalltalk That Runs in Any Browser</a></li>
 <li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/should-web-browsers-have-stuck-to-being-document-viewers/">[译]web浏览器是否应该坚持成为文档查看器?</a></li>
