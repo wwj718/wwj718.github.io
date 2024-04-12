@@ -49,7 +49,7 @@
 <meta itemprop="name" content="使用 Squeak(Etoys) 模拟日食月食">
 <meta itemprop="description" content="太阳是石而月亮是土 &ndash; 阿那克萨哥拉(古希腊 公元前500年) 模型是揭示真相的谎言 前两天跟小蘑菇分享 Squeak 学习笔记, 里边提到: Alan Kay 说计算机可以是一切的"><meta itemprop="datePublished" content="2024-04-10T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-04-10T00:00:00+00:00" />
-<meta itemprop="wordCount" content="707">
+<meta itemprop="wordCount" content="1081">
 <meta itemprop="keywords" content="programming,smalltalk,squeak," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="使用 Squeak(Etoys) 模拟日食月食"/>
 <meta name="twitter:description" content="太阳是石而月亮是土 &ndash; 阿那克萨哥拉(古希腊 公元前500年) 模型是揭示真相的谎言 前两天跟小蘑菇分享 Squeak 学习笔记, 里边提到: Alan Kay 说计算机可以是一切的"/>
@@ -138,6 +138,12 @@
     <li>
       <ul>
         <li><a href="#后记">后记</a></li>
+        <li><a href="#faq">FAQ</a>
+          <ul>
+            <li><a href="#日地系统时如何构建的">日地系统时如何构建的?</a></li>
+            <li><a href="#地月系统是如何构建的">地月系统是如何构建的?</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -173,6 +179,37 @@
 
 submorph 手动拖拽似乎无法超过extend范围, 可以使用 etoys 的 move 移出去一点
 -->
+<h2 id="faq">FAQ</h2>
+<h3 id="日地系统时如何构建的">日地系统时如何构建的?</h3>
+<p>日地系统的构建比较简单:</p>
+<ol>
+<li>太阳不动</li>
+<li>地球绕着太阳转</li>
+</ol>
+<p>我们可以完全在视觉环境中做到这点(无需写代码)</p>
+<p>首先让地球成为太阳的 submorph:</p>
+<img width=400 src="/post/img/simulate-eclipse-01.png" />
+<p>这样地球就会成为太阳系的一部分, 挪动太阳，地球也会跟着动:</p>
+<img width=400 src="/post/img/simulate-eclipse-03.png" />
+<p>然后将地球拖到何时的轨道上:</p>
+<ul>
+<li>shift + option + click 选中作为 submorph 的地球</li>
+<li>地球会被限制在太阳(椭圆)的 extent 里, 如果轨道比较远, 可以使用 <code>forward</code> 移动地球到目标位置</li>
+</ul>
+<p><img src="/post/img/simulate-eclipse-02.png" alt=""></p>
+<p>将地球的旋转中心移到太阳中心位置(shift+click):</p>
+<img width=400 src="/post/img/simulate-eclipse-04.png" />
+<p>这样一来, 地球转动(<code>turn</code>)的时候，就会以太阳为中心了</p>
+<h3 id="地月系统是如何构建的">地月系统是如何构建的?</h3>
+<p>要构建地月系统, 我们需要做到以下两点</p>
+<ol>
+<li>月球绕着地球转(和上边的日地系统相同操作)</li>
+<li>月球跟着地球一起绕太阳转</li>
+</ol>
+<p>要如何做到第 2 条呢?</p>
+<p>什么都不用做! 当我们让月球成为地球的 submorph , &ldquo;地球围绕太阳转&rdquo; 的运动会叠加到月球上!</p>
+<p>submorph 非常强大,  很适合用于构建复合系统。 Snap! 也支持 submorph, Scratch 不支持。</p>
+
     </div>
 
     <div class="post-copyright">
