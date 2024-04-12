@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="我目前关注 lively 的 2 个版本, 它们各有优势: lively kernel lively next 现阶段 lively kernel 与 lively next 各有优势 lively kernel 稳定性更好 更完整的环境 debugger 模式 lively next component freezer 本地测试 lively.next/local_projects/wwj718--lively-demo npm run build cd build python -m http.server 发布" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="前言 我目前关注 lively 的 2 个版本: LivelyKernel lively.next 就目标而言, lively.next 试图成为 LivelyKernel 下一代版本, 但完成度还不高, 目前它们各有优势: LivelyKernel 更更富的学习资料 更加稳定和完整 更强大" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="lively 学习笔记" />
-<meta property="og:description" content="我目前关注 lively 的 2 个版本, 它们各有优势: lively kernel lively next 现阶段 lively kernel 与 lively next 各有优势 lively kernel 稳定性更好 更完整的环境 debugger 模式 lively next component freezer 本地测试 lively.next/local_projects/wwj718--lively-demo npm run build cd build python -m http.server 发布" />
+<meta property="og:description" content="前言 我目前关注 lively 的 2 个版本: LivelyKernel lively.next 就目标而言, lively.next 试图成为 LivelyKernel 下一代版本, 但完成度还不高, 目前它们各有优势: LivelyKernel 更更富的学习资料 更加稳定和完整 更强大" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/lively-note/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2024-04-12T00:00:00+00:00" />
 <meta property="article:modified_time" content="2024-04-12T00:00:00+00:00" />
 
 <meta itemprop="name" content="lively 学习笔记">
-<meta itemprop="description" content="我目前关注 lively 的 2 个版本, 它们各有优势: lively kernel lively next 现阶段 lively kernel 与 lively next 各有优势 lively kernel 稳定性更好 更完整的环境 debugger 模式 lively next component freezer 本地测试 lively.next/local_projects/wwj718--lively-demo npm run build cd build python -m http.server 发布"><meta itemprop="datePublished" content="2024-04-12T00:00:00+00:00" />
+<meta itemprop="description" content="前言 我目前关注 lively 的 2 个版本: LivelyKernel lively.next 就目标而言, lively.next 试图成为 LivelyKernel 下一代版本, 但完成度还不高, 目前它们各有优势: LivelyKernel 更更富的学习资料 更加稳定和完整 更强大"><meta itemprop="datePublished" content="2024-04-12T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-04-12T00:00:00+00:00" />
-<meta itemprop="wordCount" content="172">
+<meta itemprop="wordCount" content="3539">
 <meta itemprop="keywords" content="programming,lively," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="lively 学习笔记"/>
-<meta name="twitter:description" content="我目前关注 lively 的 2 个版本, 它们各有优势: lively kernel lively next 现阶段 lively kernel 与 lively next 各有优势 lively kernel 稳定性更好 更完整的环境 debugger 模式 lively next component freezer 本地测试 lively.next/local_projects/wwj718--lively-demo npm run build cd build python -m http.server 发布"/>
+<meta name="twitter:description" content="前言 我目前关注 lively 的 2 个版本: LivelyKernel lively.next 就目标而言, lively.next 试图成为 LivelyKernel 下一代版本, 但完成度还不高, 目前它们各有优势: LivelyKernel 更更富的学习资料 更加稳定和完整 更强大"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -135,67 +135,238 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#lively-kernel">lively kernel</a></li>
-    <li><a href="#lively-next">lively next</a></li>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#livelykernel">LivelyKernel</a>
+      <ul>
+        <li><a href="#更更富的案例和学习资料">更更富的案例和学习资料</a></li>
+        <li><a href="#更加稳定和完整">更加稳定和完整</a></li>
+        <li><a href="#更强大的开发环境">更强大的开发环境</a>
+          <ul>
+            <li><a href="#函数级别的调试模式">函数级别的调试模式</a></li>
+            <li><a href="#可视化的-connect">可视化的 connect</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#livelynext">lively.next</a>
+      <ul>
+        <li><a href="#更加模块化和简洁">更加模块化和简洁</a></li>
+        <li><a href="#component">component</a></li>
+        <li><a href="#生产模式freezer">生产模式(freezer)</a>
+          <ul>
+            <li><a href="#如何以生产模式发布-livelynext-应用">如何以&quot;生产模式&quot;发布 lively.next 应用</a></li>
+            <li><a href="#如何支持用户探索-和-改编remix">如何支持用户探索 和 改编(remix)</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#结论">结论</a></li>
+    <li><a href="#思考">思考</a>
+      <ul>
+        <li><a href="#squeakjs-vs-lively">SqueakJS vs lively</a></li>
+        <li><a href="#数字赋权">数字赋权</a></li>
+      </ul>
+    </li>
     <li><a href="#参考">参考</a></li>
   </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
-      <p>我目前关注 lively 的 2 个版本, 它们各有优势:</p>
+      <h1 id="前言">前言</h1>
+<p>我目前关注 lively 的 2 个版本:</p>
 <ul>
-<li>lively kernel</li>
-<li>lively next</li>
+<li><a href="https://github.com/LivelyKernel/LivelyKernel">LivelyKernel</a></li>
+<li><a href="https://github.com/LivelyKernel/lively.next">lively.next</a></li>
 </ul>
-<p>现阶段 lively kernel 与 lively next 各有优势</p>
+<p>就目标而言, lively.next 试图成为 LivelyKernel 下一代版本, 但完成度还不高, 目前它们各有优势:</p>
 <ul>
 <li>
-<p>lively kernel</p>
+<p>LivelyKernel</p>
 <ul>
-<li>稳定性更好</li>
-<li>更完整的环境</li>
-<li>debugger 模式</li>
+<li>更更富的学习资料</li>
+<li>更加稳定和完整</li>
+<li>更强大的开发环境
+<ul>
+<li>函数级别的调试模式</li>
+<li>可视化的 connect</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
-<p>lively next</p>
+<p>lively.next</p>
 <ul>
+<li>更加模块化和简洁</li>
 <li>component</li>
-<li>freezer
+<li>生产模式(freezer)</li>
+</ul>
+</li>
+</ul>
+<p>下文分别记录它们的优势.</p>
+<h1 id="livelykernel">LivelyKernel</h1>
+<h2 id="更更富的案例和学习资料">更更富的案例和学习资料</h2>
+<p>这点对于开发团队本身至关重要。没有可供学习的资料和例子, 从源代码开始学习, 是低效且令人生畏的。</p>
+<p>仅这一点理由, 就足以让任何打算使用 lively 的团队, 得从 LivelyKernel 开始。从 LivelyKernel 习得的知识和技能, 基本都可用于 lively 生态的所有系统。</p>
+<p>因此即使 LivelyKernel 比较旧, 它也值得你将入门的时间投入在这里。</p>
+<p>有大量的真实案例在 LivelyKernel 上边构建, 在 PartsBin 里查看:</p>
+<p><img src="/post/img/lively-note-01.png" alt=""></p>
+<p>我特别这些基于 LivelyKernel 的项目:</p>
 <ul>
-<li>本地测试
-<ul>
-<li><code>lively.next/local_projects/wwj718--lively-demo</code></li>
-<li>npm run build</li>
-<li>cd build</li>
-<li><code>python -m http.server</code></li>
+<li><a href="https://smalltalkzoo.thechm.org/users/robertkrahn/Lively-101.html">Lively-101</a>: 最佳的入门教程</li>
+<li><a href="https://smalltalkzoo.thechm.org/users/robertkrahn/draggable-code.html">Draggable Code</a>: 图形化与代码的结合</li>
+<li><a href="https://lively-web.org/users/robertkrahn/2015-09-15_recording-debugger-demo.html">recording debugger demo</a></li>
+<li><a href="https://smalltalkzoo.thechm.org/">Smalltalk Zoo</a>: 构建一个真实的主页</li>
+<li><a href="https://smalltalkzoo.thechm.org/HOPL-Squeak.html?etoys">lively for SqueakJS</a>: 开发操作系统级别复杂性的项目</li>
+<li><a href="https://smalltalkzoo.thechm.org/blank.html">blank world</a>: 从这里开始新的工作(类似于 Smalltalk 干净的 image)</li>
 </ul>
-</li>
-<li>发布到 github</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="lively-kernel">lively kernel</h1>
+<h2 id="更加稳定和完整">更加稳定和完整</h2>
+<p>LivelyKernel 提供了稳定和完整的开发环境, 用于支持开发过程。</p>
+<p><a href="https://github.com/wwj718/dynatalk-js">dynatalk-js</a> 是在 LivelyKernel 中开发的, 开发过程非常愉快, 很少遇到系统问题。 而在 lively.next 中做一些简单的项目也可能出现许多系统性的 bug, 可能是因为 lively.next 还在频繁开发中。</p>
+<p>随手可及的小工具(<code>log</code>等)让开发过程非常愉快。这些小工具的设计, 贴心周到。随着你对编程环境的熟悉, 有时会想&quot;要是有这样一种工具就好了&quot;, 在系统里一搜寻, 它果然就在哪里! 只有当系统的开发者喜欢&quot;吃自己的狗粮&quot;时, 才会出现这种贴心的设计。</p>
+<h2 id="更强大的开发环境">更强大的开发环境</h2>
+<p>Dan Ingalls 编程的手艺是无与伦比的(Alan Kay 认为世界上再也找不到第二个)。LivelyKernel 注入了 Dan Ingalls 大量的心血。 LivelyKernel 是一个 JavaScript 开发环境, 却提供相当丰富的 Smalltalk 编程体验。</p>
+<p>lively.next 试图继承这些特质，目前完成度似乎还不够高。</p>
+<h3 id="函数级别的调试模式">函数级别的调试模式</h3>
+<p>LivelyKernel 最强大能力之一是调试模式, 你可以在代码运行期间, &ldquo;录制&quot;整个执行过程, 然后进行&quot;时间旅行风格的调试&rdquo;. 由于是录制的过程, 所以副作用不会重复触发。</p>
+<p>你可以在 Workspace 或 browser 中进入这个模式:</p>
+<p><img src="/post/img/lively-note-02.png" alt=""></p>
+<p><img src="/post/img/lively-note-03.png" alt=""></p>
+<p>这使得浏览器本身的 debugger 变得不重要。 当然, 如果你确实需要, 可以在代码中实时加入 <code>debugger</code>(完全是动态的!), 然后打开浏览器的 devtool 使用它。</p>
+<p>目前 lively.next 似乎还不支持这样的调试体验。 lively.next 中的调试, 似乎只能借助浏览器的 <code>debugger</code></p>
+<h3 id="可视化的-connect">可视化的 connect</h3>
 <blockquote>
-<p>debug 模式是唯一模式
-翻译</p>
+<p>connect : 以声明方式定义源对象(source object)与目标对象(target object)之间的数据流连接。</p>
 </blockquote>
-<p>所以部署是个问题</p>
-<p>截图展示它的能力，下次运行函数，debug</p>
-<h1 id="lively-next">lively next</h1>
-<!--
-思考: 
-
-- lively 编写的模块是否可以用在 lively next
-- squeakjs 是否有可能与lively 竞争
-
-我整体上感觉 lively kernel 更完整(也更多历史包袱因此更负责）。 lively kernel 功能更少，更干净，从这里修改为自己想要的东西可能更容易
-
-我们在一段时间里，或许可以考虑让 lively kernel 与 lively next  共存，lively kernel  如果开发效率更高的话，用于内部开发，尽量让开发的代码模块化，这样可以很容易把代码模块迁移到 lively next。  lively next 则用于发布应用 
--->
+<p>LivelyKernel 允许使用 halo 直观地在两个 Morph 对象之间建立连接.</p>
+<p><img src="/post/img/lively-note-04.png" alt=""></p>
+<p>lively.next 目前还需要使用代码。</p>
+<h1 id="livelynext">lively.next</h1>
+<h2 id="更加模块化和简洁">更加模块化和简洁</h2>
+<p>lively.next 将 LivelyKernel 的许多功能划分为模块, 给人感觉更加干净整洁。</p>
+<p>代码层面, 更加现代化(ES6)。</p>
+<p>给人感觉调整 lively.next 似乎会更容易(暂未验证)。</p>
+<h2 id="component">component</h2>
+<p>component 功能在 <a href="https://youtu.be/XaMYx-OCaYo?t=2777">这段演讲中</a> 有提及, 看起来非常强大, 它可以做到:</p>
+<ul>
+<li>在浏览代码时实时实例化 component</li>
+<li>手动摆弄实例, 会实时地映射到代码上</li>
+</ul>
+<p><img src="/post/img/lively-note-05.png" alt=""></p>
+<p>以下是我做的一个小实验:</p>
+<p><video width=100% src="/post/img/lively-next-component.mp4" controls="controls"></video></p>
+<p>lively.next 系统内有许多系统级别的 component, 都支持这样的操作!</p>
+<h2 id="生产模式freezer">生产模式(freezer)</h2>
+<p>Smalltalkers 普遍认可<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/debug-mode-is-only-mode/">调试模式是唯一模式</a>, 他们将编程环境视为一种学习环境, 将计算视为一种理解世界或特定问题的动态媒介, 软件只是心智成熟的副产品, 甚至不是最重要的副产品。</p>
+<p>Smalltalk 分发的软件通常会<strong>携带完整的开发环境</strong>, 因为它假设用户可能会持续成长, 以至于需要理解和修改它，以服务于自己的新需求。尽管这样的事情不一定会发生, 但当用户需要时， 它应该是&quot;可能的&quot;。</p>
+<blockquote>
+<p>让简单的事情保持简单, 让困难的事情成为可能 &ndash; Alan Kay</p>
+</blockquote>
+<p>这使得他们尤其关注可理解性, 他们喜欢触摸运行中的软件/对象，在其生命周期中去探索和理解它(这比主流开源社区要求的更多, 公开代码只是理解的最低限度)。</p>
+<p>带来的一个问题是, 不容易以主流风格分发软件。</p>
+<p>目前的软件行业喜欢分发&quot;软件产品&quot;, 通常有以下要求:</p>
+<ul>
+<li>它应该尽可能优化(为了用户体验)</li>
+<li>它要尽可能安全(用户体验是目标之一, 文末有更多讨论)</li>
+</ul>
+<p>而 Smalltalk 社区的软件(它们甚至不喜欢产品这个概念)总是携带完整的开发/调试环境, 这通常被认为 &ldquo;商业不友好&rdquo;。 这个问题很复杂, 我们留待文末讨论。</p>
+<p>在此, 我想简单地抛出这样的看法, Smalltalk 社区的软件在优化层面做得确实不够好, 它应该提供&quot;生产模式&quot;的选项, 这有利于做到 Alan Kay 下述名言的后两项:</p>
+<blockquote>
+<p>Make it work, make it correct, make it fast, make it cheap &ndash; Alan Kay</p>
+</blockquote>
+<p>lively.next 提供了 &ldquo;生产模式&rdquo;, 称为 freezer. <a href="https://www.youtube.com/watch?v=XaMYx-OCaYo&amp;t=2406s">这部分演讲</a>提到了这点。</p>
+<p>freezer 使得我们能够发布更接近主流 Web APP 体验的应用。</p>
+<h3 id="如何以生产模式发布-livelynext-应用">如何以&quot;生产模式&quot;发布 lively.next 应用</h3>
+<p>以下是两个使用 &ldquo;生产模式&rdquo; 发布到 Github 的应用:</p>
+<ul>
+<li><a href="https://github.com/LivelyKernel/froscon-2023">LivelyKernel/froscon-2023</a>
+<ul>
+<li><a href="https://livelykernel.github.io/froscon-2023/">在线地址(Github Pages)</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/wwj718/lively-demo">wwj718/lively-demo</a>: 我的第一个 &ldquo;hello world&rdquo; demo
+<ul>
+<li><a href="https://wwj718.github.io/lively-demo/">在线地址(Github Pages)</a></li>
+</ul>
+</li>
+</ul>
+<p>可以看到, 打开这些 demo, 要比从 lively 开发环境打开快得多。</p>
+<p>lively.next 提供了很好的脚手架来支持&quot;生产模式&quot;。 当你在 lively.next 中常见了一个项目, 可以将其配置为提交到 Github 之后自动发布为 &ldquo;生产模式&rdquo;。</p>
+<p><img src="/post/img/lively-note-06.png" alt=""></p>
+<p>当然你也可以在 build 为&quot;生产模式&quot;:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 进入项目目录如: lively.next/local_projects/lively-demo`</span>
+</span></span><span class="line"><span class="cl">npm run build
+</span></span><span class="line"><span class="cl"><span class="c1"># 预览</span>
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> build
+</span></span><span class="line"><span class="cl">python -m http.server
+</span></span><span class="line"><span class="cl"><span class="c1"># 打开: http://127.0.0.1:8000</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="如何支持用户探索-和-改编remix">如何支持用户探索 和 改编(remix)</h3>
+<p>我们无需在 &ldquo;生产模式&rdquo; 与 &ldquo;调试模式&rdquo; 之中二选一, 可以将它们视为应用的不同视图(view)。</p>
+<p>有很多方式可以做到这点. 一种建议的做法是, 在 &ldquo;生产模式&rdquo; 的页头或页脚附上代码仓库地址, 当用户有兴趣探索或改编时, 点击链接，将使用 lively 开发环境打开仓库地址。</p>
+<h1 id="结论">结论</h1>
+<p>我目前整体上感觉是:</p>
+<ul>
+<li>LivelyKernel 完整性更高, 似乎更适合作为开发和探索新想法的环境。它有许多历史包袱, 因此更复杂。</li>
+<li>lively.next 功能更少, 更干净, 将其修改为自己想要的东西似乎更容易。</li>
+</ul>
+<p>在一段时间里, 或许可以考虑让两者共存, 如果 LivelyKernel 确实开发效率更高的话，适合用于内部开发。尽量让开发的代码模块化，方便在 lively.next 更加成熟后, 把开发成果迁移过去。 <a href="https://github.com/codefrau/SqueakJS">SqueakJS</a> 和 <a href="https://github.com/wwj718/dynatalk-js/tree/main/examples">dynatalk-js example</a> 都展示了 LivelyKernel 开发的项目, 可以用于其他 JavaScript 环境。</p>
+<p>lively.next 似乎适合用于发布应用, 目前的 freezer(以生产模式发布应用) 功能似乎已经很不错了。</p>
+<h1 id="思考">思考</h1>
+<h2 id="squeakjs-vs-lively">SqueakJS vs lively</h2>
+<p><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeakjs-note/">SqueakJS</a> 存在 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/squeakjs-note/#jsbridge">JSBridge</a> , 如果将其发展得足够易用(如 <a href="https://caffeine.js.org/">Caffeine</a>), 是否会与 lively 形成竞争?</p>
+<h2 id="数字赋权">数字赋权</h2>
+<p>前边在讨论&quot;生产模式&quot;时提到:</p>
+<blockquote>
+<p>目前的软件行业喜欢分发&quot;软件产品&quot;, 通常有以下要求:</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>它应该尽可能优化(为了用户体验)</li>
+<li>它要尽可能安全(用户体验是目标之一, 文末有更多讨论)</li>
+</ul>
+</blockquote>
+<p>&ldquo;尽可能安全&quot;通常包含几层含义:</p>
+<ol>
+<li>&ldquo;为了保障用户的安全&rdquo; 是通常的说辞, 它的确包含事实的碎片
+<ul>
+<li>避免用户弄坏软件, 软件最好是冻结的, 它应该像水泥浇筑的一样坚固, 用户不应该可以随意掀开引擎盖。用户只应该在产品经理设计好的区域活动。
+<ul>
+<li>移动端软件将这个想法发挥到极致。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>对供应商安全
+<ul>
+<li>这通常不会拿到台面上说, 供应商不想自己的工作被用户或对手获取, 所以希望把软件作为一个黑盒发布, 这也是 SaaS 受到供应商青睐的主要原因之一。</li>
+</ul>
+</li>
+</ol>
+<p>当用户寻求软件只是希望解决手头问题时，用户不会要求更多的权利, 这通常是供应商教育他们的, 比如乔布斯告诉用户&quot;任何问题都有一个适合它的 APP&rdquo;。他们只是等待供应商的供给，并期待他们是仁慈而全能的上帝.</p>
+<p>今天的计算机文化与社会民主化之前的政治文化是很相似的, 拥有权力的人喜欢谈论 &ldquo;安全&rdquo; 和 &ldquo;保护&rdquo; (然后坐享&quot;保护者&quot;拥有的特权, 柏拉图在《理想国》中把这想法发挥得动听极了), &ldquo;保护者&rdquo; 不喜欢谈论与授权相关的概念(如约翰·洛克主张的 <a href="https://en.wikipedia.org/wiki/Agency_(sociology)">agency</a>), 那样的话, 他们就要交出诱人的权力了。</p>
+<p>怎么看待主流软件行业对 &ldquo;软件产品&rdquo; 的这些看法呢?</p>
+<p>我的看法是它们并不都是荒谬的, 里边有&quot;真理的碎片&quot;, 有些目标是可取的, 诸如追求更好的用户体验, 诸如提供优化和有安全护栏的产品。</p>
+<p>但这不是剥夺用户权力的理由。</p>
+<p>Alan Kay 给出过一个很好的思考方式:</p>
+<blockquote>
+<p>让简单的事情保持简单, 让困难的事情成为可能</p>
+</blockquote>
+<p>安全护栏是有意义的, 自由有时候是一种负担, 设计者不应该将所有的自由度暴露在用户面前, 强迫用户接受自由度， 也会强迫他们接受复杂性。</p>
+<p>通过好的设计, 可以在自由度与复杂性之间取得协调, 日渐强大的 AI 也有助于实现这个目标。</p>
+<p>但是护栏并不应该是锁死的, 当用户主动要求跨越护栏时， 应该允许这样做，因为这是用户的<strong>权力</strong>。</p>
+<p>Smalltalk 社区始终珍视用户的这种权力, 我将 Smalltalk 看作计算机领域与主流不同的另一种政治诉求, 它主要关于用户权力与计算的民主化。</p>
 <h1 id="参考">参考</h1>
 <ul>
 <li><a href="https://github.com/LivelyKernel/froscon-2023">LivelyKernel/froscon-2023</a></li>
@@ -209,6 +380,7 @@
 <li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/a-world-of-active-objects-for-work-and-play/">[译]用于工作和玩耍的鲜活对象世界&ndash;Lively 的第一个十年</a></li>
 <li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/lively-next-memos/">lively next 备忘</a></li>
 <li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/dan-ingalls-and-lively/">Dan Ingalls 与 Lively</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/debug-mode-is-only-mode/">[译] 调试模式是唯一模式</a></li>
 </ul>
 </li>
 </ul>
@@ -236,7 +408,11 @@
           <a href="/tags/lively/">lively</a>
           </div>
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/debug-mode-is-only-mode/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">[译] 调试模式是唯一模式</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
         <a class="next" href="/post/%E7%BC%96%E7%A8%8B/simulate-eclipse/">
             <span class="next-text nav-default">使用 Squeak(Etoys) 模拟日食月食</span>
             <span class="next-text nav-mobile">下一篇</span>
