@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>[译] 调试模式是唯一模式 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="原文 Debug Mode is the Only Mode 译文 (由 ChatGPT 翻译, 种瓜校对和微调) 最近 Bret Victor 的一些演讲和博客文章引起了相当多的讨论。如果你还没有看过这些内容，我强烈推荐你去看一" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/debug-mode-is-only-mode/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="[译] 调试模式是唯一模式" />
+<meta property="og:description" content="原文 Debug Mode is the Only Mode 译文 (由 ChatGPT 翻译, 种瓜校对和微调) 最近 Bret Victor 的一些演讲和博客文章引起了相当多的讨论。如果你还没有看过这些内容，我强烈推荐你去看一" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/debug-mode-is-only-mode/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-04-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-04-12T00:00:00+00:00" />
+
+<meta itemprop="name" content="[译] 调试模式是唯一模式">
+<meta itemprop="description" content="原文 Debug Mode is the Only Mode 译文 (由 ChatGPT 翻译, 种瓜校对和微调) 最近 Bret Victor 的一些演讲和博客文章引起了相当多的讨论。如果你还没有看过这些内容，我强烈推荐你去看一"><meta itemprop="datePublished" content="2024-04-12T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-04-12T00:00:00+00:00" />
+<meta itemprop="wordCount" content="2085">
+<meta itemprop="keywords" content="programming,smalltalk," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="[译] 调试模式是唯一模式"/>
+<meta name="twitter:description" content="原文 Debug Mode is the Only Mode 译文 (由 ChatGPT 翻译, 种瓜校对和微调) 最近 Bret Victor 的一些演讲和博客文章引起了相当多的讨论。如果你还没有看过这些内容，我强烈推荐你去看一"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">[译] 调试模式是唯一模式</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-04-12 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#原文">原文</a></li>
+        <li><a href="#译文">译文</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="原文">原文</h2>
+<p><a href="https://gbracha.blogspot.com/2012/11/debug-mode-is-only-mode.html">Debug Mode is the Only Mode</a></p>
+<h2 id="译文">译文</h2>
+<p>(由 ChatGPT 翻译, 种瓜校对和微调)</p>
+<p>最近 Bret Victor 的一些<a href="https://www.youtube.com/watch?v=PUv66718DII">演讲</a>和<a href="http://worrydream.com/LearnableProgramming/">博客文章</a>引起了相当多的讨论。如果你还没有看过这些内容，我强烈推荐你去看一看，但要保持一定的怀疑态度。</p>
+<p>这些作品提出了与编程和编程环境相关的重要观点，并且做得非常出色。</p>
+<p>它们还涉及到教育和其他我在这里不会讨论的事项。</p>
+<p>因其精美的呈现，这些作品引起了比其他人更多的关注，这是一件好事。然而，在优雅的外表下，令人不安的问题出现了。</p>
+<p>Victor 展示的演示因令人失望的认识而被破坏，我们并没有看到一个可以完成这些奇迹的通用编程环境。相反，它们是手工制作的示例，展示了这样一个工具可能的行为。这是关于这种环境的愿景, 而不是环境本身。仅有一些暗示涉及如何为一般情况创建这样的工具。</p>
+<p>我们应该将这些想法作为灵感，并看看在实践中可能做些什么。我期待这是 Victor 打算通过这些演示实现的目标之一。</p>
+<p>Victor 意识到他的许多例子依赖于图形反馈，并不一定适用于其他类型的编程。然而，他对轨迹和时间线的使用是我们可以普遍使用的。在一个片段中，循环期间的状态会被编程环境自动展开 - 将时间转化为空间，这样我们就可以可视化计算的进展（或者缺乏进展）。</p>
+<p>在现有的调试器中，可以使用尾递归形式的循环来处理这个特定的例子, 没有尾递归消除！然后可以使用调试器中的堆栈普通视图, 虽然基于轨迹的视图在屏幕空间方面可能具有优势，因为我们不需要重复代码。这些优势将适用于任何递归例程，因此添加递归调用的展开视图是人们可能想要研究的一个小的具体步骤。</p>
+<p>显示所有相关数据的跟踪本质上与时间旅行调试相关，因为我们想要的不仅仅是选择性打印输出 - 我们希望能够在追踪的任何时间点探索数据，跟随对象图，无论它将我们带向何处。</p>
+<p>我坚信时间旅行调试器比一大堆语言特性更有价值（特别是因为大多数这样的一大堆特性实际上都没有价值）。</p>
+<p>当我第一次看到 Bil Lewis 的<a href="http://www.lambdacs.com/debugger/">全知调试器(Omniscient Debugger)</a>时，我试图说服我的管理层在这个领域投资。不用说，我一无所获。</p>
+<p>总体观点是，<strong>程序是某个真实或想象的世界的动态和发展模型。我们应该能够对该模型进行实验</strong>，并观察和与其任何部分进行交互。一个人应该能够查询模型的整个历史，搜索过去发生的事件和情况，然后回到它们发生的时间，或者在事件发生之前的时间，这样我们就可以预先阻止事件并随意改变历史。</p>
+<p>由回溯调试器(back-in-time debugger)实现的查询技术也可以帮助实现图形演示。您可以询问我的代码中间接调用了哪个写入给定像素的调用。这是一个复杂的查询，但基本上类似于询问变量何时获得了给定的值。</p>
+<p>这个领域有一些工作，有些是学术性的，有些是商业性的（请原谅我没有在这里引用所有的工作），但它并没有真正起飞。这是一个挑战，因为程序会生成大量的临时数据，记录所有这些数据是昂贵的。这给“大数据”一词赋予了新的解释。数据在我们所做的许多事情中都是核心，关于程序的数据也不应该例外。</p>
+<!-- squeak 里目前有很好的 -->
+<p>一个相关的主题是将数据与代码相关联，通过将实际值与程序变量关联起来。一个简单例子解释将值与变量关联的优势，我们可以在没有静态类型信息的情况下进行名称补全。我们可以在 workspaces、REPL、对象检查器和（再一次！）调试器等工具中获得变量与其值之间的连接，而在普通编辑器甚至类浏览器中查看程序文本时无法做到。</p>
+<p>在 Newspeak 和Smalltalk中，开发人员有时会使用调试器从初始草图构建程序，因为在调试过程中他们可以看到实时数据，并根据这些具体信息设计他们的代码。你将 Victor 在的演讲中找到这种情况的一个例子，大约在 <code>19:10</code> 左右，其中一个错误是基于运行时值在编写代码时被检测到的。</p>
+<p><a href="http://www.smalltalk.org.br/movies/Self_big.mov">Self 环境</a>展示了一种将实时数据与代码集成的方法。基于原型的语言在这方面有一些优势，因为代码与实际对象相关联, 但一旦涉及到带有参数的方法，我们就会回到处理抽象的情况，就像以类或函数为基础的语言一样。</p>
+<p>你甚至可能会说，JavaScript 作为一种基于原型的语言，是 Self 的现代化体现。请不要酒后驾车；最好的情况是这是一个关于“小心你所期望的”的<a href="http://gaslight.mtroyal.ca/mnkyspaw.htm">警世故事</a>。</p>
+<p>我们需要一个流程，使得从最初的草图到稳定的生产代码更加容易。我们希望从 workspaces 开始，并能够顺利地迁移到类和单元测试。这与本文中所表达的哲学是一致的。</p>
+<p>我觉得各种工具，比如编辑器、类浏览器、对象检查器、workspaces、REPL 和调试器，都创造了不同的操作模式。如果能够更紧密地集成这些工具，那就太好了。在编辑代码时，与你的作用域关联的实例将始终存在，并且具有逐步评估代码的能力（就像在 REPL 中一样），以及像时间旅行调试器一样向前向后步进。这样的工具的确切形式仍然是一个未解决的 UI 设计挑战。</p>
+<p>无论您是进行面向对象编程、函数式编程（顺便说一句，这是一个错误的二分法），还是逻辑编程，上述所有内容都适用。</p>
+<p>题外话：我知道在惰性函数式语言中调试的概念是有问题的。但是对于实时数据和交互式反馈的需求仍然存在。一旦发生交互式计算，时间就已经完全确定了。因此，向前迈进可能毫无意义，但回到过去却不是。</p>
+<p>我们不应该把程序仅仅看作是代码。PL 社区对代码的静态视图，脱离其动态范围，已经被过分强调。这种情况需要改变，而且它将会改变。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-04-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/programming/">programming</a>
+          <a href="/tags/smalltalk/">smalltalk</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/simulate-eclipse/">
+            <span class="next-text nav-default">使用 Squeak(Etoys) 模拟日食月食</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="/post/img/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="/post/img/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="/post/img/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
