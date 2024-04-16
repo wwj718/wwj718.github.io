@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 使用笔记: JavaScript function">
 <meta itemprop="description" content="让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出"><meta itemprop="datePublished" content="2023-02-28T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2023-02-28T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2131">
+<meta itemprop="wordCount" content="2294">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 使用笔记: JavaScript function"/>
 <meta name="twitter:description" content="让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出"/>
@@ -162,6 +162,8 @@
         </li>
         <li><a href="#faq">FAQ</a>
           <ul>
+            <li><a href="#javascript-function-可访问哪些上下文context">JavaScript function 可访问哪些上下文(Context)?</a></li>
+            <li><a href="#如何往-javascript-function-传递回调函数">如何往 JavaScript function 传递回调函数</a></li>
             <li><a href="#如何引入第三方库">如何引入第三方库?</a></li>
             <li><a href="#获取移动端传感器信息">获取移动端传感器信息</a></li>
           </ul>
@@ -246,7 +248,7 @@
 <p><img src="/post/img/Snap-JavaScript-function-07.png" alt=""></p>
 <p>这是重构为 primitive 之后:</p>
 <p><img src="/post/img/Snap-JavaScript-function-08.png" alt=""></p>
-<p>之后所有与 <strong>CodeLab Adapter</strong> 相关的插件都是这样开发的，整个插件的开发过程中，我不需要刷新一次页面! 这样意味着我的思绪总是连贯的，没有被<strong>编写、刷新</strong>模式打算。它带来了数量级的开发效率提升。</p>
+<p>之后所有与 <strong>CodeLab Adapter</strong> 相关的插件都是这样开发的，整个插件的开发过程中，我不需要刷新一次页面! 这样意味着我的思绪总是连贯的，没有被<strong>编写、刷新</strong>模式打断。它带来了数量级的开发效率提升。</p>
 <h3 id="使用-javascript-function-探索-javascript-api">使用 <strong>JavaScript function</strong> 探索 JavaScript API</h3>
 <p>有了前边愉快而高效的插件开发经验, 我打算走得再远一点, 将 Snap! 看作一个挖掘浏览器潜力的实验环境。 所以 Snap! 现在成了我编写实验性 JavaScript 代码的环境。</p>
 <p>这方面很好的一个案例是将 Web Serial 封装成通用积木。</p>
@@ -264,6 +266,45 @@
 <li>不同的匿名函数(<strong>JavaScript function</strong>)可以共同操作一个全局对象，这使得许多事情变得简单，诸如在不同的函数之间交换信息。</li>
 </ul>
 <h2 id="faq">FAQ</h2>
+<h3 id="javascript-function-可访问哪些上下文context">JavaScript function 可访问哪些上下文(Context)?</h3>
+<p>JavaScript function 可访问的上下文与 <a href="https://github.com/jmoenig/Snap/blob/master/docs/Extensions.md">primitive</a> 相似(它们在许多方面都非常相似)。 大多数全局对象都可以访问:</p>
+<ul>
+<li>List</li>
+<li>Process</li>
+<li>&hellip;</li>
+</ul>
+<p>JavaScript function 的 this 是 SpriteMorph.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// SpriteMorph
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过 this, 可以进一步访问其他对象</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// 参考 JavaScript function  的 help
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span> <span class="nx">stage</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">parentThatIsA</span><span class="p">(</span><span class="nx">StageMorph</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// this.gotoXY 
+</span></span></span><span class="line"><span class="cl"><span class="c1">// this.direction()
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="如何往-javascript-function-传递回调函数">如何往 JavaScript function 传递回调函数</h3>
+<p>有些时候, 我们需要往 JavaScript function 传递回调函数, 如:</p>
+<ul>
+<li>websockets onmessage</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Accelerometer#example">Accelerometer reading</a></li>
+</ul>
+<p><img src="/post/img/Snap-JavaScript-function-09.png" alt=""></p>
+<p>将以上图片拖拽到 Snap! 中, 它会变成对应脚本。</p>
 <h3 id="如何引入第三方库">如何引入第三方库?</h3>
 <p>让我们试着引入 jquery 库:</p>
 <p><code>https://code.jquery.com/jquery-3.7.1.min.js</code></p>
