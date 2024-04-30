@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>调试 Snap! 程序 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 调试功能是 Snap! 相比于 Scratch 的最大改进之一。 这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/debug-snap-promgram/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="调试 Snap! 程序" />
+<meta property="og:description" content="前言 调试功能是 Snap! 相比于 Scratch 的最大改进之一。 这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/debug-snap-promgram/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-04-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-04-29T00:00:00+00:00" />
+
+<meta itemprop="name" content="调试 Snap! 程序">
+<meta itemprop="description" content="前言 调试功能是 Snap! 相比于 Scratch 的最大改进之一。 这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的"><meta itemprop="datePublished" content="2024-04-29T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-04-29T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1014">
+<meta itemprop="keywords" content="programming,Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="调试 Snap! 程序"/>
+<meta name="twitter:description" content="前言 调试功能是 Snap! 相比于 Scratch 的最大改进之一。 这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">调试 Snap! 程序</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-04-29 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#调试这个程序">调试这个程序</a>
+      <ul>
+        <li><a href="#条件断电">条件断电</a></li>
+        <li><a href="#其他调试技巧">其他调试技巧</a>
+          <ul>
+            <li><a href="#say">say</a></li>
+            <li><a href="#debuglog">debugLog</a></li>
+            <li><a href="#consolelog">console.log</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#启动和停止按钮如何影响程序生命周期">启动和停止按钮如何影响程序生命周期?</a></li>
+        <li><a href="#如何调试自定义积木">如何调试自定义积木?</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>调试功能是 Snap! 相比于 Scratch 的最大改进之一。</p>
+<p>这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的。</p>
+<p>在调试中理解程序，而不是通过阅读代码来理解程序, 是 Smalltalk 的传统之一。在 Smalltalk 中, 所有的开发工作都可以在调试器中完成, 人们喜欢以调试为中心的编程(这导致了测试驱动, 测试驱动(TDD)范式最初来自 Smalltalk)。作为 Smalltalk 的后代, Snap! 具有出色的调试能力。</p>
+<blockquote>
+<p>我们在施乐帕克实验室的工作并不是研究计算, 而是研究人 &ndash; Alan Kay</p>
+</blockquote>
+<p>Smalltalk 鼓励用户与程序交互, 并在交互中建立理解。这是人类习惯的认知方式。 我们生活在物理世界中, 物理世界的交互性极好(一致性也极其出色), 我们在出生之后，不是通过阅读这个世界的说明书(物理学)来理解世界的，而是在交互/反馈循环中理解这个世界。</p>
+<blockquote>
+<p>宇宙最不可理解之处, 在于它是可理解的 &ndash;爱因斯坦</p>
+</blockquote>
+<h1 id="调试这个程序">调试这个程序</h1>
+<p>我们可以通过调试<a href="/post/img/debug-snap.xml">这个简单程序</a>来弄清楚 Snap! 的所有调试功能:</p>
+<p><img src="/post/img/debug-snap-promgram-01.png" alt=""></p>
+<p>这个程序非常简单, 它将循环 1000 次, 每次会把当前循环计数说出来, 程序在运行过程中会修改一个全局变量。 通过暂停和恢复程序, 并观察变量的变化, 对比你的预期和实际结果, 在这个过程弄清 Snap! 的调试功能。</p>
+<p>红色箭头所指的之处是 Snap! 中与调试有关的东西:</p>
+<ol>
+<li>单步运行(step)开关, 点击开启时, 程序将单步运行, 当前运行的积木将被高亮。 用户可以通过 slider 控制单步运行的速度, 拉到最左边, 每次运行一个积木</li>
+<li>暂停和恢复程序</li>
+<li>程序将停止在这个积木位置。类似其他编程语言的断点</li>
+</ol>
+<!--周末分享会视频-->
+<h2 id="条件断电">条件断电</h2>
+<p>如果你只希望在 <code>i==50</code> 时暂停程序, 可以这样做:</p>
+<p><img src="/post/img/debug-snap-promgram-06.png" alt=""></p>
+<h2 id="其他调试技巧">其他调试技巧</h2>
+<p>前边的调试都属于<a href="https://zh.wikipedia.org/wiki/%E6%96%AD%E7%82%B9">断点调试</a>。</p>
+<p>打印 log 是另一种常见的调试方法, 介绍 3 种打印 log 的方式</p>
+<ul>
+<li>say</li>
+<li>debuglog</li>
+<li>console.log</li>
+</ul>
+<h3 id="say">say</h3>
+<p><img src="/post/img/debug-snap-promgram-03.png" alt=""></p>
+<p>使用 say 积木是最简单的 log 方式, 它每次只能显示一条信息，适用于简单调试。</p>
+<h3 id="debuglog">debugLog</h3>
+<p>debugLog 的想法是使用一个变量(列表)来存下所有记录的信息.</p>
+<p>我在 <a href="https://github.com/wwj718/dynatalk-snap">dynatalk 库</a> 中使用了这个技巧:</p>
+<p><img src="/post/img/debug-snap-promgram-04.png" alt=""></p>
+<p>@邵悦 在 MicroBlocks 也有类似做法 <a href="https://www.bilibili.com/video/BV18p421D7jb/?vd_source=bb63e646390f9ab36309f6557d342587">如何使用MicroBlocks中的 log4M 日志库，实时监控程序进程</a></p>
+<p>或许我们应该在 Snap! 中将 debugLog 剥离为一个库, 就像@邵悦在 MicroBlocks 里做的。</p>
+<h3 id="consolelog">console.log</h3>
+<p>使用浏览器的 <code>console.log</code> 来记录 log:</p>
+<p>我们可以通过 JavaSccript function 来使用 <code>console.log</code>。 你需要先开启 JavaScript 扩展。</p>
+<p><img src="/post/img/debug-snap-promgram-05.png" alt=""></p>
+<h1 id="faq">FAQ</h1>
+<h2 id="启动和停止按钮如何影响程序生命周期">启动和停止按钮如何影响程序生命周期?</h2>
+<ul>
+<li>启动: 只影响绿旗触发的程序</li>
+<li>停止: 停止所有正在运行的程序</li>
+</ul>
+<p>值得注意的是, 它们都不会重置程序的状态! 诸如本文例子中的 test 变量状态不会被重置(动手做个实验试试)</p>
+<h2 id="如何调试自定义积木">如何调试自定义积木?</h2>
+<p>开启调试模式的情况下, 展开自定积木, 会逐个高亮运行内部积木:</p>
+<p><img src="/post/img/debug-snap-promgram-02.png" alt=""></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%96%AD%E7%82%B9">断点</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-04-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/programming/">programming</a>
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E8%AF%BB%E4%B9%A6/merits-and-demerits-of-political-systems-in-dynastic-china/">
+            <span class="next-text nav-default">中国历代政治得失</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="/post/img/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="/post/img/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="/post/img/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
