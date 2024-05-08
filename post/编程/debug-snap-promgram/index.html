@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="前言 调试功能是 Snap! 相比于 Scratch 的最大改进之一。 这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="前言 调试比编写程序要困难两倍。如果你在编程时使出了所有聪明，那你要如何调试它呢？ &amp;ndash; 《The Elements of Programming Style》 调试功能是 Snap! 相比于 Scratch 的最大改进之" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="调试 Snap! 程序" />
-<meta property="og:description" content="前言 调试功能是 Snap! 相比于 Scratch 的最大改进之一。 这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的" />
+<meta property="og:description" content="前言 调试比编写程序要困难两倍。如果你在编程时使出了所有聪明，那你要如何调试它呢？ &ndash; 《The Elements of Programming Style》 调试功能是 Snap! 相比于 Scratch 的最大改进之" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/debug-snap-promgram/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2024-04-29T00:00:00+00:00" />
 <meta property="article:modified_time" content="2024-04-29T00:00:00+00:00" />
 
 <meta itemprop="name" content="调试 Snap! 程序">
-<meta itemprop="description" content="前言 调试功能是 Snap! 相比于 Scratch 的最大改进之一。 这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的"><meta itemprop="datePublished" content="2024-04-29T00:00:00+00:00" />
+<meta itemprop="description" content="前言 调试比编写程序要困难两倍。如果你在编程时使出了所有聪明，那你要如何调试它呢？ &ndash; 《The Elements of Programming Style》 调试功能是 Snap! 相比于 Scratch 的最大改进之"><meta itemprop="datePublished" content="2024-04-29T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-04-29T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1014">
+<meta itemprop="wordCount" content="1075">
 <meta itemprop="keywords" content="programming,Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="调试 Snap! 程序"/>
-<meta name="twitter:description" content="前言 调试功能是 Snap! 相比于 Scratch 的最大改进之一。 这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的"/>
+<meta name="twitter:description" content="前言 调试比编写程序要困难两倍。如果你在编程时使出了所有聪明，那你要如何调试它呢？ &ndash; 《The Elements of Programming Style》 调试功能是 Snap! 相比于 Scratch 的最大改进之"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -161,6 +161,9 @@
 </div>
     <div class="post-content">
       <h1 id="前言">前言</h1>
+<blockquote>
+<p>调试比编写程序要困难两倍。如果你在编程时使出了所有聪明，那你要如何调试它呢？ &ndash; 《The Elements of Programming Style》</p>
+</blockquote>
 <p>调试功能是 Snap! 相比于 Scratch 的最大改进之一。</p>
 <p>这个改进极大增强了可理解性, 尤其是复杂程序的可理解性。没有调试功能, 构建和理解大型程序都是令人生畏的。</p>
 <p>在调试中理解程序，而不是通过阅读代码来理解程序, 是 Smalltalk 的传统之一。在 Smalltalk 中, 所有的开发工作都可以在调试器中完成, 人们喜欢以调试为中心的编程(这导致了测试驱动, 测试驱动(TDD)范式最初来自 Smalltalk)。作为 Smalltalk 的后代, Snap! 具有出色的调试能力。</p>
@@ -172,6 +175,7 @@
 <p>宇宙最不可理解之处, 在于它是可理解的 &ndash;爱因斯坦</p>
 </blockquote>
 <h1 id="调试这个程序">调试这个程序</h1>
+<p>(可参考 <a href="https://www.bilibili.com/video/BV17D421P7KC/?vd_source=bb63e646390f9ab36309f6557d342587">视频教程</a>)</p>
 <p>我们可以通过调试<a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/debug-snap.xml">这个简单程序</a>来弄清楚 Snap! 的所有调试功能:</p>
 <p><img src="/post/img/debug-snap-promgram-01.png" alt=""></p>
 <p>这个程序非常简单, 它将循环 1000 次, 每次会把当前循环计数说出来, 程序在运行过程中会修改一个全局变量。 通过暂停和恢复程序, 并观察变量的变化, 对比你的预期和实际结果, 在这个过程弄清 Snap! 的调试功能。</p>
@@ -272,8 +276,7 @@
 </div>
 
 <div class="copyright">
-  <span><a target="_blank" href="/post/%E7%BC%96%E7%A8%8B/dynaverse-studio/">加入我们</a></span>
-  <span class="division">|</span>
+  
   <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
   <span class="division">|</span>
   <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
