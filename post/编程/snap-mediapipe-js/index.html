@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在 Snap! 中使用 mediapipe 库 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="介绍 mediapipe MediaPipe 提供了一套库和工具，供用户在应用程序中快速应用人工智能 (AI) 和机器学习 (ML) 技术 &amp;ndash; Github/MediaPipe 这些灵活的工具构建在 TensorFlow Lite 之上 &amp;ndash; mediapipe homepage Mediapipe 提供了一系列预训练的" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-mediapipe-js/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="在 Snap! 中使用 mediapipe 库" />
+<meta property="og:description" content="介绍 mediapipe MediaPipe 提供了一套库和工具，供用户在应用程序中快速应用人工智能 (AI) 和机器学习 (ML) 技术 &ndash; Github/MediaPipe 这些灵活的工具构建在 TensorFlow Lite 之上 &ndash; mediapipe homepage Mediapipe 提供了一系列预训练的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-mediapipe-js/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-05-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-05-09T00:00:00+00:00" />
+
+<meta itemprop="name" content="在 Snap! 中使用 mediapipe 库">
+<meta itemprop="description" content="介绍 mediapipe MediaPipe 提供了一套库和工具，供用户在应用程序中快速应用人工智能 (AI) 和机器学习 (ML) 技术 &ndash; Github/MediaPipe 这些灵活的工具构建在 TensorFlow Lite 之上 &ndash; mediapipe homepage Mediapipe 提供了一系列预训练的"><meta itemprop="datePublished" content="2024-05-09T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-05-09T00:00:00+00:00" />
+<meta itemprop="wordCount" content="673">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在 Snap! 中使用 mediapipe 库"/>
+<meta name="twitter:description" content="介绍 mediapipe MediaPipe 提供了一套库和工具，供用户在应用程序中快速应用人工智能 (AI) 和机器学习 (ML) 技术 &ndash; Github/MediaPipe 这些灵活的工具构建在 TensorFlow Lite 之上 &ndash; mediapipe homepage Mediapipe 提供了一系列预训练的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">在 Snap! 中使用 mediapipe 库</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-05-09 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#介绍-mediapipe">介绍 mediapipe</a></li>
+    <li><a href="#动态导入">动态导入</a>
+      <ul>
+        <li><a href="#绘制手部关键点">绘制手部关键点</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="介绍-mediapipe">介绍 mediapipe</h1>
+<blockquote>
+<p>MediaPipe 提供了一套库和工具，供用户在应用程序中快速应用人工智能 (AI) 和机器学习 (ML) 技术 &ndash; <a href="https://github.com/google/mediapipe">Github/MediaPipe</a></p>
+</blockquote>
+<blockquote>
+<p>这些灵活的工具构建在 TensorFlow Lite 之上 &ndash; <a href="https://developers.google.com/mediapipe">mediapipe homepage</a></p>
+</blockquote>
+<blockquote>
+<p>Mediapipe 提供了一系列预训练的模型和处理工具，用于处理各种媒体数据。这些模型可以用于各种用途，如姿态检测、手部追踪、人脸检测、手势识别等 &ndash; <a href="https://chat.openai.com/share/43d25ec5-4d3b-4fde-8e61-1121f9a9d711">ChatGPT</a></p>
+</blockquote>
+<h1 id="动态导入">动态导入</h1>
+<!--
+介绍更多技巧
+primitive 与 function call 区别， 使用等待直到
+-->
+<p>mediapipe 提供了 <a href="https://developers.google.com/mediapipe/api/solutions/js/tasks-vision">JavaScript API</a>, 因此我们似乎可以通过 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">JavaScript function</a> 将 mediapipe 引入到 Snap! 中。</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import">import()</a> 可以将 ECMAScript 模块异步动态加载到非模块环境中, 它正是我们需要的。</p>
+<p>让我们试着引入 mediapipe 库。<a href="https://mediapipe-studio.webapps.google.com/home">mediapipe</a> 有丰富的功能, 我们打算制作的一个例子是 <a href="https://mediapipe-studio.webapps.google.com/studio/demo/gesture_recognizer">Gesture Recognition(点击体验)</a>。参考 <a href="https://developers.google.com/mediapipe/solutions/vision/gesture_recognizer/web_js">mediapipe 的文档</a> 和<a href="https://codepen.io/mediapipe-preview/details/zYamdVd">使用案例</a>, 引入 mediapipe 相关库。</p>
+<p><video width=100% src="/post/img/Gesture-Recognition.mp4" controls="controls"></video></p>
+<p>项目代码:</p>
+<ul>
+<li><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/mediapipe-Gesture-Recognition-cn.xml&amp;enableJS">mediapipe 托管在国内</a></li>
+<li><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/mediapipe-Gesture-Recognition.xml&amp;enableJS">mediapipe 官方库</a></li>
+</ul>
+<p>以下介绍关键的部分.</p>
+<p>首先是使用 <code>import()</code> 动态引入模块:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// 避免重复导入
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">FilesetResolver</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// https://developers.google.com/mediapipe/api/solutions/js/tasks-vision
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">url</span> <span class="o">=</span> <span class="s2">&#34;https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13&#34;</span> <span class="c1">// @latest
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">import</span><span class="p">(</span><span class="nx">url</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">vision</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// 将模块中的函数, 放到全局变量里
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nb">window</span><span class="p">.</span><span class="nx">FilesetResolver</span> <span class="o">=</span> <span class="nx">vision</span><span class="p">.</span><span class="nx">FilesetResolver</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">window</span><span class="p">.</span><span class="nx">GestureRecognizer</span> <span class="o">=</span> <span class="nx">vision</span><span class="p">.</span><span class="nx">GestureRecognizer</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">window</span><span class="p">.</span><span class="nx">DrawingUtils</span> <span class="o">=</span> <span class="nx">vision</span><span class="p">.</span><span class="nx">DrawingUtils</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>导入后就可以使用模块中的函数:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// https://codepen.io/mediapipe-preview/details/zYamdVd
+</span></span></span><span class="line"><span class="cl"><span class="c1">// url 中的资源可托管到国内
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">gestureRecognizer</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">createGestureRecognizer</span> <span class="o">=</span> <span class="kr">async</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">vision</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">FilesetResolver</span><span class="p">.</span><span class="nx">forVisionTasks</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">gestureRecognizer</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">GestureRecognizer</span><span class="p">.</span><span class="nx">createFromOptions</span><span class="p">(</span><span class="nx">vision</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">baseOptions</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// &#34;https://scratch3-files.just4fun.site/gesture_recognizer.task&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="nx">modelAssetPath</span><span class="o">:</span> <span class="s2">&#34;https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">      <span class="nx">delegate</span><span class="o">:</span> <span class="s2">&#34;GPU&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">numHands</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="p">});</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">window</span><span class="p">.</span><span class="nx">gestureRecognizer</span> <span class="o">=</span> <span class="nx">gestureRecognizer</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// demosSection.classList.remove(&#34;invisible&#34;);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="nx">createGestureRecognizer</span><span class="p">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>之后就可以使用 <code>gestureRecognizer</code> 识别图片.</p>
+<h2 id="绘制手部关键点">绘制手部关键点</h2>
+<p><a href="https://codepen.io/mediapipe-preview/details/zYamdVd">官方体验项目</a>中不仅给出了手势结果, 还将绘制出了关键点:</p>
+<p><img src="/post/img/snap-mediapipe-js-01.png" alt=""></p>
+<p><a href="https://developers.google.com/mediapipe/solutions/vision/hand_landmarker">手部关键点</a>的含义如下:</p>
+<p><img src="/post/img/hand-landmarks.png" alt=""></p>
+<p>Snap! 的画笔功能非常易用和强大, 我们可以通过它来实现:</p>
+<p><img src="/post/img/snap-mediapipe-js-02.png" alt=""></p>
+<p>关键的想法是将 <code>results.landmarks</code> 包含的坐标信息使用画笔绘制出来。在这个过程中需要将 mediapipe 的坐标系转化(左上角为原点, y 轴正方向向下)为 Snap! 坐标系。</p>
+<p>具体参考 <a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/mediapipe-Gesture-Recognition-draw-cn.xml&amp;enableJS">项目代码</a></p>
+<!--
+
+支持 2 只手
+
+拿到所有点的信息，在 Snap 中用画笔绘制
+
+for (const landmarks of results.landmarks) {
+  逐个绘制
+}
+-->
+<!--
+const vision = await FilesetResolver.forVisionTasks(
+  // path/to/wasm/root
+  "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+);
+const gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+  baseOptions: {
+    modelAssetPath: "https://storage.googleapis.com/mediapipe-tasks/gesture_recognizer/gesture_recognizer.task"
+  },
+  numHands: 2
+});
+-->
+<!--
+neolay:
+
+function loadScripts(scriptUrls) {
+    scriptUrls.forEach(url => {
+        const script = document.createElement('script');
+        script.src = url;
+        document.head.appendChild(script);
+    });
+}
+
+const scriptUrls = [
+    "https://cdn.jsdelivr.net/npm/@tensorflow-models/hand-pose-detection",
+    "https://cdn.jsdelivr.net/npm/@mediapipe/hands",
+];
+
+loadScripts(scriptUrls);
+
+const model = handPoseDetection.SupportedModels.MediaPipeHands;
+const detectorConfig = {
+    runtime: "mediapipe",
+    solutionPath: "https://cdn.aimaker.space/npm/@mediapipe/hands@0.4.1675469240",
+    modelType: "full"
+};
+let detector;
+handPoseDetection.createDetector(model, detectorConfig).then(d => {
+    console.log("detector",detector);
+    detector = d;
+});
+detector
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">Snap! 使用笔记: JavaScript function</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import">MDN import()</a></li>
+<li><a href="https://mediapipe-studio.webapps.google.com/home">mediapipe studio</a></li>
+<li><a href="https://mediapipe-studio.webapps.google.com/studio/demo/gesture_recognizer">Gesture Recognition</a>
+<ul>
+<li><a href="https://developers.google.com/mediapipe/solutions/vision/gesture_recognizer/web_js">web_js 文档</a></li>
+<li><a href="https://codepen.io/mediapipe-preview/details/zYamdVd">案例</a></li>
+</ul>
+</li>
+<li><a href="https://developers.google.com/mediapipe/api/solutions/js/tasks-vision">mediapipe JavaScript API</a></li>
+<li><a href="https://developers.google.com/mediapipe/solutions/vision/hand_landmarker">Hand landmarks detection guide</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-05-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/debug-snap-promgram/">
+            <span class="next-text nav-default">调试 Snap! 程序</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="/post/img/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="/post/img/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="/post/img/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>

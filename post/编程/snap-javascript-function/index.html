@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 使用笔记: JavaScript function">
 <meta itemprop="description" content="让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出"><meta itemprop="datePublished" content="2023-02-28T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2023-02-28T00:00:00+00:00" />
-<meta itemprop="wordCount" content="3025">
+<meta itemprop="wordCount" content="2686">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 使用笔记: JavaScript function"/>
 <meta name="twitter:description" content="让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出"/>
@@ -379,138 +379,7 @@ SnapExtensions.primitives.get('var_set(name, val)').apply(
 <p>在这个例子中, 我们首先加载了 jQuery 库,  然后使用 jQuery 内置的函数缓慢地隐藏当前的 Snap! 工作区, 之后快速显示它。</p>
 <p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/load-js-lib.xml">项目代码</a>, 建议从这里开始, 将其修改为你要的样子</p>
 <h4 id="引入模块">引入模块</h4>
-<!--
-const vision = await FilesetResolver.forVisionTasks(
-  // path/to/wasm/root
-  "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
-);
-const gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
-  baseOptions: {
-    modelAssetPath: "https://storage.googleapis.com/mediapipe-tasks/gesture_recognizer/gesture_recognizer.task"
-  },
-  numHands: 2
-});
--->
-<!--
-neolay:
-
-function loadScripts(scriptUrls) {
-    scriptUrls.forEach(url => {
-        const script = document.createElement('script');
-        script.src = url;
-        document.head.appendChild(script);
-    });
-}
-
-const scriptUrls = [
-    "https://cdn.jsdelivr.net/npm/@tensorflow-models/hand-pose-detection",
-    "https://cdn.jsdelivr.net/npm/@mediapipe/hands",
-];
-
-loadScripts(scriptUrls);
-
-const model = handPoseDetection.SupportedModels.MediaPipeHands;
-const detectorConfig = {
-    runtime: "mediapipe",
-    solutionPath: "https://cdn.aimaker.space/npm/@mediapipe/hands@0.4.1675469240",
-    modelType: "full"
-};
-let detector;
-handPoseDetection.createDetector(model, detectorConfig).then(d => {
-    console.log("detector",detector);
-    detector = d;
-});
-detector
--->
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import">import()</a> 可以将 ECMAScript 模块异步动态加载到非模块环境中, 它正是我们需要的。</p>
-<p>让我们试着引入 mediapipe 库。<a href="https://mediapipe-studio.webapps.google.com/home">mediapipe</a> 有丰富的功能, 我们打算制作的一个例子是 <a href="https://mediapipe-studio.webapps.google.com/studio/demo/gesture_recognizer">Gesture Recognition(点击体验)</a>。参考 <a href="https://developers.google.com/mediapipe/solutions/vision/gesture_recognizer/web_js">mediapipe 的文档</a> 和<a href="https://codepen.io/mediapipe-preview/details/zYamdVd">使用案例</a>, 引入 mediapipe 相关库。</p>
-<p><video width=100% src="/post/img/Gesture-Recognition.mp4" controls="controls"></video></p>
-<p>项目代码:</p>
-<ul>
-<li><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/mediapipe-Gesture-Recognition-cn.xml&amp;enableJS">mediapipe 托管在国内</a></li>
-<li><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/mediapipe-Gesture-Recognition.xml&amp;enableJS">mediapipe 官方库</a></li>
-</ul>
-<p>以下介绍关键的部分.</p>
-<p>首先是使用 <code>import()</code> 动态引入模块:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">FilesetResolver</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// https://developers.google.com/mediapipe/api/solutions/js/tasks-vision
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">url</span> <span class="o">=</span> <span class="s2">&#34;https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13&#34;</span> <span class="c1">// @latest
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">import</span><span class="p">(</span><span class="nx">url</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">vision</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="nb">window</span><span class="p">.</span><span class="nx">FilesetResolver</span> <span class="o">=</span> <span class="nx">vision</span><span class="p">.</span><span class="nx">FilesetResolver</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="nb">window</span><span class="p">.</span><span class="nx">GestureRecognizer</span> <span class="o">=</span> <span class="nx">vision</span><span class="p">.</span><span class="nx">GestureRecognizer</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="nb">window</span><span class="p">.</span><span class="nx">DrawingUtils</span> <span class="o">=</span> <span class="nx">vision</span><span class="p">.</span><span class="nx">DrawingUtils</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">});</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>引入后就可以使用模块中的函数:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// https://codepen.io/mediapipe-preview/details/zYamdVd
-</span></span></span><span class="line"><span class="cl"><span class="c1">// url 中的资源可托管到国内
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">gestureRecognizer</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">createGestureRecognizer</span> <span class="o">=</span> <span class="kr">async</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">vision</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">FilesetResolver</span><span class="p">.</span><span class="nx">forVisionTasks</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">    <span class="s2">&#34;https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm&#34;</span>
-</span></span><span class="line"><span class="cl">  <span class="p">);</span>
-</span></span><span class="line"><span class="cl">  <span class="nx">gestureRecognizer</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">GestureRecognizer</span><span class="p">.</span><span class="nx">createFromOptions</span><span class="p">(</span><span class="nx">vision</span><span class="p">,</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">baseOptions</span><span class="o">:</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">      <span class="c1">// &#34;https://scratch3-files.just4fun.site/gesture_recognizer.task&#34;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="nx">modelAssetPath</span><span class="o">:</span> <span class="s2">&#34;https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task&#34;</span><span class="p">,</span> 
-</span></span><span class="line"><span class="cl">      <span class="nx">delegate</span><span class="o">:</span> <span class="s2">&#34;GPU&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">},</span>
-</span></span><span class="line"><span class="cl">    <span class="nx">numHands</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">  <span class="p">});</span>
-</span></span><span class="line"><span class="cl">  <span class="nb">window</span><span class="p">.</span><span class="nx">gestureRecognizer</span> <span class="o">=</span> <span class="nx">gestureRecognizer</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">  <span class="c1">// demosSection.classList.remove(&#34;invisible&#34;);
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
-</span></span><span class="line"><span class="cl"><span class="nx">createGestureRecognizer</span><span class="p">();</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>之后就可以使用 <code>gestureRecognizer</code> 识别图片.</p>
-<p>进一步, 你也可以绘制出关键位置的坐标:</p>
-<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/mediapipe-Gesture-Recognition-draw-cn.xml&amp;enableJS">绘制坐标</a></p>
-<!--
-拿到所有点的信息，在 Snap 中用画笔绘制
-
-for (const landmarks of results.landmarks) {
-  逐个绘制
-}
--->
+<p>参考 <a href="/post/%E7%BC%96%E7%A8%8B/snap-mediapipe-js">在 Snap! 中使用 mediapipe 库</a></p>
 <h3 id="获取移动端传感器信息">获取移动端传感器信息</h3>
 <p>参考 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Sensor_APIs">Sensor APIs</a></p>
 <p>目前似乎只有<strong>安卓设备</strong>支持， iOS 设备一如既往的封闭。</p>
