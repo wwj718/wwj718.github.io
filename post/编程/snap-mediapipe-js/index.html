@@ -49,7 +49,7 @@
 <meta itemprop="name" content="在 Snap! 中使用 mediapipe 库">
 <meta itemprop="description" content="介绍 mediapipe MediaPipe 提供了一套库和工具，供用户在应用程序中快速应用人工智能 (AI) 和机器学习 (ML) 技术 &ndash; Github/MediaPipe 这些灵活的工具构建在 TensorFlow Lite 之上 &ndash; mediapipe homepage Mediapipe 提供了一系列预训练的"><meta itemprop="datePublished" content="2024-05-09T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-05-09T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1160">
+<meta itemprop="wordCount" content="1296">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="在 Snap! 中使用 mediapipe 库"/>
 <meta name="twitter:description" content="介绍 mediapipe MediaPipe 提供了一套库和工具，供用户在应用程序中快速应用人工智能 (AI) 和机器学习 (ML) 技术 &ndash; Github/MediaPipe 这些灵活的工具构建在 TensorFlow Lite 之上 &ndash; mediapipe homepage Mediapipe 提供了一系列预训练的"/>
@@ -169,7 +169,7 @@
 <p>我们希望引入 mediapipe 的所有工作都完全在积木环境中完成!</p>
 <p>这样有如下好处:</p>
 <ol>
-<li>无需更新平台, 不需要开发者介入, 所有工作都在用户环境中完成(只是一个 Snap! 项目), 这意味着普通用户可以继续延伸这些能力。</li>
+<li>无需更新平台, 不需要开发者介入, 所有工作都在用户环境中完成(只是一个 Snap! 项目), 这意味着普通用户可以继续延伸这些能力。 (这是终端用户编程的一个例子)</li>
 <li>可以充分利用 Snap! 的活性(liveness), 享受高效而愉快的开发体验。</li>
 </ol>
 <h2 id="动态导入">动态导入</h2>
@@ -269,12 +269,21 @@ primitive 与 function call 区别， 使用等待直到
 <p><img src="/post/img/hand-landmarks.png" alt=""></p>
 <p>从官方示例的代码中可以看出, 绘制工作使用了 <a href="https://developers.google.com/mediapipe/api/solutions/js/tasks-vision.drawingutils">drawingUtils</a>, 相比于去阅读 drawingUtils 代码(通常非常乏味), 我更愿意基于原始数据在 Snap! 中绘图, 这样我们可以充分享受 Snap! 活性(liveness)的好处。Snap! 的画笔功能非常易用和强大, 我们可以通过它来画图:</p>
 <p><img src="/post/img/snap-mediapipe-js-02.png" alt=""></p>
-<p>关键的想法是将 <code>results.landmarks</code> 包含的坐标信息使用画笔绘制出来。在这个过程中需要将 mediapipe 的坐标系转化(左上角为原点, y 轴正方向向下)为 Snap! 坐标系。</p>
+<p>具体而言, 将 <code>results.landmarks</code> 包含的坐标信息使用画笔绘制出来。在这个过程中需要将 mediapipe 的坐标系转化(左上角为原点, y 轴正方向向下)为 Snap! 坐标系。</p>
+<p>在绘制的过程中, Snap! 作为交互式个人计算愿景的产物， 其包含的特性(liveness 等)特别有助于探索数据, 用户可以交互式地观察数据:</p>
+<p><img src="/post/img/snap-mediapipe-js-04.png" alt=""></p>
+<p>对当前的某一桢感兴趣时, 可以暂停程序, 将系统定格在这个瞬间:</p>
+<p><img src="/post/img/snap-mediapipe-js-05.png" alt=""></p>
+<p>仿佛冻结了时间, 探索完当前时间截面的数据, 继续恢复程序。</p>
 <p>具体参考 <a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/mediapipe-Gesture-Recognition-draw-cn.xml&amp;enableJS">项目代码</a></p>
 <p>在示例项目中, 我们只绘制了 1 只手的数据, <code>results.landmarks</code> 有可能会包含 2 只手的数据。</p>
 <h1 id="与-microblocks-的互操作">与 MicroBlocks 的互操作</h1>
 <p>mediapipe 可以充分利用边缘设备(手机/平板)的计算能力, 来提供 AI 功能。 边缘设备的算力越来越强, <a href="https://www.apple.com/newsroom/2024/05/apple-introduces-m4-chip/">苹果最近推出的 M4 芯片</a> 拥有苹果有史以来最快的神经引擎，每秒能够执行高达 38 万亿次操作。 苹果的人工智能战略似乎是在边缘设备上进行推理/学习。</p>
 <p>随着 WebGPU 的标准化,  Snap! 将可以充分利用到这些性能, 由于 Snap! 也可以基于蓝牙无线连接 MicroBlocks 设备, 以此我们似乎可以将手机用作单片机的算力, 使用 mediapipe 这样的框架, 使用手机制作一个无线 AI 摄像头(就像<a href="https://www.dfrobot.com.cn/huskylens.html">二哈识图(HuskyLens)摄像头</a>)似乎是很容易的。</p>
+<!--
+我的 iphone 似乎无法调用摄像头
+硬件好像打开了, 但 Snap! 认为没开
+-->
 <!--
 
 支持 2 只手
