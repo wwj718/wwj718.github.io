@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap! 中的 Python 解释器 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 Snap! 的 JavaScript function 简单, 灵活且强大, 我想模仿它构建 Python function。 我们之前在这篇文章里, 基于 CodeLab Adapter 构建了一个 Python function, 但我一直更想要一个除了浏览器之外" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-interpreter/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Snap! 中的 Python 解释器" />
+<meta property="og:description" content="前言 Snap! 的 JavaScript function 简单, 灵活且强大, 我想模仿它构建 Python function。 我们之前在这篇文章里, 基于 CodeLab Adapter 构建了一个 Python function, 但我一直更想要一个除了浏览器之外" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-interpreter/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-05-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-05-11T00:00:00+00:00" />
+
+<meta itemprop="name" content="Snap! 中的 Python 解释器">
+<meta itemprop="description" content="前言 Snap! 的 JavaScript function 简单, 灵活且强大, 我想模仿它构建 Python function。 我们之前在这篇文章里, 基于 CodeLab Adapter 构建了一个 Python function, 但我一直更想要一个除了浏览器之外"><meta itemprop="datePublished" content="2024-05-11T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-05-11T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1362">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! 中的 Python 解释器"/>
+<meta name="twitter:description" content="前言 Snap! 的 JavaScript function 简单, 灵活且强大, 我想模仿它构建 Python function。 我们之前在这篇文章里, 基于 CodeLab Adapter 构建了一个 Python function, 但我一直更想要一个除了浏览器之外"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Snap! 中的 Python 解释器</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-05-11 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#使用场景">使用场景</a></li>
+      </ul>
+    </li>
+    <li><a href="#选择-python-解释器">选择 Python 解释器</a></li>
+    <li><a href="#将-pyodide-引入-snap">将 pyodide 引入 Snap!</a>
+      <ul>
+        <li><a href="#目标">目标</a></li>
+        <li><a href="#导入-pyodide">导入 pyodide</a></li>
+      </ul>
+    </li>
+    <li><a href="#demo">demo</a>
+      <ul>
+        <li><a href="#使用-requests-与网络交互">使用 requests 与网络交互</a></li>
+        <li><a href="#正则表达式">正则表达式</a></li>
+        <li><a href="#在-python-与-snap-之间传递列表">在 Python 与 Snap! 之间传递列表</a></li>
+        <li><a href="#numpy-demo">numpy demo</a></li>
+        <li><a href="#opencv-demo">OpenCV demo</a>
+          <ul>
+            <li><a href="#社区第三方库">社区第三方库</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#如何保存状态">如何保存状态</a></li>
+        <li><a href="#如何调用蓝牙-串口等浏览器-api">如何调用蓝牙, 串口等浏览器 API</a></li>
+      </ul>
+    </li>
+    <li><a href="#结论">结论</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>Snap! 的 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">JavaScript function</a> 简单, 灵活且强大, 我想模仿它构建 Python function。</p>
+<p>我们之前在<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-function/">这篇文章</a>里, 基于 <a href="https://adapter.codelab.club/">CodeLab Adapter</a> 构建了一个 Python function, 但我一直更想要一个除了浏览器之外没有任何依赖的 Python function。</p>
+<h2 id="使用场景">使用场景</h2>
+<p>有了 Python function,  我们就可以在 Snap! 中获得:</p>
+<ul>
+<li>Python 生态中海量的第三方库(opencv-python, numpy&hellip;)</li>
+<li>Python 社区已经实现的各种算法(如 <a href="https://github.com/TheAlgorithms/Python">TheAlgorithms</a>)</li>
+</ul>
+<p>我们既可以在 Snap! 环境中获得 Python 生态积累的丰富工具, 又可以借助 Snap!  <strong>提升</strong> Python 的活性(liveness)。</p>
+<h1 id="选择-python-解释器">选择 Python 解释器</h1>
+<p>有<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/browser-python/#%E9%98%B5%E8%90%A5-2-jupyterlitebrython">多个 Python 解释器</a>可运行在浏览器环境。 <a href="https://github.com/pyodide/pyodide">pyodide</a> 是其中最强大的一个, 它允许我们使用 <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">Python 生态大量的库</a>, 如: opencv-python, Pillow, pyparsing, requests(最新的版本有问题), retrying, scikit-image 以及大量的科学计算相关的库(scipy, sympy, numpy, pandas)</p>
+<p>实际上, pyodide 支持 <strong>任何纯 Python 实现的库(构建为 wheel)</strong>, 使用了 C/C++ 代码的库(如 numpy)编译为 WebAssembly 也能够在 pyodide 中使用。</p>
+<p>我们打算基于 pyodide 构建 Python function。</p>
+<h1 id="将-pyodide-引入-snap">将 pyodide 引入 Snap!</h1>
+<h2 id="目标">目标</h2>
+<p>与我们上篇文章<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-mediapipe-js/#%E5%B0%86-mediapipe-%E5%BC%95%E5%85%A5-snap">引入 mediapipe 库</a>一样, 我们希望实现以下 2 个目标:</p>
+<blockquote>
+<ol>
+<li>无需更新平台, 不需要开发者介入, 所有工作都在用户环境中完成(只是一个 Snap! 项目), 这意味着普通用户可以继续延伸这些能力。 (这是终端用户编程的一个例子)</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>可以充分利用 Snap! 的活性(liveness), 享受高效而愉快的开发体验。</li>
+</ol>
+</blockquote>
+<p>由于一切都只是一个 Snap! 项目, 你可以随意调整它, 甚至使用其他的 Python 解释器替代 pyodide。</p>
+<h2 id="导入-pyodide">导入 pyodide</h2>
+<p>与 mediapipe 不同, pyodide 不是以模块的形式发布, 而是采用了更传统的<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/#%E5%85%A8%E5%B1%80%E5%BC%95%E5%85%A5">全局引入</a>。 我们可以使用 <code>src_load(url)</code> 引入它。</p>
+<p><img src="/post/img/snap-python-interpreter-01.png" alt=""></p>
+<p>我们使用的 pyodide 版本为 <code>0.25.1</code>, 它所对应的 Python 版本为 <code>3.11</code></p>
+<!--
+https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js
+https://scratch3-files.just4fun.site/pyodide/v0.25.1/full/pyodide.js
+https://github.com/pyodide/pyodide/releases
+[Downloading and deploying Pyodide](https://pyodide.org/en/stable/usage/downloading-and-deploying.html)
+-->
+<p>我们没有采用<a href="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js">官方的 CDN</a>, 而是将 pyodide 部署到了国内的 CDN 上。</p>
+<!--
+观察devtool network面板, 加载的文件都在 https://cdn.jsdelivr.net/pyodide/v0.25.1/full/
+
+micropip 使用 pypi
+-->
+<h1 id="demo">demo</h1>
+<h2 id="使用-requests-与网络交互">使用 requests 与网络交互</h2>
+<p>Snap! 有一个积木用于与网络交互, 但使用起来不是很便利, <a href="">requests 的 API</a> 设计得非常简单易用:</p>
+<p><img src="/post/img/snap-python-interpreter-07.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-requests.xml&amp;enableJS">requests demo</a></p>
+<h2 id="正则表达式">正则表达式</h2>
+<p>Snap! 缺少正则表达式相关的支持, 我们可以使用 python 的正则表达式模块增强它</p>
+<p><img src="/post/img/snap-python-interpreter-03.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-re.xml&amp;enableJS">搜索电话号码 demo</a></p>
+<h2 id="在-python-与-snap-之间传递列表">在 Python 与 Snap! 之间传递列表</h2>
+<p><img src="/post/img/snap-python-interpreter-03.png" alt=""></p>
+<p>这个例子展示了如何在 Python 与 Snap! 之间传递列表(任意嵌套深度!)</p>
+<p>列表几乎可以承载一切的数据结构.Python 和 Snap! 的列表功能都极其强大(Snap! 由于是 lisp, 列表处理能力比 python 更强大)，现在这二者可以无缝互操作了。</p>
+<p>图像、音频等多媒体数据全都可以表示为列表/矩阵，所有这些数据都能够在两个系统中随意流动了</p>
+<p>一个典型的用例是, numpy 的所有能力都可以进入 Snap! 中, 反过来 Snap! 又可以为 numpy 提供 liveness 的增强</p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-pass-list.xml&amp;enableJS">传递列表 demo</a></p>
+<h2 id="numpy-demo">numpy demo</h2>
+<p><img src="/post/img/snap-python-interpreter-02.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-numpy.xml&amp;enableJS">numpy demo</a></p>
+<h2 id="opencv-demo">OpenCV demo</h2>
+<p><img src="/post/img/snap-python-interpreter-04.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-opencv.xml&amp;enableJS">OpenCV demo</a></p>
+<h3 id="社区第三方库">社区第三方库</h3>
+<p>前边说到:</p>
+<blockquote>
+<p>pyodide 支持 <strong>任何纯 Python 实现的库(构建为 wheel)</strong></p>
+</blockquote>
+<p>我们试着安装 <a href="https://github.com/gruns/furl">furl</a> 库, furl 用于方便地处理 url</p>
+<p>pyodide 将从 pypi 上安装这个库(你也可以从指定的 url 安装自定义库)。</p>
+<p><img src="/post/img/snap-python-interpreter-06.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-furl.xml&amp;enableJS">furl demo</a></p>
+<h1 id="faq">FAQ</h1>
+<!--
+
+预制模块
+
+```js
+let data = `
+def to_snap_list(py_list):
+    return js.List.new(to_js(mylist))
+
+def to_python_list(snap_list):
+    return snap_list.asArray().to_py()
+`;
+pyodide.FS.writeFile("snap.py", data, { encoding: "utf8" });
+pyodide.pyimport("snap");
+// python: import snap 
+```
+-->
+<h2 id="如何保存状态">如何保存状态</h2>
+<p>函数通常是无状态的, Python function 是一个函数。</p>
+<p>如果你期望在多个函数调用中, 操作同一个状态变量, 可以把它存放在 window 全局变量里:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">js</span>
+</span></span><span class="line"><span class="cl"><span class="n">js</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="s2">&#34;hello&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 可在 devtool 中访问: console.log(window.a)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当然你也可以把它持久化存储在 localstorage 或 indexeddb, 这样即使刷新浏览器, 也还能找到这些状态。</p>
+<h2 id="如何调用蓝牙-串口等浏览器-api">如何调用蓝牙, 串口等浏览器 API</h2>
+<p>目前 pyodide 还无法调用这个 API, 因为 pyodide 的 Python 解释器运行在 Worker 中,  收到与 Worker 相同的权限限制。</p>
+<p>但 基于 pyodide 的 <a href="https://github.com/pyscript/pyscript">pyscript</a> 解决这些问题, 未来或许会合并到 pyodide 中。</p>
+<h1 id="结论">结论</h1>
+<p>构建了与 JavaScript function 风格相同的 Python function 积木，一切都运行在浏览器中，没有任何外部依赖</p>
+<p>所有工作都在积木环境中完成，没有修改一行 Snap! 源代码</p>
+<p>最令人满意的是所有这些扩展性都掌握在普通用户自己的手里，无需开发人员的介入，也无需更新平台。一切都只是一个普通的 Snap! 项目</p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">Snap! 使用笔记: JavaScript function</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-function/">Snap! 使用笔记: Python function(CodeLab Adapter版)</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/browser-python/">浏览器中的 Python</a></li>
+<li><a href="https://pyodide.org/en/stable/">pyodide 文档</a>
+<ul>
+<li><a href="https://pyodide.org/en/stable/console.html">REPL</a></li>
+<li><a href="https://pyodide.org/en/stable/usage/faq.html">FAQ</a></li>
+</ul>
+</li>
+<li><a href="https://jupyterlite.rtfd.io/en/stable/try/lab">jupyterlite</a>: 用于探索 pyodide api</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-05-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/snap-mediapipe-js/">
+            <span class="next-text nav-default">在 Snap! 中使用 mediapipe 库</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="/post/img/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="/post/img/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="/post/img/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
