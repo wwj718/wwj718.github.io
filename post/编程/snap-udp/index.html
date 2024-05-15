@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="Scratch 可计算的颜色 https://en.scratch-wiki.info/wiki/Computer_Colors" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="logseq: Snap! 令人满意之处 目标 在 Snap! 中探索 tcp/udp, 持续成长 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome &amp;ndash;disable-web-security IsolatedWebApps 6965 ./Google\ Chrome.app/Contents/MacOS/Google\ Chrome &amp;ndash;enable-features=IsolatedWebApps,IsolatedWebAppDevMode &amp;ndash;install-isolated-web-app-from-url=https://direct-sockets-ntp.glitch.me\n logseq Snap! udp/tcp https://www.bilibili.com/video/BV125411q7vY/?vd_source=bb63e646390f9ab36309f6557d342587 /Users/wwj718/Documents/mylab/codelabclub/Snap-codelab-github udp-tcp 只能发送, 不能接受 UDP dynatalk artnet 协议, OSC 协议, 都可以使用 udp 从 nodejs 的代码里修改" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -26,7 +26,7 @@
 <meta name="generator" content="Hugo 0.96.0 with theme even" />
 
 
-<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/scratch%E5%A4%87%E5%BF%98/" />
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-udp/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="" />
-<meta property="og:description" content="Scratch 可计算的颜色 https://en.scratch-wiki.info/wiki/Computer_Colors" />
+<meta property="og:description" content="logseq: Snap! 令人满意之处 目标 在 Snap! 中探索 tcp/udp, 持续成长 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome &ndash;disable-web-security IsolatedWebApps 6965 ./Google\ Chrome.app/Contents/MacOS/Google\ Chrome &ndash;enable-features=IsolatedWebApps,IsolatedWebAppDevMode &ndash;install-isolated-web-app-from-url=https://direct-sockets-ntp.glitch.me\n logseq Snap! udp/tcp https://www.bilibili.com/video/BV125411q7vY/?vd_source=bb63e646390f9ab36309f6557d342587 /Users/wwj718/Documents/mylab/codelabclub/Snap-codelab-github udp-tcp 只能发送, 不能接受 UDP dynatalk artnet 协议, OSC 协议, 都可以使用 udp 从 nodejs 的代码里修改" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/scratch%E5%A4%87%E5%BF%98/" /><meta property="article:section" content="post" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-udp/" /><meta property="article:section" content="post" />
 
 
 
 <meta itemprop="name" content="">
-<meta itemprop="description" content="Scratch 可计算的颜色 https://en.scratch-wiki.info/wiki/Computer_Colors">
+<meta itemprop="description" content="logseq: Snap! 令人满意之处 目标 在 Snap! 中探索 tcp/udp, 持续成长 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome &ndash;disable-web-security IsolatedWebApps 6965 ./Google\ Chrome.app/Contents/MacOS/Google\ Chrome &ndash;enable-features=IsolatedWebApps,IsolatedWebAppDevMode &ndash;install-isolated-web-app-from-url=https://direct-sockets-ntp.glitch.me\n logseq Snap! udp/tcp https://www.bilibili.com/video/BV125411q7vY/?vd_source=bb63e646390f9ab36309f6557d342587 /Users/wwj718/Documents/mylab/codelabclub/Snap-codelab-github udp-tcp 只能发送, 不能接受 UDP dynatalk artnet 协议, OSC 协议, 都可以使用 udp 从 nodejs 的代码里修改">
 
-<meta itemprop="wordCount" content="8">
+<meta itemprop="wordCount" content="75">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="Scratch 可计算的颜色 https://en.scratch-wiki.info/wiki/Computer_Colors"/>
+<meta name="twitter:description" content="logseq: Snap! 令人满意之处 目标 在 Snap! 中探索 tcp/udp, 持续成长 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome &ndash;disable-web-security IsolatedWebApps 6965 ./Google\ Chrome.app/Contents/MacOS/Google\ Chrome &ndash;enable-features=IsolatedWebApps,IsolatedWebAppDevMode &ndash;install-isolated-web-app-from-url=https://direct-sockets-ntp.glitch.me\n logseq Snap! udp/tcp https://www.bilibili.com/video/BV125411q7vY/?vd_source=bb63e646390f9ab36309f6557d342587 /Users/wwj718/Documents/mylab/codelabclub/Snap-codelab-github udp-tcp 只能发送, 不能接受 UDP dynatalk artnet 协议, OSC 协议, 都可以使用 udp 从 nodejs 的代码里修改"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -133,16 +133,27 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#scratch">Scratch</a></li>
-    <li><a href="#可计算的颜色">可计算的颜色</a></li>
+    <li><a href="#目标">目标</a></li>
   </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
-      <h1 id="scratch">Scratch</h1>
-<h1 id="可计算的颜色">可计算的颜色</h1>
-<p><a href="https://en.scratch-wiki.info/wiki/Computer_Colors">https://en.scratch-wiki.info/wiki/Computer_Colors</a></p>
+      <p>logseq:
+Snap! 令人满意之处</p>
+<h1 id="目标">目标</h1>
+<p>在 Snap! 中探索 tcp/udp, 持续成长</p>
+<p>/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome &ndash;disable-web-security</p>
+<p>IsolatedWebApps</p>
+<p>6965  ./Google\ Chrome.app/Contents/MacOS/Google\ Chrome &ndash;enable-features=IsolatedWebApps,IsolatedWebAppDevMode &ndash;install-isolated-web-app-from-url=https://direct-sockets-ntp.glitch.me\n</p>
+<p>logseq
+Snap! udp/tcp</p>
+<p><a href="https://www.bilibili.com/video/BV125411q7vY/?vd_source=bb63e646390f9ab36309f6557d342587">https://www.bilibili.com/video/BV125411q7vY/?vd_source=bb63e646390f9ab36309f6557d342587</a></p>
+<p>/Users/wwj718/Documents/mylab/codelabclub/Snap-codelab-github  udp-tcp</p>
+<p>只能发送, 不能接受 UDP
+dynatalk</p>
+<p>artnet 协议, OSC 协议, 都可以使用 udp</p>
+<p>从 nodejs 的代码里修改，复用算法</p>
 
     </div>
 
@@ -164,12 +175,12 @@
 <footer class="post-footer">
       
       <nav class="post-nav">
-        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/scratch%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96%E7%A4%BE%E5%8C%BA-01/">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/snap-openai/">
             <i class="iconfont icon-left"></i>
             <span class="prev-text nav-default"></span>
             <span class="prev-text nav-mobile">上一篇</span>
           </a>
-        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/snap-onnx/">
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/snap%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0-dynaverse/">
             <span class="next-text nav-default"></span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
