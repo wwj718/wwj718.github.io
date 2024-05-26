@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的硬件模拟器">
 <meta itemprop="description" content="前言 @Bingo 昨晚提到: 想做一个虚拟仿真项目, 用 Python 测试了一下可行性, 感觉用 Snap! 实现是否更简单? @Bingo 目前使用的是 wokwi/avr8js, wokwi/avr8js 使用 wokwi-elements 来呈现硬件设备的外观(基于 SVG"><meta itemprop="datePublished" content="2024-05-25T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-05-25T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1238">
+<meta itemprop="wordCount" content="1070">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的硬件模拟器"/>
 <meta name="twitter:description" content="前言 @Bingo 昨晚提到: 想做一个虚拟仿真项目, 用 Python 测试了一下可行性, 感觉用 Snap! 实现是否更简单? @Bingo 目前使用的是 wokwi/avr8js, wokwi/avr8js 使用 wokwi-elements 来呈现硬件设备的外观(基于 SVG"/>
@@ -141,7 +141,6 @@
       <ul>
         <li><a href="#它有什么用">它有什么用?</a></li>
         <li><a href="#目前支持哪些功能">目前支持哪些功能?</a></li>
-        <li><a href="#已知错误有哪些">已知错误有哪些？</a></li>
         <li><a href="#可以使用-python-驱动-wokwi-elements-吗">可以使用 Python 驱动 wokwi-elements 吗?</a></li>
         <li><a href="#如何提高清晰度">如何提高清晰度?</a></li>
       </ul>
@@ -196,11 +195,17 @@
 由于 Snap! 支持嵌套精灵，直接在 Snap! 中构建 wokwi-elements 并不难， 但会花时间，使用 wokwi-elements 的好处是可以复用大量优质的 svg 图像, 而且它们是有状态的
 -->
 <p>wokwi-elements 的一些元素支持交互式的操作(点击，拉动等), 并产生相应输出, 这部分功能暂未接入, 如果你有需要可以思考如何模仿目前已有的代码接入它们。 我更喜欢直接在 Snap! 中构建交互功能。</p>
-<h2 id="已知错误有哪些">已知错误有哪些？</h2>
-<p><a href="https://elements.wokwi.com/?path=/story/servo--default&amp;globals=backgrounds.value:transparent;backgrounds.grid:false">Servo</a> 无法正常渲染, 原因是它的 SVG 有语法错误: <code>error on line 16 at column 49: Namespace prefix xlink for href on use is not defined</code></p>
-<p>一些比较宽容的 SVG 渲染器可以渲染它, 但 Chrome 浏览器(直接将 SVG 转为 base64 输入地址栏)和 Snap! 都拒绝容忍这个错误。</p>
-<p>xlink 的问题可以通过<a href="https://stackoverflow.com/questions/59138117/svg-namespace-prefix-xlink-for-href-on-image-is-not-defined">这个解决方案</a>修复, 这使得 Servo 变得可用, 但还会有其他问题，诸如渲染 arduino-uno svg 时会遇到: <code>Entity 'nbsp' not defined</code>。</p>
-<p>总体来说 wokwi-elements 使用的 SVG 数据似乎不大规范。</p>
+<!--
+## 已知错误有哪些？
+
+[Servo](https://elements.wokwi.com/?path=/story/servo--default&globals=backgrounds.value:transparent;backgrounds.grid:false) 无法正常渲染, 原因是它的 SVG 有语法错误: `error on line 16 at column 49: Namespace prefix xlink for href on use is not defined`
+
+一些比较宽容的 SVG 渲染器可以渲染它, 但 Chrome 浏览器(直接将 SVG 转为 base64 输入地址栏)和 Snap! 都拒绝容忍这个错误。
+
+xlink 的问题可以通过[这个解决方案](https://stackoverflow.com/questions/59138117/svg-namespace-prefix-xlink-for-href-on-image-is-not-defined)修复, 这使得 Servo 变得可用, 但还会有其他问题，诸如渲染 arduino-uno svg 时会遇到: `Entity 'nbsp' not defined`。 
+
+总体来说 wokwi-elements 使用的 SVG 数据似乎不大规范。
+-->
 <h2 id="可以使用-python-驱动-wokwi-elements-吗">可以使用 Python 驱动 wokwi-elements 吗?</h2>
 <p>由于我们往 Snap! 中接入了 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-interpreter/">Python 解释器</a>, 所以在 Snap! 中使用 Python 驱动 wokwi-elements 应该是可行的。</p>
 <p>但是直接使用 <a href="https://wokwi.com/">wokwi</a> 提供的 <a href="https://wokwi.com/projects/305568836183130690">Python 编程环境</a>会更容易和专业.</p>
