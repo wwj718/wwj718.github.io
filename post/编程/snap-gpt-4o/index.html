@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 GPT-4o">
 <meta itemprop="description" content="![/post/img/snap-GPT-4o-04.png] 前言 之前写过一篇文章讨论图形化编程中的 AI 助手 , 当时的实验展示了一些有趣的可能性, 但实用性并不高。 随着 GPT-4o 的发布, 尤其是多模态能力的提升(不久"><meta itemprop="datePublished" content="2024-05-28T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-05-28T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1357">
+<meta itemprop="wordCount" content="1358">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 GPT-4o"/>
 <meta name="twitter:description" content="![/post/img/snap-GPT-4o-04.png] 前言 之前写过一篇文章讨论图形化编程中的 AI 助手 , 当时的实验展示了一些有趣的可能性, 但实用性并不高。 随着 GPT-4o 的发布, 尤其是多模态能力的提升(不久"/>
@@ -157,7 +157,7 @@
       <p>![/post/img/snap-GPT-4o-04.png]</p>
 <h1 id="前言">前言</h1>
 <p>之前写过一篇文章讨论<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-ai-assistant/">图形化编程中的 AI 助手</a> , 当时的实验展示了一些有趣的可能性, 但实用性并不高。 随着 GPT-4o 的发布, 尤其是多模态能力的提升(不久将发布音频流, 视频流 API), 图形化编程中的 AI 助手(或导师) 变得真正具有吸引力: <strong>你可以通过对话与之交流, 它能够实时看到你在做的事情, 理解你的困境并给予建议或引导</strong></p>
-<p>Snap! (即将发布 Snap! v10)近期的巨大改进。尤其是 lisp code 功能的发布(积木与代码是同构的)，使得 Snap 成为可以与 AI 进行深度协作的环境。</p>
+<p>Snap! (即将发布 Snap! v10)近期的巨大改进。尤其是 lisp code 功能的发布(积木与代码是<strong>同构</strong>的)，使得 Snap 成为可以与 AI 进行深度协作的图形化环境。</p>
 <!--
 将 GPT-4o 深度集成到图形化环境中，它可以直接根据视觉所见(能够看见页面的所有内容, 与用户拥有完全相同的视野)，并直接给出可运行的解决方案
 
@@ -183,25 +183,25 @@ function call 上的工作，我们可以做到"一切都只是一个Snap!项目
 模仿 [Squeak-SemanticText](https://news.squeak.org/2024/05/03/squeak-semantictext/), AI 助手深入了解程序的帮助文档, 语义
 -->
 <h1 id="snap-中的-gpt-4o">Snap! 中的 GPT-4o</h1>
-<p>通过 Snap! 的<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">JavaScript function</a> 功能, 我们可以将 GPT-4o 的能力全部引入 Snap! , 无需对 Snap! 源代码做任何更新!</p>
+<p>通过 Snap! 的<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">JavaScript function</a> 功能, 我们可以将 GPT-4o 的能力全部引入 Snap! , 无需对 Snap! 源代码做任何修改!</p>
 <p>我将 GPT-4o 的功能包装为一个 Snap! 库</p>
 <p><img src="/post/img/snap-GPT-4o-01.png" alt=""></p>
-<p>其中最常用的积木是 <code>stream chat completions</code>, 这个积木可以流式地输出 GPT-4o 的回复, 与你在 ChatGPT app 的使用体验非常相似。</p>
+<p>其中最常用的积木是 <code>stream chat completions</code>, 这个积木<strong>流式</strong>地输出 GPT-4o 的回复, 与你在 ChatGPT app 的使用体验非常相似。</p>
 <img width=500 src="/post/img/snap-GPT-4o-02.png" />
-<p>我来介绍下这个积木的参数:</p>
+<p>这个积木的参数如下:</p>
 <ul>
 <li><code>text</code>: 提示词</li>
-<li><code>vision</code>: 将 Snap! 页面某个区域的图像发送给 GPT-4o。以下几个选择:
+<li><code>vision</code>: 将 Snap! 某个区域的图像发送给 GPT-4o。你可以选择让 GPT-4o 看到以下任一内容,
 <ul>
 <li>IDE: 当前整个页面</li>
 <li>Stage: 舞台区</li>
 <li>Camera: 摄像头</li>
-<li>Scripting Area: 脚本区(暂未实现)</li>
-<li>Palette: 最左边的积木区域(暂未实现)</li>
-<li>None: 不携带图像(只进行文本对话时使用)</li>
+<li><em>Scripting Area</em>: 脚本区(暂未实现)</li>
+<li><em>Palette</em>: 最左边的积木区域(暂未实现)</li>
+<li>None: 不携带图像(只进行文本对话)</li>
 </ul>
 </li>
-<li><code>callback</code>: 回调函数。每当 GPT-4o 返回了更多的信息, 将调用这个回掉函数, 通常而言它是 <code>say</code>, 或者<code>设置某个变量</code></li>
+<li><code>callback</code>: 回调函数。每当 GPT-4o 返回了信息时, 将调用这个回掉函数, 通常来时，它是 <code>say</code>, 或者 <code>设置某个变量</code></li>
 <li><code>temporary</code>: 这个开关用来控制是否是临时对话, 如果不是临时对话, 对话的内容都将存储在 <code>messages</code> 变量中。 你可以使用 <code>clear messages</code> 积木清理它。</li>
 </ul>
 <p>以下是一个<a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/Snap-GPT-4o-v1-demo1.xml&amp;enableJS">简单例子(点击运行)</a>:</p>
