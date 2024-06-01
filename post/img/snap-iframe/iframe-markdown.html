@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js" crossorigin="anonymous"></script>
+    <title>iframe markdown</title>
+</head>
+<body>
+<!--
+    markdown 解析
+        https://github.com/markedjs/marked 快速解析 markdown
+        https://github.com/markdown-it/markdown-it
+    markdown css
+        https://github.com/sindresorhus/github-markdown-css
+    
+    页面简洁 css
+        https://github.com/pure-css/pure
+        https://github.com/picocss/pico 文档更好读
+-->
+
+    <!--<h1>iframe markdown</h1>-->
+    <div id="messageContainer"></div>
+
+    <script>
+        const messageContainer = document.getElementById('messageContainer');
+        
+        // 接收来自主页面的消息并显示在页面上
+        window.addEventListener('message', (event) => {
+            if (event.origin !== window.location.origin) {
+                console.log(event.origin, window.location.origin); 
+                // return;
+            }
+            console.log('Received message from main page:', event.data);
+            // messageContainer.textContent = 'Received message: ' + event.data;
+            document.getElementById('messageContainer').innerHTML = marked.parse(event.data);
+        });
+    </script>
+</body>
+</html>

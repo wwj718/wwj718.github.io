@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iframe test</title>
+</head>
+<body>
+    <h1>iframe test</h1>
+    <div id="messageContainer"></div>
+
+    <script>
+        const messageContainer = document.getElementById('messageContainer');
+        
+        // 接收来自主页面的消息并显示在页面上
+        window.addEventListener('message', (event) => {
+            if (event.origin !== window.location.origin) {
+                console.log(event.origin, window.location.origin); 
+                // return;
+            }
+            console.log('Received message from main page:', event.data);
+            messageContainer.textContent = 'Received message: ' + event.data;
+        });
+    </script>
+</body>
+</html>
