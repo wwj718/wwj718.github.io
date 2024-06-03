@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 iframe 库">
 <meta itemprop="description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行"><meta itemprop="datePublished" content="2024-06-03T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-06-03T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1851">
+<meta itemprop="wordCount" content="1863">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 iframe 库"/>
 <meta name="twitter:description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行"/>
@@ -223,7 +223,22 @@
 <p>相比于使用 markdown 编写和显示文档, 这种既不灵活(无法显示视频)也不清晰。</p>
 <p>&ldquo;支持使用 markdown 显示文档&rdquo; 是我此次构建 iframe 的主要原因。</p>
 <p>iframe 可以以多种方式显示 markdown 文档, 诸如使用常规方式编写 markdown 文档, 将其托管在网络上, 然后使用 iframe 打开文档链接它.</p>
-<p>我采用了另一种更加 Snap! 的动态方案， 只托管一个<a href="https://wwj718.github.io/post/img/snap-iframe/iframe-markdown.html">通用的 markdown 渲染页面(默认空白)</a>, 如果你对它的工作原理感兴趣, 可以<strong>查看页面源代码</strong>, 只有 10 行不到的代码！ 其中最关键的部分是通过 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage</a> API , 可以在 iframe 页面中接收到 Snap! 页面发送过来的消息。</p>
+<p>我采用了另一种更加 Snap! 的动态方案， 只托管一个<a href="https://wwj718.github.io/post/img/snap-iframe/iframe-markdown.html">通用的 markdown 渲染页面(默认空白)</a>, 如果你对它的工作原理感兴趣, 可以<strong>查看页面源代码</strong>, 使事情生效的代码只有 4 行!</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl">        <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Received message from main page:&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;messageContainer&#39;</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">marked</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage</a> API , 可以在 iframe 页面中接收到 Snap! 页面发送过来的消息。</p>
 <p>这个页面显示的 markdown 内容, 是由积木控制的! 这样一来我们就可以在积木环境中，实时控制文档页面的内容。</p>
 <h2 id="嵌入-microblocks-项目">嵌入 MicroBlocks 项目</h2>
 <p>有些项目涉及到软硬件协作, 在嵌入 MicroBlocks 项目, 就无需额外打开 MicroBlocks 页面刷入或查看硬件程序。</p>
