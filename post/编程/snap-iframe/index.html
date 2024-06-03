@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 iframe 库">
 <meta itemprop="description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行"><meta itemprop="datePublished" content="2024-06-03T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-06-03T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1863">
+<meta itemprop="wordCount" content="1974">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 iframe 库"/>
 <meta name="twitter:description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行"/>
@@ -283,16 +283,33 @@ future park
 <p>部署你自己的 web 应用, 使用 iframe 将其引入 Snap! , 然后你就可以为其提供一个高度可定制的图形化编程环境!</p>
 <p>在过去, 这通常是一个完整的开发项目(有时是一个公司的商业项目), 现在，它只是一个用户级别的 Snap! 项目!</p>
 <h2 id="接下来做什么">接下来做什么?</h2>
-<p>我接下来打算基于消息通信(postMessage)增强它与外部 iframe 环境的互操作能力, 完成之后, Snap! 就可以与 iframe 引入的外部系统（诸如一个游戏环境）进行双向互操作。</p>
+<p>目前可以 Snap! 与 iframe 页面可以通过 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage</a> 互相发送消息, 这些消息是异步非阻塞的。</p>
+<ul>
+<li>Snap! -&gt; iframe
+<ul>
+<li>Snap! 一侧: 使用 <code>postMessage</code> 积木给特定 iframe 页面发送消息</li>
+<li>iframe 一侧: 使用 <code>window.addEventListener('message', (event) =&gt; {})</code> 接受 Snap! 消息</li>
+</ul>
+</li>
+<li>iframe -&gt; Snap!
+<ul>
+<li>Snap! 一侧: 使用 <code>handle postMessage</code> 接收 iframe 消息</li>
+<li>iframe 一侧: 使用 <code>window.parent.postMessage(msg, &quot;*&quot;)</code> 发送<strong>字符串</strong>消息</li>
+</ul>
+</li>
+</ul>
+<p>有时候我们想要同步语义的消息, 诸如<code>调用并等待结果</code>。</p>
+<p>我接下来打算基于消息通信 postMessage 增强它与外部 iframe 环境的互操作能力, 完成之后, Snap! 就可以与 iframe 引入的外部系统（诸如一个游戏环境）进行双向互操作。</p>
 <blockquote>
 <p>Dynatalk 致力于对象之间的交流, 尤其关心不同语言/环境之间的互操作。</p>
 </blockquote>
-<p>具体而言, 我打算制作 dynatalk-over-postMessage: 将 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">dynatalk</a> 构建在 postMessage 之上。 一旦完成 dynatalk 的所有能力在 iframe 库中使用。</p>
+<p>我打算制作 dynatalk-over-postMessage: 将 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">dynatalk</a> 构建在 postMessage 之上。 一旦完成 dynatalk 的所有能力在 iframe 库中使用。</p>
 <h1 id="参考">参考</h1>
 <ul>
 <li><a href="https://www.bilibili.com/video/BV1Xf421Q7zW?t=6649.0">视频: Snap! 中的 iframe 库</a></li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe">iframe: The Inline Frame element</a></li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe">MDN: iframe</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">MDN: postMessage</a></li>
 <li><a href="https://docs.spline.design/77c32288501a479fa8bc5e787f1e0878">Spine Docs: Exporting as Code</a></li>
 </ul>
 
