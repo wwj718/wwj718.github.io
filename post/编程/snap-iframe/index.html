@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap! 中的 iframe 库 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &amp;ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-iframe/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Snap! 中的 iframe 库" />
+<meta property="og:description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-iframe/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-06-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-06-03T00:00:00+00:00" />
+
+<meta itemprop="name" content="Snap! 中的 iframe 库">
+<meta itemprop="description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行"><meta itemprop="datePublished" content="2024-06-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-06-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1088">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! 中的 iframe 库"/>
+<meta name="twitter:description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Snap! 中的 iframe 库</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-06-03 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#iframe-库">iframe 库</a>
+      <ul>
+        <li><a href="#基本使用方式">基本使用方式</a></li>
+        <li><a href="#动态显示-markdown-文档">动态显示 markdown 文档</a>
+          <ul>
+            <li><a href="#snap-中的帮助文档">Snap! 中的帮助文档</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/arch-5826002_1280.jpg" alt=""></p>
+<h1 id="前言">前言</h1>
+<blockquote>
+<p>将另一个 HTML 页面嵌入到当前页面中 &ndash; <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe">iframe</a></p>
+</blockquote>
+<p>我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够<strong>通用</strong>, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行互操作。</p>
+<p>这样一来我们就可以做许多有趣的事情:</p>
+<ul>
+<li>以可编程的方式显示 markdown 文档</li>
+<li>以可编程的方式播放 mp4 演示视频</li>
+<li>以可编程的方式显示在线幻灯片</li>
+<li>引入 3D world/game, 并使用 Snap! 对这些 3D 环境进行实时编程</li>
+<li>将 MicroBlocks 平台嵌入 Snap! (之前的 MicroBlocks ide 库将成为这个通用 iframe 库的一个特例)</li>
+<li>&hellip;</li>
+</ul>
+<p>潜在的用例非常多!</p>
+<p>我在 CodeLab 群里分享相关演示视频的时候, @Patch 评论说:</p>
+<blockquote>
+<p>给 Snap! 又开了一扇窗</p>
+</blockquote>
+<p>我回复说</p>
+<blockquote>
+<p>我也是这样看待 iframe 库，所以我刚给这个库添加的图标是 emoji 窗户: 🪟</p>
+</blockquote>
+<p>我一直想要一个通用的 iframe 库，迟迟没有动手是因为不大喜欢也不大擅长前端工作，好在有了 ChatGPT! 这些工作变得非常轻松。 通过与 ChatGPT 协作,  我无需操心太多知识细节(这些是我过去不擅长的), 更多精力用于关注和表述想法, 不多时, 就得到了仅凭自己做不出来的东西。</p>
+<p>对我而言, ChatGPT 的价值是双重的, 客观上, 它补足了我的知识短板, 更大的价值是<strong>主观层面</strong>的: 它极大减少了我对不熟悉领域的恐惧, 我之前倾向于回避这些工作。ChatGPT 通过使知识细节变得无关紧要, 让编程重新变得激动人心, 我们有更多精力关注自己的热情(passion)与项目(projects)的图景。</p>
+<!--熟悉材料，是为了学会描述，就像画家使用画笔。镜头语言。更高更美的抽象-->
+<!--
+可能的想象空间非常大，而且每一个点可能都是一个全新的世界。如果关注点是 3D world，那么通过 iframe，几乎可以引入任何主流游戏引擎(unity, godot)导出的 wasm 游戏，然后使用 snap 作为其编程环境。 如果关注点是文档，那么通过一个 iframe 引入一个带有 markdown 引擎的页面，剩下的工作全都可以在 Snap! 中完成，markdown 文档在 Snap! 中编程，然后渲染到 iframe 中显示，积木可以实时控制文档的显示内容，无论是视频演示还是其他文档格式通通支持
+-->
+<h1 id="iframe-库">iframe 库</h1>
+<p>与<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-interpreter/#%E7%9B%AE%E6%A0%87">之前的工作</a>一样, 我们希望实现以下 2 个目标:</p>
+<blockquote>
+<p>无需更新平台, 不需要开发者介入, 所有工作都在用户环境中完成(只是一个 Snap! 项目), 这意味着普通用户可以继续延伸这些能力。 (这是终端用户编程的一个例子)</p>
+</blockquote>
+<blockquote>
+<p>可以充分利用 Snap! 的活性(liveness), 享受高效而愉快的开发体验。</p>
+</blockquote>
+<p>所以整个 iframe 库完全在 Snap! IDE 中构建, &ldquo;只是一个普通的 Snap! 项目&rdquo;, 没有对平台进行任何修改。</p>
+<p>我们将通过几个例子展示如何使用 iframe 库:</p>
+<ul>
+<li>基本使用方式 (引入外部网站)</li>
+<li>markdown</li>
+<li>MicroBlocks</li>
+<li>spline</li>
+</ul>
+<p>更多的操作细节, 推荐观看这个<a href="https://www.bilibili.com/video/BV1Xf421Q7zW?t=6649.0">演示视频</a></p>
+<h2 id="基本使用方式">基本使用方式</h2>
+<p><video width=100% src="/post/img/snap-iframe-demo1.mp4" controls="controls"></video></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-iframe-demo1.xml&amp;enableJS">示例项目(点击运行)</a></p>
+<p>也可以打开多个页面, 每个页面可以通过它的 id 控制它:</p>
+<p><img src="/post/img/snap-iframe-01.jpg" alt=""></p>
+<h2 id="动态显示-markdown-文档">动态显示 markdown 文档</h2>
+<p><video width=100% src="/post/img/snap-iframe-markdown.mp4" controls="controls"></video></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-iframe-markdown.xml&amp;enableJS">示例项目(点击运行)</a></p>
+<h3 id="snap-中的帮助文档">Snap! 中的帮助文档</h3>
+<p>Snap! 官方的积木文档是以图片的形式制作的, 相比于使用 markdown 编写和显示文档, 它既不灵活(无法显示视频)也不清晰。</p>
+<p>&ldquo;支持使用 markdown 显示文档&rdquo; 是我此次构建 iframe 的主要原因。</p>
+<p>iframe 可以以多种方式显示 markdown 文档, 诸如使用常规方式编写 markdown 文档, 将其托管在网络上, 然后使用 iframe 打开文档链接它.</p>
+<p>我采用了另一种更加 Snap! 的动态方案， 只托管一个<a href="https://wwj718.github.io/post/img/snap-iframe/iframe-markdown.html">通用的 markdown 渲染页面(默认空白)</a>, 如果你对它的工作原理感兴趣, 可以查看页面源代码, 只有 10 行不到的代码！</p>
+<p>这个页面显示的 markdown 内容, 是由积木控制的! 这样一来我们就可以在积木环境中，实时控制文档页面的内容。</p>
+<hr>
+<p>todo&hellip;</p>
+<!--
+## MicroBlocks
+
+[示例项目]()
+
+## 
+
+# 例子
+
+演示的例子，使用的是 Spline (https://spline.design)， 我目前最喜欢的 3D 制作平台，它和 Scratch 有很多相似性，极大降低了 3D 项目的制作难度
+
+
+# 总结
+
+我接下来打算基于消息通信增强它与外部 iframe 环境的互操作能力，完成之后，Snap! 就可以驱动 iframe 引入的外部系统（诸如一个游戏环境）
+
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1Xf421Q7zW?t=6649.0">视频: Snap! 中的 iframe 库</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe"><iframe>: The Inline Frame element</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe">MDN: iframe</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-06-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E8%AF%97%E8%AF%8D/nap/">
+            <span class="next-text nav-default">nap</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="/post/img/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="/post/img/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="/post/img/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
