@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dynatalk-js demo</title>
+    <script src="./dynatalk-helper.js"></script>
+    <script src="./dynatalk.js"></script>
+  </head>
+  <body>
+    <div class="container">
+        <input type="text" id="agentName" value="LivelyDemoAgent" placeholder="agentName">
+        <input type="text" id="action" value="echo" placeholder="action">
+        <input type="text" id="args" value="hi" placeholder="args">
+        <button onclick="submit()">Submit</button>
+        <div id="output"></div>
+    </div>
+
+    
+    <script>
+      
+      /*
+      window._mqttConf={   
+          "url": "ws://guest:test@mqtt.aimaker.space:8083/mqtt"
+      }
+      */
+     
+      let supervisor = new Supervisor("child");
+      let agent = new LivelyDemoAgent("iframeAgent");
+      supervisor.addAgent(agent);
+
+
+      async function request(agentName, action, args) {
+        // let aPromise = agent.request('SnapAgent', 'add', [1, 2]);
+        // aPromise.then((value)=> console.log(value))
+        let result = await agent.request(agentName, action, args);
+        output(result);
+      }
+
+      function submit() {
+        // chatgpt: https://chat.openai.com/share/19788b0a-5d2b-4deb-a7da-058250bc1ba4
+        let agentName = document.getElementById("agentName").value;
+        let action = document.getElementById("action").value;
+        let args = document.getElementById("args").value;
+        // console.log(agentName, action, args);
+        request(agentName, action, args.split(","));
+    }
+
+    function output(text){
+        let outputDiv = document.getElementById("output");
+        let newContent = document.createElement("div");
+        newContent.textContent = text;
+        outputDiv.appendChild(newContent);
+      }
+
+    </script>
+  </body>
+</html>
