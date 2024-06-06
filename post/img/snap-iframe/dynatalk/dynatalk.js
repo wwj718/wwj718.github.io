@@ -1,4 +1,4 @@
-module('users.wwj.dynatalk').requires().toRun(function() {
+// module('users.wwj.dynatalk').requires().toRun(function() {
 
 Object.subclass('PostMessageSpace', // used global variable: window.space
 'initialize-release', {
@@ -361,4 +361,4 @@ Object.subclass('Supervisor',
 });
 
 
-}) // end of module
+// }) // end of module
