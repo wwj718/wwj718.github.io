@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title> - 夜行人</title>
+  <title>Snap! 中的 Spline 库 - 夜行人</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="种瓜" /><meta name="description" content="Spline 库 基于 Snap iframe 库 如何看待 Snap! 与 Spline 的关系 两边都要编程 将 Spline 的项目视为编写硬件代码 类比 microblocks 与 snap 与之通信 对象通过消息通信 对象可以完全异构,充分利用自身环境" /><meta name="keywords" content="education, programming, Technology" />
+<meta name="author" content="种瓜" /><meta name="description" content="前言 我对 3D 环境的最初兴趣来自 Croquet 团队的这篇论文. 我从 Alan Kay 那里学到这样的一种视角来看待交互式图形计算: 桌面隐喻/GUI 的力量是心理层面的, 它们为" /><meta name="keywords" content="education, programming, Technology" />
 
 
 
@@ -39,20 +39,20 @@
 <link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="" />
-<meta property="og:description" content="Spline 库 基于 Snap iframe 库 如何看待 Snap! 与 Spline 的关系 两边都要编程 将 Spline 的项目视为编写硬件代码 类比 microblocks 与 snap 与之通信 对象通过消息通信 对象可以完全异构,充分利用自身环境" />
+<meta property="og:title" content="Snap! 中的 Spline 库" />
+<meta property="og:description" content="前言 我对 3D 环境的最初兴趣来自 Croquet 团队的这篇论文. 我从 Alan Kay 那里学到这样的一种视角来看待交互式图形计算: 桌面隐喻/GUI 的力量是心理层面的, 它们为" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-06-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-06-10T00:00:00+00:00" />
 
-
-
-<meta itemprop="name" content="">
-<meta itemprop="description" content="Spline 库 基于 Snap iframe 库 如何看待 Snap! 与 Spline 的关系 两边都要编程 将 Spline 的项目视为编写硬件代码 类比 microblocks 与 snap 与之通信 对象通过消息通信 对象可以完全异构,充分利用自身环境">
-
-<meta itemprop="wordCount" content="89">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
-<meta name="twitter:description" content="Spline 库 基于 Snap iframe 库 如何看待 Snap! 与 Spline 的关系 两边都要编程 将 Spline 的项目视为编写硬件代码 类比 microblocks 与 snap 与之通信 对象通过消息通信 对象可以完全异构,充分利用自身环境"/>
+<meta itemprop="name" content="Snap! 中的 Spline 库">
+<meta itemprop="description" content="前言 我对 3D 环境的最初兴趣来自 Croquet 团队的这篇论文. 我从 Alan Kay 那里学到这样的一种视角来看待交互式图形计算: 桌面隐喻/GUI 的力量是心理层面的, 它们为"><meta itemprop="datePublished" content="2024-06-10T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-06-10T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1146">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! 中的 Spline 库"/>
+<meta name="twitter:description" content="前言 我对 3D 环境的最初兴趣来自 Croquet 团队的这篇论文. 我从 Alan Kay 那里学到这样的一种视角来看待交互式图形计算: 桌面隐喻/GUI 的力量是心理层面的, 它们为"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -119,11 +119,13 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title"></h1>
+      <h1 class="post-title">Snap! 中的 Spline 库</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 0001-01-01 </span>
-        
+        <span class="post-time"> 2024-06-10 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
         
       </div>
     </header>
@@ -133,31 +135,104 @@
   <div class="post-toc-content always-active">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#spline-库">Spline 库</a>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#将-3d-环境引入-snap">将 3D 环境引入 Snap!</a></li>
+    <li><a href="#snap-中的-spline-库">Snap! 中的 Spline 库</a></li>
+    <li><a href="#faq">FAQ</a>
       <ul>
-        <li><a href="#如何看待-snap-与-spline-的关系">如何看待 Snap! 与 Spline 的关系</a></li>
+        <li><a href="#dynatalk-over-postmessage-在这里有什么用">dynatalk-over-postmessage 在这里有什么用?</a></li>
       </ul>
     </li>
-    <li><a href="#todo">todo</a></li>
+    <li><a href="#参考">参考</a></li>
   </ul>
 </nav>
   </div>
 </div>
     <div class="post-content">
-      <h1 id="spline-库">Spline 库</h1>
-<p>基于 Snap iframe 库</p>
-<h2 id="如何看待-snap-与-spline-的关系">如何看待 Snap! 与 Spline 的关系</h2>
-<p>两边都要编程
+      <p><img src="/post/img/snap-Spline-01.png" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>我对 3D 环境的最初兴趣来自 Croquet 团队的<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/croqueta-collaboration-system-architecture/">这篇论文</a>.</p>
+<p>我从 Alan Kay 那里<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/computer-software/">学到这样的一种视角</a>来看待交互式图形计算: 桌面隐喻/GUI 的力量是心理层面的, 它们为用户制造了一种&quot;幻觉&quot;, 仿佛事物就在屏幕那里, 因此用户可以将他们在现实世界的经验迁移过来, 就像与物理对象交互一样, 与屏幕上的虚拟对象打交道.</p>
+<p>沿着这个视角, 我们自然会渴望 3D 环境, 因为它能够进一步增强这种&quot;用户幻觉&quot;, 事物存在于一个虚拟的 3 维空间里, 而不是事一个 2 维的&quot;桌面&quot;上, 这样一来, 用户能够更多地迁移他们在现实世界(3 维空间)的经验.</p>
+<p>这些想法的背后是让计算适应人类, 而不是让人类适应计算.</p>
+<h1 id="将-3d-环境引入-snap">将 3D 环境引入 Snap!</h1>
+<p>Snap! 提供的舞台区通常用于制作 2D 项目. 我渴望将 3D 环境引入到 Snap! 中.</p>
+<p>有许多方法可以达成目标:</p>
+<ul>
+<li>Bernat 的 <a href="https://github.com/bromagosa/BeetleExtension">3D Beetle</a> 展示了一种可行的思路, 将 <a href="https://www.babylonjs.com/">babylonjs</a> 制作的 3D 世界带入 Snap! 里</li>
+<li>Dynalab 团队尝试过使用 Snap! 驱动 <a href="https://github.com/croquet/microverse">Croquet Microverse</a></li>
+</ul>
+<p>我一直渴望更加通用和非侵入的方案, 最好 &ldquo;只是一个普通的 Snap! 项目&rdquo;.</p>
+<p>前段时间完成的<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-iframe/">通用 iframe 库</a>提供了这种可能性.</p>
+<p>大体来说, 我的想法是这样的:</p>
+<ul>
+<li>通过 iframe 库将基于 web 的 3D 环境引入 Snap!.
+<ul>
+<li>许多 3D 引擎都能制作 3D web 项目: Unity, <a href="https://spline.design/">Spline</a>, Unity, <a href="https://threejs.org/">threejs</a>, <a href="https://www.babylonjs.com/">babylonjs</a></li>
+</ul>
+</li>
+<li>通过 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage API</a>, Snap! 可以与 iframe 中的 3D 环境通信
+<ul>
+<li>在 postMessage 之上构建 dynatalk, Snap! 就能够与这些 3D 环境进行同步或异步的互操作, 仿佛它们由同一个引擎驱动.</li>
+</ul>
+</li>
+</ul>
+<p>我打算挑选一个 3D 引擎来演示如何实施以上想法. 一番比较之后, 最终选择了 <a href="https://spline.design/">Spline</a>, 原因是它是我了解的 3D 工具中<strong>最简单易用</strong>的.Spline 和 Scratch 有很多相似性, 它极大降低了 3D 项目的制作难度。</p>
+<p>理论上, 我们有可能基于 <a href="https://threejs.org/">threejs</a> 或 <a href="https://www.babylonjs.com/">babylonjs</a> 为 Snap! 制作一个 3D 编辑器, 就像 Snap! 的像素编辑器/矢量编辑器 那样, 深度整合到 Snap! 中, 这样做的坏处是, 工程量巨大无比, 是否易用也值得怀疑. 我最终放弃了这个想法, 转而去思考:</p>
+<blockquote>
+<p>哪个 3D 编辑器非常易用, 而且暴露出了与之互操作的 API ? 如果有这样的项目, 我们可以将其视为 Snap! 的 &ldquo;外部编辑器&rdquo;</p>
+</blockquote>
+<p>我选择了 Spline(还有很多其他的潜在选项).</p>
+<p>Spline 负责制作 3D 项目, 并暴露出 API ! 而编程和控制的的部分, 由 Snap! 提供。 在 Snap! 中操作 Spline 项目, 很像在 Snap! 操作 MicroBlocks 项目. Spline 和 MicroBlocks 用于编写项目的&quot;内核&quot;, 对外提供出服务, Snap! 则作为客户端使用这些服务.</p>
+<p>接下来我们便着手制作了 Spline 库.</p>
+<h1 id="snap-中的-spline-库">Snap! 中的 Spline 库</h1>
+<!--
+1. 一切都是对象
+2. 对象通过消息沟通
+3. 对象解释它理解的消息
+
+从 CodeLab 群整理信息
+
+演示视频和截图
+-->
+<p><video width=100% src="https://scratch3-files.just4fun.site/spline-scene.mp4" controls="controls"></video></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-spline-demo.xml&amp;enableJS">示例项目(点击运行)</a></p>
+<p>演示使用的 <a href="https://app.spline.design/file/d3116a73-5d3f-4d78-98ad-46738716488f">Spline 项目</a>, 修改自 <a href="https://app.spline.design/file/8dca6daa-d77b-4c65-85a5-b220b8b66ba0">Mini House - Conditional Logic</a>。iframe 页面的源代码在这里:<a href="https://github.com/wwj718/Snap-Spline-Demo">Snap-Spline-Demo</a>.</p>
+<h1 id="faq">FAQ</h1>
+<!--
+## 如何看待 Snap! 与 Spline 的关系?
+
+两边都要编程
 将 Spline 的项目视为编写硬件代码
-类比 microblocks 与 snap</p>
-<p>与之通信
+类比 microblocks 与 snap
+
+与之通信
 对象通过消息通信
-对象可以完全异构,充分利用自身环境的特性.</p>
-<h1 id="todo">todo</h1>
-<p>dynatalk-over-postmessage
-基于 lively 构建</p>
-<p>parent , python, js 使用</p>
-<p>iframe 端</p>
+对象可以完全异构,充分利用自身环境的特性.
+-->
+<h2 id="dynatalk-over-postmessage-在这里有什么用">dynatalk-over-postmessage 在这里有什么用?</h2>
+<blockquote>
+<p>架构将掌控材料 &ndash; Alan Kay</p>
+</blockquote>
+<p>Spline 库的许多积木依赖于 dynatalk-over-postmessage 库.</p>
+<p>浏览器提供了 postMessage API , 用于与 iframe 页面进行通信, 这是一种异步通信(pub/sub)方式. 有时候我们想要同步通信, 类似 RPC 或者函数调用, 我们想要</p>
+<p>dynatalk-over-postmessage 使得 Snap! 与 iframe 页面(在本文中它是 Spline 项目)可以进行同步通信, postMe</p>
+<!--
+# todo
+
+dynatalk-over-postmessage
+基于 lively 构建
+
+parent , python, js 使用
+
+iframe 端
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/computer-software/">[译]计算机软件</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-iframe/">Snap! 中的 iframe 库</a></li>
+<li><a href="https://github.com/wwj718/Snap-Spline-Demo">Snap-Spline-Demo</a></li>
+</ul>
 
     </div>
 
@@ -169,7 +244,7 @@
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        0001-01-01
+        2024-06-10
         
     </span>
   </p>
@@ -177,15 +252,13 @@
   
 </div>
 <footer class="post-footer">
-      
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/snap-onnx/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default"></span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/snap-udp/">
-            <span class="next-text nav-default"></span>
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/snap-iframe/">
+            <span class="next-text nav-default">Snap! 中的 iframe 库</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>
