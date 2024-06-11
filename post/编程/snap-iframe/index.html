@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 iframe 库">
 <meta itemprop="description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行"><meta itemprop="datePublished" content="2024-06-03T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-06-03T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2025">
+<meta itemprop="wordCount" content="2001">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 iframe 库"/>
 <meta name="twitter:description" content="前言 将另一个 HTML 页面嵌入到当前页面中 &ndash; iframe 我一直渴望拥有一个 Snap! iframe 库, 这个库最好足够通用, 它能够将各种各样的互联网资源通过 iframe 引入到 Snap! 里, 并与 Snap! 进行"/>
@@ -146,7 +146,6 @@
         </li>
         <li><a href="#嵌入-microblocks-项目">嵌入 MicroBlocks 项目</a></li>
         <li><a href="#与-3d-world-互操作以-spline-为例">与 3D world 互操作(以 Spline 为例)</a></li>
-        <li><a href="#将消息从-iframe-页面发送到-snap">将消息从 iframe 页面发送到 Snap!</a></li>
       </ul>
     </li>
     <li><a href="#faq">FAQ</a>
@@ -246,9 +245,14 @@
 <p><img src="/post/img/snap-iframe-03.png" alt=""></p>
 <p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-iframe-microblocks.xml&amp;enableJS">示例项目(点击运行)</a></p>
 <h2 id="与-3d-world-互操作以-spline-为例">与 3D world 互操作(以 Spline 为例)</h2>
-<p><video width=100% src="https://scratch3-files.just4fun.site/snap-iframe-spline-demo.mp4" controls="controls"></video></p>
-<p><video width=100% src="/post/img/snap-iframe-spline-demo2.mp4" controls="controls"></video></p>
-<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-iframe-spline-demo.xml&amp;enableJS">示例项目(点击运行)</a></p>
+<p>参考 <a href="/post/%E7%BC%96%E7%A8%8B/snap-spline/">Snap! 中的 Spline 库</a></p>
+<!--
+<video width=100% src="https://scratch3-files.just4fun.site/snap-iframe-spline-demo.mp4" controls="controls"></video>
+
+<video width=100% src="/post/img/snap-iframe-spline-demo2.mp4" controls="controls"></video>
+
+[示例项目(点击运行)](https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-iframe-spline-demo.xml&enableJS)
+-->
 <!--
 https://codesandbox.io/p/sandbox/demo-scene-relax-forked-ydcqvc?file=/src/index.js 
 
@@ -268,27 +272,35 @@ codesandbox 的 allow 机制很丰富
 
 chatgpt allow 的所有选项 https://chatgpt.com/share/074becdb-e828-404d-9873-3806b3603d9f
 -->
-<p>演示的例子，使用的是 <a href="https://spline.design">Spline</a>。<a href="https://app.spline.design/file/d3116a73-5d3f-4d78-98ad-46738716488f">演示使用的 Spline 项目</a>, 修改自 <a href="https://app.spline.design/file/8dca6daa-d77b-4c65-85a5-b220b8b66ba0">Mini House - Conditional Logic</a>。iframe 页面的源代码在这里:<a href="https://github.com/wwj718/Snap-Spline-Demo">Snap-Spline-Demo</a></p>
 <!--
-使用变量与事件
+演示的例子，使用的是 [Spline](https://spline.design)。[演示使用的 Spline 项目](https://app.spline.design/file/d3116a73-5d3f-4d78-98ad-46738716488f), 修改自 [Mini House - Conditional Logic](https://app.spline.design/file/8dca6daa-d77b-4c65-85a5-b220b8b66ba0)。iframe 页面的源代码在这里:[Snap-Spline-Demo](https://github.com/wwj718/Snap-Spline-Demo)
 
-iframe 同源的话可以直接操纵iframe变量里的东西
+// iframe 同源的话可以直接操纵iframe变量里的东西
+
+Spline 是我目前最喜欢的 3D 制作平台，它和 Scratch 有很多相似性，极大降低了 3D 项目的制作难度。
+
+"与 3D world 互操作"是一个非常有想象力的方向。 它极大地扩展了 Snap! 的可能性。 Snap! 目前的舞台区默认是 2D 的, 如果你想要使用 Snap! 制作 3D 项目, 一个有前途的方向是:
+
+- 使用流行的 3D 制作工具([Spline](https://spline.design/), Unity, [threejs](https://threejs.org/), [babylonjs](https://www.babylonjs.com/))制作 3D 项目, 将其部署到线上
+- 使用 iframe 库将其引入 Snap!
+- 通过消息通信(postMessage)进行互操作.
+
+如此一来, Snap! 就可以将各种 3D 制作工具, 视为它的 3D 编辑器! 而编程和控制的的部分, 由 Snap! 提供。
+
+## 将消息从 iframe 页面发送到 Snap!
+
+有时我们想要将消息从 iframe 页面发送到 Snap!, 比如一个 iframe 页面具有图像识别能力, 我们想要将识别的结果发送到 Snap!
+
+通过 postMessage 可以做到: `window.parent.postMessage(msg, "*");`
+
+<video width=100% src="/post/img/snap-iframe-mediapipe.mp4" controls="controls"></video>
+
+[示例项目(点击运行)](https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-iframe-mediapipe.xml&enableJS)
+
+示例中的 [mediapipe iframe 项目](https://wwj718.github.io/post/img/iframe-mediapipe/script.js)修改自 [官方的这个例子](https://codepen.io/mediapipe-preview/details/zYamdVd), 只添加了一行代码:
+
+`window.parent.postMessage(categoryName, "*");`
 -->
-<p>Spline 是我目前最喜欢的 3D 制作平台，它和 Scratch 有很多相似性，极大降低了 3D 项目的制作难度。</p>
-<p>&ldquo;与 3D world 互操作&quot;是一个非常有想象力的方向。 它极大地扩展了 Snap! 的可能性。 Snap! 目前的舞台区默认是 2D 的, 如果你想要使用 Snap! 制作 3D 项目, 一个有前途的方向是:</p>
-<ul>
-<li>使用流行的 3D 制作工具(<a href="https://spline.design/">Spline</a>, Unity, <a href="https://threejs.org/">threejs</a>, <a href="https://www.babylonjs.com/">babylonjs</a>)制作 3D 项目, 将其部署到线上</li>
-<li>使用 iframe 库将其引入 Snap!</li>
-<li>通过消息通信(postMessage)进行互操作.</li>
-</ul>
-<p>如此一来, Snap! 就可以将各种 3D 制作工具, 视为它的 3D 编辑器! 而编程和控制的的部分, 由 Snap! 提供。</p>
-<h2 id="将消息从-iframe-页面发送到-snap">将消息从 iframe 页面发送到 Snap!</h2>
-<p>有时我们想要将消息从 iframe 页面发送到 Snap!, 比如一个 iframe 页面具有图像识别能力, 我们想要将识别的结果发送到 Snap!</p>
-<p>通过 postMessage 可以做到: <code>window.parent.postMessage(msg, &quot;*&quot;);</code></p>
-<p><video width=100% src="/post/img/snap-iframe-mediapipe.mp4" controls="controls"></video></p>
-<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-iframe-mediapipe.xml&amp;enableJS">示例项目(点击运行)</a></p>
-<p>示例中的 <a href="https://wwj718.github.io/post/img/iframe-mediapipe/script.js">mediapipe iframe 项目</a>修改自 <a href="https://codepen.io/mediapipe-preview/details/zYamdVd">官方的这个例子</a>, 只添加了一行代码:</p>
-<p><code>window.parent.postMessage(categoryName, &quot;*&quot;);</code></p>
 <h1 id="faq">FAQ</h1>
 <h2 id="可以拿-iframe-库做什么">可以拿 iframe 库做什么?</h2>
 <p>部署你自己的 web 应用, 使用 iframe 将其引入 Snap! , 然后你就可以为其提供一个高度可定制的图形化编程环境!</p>
