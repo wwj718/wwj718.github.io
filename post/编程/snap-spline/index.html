@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 Spline 库">
 <meta itemprop="description" content="前言 对 3D 环境的最初兴趣来自 Croquet 团队的这篇论文. 从 Alan Kay 那里学到这样的一种视角来看待交互式图形计算: 桌面隐喻/GUI 的力量是心理层面的, 它们为用户"><meta itemprop="datePublished" content="2024-06-10T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-06-10T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1393">
+<meta itemprop="wordCount" content="1542">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 Spline 库"/>
 <meta name="twitter:description" content="前言 对 3D 环境的最初兴趣来自 Croquet 团队的这篇论文. 从 Alan Kay 那里学到这样的一种视角来看待交互式图形计算: 桌面隐喻/GUI 的力量是心理层面的, 它们为用户"/>
@@ -137,9 +137,16 @@
   <ul>
     <li><a href="#前言">前言</a></li>
     <li><a href="#将-3d-环境引入-snap">将 3D 环境引入 Snap!</a></li>
-    <li><a href="#snap-中的-spline-库">Snap! 中的 Spline 库</a></li>
+    <li><a href="#snap-中的-spline-库">Snap! 中的 Spline 库</a>
+      <ul>
+        <li><a href="#demo-1">demo 1</a></li>
+        <li><a href="#demo-2">demo 2</a></li>
+      </ul>
+    </li>
     <li><a href="#faq">FAQ</a>
       <ul>
+        <li><a href="#如何获取-world-url">如何获取 world url</a></li>
+        <li><a href="#open-world-url-积木是如何工作的"><code>open world url</code> 积木是如何工作的?</a></li>
         <li><a href="#spline-对外暴露了哪些-api">Spline 对外暴露了哪些 API?</a></li>
         <li><a href="#dynatalk-over-postmessage-在这里有什么用">dynatalk-over-postmessage 在这里有什么用?</a></li>
       </ul>
@@ -195,10 +202,19 @@
 
 演示视频和截图
 -->
+<h2 id="demo-1">demo 1</h2>
 <p><video width=100% src="https://scratch3-files.just4fun.site/spline-scene.mp4" controls="controls"></video></p>
 <p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-spline-demo.xml&amp;enableJS">示例项目(点击运行)</a></p>
-<p>演示使用的 <a href="https://app.spline.design/file/d3116a73-5d3f-4d78-98ad-46738716488f">Spline 项目</a>, 修改自 <a href="https://app.spline.design/file/8dca6daa-d77b-4c65-85a5-b220b8b66ba0">Mini House - Conditional Logic</a>。iframe 页面的源代码在这里:<a href="https://github.com/wwj718/Snap-Spline-Demo">Snap-Spline-Demo</a>.</p>
+<p>演示使用的 <a href="https://app.spline.design/file/d3116a73-5d3f-4d78-98ad-46738716488f">Spline 项目</a>, 修改自 <a href="https://app.spline.design/file/8dca6daa-d77b-4c65-85a5-b220b8b66ba0">Mini House - Conditional Logic</a>。</p>
+<p>填写在 Snap! 中 world url 是 <code>https://prod.spline.design/nO5gRl8xdZ5gp4UJ/scene.splinecode</code> (FAQ 里介绍了如何获取项目的 world url)</p>
+<h2 id="demo-2">demo 2</h2>
+<p><video width=100% src="/post/img/spline-bunny.mp4" controls="controls"></video></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-spline-bunny.xml&amp;enableJS">示例项目(点击运行)</a></p>
+<p>演示使用的 <a href="https://app.spline.design/file/3f36e197-55e8-4b10-b3ed-99d508338eed">Spline 项目</a>, 修改自 <a href="https://app.spline.design/library/d5a2416e-8da4-41e1-ab7e-f632fe8d1d11">Platformer Rabbit</a>。</p>
+<p>填写在 Snap! 中 world url 是 <code>https://prod.spline.design/dP5NwOaNd2IR5Npm/scene.splinecode</code> (FAQ 里介绍了如何获取项目的 world url)</p>
 <h1 id="faq">FAQ</h1>
+<h2 id="如何获取-world-url">如何获取 world url</h2>
+<p><img src="/post/img/snap-Spline-02.png" alt=""></p>
 <!--
 ## 如何看待 Snap! 与 Spline 的关系?
 
@@ -210,6 +226,10 @@
 对象通过消息通信
 对象可以完全异构,充分利用自身环境的特性.
 -->
+<h2 id="open-world-url-积木是如何工作的"><code>open world url</code> 积木是如何工作的?</h2>
+<p><code>open world url</code> 积木接受 Spline 项目的地址, 形如 <code>https://prod.spline.design/nO5gRl8xdZ5gp4UJ/scene.splinecode</code>, 你可以从项目的 <code>export</code> 中找到它.</p>
+<p>在 <code>open world url</code> 内部, 它会将 Spline 项目的地址传递给这个 iframe 页面: <code>https://wwj718.github.io/Snap-Spline-Demo?project=https://prod.spline.design/nO5gRl8xdZ5gp4UJ/scene.splinecode</code></p>
+<p>iframe 页面的源代码在这里:<a href="https://github.com/wwj718/Snap-Spline-Demo">Snap-Spline-Demo</a>.</p>
 <h2 id="spline-对外暴露了哪些-api">Spline 对外暴露了哪些 API?</h2>
 <p><a href="https://github.com/splinetool/react-spline">这儿</a>给出了完整的 API 描述.</p>
 <p>这些 API 决定了外部系统 (如 Snap!) 可以以哪些方式操作 Spline 项目.</p>
