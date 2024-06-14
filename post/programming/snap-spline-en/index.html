@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spline library for Snap! - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="中文版本 Preface My interest in 3D environments came from this paper by Croquet team. I learned this perspective on interactive graphical computing from Alan Kay: the power of desktop metaphor/GUI is psychological, it create a &amp;ldquo;illusion&amp;rdquo; for users, as if things are right there on the screen, so users can transfer their real-world experience, just like dealing with physical objects, to interacting with virtual objects on the" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/programming/snap-spline-en/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Spline library for Snap!" />
+<meta property="og:description" content="中文版本 Preface My interest in 3D environments came from this paper by Croquet team. I learned this perspective on interactive graphical computing from Alan Kay: the power of desktop metaphor/GUI is psychological, it create a &ldquo;illusion&rdquo; for users, as if things are right there on the screen, so users can transfer their real-world experience, just like dealing with physical objects, to interacting with virtual objects on the" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/programming/snap-spline-en/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-06-14T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-06-14T00:00:00+00:00" />
+
+<meta itemprop="name" content="Spline library for Snap!">
+<meta itemprop="description" content="中文版本 Preface My interest in 3D environments came from this paper by Croquet team. I learned this perspective on interactive graphical computing from Alan Kay: the power of desktop metaphor/GUI is psychological, it create a &ldquo;illusion&rdquo; for users, as if things are right there on the screen, so users can transfer their real-world experience, just like dealing with physical objects, to interacting with virtual objects on the"><meta itemprop="datePublished" content="2024-06-14T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-06-14T00:00:00+00:00" />
+<meta itemprop="wordCount" content="783">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spline library for Snap!"/>
+<meta name="twitter:description" content="中文版本 Preface My interest in 3D environments came from this paper by Croquet team. I learned this perspective on interactive graphical computing from Alan Kay: the power of desktop metaphor/GUI is psychological, it create a &ldquo;illusion&rdquo; for users, as if things are right there on the screen, so users can transfer their real-world experience, just like dealing with physical objects, to interacting with virtual objects on the"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Spline library for Snap!</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-06-14 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#preface">Preface</a></li>
+    <li><a href="#introducing-3d-world-into-snap">Introducing 3D world into Snap!</a></li>
+    <li><a href="#spline-library-for-snap">Spline library for Snap!</a>
+      <ul>
+        <li><a href="#demo-1">demo 1</a></li>
+        <li><a href="#demo2">demo2</a></li>
+        <li><a href="#demo3-get-and-set-variable">demo3: get and set variable</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#how-to-get-the-world-url">How to get the world url</a></li>
+        <li><a href="#how-to-self-host-project-files">How to self-host project files?</a></li>
+        <li><a href="#how-does-the-open-world-url-block-work">How does the <code>open world url</code> block work?</a></li>
+        <li><a href="#what-apis-does-spline-expose">What APIs does Spline expose?</a></li>
+        <li><a href="#what-is-the-use-of-dynatalk-over-postmessage-blocks">What is the use of dynatalk-over-postmessage blocks</a></li>
+      </ul>
+    </li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><img src="/post/img/snap-Spline-01.png" alt=""></p>
+<p><a href="/post/%E7%BC%96%E7%A8%8B/snap-spline/"><strong>中文版本</strong></a></p>
+<h1 id="preface">Preface</h1>
+<p>My interest in 3D environments came from <a href="http://worrydream.com/refs/Smith%20-%20Croquet%20-%20A%20Collaboration%20System%20Architecture.pdf">this paper</a> by Croquet team.</p>
+<p>I learned <a href="http://worrydream.com/refs/Kay%20-%20Computer%20Software%20-%20SciAm.pdf">this perspective</a> on interactive graphical computing from Alan Kay: the power of <a href="https://en.wikipedia.org/wiki/Desktop_metaphor">desktop metaphor</a>/GUI is psychological, it create a &ldquo;illusion&rdquo; for users, as if things are right there on the screen, so users can transfer their real-world experience, just like dealing with physical objects, to interacting with virtual objects on the screen.</p>
+<p>From this perspective, we naturally crave a 3D environment because it can further enhance this &ldquo;user illusion&rdquo; that things exist in a virtual 3D space rather than on a 2D &ldquo;desktop.&rdquo; As a result, users can more easily transfer their experiences from the real world (the real world is a kind of 3D space).</p>
+<p>These ideas focus on making computing adapt to humans, rather than making humans adapt to computing.</p>
+<h1 id="introducing-3d-world-into-snap">Introducing 3D world into Snap!</h1>
+<p>The stage provided by Snap! is usually used to make 2D projects. I was eager to introduce 3D world into Snap!.</p>
+<p>There are many ways to achieve goals:</p>
+<ul>
+<li>Bernat&rsquo;s <a href="https://github.com/bromagosa/BeetleExtension">3D Beetle library</a> demonstrates a feasible approach to integrating a 3D world created with <a href="https://www.babylonjs.com/">babylonjs</a> into Snap!</li>
+<li>The Dynalab team has tried <a href="https://x.com/neolayIO/status/1606083582090285056">using Snap! to drive the Croquet Microverse</a></li>
+</ul>
+<p>The <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-iframe/">iframe library</a> provides this possibility.</p>
+<p>My idea is:</p>
+<ul>
+<li>Introducing web-based 3D world into Snap! using the iframe library.
+<ul>
+<li>Many 3D engines can create web-based 3D world: Unity, <a href="https://spline.design/">Spline</a>, <a href="https://threejs.org/">threejs</a>, <a href="https://www.babylonjs.com/">babylonjs</a></li>
+</ul>
+</li>
+<li>With <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage API</a>, Snap! can communicate with the 3D world inside an iframe</li>
+</ul>
+<p>I need to choose a 3D engine to demonstrate how to implement the above ideas. After some comparison, I chose <a href="https://spline.design/">Spline</a>, which is simple and easy. Spline has many similarities with Scratch, and it greatly reduces the difficulty of 3D creation.</p>
+<p>It is possible to create a 3D editor(based on threejs or babylonjs) for Snap!, just like Snap!&rsquo;s Bitmap Paint Editor/Vector Paint Editor, deeply integrated into Snap!. The downside of doing this is the development workload is huge, and it is doubtful whether it is as easy to use. I ultimately abandoned this idea and instead started thinking about:</p>
+<blockquote>
+<p>Which 3D editor is easy to use and exposes an API for interaction? If such a editor exists, we can consider it as an &ldquo;external editor&rdquo; for Snap!</p>
+</blockquote>
+<p>Spline is responsible for creating 3D projects and exposing API and Snap! is responsible for programming and control. Operating a Spline project in Snap! is similar to operating a MicroBlocks project in Snap!. Spline and MicroBlocks is responsible for &ldquo;internal Programming&rdquo;, providing services externally, while Snap! acts as a client using these services.</p>
+<h1 id="spline-library-for-snap">Spline library for Snap!</h1>
+<h2 id="demo-1">demo 1</h2>
+<p><video width=100% src="https://scratch3-files.just4fun.site/snap-spline-paper-airplane.mp4" controls="controls"></video></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-spline-paper-airplane.xml&amp;enableJS">Project link (Click to Run)</a></p>
+<p><a href="https://app.spline.design/file/dc65c34d-346f-4f1a-87b3-a22897b85f9a">Spline project</a> used for demonstration, remixed from <a href="https://app.spline.design/library/ce3168f1-047a-49c0-8c05-dbfa3c1b603a">Little World Kawaii Pig</a>。</p>
+<p>The <code>world url</code> filled in Snap! is <code>https://prod.spline.design/s7FG1KdbdsyW8yOY/scene.splinecode</code> (FAQ explains how to get the <code>world url</code> of a project)</p>
+<h2 id="demo2">demo2</h2>
+<p><video width=100% src="/post/img/spline-mini-house.mp4" controls="controls"></video></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-spline-Mini-House.xml&amp;enableJS">Project link (Click to Run)</a></p>
+<p><a href="https://app.spline.design/file/d3116a73-5d3f-4d78-98ad-46738716488f">Spline project</a> used for demonstration, remixed from <a href="https://app.spline.design/file/8dca6daa-d77b-4c65-85a5-b220b8b66ba0">Mini House - Conditional Logic</a>。</p>
+<p>The <code>world url</code> filled in Snap! is <code>https://prod.spline.design/nO5gRl8xdZ5gp4UJ/scene.splinecode</code></p>
+<h2 id="demo3-get-and-set-variable">demo3: get and set variable</h2>
+<p><video width=100% src="/post/img/Spline-variable-3dtext.mp4" controls="controls"></video></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-spline-3dtext.xml&amp;enableJS">Project link (Click to Run)</a></p>
+<p><a href="https://app.spline.design/file/3bb960b7-2353-4217-9f2d-ed12c5ab6d9b">Spline project</a> used for demonstration, remixed from <a href="https://app.spline.design/library/781fe354-f6cb-4f01-91c3-315f9ae1598b">3D Text - Blue</a>.</p>
+<p>About the usage of variables in Spline, refer to <a href="https://docs.spline.design/d17e9b49f5284f19b309fce92af0d011">this tutorial</a></p>
+<h1 id="faq">FAQ</h1>
+<h2 id="how-to-get-the-world-url">How to get the world url</h2>
+<p><img src="/post/img/snap-Spline-02.png" alt=""></p>
+<h2 id="how-to-self-host-project-files">How to self-host project files?</h2>
+<p>Taking demo 2 (<code>https://prod.spline.design/dP5NwOaNd2IR5Npm/scene.splinecode</code>) as an example, you can download it, store it on your own server (I put it at: <a href="https://wwj718.github.io/post/img/scene.splinecode">https://wwj718.github.io/post/img/scene.splinecode</a> ), and then load it.</p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-spline-self-hosted.xml&amp;enableJS">Project link (Click to Run)</a></p>
+<h2 id="how-does-the-open-world-url-block-work">How does the <code>open world url</code> block work?</h2>
+<p><code>open world url</code> block requires a url parameter, like <code>https://prod.spline.design/nO5gRl8xdZ5gp4UJ/scene.splinecode</code>, you can get the url
+from the Export button of a Splne project.</p>
+<p>Within <code>open world url</code> block , it will pass the url to this iframe page: <code>https://wwj718.github.io/Snap-Spline-Demo?project=https://prod.spline.design/nO5gRl8xdZ5gp4UJ/scene.splinecode</code></p>
+<p>The source code of the iframe page is here: <a href="https://github.com/wwj718/Snap-Spline-Demo">Snap-Spline-Demo</a>.</p>
+<h2 id="what-apis-does-spline-expose">What APIs does Spline expose?</h2>
+<p><a href="https://www.npmjs.com/package/@splinetool/runtime">Here</a> is the API description.</p>
+<p>These APIs determine how external systems (such as Snap!) can interact with Spline projects.</p>
+<h2 id="what-is-the-use-of-dynatalk-over-postmessage-blocks">What is the use of dynatalk-over-postmessage blocks</h2>
+<blockquote>
+<p>Everything is an object<br>
+Objects communicate via messages<br>
+The object interprets the message it understands<br>
+&ndash; Alan Kay</p>
+</blockquote>
+<p>The browser provides the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage API</a> for communicating with iframe pages, which is an asynchronous communication (pub/sub) method. Sometimes we want synchronous communication (such as the ask _ for _ blocks of the Spline library), similar to RPC or function call. <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">Dynatalk</a> can achieve this.</p>
+<p>Creating dynatalk-over-postmessage is esay. It only needs to switch the message channel from MQTT to postMessage. Specifically, the mechanism for receiving and sending messages needs to be adjusted.</p>
+<h1 id="references">References</h1>
+<ul>
+<li><a href="http://worrydream.com/refs/Kay%20-%20Computer%20Software%20-%20SciAm.pdf">Computer Software(Alan Kay)</a></li>
+<li><a href="http://stephane.ducasse.free.fr/FreeBooks/CollectiveNBlueBook/pierce-final.pdf">Alice in a Squeak Wonderland</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-iframe/">Snap! 中的 iframe 库</a></li>
+<li><a href="https://github.com/wwj718/Snap-Spline-Demo">Snap-Spline-Demo</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">介绍 Dynatalk</a></li>
+<li><a href="https://docs.spline.design/77c32288501a479fa8bc5e787f1e0878">Spine Docs: Exporting as Code</a></li>
+<li><a href="https://www.npmjs.com/package/@splinetool/runtime">Spline Runtime</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-06-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/snap-spline/">
+            <span class="next-text nav-default">Snap! 中的 Spline 库</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="/post/img/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="/post/img/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="/post/img/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
