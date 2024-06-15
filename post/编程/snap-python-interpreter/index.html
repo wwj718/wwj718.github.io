@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 Python 解释器">
 <meta itemprop="description" content="前言 Snap! 的 JavaScript function 简单, 灵活且强大, 我想模仿它构建 Python function。 我们之前在这篇文章里, 基于 CodeLab Adapter 构建了一个 Python function, 但我一直更想要一个除了浏览器之外"><meta itemprop="datePublished" content="2024-05-11T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-05-11T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1838">
+<meta itemprop="wordCount" content="1924">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 Python 解释器"/>
 <meta name="twitter:description" content="前言 Snap! 的 JavaScript function 简单, 灵活且强大, 我想模仿它构建 Python function。 我们之前在这篇文章里, 基于 CodeLab Adapter 构建了一个 Python function, 但我一直更想要一个除了浏览器之外"/>
@@ -164,8 +164,9 @@
         <li><a href="#如何保存状态">如何保存状态</a></li>
         <li><a href="#如何调用蓝牙-串口等浏览器-api">如何调用蓝牙, 串口等浏览器 API</a></li>
         <li><a href="#第三方库从哪儿加载">第三方库从哪儿加载?</a></li>
-        <li><a href="#如何在-snap-和-python-之间传递图像文件">如何在 Snap! 和 Python 之间传递图像文件</a></li>
-        <li><a href="#如何将积木积木编译为-python-代码">如何将积木积木编译为 Python 代码</a></li>
+        <li><a href="#如何在-snap-和-python-之间传递图像文件">如何在 Snap! 和 Python 之间传递图像文件?</a></li>
+        <li><a href="#如何将积木积木编译为-python-代码">如何将积木积木编译为 Python 代码?</a></li>
+        <li><a href="#如何使用更专业的-python-编辑器">如何使用更专业的 Python 编辑器?</a></li>
       </ul>
     </li>
     <li><a href="#结论">结论</a></li>
@@ -314,13 +315,16 @@ pyodide.pyimport("snap");
 <li>其他的库默认从 pypi 安装</li>
 </ul>
 <p>你也可以直接从 url 中加载库(你可以把它们托管在自己的服务器上), 如: <code>https://wwj718.github.io/post/img/furl-2.1.3-py2.py3-none-any.whl</code></p>
-<h2 id="如何在-snap-和-python-之间传递图像文件">如何在 Snap! 和 Python 之间传递图像文件</h2>
+<h2 id="如何在-snap-和-python-之间传递图像文件">如何在 Snap! 和 Python 之间传递图像文件?</h2>
 <p>跨语言/系统传递媒体类信息(音频、图片)的常见做法是使用 base64 格式, 本文的例子采用的也是这种做法。</p>
 <p><a href="https://chatgpt.com/share/4c80ad15-a677-4cbd-a46f-3bdccc68945f">这个对话</a> 中, ChatGPT 解释了这些这个格式编码的 png 格式。</p>
 <p>你可以直接将 base64 编码的字符串(形如: <code>data:image/png;base64,iVBORxxxx...</code>)粘贴到 Chrome 浏览器的输入栏中浏览图片:</p>
 <p><img src="/post/img/snap-python-interpreter-08.png" alt=""></p>
-<h2 id="如何将积木积木编译为-python-代码">如何将积木积木编译为 Python 代码</h2>
+<h2 id="如何将积木积木编译为-python-代码">如何将积木积木编译为 Python 代码?</h2>
 <p>通常而言，这不是个好想法， Snap! 的 lisp code 要更为强大(因为它与积木是同构的)。 如果确实需要编译为 Python，可以参考<a href="https://snap.berkeley.edu/versions/dev/pyret/inline.html">这个项目</a></p>
+<h2 id="如何使用更专业的-python-编辑器">如何使用更专业的 Python 编辑器?</h2>
+<p>在 Snap! 积木中写 Python 代码无法使用自动补全等功能, 如何使用更专业的 Python 编辑器?</p>
+<p>一个思路是使用 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-iframe/">iframe 库</a> 引入 <a href="https://github.com/pyscript/pyscript">pyscrit</a>(pyscrit-editor) 或者 <a href="https://github.com/marimo-team/marimo">marimo</a> 这样更专业的 Python 编辑器, 然后使用 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/#dynatalk-over-postmessage-%E5%9C%A8%E8%BF%99%E9%87%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8">dynatalk-over-postmessage</a> 进行消息传递</p>
 <h1 id="结论">结论</h1>
 <p>本文构建了与 JavaScript function 风格相同的 Python function 积木，一切都运行在浏览器中，没有任何外部依赖。 所有工作都在积木环境中完成，没有修改一行 Snap! 源代码。</p>
 <p>最令人满意的是所有这些扩展性都掌握在普通用户自己的手里，无需开发人员的介入，也无需更新平台。一切都只是一个普通的 Snap! 项目!</p>
