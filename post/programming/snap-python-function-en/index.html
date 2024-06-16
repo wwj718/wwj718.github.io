@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Python function for Snap! - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="中文版本 The JavaScript function of Snap! is simple, flexible, and powerful. I want to emulate it to build a Python function. Preface Usage scenarios With the Python function, we can: Use the vast number of third-party libraries in the Python ecosystem(opencv-python, numpy…) Use various algorithms that have been implemented by the Python community(such as TheAlgorithms) We can both access the vast" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/programming/snap-python-function-en/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Python function for Snap!" />
+<meta property="og:description" content="中文版本 The JavaScript function of Snap! is simple, flexible, and powerful. I want to emulate it to build a Python function. Preface Usage scenarios With the Python function, we can: Use the vast number of third-party libraries in the Python ecosystem(opencv-python, numpy…) Use various algorithms that have been implemented by the Python community(such as TheAlgorithms) We can both access the vast" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/programming/snap-python-function-en/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-05-11T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-05-11T00:00:00+00:00" />
+
+<meta itemprop="name" content="Python function for Snap!">
+<meta itemprop="description" content="中文版本 The JavaScript function of Snap! is simple, flexible, and powerful. I want to emulate it to build a Python function. Preface Usage scenarios With the Python function, we can: Use the vast number of third-party libraries in the Python ecosystem(opencv-python, numpy…) Use various algorithms that have been implemented by the Python community(such as TheAlgorithms) We can both access the vast"><meta itemprop="datePublished" content="2024-05-11T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-05-11T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1142">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Python function for Snap!"/>
+<meta name="twitter:description" content="中文版本 The JavaScript function of Snap! is simple, flexible, and powerful. I want to emulate it to build a Python function. Preface Usage scenarios With the Python function, we can: Use the vast number of third-party libraries in the Python ecosystem(opencv-python, numpy…) Use various algorithms that have been implemented by the Python community(such as TheAlgorithms) We can both access the vast"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Python function for Snap!</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-05-11 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#preface">Preface</a>
+      <ul>
+        <li><a href="#usage-scenarios">Usage scenarios</a></li>
+      </ul>
+    </li>
+    <li><a href="#select-a-python-interpreter">Select a Python Interpreter</a></li>
+    <li><a href="#introduce-pyodide-into-snap">Introduce Pyodide into Snap!</a>
+      <ul>
+        <li><a href="#goals">Goals</a></li>
+        <li><a href="#import-pyodide">Import pyodide</a></li>
+      </ul>
+    </li>
+    <li><a href="#demo">Demo</a>
+      <ul>
+        <li><a href="#using-requests-to-interact-with-the-network">Using <code>requests</code> to interact with the network</a></li>
+        <li><a href="#parse-xml">Parse XML</a></li>
+        <li><a href="#regular-expression">Regular expression</a></li>
+        <li><a href="#passing-lists-between-python-and-snap">Passing Lists Between Python and Snap!</a></li>
+        <li><a href="#numpy-demo">numpy demo</a></li>
+        <li><a href="#opencv-demo">OpenCV demo</a></li>
+        <li><a href="#pillow-demo">Pillow demo</a></li>
+        <li><a href="#third-party-libraries">Third-party libraries</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#how-to-save-global-state">How to save global state?</a></li>
+        <li><a href="#how-to-access-bluetooth-serial-port-and-other-browser-apis">How to access Bluetooth, serial port, and other browser APIs</a></li>
+        <li><a href="#where-is-the-third-party-library-loaded-from">Where is the third-party library loaded from?</a></li>
+        <li><a href="#how-to-pass-image-files-between-snap-and-python">How to pass image files between Snap! and Python?</a></li>
+        <li><a href="#how-to-compile-blocks-into-python-code">How to compile blocks into Python code?</a></li>
+        <li><a href="#how-to-use-a-more-professional-python-editor">How to use a more professional Python editor?</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><a href="/post/%E7%BC%96%E7%A8%8B/snap-python-interpreter/"><strong>中文版本</strong></a></p>
+<p>The JavaScript function of Snap! is simple, flexible, and powerful. I want to emulate it to build a Python function.</p>
+<h1 id="preface">Preface</h1>
+<h2 id="usage-scenarios">Usage scenarios</h2>
+<p>With the Python function, we can:</p>
+<ul>
+<li>Use the vast number of third-party libraries in the Python ecosystem(opencv-python, numpy…)</li>
+<li>Use various algorithms that have been implemented by the Python community(such as <a href="https://github.com/TheAlgorithms/Python">TheAlgorithms</a>)</li>
+</ul>
+<p>We can both access the vast tools accumulated in the Python ecosystem within the Snap! environment and use Snap! to enhance the liveness of Python.</p>
+<h1 id="select-a-python-interpreter">Select a Python Interpreter</h1>
+<p>There are <a href="/post/%E7%BC%96%E7%A8%8B/browser-python/#%E9%98%B5%E8%90%A5-2-jupyterlitebrython">multiple Python interpreters</a> that can work in the browser environment. <a href="https://github.com/pyodide/pyodide">Pyodide</a> is the most powerful. It allows us to use a large number of libraries from <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">the Python ecosystem</a>, such as: opencv-python, Pillow, pyparsing, requests, retrying, scikit-image, and a large number of scientific libraries (scipy, sympy, numpy, pandas).</p>
+<p>Pyodide supports any library implemented in pure Python (built as python wheel packaging standard), and libraries using C/C++ code (such as numpy) compiled to WebAssembly can also be used in pyodide.</p>
+<p>We decided to build the Python function based on Pyodide.</p>
+<h1 id="introduce-pyodide-into-snap">Introduce Pyodide into Snap!</h1>
+<h2 id="goals">Goals</h2>
+<p>Just like in our previous article where we introduced the mediapipe library into Snap!, we hope to achieve the following 2 goals:</p>
+<blockquote>
+<p>No need to update the Snap! platform, no developer intervention required, all work is done in the user environment (just a Snap! project), which means ordinary users can continue to extend these capabilities. (This is an example of end-user programming)</p>
+</blockquote>
+<blockquote>
+<p>We can fully utilize the liveness of Snap! and enjoy an efficient and pleasant development experience.</p>
+</blockquote>
+<p>Since it is just a Snap! project, you can adjust it as you like, and even use other Python interpreters instead of Pyodide.</p>
+<h2 id="import-pyodide">Import pyodide</h2>
+<p>Unlike <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-mediapipe-js/">mediapipe</a> , Pyodide is not released as a JavaScript module. Pyodide takes a more traditional approach to bundling code, We can import it using the <code>src_load(url)</code> primitive of Snap! .</p>
+<p>The version of Pyodide we are using is <code>0.25.1</code> , and the corresponding Python version is <code>3.11</code>. We used the <a href="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js">official CDN</a>,</p>
+<h1 id="demo">Demo</h1>
+<h2 id="using-requests-to-interact-with-the-network">Using <code>requests</code> to interact with the network</h2>
+<p>Snap! has a block for interacting with the network, but it is not convenient to use. The API of requests is designed to be easy to use:</p>
+<p><img src="/post/img/snap-python-interpreter-07.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-requests.xml&amp;enableJS">requests demo</a></p>
+<h2 id="parse-xml">Parse XML</h2>
+<p>There is no built-in XML library in Snap!, but the built-in XML library of Python is useful, we can use it to extract information from blog RSS feeds.</p>
+<p><strong>Notice</strong>: you can also use JavaScript function to do it.</p>
+<p><video width=100% src="/post/img/blog-rss.mp4" controls="controls"></video></p>
+<p>This example demonstrates fetching the latest RSS from my blog, parsing it using the XML library of Python, and storing the parsed results in the posts variable of Snap!. Then, each blog post is displayed as a clone:</p>
+<ul>
+<li>The costume of the clone is the article title</li>
+<li>When the mouse hovers over a clone, the clone will say the article summary</li>
+<li>Clicking on a clone will open the article link</li>
+</ul>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-blog-rss.xml&amp;enableJS">XML demo</a></p>
+<h2 id="regular-expression">Regular expression</h2>
+<p>Snap! Lacks support for regular expressions, we can use the regular expression library of Python to enhance it.</p>
+<p><img src="/post/img/snap-python-interpreter-05.png" alt=""></p>
+<h2 id="passing-lists-between-python-and-snap">Passing Lists Between Python and Snap!</h2>
+<p><img src="/post/img/snap-python-interpreter-03.png" alt=""></p>
+<p>This example demonstrates how to pass lists (any nesting depth!) between Python and Snap!</p>
+<p>Lists can represent any data structure. The list functions of Python and Snap! are extremely powerful (Snap! , a kind of Lisp, has even more powerful list expressiveness). Now, the two can interoperate seamlessly.</p>
+<p>Images, audio, and other multimedia data can all be represented as lists, and all the data can now flow freely between the two systems.</p>
+<p>A typical use case is that the capabilities of numpy(just like the hyperblock of Snap!) can be integrated into Snap!, and Snap! can provide enhanced liveness for numpy.</p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-pass-list.xml&amp;enableJS">Passing Lists demo</a></p>
+<h2 id="numpy-demo">numpy demo</h2>
+<p><img src="/post/img/snap-python-interpreter-02.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-numpy.xml&amp;enableJS">numpy demo</a></p>
+<h2 id="opencv-demo">OpenCV demo</h2>
+<p><img src="/post/img/snap-python-interpreter-04.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-opencv.xml&amp;enableJS">OpenCV demo</a></p>
+<h2 id="pillow-demo">Pillow demo</h2>
+<p><img src="/post/img/snap-python-interpreter-pillow.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-pillow.xml&amp;enableJS">Pillow demo</a></p>
+<h2 id="third-party-libraries">Third-party libraries</h2>
+<p>As mentioned:</p>
+<blockquote>
+<p>Pyodide supports any library implemented in pure Python (built as python wheel packaging standard)</p>
+</blockquote>
+<p>We tried to install the <a href="https://github.com/gruns/furl">furl</a> library, which is used to conveniently handle URLs</p>
+<p>Pyodide will install this library from PyPI (you can also install your libraries from a specified URL).</p>
+<p><img src="/post/img/snap-python-interpreter-06.png" alt=""></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-furl.xml&amp;enableJS">furl demo</a></p>
+<h1 id="faq">FAQ</h1>
+<h2 id="how-to-save-global-state">How to save global state?</h2>
+<p>Functions are usually stateless, the Python function is a function.</p>
+<p>If you expect to operate on the same state(variable) across multiple function calls, you can store it in the window global variable</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">js</span>
+</span></span><span class="line"><span class="cl"><span class="n">js</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="s2">&#34;hello&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Accessible in devtool: console.log(window.a)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>And of course, you can persistently store it in localstorage or indexeddb, so that even if you refresh the browser, you can still find these states.</p>
+<h2 id="how-to-access-bluetooth-serial-port-and-other-browser-apis">How to access Bluetooth, serial port, and other browser APIs</h2>
+<p>This <a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-BLE.xml&amp;enableJS">demo (click to run)</a> shows how to use Python to connect to MicroBlocks&rsquo; Bluetooth service.</p>
+<h2 id="where-is-the-third-party-library-loaded-from">Where is the third-party library loaded from?</h2>
+<p>The <code>load package</code> block is used to load third-party libraries from the network. It uses <a href="https://micropip.pyodide.org/en/stable/project/usage.html">micropip</a> internally.</p>
+<p>Python packages can be loaded from multiple sources:</p>
+<ul>
+<li>The official Pyodide has compiled <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">these Python libraries</a>. If you load these libraries, they will be loaded from the Pyodide repository.</li>
+<li>Other libraries are loaded from PyPI by default</li>
+</ul>
+<p>You can also load libraries directly from the URL (you can host them on your own server), such as: <code>https://wwj718.github.io/post/img/furl-2.1.3-py2.py3-none-any.whl</code></p>
+<h2 id="how-to-pass-image-files-between-snap-and-python">How to pass image files between Snap! and Python?</h2>
+<p>The common practice for transferring media information (audio, images) across languages/systems is to use the base64 data format. The example in this article also uses it.</p>
+<p>In <a href="https://chatgpt.com/share/4c80ad15-a677-4cbd-a46f-3bdccc68945f">this conversation</a>, ChatGPT explained the PNG data of base64 encoding.</p>
+<p>You can directly paste the base64 encoded string (such as: <code>data:image/png;base64,iVBORxxxx...</code>) int the oaddress bar of Chrome to view the image.</p>
+<p><img src="/post/img/snap-python-interpreter-08.png" alt=""></p>
+<h2 id="how-to-compile-blocks-into-python-code">How to compile blocks into Python code?</h2>
+<p>Generally speaking, this is not a good idea. the lisp code of Snap! is more powerful (because it is isomorphic with the blocks). If you really need to compile to Python, you can refer to <a href="https://snap.berkeley.edu/versions/dev/pyret/inline.html">this project</a>.</p>
+<h2 id="how-to-use-a-more-professional-python-editor">How to use a more professional Python editor?</h2>
+<p>How to use a more professional Python editor, since writing Python code in Snap! blocks cannot use features like auto-completion.</p>
+<p>One approach is to use the <a href="https://wwj718.github.io/post/programming/snap-iframe-en/">iframe library</a> to introduce a more professional Python editor like <a href="https://github.com/pyscript/pyscript">pyscrit</a>(pyscrit-editor) (pyscrit-editor) or <a href="https://github.com/marimo-team/marimo">marimo</a>, and then use <a href="https://wwj718.github.io/post/programming/snap-spline-en/#what-is-the-use-of-dynatalk-over-postmessage-blocks">dynatalk-over-postmessage</a> for message passing.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>This article introduces Python function in the same style as JavaScript function, running in the browser without any external dependencies. All work is done within the Snap! IDE without modifying any Snap! source code.</p>
+<p>The most satisfying part is that all this extensibility is in the hands of ordinary users themselves, without the need for developers&rsquo; intervention or source code updates. Everything is just an Snap! project!</p>
+<h1 id="references">References</h1>
+<ul>
+<li><a href="https://pyodide.org/en/stable/">pyodide 文档</a>
+<ul>
+<li><a href="https://pyodide.org/en/stable/console.html">REPL</a></li>
+<li><a href="https://pyodide.org/en/stable/usage/faq.html">FAQ</a></li>
+</ul>
+</li>
+<li><a href="https://jupyterlite.rtfd.io/en/stable/try/lab">jupyterlite</a>: 用于探索 pyodide api</li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">Snap! 使用笔记: JavaScript function</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-function/">Snap! 使用笔记: Python function(CodeLab Adapter 版)</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/browser-python/">浏览器中的 Python</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-05-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/%E7%BC%96%E7%A8%8B/snap-simulate-iot/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Snap! 中的硬件模拟器</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E7%BC%96%E7%A8%8B/snap-python-interpreter/">
+            <span class="next-text nav-default">Snap! 中的 Python 解释器</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="/post/img/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="/post/img/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="/post/img/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
