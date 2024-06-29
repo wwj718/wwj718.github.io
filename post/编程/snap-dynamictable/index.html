@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap! 中的 Dynamic Table 库 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="TODO 梁博士 CoCube , 我作为 microblocks 团队代表, 测试 aruco, 最近使用 toio 相同传感器. 将 dynamic table 是现在 snap 性能优化 base64 是问题, @禾牧提到 &amp;hellip; 图像是不是太高清? 灰度传输, 压缩大小?" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-dynamictable/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Snap! 中的 Dynamic Table 库" />
+<meta property="og:description" content="TODO 梁博士 CoCube , 我作为 microblocks 团队代表, 测试 aruco, 最近使用 toio 相同传感器. 将 dynamic table 是现在 snap 性能优化 base64 是问题, @禾牧提到 &hellip; 图像是不是太高清? 灰度传输, 压缩大小?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-dynamictable/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-06-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-06-29T00:00:00+00:00" />
+
+<meta itemprop="name" content="Snap! 中的 Dynamic Table 库">
+<meta itemprop="description" content="TODO 梁博士 CoCube , 我作为 microblocks 团队代表, 测试 aruco, 最近使用 toio 相同传感器. 将 dynamic table 是现在 snap 性能优化 base64 是问题, @禾牧提到 &hellip; 图像是不是太高清? 灰度传输, 压缩大小?"><meta itemprop="datePublished" content="2024-06-29T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-06-29T00:00:00+00:00" />
+<meta itemprop="wordCount" content="800">
+<meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Snap! 中的 Dynamic Table 库"/>
+<meta name="twitter:description" content="TODO 梁博士 CoCube , 我作为 microblocks 团队代表, 测试 aruco, 最近使用 toio 相同传感器. 将 dynamic table 是现在 snap 性能优化 base64 是问题, @禾牧提到 &hellip; 图像是不是太高清? 灰度传输, 压缩大小?"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Snap! 中的 Dynamic Table 库</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-06-29 </span>
+        <div class="post-category">
+            <a href="/categories/snap/"> Snap </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#dynamic-table">Dynamic Table</a></li>
+      </ul>
+    </li>
+    <li><a href="#snap-中的-dynamic-table-库">Snap! 中的 Dynamic Table 库</a></li>
+    <li><a href="#faq">FAQ</a>
+      <ul>
+        <li><a href="#提升性能">提升性能</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <ul>
+<li>TODO 梁博士 CoCube , 我作为 microblocks 团队代表, 测试 aruco, 最近使用 toio 相同传感器.
+<ul>
+<li>将 dynamic table 是现在 snap</li>
+<li>性能优化
+<ul>
+<li>base64 是问题, @禾牧提到 &hellip;</li>
+<li>图像是不是太高清?</li>
+<li>灰度传输, 压缩大小? 1080?
+<ul>
+<li>使用 png 对象? 在 pyodide 直接, opencv 如何获取浏览器中图片对象</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/post/img/WechatIMG1946.jpeg" alt=""></p>
+<h1 id="前言">前言</h1>
+<p>@梁博士 制作了一个桌面级模块化群控机器人系统, 取名&quot;CoCube&quot; (Collaborative-Cube), CoCube 将 MicroBlocks 用作其编程环境. CoCube 与 <a href="https://toio.io/">toio</a> 有许多相似的特性, 也有一些 toio 不具备的能力, 如可扩展的硬件接口, 以及与 MicroBlocks 更紧密的结合. 近期 @梁博士 打算使用这款机器人参加中美青年创客大赛, 邀请 MicroBlocks 团队成员参与其中, John Maloney 让我代表团队参与.</p>
+<p>为了将 GPT-4o 的能力带给 CoCube, 我打算将 Snap! 用作 CoCube 的上位机, 这样我就可以将<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-gpt-4o/">之前在这方面的工作</a>迁移到 CoCube 身上. 在解析 CoCube 顶部二维码的过程中, 我发现它基于 <a href="https://www.uco.es/investiga/grupos/ava/portfolio/aruco/">ArUco</a>, 与 Dynamic Table 使用的是同一套 marker 系统!</p>
+<p>因此只需要实现在 Snap! 中实现 Dynamic Table 库, 就可以将其用于解析 CoCube 的空间位置.</p>
+<h2 id="dynamic-table">Dynamic Table</h2>
+<blockquote>
+<p>当心灵和手不默契，艺术将不存在 &ndash; 达·芬奇</p>
+</blockquote>
+<blockquote>
+<p>在设计这样一个系统时，我们使用的一个隐喻是乐器，比如长笛，它是用户拥有的，并对用户的愿望作出即时和一致的响应。想象一下，在吹出一个音符和听到它之间的一秒钟的延迟是多么荒谬！ &ndash; Alan Kay &amp; Adele Goldberg 《Personal Dynamic Media》</p>
+</blockquote>
+<p>Dynamic Table 围绕<strong>在一张桌子上对实物进行编程</strong>的想法构建. <a href="https://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-dynamictable-a-seeing-world/">这篇文章</a> 对其做了详细介绍.</p>
+<p>来看一些演示视频:</p>
+<p><video width=100% src="/post/img/dynamictable-cozmo-toio.mp4" controls="controls"></video></p>
+<p><video width=100% src="https://scratch3-files.just4fun.site/dynamictable-spelling.mp4" controls="controls"></video></p>
+<p><video width=100% src="/post/img/dynamictable-Pikachu.mp4" controls="controls"></video></p>
+<p><video width=100% src="/post/img/dynamictable-running.mp4" controls="controls"></video></p>
+<p><video width=100% src="https://scratch3-files.just4fun.site/42.mp4" controls="controls"></video></p>
+<p>技术层面, 使用 ArUco 来标识这些自制卡片, 演示视频使用的编程环境是 Scratch + <a href="https://adapter.codelab.club/extension_guide/physical_blocks2/">CodeLab Adapter</a></p>
+<p><img src="/post/img/snap-DynamicTable-01.png" alt=""></p>
+<p>由于我们已经有了<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-interpreter/">运行在 Snap! 中的 Python 解释器</a>, 我打算让 Snap! 中的 Dynamic Table 库运行在纯浏览器环境中, 如此一来, 不仅提高了开箱可用性, 而且可以运行在移动设备上!</p>
+<h1 id="snap-中的-dynamic-table-库">Snap! 中的 Dynamic Table 库</h1>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-dynamictable-demo.xml&amp;enableJS">示例项目(点击运行)</a></p>
+<!--
+# 使用场景
+
+机器人相关的项目, 经常会将 ArUco 用于定位.
+
+由于当前版本的 dynamictable 运行在纯浏览器环境中, 因此可以在移动端使用, 移动的摄像头
+
+由于我们也可以在移动设备上无线连接 microblocks 设备,所以可以联动的设备是非常丰富的的
+
+# todo
+
+更新 json python function
+-->
+<h1 id="faq">FAQ</h1>
+<h2 id="提升性能">提升性能</h2>
+<p>我在 CodeLab 分享了这个工作, 最初的性能比较弱, fps 只有 8 左右.</p>
+<p>@禾牧 提醒说:</p>
+<blockquote>
+<p>之前我测了下在 Snap! 里用 Python 拓展处理图片，瓶颈主要在图片转 base64 以及 base64 转图片，计算过程很快</p>
+</blockquote>
+<p>根据 @禾牧 的提示, 我进行了相关部分的优化, 将 DynamicTable 的性能提升了 3 倍左右, fps 达到了 30:</p>
+<p><img src="/post/img/snap-DynamicTable-02.png" alt=""></p>
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-dynamictable-a-seeing-world/">CodeLab DynamicTable: A Seeing World</a></li>
+<li><a href="https://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/codelab-dynamictable-an-instance/">CodeLab DynamicTable: 一个可实施的技术方案</a></li>
+<li><a href="https://adapter.codelab.club/extension_guide/physical_blocks2/">physical blocks 2.0</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-interpreter/">Snap! 中的 Python 解释器</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-06-29
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/snap/">Snap</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/programming/snap-spline-en/">
+            <span class="next-text nav-default">Spline library for Snap!</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="/post/img/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="/post/img/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="/post/img/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
