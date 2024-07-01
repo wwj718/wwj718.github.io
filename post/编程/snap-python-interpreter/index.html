@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 Python 解释器">
 <meta itemprop="description" content="English version 前言 Snap! 的 JavaScript function 简单, 灵活且强大, 我想模仿它构建 Python function。 我们之前在这篇文章里, 基于 CodeLab Adapter 构建了一个 Python function, 但我一直更想要一个除了浏览器"><meta itemprop="datePublished" content="2024-05-11T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-05-11T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1983">
+<meta itemprop="wordCount" content="2179">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 Python 解释器"/>
 <meta name="twitter:description" content="English version 前言 Snap! 的 JavaScript function 简单, 灵活且强大, 我想模仿它构建 Python function。 我们之前在这篇文章里, 基于 CodeLab Adapter 构建了一个 Python function, 但我一直更想要一个除了浏览器"/>
@@ -168,6 +168,7 @@
         <li><a href="#如何在-snap-和-python-之间传递图像文件">如何在 Snap! 和 Python 之间传递图像文件?</a></li>
         <li><a href="#如何将积木编译为-python-代码">如何将积木编译为 Python 代码?</a></li>
         <li><a href="#如何使用更专业的-python-编辑器">如何使用更专业的 Python 编辑器?</a></li>
+        <li><a href="#如何将其转化为标准的-snap-库">如何将其转化为标准的 Snap! 库?</a></li>
       </ul>
     </li>
     <li><a href="#结论">结论</a></li>
@@ -182,12 +183,12 @@
 <p>Snap! 的 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">JavaScript function</a> 简单, 灵活且强大, 我想模仿它构建 Python function。</p>
 <p>我们之前在<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-function/">这篇文章</a>里, 基于 <a href="https://adapter.codelab.club/">CodeLab Adapter</a> 构建了一个 Python function, 但我一直更想要一个除了浏览器之外没有任何依赖的 Python function。</p>
 <h2 id="使用场景">使用场景</h2>
-<p>有了 Python function,  我们就可以在 Snap! 中获得:</p>
+<p>有了 Python function, 我们就可以在 Snap! 中获得:</p>
 <ul>
 <li>Python 生态中海量的第三方库(opencv-python, numpy&hellip;)</li>
 <li>Python 社区已经实现的各种算法(如 <a href="https://github.com/TheAlgorithms/Python">TheAlgorithms</a>)</li>
 </ul>
-<p>我们既可以在 Snap! 环境中获得 Python 生态积累的丰富工具, 又可以借助 Snap!  <strong>提升</strong> Python 的活性(liveness)。</p>
+<p>我们既可以在 Snap! 环境中获得 Python 生态积累的丰富工具, 又可以借助 Snap! <strong>提升</strong> Python 的活性(liveness)。</p>
 <h1 id="选择-python-解释器">选择 Python 解释器</h1>
 <p>有<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/browser-python/#%E9%98%B5%E8%90%A5-2-jupyterlitebrython">多个 Python 解释器</a>可运行在浏览器环境。 <a href="https://github.com/pyodide/pyodide">pyodide</a> 是其中最强大的一个, 它允许我们使用 <a href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">Python 生态大量的库</a>, 如: opencv-python, Pillow, pyparsing, requests(最新的版本有问题), retrying, scikit-image 以及大量的科学计算相关的库(scipy, sympy, numpy, pandas)</p>
 <p>实际上, pyodide 支持 <strong>任何纯 Python 实现的库(构建为 wheel)</strong>, 使用了 C/C++ 代码的库(如 numpy)编译为 WebAssembly 也能够在 pyodide 中使用。</p>
@@ -253,7 +254,7 @@ micropip 使用 pypi
 <h2 id="在-python-与-snap-之间传递-json">在 Python 与 Snap! 之间传递 json</h2>
 <p>对于复杂的数据结构, 可以考虑使用 json 传递. 也可以使用 json 来传递列表 (将列表作为一个 key 的 value ).</p>
 <p><img src="/post/img/snap-python-interpreter-json.png" alt=""></p>
-<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-pass-json.xml&amp;enableJS">传递json demo</a></p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-pass-json.xml&amp;enableJS">传递 json demo</a></p>
 <h2 id="numpy-demo">numpy demo</h2>
 <p><img src="/post/img/snap-python-interpreter-02.png" alt=""></p>
 <p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-cn-numpy.xml&amp;enableJS">numpy demo</a></p>
@@ -287,7 +288,7 @@ def to_python_list(snap_list):
 `;
 pyodide.FS.writeFile("snap.py", data, { encoding: "utf8" });
 pyodide.pyimport("snap");
-// python: import snap 
+// python: import snap
 ```
 -->
 <h2 id="如何保存状态">如何保存状态</h2>
@@ -312,7 +313,7 @@ pyodide.pyimport("snap");
 
 但基于 pyodide 的 [pyscript](https://github.com/pyscript/pyscript) 解决这些问题, 未来或许会合并到 pyodide 中。
 -->
-<p>这个 <a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-BLE.xml&amp;enableJS">demo(点击体验)</a> 展示了如何使用  Python 连接 MicroBlocks 的蓝牙服务。</p>
+<p>这个 <a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/snap-pyodide-BLE.xml&amp;enableJS">demo(点击体验)</a> 展示了如何使用 Python 连接 MicroBlocks 的蓝牙服务。</p>
 <h2 id="第三方库从哪儿加载">第三方库从哪儿加载?</h2>
 <p><code>load package</code> 积木用于从网络加载第三方库, 它在背后使用了 <a href="https://micropip.pyodide.org/en/stable/project/usage.html">micropip</a></p>
 <p>可以从多种来源加载 python 包:</p>
@@ -331,13 +332,25 @@ pyodide.pyimport("snap");
 <h2 id="如何使用更专业的-python-编辑器">如何使用更专业的 Python 编辑器?</h2>
 <p>在 Snap! 积木中写 Python 代码无法使用自动补全等功能, 如何使用更专业的 Python 编辑器?</p>
 <p>一个思路是使用 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-iframe/">iframe 库</a> 引入 <a href="https://github.com/pyscript/pyscript">pyscrit</a>(pyscrit-editor) 或者 <a href="https://github.com/marimo-team/marimo">marimo</a> 这样更专业的 Python 编辑器, 然后使用 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/#dynatalk-over-postmessage-%E5%9C%A8%E8%BF%99%E9%87%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8">dynatalk-over-postmessage</a> 进行消息传递</p>
+<h2 id="如何将其转化为标准的-snap-库">如何将其转化为标准的 Snap! 库?</h2>
+<p>处于教育目的, 我们使用 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">JavaScript function</a> 来制作 Python function 库. 这样做,</p>
+<ul>
+<li>好处是: &ldquo;一切都只是一个普通 Snap! 项目&rdquo;, 用户可以在 IDE 中理解所有事情</li>
+<li>坏处是: 需要开启 &ldquo;JavaScript 扩展&quot;才能用</li>
+</ul>
+<p>为了将基于 JavaScript function 的 Python function 库转化为开箱可用的内置积木库, 我们需要做一下工作:</p>
+<ol>
+<li>将 Python function 库中所有的 JavaScript function 整理到一个 JavaScript 文件中, 并将 JavaScript 文件放在 Snap! 代码仓库里</li>
+<li>将 Python function 库文件(以 xml 结尾) 当到 Snap! 代码仓库里</li>
+</ol>
+<p>目前 Python function 已成为了 <a href="https://snap.codelab.club/snap.html">Snap! 中文版</a> 内置库.</p>
 <h1 id="结论">结论</h1>
 <p>本文构建了与 JavaScript function 风格相同的 Python function 积木，一切都运行在浏览器中，没有任何外部依赖。 所有工作都在积木环境中完成，没有修改一行 Snap! 源代码。</p>
 <p>最令人满意的是所有这些扩展性都掌握在普通用户自己的手里，无需开发人员的介入，也无需更新平台。一切都只是一个普通的 Snap! 项目!</p>
 <h1 id="参考">参考</h1>
 <ul>
 <li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-javascript-function/">Snap! 使用笔记: JavaScript function</a></li>
-<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-function/">Snap! 使用笔记: Python function(CodeLab Adapter版)</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-python-function/">Snap! 使用笔记: Python function(CodeLab Adapter 版)</a></li>
 <li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/browser-python/">浏览器中的 Python</a></li>
 <li><a href="https://pyodide.org/en/stable/">pyodide 文档</a>
 <ul>
