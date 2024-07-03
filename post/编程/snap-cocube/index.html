@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 CoCube 库">
 <meta itemprop="description" content="前言 上篇文章提到: @梁博士 制作了一个桌面级模块化群控机器人系统, 取名&quot;CoCube&quot; (Collaborative-Cube), CoCube 将 MicroBlocks 用作其编程环境. CoCube 与 toio 有许多"><meta itemprop="datePublished" content="2024-07-03T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-03T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1798">
+<meta itemprop="wordCount" content="1803">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 CoCube 库"/>
 <meta name="twitter:description" content="前言 上篇文章提到: @梁博士 制作了一个桌面级模块化群控机器人系统, 取名&quot;CoCube&quot; (Collaborative-Cube), CoCube 将 MicroBlocks 用作其编程环境. CoCube 与 toio 有许多"/>
@@ -212,7 +212,7 @@
 </li>
 </ul>
 <p>MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 基于它制作类似 Firmata 这样的 push 机制很容易.</p>
-<p>于是我便打算基于 push 风格来构建 CoCube 库</p>
+<p>于是我打算先基于 push 风格来构建 CoCube 库.</p>
 <h1 id="实施">实施</h1>
 <h2 id="microblocks-一侧">MicroBlocks 一侧</h2>
 <p>前头提到, 我们力求做到:</p>
@@ -229,7 +229,7 @@
 </ol>
 <p>你可以将这个程序视为运行在硬件中的 server, Snap! 则是它的 client. 我们使用了 C/S 架构.</p>
 <h2 id="snap-一侧">Snap! 一侧</h2>
-<p>前边提到</p>
+<p>前边提到:</p>
 <blockquote>
 <ol>
 <li>用户可以在 Snap! 中获取 MicroBlocks 设备的状态信息(reporter 积木)</li>
@@ -237,14 +237,14 @@
 </ol>
 </blockquote>
 <p>我们分别展示它们是如何做到的:</p>
-<p>对于第 1 点, 获取状态信息(reporter 积木)</p>
+<p>对于第 1 点, 获取状态信息(reporter 积木):</p>
 <p><img src="/post/img/CoCube-06.png" alt=""></p>
-<p>MicroBlocks 会将设备的状态信息源源不断地发送到 Snap! 里, 运行 <code>updating status</code> 积木, 状态信息将被更新到 <code>_CoCube_status_</code> 列表变量中. reporter 积木将从这个变量里取自己感兴趣的信息.</p>
-<p>对于第 2 点, 发送指令(command 积木)</p>
+<p>MicroBlocks 会将设备的状态信息源源不断地发送到 Snap! 里, 运行 <code>updating status</code> 积木, 状态信息将被更新到 <code>_CoCube_status_</code> 列表变量中. reporter 积木将从这个变量里取到自己感兴趣的信息.</p>
+<p>对于第 2 点, 发送指令(command 积木):</p>
 <p><img src="/post/img/CoCube-05.png" alt=""></p>
-<p>消息采用纯字符串形式, 携带方法名(自定义积木名字或者 vm primitive)和 参数 args, 以 <code>,</code> 分隔 , 以下是一个例子: <code>command, move_forward, 50</code></p>
+<p>消息采用纯字符串形式, 携带方法名(自定义积木名字或者 vm primitive)和 参数, 以 <code>,</code> 分隔 , 以下是一个例子: <code>command, move_forward, 50</code></p>
 <h1 id="如何使用">如何使用?</h1>
-<p>要是用 CoCube 库, 只需打开 <a href="https://snap.codelab.club/snap.html">Snap! 平台</a>即可.</p>
+<p>要使用 CoCube 库, 只需打开 <a href="https://snap.codelab.club/snap.html">Snap! 平台</a>即可.</p>
 <p>加载 CoCube 库,</p>
 <p><img src="/post/img/CoCube-07.png" alt=""></p>
 <p>点击 <code>open MicroBlocks project</code> 积木, 将打开 MicroBlocks 窗口, 连接设备将程序刷入后, 即可断开并关闭 MicroBlocks 窗口</p>
