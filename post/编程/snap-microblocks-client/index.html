@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 MicroBlocks Client 库">
 <meta itemprop="description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"><meta itemprop="datePublished" content="2024-07-04T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-04T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1770">
+<meta itemprop="wordCount" content="1850">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 MicroBlocks Client 库"/>
 <meta name="twitter:description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"/>
@@ -149,7 +149,11 @@
       <ul>
         <li><a href="#如何同时调试-snap-microblocks-的代码">如何同时调试 Snap! MicroBlocks 的代码?</a></li>
         <li><a href="#如何查看-microblocks-支持的-vm-primitive">如何查看 MicroBlocks 支持的 vm primitive?</a></li>
-        <li><a href="#push-和-pull-风格的差别">push 和 pull 风格的差别</a></li>
+        <li><a href="#push-和-pull-风格的差别">push 和 pull 风格的差别</a>
+          <ul>
+            <li><a href="#dynatalk-over-ble">dynatalk-over-ble</a></li>
+          </ul>
+        </li>
         <li><a href="#是否可以为-cocube-制作一个类似的-python-client-库">是否可以为 CoCube 制作一个类似的 Python client 库?</a></li>
       </ul>
     </li>
@@ -258,7 +262,11 @@
 <li>实时性不好, 目前是 50ms 更新一次状态信息</li>
 </ul>
 <p>采用 pull 风格, 可能能够解决以上问题, pull 风格按需查询, 或许能够同时改善性能和实时性问题</p>
-<p>未来我有可能通过制作 Dynatalk-over-ble(它会类似<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/#dynatalk-over-postmessage-%E5%9C%A8%E8%BF%99%E9%87%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8">dynatalk-over-postmessage</a>) 实现 pull 风格的 CoCube 库</p>
+<h3 id="dynatalk-over-ble">dynatalk-over-ble</h3>
+<p>我打算基于 dynatalk-over-ble(它会类似<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/#dynatalk-over-postmessage-%E5%9C%A8%E8%BF%99%E9%87%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8">dynatalk-over-postmessage</a>) 实现 pull 风格的 MicroBlocks Client 库.</p>
+<p>在我们的用例中, 我们只需要实现单向的 C/S 架构(Snap! 为 client, MicroBlocks 为 server), 所以 dynatalk-over-ble 的复杂性只有常规 dynatalk 的一半, 令人开心的是, 正好计算能力偏弱的 MicroBlocks 的那部分极为简单.</p>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/MicroBlocks-Client-dynatalk.xml">示例(点击运行)</a></p>
+<!--只需要处理response即可, 收到简单 ble 消息后, 改造为 payload-->
 <h2 id="是否可以为-cocube-制作一个类似的-python-client-库">是否可以为 CoCube 制作一个类似的 Python client 库?</h2>
 <p>本文的设计很容易迁移到 Python 中, 使用我之前为 Python 制作的 <a href="https://github.com/wwj718/microblocks_messaging_library">microblocks_messaging_library</a> 库, 可以很容易地实现跟 Snap! 库相同的功能. 将 Python 用作 CoCube 上位机.</p>
 <h1 id="参考">参考</h1>
