@@ -1,0 +1,656 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables test 
+
+  spec ' ' 'handle_message' 'handle_message'
+  spec 'r' 'to_mb_args' 'to_mb_args _' 'auto' ''
+  spec ' ' 'handle_blocking_message' 'handle_blocking_message'
+
+to handle_blocking_message {
+  local 'msg' (getLastBroadcast)
+  if (('[data:copyFromTo]' msg 1 13) == 'blocking_call') {
+    local 'msg' ('[data:split]' msg ',')
+    local 'msg_id' (at 2 msg)
+    local 'cmd_name' (at 3 msg)
+    local 'cmd_args' ('[data:copyFromTo]' msg 4)
+    local 'result' (callCustomReporter cmd_name (to_mb_args cmd_args))
+    sendBroadcast ('[data:joinStrings]' ('[data:makeList]' '[response]' msg_id result) ',')
+  }
+}
+
+to handle_message {
+  local 'msg' (getLastBroadcast)
+  if (('[data:copyFromTo]' msg 1 4) == 'call') {
+    local 'msg' ('[data:split]' msg ',')
+    local 'msg_id' (at 2 msg)
+    local 'cmd_name' (at 3 msg)
+    local 'cmd_args' ('[data:copyFromTo]' msg 4)
+    local 'result' (callCustomReporter cmd_name (to_mb_args cmd_args))
+    sendBroadcast ('[data:joinStrings]' ('[data:makeList]' '[response]' msg_id result) ',')
+  }
+}
+
+to to_mb_args args {
+  local 'json' ('[data:join]' '[' ('[data:joinStrings]' args ',') ']')
+  local 'json_count' ('[misc:jsonCount]' json '')
+  local 'result' ('[data:makeList]')
+  for i json_count {
+    '[data:addLast]' ('[misc:jsonGet]' json ('[data:convertType]' i 'string')) result
+  }
+  return result
+}
+
+script 50 50 {
+whenBroadcastReceived ''
+handle_message
+}
+
+script 217 50 {
+whenBroadcastReceived ''
+handle_blocking_message
+}
+
+
+module CoCube
+author '梁帅'
+version 1 4 
+depends Tone Ringtone TFT Display 
+tags 'cocube机器人' 
+description ''
+variables speed error_angle target_angle 
+
+  spec 'r' 'Battery Percentage' 'Battery Percentage'
+  space
+  spec 'r' 'position_X' 'positionX'
+  spec 'r' 'position_Y' 'positionY'
+  spec 'r' 'position_Yaw' 'positionYaw'
+  space
+  spec ' ' 'set TFT backlight' 'set TFT backlight _' 'bool' false
+  spec ' ' 'draw Aruco Marker on TFT' 'draw Aruco Marker on TFT _' 'num' 0
+  spec ' ' 'draw AprilTag on TFT' 'draw AprilTag on TFT _' 'num' 0
+  space
+  spec ' ' 'ControlLeftMotor' 'Control Left Motor _' 'num' 50
+  spec ' ' 'ControlRightMotor' 'Control Right Motor _' 'num' 50
+  space
+  spec ' ' 'Move Forward' 'Move Forward _' 'num' 50
+  spec ' ' 'Move Backward' 'Move Backward _' 'num' 50
+  spec ' ' 'Turn Left' 'Turn Left _' 'num' 10
+  spec ' ' 'Turn Right' 'Turn Right _' 'num' 10
+  spec ' ' 'Motor Stop' 'Motor Stop'
+  spec ' ' 'Motor Break' 'Motor Break'
+  space
+  spec ' ' 'Rotate to Angle' 'Rotate to Angle _ Speed _' 'num num' 0 10
+  spec ' ' 'Rotate to Target' 'Rotate to Target X _ Y _ Speed _' 'num num num' 10 10 10
+
+to 'Battery Percentage' {
+  return (minimum (((13 * ('[misc:rescale]' (analogReadOp 34) 0 1023 0 3300)) - 33000) / 90) 100)
+}
+
+to ControlLeftMotor speed {
+  if (speed == 0) {
+    digitalWriteOp 9 false
+    digitalWriteOp 10 false
+  } (speed > 0) {
+    analogWriteOp 9 ('[misc:rescale]' speed 0 100 75 1023)
+    digitalWriteOp 10 false
+  } else {
+    digitalWriteOp 9 false
+    analogWriteOp 10 ('[misc:rescale]' (absoluteValue speed) 0 100 75 1023)
+  }
+}
+
+to ControlRightMotor speed {
+  if (speed == 0) {
+    digitalWriteOp 26 false
+    digitalWriteOp 25 false
+  } (speed > 0) {
+    analogWriteOp 26 ('[misc:rescale]' speed 0 100 75 1023)
+    digitalWriteOp 25 false
+  } else {
+    digitalWriteOp 26 false
+    analogWriteOp 25 ('[misc:rescale]' (absoluteValue speed) 0 100 75 1023)
+  }
+}
+
+to 'Motor Break' {
+  digitalWriteOp 9 true
+  digitalWriteOp 10 true
+  digitalWriteOp 26 true
+  digitalWriteOp 25 true
+  waitMillis 200
+  digitalWriteOp 9 false
+  digitalWriteOp 10 false
+  digitalWriteOp 26 false
+  digitalWriteOp 25 false
+}
+
+to 'Motor Stop' {
+  ControlLeftMotor 0
+  ControlRightMotor 0
+}
+
+to 'Move Backward' speed {
+  ControlLeftMotor (0 - speed)
+  ControlRightMotor (0 - speed)
+}
+
+to 'Move Forward' speed {
+  ControlLeftMotor speed
+  ControlRightMotor speed
+}
+
+to 'Rotate to Angle' angle speed {
+  forever {
+    error_angle = ((angle % 360) - (position_Yaw))
+    if (error_angle > 180) {
+      error_angle += -360
+    } (error_angle < -180) {
+      error_angle += 360
+    } else {
+    }
+    if (error_angle > 1) {
+      'Turn Left' speed
+    } (error_angle < -1) {
+      'Turn Right' speed
+    } else {
+      'Motor Break'
+      return 0
+    }
+  }
+}
+
+to 'Rotate to Target' target_x target_y speed {
+  target_angle = (('[misc:atan2]' (target_y - (position_Y)) (target_x - (position_X))) / 100)
+  'Rotate to Angle' target_angle speed
+}
+
+to 'Turn Left' speed {
+  ControlLeftMotor (0 - speed)
+  ControlRightMotor speed
+}
+
+to 'Turn Right' speed {
+  ControlLeftMotor speed
+  ControlRightMotor (0 - speed)
+}
+
+to 'draw AprilTag on TFT' id {
+  comment '0 <= id < 100'
+  if (id >= 100) {
+    sayIt '0 <= id < 100'
+  } else {
+    callCustomCommand '[tft:aprilTag]' ('[data:makeList]' id)
+  }
+}
+
+to 'draw Aruco Marker on TFT' id {
+  comment '0 <= id < 100'
+  if (id >= 100) {
+    sayIt '0 <= id < 100'
+  } else {
+    callCustomCommand '[tft:aruco]' ('[data:makeList]' id)
+  }
+}
+
+to position_X {
+  return (callCustomReporter '[sensors:position_x]')
+}
+
+to position_Y {
+  return (callCustomReporter '[sensors:position_y]')
+}
+
+to position_Yaw {
+  return (callCustomReporter '[sensors:position_yaw]')
+}
+
+to 'set TFT backlight' state {
+  if state {
+    '[tft:setBacklight]' 10
+  } else {
+    '[tft:setBacklight]' 0
+  }
+}
+
+
+module 'LED Display' Output
+author MicroBlocks
+version 1 8 
+choices led_imageMenu heart 'small heart' yes no happy sad confused angry asleep surprised silly fabulous meh 't-shirt' 'roller skate' duck house tortoise butterfly 'stick figure' ghost sword giraffe skull umbrella snake rabbit cow 'quarter note' 'eight note' pitchfork target triangle 'left triangle' 'chess board' diamond 'small diamond' square 'small square' scissors 
+description 'Display primitives for the 5x5 LED display on the BBC micro:bit, Calliope mini and M5Atom Matrix. Boards with TFT displays (such as the Citilab ED1 or the M5Stack family) support these primitives with a simulated "fat pixel" display.'
+variables _stop_scrolling_text 
+
+  spec ' ' '[display:mbDisplay]' 'display _' 'microbitDisplay' 15237440
+  spec ' ' 'led_displayImage' 'display image _ : x _ y _' 'menu.led_imageMenu num num' 'happy' 1 1
+  spec ' ' '[display:mbDisplayOff]' 'clear display'
+  space
+  spec ' ' '[display:mbPlot]' 'plot x _ y _' 'num num' 3 3
+  spec ' ' '[display:mbUnplot]' 'unplot x _ y _' 'num num' 3 3
+  space
+  spec ' ' 'displayCharacter' 'display character _' 'str' 'A'
+  spec ' ' 'scroll_text' 'scroll text _ : pausing _ ms' 'str num' 'HELLO ROSA!' 100
+  spec ' ' 'stopScrollingText' 'stop scrolling'
+  space
+  spec ' ' '_set display color' 'set display color _' 'color'
+  space
+  spec 'r' '_led_image' 'led image _' 'microbitDisplay' 15237440
+  spec 'r' '_led_namedImage' '_led_namedImage _' 'menu.led_imageMenu' 'happy'
+  spec 'r' '_led_imageData' '_led_imageData'
+
+to '_led_image' twentyFiveBitInt {
+  comment 'An LED image is a 25-bit integer'
+  return twentyFiveBitInt
+}
+
+to '_led_imageData' {
+  return 'heart:4685802,small heart:145728,yes:2269696,no:18157905,happy:15237440,sad:18284864,confused:22348096,angry:23036241,asleep:459616,surprised:4526090,silly:25984017,fabulous:15008639,meh:2236443,t-shirt:15154043,roller skate:11534104,duck:489702,house:10976708,tortoise:359872,butterfly:29332475,stick figure:18158564,ghost:23068334,sword:4657284,giraffe:10946627,skull:15171246,umbrella:6460398,snake:469859,rabbit:16104613,cow:4685361,quarter note:7573636,eight note:7590276,pitchfork:4357813,target:4681156,triangle:1026176,left triangle:32805985,chess board:11184810,diamond:4539716,small diamond:141440,square:33080895,small square:469440,scissors:20287859,'
+}
+
+to '_led_namedImage' name {
+  local 'data' ('_led_imageData')
+  local 'i' ('[data:find]' name data)
+  if (i == -1) {
+    comment 'Name not found'
+    return 0
+  }
+  local 'start' (('[data:find]' ':' data i) + 1)
+  local 'end' (('[data:find]' ',' data i) - 1)
+  return ('[data:convertType]' ('[data:copyFromTo]' data start end) 'number')
+}
+
+to '_set display color' color {
+  callCustomCommand '[display:mbSetColor]' ('[data:makeList]' color)
+}
+
+to displayCharacter s {
+  s = ('[data:join]' '' s)
+  if ((size s) == 0) {
+    '[display:mbDisplayOff]'
+    return 0
+  }
+  '[display:mbDrawShape]' ('[display:mbShapeForLetter]' (at 1 s))
+}
+
+to led_displayImage imageName optionalX optionalY {
+  local 'image' imageName
+  if (isType image 'string') {
+    image = ('_led_namedImage' imageName)
+  }
+  '[display:mbDrawShape]' image (argOrDefault 2 1) (argOrDefault 3 1)
+}
+
+to scroll_text text optionalDelay {
+  text = ('[data:join]' '' text)
+  local 'delay' 100
+  if ((pushArgCount) > 1) {
+    delay = optionalDelay
+  }
+  _stop_scrolling_text = (booleanConstant false)
+  if ('Pico:ed' == (boardType)) {
+    for position (((size text) * 6) + 18) {
+      if _stop_scrolling_text {return 0}
+      '[display:mbDisplayOff]'
+      '[tft:text]' text (17 - position) 0 (colorSwatch 125 125 125 255) 1 true
+      waitMillis (delay / 2)
+    }
+  } else {
+    for position (((size text) * 6) + 6) {
+      if _stop_scrolling_text {return 0}
+      for i (size text) {
+        '[display:mbDrawShape]' ('[display:mbShapeForLetter]' ('[data:unicodeAt]' i text)) (((i * 6) + 2) - position) 1
+      }
+      waitMillis delay
+    }
+  }
+}
+
+to stopScrollingText {
+  _stop_scrolling_text = (booleanConstant true)
+  waitMillis 10
+  '[display:mbDisplayOff]'
+}
+
+
+module Ringtone Output
+author MicroBlocks
+version 1 2 
+depends Tone 
+description 'Plays tunes in RTTTL (Ringtone Text Transfer Language) a language developed by Nokia to store ringtones.
+Also known as Nokring.'
+variables '_RTTTL default duration' '_RTTTL default octave' '_RTTTL bpm' '_RTTTL song name' 
+
+  spec 'r' '_RTTTL parse control from' '_RTTTL parse control from _' 'str' ''
+  spec ' ' 'play ringtone' 'play ringtone _' 'str' 'Pacman:d=16,o=6,b=140:
+b5,b,f#,d#,8b,8d#,c,c7,g,f,8c7,8e,b5,b,f#,d#,8b,8d#,32d#,32e,f,32f,32f#,g,32g,32g#,a,8b'
+  spec 'r' 'current song name' 'current song name'
+  spec ' ' '_RTTTL play note' '_RTTTL play note _' 'str' '8c#'
+
+to '_RTTTL parse control from' 'control section' {
+  comment 'Extract control section'
+  local 'd' 4
+  local 'o' 6
+  local 'b' 63
+  repeatUntil ((size (v 'control section')) == 0) {
+    local 'next separator' ('[data:find]' ',' (v 'control section'))
+    if ((v 'next separator') == -1) {
+      'next separator' = (size (v 'control section'))
+    }
+    local 'to process' ('[data:copyFromTo]' (v 'control section') 1 (v 'next separator'))
+    'control section' = ('[data:copyFromTo]' (v 'control section') ((v 'next separator') + 1))
+    'next separator' = ('[data:find]' ',' (v 'to process'))
+    if ((v 'next separator') == -1) {
+      'next separator' = ((size (v 'to process')) + 1)
+    }
+    if (('[data:find]' 'd' (v 'to process')) > 0) {
+      d = ('[data:copyFromTo]' (v 'to process') (('[data:find]' '=' (v 'to process')) + 1) ((v 'next separator') - 1))
+    } (('[data:find]' 'b' (v 'to process')) > 0) {
+      b = ('[data:copyFromTo]' (v 'to process') (('[data:find]' '=' (v 'to process')) + 1) ((v 'next separator') - 1))
+    } (('[data:find]' 'o' (v 'to process')) > 0) {
+      o = ('[data:copyFromTo]' (v 'to process') (('[data:find]' '=' (v 'to process')) + 1) ((v 'next separator') - 1))
+    }
+  }
+  return ('[data:makeList]' d o b)
+}
+
+to '_RTTTL play note' note {
+  local 'duration' ''
+  local 'note name' ''
+  local 'octave' (v '_RTTTL default octave')
+  local 'ms / whole note' (240000 / (v '_RTTTL bpm'))
+  local 'isDotted' (('[data:find]' '.' note) > -1)
+  note = ('_trimmedLowercase' note)
+  if (note == '') {
+    comment 'empty note string; skip'
+    return 0
+  }
+  comment 'parse duration value, if there is one'
+  repeatUntil (or (('[data:unicodeAt]' 1 note) < 48) (('[data:unicodeAt]' 1 note) > 57)) {
+    duration = ('[data:join]' duration (at 1 note))
+    note = ('[data:copyFromTo]' note 2)
+  }
+  if (duration == '') {
+    duration = (v '_RTTTL default duration')
+  }
+  comment 'parse note name'
+  if (or (('[data:find]' '#' note) > -1) (('[data:find]' '_' note) > -1)) {
+    'note name' = ('[data:copyFromTo]' note 1 2)
+  } else {
+    'note name' = (at 1 note)
+  }
+  note = ('[data:copyFromTo]' note ((size (v 'note name')) + 1))
+  comment 'deal with dotted notes'
+  if isDotted {
+    duration = ((((v 'ms / whole note') / duration) * 15) / 10)
+  } else {
+    duration = ((v 'ms / whole note') / duration)
+  }
+  comment 'parse octave, if there is one'
+  if (note != '') {
+    octave = (at 1 note)
+  }
+  'play tone' (v 'note name') (octave - 4) duration
+}
+
+to 'current song name' {
+  return (v '_RTTTL song name')
+}
+
+to 'play ringtone' RTTTL {
+  comment 'Initialize frequency map.'
+  ignoreArgs ('_baseFreqForNote' 'c')
+  comment 'Remove song name'
+  '_RTTTL song name' = ('[data:copyFromTo]' RTTTL 1 (('[data:find]' ':' RTTTL) - 1))
+  RTTTL = ('[data:copyFromTo]' RTTTL ((size (v '_RTTTL song name')) + 2))
+  local 'control' ('_RTTTL parse control from' ('[data:copyFromTo]' RTTTL 1 (('[data:find]' ':' RTTTL) - 1)))
+  '_RTTTL default duration' = (at 1 control)
+  '_RTTTL default octave' = (at 2 control)
+  '_RTTTL bpm' = (at 3 control)
+  RTTTL = ('[data:copyFromTo]' RTTTL (('[data:find]' ':' RTTTL) + 1))
+  repeatUntil ((size RTTTL) == 0) {
+    local 'next separator' ('[data:find]' ',' RTTTL)
+    if ((v 'next separator') == -1) {
+      'next separator' = ((size RTTTL) + 1)
+    }
+    local 'next note' ('[data:copyFromTo]' RTTTL 1 ((v 'next separator') - 1))
+    RTTTL = ('[data:copyFromTo]' RTTTL ((v 'next separator') + 1))
+    '_RTTTL play note' (v 'next note')
+  }
+  '_RTTTL song name' = ''
+}
+
+
+module TFT Output
+author MicroBlocks
+version 1 8 
+description 'Draw graphics and write text on boards with a TFT display, such as the M5Stack, M5Stick, Citilab ED1 or (discontinued) IoT-Bus.'
+
+  spec ' ' '[tft:clear]' 'clear TFT display'
+  space
+  spec ' ' '[tft:rect]' 'draw rectangle on TFT at x _ y _ width _ height _ color _ : filled _' 'num num num num color bool' 10 10 40 30 nil true
+  spec ' ' '[tft:roundedRect]' 'draw rounded rectangle on TFT at x _ y _ width _ height _ radius _ color _ : filled _' 'num num num num num color bool' 10 10 40 30 8 nil true
+  spec ' ' '[tft:circle]' 'draw circle on TFT at x _ y _ radius _ color _ : filled _' 'num num num color bool' 40 40 30 nil true
+  spec ' ' '[tft:triangle]' 'draw triangle on TFT at x _ y _ , x _ y _ , x _ y _ color _ : filled _' 'num num num num num num color bool' 20 20 30 80 60 5 nil true
+  spec ' ' '[tft:text]' 'write _ on TFT at x _ y _ color _ : scale _ wrap _ : bg color _' 'str num num color num bool color' 'Hello World!' 5 5 nil 2 true
+  spec ' ' '[tft:line]' 'draw line on TFT from x _ y _ to x _ y _ color _' 'num num num num color' 12 8 25 15
+  spec ' ' '[tft:setPixel]' 'set TFT pixel x _ y _ to _' 'num num color' 10 10
+  spec ' ' '[tft:drawBitmap]' 'draw bitmap _ palette _ on TFT at x _ y _' 'str str num num' 'aBitmap' 'a list of colors' 10 10
+  space
+  spec 'r' 'tft_colorSwatch' '_' 'color'
+  spec 'r' 'makeColor' 'color r _ g _ b _ (0-255)' 'num num num' 0 100 100
+  spec 'r' 'makeGray' 'gray _ %' 'num' 50
+  spec 'r' 'randomColor' 'random color'
+  space
+  spec 'r' '[tft:getWidth]' 'TFT width'
+  spec 'r' '[tft:getHeight]' 'TFT height'
+  space
+  spec ' ' '[tft:setBacklight]' 'set TFT backlight _ (0-10)' 'num' 10
+  space
+  spec ' ' '_deferMonochromeDisplayUpdates' '_defer monochrome display updates'
+  spec ' ' '_resumeMonochromeDisplayUpdates' '_resume monochrome display updates'
+
+to '_deferMonochromeDisplayUpdates' {
+  '[tft:deferUpdates]'
+}
+
+to '_resumeMonochromeDisplayUpdates' {
+  '[tft:resumeUpdates]'
+}
+
+to makeColor r g b {
+  r = (maximum 0 (minimum r 255))
+  g = (maximum 0 (minimum g 255))
+  b = (maximum 0 (minimum b 255))
+  return ((r << 16) | ((g << 8) | b))
+}
+
+to makeGray percent {
+  gray = ((percent * 255) / 100)
+  gray = (maximum 0 (minimum gray 255))
+  return ((gray << 16) | ((gray << 8) | gray))
+}
+
+to randomColor {
+  local 'n1' (random 100 200)
+  local 'n2' (random 0 100)
+  if (1 == (random 1 3)) {
+    return ((n1 << 16) | (n2 << 8))
+  } (1 == (random 1 2)) {
+    return ((n2 << 16) | n1)
+  } else {
+    return ((n1 << 8) | n2)
+  }
+}
+
+to tft_colorSwatch color {
+  return color
+}
+
+
+module Tone Output
+author MicroBlocks
+version 1 8 
+tags tone sound music audio note speaker 
+choices tone_NoteName c 'c#' d 'd#' e f 'f#' g 'g#' a 'a#' b 
+description 'Audio tone generation. Make music with MicroBlocks!'
+variables _tonePin _toneInitalized _toneLoopOverhead _toneNoteNames _toneArezzoNotes _toneFrequencies 
+
+  spec ' ' 'play tone' 'play note _ octave _ for _ ms' 'str.tone_NoteName num num' 'c' 0 500
+  spec ' ' 'playMIDIKey' 'play midi key _ for _ ms' 'num num' 60 500
+  spec ' ' 'play frequency' 'play frequency _ for _ ms' 'num num' 261 500
+  space
+  spec ' ' 'startTone' 'start tone _ Hz' 'num' 440
+  spec ' ' 'stopTone' 'stop tone'
+  space
+  spec ' ' 'attach buzzer to pin' 'attach buzzer to pin _' 'auto' ''
+  space
+  spec 'r' '_measureLoopOverhead' '_measureLoopOverhead'
+  spec 'r' '_baseFreqForNote' '_baseFreqForNote _' 'auto' 'c'
+  spec 'r' '_baseFreqForSemitone' '_baseFreqForSemitone _' 'num' 0
+  spec ' ' '_toneLoop' '_toneLoop _ for _ ms' 'num num' 440000 100
+  spec 'r' '_trimmedLowercase' '_trimmedLowercase _' 'str' 'A. b C...'
+
+to '_baseFreqForNote' note {
+  comment 'Return the frequency for the given note in the middle-C octave
+scaled by 1000. For example, return 440000 (440Hz) for A.
+Note names may be upper or lower case. Note names
+may be followed by # for a sharp or b for a flat.'
+  local 'normalized note' ('_trimmedLowercase' note)
+  if (_toneNoteNames == 0) {
+    _toneNoteNames = ('[data:makeList]' 'c' 'c#' 'd' 'd#' 'e' 'f' 'f#' 'g' 'g#' 'a' 'a#' 'b' 'c_' 'db' 'd_' 'eb' 'e_' 'e#' 'f_' 'gb' 'g_' 'ab' 'a_' 'bb' 'b_' 'b#')
+    _toneArezzoNotes = ('[data:makeList]' 'do' 'do#' 're' 're#' 'mi' 'fa' 'fa#' 'sol' 'sol#' 'la' 'la#' 'si' 'do_' 'dob' 're_' 'reb' 'mi_' 'mi#' 'fa_' 'solb' 'sol_' 'lab' 'la_' 'sib' 'si_' 'si#')
+  }
+  if (('[data:find]' (v 'normalized note') _toneArezzoNotes) > 0) {
+    return ('_baseFreqForSemitone' ('[data:find]' (v 'normalized note') _toneArezzoNotes))
+  } else {
+    return ('_baseFreqForSemitone' ('[data:find]' (v 'normalized note') _toneNoteNames))
+  }
+}
+
+to '_baseFreqForSemitone' semitone {
+  if (_toneFrequencies == 0) {_toneFrequencies = ('[data:makeList]' 261626 277183 293665 311127 329628 349228 369994 391995 415305 440000 466164 493883 246942 277183 277183 311127 311127 349228 329628 369994 369994 415305 415305 466164 466164 523252)}
+  if (and (1 <= semitone) (semitone <= (size _toneFrequencies))) {
+    return (at semitone _toneFrequencies)
+  } else {
+    comment 'Bad note name; return 10 Hz'
+    return 10000
+  }
+}
+
+to '_measureLoopOverhead' {
+  comment 'Measure the loop overhead on this device'
+  local 'halfCycle' 100
+  local 'startT' (microsOp)
+  repeat 100 {
+    digitalWriteOp _tonePin false
+    waitMicros halfCycle
+    digitalWriteOp _tonePin false
+    waitMicros halfCycle
+  }
+  local 'usecs' ((microsOp) - startT)
+  return ((usecs - 20000) / 200)
+}
+
+to '_toneLoop' scaledFreq ms {
+  if (_toneInitalized == 0) {'attach buzzer to pin' ''}
+  if ('[io:hasTone]') {
+    '[io:playTone]' _tonePin (scaledFreq / 1000)
+    waitMillis ms
+    '[io:playTone]' _tonePin 0
+  } else {
+    local 'halfCycle' ((500000000 / scaledFreq) - _toneLoopOverhead)
+    local 'cycles' ((ms * 500) / halfCycle)
+    repeat cycles {
+      digitalWriteOp _tonePin true
+      waitMicros halfCycle
+      digitalWriteOp _tonePin false
+      waitMicros halfCycle
+    }
+  }
+}
+
+to '_trimmedLowercase' s {
+  comment 'Return a copy of the given string without whitespace
+or periods and all lowercase.'
+  local 'result' (newList (size s))
+  '[data:delete]' 'all' result
+  for i (size s) {
+    local 'ch' ('[data:unicodeAt]' i s)
+    if (and (ch > 32) (ch != 46)) {
+      if (and (65 <= ch) (ch <= 90)) {ch = (ch + 32)}
+      '[data:addLast]' ch result
+    }
+  }
+  return ('[data:unicodeString]' result)
+}
+
+to 'attach buzzer to pin' pinNumber {
+  if (pinNumber == '') {
+    comment 'Pin number not specified; use default pin for this device'
+    if ((boardType) == 'Citilab ED1') {
+      _tonePin = 26
+    } ((boardType) == 'M5Stack-Core') {
+      _tonePin = 25
+    } ((boardType) == 'M5StickC') {
+      _tonePin = 26
+    } ((boardType) == 'Calliope') {
+      digitalWriteOp 23 true
+      digitalWriteOp 24 true
+      _tonePin = 25
+    } ((boardType) == 'D1-Mini') {
+      _tonePin = 12
+    } else {
+      _tonePin = -1
+    }
+  } else {
+    _tonePin = pinNumber
+  }
+  _toneLoopOverhead = ('_measureLoopOverhead')
+  _toneInitalized = (booleanConstant true)
+}
+
+to 'play frequency' freq ms {
+  '_toneLoop' (freq * 1000) ms
+}
+
+to 'play tone' note octave ms {
+  local 'freq' ('_baseFreqForNote' note)
+  if (freq <= 10000) {
+    waitMillis ms
+    return 0
+  }
+  if (octave < 0) {
+    repeat (absoluteValue octave) {
+      freq = (freq / 2)
+    }
+  }
+  repeat octave {
+    freq = (freq * 2)
+  }
+  '_toneLoop' freq ms
+}
+
+to playMIDIKey key ms {
+  local 'freq' ('_baseFreqForSemitone' ((key % 12) + 1))
+  local 'octave' ((key / 12) - 5)
+  if (octave < 0) {
+    repeat (absoluteValue octave) {
+      freq = (freq / 2)
+    }
+  }
+  repeat octave {
+    freq = (freq * 2)
+  }
+  '_toneLoop' freq ms
+}
+
+to startTone freq {
+  if (_toneInitalized == 0) {'attach buzzer to pin' ''}
+  if ('[io:hasTone]') {'[io:playTone]' _tonePin freq}
+}
+
+to stopTone {
+  startTone 0
+}
+
