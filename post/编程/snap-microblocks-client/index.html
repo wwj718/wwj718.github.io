@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 MicroBlocks Client 库">
 <meta itemprop="description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"><meta itemprop="datePublished" content="2024-07-04T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-04T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1791">
+<meta itemprop="wordCount" content="1725">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 MicroBlocks Client 库"/>
 <meta name="twitter:description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"/>
@@ -149,11 +149,7 @@
       <ul>
         <li><a href="#如何同时调试-snap-microblocks-的代码">如何同时调试 Snap! MicroBlocks 的代码?</a></li>
         <li><a href="#如何查看-microblocks-支持的-vm-primitive">如何查看 MicroBlocks 支持的 vm primitive?</a></li>
-        <li><a href="#push-和-pull-风格的差别">push 和 pull 风格的差别</a>
-          <ul>
-            <li><a href="#dynatalk-over-ble">dynatalk-over-ble</a></li>
-          </ul>
-        </li>
+        <li><a href="#push-风格的版本">push 风格的版本</a></li>
         <li><a href="#是否可以为-cocube-制作一个类似的-python-client-库">是否可以为 CoCube 制作一个类似的 Python client 库?</a></li>
       </ul>
     </li>
@@ -166,7 +162,6 @@
       <h1 id="前言">前言</h1>
 <p>在制作完 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-cocube/">Snap! 中的 CoCube 库</a> 后, 我发现这个库的大多数工作都是通用的, 我们<strong>可以将其用于任何 MicroBlocks 设备</strong>!</p>
 <p>通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库.</p>
-<p><img src="/post/img/snap-MicroBlocks-Client-01.png" alt=""></p>
 <p>这篇文章的许多内容与<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-cocube/">Snap! 中的 CoCube 库</a>重合, <strong>MicroBlocks Client 库实质上是通用版本的 CoCube 库</strong>.</p>
 <h1 id="动机">动机</h1>
 <p>使用 Snap! 驱动 MicroBlocks 设备, 通常有以下两个动机:</p>
@@ -204,8 +199,13 @@
 </ul>
 </li>
 </ul>
-<p>MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 基于它制作类似 Firmata 这样的 push 机制很容易.</p>
-<p>于是我打算先基于 push 风格来构建 MicroBlocks Client 库.</p>
+<p>MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 我打算基于它构建出 dynatalk-over-ble, 然后基于 dynatalk-over-ble(类似<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/#dynatalk-over-postmessage-%E5%9C%A8%E8%BF%99%E9%87%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8">dynatalk-over-postmessage</a>) 实现 pull 风格的 MicroBlocks Client 库.</p>
+<p>在我们的用例中, 只需要实现单向的 C/S 架构(Snap! 为 client, MicroBlocks 为 server). 所以 dynatalk-over-ble 的复杂性只有常规 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">dynatalk</a> 的一半, 令人开心的是, 正好计算能力偏弱的 MicroBlocks 那一半极为简单.</p>
+<!--
+MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 基于它制作类似 Firmata 这样的 push 机制很容易.
+
+于是我打算先基于 push 风格来构建 MicroBlocks Client 库.
+-->
 <h1 id="实施">实施</h1>
 <h2 id="microblocks-一侧">MicroBlocks 一侧</h2>
 <p>前头提到, 我们力求做到:</p>
@@ -213,13 +213,24 @@
 <p>用户只需要在 Snap! 中编程即可, 无需在 Snap! 和 MicroBlocks 中来回切换.</p>
 </blockquote>
 <p>因此我希望 MicroBlocks 一侧中的代码是完全<strong>通用</strong>的, 用户只需要刷入这个通用程序, 就<strong>不再需要打开 MicroBlocks 平台, 完全在 Snap! 中对设备进行编程</strong></p>
-<p>为了做到这点, 我们在 MicroBlocks 中运行<a href="https://microblocksfun.cn/run/microblocks.html#project=https://wwj718.github.io/post/img/MicroBlocks-server-v2.ubp">这个通用程序</a>:</p>
-<p><img src="/post/img/snap-MicroBlocks-Client-04.png" alt=""></p>
+<p>为了做到这点, 我们在 MicroBlocks 中运行<a href="https://microblocksfun.cn/run/microblocks.html#project=https://wwj718.github.io/post/img/MicroBlocks-server-dynatalk.ubp">这个通用程序</a>:</p>
+<!--
+![](/post/img/snap-MicroBlocks-Client-04.png)
+-->
+<p><img src="/post/img/snap-MicroBlocks-Client-04-dynatalk.png" alt=""></p>
 <p>这段程序负责以下工作:</p>
-<ol>
-<li>源源不断地将<strong>设备的状态</strong> push 出去(<code>when started</code> 积木), 这些状态可以自行扩展. 目前的更新速率是 20 次/秒(可自定义)</li>
-<li>解释收到的消息(<code>handle_message</code> 积木), 将消息的语义&quot;接地&quot;到硬件设备的具体功能上. &ldquo;接地&rdquo; 工作是使用 <code>call</code> 积木实现的, 它类似其他编程语言中的 eval , 可以动态运行自定义积木和 vm primitive.</li>
-</ol>
+<ul>
+<li>解释收到的消息, 将消息的语义&quot;接地&quot;到硬件设备的具体功能上. &ldquo;接地&rdquo; 工作是使用 <code>call</code> 积木实现的, 它类似其他编程语言中的 eval , 可以动态运行自定义积木和 vm primitive.
+<ul>
+<li><code>handle_message</code> 积木用于处理非阻塞式的消息</li>
+<li><code>handle_blocking_message</code> 积木用于处理阻塞式的消息</li>
+</ul>
+</li>
+</ul>
+<!--
+1. 源源不断地将**设备的状态** push 出去(`when started` 积木), 这些状态可以自行扩展. 目前的更新速率是 20 次/秒(可自定义)
+2. 解释收到的消息(`handle_message` 积木), 将消息的语义"接地"到硬件设备的具体功能上. "接地" 工作是使用 `call` 积木实现的, 它类似其他编程语言中的 eval , 可以动态运行自定义积木和 vm primitive.
+-->
 <p>你可以将这个程序视为运行在硬件中的 server, Snap! 则是它的 client. 我们使用了 C/S 架构.</p>
 <h2 id="snap-一侧">Snap! 一侧</h2>
 <p>前边提到:</p>
@@ -231,40 +242,78 @@
 </blockquote>
 <p>我们分别展示它们是如何做到的:</p>
 <p>对于第 1 点, 获取状态信息(reporter 积木):</p>
-<p><img src="/post/img/snap-MicroBlocks-Client-06.png" alt=""></p>
+<!--
+![](/post/img/snap-MicroBlocks-Client-06.png)
+-->
+<p><img src="/post/img/snap-MicroBlocks-Client-06-dynatalk.png" alt=""></p>
 <p>对于第 2 点, 发送指令(command 积木):</p>
-<p><img src="/post/img/snap-MicroBlocks-Client-05.png" alt=""></p>
-<p>消息采用纯字符串形式, 携带方法名(自定义积木名字或者 vm primitive)和 参数, 以 <code>,</code> 分隔 , 以下是一个例子: <code>command, [display:mbPlot], 3, 3</code></p>
+<p><img src="/post/img/snap-MicroBlocks-Client-05-dynatalk.png" alt=""></p>
+<!--
+![](/post/img/snap-MicroBlocks-Client-05.png)
+-->
+<p>消息采用纯字符串形式, 携带方法名(自定义积木名字或者 vm primitive)和 参数, 以 <code>,</code> 分隔 , 以下是一个例子: <code>call, &lt;msg-id&gt;, [display:mbPlot], 3, 3</code></p>
 <h1 id="如何使用">如何使用?</h1>
 <p>要使用 MicroBlocks Client 库, 只需打开 <a href="https://snap.codelab.club/snap.html">Snap! 平台</a>即可.</p>
 <p>加载 MicroBlocks Client 库,</p>
 <p><img src="/post/img/snap-MicroBlocks-Client-07.png" alt=""></p>
 <p>点击 <code>open MicroBlocks project</code> 积木, 将打开 MicroBlocks 窗口, 连接设备将程序刷入后, 即可断开并关闭 MicroBlocks 窗口.</p>
-<p><img src="/post/img/snap-MicroBlocks-Client-08.png" alt=""></p>
-<p>然后在 Snap! 中开始编程:</p>
-<p><img src="/post/img/CoCube-09.png" alt=""></p>
-<p>你可以从<a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/MicroBlocks-Client-demo.xml">这个示例(点击运行)</a>程序开始</p>
+<p><img src="/post/img/snap-MicroBlocks-Client-08-dynatalk.png" alt=""></p>
+<!--
+![](/post/img/snap-MicroBlocks-Client-08.png)
+-->
+<p>然后在 Snap! 中开始编程.</p>
+<!--
+![](/post/img/CoCube-09.png)
+-->
+<p>你可以从<a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/MicroBlocks-Client-dynatalk.xml">这个示例(点击运行)</a>程序开始</p>
+<!--
+你可以从[这个示例(点击运行)](https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/MicroBlocks-Client-demo.xml)程序开始
+-->
 <h1 id="faq">FAQ</h1>
 <h2 id="如何同时调试-snap-microblocks-的代码">如何同时调试 Snap! MicroBlocks 的代码?</h2>
-<p>是的, 你可以同时调试软件和硬件侧的代码! 一切都是实时的!</p>
+<p>是的, 你可以同时调试软件和硬件侧的代码! 一切都是活性(<strong>liveness</strong>)的!</p>
 <p>你可以在 Snap! MicroBlocks 中同时连接同一个设备, 记得点击 MicroBlocks 中的绿旗启动程序, 然后观察消息在它们之间的流动:</p>
-<p><img src="/post/img/snap-MicroBlocks-Client-12.png" alt=""></p>
+<p><img src="/post/img/snap-MicroBlocks-Client-12-dynatalk.png" alt=""></p>
+<!--
+say 
+![](/post/img/snap-MicroBlocks-Client-12.png)
+-->
 <h2 id="如何查看-microblocks-支持的-vm-primitive">如何查看 MicroBlocks 支持的 vm primitive?</h2>
 <p>可以在 ubl 库文件中找到这些 primitive, 它的形式是<code>[a:b]</code>, 如 <code>[display:mbPlot]</code></p>
 <p><img src="/post/img/CoCube-11.png" alt=""></p>
-<h2 id="push-和-pull-风格的差别">push 和 pull 风格的差别</h2>
-<p>目前我们的工作基于 push 风格, MicroBlocks 源源不断将设备状态信息同步给 Snap!</p>
-<p>这种风格可能有以下问题:</p>
-<ul>
-<li>性能不佳, 不断查询状态信息(每秒 20 次)可能会导致电量快速消耗</li>
-<li>实时性不好, 目前是 50ms 更新一次状态信息</li>
-</ul>
-<p>采用 pull 风格, 可能能够解决以上问题, pull 风格按需查询, 或许能够同时改善性能和实时性问题</p>
-<h3 id="dynatalk-over-ble">dynatalk-over-ble</h3>
-<p>我打算基于 dynatalk-over-ble(它会类似<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/#dynatalk-over-postmessage-%E5%9C%A8%E8%BF%99%E9%87%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8">dynatalk-over-postmessage</a>) 实现 pull 风格的 MicroBlocks Client 库.</p>
-<p>在我们的用例中, 只需要实现单向的 C/S 架构(Snap! 为 client, MicroBlocks 为 server). 所以 dynatalk-over-ble 的复杂性只有常规 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">dynatalk</a> 的一半, 令人开心的是, 正好计算能力偏弱的 MicroBlocks 那一半极为简单.</p>
-<p>基于 pull 的版本, 除了能够改善性能, 另一个价值是, 能够获取任何有返回值的自定义积木或 vm primitive, 如 <code>[misc:version]</code> (获取固件版本号)</p>
-<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/MicroBlocks-Client-dynatalk.xml">示例(点击运行)</a></p>
+<h2 id="push-风格的版本">push 风格的版本</h2>
+<p>MicroBlocks 部分:</p>
+<p><img src="/post/img/snap-MicroBlocks-Client-04.png" alt=""></p>
+<p>这段程序负责以下工作:</p>
+<ol>
+<li>源源不断地将<strong>设备的状态</strong> push 出去(<code>when started</code> 积木), 这些状态可以自行扩展. 目前的更新速率是 20 次/秒(可自定义)</li>
+<li>解释收到的消息(<code>handle_message</code> 积木), 将消息的语义&quot;接地&quot;到硬件设备的具体功能上. &ldquo;接地&rdquo; 工作是使用 <code>call</code> 积木实现的, 它类似其他编程语言中的 eval , 可以动态运行自定义积木和 vm primitive.</li>
+</ol>
+<p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/MicroBlocks-Client-demo.xml">Snap! 示例(点击运行)</a></p>
+<!--
+## push 和 pull 风格的差别
+
+目前我们的工作基于 push 风格, MicroBlocks 源源不断将设备状态信息同步给 Snap!
+
+这种风格可能有以下问题:
+
+- 性能不佳, 不断查询状态信息(每秒 20 次)可能会导致电量快速消耗
+- 实时性不好, 目前是 50ms 更新一次状态信息
+
+采用 pull 风格, 可能能够解决以上问题, pull 风格按需查询, 或许能够同时改善性能和实时性问题
+-->
+<!--
+### dynatalk-over-ble
+
+我打算基于 dynatalk-over-ble(它会类似[dynatalk-over-postmessage](https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/#dynatalk-over-postmessage-%E5%9C%A8%E8%BF%99%E9%87%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8)) 实现 pull 风格的 MicroBlocks Client 库.
+
+在我们的用例中, 只需要实现单向的 C/S 架构(Snap! 为 client, MicroBlocks 为 server). 所以 dynatalk-over-ble 的复杂性只有常规 [dynatalk](https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/) 的一半, 令人开心的是, 正好计算能力偏弱的 MicroBlocks 那一半极为简单.
+
+基于 pull 的版本, 除了能够改善性能, 另一个价值是, 能够获取任何有返回值的自定义积木或 vm primitive, 如 `[misc:version]` (获取固件版本号)
+
+[示例(点击运行)](https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/MicroBlocks-Client-dynatalk.xml)
+
+-->
 <!--
 
 性能测试 MicroBlocks-Client-dynatalk-time-test (3).xml
