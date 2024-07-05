@@ -27,12 +27,12 @@ to to_mb_args args {
   return result
 }
 
-script 111 33 {
+script 111 50 {
 whenBroadcastReceived ''
 handle_message
 }
 
-script 111 131 {
+script 111 148 {
 whenStarted
 forever {
   waitMillis 50
@@ -43,13 +43,11 @@ forever {
 
 module CoCube
 author '梁帅'
-version 1 3 
+version 1 4 
 depends Tone Ringtone TFT Display 
 tags 'cocube机器人' 
-choices CarDirMenu '前进' '后退' '左转' '右转' 
-choices MotorDirMenu '前进' '后退' 
 description ''
-variables speed 
+variables speed error_angle target_angle 
 
   spec 'r' 'Battery Percentage' 'Battery Percentage'
   space
@@ -70,6 +68,9 @@ variables speed
   spec ' ' 'Turn Right' 'Turn Right _' 'num' 10
   spec ' ' 'Motor Stop' 'Motor Stop'
   spec ' ' 'Motor Break' 'Motor Break'
+  space
+  spec ' ' 'Rotate to Angle' 'Rotate to Angle _ Speed _' 'num num' 0 10
+  spec ' ' 'Rotate to Target' 'Rotate to Target X _ Y _ Speed _' 'num num num' 10 10 10
 
 to 'Battery Percentage' {
   return (minimum (((13 * ('[misc:rescale]' (analogReadOp 34) 0 1023 0 3300)) - 33000) / 90) 100)
@@ -126,6 +127,31 @@ to 'Move Backward' speed {
 to 'Move Forward' speed {
   ControlLeftMotor speed
   ControlRightMotor speed
+}
+
+to 'Rotate to Angle' angle speed {
+  forever {
+    error_angle = ((angle % 360) - (position_Yaw))
+    if (error_angle > 180) {
+      error_angle += -360
+    } (error_angle < -180) {
+      error_angle += 360
+    } else {
+    }
+    if (error_angle > 1) {
+      'Turn Left' speed
+    } (error_angle < -1) {
+      'Turn Right' speed
+    } else {
+      'Motor Break'
+      return 0
+    }
+  }
+}
+
+to 'Rotate to Target' target_x target_y speed {
+  target_angle = (('[misc:atan2]' (target_y - (position_Y)) (target_x - (position_X))) / 100)
+  'Rotate to Angle' target_angle speed
 }
 
 to 'Turn Left' speed {
