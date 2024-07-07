@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 MicroBlocks Client 库">
 <meta itemprop="description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"><meta itemprop="datePublished" content="2024-07-04T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-04T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1798">
+<meta itemprop="wordCount" content="1894">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 MicroBlocks Client 库"/>
 <meta name="twitter:description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"/>
@@ -147,7 +147,11 @@
     <li><a href="#如何使用">如何使用?</a></li>
     <li><a href="#faq">FAQ</a>
       <ul>
-        <li><a href="#如何添加更多-microblocks-client">如何添加更多 MicroBlocks Client?</a></li>
+        <li><a href="#如何添加更多-microblocks-client">如何添加更多 MicroBlocks Client?</a>
+          <ul>
+            <li><a href="#使用场景">使用场景</a></li>
+          </ul>
+        </li>
         <li><a href="#如何同时调试-snap-microblocks-的代码">如何同时调试 Snap! MicroBlocks 的代码?</a></li>
         <li><a href="#如何查看-microblocks-支持的-vm-primitive">如何查看 MicroBlocks 支持的 vm primitive?</a></li>
         <li><a href="#push-风格的版本">push 风格的版本</a></li>
@@ -287,6 +291,8 @@ MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 基于它制�
 <li>将修改获得文件(这是一个示例: <code>https://wwj718.github.io/post/img/MicroBlocks-Client2.xml</code>), 拖拽到 Snap! 里.</li>
 </ul>
 <p>以此类推, 你可以添加任意多个 MicroBlocks Client!</p>
+<h3 id="使用场景">使用场景</h3>
+<p>当有多个 MicroBlocks 设备时,  Snap! 非常适合作为 &ldquo;演示控制台&rdquo;, 我在<a href="https://www.bilibili.com/video/BV13z421B7mu?t=6666.8">这个视频</a>里做了分享</p>
 <h2 id="如何同时调试-snap-microblocks-的代码">如何同时调试 Snap! MicroBlocks 的代码?</h2>
 <p>是的, 你可以同时调试软件和硬件侧的代码! 一切都是活性(<strong>liveness</strong>)的!</p>
 <p>你可以在 Snap! MicroBlocks 中同时连接同一个设备, 然后观察消息在它们之间的流动:</p>
@@ -298,6 +304,8 @@ say
 <h2 id="如何查看-microblocks-支持的-vm-primitive">如何查看 MicroBlocks 支持的 vm primitive?</h2>
 <p>可以在 ubl 库文件中找到这些 primitive, 它的形式是<code>[a:b]</code>, 如 <code>[display:mbPlot]</code></p>
 <p><img src="/post/img/CoCube-11.png" alt=""></p>
+<p>Peter 在 <a href="https://discord.com/channels/1000653853491998760/1083593745531936778/1259460898607857734">Discord</a> 上分享了一些例子:</p>
+<p><img src="/post/img/primitives-demo.png" alt=""></p>
 <h2 id="push-风格的版本">push 风格的版本</h2>
 <!--如果需要更快的 push 速度, 可以在 pull 中保留 push 部分-->
 <p>MicroBlocks 部分:</p>
@@ -308,6 +316,7 @@ say
 <li>解释收到的消息(<code>handle_message</code> 积木), 将消息的语义&quot;接地&quot;到硬件设备的具体功能上. &ldquo;接地&rdquo; 工作是使用 <code>call</code> 积木实现的, 它类似其他编程语言中的 eval , 可以动态运行自定义积木和 vm primitive.</li>
 </ol>
 <p><a href="https://snap.codelab.club/snap.html#open:https://wwj718.github.io/post/img/MicroBlocks-Client-demo.xml">Snap! 示例(点击运行)</a></p>
+<p>值得注意的是, <strong>push 的速度要比 pull 快很多</strong>, 如有需要, 可以把它们二者结合.</p>
 <!--
 ## push 和 pull 风格的差别
 
