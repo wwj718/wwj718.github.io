@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 CoCube 库">
 <meta itemprop="description" content="前言 上篇文章提到: @梁博士 制作了一个桌面级模块化群控机器人系统, 取名&quot;CoCube&quot; (Collaborative-Cube), CoCube 将 MicroBlocks 用作其编程环境. CoCube 与 toio 有许多"><meta itemprop="datePublished" content="2024-07-03T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-03T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2171">
+<meta itemprop="wordCount" content="2152">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 CoCube 库"/>
 <meta name="twitter:description" content="前言 上篇文章提到: @梁博士 制作了一个桌面级模块化群控机器人系统, 取名&quot;CoCube&quot; (Collaborative-Cube), CoCube 将 MicroBlocks 用作其编程环境. CoCube 与 toio 有许多"/>
@@ -343,29 +343,44 @@ CoCube-dynatalk-demo.xml
 <h2 id="是否可以为-cocube-制作一个类似的-python-client-库">是否可以为 CoCube 制作一个类似的 Python client 库?</h2>
 <h2 id="是否可以制作一个类似的-python-client-库">是否可以制作一个类似的 Python client 库?</h2>
 <p>本文的设计很容易迁移到 Python 中, 使用我之前为 Python 制作的 <a href="https://github.com/wwj718/microblocks_messaging_library">microblocks_messaging_library</a> 和 <a href="https://github.com/wwj718/dynatalk-py">dynatalk-py</a> 库, 可以很容易地实现跟 MicroBlocks Client 库相同的功能.</p>
-<p>目前添加了一个临时的 command 方法, 用法与 snap! 中相同:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="c1"># pip install -U microblocks</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
-</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">microblocks</span> <span class="kn">import</span> <span class="n">Message</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">concurrent</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">microblocks</span> <span class="kn">import</span> <span class="n">MicroblocksClient</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">m1</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="s2">&#34;MicroBlocks AZB&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># m2 = Message(&#34;MicroBlocks OBQ&#34;)</span>
-</span></span><span class="line"><span class="cl"><span class="n">m1</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s2">&#34;displayCharacter&#34;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&#34;a&#34;</span><span class="p">])</span> <span class="c1"># 简单地发送消息, 不等待</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># m2.command(&#34;displayCharacter&#34;, [&#34;b&#34;])</span>
-</span></span><span class="line"><span class="cl"><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">m1</span> <span class="o">=</span> <span class="n">MicroblocksClient</span><span class="p">(</span><span class="s2">&#34;MicroBlocks AZB&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">m1</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;displayCharacter&#34;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&#34;f&#34;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tiltX</span> <span class="o">=</span> <span class="n">m1</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;positionX&#34;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="n">tiltX</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">pass</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">pass</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>记得先往设备里刷入<a href="https://microblocksfun.cn/run/microblocks.html#project=https://wwj718.github.io/post/img/CoCube-server-dynatalk-v1.ubp">这个程序</a></p>
