@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 MicroBlocks Client 库">
 <meta itemprop="description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"><meta itemprop="datePublished" content="2024-07-04T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-04T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2055">
+<meta itemprop="wordCount" content="2109">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 MicroBlocks Client 库"/>
 <meta name="twitter:description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"/>
@@ -144,7 +144,7 @@
         <li><a href="#snap-一侧">Snap! 一侧</a></li>
       </ul>
     </li>
-    <li><a href="#如何使用">如何使用?</a></li>
+    <li><a href="#如何使用-microblocks-client-库">如何使用 MicroBlocks Client 库?</a></li>
     <li><a href="#faq">FAQ</a>
       <ul>
         <li><a href="#如何添加更多-microblocks-client">如何添加更多 MicroBlocks Client?</a>
@@ -184,7 +184,7 @@
 <blockquote>
 <p>构建优秀且可扩展的系统的关键更多的是设计模块之间如何通信，而不仅仅是设计其内部属性和行为 &ndash; Alan Kay</p>
 </blockquote>
-<p>由于 Snap! 和 MicroBlocks 都是<strong>个人计算</strong>精神的产物, 都拥有极为出色的动态性, 我确信可以通过<strong>消息传递</strong>来实现目标: 在 Snap! 中对 MicroBlocks 设备进行编程.</p>
+<p>由于 Snap! 和 MicroBlocks 都是<strong>个人计算</strong>精神的产物, 都拥有极为出色的动态性, 我确信可以通过<strong>消息传递</strong>来实现目标: 在 Snap! 中对 MicroBlocks 设备进行编程. 事实上, MicroBlocks IDE 正是通过消息传递机制与 vm 协作的</p>
 <p>我喜欢采用 <strong>消息传递</strong> 来设计系统之间的互操作机制, 这样做能够最大限度地降低了系统之间的耦合度.</p>
 <p>Snap! 中已经存在了用于在 Snap! 和 MicroBlocks 直接传递消息的库:</p>
 <p><img src="/post/img/CoCube-03.png" alt=""></p>
@@ -197,7 +197,7 @@
 </ol>
 <p>关于第 1 点: <strong>获取另一个系统的状态信息</strong>, 通常有两种方式:</p>
 <ul>
-<li>push(推) 风格: 一个系统源源不断地向另一个系统广播消息
+<li>push(推) 风格: 一个系统源源不断地向另一个系统广播携带状态数据的消息
 <ul>
 <li><a href="https://github.com/firmata/protocol">Firmata</a> 是这种风格</li>
 <li>Scratch 的硬件插件大多数是这种风格, 如 micro:bit 插件, 参考<a href="https://wwj718.github.io/post/%E5%B0%91%E5%84%BF%E7%BC%96%E7%A8%8B/scratch3-microbit-analysis/">分析 scratch3.0 与 micro:bit 的通信</a></li>
@@ -210,7 +210,7 @@
 </ul>
 </li>
 </ul>
-<p>MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 我打算基于它构建出 dynatalk-over-ble, 然后基于 dynatalk-over-ble(类似<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/#dynatalk-over-postmessage-%E5%9C%A8%E8%BF%99%E9%87%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8">dynatalk-over-postmessage</a>) 实现 pull 风格的 MicroBlocks Client 库.</p>
+<p>MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息机制, 我打算基于它构建出 dynatalk-over-ble, 然后基于 dynatalk-over-ble(类似<a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/#dynatalk-over-postmessage-%E5%9C%A8%E8%BF%99%E9%87%8C%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8">dynatalk-over-postmessage</a>) 实现 pull 风格的 MicroBlocks Client 库.</p>
 <p>在我们的用例中, 只需要实现单向的 C/S 架构(Snap! 为 client, MicroBlocks 为 server). 所以 dynatalk-over-ble 的复杂性只有常规 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">dynatalk</a> 的一半, 令人开心的是, 正好计算能力偏弱的 MicroBlocks 那一半极为简单.</p>
 <!--
 MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 基于它制作类似 Firmata 这样的 push 机制很容易.
@@ -263,7 +263,7 @@ MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 基于它制�
 ![](/post/img/snap-MicroBlocks-Client-05.png)
 -->
 <p>消息采用纯字符串形式, 携带方法名(自定义积木名字或者 vm primitive)和 参数, 以 <code>,</code> 分隔 , 以下是一个例子: <code>call, &lt;msg-id&gt;, [display:mbPlot], 3, 3</code></p>
-<h1 id="如何使用">如何使用?</h1>
+<h1 id="如何使用-microblocks-client-库">如何使用 MicroBlocks Client 库?</h1>
 <p>要使用 MicroBlocks Client 库, 只需打开 <a href="https://snap.codelab.club/snap.html">Snap! 平台</a>即可.</p>
 <p>加载 MicroBlocks Client 库,</p>
 <p><img src="/post/img/snap-MicroBlocks-Client-07.png" alt=""></p>
@@ -310,9 +310,11 @@ say
 -->
 <h2 id="如何在-snap-的-microblocks-窗口中保存和加载-microblocks-项目">如何在 Snap! 的 MicroBlocks 窗口中保存和加载 MicroBlocks 项目?</h2>
 <h3 id="保存项目">保存项目</h3>
-<p>无法使用菜单中的 <code>Save</code> 按钮打开本地文件, 点击 <code>Copy project url to clipboard</code>, 然后粘贴到浏览器地址栏里, 之后再保存</p>
+<p>由于 iframe 的限制 , 无法使用菜单中的 <code>Save</code> 按钮打开本地文件.</p>
+<p>替代方案: 点击 <code>Copy project url to clipboard</code>, 然后粘贴到浏览器地址栏里, 之后再保存</p>
 <h3 id="加载项目">加载项目</h3>
-<p>无法使用菜单中的 <code>Open</code> 按钮打开本地文件, 需要将本地文件直接<strong>拖拽</strong>到 MicroBlocks 窗口</p>
+<p>由于 iframe 的限制, 无法使用菜单中的 <code>Open</code> 按钮打开本地文件.</p>
+<p>替代方案: 将本地文件直接<strong>拖拽</strong>到 MicroBlocks 窗口</p>
 <h2 id="如何查看-microblocks-支持的-vm-primitive">如何查看 MicroBlocks 支持的 vm primitive?</h2>
 <p>可以在 ubl 库文件中找到这些 primitive, 它的形式是<code>[a:b]</code>, 如 <code>[display:mbPlot]</code></p>
 <p><img src="/post/img/CoCube-11.png" alt=""></p>
@@ -440,7 +442,11 @@ turbo 模式 70 ms 左右
           <a href="/tags/snap/">Snap</a>
           </div>
       <nav class="post-nav">
-        
+        <a class="prev" href="/post/programming/snap-microblocks-client-en/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">MicroBlocks Client for Snap!</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
         <a class="next" href="/post/%E7%BC%96%E7%A8%8B/snap-cocube/">
             <span class="next-text nav-default">Snap! 中的 CoCube 库</span>
             <span class="next-text nav-mobile">下一篇</span>
