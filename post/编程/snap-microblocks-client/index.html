@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 MicroBlocks Client 库">
 <meta itemprop="description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"><meta itemprop="datePublished" content="2024-07-04T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-04T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2120">
+<meta itemprop="wordCount" content="2164">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 MicroBlocks Client 库"/>
 <meta name="twitter:description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"/>
@@ -161,7 +161,11 @@
         </li>
         <li><a href="#如何查看-microblocks-支持的-vm-primitive">如何查看 MicroBlocks 支持的 vm primitive?</a></li>
         <li><a href="#push-风格的版本">push 风格的版本</a></li>
-        <li><a href="#是否可以制作一个类似的-python-client-库">是否可以制作一个类似的 Python client 库?</a></li>
+        <li><a href="#是否可以制作一个类似的-python-client-库">是否可以制作一个类似的 Python client 库?</a>
+          <ul>
+            <li><a href="#批量连接设备">批量连接设备</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#参考">参考</a></li>
@@ -393,8 +397,8 @@ turbo 模式 70 ms 左右
 </span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">microblocks</span> <span class="kn">import</span> <span class="n">MicroblocksClient</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">client</span> <span class="o">=</span> <span class="n">MicroblocksClient</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="n">devices</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">discover</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;found devices:&#34;</span><span class="p">,</span> <span class="n">devices</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">client</span><span class="o">.</span><span class="n">discover</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;found devices:&#34;</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">found_devices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 </span></span><span class="line"><span class="cl"><span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&#34;MicroBlocks QCQ&#34;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">client</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;displayCharacter&#34;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&#34;f&#34;</span><span class="p">])</span>
@@ -408,7 +412,34 @@ turbo 模式 70 ms 左右
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>记得先往设备里刷入<a href="https://microblocksfun.cn/run/microblocks.html#project=https://wwj718.github.io/post/img/MicroBlocks-server-dynatalk.ubp">这个程序(和 Snap! 相同)</a></p>
-<!--
+<h3 id="批量连接设备">批量连接设备</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">microblocks</span> <span class="kn">import</span> <span class="n">MicroblocksClient</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">client</span> <span class="o">=</span> <span class="n">MicroblocksClient</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">client</span><span class="o">.</span><span class="n">discover</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;found devices:&#34;</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">found_devices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># connect all discovered devices</span>
+</span></span><span class="line"><span class="cl"><span class="n">devices</span> <span class="o">=</span> <span class="p">[</span><span class="n">MicroblocksClient</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">found_devices</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">device</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">devices</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">device</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;displayCharacter&#34;</span><span class="p">,</span> <span class="p">[</span><span class="n">index</span><span class="p">])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><!--
 
 **提醒:** 目前有个bug,  有时候取到的 msgBytes 有问题
 
