@@ -49,7 +49,7 @@
 <meta itemprop="name" content="MicroBlocks 编程案例: 扩展 OctoStudio 库">
 <meta itemprop="description" content="前言 前几天, @yinxi 问我 MicroBlocks 团队何时推出 BLE radio 库。 他想要使用 BLE radio 构建手柄和受控小车项目。相比于 wifi radio, BLE radio 功耗更低(手柄和小车因此会有更长的续航时间)而且"><meta itemprop="datePublished" content="2024-01-14T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-01-14T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1018">
+<meta itemprop="wordCount" content="925">
 <meta itemprop="keywords" content="MicroBlocks," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="MicroBlocks 编程案例: 扩展 OctoStudio 库"/>
 <meta name="twitter:description" content="前言 前几天, @yinxi 问我 MicroBlocks 团队何时推出 BLE radio 库。 他想要使用 BLE radio 构建手柄和受控小车项目。相比于 wifi radio, BLE radio 功耗更低(手柄和小车因此会有更长的续航时间)而且"/>
@@ -139,7 +139,6 @@
       <ul>
         <li><a href="#前言">前言</a></li>
         <li><a href="#hack">Hack</a></li>
-        <li><a href="#预编译固件">预编译固件</a></li>
         <li><a href="#进一步">进一步</a>
           <ul>
             <li><a href="#simple-ble-radio">Simple BLE Radio</a></li>
@@ -165,15 +164,20 @@
 <p>只需 hack 两处即可, 其一是下拉菜单，其二是 <code>_OctoInit</code> :</p>
 <p><img src="/post/img/microblocks-OctoStudio-BLEradio-01.png" alt=""></p>
 <p>从这里开始 <a href="https://microblocksfun.cn/run/microblocks.html#project=https://wwj718.github.io/post/img/OctoStudio-Demo-hack.ubp">OctoStudio-Demo-hack</a></p>
-<h2 id="预编译固件">预编译固件</h2>
-<p>目前官方最新的固件, 用于两个板子通信经常会丢失消息(但在板子与手机之间非常稳定)。下边这个固件提高了板子之间使用 OctoStudio 通信的稳定性:</p>
-<ul>
-<li><a href="https://wwj718.github.io/post/img/esp32-fixocto-20240116.bin">esp32-fixocto-20240116.bin</a></li>
-<li><a href="https://wwj718.github.io/post/img/microbitV2-fixocto-20240116.hex">microbitV2-fixocto-20240116.hex</a></li>
-</ul>
-<p>这些改进会部署到下一个版本里。</p>
-<p><a href="https://microblocksfun.cn/run/microblocks.html">在线</a>刷入固件:</p>
-<p><img src="/post/img/install-esp-firmware-from-url.png" alt=""></p>
+<!--
+## 预编译固件
+
+目前官方最新的固件, 用于两个板子通信经常会丢失消息(但在板子与手机之间非常稳定)。下边这个固件提高了板子之间使用 OctoStudio 通信的稳定性: 
+
+- [esp32-fixocto-20240116.bin](https://wwj718.github.io/post/img/esp32-fixocto-20240116.bin)
+- [microbitV2-fixocto-20240116.hex](https://wwj718.github.io/post/img/microbitV2-fixocto-20240116.hex)
+
+这些改进会部署到下一个版本里。
+
+[在线](https://microblocksfun.cn/run/microblocks.html)刷入固件:
+
+![](/post/img/install-esp-firmware-from-url.png)
+-->
 <h2 id="进一步">进一步</h2>
 <p>@yinxi 还提出&quot;多个手柄遥控不同的车&quot;的问题, micro:bit radio 通过不同的 &ldquo;广播分组&rdquo; 解决这个问题。John 规划中的 BLE radio 也支持广播分组。</p>
 <p>OctoStudio 目前还支持广播分组, 如果我们愿意的话，我们可以进一步扩展 OctoStudio 库来支持广播分组。但需要修改 vm 中代码, 关键的代码是 <a href="https://github.com/MicroBlocksCN/smallvm/blob/devCN/vm/blePrims.cpp#L172">shape_id = deviceName.back() - &lsquo;0&rsquo;;</a></p>
