@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 CoCube 库">
 <meta itemprop="description" content="前言 上篇文章提到: @梁博士 制作了一个桌面级模块化群控机器人系统, 取名&quot;CoCube&quot; (Collaborative-Cube), CoCube 将 MicroBlocks 用作其编程环境. CoCube 与 toio 有许多"><meta itemprop="datePublished" content="2024-07-03T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-03T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2281">
+<meta itemprop="wordCount" content="2314">
 <meta itemprop="keywords" content="Snap,MicroBlocks," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 CoCube 库"/>
 <meta name="twitter:description" content="前言 上篇文章提到: @梁博士 制作了一个桌面级模块化群控机器人系统, 取名&quot;CoCube&quot; (Collaborative-Cube), CoCube 将 MicroBlocks 用作其编程环境. CoCube 与 toio 有许多"/>
@@ -165,6 +165,7 @@
         <li><a href="#是否可以制作一个类似的-python-client-库">是否可以制作一个类似的 Python client 库?</a>
           <ul>
             <li><a href="#批量连接设备">批量连接设备</a></li>
+            <li><a href="#并行控制多个设备">并行控制多个设备</a></li>
           </ul>
         </li>
       </ul>
@@ -414,6 +415,25 @@ CoCube-dynatalk-demo.xml
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">device</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">devices</span><span class="p">):</span>
 </span></span><span class="line"><span class="cl">    <span class="n">device</span><span class="o">.</span><span class="n">display_character</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="并行控制多个设备">并行控制多个设备</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Launching parallel tasks: https://docs.python.org/3/library/concurrent.futures.html</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">client</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">scroll_text</span><span class="p">,</span> <span class="s2">&#34;hello&#34;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="参考">参考</h1>

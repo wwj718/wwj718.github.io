@@ -49,7 +49,7 @@
 <meta itemprop="name" content="MicroBlocks Client for Snap!">
 <meta itemprop="description" content="中文版本 Preface After making the CoCube library in Snap!, I realized that most of the work in this library is general and can be used for any MicroBlocks device! By extracting the general parts of the CoCube library, the MicroBlocks Client library was obtained. Much of the content of this article overlaps with the CoCube library in Snap!, and the MicroBlocks Client library is essentially a general"><meta itemprop="datePublished" content="2024-07-10T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-10T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1286">
+<meta itemprop="wordCount" content="1313">
 <meta itemprop="keywords" content="Snap,MicroBlocks," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="MicroBlocks Client for Snap!"/>
 <meta name="twitter:description" content="中文版本 Preface After making the CoCube library in Snap!, I realized that most of the work in this library is general and can be used for any MicroBlocks device! By extracting the general parts of the CoCube library, the MicroBlocks Client library was obtained. Much of the content of this article overlaps with the CoCube library in Snap!, and the MicroBlocks Client library is essentially a general"/>
@@ -164,6 +164,7 @@
         <li><a href="#is-it-possible-to-create-a-similar-python-client-library">Is it possible to create a similar Python client library?</a>
           <ul>
             <li><a href="#connect-multiple-devices">Connect multiple devices</a></li>
+            <li><a href="#parallel-control">Parallel Control</a></li>
           </ul>
         </li>
       </ul>
@@ -363,6 +364,25 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">device</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">devices</span><span class="p">):</span>
 </span></span><span class="line"><span class="cl">    <span class="n">device</span><span class="o">.</span><span class="n">display_character</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="parallel-control">Parallel Control</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Launching parallel tasks: https://docs.python.org/3/library/concurrent.futures.html</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">client</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">scroll_text</span><span class="p">,</span> <span class="s2">&#34;hello&#34;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="references">References</h1>
