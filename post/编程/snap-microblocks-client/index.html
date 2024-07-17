@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的 MicroBlocks Client 库">
 <meta itemprop="description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"><meta itemprop="datePublished" content="2024-07-04T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-04T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2209">
+<meta itemprop="wordCount" content="2335">
 <meta itemprop="keywords" content="Snap,MicroBlocks," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的 MicroBlocks Client 库"/>
 <meta name="twitter:description" content="前言 在制作完 Snap! 中的 CoCube 库 后, 我发现这个库的大多数工作都是通用的, 我们可以将其用于任何 MicroBlocks 设备! 通过提取出 CoCube 库的通用部分, 得到了 MicroBlocks Client 库. 这篇文章的"/>
@@ -167,6 +167,7 @@
             <li><a href="#并行控制多个设备">并行控制多个设备</a></li>
           </ul>
         </li>
+        <li><a href="#如何为特定-microblocks-项目制作-python-库">如何为特定 MicroBlocks 项目制作 Python 库</a></li>
       </ul>
     </li>
     <li><a href="#参考">参考</a></li>
@@ -295,7 +296,7 @@ MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 基于它制�
 <li><code>MicroBlocks-Client.xml</code> 改名为 <code>MicroBlocks-Client2.xml</code></li>
 <li>编辑 <code>MicroBlocks-Client2.xml</code> 文件:
 <ul>
-<li>将 <code>🐰</code> 全部为 <code>🐰2</code> (vscode有批量替换功能)</li>
+<li>将 <code>🐰</code> 全部为 <code>🐰2</code> (vscode 有批量替换功能)</li>
 <li><code>_ble_</code> 全部替换为 <code>_ble2_</code></li>
 </ul>
 </li>
@@ -303,14 +304,14 @@ MicroBlocks messaging(BLE) 库提供了 PubSub 风格的消息流, 基于它制�
 </ul>
 <p>以此类推, 你可以添加任意多个 MicroBlocks Client!</p>
 <h3 id="使用场景">使用场景</h3>
-<p>当有多个 MicroBlocks 设备时,  Snap! 非常适合作为 &ldquo;演示控制台&rdquo;, 我在<a href="https://www.bilibili.com/video/BV13z421B7mu?t=6666.8">这个视频</a>里做了分享</p>
+<p>当有多个 MicroBlocks 设备时, Snap! 非常适合作为 &ldquo;演示控制台&rdquo;, 我在<a href="https://www.bilibili.com/video/BV13z421B7mu?t=6666.8">这个视频</a>里做了分享</p>
 <p><img src="/post/img/snap-MicroBlocks-Client-10.png" alt=""></p>
 <h2 id="如何同时调试-snap-microblocks-的代码">如何同时调试 Snap! MicroBlocks 的代码?</h2>
 <p>是的, 你可以同时调试软件和硬件侧的代码! 一切都是活性(<strong>liveness</strong>)的!</p>
 <p>你可以在 Snap! MicroBlocks 中同时连接同一个设备, 然后观察消息在它们之间的流动:</p>
 <p><img src="/post/img/snap-MicroBlocks-Client-12-dynatalk.png" alt=""></p>
 <!--
-say 
+say
 ![](/post/img/snap-MicroBlocks-Client-12.png)
 -->
 <h2 id="如何在-snap-的-microblocks-窗口中保存和加载-microblocks-项目">如何在 Snap! 的 MicroBlocks 窗口中保存和加载 MicroBlocks 项目?</h2>
@@ -468,6 +469,49 @@ turbo 模式 70 ms 左右
   才测试蓝牙的缓冲区
     果然!
 -->
+<h2 id="如何为特定-microblocks-项目制作-python-库">如何为特定 MicroBlocks 项目制作 Python 库</h2>
+<p>上述 MicroblocksClient 类是通用的, 要为自定义的 MicroBlocks 设备制作 Python 库, 只需要继承 MicroblocksClient 类, 然后添加自定义方法即可. 参考 <a href="https://github.com/wwj718/cocube/blob/main/src/cocube/__init__.py">CoCube</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">microblocks</span> <span class="kn">import</span> <span class="n">MicroblocksClient</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">CoCube</span><span class="p">(</span><span class="n">MicroblocksClient</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@property</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">battery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;Battery Percentage&#34;</span><span class="p">,</span> <span class="p">[]))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@property</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">position_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;position_X&#34;</span><span class="p">,</span> <span class="p">[]))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">move_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;Move Forward&#34;</span><span class="p">,</span> <span class="p">[</span><span class="n">speed</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">move_backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;Move Backward&#34;</span><span class="p">,</span> <span class="p">[</span><span class="n">speed</span><span class="p">])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="https://github.com/wwj718/cocube">CoCube Python 库</a> 使用 <a href="https://hatch.pypa.io/latest/why/">Hatch</a> 创建, 非常推荐使用 Hatch 来开发和发布 Python 项目.</p>
 <h1 id="参考">参考</h1>
 <ul>
 <li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-cocube/#%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E6%9B%B4%E5%A4%9A-cocube">Snap! 中的 CoCube 库</a></li>
