@@ -49,7 +49,7 @@
 <meta itemprop="name" content="MicroBlocks Client for Snap!">
 <meta itemprop="description" content="中文版本 Preface After making the CoCube library in Snap!, I realized that most of the work in this library is general and can be used for any MicroBlocks device! By extracting the general parts of the CoCube library, the MicroBlocks Client library was obtained. Much of the content of this article overlaps with the CoCube library in Snap!, and the MicroBlocks Client library is essentially a general"><meta itemprop="datePublished" content="2024-07-10T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-10T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1313">
+<meta itemprop="wordCount" content="1420">
 <meta itemprop="keywords" content="Snap,MicroBlocks," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="MicroBlocks Client for Snap!"/>
 <meta name="twitter:description" content="中文版本 Preface After making the CoCube library in Snap!, I realized that most of the work in this library is general and can be used for any MicroBlocks device! By extracting the general parts of the CoCube library, the MicroBlocks Client library was obtained. Much of the content of this article overlaps with the CoCube library in Snap!, and the MicroBlocks Client library is essentially a general"/>
@@ -167,6 +167,7 @@
             <li><a href="#parallel-control">Parallel Control</a></li>
           </ul>
         </li>
+        <li><a href="#how-to-make-a-python-library-for-a-custom-microblocks-device">How to make a Python library for a custom MicroBlocks device</a></li>
       </ul>
     </li>
     <li><a href="#references">References</a></li>
@@ -385,7 +386,50 @@
 </span></span><span class="line"><span class="cl">        <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">scroll_text</span><span class="p">,</span> <span class="s2">&#34;hello&#34;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h1 id="references">References</h1>
+</div><h2 id="how-to-make-a-python-library-for-a-custom-microblocks-device">How to make a Python library for a custom MicroBlocks device</h2>
+<p>The MicroblocksClient class above is generic. To make a Python library for a custom MicroBlocks device, you only need to inherit the MicroblocksClient class and add custom methods. See <a href="https://github.com/wwj718/cocube/blob/main/src/cocube/__init__.py">CoCube</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">microblocks</span> <span class="kn">import</span> <span class="n">MicroblocksClient</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">CoCube</span><span class="p">(</span><span class="n">MicroblocksClient</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@property</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">battery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;Battery Percentage&#34;</span><span class="p">,</span> <span class="p">[]))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@property</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">position_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;position_X&#34;</span><span class="p">,</span> <span class="p">[]))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">move_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;Move Forward&#34;</span><span class="p">,</span> <span class="p">[</span><span class="n">speed</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">move_backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&#34;Move Backward&#34;</span><span class="p">,</span> <span class="p">[</span><span class="n">speed</span><span class="p">])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a href="https://github.com/wwj718/cocube">The CoCube Python library</a> is created using <a href="https://hatch.pypa.io/latest/why/">Hatch</a>. I recommend using Hatch for developing and publishing Python projects.</p>
+<h1 id="references">References</h1>
 <ul>
 <li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-cocube/#%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E6%9B%B4%E5%A4%9A-cocube">Snap! 中的 CoCube 库</a></li>
 </ul>
