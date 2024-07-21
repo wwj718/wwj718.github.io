@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Godot 学习笔记">
 <meta itemprop="description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建"><meta itemprop="datePublished" content="2024-07-20T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-20T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1778">
+<meta itemprop="wordCount" content="1869">
 <meta itemprop="keywords" content="game,MicroBlocks," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Godot 学习笔记"/>
 <meta name="twitter:description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建"/>
@@ -360,43 +360,105 @@ gdscript 没有异常: [GdScript 需要异常](https://www.reddit.com/r/godot/co
 </span><span class="lnt">33
 </span><span class="lnt">34
 </span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_on_send_pressed</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="n">aString</span> <span class="o">=</span> <span class="o">$</span><span class="ne">LineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;let aString = &#34;</span><span class="si">%s</span><span class="s1">&#34;;&#39;</span> <span class="o">%</span> <span class="n">aString</span>  <span class="o">+</span> <span class="s1">&#39;&#39;&#39;
-</span></span></span><span class="line"><span class="cl"><span class="s1">        const data = new TextEncoder().encode(aString);
-</span></span></span><span class="line"><span class="cl"><span class="s1">        let length = data.length + 1;
-</span></span></span><span class="line"><span class="cl"><span class="s1">        let bytes = new Uint8Array([ ...(new Uint8Array([251, 27, 0, length % 256, parseInt((length / 256))])), ...data, ...(new Uint8Array([254]))])
-</span></span></span><span class="line"><span class="cl"><span class="s1">        
-</span></span></span><span class="line"><span class="cl"><span class="s1">        const MICROBLOCKS_SERVICE_UUID = &#34;bb37a001-b922-4018-8e74-e14824b3a638&#34;
-</span></span></span><span class="line"><span class="cl"><span class="s1">        const MICROBLOCKS_RX_CHAR_UUID = &#34;bb37a002-b922-4018-8e74-e14824b3a638&#34; // board receive characteristic
-</span></span></span><span class="line"><span class="cl"><span class="s1">        const MICROBLOCKS_TX_CHAR_UUID = &#34;bb37a003-b922-4018-8e74-e14824b3a638&#34; // board transmit characteristic
-</span></span></span><span class="line"><span class="cl"><span class="s1">
-</span></span></span><span class="line"><span class="cl"><span class="s1">        window.bleDevice &amp;&amp; window.bleDevice.gatt
-</span></span></span><span class="line"><span class="cl"><span class="s1">          .getPrimaryService(MICROBLOCKS_SERVICE_UUID)
-</span></span></span><span class="line"><span class="cl"><span class="s1">          .then((service) =&gt; service.getCharacteristic(MICROBLOCKS_RX_CHAR_UUID))
-</span></span></span><span class="line"><span class="cl"><span class="s1">          .then((characteristic) =&gt; characteristic.writeValue(bytes))
-</span></span></span><span class="line"><span class="cl"><span class="s1">          .catch((error) =&gt; {
-</span></span></span><span class="line"><span class="cl"><span class="s1">            console.log(&#34;error:&#34; + error);
-</span></span></span><span class="line"><span class="cl"><span class="s1">          });
-</span></span></span><span class="line"><span class="cl"><span class="s1">        &#39;&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="cl"><span class="k">extends</span> <span class="ne">Control</span>
 </span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Called when the node enters the scene tree for the first time.</span>
+</span></span><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">	<span class="nb">print</span><span class="p">(</span><span class="s2">&#34;ready&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">class MicroBlocksClient {
+</span></span></span><span class="line"><span class="cl"><span class="s1">	constructor(height, width) {
+</span></span></span><span class="line"><span class="cl"><span class="s1">		this.MICROBLOCKS_SERVICE_UUID = &#34;bb37a001-b922-4018-8e74-e14824b3a638&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">		this.MICROBLOCKS_RX_CHAR_UUID = &#34;bb37a002-b922-4018-8e74-e14824b3a638&#34; // board receive characteristic
+</span></span></span><span class="line"><span class="cl"><span class="s1">		this.MICROBLOCKS_TX_CHAR_UUID = &#34;bb37a003-b922-4018-8e74-e14824b3a638&#34; // board transmit characteristic
+</span></span></span><span class="line"><span class="cl"><span class="s1">	}
+</span></span></span><span class="line"><span class="cl"><span class="s1">
+</span></span></span><span class="line"><span class="cl"><span class="s1">	connect() {
+</span></span></span><span class="line"><span class="cl"><span class="s1">		navigator.bluetooth.requestDevice({
+</span></span></span><span class="line"><span class="cl"><span class="s1">			filters: [
+</span></span></span><span class="line"><span class="cl"><span class="s1">				{ services: [this.MICROBLOCKS_SERVICE_UUID] }
+</span></span></span><span class="line"><span class="cl"><span class="s1">			]
+</span></span></span><span class="line"><span class="cl"><span class="s1">		}).then((device) =&gt; { window.bleDevice = device; return device.gatt.connect(); })
+</span></span></span><span class="line"><span class="cl"><span class="s1">	}
+</span></span></span><span class="line"><span class="cl"><span class="s1">
+</span></span></span><span class="line"><span class="cl"><span class="s1">	send(aString) {
+</span></span></span><span class="line"><span class="cl"><span class="s1">		// console.log(aString);
+</span></span></span><span class="line"><span class="cl"><span class="s1">		const data = new TextEncoder().encode(aString);
+</span></span></span><span class="line"><span class="cl"><span class="s1">		let length = data.length + 1;
+</span></span></span><span class="line"><span class="cl"><span class="s1">		let bytes = new Uint8Array([...(new Uint8Array([251, 27, 0, length % 256, parseInt((length / 256))])), ...data, ...(new Uint8Array([254]))])
+</span></span></span><span class="line"><span class="cl"><span class="s1">		if (window.bleDevice) {
+</span></span></span><span class="line"><span class="cl"><span class="s1">			window.bleDevice.gatt
+</span></span></span><span class="line"><span class="cl"><span class="s1">				.getPrimaryService(this.MICROBLOCKS_SERVICE_UUID)
+</span></span></span><span class="line"><span class="cl"><span class="s1">				.then((service) =&gt; service.getCharacteristic(this.MICROBLOCKS_RX_CHAR_UUID))
+</span></span></span><span class="line"><span class="cl"><span class="s1">				.then((characteristic) =&gt; characteristic.writeValue(bytes))
+</span></span></span><span class="line"><span class="cl"><span class="s1">				.catch((error) =&gt; {
+</span></span></span><span class="line"><span class="cl"><span class="s1">					console.log(&#34;error:&#34; + error);
+</span></span></span><span class="line"><span class="cl"><span class="s1">				});
+</span></span></span><span class="line"><span class="cl"><span class="s1">		}
+</span></span></span><span class="line"><span class="cl"><span class="s1">	}
+</span></span></span><span class="line"><span class="cl"><span class="s1">}
+</span></span></span><span class="line"><span class="cl"><span class="s1">window.MicroBlocksClient = MicroBlocksClient;
+</span></span></span><span class="line"><span class="cl"><span class="s1">	&#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Called every frame. &#39;delta&#39; is the elapsed time since the previous frame.</span>
+</span></span><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_process</span><span class="p">(</span><span class="n">delta</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">	<span class="k">pass</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_on_send_pressed</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="k">var</span> <span class="n">aString</span> <span class="o">=</span> <span class="o">$</span><span class="ne">LineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;window.microblocks_client.send(&#34;</span><span class="si">%s</span><span class="s1">&#34;)&#39;</span> <span class="o">%</span> <span class="n">aString</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">print</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_on_connect_pressed</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;
-</span></span></span><span class="line"><span class="cl"><span class="s1">            navigator.bluetooth.requestDevice({
-</span></span></span><span class="line"><span class="cl"><span class="s1">                filters: [
-</span></span></span><span class="line"><span class="cl"><span class="s1">                    { services: [&#39;bb37a001-b922-4018-8e74-e14824b3a638&#39;] }
-</span></span></span><span class="line"><span class="cl"><span class="s1">                ]
-</span></span></span><span class="line"><span class="cl"><span class="s1">            }).then((device) =&gt; {window.bleDevice = device;return device.gatt.connect();})
-</span></span></span><span class="line"><span class="cl"><span class="s1">        &#39;&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;The JavaScriptBridge is NOT available&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">window.microblocks_client = new window.MicroBlocksClient();
+</span></span></span><span class="line"><span class="cl"><span class="s1">window.microblocks_client.connect();
+</span></span></span><span class="line"><span class="cl"><span class="s1">		&#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">print</span><span class="p">(</span><span class="s2">&#34;The JavaScriptBridge is NOT available&#34;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="传递-json">传递 json</h3>
