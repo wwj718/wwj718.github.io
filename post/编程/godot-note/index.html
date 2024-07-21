@@ -363,40 +363,40 @@ gdscript 没有异常: [GdScript 需要异常](https://www.reddit.com/r/godot/co
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_on_send_pressed</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">		<span class="k">var</span> <span class="n">aString</span> <span class="o">=</span> <span class="o">$</span><span class="ne">LineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">		<span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;let aString = &#34;</span><span class="si">%s</span><span class="s1">&#34;;&#39;</span> <span class="o">%</span> <span class="n">aString</span>  <span class="o">+</span> <span class="s1">&#39;&#39;&#39;
-</span></span></span><span class="line"><span class="cl"><span class="s1">		const data = new TextEncoder().encode(aString);
-</span></span></span><span class="line"><span class="cl"><span class="s1">		let length = data.length + 1;
-</span></span></span><span class="line"><span class="cl"><span class="s1">		let bytes = new Uint8Array([ ...(new Uint8Array([251, 27, 0, length % 256, parseInt((length / 256))])), ...data, ...(new Uint8Array([254]))])
-</span></span></span><span class="line"><span class="cl"><span class="s1">		
-</span></span></span><span class="line"><span class="cl"><span class="s1">		const MICROBLOCKS_SERVICE_UUID = &#34;bb37a001-b922-4018-8e74-e14824b3a638&#34;
-</span></span></span><span class="line"><span class="cl"><span class="s1">		const MICROBLOCKS_RX_CHAR_UUID = &#34;bb37a002-b922-4018-8e74-e14824b3a638&#34; // board receive characteristic
-</span></span></span><span class="line"><span class="cl"><span class="s1">		const MICROBLOCKS_TX_CHAR_UUID = &#34;bb37a003-b922-4018-8e74-e14824b3a638&#34; // board transmit characteristic
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="n">aString</span> <span class="o">=</span> <span class="o">$</span><span class="ne">LineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;let aString = &#34;</span><span class="si">%s</span><span class="s1">&#34;;&#39;</span> <span class="o">%</span> <span class="n">aString</span>  <span class="o">+</span> <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">        const data = new TextEncoder().encode(aString);
+</span></span></span><span class="line"><span class="cl"><span class="s1">        let length = data.length + 1;
+</span></span></span><span class="line"><span class="cl"><span class="s1">        let bytes = new Uint8Array([ ...(new Uint8Array([251, 27, 0, length % 256, parseInt((length / 256))])), ...data, ...(new Uint8Array([254]))])
+</span></span></span><span class="line"><span class="cl"><span class="s1">        
+</span></span></span><span class="line"><span class="cl"><span class="s1">        const MICROBLOCKS_SERVICE_UUID = &#34;bb37a001-b922-4018-8e74-e14824b3a638&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">        const MICROBLOCKS_RX_CHAR_UUID = &#34;bb37a002-b922-4018-8e74-e14824b3a638&#34; // board receive characteristic
+</span></span></span><span class="line"><span class="cl"><span class="s1">        const MICROBLOCKS_TX_CHAR_UUID = &#34;bb37a003-b922-4018-8e74-e14824b3a638&#34; // board transmit characteristic
 </span></span></span><span class="line"><span class="cl"><span class="s1">
-</span></span></span><span class="line"><span class="cl"><span class="s1">		window.bleDevice &amp;&amp; window.bleDevice.gatt
-</span></span></span><span class="line"><span class="cl"><span class="s1">		  .getPrimaryService(MICROBLOCKS_SERVICE_UUID)
-</span></span></span><span class="line"><span class="cl"><span class="s1">		  .then((service) =&gt; service.getCharacteristic(MICROBLOCKS_RX_CHAR_UUID))
-</span></span></span><span class="line"><span class="cl"><span class="s1">		  .then((characteristic) =&gt; characteristic.writeValue(bytes))
-</span></span></span><span class="line"><span class="cl"><span class="s1">		  .catch((error) =&gt; {
-</span></span></span><span class="line"><span class="cl"><span class="s1">			console.log(&#34;error:&#34; + error);
-</span></span></span><span class="line"><span class="cl"><span class="s1">		  });
-</span></span></span><span class="line"><span class="cl"><span class="s1">		&#39;&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">		<span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</span></span></span><span class="line"><span class="cl"><span class="s1">        window.bleDevice &amp;&amp; window.bleDevice.gatt
+</span></span></span><span class="line"><span class="cl"><span class="s1">          .getPrimaryService(MICROBLOCKS_SERVICE_UUID)
+</span></span></span><span class="line"><span class="cl"><span class="s1">          .then((service) =&gt; service.getCharacteristic(MICROBLOCKS_RX_CHAR_UUID))
+</span></span></span><span class="line"><span class="cl"><span class="s1">          .then((characteristic) =&gt; characteristic.writeValue(bytes))
+</span></span></span><span class="line"><span class="cl"><span class="s1">          .catch((error) =&gt; {
+</span></span></span><span class="line"><span class="cl"><span class="s1">            console.log(&#34;error:&#34; + error);
+</span></span></span><span class="line"><span class="cl"><span class="s1">          });
+</span></span></span><span class="line"><span class="cl"><span class="s1">        &#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_on_connect_pressed</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">		<span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;
-</span></span></span><span class="line"><span class="cl"><span class="s1">			navigator.bluetooth.requestDevice({
-</span></span></span><span class="line"><span class="cl"><span class="s1">				filters: [
-</span></span></span><span class="line"><span class="cl"><span class="s1">					{ services: [&#39;bb37a001-b922-4018-8e74-e14824b3a638&#39;] }
-</span></span></span><span class="line"><span class="cl"><span class="s1">				]
-</span></span></span><span class="line"><span class="cl"><span class="s1">			}).then((device) =&gt; {window.bleDevice = device;return device.gatt.connect();})
-</span></span></span><span class="line"><span class="cl"><span class="s1">		&#39;&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">		<span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">		<span class="nb">print</span><span class="p">(</span><span class="s2">&#34;The JavaScriptBridge is NOT available&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">            navigator.bluetooth.requestDevice({
+</span></span></span><span class="line"><span class="cl"><span class="s1">                filters: [
+</span></span></span><span class="line"><span class="cl"><span class="s1">                    { services: [&#39;bb37a001-b922-4018-8e74-e14824b3a638&#39;] }
+</span></span></span><span class="line"><span class="cl"><span class="s1">                ]
+</span></span></span><span class="line"><span class="cl"><span class="s1">            }).then((device) =&gt; {window.bleDevice = device;return device.gatt.connect();})
+</span></span></span><span class="line"><span class="cl"><span class="s1">        &#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;The JavaScriptBridge is NOT available&#34;</span><span class="p">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="传递-json">传递 json</h3>
