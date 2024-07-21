@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Godot 学习笔记 - 夜行人</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="种瓜" /><meta name="description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建" /><meta name="keywords" content="education, programming, Technology" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/godot-note/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.69e0bbe2419d9b0efbdcc1d3b4338bba03a6f6789ae2832bc1af58e5b2757470.css" rel="stylesheet">
+<link rel="stylesheet" href="/post/img/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Godot 学习笔记" />
+<meta property="og:description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/godot-note/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-07-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-07-20T00:00:00+00:00" />
+
+<meta itemprop="name" content="Godot 学习笔记">
+<meta itemprop="description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建"><meta itemprop="datePublished" content="2024-07-20T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2024-07-20T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1585">
+<meta itemprop="keywords" content="game,MicroBlocks," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Godot 学习笔记"/>
+<meta name="twitter:description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">夜行人</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/post/%E9%9A%8F%E7%AC%94/aboutme/">
+        <li class="mobile-menu-item">About-Me</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">夜行人</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/%E9%9A%8F%E7%AC%94/aboutme/">About-Me</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Godot 学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-07-20 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%BC%96%E7%A8%8B/"> 编程 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#为何要使用-godot-构建-microblocks-ide">为何要使用 Godot 构建 MicroBlocks IDE?</a></li>
+        <li><a href="#如何使用-godot-构建-microblocks-ide">如何使用 Godot 构建 MicroBlocks IDE?</a></li>
+      </ul>
+    </li>
+    <li><a href="#兴趣点-gui">兴趣点: GUI</a></li>
+    <li><a href="#godot-入门">Godot 入门</a>
+      <ul>
+        <li><a href="#关键概念">关键概念</a></li>
+        <li><a href="#gdscript">GDScript</a>
+          <ul>
+            <li><a href="#replplayground">REPL/Playground</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#开发">开发</a>
+      <ul>
+        <li><a href="#导出-web-项目">导出 Web 项目</a>
+          <ul>
+            <li><a href="#在-web-中环境测试">在 Web 中环境测试</a></li>
+          </ul>
+        </li>
+        <li><a href="#与-javascript-互操作">与 JavaScript 互操作</a>
+          <ul>
+            <li><a href="#传递-json">传递 json</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="前言">前言</h1>
+<p>之前做 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/autonomous-agent-in-roblox/">游戏中的 AI Agent</a> 的时候, 最初的选型过程, 调研过 <a href="https://godotengine.org/">Godot</a>, 对它充满好感.</p>
+<p>最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 <a href="https://godotengine.org/">Godot</a> 构建.</p>
+<p>为何要使用 Godot 构建 MicroBlocks IDE? 又要如何做呢?</p>
+<p>目前 John 还没有给出进一步的消息, 以下记录我的一些想法.</p>
+<h2 id="为何要使用-godot-构建-microblocks-ide">为何要使用 Godot 构建 MicroBlocks IDE?</h2>
+<p>目前, MicroBlocks 用户呼声最好的需求是<strong>支持移动端编程</strong></p>
+<p>MicroBlocks 当前的 IDE 基于 <a href="https://gpblocks.org/">GP Blocks</a>, 若要 MicroBlocks IDE 只需移动端, 需要在 GP Blocks 上进行许多工作, 可是 GP Blocks 已经不再维护.</p>
+<p>因此, 更好的方向是使用一个成熟的 GUI 构建工具来重新制作 MicroBlocks IDE.</p>
+<p>Godot 是一个非常强大的开源解决方案.</p>
+<h2 id="如何使用-godot-构建-microblocks-ide">如何使用 Godot 构建 MicroBlocks IDE?</h2>
+<p>值得提醒的是, 并不是要使用 Godot 重新构建 MicroBlocks 而是<strong>使用 Godot 构建 MicroBlocks IDE</strong></p>
+<p>MicroBlocks 主要包含两大部分:</p>
+<ul>
+<li>MicroBlocks VM</li>
+<li>MicroBlocks IDE</li>
+</ul>
+<p>MicroBlocks IDE 是 MicroBlocks VM 的图形化客户端, 它们之间通过消息进行通信(基于 <a href="https://bitbucket.org/john_maloney/smallvm/src/master/misc/SERIAL_PROTOCOL.md">MicroBlocks 协议</a>). 要理解它们之间的关系可以参考 @邵悦 上周末的分享: <a href="https://www.bilibili.com/video/BV1rb421n7Wo?t=3068.7">MicroBlocks 能力图谱(视频)</a></p>
+<p><strong>使用 Godot 构建 MicroBlocks IDE</strong> 的含义是我们要制作一个图形化客户端, 它是一个 GUI 项目.</p>
+<p>所以我们要做的事情是<strong>使用 Godot 制作一个 GUI 项目, 它能够支持移动端</strong></p>
+<p>Godot 非常擅长制作 GUI 项目:</p>
+<ul>
+<li><a href="https://medium.com/swlh/what-makes-godot-engine-great-for-advance-gui-applications-b1cfb941df3b">Is Making Advanced GUI Applications with Godot the Future?</a></li>
+<li><a href="https://alfredbaudisch.com/blog/gamedev/godot-engine/standalone-applications-made-with-godot-gui-softwares-tools/">Standalone Tools and Applications Made with Godot GUI</a></li>
+</ul>
+<h1 id="兴趣点-gui">兴趣点: GUI</h1>
+<p>Godot 主要是一个游戏引擎, 能做的事情非常多, 生态巨大, 文档极多. 这带来的一个问题是, 很难&quot;学会&quot;它.</p>
+<p>好在, 我们并不需要&quot;学会&quot;它. 记住我们要做的事情是:</p>
+<blockquote>
+<p><strong>使用 Godot 制作一个 GUI 项目, 它能够支持移动端</strong></p>
+</blockquote>
+<p>我们并不需要学习如何使用 Godot 制作 2D 或 3D 游戏(这需要很多时间), 只需学习如何使用它制作 GUI 即可!</p>
+<p>弄清楚目标, 需要学习的内容就变得很少且聚焦了, 我们只需要学习如何使用 <code>Control</code> 节点</p>
+<p><img src="/post/img/Godot-note-01.png" alt=""></p>
+<p>以下是我喜欢的一些教学资源, 对于 Godot 这样**丰富(rich)**的计算环境, 强烈推荐通过观看视频来学习(尤其是入门阶段), 操作中的许多知识是隐性的, 很难通过文字描述学会:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=KfydpMuTBvA">Godot 4 — An Overview of Control Nodes | Easy UI (Tutorial)</a></li>
+<li><a href="https://www.youtube.com/watch?v=1_OFJLyqlXI">Godot UI Basics - how to build beautiful interfaces that work everywhere (Beginners)</a></li>
+<li><a href="https://www.youtube.com/watch?v=y_YAKzlEbxs">Export Your Game to the WEB in Godot 4 - Tutorial</a></li>
+</ul>
+<h1 id="godot-入门">Godot 入门</h1>
+<h2 id="关键概念">关键概念</h2>
+<blockquote>
+<p>Godot 非常适合快速制作原型。一旦你理解了核心概念，编辑器就非常快速且直观 &ndash; <a href="https://news.ycombinator.com/item?id=38952347">Hacker New 用户</a></p>
+</blockquote>
+<p><a href="https://docs.godotengine.org/zh-cn/4.x/getting_started/introduction/key_concepts_overview.html">Godot 关键概念概述</a></p>
+<blockquote>
+<p>任何游戏引擎都是围绕着构建程序所用的抽象的。在 Godot 中，游戏就是一棵由<strong>节点</strong>构成的<strong>树</strong>，树又可以结合起来构成<strong>场景</strong>。然后你还可以将这些节点连起来，让它们通过<strong>信号</strong>进行通信。</p>
+</blockquote>
+<!--
+这就是你将在这里学习的四个概念
+
+其他内置信号可以告诉你两个对象何时碰撞，角色或怪物何时进入给定区域等等。你还可以针对游戏量身定制新的信号。
+
+节点是游戏最小的构建块。你把它们组合起来创建场景，再把它们组合起来并嵌套到场景树中。最后，你可以使用信号来使节点对其他节点或不同的场景树分支中的事件做出响应。
+-->
+<!--
+## 最佳实践
+
+[最佳实践](https://docs.godotengine.org/zh-cn/4.x/tutorials/best_practices/introduction_best_practices.html)
+-->
+<h2 id="gdscript">GDScript</h2>
+<p>GDScript 与 Python 高度相似.</p>
+<p>有 Python 经验的用户快速过一下 <a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/scripting/gdscript/gdscript_basics.html">GDScript 参考</a> 即可.</p>
+<p>如果你想从头开始学习, <a href="https://gdquest.github.io/learn-gdscript/">Learn to Code From Zero with Godot</a> 或许是不错的选择</p>
+<p>值得注的是, 使用 GDScript 编程通常具有事件驱动风格(UI/游戏领域通常采用的编程风格), 你经常使用 callback, 有 JavaScript 经验的用户可能对此熟悉.</p>
+<h3 id="replplayground">REPL/Playground</h3>
+<p>学习一门新语言时, 我喜欢使用 <a href="https://www.google.com/search?q=REPL&amp;sourceid=chrome&amp;ie=UTF-8">REPL</a> 进行支持交互式的实验和探索, 对于新手非常有帮助</p>
+<p>Godot 没有提供 GDScript REPL. 有社区用户提供了类似的东西 <a href="https://gd.tumeo.space/">GDScript Playground</a></p>
+<!--[JavaScriptBridge.eval](https://docs.godotengine.org/zh-cn/4.x/tutorials/platform/web/javascript_bridge.html#the-eval-interface)-->
+<!--
+
+- parse_string 方法解析字符串，但它不允许处理错误
+- parse 可以处理错误
+
+gdscript 没有异常: [GdScript 需要异常](https://www.reddit.com/r/godot/comments/18kx9ed/gdscript_needs_exceptions/)
+-->
+<h1 id="开发">开发</h1>
+<h2 id="导出-web-项目">导出 Web 项目</h2>
+<p>MicroBlocks 用户最喜欢使用 Web 版本的 MicroBlocks IDE, 因其支持无线编程(BLE).</p>
+<p>如果我们使用 Godot 制作 MicroBlocks IDE, 会将其<a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/export/exporting_for_web.html">导出为 Web 项目</a> 并部署到线上.</p>
+<h3 id="在-web-中环境测试">在 Web 中环境测试</h3>
+<p>如果你使用的本机版本的 Godot, 点击<strong>远程调试</strong>按钮, 即可在浏览器上运行:</p>
+<p><img src="/post/img/Godot-note-02.png" alt=""></p>
+<p>此外, 你可以将项目导出, 然后导入到<a href="https://editor.godotengine.org/releases/latest/">Godot Web 开发环境</a>里, 这样就可以实时调试它. Godot 的 Web 开发环境甚至支持<strong>数据持久化</strong>, 关闭浏览器再次打开, 之前所做的工作都还在.</p>
+<!--godot 支持安卓上的开发环境-->
+<h2 id="与-javascript-互操作">与 JavaScript 互操作</h2>
+<p>我们可以在 Godot 中<a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/platform/web/javascript_bridge.html">与 JavaScript 互操作</a></p>
+<p>以下是一个简单例子:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_on_button_pressed</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">            console.log(&#39;The JavaScriptBridge singleton is available&#39;)
+</span></span></span><span class="line"><span class="cl"><span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">print</span><span class="p">(</span><span class="s2">&#34;The JavaScriptBridge singleton is NOT available&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>扫描蓝牙设备:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_on_button_pressed</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># var console = JavaScriptBridge.get_interface(&#34;console&#34;)</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># var window = JavaScriptBridge.get_interface(&#34;window&#34;)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">		<span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">		console.log(&#34;test&#34;);
+</span></span></span><span class="line"><span class="cl"><span class="s1">		navigator.bluetooth.requestDevice({
+</span></span></span><span class="line"><span class="cl"><span class="s1">			acceptAllDevices: true,
+</span></span></span><span class="line"><span class="cl"><span class="s1">			optionalServices: []
+</span></span></span><span class="line"><span class="cl"><span class="s1">		});
+</span></span></span><span class="line"><span class="cl"><span class="s1">		&#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">		<span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">print</span><span class="p">(</span><span class="s2">&#34;The JavaScriptBridge singleton is NOT available&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="传递-json">传递 json</h3>
+<p>如果你想在 GDScript 和 JavaScript 中传递复杂的数据结构, 可以考虑传递 json 字符串(list 也有有效的 json 数据)</p>
+<p>GDScript 有<a href="https://docs.godotengine.org/zh-cn/4.x/classes/class_json.html">JSON</a> 模块.</p>
+<!--
+## 导出为 web
+
+自动: 一键部署.
+
+手动
+
+```bash
+npx local-web-server --https --cors.embedder-policy "require-corp" --cors.opener-policy "same-origin" --directory "."
+```
+-->
+<!--
+# build
+
+[命令行教程](https://docs.godotengine.org/zh-cn/4.x/tutorials/editor/command_line_tutorial.html)
+-->
+<h1 id="参考">参考</h1>
+<ul>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/autonomous-agent-in-roblox/">在 Roblox 中探索自主 Agent</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/learn-unity-message-passing/">Unity 学习笔记之消息传递</a></li>
+<li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/microblocks-dev-notes/#microblocks-ide%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%BC%96%E7%A8%8B%E7%8E%AF%E5%A2%83">MicroBlocks 开发笔记/MicroBlocks IDE(图形化编程环境)</a></li>
+<li><a href="https://bitbucket.org/john_maloney/smallvm/src/master/misc/SERIAL_PROTOCOL.md">Microblocks Serial Protocol (version 2.09)</a></li>
+<li><a href="https://medium.com/swlh/what-makes-godot-engine-great-for-advance-gui-applications-b1cfb941df3b">Is Making Advanced GUI Applications with Godot the Future?</a></li>
+<li><a href="https://alfredbaudisch.com/blog/gamedev/godot-engine/standalone-applications-made-with-godot-gui-softwares-tools/">Standalone Tools and Applications Made with Godot GUI</a></li>
+<li><a href="https://www.youtube.com/watch?v=KfydpMuTBvA">Godot 4 — An Overview of Control Nodes | Easy UI (Tutorial)</a></li>
+<li><a href="https://www.youtube.com/watch?v=1_OFJLyqlXI">Godot UI Basics - how to build beautiful interfaces that work everywhere (Beginners)</a></li>
+<li><a href="https://www.bilibili.com/video/BV1rb421n7Wo?t=3068.7">MicroBlocks 能力图谱(视频)</a></li>
+<li><a href="https://gdquest.github.io/learn-gdscript/">Learn to Code From Zero with Godot</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/getting_started/introduction/key_concepts_overview.html">Godot 关键概念概述</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/scripting/gdscript/gdscript_basics.html">GDScript 参考</a></li>
+<li><a href="https://www.google.com/search?q=REPL&amp;sourceid=chrome&amp;ie=UTF-8">REPL</a></li>
+<li><a href="https://www.youtube.com/watch?v=y_YAKzlEbxs">Export Your Game to the WEB in Godot 4 - Tutorial</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/export/exporting_for_web.html">Godot 文档: 为 Web 导出</a></li>
+<li><a href="https://editor.godotengine.org/releases/latest/">Godot Web 开发环境</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/platform/web/javascript_bridge.html">Godot 文档: Interacting with JavaScript</a></li>
+<li><a href="https://www.youtube.com/watch?v=bvqEKZMUIqg">Every Godot User Needs To Check Out These Amazing Projects !</a></li>
+<li><a href="https://www.endlessos.org/post/block-coding-for-godot-lowering-the-bar-of-entry-for-a-powerful-tool">Block Coding for Godot: Lowering the Bar of Entry for a Powerful Tool</a></li>
+</ul>
+<!--
+
+---
+
+旧
+
+Godot 文档比 Roblox 难
+
+直接从例子([3D Truck Town Demo](https://godotengine.org/asset-library/asset/524))开始 ，凭直觉摆弄，再结合[文档(cn)](https://docs.godotengine.org/zh_CN/stable/classes/class_vehiclebody.html)理解概念
+-->
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">种瓜</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-07-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/game/">game</a>
+          <a href="/tags/microblocks/">MicroBlocks</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/programming/snap-microblocks-client-en/">
+            <span class="next-text nav-default">MicroBlocks Client for Snap!</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="mailto:wuwenjie718@gmail.com" class="iconfont icon-out-me" title="out-me"></a>
+      <a href="https://github.com/wwj718" class="iconfont icon-github" title="github"></a>
+  <a href="http://wwj718.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  
+  <span><a target="_blank" href="https://cn.bing.com/search?q=site%3Awwj718.github.io%20%20codelab-adapter">搜索本站</a></span>
+  <span class="division">|</span>
+  <span><a target="_blank" href="/index.xml">RSS订阅</a></span>
+  <span class="division">|</span>
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2013 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>种瓜</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="/post/img/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="/post/img/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="/post/img/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+<script id="baidu_analytics">
+  var _hmt = _hmt || [];
+  (function() {
+    if (window.location.hostname === 'localhost') return;
+    var hm = document.createElement("script"); hm.async = true;
+    hm.src = "https://hm.baidu.com/hm.js?18db4b662c04fbd6cc2851d246c51b3f";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+
+
+
+
+</body>
+</html>
