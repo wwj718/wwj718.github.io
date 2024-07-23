@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Godot 学习笔记">
 <meta itemprop="description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建"><meta itemprop="datePublished" content="2024-07-20T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-20T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2236">
+<meta itemprop="wordCount" content="2294">
 <meta itemprop="keywords" content="game,MicroBlocks," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Godot 学习笔记"/>
 <meta name="twitter:description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建"/>
@@ -536,13 +536,50 @@ npx local-web-server --https --cors.embedder-policy "require-corp" --cors.opener
 <img width=300 src="/post/img/IMG_0142.PNG" />
 <img width=300 src="/post/img/IMG_0143.PNG" />
 <h2 id="如何将外部-javascript-库引入-godot-web-项目">如何将外部 JavaScript 库引入 Godot web 项目</h2>
-<p>使用 Godot 4.3 导出 web 项目(<strong>不启用</strong>线程支持)</p>
-<p>4.2 需要在服务器做跨域安全性相关配置</p>
+<!--
+使用 Godot 4.3 导出 web 项目(**不启用**线程支持)
+
+4.2 需要在服务器做跨域安全性相关配置
+-->
+<p>将外部 JavaScript 库(如<code>test.js</code>)放入导出的 web 项目目录</p>
+<p>在 GDScript 中引入 JavaScript 库</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code></code></pre></td>
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;ready&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ne">OS</span><span class="o">.</span><span class="n">has_feature</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">        let url = &#34;test.js&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="s1">        let scriptElement = document.createElement(&#34;script&#34;);
+</span></span></span><span class="line"><span class="cl"><span class="s1">        document.head.appendChild(scriptElement);
+</span></span></span><span class="line"><span class="cl"><span class="s1">        scriptElement.src = url;
+</span></span></span><span class="line"><span class="cl"><span class="s1">        // scriptElement.crossorigin=&#34;anonymous&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="s1">        &#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>测试:</p>
+<p>在 web 项目目录启动服务器:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">npx</span> <span class="nx">local</span><span class="o">-</span><span class="nx">web</span><span class="o">-</span><span class="nx">server</span> <span class="o">--</span><span class="nx">https</span> <span class="o">--</span><span class="nx">cors</span><span class="p">.</span><span class="nx">embedder</span><span class="o">-</span><span class="nx">policy</span> <span class="s2">&#34;require-corp&#34;</span> <span class="o">--</span><span class="nx">cors</span><span class="p">.</span><span class="nx">opener</span><span class="o">-</span><span class="nx">policy</span> <span class="s2">&#34;same-origin&#34;</span> <span class="o">--</span><span class="nx">directory</span> <span class="s2">&#34;.&#34;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="参考">参考</h1>
 <ul>
