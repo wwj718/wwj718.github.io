@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Godot 学习笔记">
 <meta itemprop="description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建"><meta itemprop="datePublished" content="2024-07-20T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-07-20T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2125">
+<meta itemprop="wordCount" content="2171">
 <meta itemprop="keywords" content="game,MicroBlocks," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Godot 学习笔记"/>
 <meta name="twitter:description" content="前言 之前做 游戏中的 AI Agent 的时候, 最初的选型过程, 调研过 Godot, 对它充满好感. 最近重新对 Godot 感兴趣, 是因为 John 在邮件里提到说, MicroBlocks 下一个版本的 IDE 将基于 Godot 构建"/>
@@ -169,7 +169,11 @@
     </li>
     <li><a href="#faq">FAQ</a>
       <ul>
-        <li><a href="#web-导出能否运行在移动设备上">Web 导出能否运行在移动设备上?</a></li>
+        <li><a href="#web-导出能否运行在移动设备上">Web 导出能否运行在移动设备上?</a>
+          <ul>
+            <li><a href="#pwa">PWA</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#参考">参考</a></li>
@@ -444,7 +448,7 @@ gdscript 没有异常: [GdScript 需要异常](https://www.reddit.com/r/godot/co
 </span></span></span><span class="line"><span class="cl"><span class="s1">
 </span></span></span><span class="line"><span class="cl"><span class="s1">window.MicroBlocksClient = MicroBlocksClient;
 </span></span></span><span class="line"><span class="cl"><span class="s1">        &#39;&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
@@ -498,7 +502,7 @@ npx local-web-server --https --cors.embedder-policy "require-corp" --cors.opener
 <blockquote>
 <p>Apple 设备(macOS 和 iOS)在播放 Godot Web 导出时会出现问题。好吧，当你以单线程方式导出游戏时，这些问题幸运地消失了。</p>
 </blockquote>
-<p>使用 <a href="https://godotengine.org/article/dev-snapshot-godot-4-3-beta-3/#downloads">4.3(目前是beta版)</a> 导出的 web 项目能够运行在 iOS 设备上. 而 4.2 不行.</p>
+<p>使用 <a href="https://godotengine.org/article/dev-snapshot-godot-4-3-beta-3/#downloads">4.3(目前是 beta 版)</a> 导出的 web 项目能够运行在 iOS 设备上. 而 4.2 不行.</p>
 <p>为了在设计上测试, 我在本地运行了服务器:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -514,7 +518,7 @@ npx local-web-server --https --cors.embedder-policy "require-corp" --cors.opener
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">~/ngrok http https://127.0.0.1:8000
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ngrok http https://127.0.0.1:8000
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>在 Bluefy 浏览器中打开:</p>
@@ -525,6 +529,11 @@ npx local-web-server --https --cors.embedder-policy "require-corp" --cors.opener
 <img width=700 src="/post/img/IMG_0065.PNG" />
 <p>支持虚拟键盘输入, 目前还是<strong>实验性的功能</strong>, 光标的位置有些问题, 但基本可用:</p>
 <img width=300 src="/post/img/IMG_0066.PNG" />
+<h3 id="pwa">PWA</h3>
+<p>4.3 的 PWA 功能也能够正常工作:</p>
+<img width=300 src="/post/img/IMG_0144.PNG" />
+<img width=300 src="/post/img/IMG_0142.PNG" />
+<img width=300 src="/post/img/IMG_0143.PNG" />
 <h1 id="参考">参考</h1>
 <ul>
 <li><a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/what-is-alan-kays-alternative-solution-for-the-web-which-he-mentioned-in-oopsla-97/">[译]Alan Kay 在 OOPSLA'97 中提到的 Web 的替代解决方案是什么？</a></li>
@@ -538,15 +547,24 @@ npx local-web-server --https --cors.embedder-policy "require-corp" --cors.opener
 <li><a href="https://www.youtube.com/watch?v=1_OFJLyqlXI">Godot UI Basics - how to build beautiful interfaces that work everywhere (Beginners)</a></li>
 <li><a href="https://www.bilibili.com/video/BV1rb421n7Wo?t=3068.7">MicroBlocks 能力图谱(视频)</a></li>
 <li><a href="https://gdquest.github.io/learn-gdscript/">Learn to Code From Zero with Godot</a></li>
-<li><a href="https://docs.godotengine.org/zh-cn/4.x/getting_started/introduction/key_concepts_overview.html">Godot 关键概念概述</a></li>
-<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/scripting/gdscript/gdscript_basics.html">GDScript 参考</a></li>
 <li><a href="https://www.google.com/search?q=REPL&amp;sourceid=chrome&amp;ie=UTF-8">REPL</a></li>
 <li><a href="https://www.youtube.com/watch?v=y_YAKzlEbxs">Export Your Game to the WEB in Godot 4 - Tutorial</a></li>
-<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/export/exporting_for_web.html">Godot 文档: 为 Web 导出</a></li>
-<li><a href="https://godotengine.org/article/progress-report-web-export-in-4-3/">Web Export in 4.3</a></li>
-<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/editor/using_the_web_editor.html">Godot 文档: 使用 Web 编辑器</a></li>
+<li>Godot 文档
+<ul>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/getting_started/introduction/key_concepts_overview.html">关键概念概述</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/scripting/gdscript/gdscript_basics.html">GDScript 参考</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/export/exporting_for_web.html">为 Web 导出</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/editor/using_the_web_editor.html">使用 Web 编辑器</a></li>
 <li><a href="https://editor.godotengine.org/releases/latest/">Godot Web editor</a></li>
-<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/platform/web/javascript_bridge.html">Godot 文档: Interacting with JavaScript</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/platform/web/javascript_bridge.html">Interacting with JavaScript</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/about/faq.html#">Godot FAQ</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/about/faq.html#is-it-possible-to-use-godot-to-create-non-game-applications">是否能用 Godot 创建非游戏应用？</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/about/faq.html#why-does-godot-not-use-exceptions">为什么 Godot 不使用异常？</a></li>
+<li><a href="https://docs.godotengine.org/zh-cn/4.x/getting_started/introduction/learning_new_features.html#learning-with-the-community">与社区共同学习</a></li>
+</ul>
+</li>
+<li><a href="https://godotengine.org/article/progress-report-web-export-in-4-3/">Web Export in 4.3</a></li>
+<li><a href="https://github.com/godotengine/godot-proposals/issues/6616">Use an HTML-based solution to the SharedArrayBuffers problem</a></li>
 <li><a href="https://www.youtube.com/watch?v=bvqEKZMUIqg">Every Godot User Needs To Check Out These Amazing Projects !</a></li>
 <li><a href="https://www.endlessos.org/post/block-coding-for-godot-lowering-the-bar-of-entry-for-a-powerful-tool">Block Coding for Godot: Lowering the Bar of Entry for a Powerful Tool</a></li>
 <li><a href="https://github.com/godotengine/godot-proposals">Godot Improvement Proposals</a>
@@ -554,6 +572,7 @@ npx local-web-server --https --cors.embedder-policy "require-corp" --cors.opener
 <li><a href="https://godot-proposals-viewer.github.io/">Godot proposals viewer</a></li>
 </ul>
 </li>
+<li><a href="https://github.com/godotengine/godot-proposals/issues/2526">Add accelerometer support for HTML5</a></li>
 </ul>
 <!--
 
