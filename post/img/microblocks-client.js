@@ -1,3 +1,4 @@
+console.log("microblocks client");
 class MicroBlocksClient {
     constructor(height, width) {
         this.MICROBLOCKS_SERVICE_UUID = "bb37a001-b922-4018-8e74-e14824b3a638"
