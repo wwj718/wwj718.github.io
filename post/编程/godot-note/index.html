@@ -161,10 +161,13 @@
         </li>
         <li><a href="#与-javascript-互操作">与 JavaScript 互操作</a>
           <ul>
-            <li><a href="#从-godot-调用-javascript">从 Godot 调用 JavaScript</a></li>
+            <li><a href="#从-godot-调用-javascript">从 Godot 调用 JavaScript</a>
+              <ul>
+                <li><a href="#使用-godot-制作-microblocks-客户端">使用 Godot 制作 MicroBlocks 客户端</a></li>
+              </ul>
+            </li>
             <li><a href="#从-javascript-调用-godot">从 JavaScript 调用 Godot</a></li>
             <li><a href="#dynatalk">Dynatalk</a></li>
-            <li><a href="#使用-godot-制作-microblocks-客户端">使用 Godot 制作 MicroBlocks 客户端</a></li>
             <li><a href="#传递-json">传递 json</a></li>
           </ul>
         </li>
@@ -335,46 +338,7 @@ gdscript 没有异常: [GdScript 需要异常](https://www.reddit.com/r/godot/co
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><img src="/post/img/Godot-note-05.png" alt=""></p>
-<h3 id="从-javascript-调用-godot">从 JavaScript 调用 Godot</h3>
-<p>使用 <a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/platform/web/javascript_bridge.html#callbacks">Callbacks</a>, 可以从 JavaScript 调用 Godot.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="cl"><span class="k">extends</span> <span class="ne">Node</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Here we create a reference to the `_my_callback` function (below).</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># This reference will be kept until the node is freed.</span>
-</span></span><span class="line"><span class="cl"><span class="k">var</span> <span class="n">_callback_ref</span> <span class="o">=</span> <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">create_callback</span><span class="p">(</span><span class="n">_my_callback</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_ready</span><span class="p">():</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># Get the JavaScript `window` object.</span>
-</span></span><span class="line"><span class="cl">    <span class="k">var</span> <span class="n">window</span> <span class="o">=</span> <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">get_interface</span><span class="p">(</span><span class="s2">&#34;window&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># Set the `window.onbeforeunload` DOM event listener.</span>
-</span></span><span class="line"><span class="cl">    <span class="n">window</span><span class="o">.</span><span class="n">sendToGodot</span> <span class="o">=</span> <span class="n">_callback_ref</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_my_callback</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>以上代码将为导出的 web 项目, 注册 window.sendToGodot 函数, 你可以在浏览器环境调用它.</p>
-<h3 id="dynatalk">Dynatalk</h3>
-<p>即然我们在 JavaScript 和 Godot 环境中进行双向通信, 我们便可以构建出 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">Dynatalk</a>, 进而实现 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/">Snap! 中的 Spline 库</a> 的所有功能: 使用 Snap! 驱动任何 Godot 制作的游戏!</p>
-<h3 id="使用-godot-制作-microblocks-客户端">使用 Godot 制作 MicroBlocks 客户端</h3>
+<h4 id="使用-godot-制作-microblocks-客户端">使用 Godot 制作 MicroBlocks 客户端</h4>
 <p><video width=80% src="/post/img/godot-microblocks-client.mp4" controls="controls"></video></p>
 <p>相关代码</p>
 <div class="highlight"><div class="chroma">
@@ -522,6 +486,45 @@ gdscript 没有异常: [GdScript 需要异常](https://www.reddit.com/r/godot/co
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>从这个例子很开始, 很容易使用 Godot 为 MicroBlocks 设备设计手机控制界面.</p>
+<h3 id="从-javascript-调用-godot">从 JavaScript 调用 Godot</h3>
+<p>使用 <a href="https://docs.godotengine.org/zh-cn/4.x/tutorials/platform/web/javascript_bridge.html#callbacks">Callbacks</a>, 可以从 JavaScript 调用 Godot.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gd" data-lang="gd"><span class="line"><span class="cl"><span class="k">extends</span> <span class="ne">Node</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Here we create a reference to the `_my_callback` function (below).</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># This reference will be kept until the node is freed.</span>
+</span></span><span class="line"><span class="cl"><span class="k">var</span> <span class="n">_callback_ref</span> <span class="o">=</span> <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">create_callback</span><span class="p">(</span><span class="n">_my_callback</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_ready</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Get the JavaScript `window` object.</span>
+</span></span><span class="line"><span class="cl">    <span class="k">var</span> <span class="n">window</span> <span class="o">=</span> <span class="n">JavaScriptBridge</span><span class="o">.</span><span class="n">get_interface</span><span class="p">(</span><span class="s2">&#34;window&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Set the `window.onbeforeunload` DOM event listener.</span>
+</span></span><span class="line"><span class="cl">    <span class="n">window</span><span class="o">.</span><span class="n">sendToGodot</span> <span class="o">=</span> <span class="n">_callback_ref</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">func</span> <span class="n">_my_callback</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上代码将为导出的 web 项目, 注册 window.sendToGodot 函数, 你可以在浏览器环境调用它.</p>
+<h3 id="dynatalk">Dynatalk</h3>
+<p>即然我们在 JavaScript 和 Godot 环境中进行双向通信, 我们便可以构建出 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/introducing-dynatalk/">Dynatalk</a>, 进而实现 <a href="https://wwj718.github.io/post/%E7%BC%96%E7%A8%8B/snap-spline/">Snap! 中的 Spline 库</a> 的所有功能: 使用 Snap! 驱动任何 Godot 制作的游戏!</p>
 <h3 id="传递-json">传递 json</h3>
 <p>如果你想在 GDScript 和 JavaScript 中传递复杂的数据结构, 可以考虑传递 json 字符串(list 也有有效的 json 数据)</p>
 <p>GDScript 有<a href="https://docs.godotengine.org/zh-cn/4.x/classes/class_json.html">JSON</a> 模块.</p>
