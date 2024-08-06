@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 蓝牙驱动库">
 <meta itemprop="description" content="编程的未来可能是大语言模型与个人计算环境的结合。 前言 近期需要把 Scratch 的一些蓝牙(BLE)插件迁移到 Snap! 里. 思路 做这件事有两种方法。 尽可能在 JavaScript 做事情"><meta itemprop="datePublished" content="2023-11-12T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2023-11-12T00:00:00+00:00" />
-<meta itemprop="wordCount" content="4668">
+<meta itemprop="wordCount" content="4541">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 蓝牙驱动库"/>
 <meta name="twitter:description" content="编程的未来可能是大语言模型与个人计算环境的结合。 前言 近期需要把 Scratch 的一些蓝牙(BLE)插件迁移到 Snap! 里. 思路 做这件事有两种方法。 尽可能在 JavaScript 做事情"/>
@@ -230,11 +230,17 @@ microbit v2 运行ble_uart_echo_test.py, 也没有广播数据
 
 esp32-ble-20231115.bin 支持 read
 -->
-<p>首先将 esp32-ble 固件(<code>https://wwj718.github.io/post/img/esp32-ble-nus-20231202.bin</code>) 刷入 ESP32 板子(我用的是 ESP32 DEVKIT V1, 你也可以在其他 ESP32 板子上使用)。</p>
-<p>通过 MicroBlocks(1.2.44及以上版本) 的 <code>显示高级积木 &gt; 从 URL 安装 ESP 固件</code> 来刷入固件。</p>
-<p><img src="https://wwj718.github.io/post/img/Snap-BLE-library-01.png" alt=""></p>
-<p>运行 <a href="https://microblocksfun.cn/run/microblocks.html#project=projectName%20%27BLE%20UART%20demo%27%0A%0Amodule%20main%0Aauthor%20%27wwj718%20%26%20CWEIB%27%0Aversion%201%200%20%0Adescription%20%27%27%0Avariables%20last_ble_message%20%0A%0Ascript%20111%2040%20%7B%0AwhenStarted%0A%27start%20BLE%20UART%20server%27%20%27BLE%20echo%20server%27%0AwaitMicros%20500%0Aforever%20%7B%0A%20%20if%20%28%27BLE%20Device%20connected%27%29%20%7B%0A%20%20%20%20sayIt%20%27Client%20is%20connected%27%0A%20%20%20%20last_ble_message%20%3D%20%28%27last%20BLE%20UART%20message%27%29%0A%20%20%20%20if%20%28last_ble_message%20%21%3D%20%28booleanConstant%20false%29%29%20%7B%0A%20%20%20%20%20%20comment%20%27echo%27%0A%20%20%20%20%20%20sayIt%20last_ble_message%0A%20%20%20%20%20%20%27BLE%20UART%20write%27%20last_ble_message%0A%20%20%20%20%7D%0A%20%20%7D%20else%20%7B%0A%20%20%20%20sayIt%20%27Wait%20for%20a%20client...%27%0A%20%20%7D%0A%20%20waitMillis%2050%0A%7D%0A%7D%0A%0A%0Amodule%20%27BLE%20UART%20server%27%20Comm%0Aauthor%20%27wwj718%20%26%20CWEIB%27%0Aversion%201%201%20%0Adescription%20%27BLE%20UART%20server.%20Firmware%20URL%3A%20https%3A%2F%2Fwwj718.github.io%2Fpost%2Fimg%2Fesp32-ble-nus-20231202.bin%27%0Avariables%20_oldname%20%0A%0A%20%20spec%20%27%20%27%20%27start%20BLE%20UART%20server%27%20%27start%20BLE%20UART%20server%20_%27%20%27auto%27%20%27MicroBlocks%20BLE%20UART%20server%27%0A%20%20spec%20%27r%27%20%27BLE%20Device%20connected%27%20%27BLE%20UART%20connected%27%0A%20%20spec%20%27r%27%20%27last%20BLE%20UART%20message%27%20%27last%20BLE%20UART%20message%27%0A%20%20spec%20%27%20%27%20%27BLE%20UART%20write%27%20%27BLE%20UART%20write%20_%27%20%27auto%27%20%27hello%27%0A%20%20spec%20%27%20%27%20%27stop%20BLE%20UART%20server%27%20%27stop%20BLE%20UART%20server%27%0A%0Ato%20%27BLE%20Device%20connected%27%20%7B%0A%20%20return%20%28callCustomReporter%20%27%5Bnet%3ABLE_UART_Connected%5D%27%29%0A%7D%0A%0Ato%20%27BLE%20UART%20write%27%20message%20%7B%0A%20%20callCustomCommand%20%27%5Bnet%3ABLE_UART_Write%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20message%29%0A%7D%0A%0Ato%20%27last%20BLE%20UART%20message%27%20%7B%0A%20%20local%20%27tmp%27%20%28callCustomReporter%20%27%5Bnet%3ABLE_UART_LastEvent%5D%27%29%0A%20%20if%20%28tmp%20%21%3D%20%28booleanConstant%20false%29%29%20%7B%0A%20%20%20%20return%20%28at%201%20tmp%29%0A%20%20%7D%20else%20%7B%0A%20%20%20%20return%20%28booleanConstant%20false%29%0A%20%20%7D%0A%7D%0A%0Ato%20%27start%20BLE%20UART%20server%27%20name%20%7B%0A%20%20callCustomCommand%20%27%5Bnet%3ABLE_UART_Start%5D%27%20%28%27%5Bdata%3AmakeList%5D%27%20name%29%0A%7D%0A%0Ato%20%27stop%20BLE%20UART%20server%27%20%7B%0A%20%20callCustomCommand%20%27%5Bnet%3ABLE_UART_Stop%5D%27%0A%7D%0A%0A">这个程序</a></p>
-<p><img src="/post/img/Snap-BLE-library-02.png" alt=""></p>
+<!--
+首先将 esp32-ble 固件(`https://wwj718.github.io/post/img/esp32-ble-nus-20231202.bin`) 刷入 ESP32 板子(我用的是 ESP32 DEVKIT V1, 你也可以在其他 ESP32 板子上使用)。
+
+通过 MicroBlocks(1.2.44及以上版本) 的 `显示高级积木 > 从 URL 安装 ESP 固件` 来刷入固件。
+
+
+![](https://wwj718.github.io/post/img/Snap-BLE-library-01.png)
+-->
+<p>运行 <a href="https://microblocksfun.cn/run/microblocks.html#project=https://wwj718.github.io/post/img/BLE-uart-echo.ubp">这个程序</a></p>
+<!--![](/post/img/Snap-BLE-library-02.png)-->
+<p><img src="/post/img/Snap-BLE-library-02-new.png" alt=""></p>
 <h3 id="测试它">测试它</h3>
 <p>运行起来之后，你就可以使用各种 BLE 客户端测试它了。从客户端发送的消息都会被原样返回。</p>
 <p>如果使用苹果设备做实验, 如果之前连接过 esp32 板子的蓝牙, 请先<code>忽略此设备</code>，不然可能无法连上。</p>
