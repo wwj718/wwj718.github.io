@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的豆包大模型">
 <meta itemprop="description" content="前言 我们之前尝试过将 GPT-4o 带入 Snap!. Snap! 用户用它做了很多有意思的项目, 比如 @张老师 带学生做的这个项目 由于国内无法正常使用 OpenAI, 人们希望往 Snap! 里接入国内大模型"><meta itemprop="datePublished" content="2024-12-16T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-12-16T00:00:00+00:00" />
-<meta itemprop="wordCount" content="908">
+<meta itemprop="wordCount" content="1029">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的豆包大模型"/>
 <meta name="twitter:description" content="前言 我们之前尝试过将 GPT-4o 带入 Snap!. Snap! 用户用它做了很多有意思的项目, 比如 @张老师 带学生做的这个项目 由于国内无法正常使用 OpenAI, 人们希望往 Snap! 里接入国内大模型"/>
@@ -147,6 +147,11 @@
         <li><a href="#有哪些注意事项">有哪些注意事项?</a></li>
         <li><a href="#如何渲染-markdown-文本">如何渲染 markdown 文本?</a></li>
         <li><a href="#如何解决在浏览器中使用豆包-api-遇到的-cors-问题">如何解决在浏览器中使用豆包 API 遇到的 CORS 问题?</a></li>
+        <li><a href="#有哪些需要改进的地方">有哪些需要改进的地方?</a>
+          <ul>
+            <li><a href="#改进图像理解相关部分">改进图像理解相关部分</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#参考">参考</a></li>
@@ -223,6 +228,14 @@
 <p>代理服务属于 I/O 密集型应用, 以异步的方式编写效率会更高, 能够有效提高吞吐量.</p>
 <p>豆包大模型文生图相关的 Python SDK 文档很糟糕, 暂时使用同步的 API (支持 4x10 的并发).</p>
 <p>对话相关的 API 目前是异步的, 性能很高, 支持大规模并发.</p>
+<h2 id="有哪些需要改进的地方">有哪些需要改进的地方?</h2>
+<h3 id="改进图像理解相关部分">改进图像理解相关部分</h3>
+<p>目前对话积木的图像理解功能, 传输的是 base64 编码的图像, 图像没有经过压缩, 有 2MB 多, 如果开启多轮视觉对话, 可能会比较慢.</p>
+<p>有两个改进方向:</p>
+<ol>
+<li>将图片上传到云服务, 然后发 url 给大模型</li>
+<li>在 Snap! 里压缩完图像再以 base64 格式传给大模型</li>
+</ol>
 <h1 id="参考">参考</h1>
 <ul>
 <li><a href="https://www.volcengine.com/docs/82379">火山方舟大模型服务平台</a></li>
