@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 中的豆包大模型">
 <meta itemprop="description" content="前言 我们之前尝试过将 GPT-4o 带入 Snap!. Snap! 用户用它做了很多有意思的项目, 比如 @张老师 带学生做的这个项目 由于国内无法正常使用 OpenAI, 人们希望往 Snap! 里接入国内大模型"><meta itemprop="datePublished" content="2024-12-16T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2024-12-16T00:00:00+00:00" />
-<meta itemprop="wordCount" content="1368">
+<meta itemprop="wordCount" content="2000">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 中的豆包大模型"/>
 <meta name="twitter:description" content="前言 我们之前尝试过将 GPT-4o 带入 Snap!. Snap! 用户用它做了很多有意思的项目, 比如 @张老师 带学生做的这个项目 由于国内无法正常使用 OpenAI, 人们希望往 Snap! 里接入国内大模型"/>
@@ -144,7 +144,6 @@
     <li><a href="#进阶">进阶</a></li>
     <li><a href="#faq">FAQ</a>
       <ul>
-        <li><a href="#如何使用这个-ai-大模型库">如何使用这个 AI 大模型库?</a></li>
         <li><a href="#速率限制">速率限制?</a></li>
         <li><a href="#如何渲染-markdown-文本">如何渲染 markdown 文本?</a></li>
         <li><a href="#如何解决在浏览器中使用豆包-api-遇到的-cors-问题">如何解决在浏览器中使用豆包 API 遇到的 CORS 问题?</a></li>
@@ -153,6 +152,7 @@
             <li><a href="#改进图像理解相关部分">改进图像理解相关部分</a></li>
           </ul>
         </li>
+        <li><a href="#如何使用这个-ai-大模型库">如何使用这个 AI 大模型库?</a></li>
       </ul>
     </li>
     <li><a href="#参考">参考</a></li>
@@ -216,13 +216,6 @@
 </ol>
 <p><img src="/post/img/doubao-snap-05.png" alt=""></p>
 <h1 id="faq">FAQ</h1>
-<h2 id="如何使用这个-ai-大模型库">如何使用这个 AI 大模型库?</h2>
-<p>这个 AI 大模型库使用起来很简单, 但人们可能以非常糟糕的方式使用它.</p>
-<p>关于如何在教育中使用 AI , 迄今为止, 我最认可的观点是 Scratch/《终生幼儿园》 作者的这篇文章 <a href="https://mit-genai.pubpub.org/pub/gj6eod3e/release/1?readingCollection=0e231e9c">Generative AI and Creative Learning: Concerns, Opportunities, and Choices</a></p>
-<blockquote>
-<p>在很大程度上，AI 导师被设计用来控制教育过程：设定目标、传递信息、提出问题、评估表现。这也是过去几个世纪大多数教室的运作方式。但当今世界要求一种不同的方法：为学生提供机会设定自己的目标，<strong>建立自己的兴趣，表达自己的想法，制定自己的策略，并对自己的学习有一种控制感和所有权</strong>。这种学习者主体性对学生的发展非常重要，帮助他们培养主动性、动力、自信和创造力，这些都是他们在未来在社区中做出有意义的贡献所需的。</p>
-</blockquote>
-<p>《终生幼儿园》 和 《Mindstorms》 可能依然是最好的向导.</p>
 <h2 id="速率限制">速率限制?</h2>
 <p>注意大模型服务通常会有请求速率限制(尤其是文生图服务), 如果访问的人数比较多(比如在课堂使用), 可能需要付费扩充 QPS(Queries Per Second，查询每秒)上限, 免费版本默认是 1 秒请求 1 次:</p>
 <p><img src="/post/img/doubao-snap-06.png" alt=""></p>
@@ -244,6 +237,31 @@
 <li>将图片上传到云服务, 然后发 url 给大模型</li>
 <li>在 Snap! 里压缩完图像再以 base64 格式传给大模型</li>
 </ol>
+<h2 id="如何使用这个-ai-大模型库">如何使用这个 AI 大模型库?</h2>
+<p>这个 AI 大模型库使用起来很简单, 但人们可能以非常糟糕的方式使用它.</p>
+<p>关于如何在教育中使用 AI , 迄今为止, 我最认可的观点是 Scratch/《终生幼儿园》 作者的这篇文章 <a href="https://mit-genai.pubpub.org/pub/gj6eod3e/release/1?readingCollection=0e231e9c">Generative AI and Creative Learning: Concerns, Opportunities, and Choices(生成式人工智能与创造性学习：忧虑、机遇和选择)</a>. 这也是我将 AI 大模型接入个人计算环境(如当前的Snap!)的主要动机.</p>
+<blockquote>
+<p>如今的人工智能技术往往以限制学习者的主动性、专注于“封闭式”问题，并以低估人际关系和社区的方式进行应用</p>
+</blockquote>
+<blockquote>
+<p>我相信这些新的人工智能技术（与早期的人工智能技术相比）在支持年轻人进行基于项目、兴趣驱动的创造性学习体验方面具有更大的潜力，从而支持他们作为有创造力、好奇心强、合作性强的学习者的发展。我们可能正处于重大教育变革的时刻：新的生成式人工智能技术所引起的混乱使更多人意识到我们在教育和学习方法上需要根本性的变革。但只有人们在设计和使用这些新工具的方式上做出明确、有意识的选择，新的人工智能技术才会对这些变革做出贡献。</p>
+</blockquote>
+<blockquote>
+<p>在很大程度上，AI 导师被设计用来控制教育过程：设定目标、传递信息、提出问题、评估表现。这也是过去几个世纪大多数教室的运作方式。但当今世界要求一种不同的方法：为学生提供机会设定自己的目标，<strong>建立自己的兴趣，表达自己的想法，制定自己的策略，并对自己的学习有一种控制感和所有权</strong>。这种学习者主体性对学生的发展非常重要，帮助他们培养主动性、动力、自信和创造力，这些都是他们在未来在社区中做出有意义的贡献所需的。</p>
+</blockquote>
+<blockquote>
+<p>AI 导师和教练被宣传为“个人化”，因为它们提供个性化的指导。但在我看来，真正个人化的学习方法应该<strong>给学习者更多的选择和控制权</strong>。</p>
+</blockquote>
+<blockquote>
+<p>通过 Scratch，年轻人可以根据自己的兴趣创建动画、游戏和其他互动项目，并与在线社区中的其他人分享。通过这种基于项目的、兴趣驱动的方法，学生仍然可以学习重要的编程技能和计算机科学概念，但他们是在更具激励和意义的背景下学习，因此能够与这些想法建立更深层次的联系。</p>
+</blockquote>
+<blockquote>
+<p>学校通常更喜欢封闭式问题，因为这样更容易管理和评估。学校最终会重视他们最容易评估的东西，而不是想出评估最有价值的东西的方法</p>
+</blockquote>
+<blockquote>
+<p>选择更多地涉及教育和政治，而不是技术.</p>
+</blockquote>
+<p>《终生幼儿园》 和 《Mindstorms》 可能依然是最好的向导.</p>
 <h1 id="参考">参考</h1>
 <ul>
 <li><a href="https://www.volcengine.com/docs/82379">火山方舟大模型服务平台</a></li>
@@ -273,6 +291,7 @@
 </li>
 </ul>
 </li>
+<li><a href="https://mit-genai.pubpub.org/pub/gj6eod3e/release/1">Generative AI and Creative Learning: Concerns, Opportunities, and Choices(生成式人工智能与创造性学习：忧虑、机遇和选择)</a></li>
 </ul>
 
     </div>
