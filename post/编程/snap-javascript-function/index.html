@@ -49,7 +49,7 @@
 <meta itemprop="name" content="Snap! 使用笔记: JavaScript function">
 <meta itemprop="description" content="让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出"><meta itemprop="datePublished" content="2023-02-28T00:00:00+00:00" />
 <meta itemprop="dateModified" content="2023-02-28T00:00:00+00:00" />
-<meta itemprop="wordCount" content="2968">
+<meta itemprop="wordCount" content="3157">
 <meta itemprop="keywords" content="Snap," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Snap! 使用笔记: JavaScript function"/>
 <meta name="twitter:description" content="让简单的事情保持简单，让困难的事情变得可能 &ndash; Alan Kay 前言 和 Scratch 3.0 一样, Snap! 也基于 JavaScript 构建，运行在浏览器中。 由于浏览器正在成为新的操作系统, 新的能力层出"/>
@@ -173,6 +173,7 @@
                 <li><a href="#嵌套列表">嵌套列表</a></li>
               </ul>
             </li>
+            <li><a href="#如何处理-json">如何处理 JSON</a></li>
             <li><a href="#如何引入第三方库">如何引入第三方库?</a>
               <ul>
                 <li><a href="#全局引入">全局引入</a></li>
@@ -394,6 +395,67 @@ itemsArray 和 asArray 都不会转化嵌套 List
 <p>将 Snap! 嵌套列表转化为 js 嵌套列表:</p>
 <p><img src="/post/img/Snap-JavaScript-function-20.png" alt=""></p>
 <p>你可以将以上两个辅助函数放到 <code>window</code> 命名空间下， 方便在不同的 JavaScript function 中使用它</p>
+<h3 id="如何处理-json">如何处理 JSON</h3>
+<p>使用一些外部 API 时, 经常需要处理 JSON 数据, 比如我最近在使用 <a href="https://platform.openai.com/docs/guides/realtime-webrtc">OpenAI Realtime API</a>, 在进行为了进行 <a href="https://platform.openai.com/docs/guides/realtime-model-capabilities#configure-callable-functions">Function calling</a>, 需要发送这样的数据</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;session.update&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;session&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;tools&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;function&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;pos&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;description&#34;</span><span class="p">:</span> <span class="s2">&#34;获取 turtle 在舞台上的xy坐标.&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;parameters&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;object&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;properties&#34;</span><span class="p">:</span> <span class="p">{},</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;required&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;sign&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;tool_choice&#34;</span><span class="p">:</span> <span class="s2">&#34;auto&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>我想在 Snap! 中编写 json 字符串, 然后传递到 js 里, 在 js 中把它还原为对象</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">event</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event_raw</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;results of a function call: &#34;</span><span class="p">,</span> <span class="nx">event</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">session</span><span class="p">.</span><span class="nx">dc</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">event</span><span class="p">));</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>此外, 你也可以基于列表构建 json , 甚至嵌套 json</p>
+<p><img src="/post/img/Snap-JavaScript-function-21.png" alt=""></p>
 <h3 id="如何引入第三方库">如何引入第三方库?</h3>
 <p>有两种引入方式:</p>
 <ul>
