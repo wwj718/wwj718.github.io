@@ -1,0 +1,127 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables message 
+
+script 50 40 {
+whenStarted
+wifiConnect 'yidan' 'yidan88888888'
+waitUntil ((getIPAddress) != '0.0.0.0')
+'[net:udpStart]' 5000
+sendBroadcast 'go!'
+}
+
+script 49 239 {
+whenBroadcastReceived 'go!'
+forever {
+  message = ('[net:udpReceivePacket]')
+  if (message != '') {
+    sayIt message
+    sendBroadcast message
+  }
+}
+}
+
+script 467 262 {
+whenBroadcastReceived 'flash'
+comment '26置高打开闪光灯'
+repeat 5 {
+  digitalWriteOp 26 true
+  waitMillis 200
+  digitalWriteOp 26 false
+  waitMillis 200
+}
+}
+
+
+module UDP Comm
+author MicroBlocks
+version 1 0 
+depends WiFi 
+tags udp network 
+description 'Blocks to send and receive UDP packets.'
+
+  spec ' ' '[net:udpStart]' 'UDP start port _' 'auto' 5000
+  spec ' ' '[net:udpStop]' 'UDP stop'
+  spec ' ' '[net:udpSendPacket]' 'UDP send packet _ to ip _ port _' 'auto auto num' 'Hello!' '255.255.255.255' 5000
+  spec 'r' '[net:udpReceivePacket]' 'UDP receive packet : binary data _' 'bool' false
+  spec 'r' '[net:udpRemoteIPAddress]' 'UDP remote IP address'
+  spec 'r' '[net:udpRemotePort]' 'UDP remote port'
+
+module WiFi Comm
+author MicroBlocks
+version 1 10 
+tags communication network 
+description 'Connect to a WiFi network. Used in conjunction with other network libraries, such as HTTP client, HTTP server or Web Thing.
+'
+
+  spec ' ' 'wifiConnect' 'wifi connect to _ password _ : IP _ gateway _ subnet _' 'str str auto auto auto' 'Network_Name' '' '192.168.1.42' '192.168.1.1' '255.255.255.0'
+  spec ' ' 'wifiCreateHotspot' 'wifi create hotspot _ password _' 'str str' 'Network_Name' 'Network_Password'
+  spec ' ' '[net:stopWiFi]' 'stop wifi'
+  space
+  spec ' ' '[net:setDomainName]' 'wifi set local domain name _ .local' 'str' 'microblocks'
+  space
+  spec 'r' 'getIPAddress' 'IP address'
+  spec 'r' '[net:myMAC]' 'MAC address'
+  space
+  spec ' ' '[net:allowWiFiAndBLE]' 'allow WiFi while using BLE _' 'bool' true
+
+to getIPAddress {
+  return ('[net:myIPAddress]')
+}
+
+to wifiConnect ssid password fixedIP gatewayIP subnetIP {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:stopWiFi]'
+  if ((pushArgCount) < 5) {
+    '[net:startWiFi]' ssid password
+  } else {
+    '[net:startWiFi]' ssid password false fixedIP gatewayIP subnetIP
+  }
+  local 'startMSecs' (millisOp)
+  repeatUntil (('[net:myIPAddress]') != '0.0.0.0') {
+    comment 'Timeout after N seconds'
+    if (((millisOp) - startMSecs) > 30000) {
+      sayIt 'Could not connect'
+      return 0
+    }
+    comment 'Slow blink while trying to connect'
+    setUserLED true
+    waitMillis 300
+    setUserLED false
+    waitMillis 300
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  '[net:setDomainName]' 'microblocks'
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+to wifiCreateHotspot ssid password {
+  if (not ('[net:hasWiFi]')) {return}
+  if ((size password) < 8) {
+    sayIt 'Password must be at least 8 characters'
+    return 0
+  }
+  '[net:startWiFi]' ssid password true
+  if ('Connected' != ('[net:wifiStatus]')) {
+    sayIt 'Could not create hotspot'
+    return 0
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  '[net:setDomainName]' 'microblocks'
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
