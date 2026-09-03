@@ -1,0 +1,1653 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables message handle_message 
+
+script 50 40 {
+whenStarted
+wifiConnect 'yidan' 'yidan88888888'
+waitUntil ((getIPAddress) != '0.0.0.0')
+'[net:udpStart]' 5000
+sendBroadcast 'go!'
+}
+
+script 406 164 {
+whenButtonPressed 'B'
+comment '是否接收消息'
+handle_message = (not handle_message)
+'CoCube wheels stop'
+}
+
+script 49 239 {
+whenBroadcastReceived 'go!'
+handle_message = (booleanConstant true)
+forever {
+  waitUntil handle_message
+  message = ('[net:udpReceivePacket]')
+  if (message != '') {
+    sayIt message
+    '[tft:clear]'
+    '[tft:text]' message 5 5 (colorSwatch 255 17 81 255) 5 true
+    local 'int_message' ('[data:convertType]' message 'number')
+    if (int_message >= 0) {
+      'CoCube set wheel' ('[misc:rescale]' int_message 0 90 30 80) 30
+    } else {
+      'CoCube set wheel' int_message ('[misc:rescale]' 3 0 -90 30 80)
+    }
+  }
+}
+}
+
+
+module '8 Bit Graphics' Output
+author MicroBlocks
+version 1 6 
+depends _TFT _Files 
+tags graphics 
+choices eightBitPalettes MicroBlocks 'red hues' 'green hues' 'blue hues' grayscale 
+choices mirrorAxis horizontal vertical 'ascending diagonal' 'descending diagonal' 
+choices fourBitPalettes CGA 'Machintosh II' 'Win & OS/2' MSX Pico8 'RISC 2' grayscale 
+choices orthoRotations '0' '90' '180' '270' 
+description 'Provides a full 8-bit (and lower depth) framework to create retro-looking games and applications.
+
+By combining different scales and bit depths you can adapt your project to work on virtually any board.
+
+It allows reading 8-bit indexed BMP files, color palettes and raw image data exported from GIMP, or creating your own bitmaps by hand as byte arrays.  It also includes a bunch of default 4-bit and 8-bit color palettes.
+
+By using a buffer and bitmap merge operations, you can work with sprites and backgrounds at a reasonably high abstraction level, while achieving a decent framerate.
+'
+variables _8bit_scale _8bit_alpha_index _8bit_buffer _8bit_palette _bmpIsRGB565 _bmpHeight _bmpCompression _bmpWidth _bmpPalette _bmpPixelsOffset _bmpBPP _bmpLine 
+
+  spec ' ' '8bit_set scale _' 'set scale _' 'num' 4
+  space
+  spec ' ' 'clear display' 'clear display'
+  spec ' ' '8bit_draw buffer' 'draw buffer : starting at x _ y _ width _ height _' 'num num num num' 10 20 7 7
+  space
+  spec 'r' '8bit_bitmap from BMP file' 'bitmap from BMP file _' 'auto' '8bit.bmp'
+  spec 'r' '8bit_bitmap from file' 'bitmap of width _ from raw indexed file _' 'num str' 32 'filename.data'
+  spec 'r' '8bit_bitmap' 'bitmap of width _ from string _' 'num str' 7 '0003000003B30003BFB30003B3000003000'
+  space
+  spec 'r' '8bit_rotated sprite' 'bitmap _ rotated _ º' 'auto menu.orthoRotations' 'aBitmap' 270
+  spec 'r' '8bit_mirrored bitmap' 'bitmap _ mirrored across _ axis' 'auto menu.mirrorAxis' 'aBitmap' 'vertical'
+  space
+  spec ' ' '8bit_merge' 'merge bitmap _ at _ , _' 'auto num num' '' 10 20
+  spec ' ' '8bit_merge3 tile' 'merge tile _ from _ , _ to _ , _' 'auto auto auto auto auto' 'aBitmap' 10 20 15 30
+  spec ' ' '8bit_merge2 tile' 'merge tile _ at tile position _ , _' 'auto auto auto' 'aBitmap' 1 2
+  space
+  spec ' ' '8bit_set palette' 'set palette _' 'auto' ''
+  spec ' ' '8bit_set transparent color index _' 'set transparent color index _' 'num' 0
+  spec 'r' '8bit_palette from pal format' 'palette from pal file _' 'auto' 'filename.data.pal'
+  spec 'r' '8bit_palette from BMP file' 'palette from BMP file _' 'auto' '8bit.bmp'
+  spec 'r' '8bit_4 bit palette' '4 bit _ palette' 'menu.fourBitPalettes' 'CGA'
+  spec 'r' '8bit_8 bit palette' '8 bit _ palette' 'menu.eightBitPalettes' 'MicroBlocks'
+  spec 'r' 'rgb_to_color' 'color number for r _ g _ b _ (0-255)' 'num num num' 128 0 0
+  spec ' ' '8bit_draw palette table' 'draw palette table _' 'auto' ''
+  spec 'r' '8bit_current palette' 'current palette'
+  space
+  spec 'r' '8bit_screen width' 'screen width'
+  spec 'r' '8bit_screen height' 'screen height'
+  space
+  spec 'r' '_8bit_4bit_CGA palette' '_8bit_4bit_CGA palette'
+  spec 'r' '_8bit_4bit_Machintosh II palette' '_8bit_4bit_Machintosh II palette'
+  spec 'r' '_8bit_4bit_Win & OS/2 palette' '_8bit_4bit_Win & OS/2 palette'
+  spec 'r' '_8bit_4bit_grayscale palette' '_8bit_4bit_grayscale palette'
+  spec 'r' '_8bit_4bit_MSX palette' '_8bit_4bit_MSX palette'
+  spec 'r' '_8bit_4bit_Pico8 palette' '_8bit_4bit_Pico8 palette'
+  spec 'r' '_8bit_4bit_RISC 2 palette' '_8bit_4bit_RISC 2 palette'
+  spec 'r' '_8bit_8bit_grayscale palette' '_8bit_8bit_grayscale palette'
+  spec 'r' '_8bit_8bit_green hues palette' '_8bit_8bit_green hues palette'
+  spec 'r' '_8bit_8bit_red hues palette' '_8bit_8bit_red hues palette'
+  spec 'r' '_8bit_8bit_blue hues palette' '_8bit_8bit_blue hues palette'
+  spec 'r' '_8bit_8bit_MicroBlocks palette' '_8bit_8bit_MicroBlocks palette'
+  spec 'r' '_sqrt _' '_sqrt _' 'num' 10
+  spec 'r' '_bmp_readHeader' '_bmp_readHeader file _' 'str' ''
+  spec ' ' '_bmp_readPalette' '_bmp_readPalette file _' 'auto' ''
+  spec ' ' '_bmp_readLine' '_bmp_readLine file _' 'auto' ''
+  spec 'r' '_bmp_line2indexes' '_bmp_line2indexes'
+  spec 'r' '_bmp_RLEline' '_bmp_readRLELine file _' 'auto' ''
+  spec 'r' '_bmp_readInt16' '_bmp read int16 file _' 'str' ''
+  spec 'r' '_bmp_readInt32' '_bmp read int32 file _' 'str' ''
+  spec ' ' '_bmp_alignLineData' '_bmp_alignLineData file _' 'auto' ''
+
+to '8bit_4 bit palette' selector {
+  return (callCustomReporter ('[data:join]' '_8bit_4bit_' selector ' palette'))
+}
+
+to '8bit_8 bit palette' selector {
+  return (callCustomReporter ('[data:join]' '_8bit_8bit_' selector ' palette'))
+}
+
+to '8bit_bitmap' width 'bitmap string' {
+  local 'list' ('[data:makeList]')
+  for line ('[data:split]' (v 'bitmap string') ('[data:unicodeString]' 10)) {
+    for bit line {
+      '[data:addLast]' (hexToInt bit) list
+    }
+  }
+  return ('[data:makeList]' width ('[data:asByteArray]' list))
+}
+
+to '8bit_bitmap from BMP file' filename {
+  if (not ('_bmp_readHeader' filename)) {return 0}
+  if (_bmpBPP > 8) {return 1}
+  '[file:setReadPosition]' _bmpPixelsOffset filename
+  local 'buf' ('[data:newByteArray]' 0)
+  repeat (absoluteValue _bmpHeight) {
+    '_bmp_readLine' filename
+    if (_bmpHeight >= 0) {
+      buf = ('[data:join]' _bmpLine buf)
+    } else {
+      buf = ('[data:join]' buf _bmpLine)
+    }
+    '_bmp_alignLineData' filename
+  }
+  return ('[data:makeList]' _bmpWidth buf)
+}
+
+to '8bit_bitmap from file' width 'file name' {
+  '[file:open]' (v 'file name')
+  local 'bitmap' ('[data:newByteArray]' ('[file:fileSize]' (v 'file name')))
+  for i ('[file:fileSize]' (v 'file name')) {
+    atPut i bitmap (at 1 ('[file:readBytes]' 1 (v 'file name')))
+  }
+  '[file:close]' (v 'file name')
+  return ('[data:makeList]' width bitmap)
+}
+
+to '8bit_current palette' {
+  return _8bit_palette
+}
+
+to '8bit_draw buffer' 'region x' 'region y' width height {
+  if (not (isType _8bit_palette 'list')) {_8bit_palette = ('[data:makeList]' '0' 'AA' 'AA00' 'AAAA' 'AA0000' 'AA00AA' 'AA5500' 'AAAAAA' '555555' '5555FF' '55FF55' '55FFFF' 'FF5555' 'FF55FF' 'FFFF55' 'FFFFFF')}
+  if ((pushArgCount) < 1) {
+    '[tft:drawBuffer]' _8bit_buffer _8bit_palette _8bit_scale
+  } else {
+    '[tft:drawBuffer]' _8bit_buffer _8bit_palette _8bit_scale (v 'region x') (v 'region y') width height
+  }
+  waitMicros 500
+}
+
+to '8bit_draw palette table' palette {
+  if (not (isType palette 'list')) {if (isType _8bit_palette 'list') {
+    palette = _8bit_palette
+  } else {
+    return 0
+  }}
+  local 'side' ('_sqrt _' (size palette))
+  local 'width' (minimum (('[tft:getHeight]') / side) (('[tft:getWidth]') / side))
+  for y side {
+    for x side {
+      local 'index' (((y - 1) * side) + x)
+      if (index <= (size palette)) {
+        '[tft:rect]' ((x - 1) * width) ((y - 1) * width) width width (at index palette)
+      }
+    }
+  }
+}
+
+to '8bit_merge' bitmap 'origin x' 'origin y' {
+  if (_8bit_scale == 0) {'8bit_set scale _' 2}
+  '[tft:mergeBitmap]' (at 2 bitmap) (at 1 bitmap) _8bit_buffer _8bit_scale _8bit_alpha_index (v 'origin x') (v 'origin y')
+}
+
+to '8bit_merge2 tile' bitmap x y {
+  local 'tile width' (at 1 bitmap)
+  local 'tile height' ((size (at 2 bitmap)) / (v 'tile width'))
+  '8bit_merge' bitmap ((x - 1) * (v 'tile width')) ((y - 1) * (v 'tile height'))
+}
+
+to '8bit_merge3 tile' bitmap x1 y1 x2 y2 {
+  local 'tile width' (at 1 bitmap)
+  local 'tile height' ((size (at 2 bitmap)) / (v 'tile width'))
+  local 'first x' (((x1 - 1) / (v 'tile width')) + 1)
+  local 'first y' (((y1 - 1) / (v 'tile height')) + 1)
+  local 'last x' (((x2 - 1) / (v 'tile width')) + 1)
+  local 'last y' (((y2 - 1) / (v 'tile height')) + 1)
+  for x ('[data:range]' (v 'first x') (v 'last x')) {
+    for y ('[data:range]' (v 'first y') (v 'last y')) {
+      '8bit_merge2 tile' bitmap x y
+    }
+  }
+}
+
+to '8bit_mirrored bitmap' bitmap axis {
+  local 'bitmap width' (at 1 bitmap)
+  local 'index list' (at 2 bitmap)
+  local 'index length' (size (v 'index list'))
+  local 'new array' ('[data:newByteArray]' (v 'index length'))
+  if (axis == 'vertical') {
+    for i (v 'index length') {
+      atPut i (v 'new array') (at (((v 'index length') - (((((i - 1) / (v 'bitmap width')) + 1) * (v 'bitmap width')) - ((i - 1) % (v 'bitmap width')))) + 1) (v 'index list'))
+    }
+  } (axis == 'horizontal') {
+    for i (v 'index length') {
+      atPut i (v 'new array') (at (((((i - 1) / (v 'bitmap width')) + 1) * (v 'bitmap width')) - ((i - 1) % (v 'bitmap width'))) (v 'index list'))
+    }
+  } (axis == 'descending diagonal') {
+    for i (v 'index length') {
+      atPut i (v 'new array') (at (((((i - 1) * (v 'bitmap width')) + ((i - 1) / (v 'bitmap width'))) % (v 'index length')) + 1) (v 'index list'))
+    }
+  } (axis == 'ascending diagonal') {
+    for i (v 'index length') {
+      atPut i (v 'new array') (at ((v 'index length') - ((((i - 1) * (v 'bitmap width')) + ((i - 1) / (v 'bitmap width'))) % (v 'index length'))) (v 'index list'))
+    }
+  }
+  return ('[data:makeList]' (v 'bitmap width') (v 'new array'))
+}
+
+to '8bit_palette from BMP file' filename {
+  if ('_bmp_readHeader' filename) {return _bmpPalette}
+}
+
+to '8bit_palette from pal format' 'file name' {
+  '[file:open]' (v 'file name')
+  local 'palette' (newList (('[file:fileSize]' (v 'file name')) / 3))
+  for i (('[file:fileSize]' (v 'file name')) / 3) {
+    atPut i palette ((((at 1 ('[file:readBytes]' 1 (v 'file name'))) << 16) | ((at 1 ('[file:readBytes]' 1 (v 'file name'))) << 8)) | (at 1 ('[file:readBytes]' 1 (v 'file name'))))
+  }
+  '[file:close]' (v 'file name')
+  return palette
+}
+
+to '8bit_rotated sprite' bitmap degs {
+  local 'bitmap width' (at 1 bitmap)
+  local 'index list' (at 2 bitmap)
+  local 'index length' (size (v 'index list'))
+  if ((degs % 360) == 0) {
+    return bitmap
+  } else {
+    local 'new array' ('[data:newByteArray]' (v 'index length'))
+    if ((absoluteValue (degs % 360)) == 180) {
+      for i (v 'index length') {
+        atPut ((v 'index length') - (i - 1)) (v 'new array') (at i (v 'index list'))
+      }
+    } ((degs % 360) == 90) {
+      for i (v 'index length') {
+        atPut i (v 'new array') (at (((v 'index length') - (((((i - 1) % (v 'bitmap width')) + 1) * (v 'bitmap width')) - ((i - 1) / (v 'bitmap width')))) + 1) (v 'index list'))
+      }
+    } ((degs % 360) == 270) {
+      for i (v 'index length') {
+        atPut i (v 'new array') (at (((((i - 1) % (v 'bitmap width')) + 1) * (v 'bitmap width')) - ((i - 1) / (v 'bitmap width'))) (v 'index list'))
+      }
+    }
+  }
+  return ('[data:makeList]' (v 'bitmap width') (v 'new array'))
+}
+
+to '8bit_screen height' {
+  if (_8bit_scale == 0) {'8bit_set scale _' 2}
+  return (('[tft:getHeight]') / _8bit_scale)
+}
+
+to '8bit_screen width' {
+  if (_8bit_scale == 0) {'8bit_set scale _' 2}
+  return (('[tft:getWidth]') / _8bit_scale)
+}
+
+to '8bit_set palette' 'color list' {
+  _8bit_palette = (v 'color list')
+}
+
+to '8bit_set scale _' scale {
+  _8bit_scale = scale
+  _8bit_buffer = ('[data:newByteArray]' (('8bit_screen width') * ('8bit_screen height')) 0)
+}
+
+to '8bit_set transparent color index _' 'alpha index' {
+  _8bit_alpha_index = (v 'alpha index')
+}
+
+to '_8bit_4bit_CGA palette' {
+  return ('[data:makeList]' 0 170 43520 43690 11141120 11141290 11162880 11184810 5592405 5592575 5635925 5636095 16733525 16733695 16777045 16777215)
+}
+
+to '_8bit_4bit_MSX palette' {
+  return ('[data:makeList]' (hexToInt '0') (hexToInt '010101') (hexToInt '3eb849') (hexToInt '74d07d') (hexToInt '5955e0') (hexToInt '8076f1') (hexToInt 'b95e51') (hexToInt '65dbef') (hexToInt 'db6559') (hexToInt 'ff897d') (hexToInt 'ccc35e') (hexToInt 'ded087') (hexToInt '3aa241') (hexToInt 'b766b5') (hexToInt 'cccccc') (hexToInt 'ffffff'))
+}
+
+to '_8bit_4bit_Machintosh II palette' {
+  return ('[data:makeList]' (hexToInt 'ffffff') (hexToInt 'fcf400') (hexToInt 'ff6400') (hexToInt 'dd0202') (hexToInt 'f10285') (hexToInt '4600a6') (hexToInt 'd5') (hexToInt 'aee9') (hexToInt '1ab90c') (hexToInt '6408') (hexToInt '582800') (hexToInt '917135') (hexToInt 'c1c1c1') (hexToInt '818181') (hexToInt '3e3e3e') (hexToInt '0'))
+}
+
+to '_8bit_4bit_Pico8 palette' {
+  return ('[data:makeList]' (hexToInt '0') (hexToInt '1d2b53') (hexToInt '7e2553') (hexToInt '008751') (hexToInt 'ab5236') (hexToInt '5f574f') (hexToInt 'c2c3c7') (hexToInt 'fff1e8') (hexToInt 'ff004d') (hexToInt 'ffa300') (hexToInt 'fff024') (hexToInt '00e756') (hexToInt '29adff') (hexToInt '83769c') (hexToInt 'ff77a8') (hexToInt 'ffccaa'))
+}
+
+to '_8bit_4bit_RISC 2 palette' {
+  return ('[data:makeList]' (hexToInt 'ffffff') (hexToInt 'dddddd') (hexToInt 'bdbdbd') (hexToInt '999999') (hexToInt '797979') (hexToInt '535353') (hexToInt '313131') (hexToInt '0') (hexToInt '4299') (hexToInt 'f0f000') (hexToInt 'cd00') (hexToInt 'dd0000') (hexToInt 'f0f0bd') (hexToInt '538900') (hexToInt 'ffbd00') (hexToInt 'bdff'))
+}
+
+to '_8bit_4bit_Win & OS/2 palette' {
+  return ('[data:makeList]' (hexToInt '0') (hexToInt '800000') (hexToInt '8000') (hexToInt '808000') (hexToInt '80') (hexToInt '800080') (hexToInt '8080') (hexToInt 'c0c0c0') (hexToInt '808080') (hexToInt 'ff0000') (hexToInt 'ff00') (hexToInt 'ffff00') (hexToInt 'ff') (hexToInt 'ff00ff') (hexToInt 'ffff') (hexToInt 'ffffff'))
+}
+
+to '_8bit_4bit_grayscale palette' {
+  return ('[data:makeList]' 0 1315860 2105376 2894892 3684408 4539717 5329233 6381921 7434609 8553090 9605778 10658466 11974326 13355979 14935011 16777215)
+}
+
+to '_8bit_8bit_MicroBlocks palette' {
+  return ('[data:join]' ('[data:range]' 0 (hexToInt 'FFFFFF') ((hexToInt 'FFFFFF') / 239)) ('[data:range]' 0 (hexToInt 'FFFFFF') ((hexToInt 'FFFFFF') / 15)))
+}
+
+to '_8bit_8bit_blue hues palette' {
+  return ('[data:range]' 0 255)
+}
+
+to '_8bit_8bit_grayscale palette' {
+  return ('[data:range]' 0 (hexToInt 'FFFFFF') ((hexToInt 'FFFFFF') / 255))
+}
+
+to '_8bit_8bit_green hues palette' {
+  return ('[data:range]' (hexToInt 'FF00') (hexToInt 'FFFF'))
+}
+
+to '_8bit_8bit_red hues palette' {
+  return ('[data:range]' (hexToInt 'FF0000') (hexToInt 'FF00FF'))
+}
+
+to '_bmp_RLEline' filename {
+  local 'result' ('[data:newByteArray]' 0)
+  forever {
+    if ((('[file:readPosition]' filename) & 1) == 1) {file_SkipBytes 1 filename}
+    local 'rle' ('[file:readBytes]' 2 filename)
+    if ((at 1 rle) == 0) {
+      if ((at 2 rle) > 2) {
+        comment 'odd numbers for RL4?'
+        result = ('[data:join]' result ('[file:readBytes]' ((((at 2 rle) * _bmpBPP) + 7) / 8) filename))
+      } else {
+        return result
+      }
+    } else {
+      result = ('[data:join]' result ('[data:newByteArray]' ((((at 1 rle) * _bmpBPP) + 7) / 8) (at 2 rle)))
+    }
+  }
+}
+
+to '_bmp_alignLineData' filename {
+  if (and (_bmpCompression != 1) (_bmpCompression != 2)) {
+    local 'padding' (((32 - ((_bmpWidth * _bmpBPP) % 32)) / 8) % 4)
+    if (padding > 0) {
+      file_SkipBytes padding filename
+    }
+  }
+}
+
+to '_bmp_line2indexes' {
+  local 'mask' ((1 << _bmpBPP) - 1)
+  local 'result' ('[data:newByteArray]' 0)
+  local 'i' 1
+  repeatUntil ((size result) == _bmpWidth) {
+    local 'byte' (at i _bmpLine)
+    local 'b' (8 / _bmpBPP)
+    repeatUntil (or (b < 1) ((size result) == _bmpWidth)) {
+      b += -1
+      result = ('[data:join]' result ('[data:asByteArray]' ((byte >> (_bmpBPP * b)) & mask)))
+    }
+    i += 1
+  }
+  return result
+}
+
+to '_bmp_readHeader' filename {
+  if (('[file:fileSize]' filename) < 0) {
+    sayIt 'File not found: ' filename
+    return (booleanConstant false)
+  }
+  '[file:open]' filename
+  if (or (('[file:fileSize]' filename) < 54) ('BM' != ('[data:join]' '' ('[file:readBytes]' 2 filename)))) {
+    sayIt 'Not a BMP file: ' filename
+    return (booleanConstant false)
+  }
+  file_SkipBytes 8 filename
+  _bmpPixelsOffset = ('_bmp_readInt32' filename)
+  local 'headerSize' ('_bmp_readInt32' filename)
+  _bmpWidth = ('_bmp_readInt32' filename)
+  _bmpHeight = ('_bmp_readInt32' filename)
+  file_SkipBytes 2 filename
+  _bmpBPP = ('_bmp_readInt16' filename)
+  _bmpCompression = ('_bmp_readInt32' filename)
+  if (_bmpCompression > 3) {
+    sayIt ('[data:join]' 'Unsupported compression method: ' _bmpCompression)
+    return (booleanConstant false)
+  }
+  _bmpPalette = 0
+  if (_bmpBPP <= 8) {
+    file_SkipBytes 12 filename
+    local 'palSize' ('_bmp_readInt16' filename)
+    if (palSize == 0) {
+      palSize = (1 << _bmpBPP)
+    }
+    _bmpPalette = (newList palSize)
+    file_SkipBytes (headerSize - 34) filename
+    '_bmp_readPalette' filename
+  } else {
+    _bmpIsRGB565 = (booleanConstant false)
+    if (_bmpCompression == 3) {
+      file_SkipBytes 20 filename
+      comment 'BITFIELD  Red'
+      _bmpIsRGB565 = (('_bmp_readInt32' filename) == (hexToInt 'F800'))
+    }
+  }
+  return (booleanConstant true)
+}
+
+to '_bmp_readInt16' filename {
+  local 'data' ('[file:readBytes]' 2 filename)
+  return (((at 2 data) << 8) | (at 1 data))
+}
+
+to '_bmp_readInt32' filename {
+  local 'data' ('[file:readBytes]' 4 filename)
+  return ((((at 4 data) << 24) | ((at 3 data) << 16)) | (((at 2 data) << 8) | (at 1 data)))
+}
+
+to '_bmp_readLine' filename {
+  if (or (_bmpCompression == 1) (_bmpCompression == 2)) {
+    _bmpLine = ('_bmp_RLEline' filename)
+  } else {
+    _bmpLine = ('[file:readBytes]' (((_bmpWidth * _bmpBPP) + 7) / 8) filename)
+  }
+  if (_bmpBPP < 8) {
+    local 'indexes' ('_bmp_line2indexes')
+    _bmpLine = indexes
+  }
+}
+
+to '_bmp_readPalette' filename {
+  for i (size _bmpPalette) {
+    local 'data' ('[file:readBytes]' 4 filename)
+    local 'color' (((at 3 data) << 16) | (((at 2 data) << 8) | (at 1 data)))
+    atPut i _bmpPalette color
+  }
+}
+
+to '_sqrt _' n {
+  for i n {
+    if ((i * i) >= n) {return i}
+  }
+}
+
+to 'clear display' {
+  '[display:mbDisplayOff]'
+}
+
+to rgb_to_color r g b {
+  r = (maximum 0 (minimum r 255))
+  g = (maximum 0 (minimum g 255))
+  b = (maximum 0 (minimum b 255))
+  return (((r << 16) | (g << 8)) | b)
+}
+
+
+module CoCube
+author 'Liang Shuai'
+version 2 21 
+depends Tone Display TFT '_Motors/PID' 'Robots/CoCube Module' '_Graphics and Displays/8 Bit Graphics' 
+tags 'cocube robot' 
+choices cocube_rotate_Menu 'cocube;left' 'cocube;right' 
+choices cocube_emoji_Menu happy naughty 'star-struck' kiss laughing neutral smug crying sleeping awkward shocked nerdy cool scared angry cold hot nauseated vomiting dizzy 
+choices cocube_move_Menu 'cocube;forward' 'cocube;backward' 
+description 'CoCube Robot library
+
+CoCube is a tabletop modular multi-robot platform for education and research.
+https://www.cocuberobot.com/
+https://wiki.cocube.fun/
+contact@cocuberobot.com
+
+v1.0 Basic functions
+v2.0 Comprehensively add encoder control motor function
+v2.1 Fix some bugs caused by broadcasting
+v2.2 Improve positioning accuracy to 1/128
+v2.3 Add blocks prompts
+v2.4 Unify positioning accuracy to 1/64
+v2.5 Adjust blocks order and delete RingTone
+v2.6 Adjust blocks order, name and default parameters
+v2.11 Improve the "CoCube move to" function logic
+v2.12 Optimize PID implementation
+v2.13 Optimize "set wheel" function
+v2.14 Improve the accuracy of move_to_target and optimize the loop exit mechanism
+v2.15 Remove "set TFT backlight" function
+v2.16 Change PID global variables into local
+v2.17 Modify the movement function on the map
+v2.18 Fix "_cocube_move_flag" variable missing
+v2.21 Add "CoCube track target" function
+'
+variables _cocube_set_right_speed _cocube_set_left_speed _cocube_error_angle _cocube_pid_flag _cocube_error_distance _cocube_error_y _cocube_error_x _cocube_target_angle _cocube_move_flag _cocube_target_x _cocube_target_y _cocube_target_speed 
+
+  spec ' ' 'CoCube move for msecs' 'move _ at _ speed (0-50) for _ msecs' 'menu.cocube_move_Menu num num' 'cocube;forward' 40 1000
+  spec ' ' 'CoCube rotate for msecs' 'rotate _ at _ speed (0-50) for _ msecs' 'menu.cocube_rotate_Menu num num' 'cocube;left' 30 1000
+  space
+  spec ' ' 'CoCube move' 'move _ at _ speed (0-50)' 'menu.cocube_move_Menu num' 'cocube;forward' 40
+  spec ' ' 'CoCube rotate' 'rotate _ at _ speed (0-50)' 'menu.cocube_rotate_Menu num' 'cocube;left' 30
+  spec ' ' 'CoCube set wheel' 'set wheel left _ right _ (-50 to 50)' 'num num' 40 20
+  space
+  spec ' ' 'CoCube wheels stop' 'wheels stop'
+  spec ' ' 'CoCube wheels break' 'wheels break'
+  space
+  spec 'r' 'CoCube position_X' 'X position'
+  spec 'r' 'CoCube position_Y' 'Y position'
+  spec 'r' 'CoCube direction' 'direction'
+  space
+  spec ' ' 'CoCube move by step' 'move _ at _ speed (0-50) by _ steps' 'menu.cocube_move_Menu num num' 'cocube;forward' 40 50
+  spec ' ' 'CoCube rotate by degree' 'rotate _ at _ speed (0-50) by _ degrees' 'menu.cocube_rotate_Menu num num' 'cocube;left' 30 90
+  space
+  spec ' ' 'CoCube rotate to angle' 'rotate to angle _ at _ speed (0-50)' 'num num' 0 30
+  spec ' ' 'CoCube point towards' 'point towards X _ Y _ at _ speed (0-50)' 'num num num' 0 0 30
+  spec ' ' 'CoCube move to' 'move to X _ Y _ at _ speed (0-50)' 'num num num' 0 0 40
+  space
+  spec 'r' 'CoCube on the mat' 'on the mat'
+  spec 'r' 'CoCube card ID' 'card ID'
+  space
+  spec ' ' 'CoCube set emoji' 'set emoji _ scale _' 'menu.cocube_emoji_Menu menu.range:1-5' 'happy' 4
+  space
+  spec ' ' 'CoCube draw ArUco marker on TFT' 'draw ArUco marker on TFT _' 'num' 0
+  spec ' ' 'CoCube draw AprilTag on TFT' 'draw AprilTag on TFT _' 'num' 0
+  space
+  spec 'r' 'CoCube battery percentage' 'battery percentage'
+  advanced
+  spec ' ' 'CoCube track target' 'track target X _ Y _ at _ speed (0-50)' 'num num num' 0 0 40
+  spec ' ' '_cocube_track_target' '_cocube_track_target'
+  space
+  spec ' ' '_cocube_motors_speed' '_cocube_motors_speed left _ right _' 'num num' 10 10
+  spec ' ' '_cocube_pid_control' '_cocube_pid_control'
+  spec ' ' '_cocube_calculate_angle_error_' '_cocube_calculate_angle_error angle _' 'num' 0
+  spec ' ' '_cocube_calculate_distance_error target_x _ target_y _' '_cocube_calculate_distance_error Target_X _ Target_Y _' 'num num' 0 0
+
+to 'CoCube battery percentage' {
+  return (minimum (((254 * ('[misc:rescale]' (analogReadOp 34) 0 1023 0 3300)) - 680000) / 1600) 100)
+}
+
+to 'CoCube card ID' {
+  return (callCustomReporter '[sensors:cube_index]')
+}
+
+to 'CoCube direction' {
+  return (callCustomReporter '[sensors:position_yaw]')
+}
+
+to 'CoCube draw AprilTag on TFT' id {
+  comment '0 <= id < 100'
+  if (id >= 100) {
+    sayIt '0 <= id < 100'
+  } else {
+    callCustomCommand '[tft:aprilTag]' ('[data:makeList]' id)
+  }
+}
+
+to 'CoCube draw ArUco marker on TFT' id {
+  comment '0 <= id < 100'
+  if (id >= 100) {
+    sayIt '0 <= id < 100'
+  } else {
+    callCustomCommand '[tft:aruco]' ('[data:makeList]' id)
+  }
+}
+
+to 'CoCube move' direction speed {
+  if (direction == 'cocube;forward') {
+    'CoCube set wheel' speed speed
+  } else {
+    'CoCube set wheel' (0 - speed) (0 - speed)
+  }
+}
+
+to 'CoCube move by step' direction speed steps {
+  _cocube_move_flag = (booleanConstant true)
+  if ('CoCube on the mat') {
+    local 'begin_x' ('CoCube position_X')
+    local 'begin_y' ('CoCube position_Y')
+    'CoCube move' direction speed
+    forever {
+      if _cocube_move_flag {
+        '_cocube_calculate_distance_error target_x _ target_y _' begin_x begin_y
+        if ((steps - _cocube_error_distance) < 2) {
+          'CoCube wheels break'
+          exitLoop
+        }
+      } else {
+        exitLoop
+      }
+    }
+  } else {
+    sayIt 'Please put CoCube on CoMaps'
+  }
+  _cocube_move_flag = (booleanConstant false)
+}
+
+to 'CoCube move for msecs' direction speed time {
+  'CoCube move' direction speed
+  waitMillis time
+  'CoCube wheels break'
+}
+
+to 'CoCube move to' target_x target_y speed {
+  _cocube_move_flag = (booleanConstant true)
+  '_cocube_calculate_distance_error target_x _ target_y _' target_x target_y
+  if (_cocube_error_distance > 3) {
+    'CoCube point towards' target_x target_y speed
+    repeatUntil (_cocube_error_distance < 3) {
+      if _cocube_move_flag {
+        '_cocube_calculate_distance_error target_x _ target_y _' target_x target_y
+        _cocube_target_angle = (('[misc:atan2]' _cocube_error_y _cocube_error_x) / 100)
+        '_cocube_calculate_angle_error_' _cocube_target_angle
+        'CoCube set wheel' (speed - ((speed * _cocube_error_angle) / 20)) (speed + ((speed * _cocube_error_angle) / 20))
+        waitMillis 10
+      } else {
+        exitLoop
+      }
+    }
+    'CoCube wheels break'
+  }
+  _cocube_move_flag = (booleanConstant false)
+}
+
+to 'CoCube on the mat' {
+  return (callCustomReporter '[sensors:cube_status]')
+}
+
+to 'CoCube point towards' target_x target_y speed {
+  _cocube_target_angle = (('[misc:atan2]' (target_y - ('CoCube position_Y')) (target_x - ('CoCube position_X'))) / 100)
+  'CoCube rotate to angle' _cocube_target_angle speed
+}
+
+to 'CoCube position_X' {
+  return ((callCustomReporter '[sensors:position_x]') / 64)
+}
+
+to 'CoCube position_Y' {
+  return ((callCustomReporter '[sensors:position_y]') / 64)
+}
+
+to 'CoCube rotate' direction speed {
+  if (direction == 'cocube;left') {
+    'CoCube set wheel' (0 - speed) speed
+  } else {
+    'CoCube set wheel' speed (0 - speed)
+  }
+}
+
+to 'CoCube rotate by degree' direction speed degree {
+  _cocube_move_flag = (booleanConstant true)
+  if ('CoCube on the mat') {
+    local 'begin_degree' ('CoCube direction')
+    forever {
+      if _cocube_move_flag {
+        if (direction == 'cocube;left') {
+          '_cocube_calculate_angle_error_' (begin_degree + degree)
+        } else {
+          '_cocube_calculate_angle_error_' (begin_degree - degree)
+        }
+        if (_cocube_error_angle > 1) {
+          comment 'turn left'
+          '_cocube_motors_speed' (0 - speed) speed
+        } (_cocube_error_angle < -1) {
+          comment 'turn right'
+          '_cocube_motors_speed' speed (0 - speed)
+        } else {
+          comment 'motors break'
+          'CoCube wheels break'
+          exitLoop
+        }
+      } else {
+        exitLoop
+      }
+    }
+  } else {
+    sayIt 'Please put CoCube on CoMaps'
+  }
+  _cocube_move_flag = (booleanConstant false)
+}
+
+to 'CoCube rotate for msecs' direction speed time {
+  'CoCube rotate' direction speed
+  waitMillis time
+  'CoCube wheels break'
+}
+
+to 'CoCube rotate to angle' angle speed {
+  local 'abs_speed' (absoluteValue speed)
+  _cocube_move_flag = (booleanConstant true)
+  forever {
+    if _cocube_move_flag {
+      '_cocube_calculate_angle_error_' angle
+      if (_cocube_error_angle > 1) {
+        comment 'turn left'
+        '_cocube_motors_speed' (0 - abs_speed) abs_speed
+      } (_cocube_error_angle < -1) {
+        comment 'turn right'
+        '_cocube_motors_speed' abs_speed (0 - abs_speed)
+      } else {
+        comment 'motors break'
+        digitalWriteOp 9 true
+        digitalWriteOp 10 true
+        digitalWriteOp 26 true
+        digitalWriteOp 25 true
+        waitMillis 99
+        digitalWriteOp 9 false
+        digitalWriteOp 10 false
+        digitalWriteOp 26 false
+        digitalWriteOp 25 false
+        exitLoop
+      }
+    } else {
+      exitLoop
+    }
+  }
+}
+
+to 'CoCube set emoji' emoji scale {
+  comment 'Show emojis on the TFT Screen.
+Emojis are stored in BMP format in the _emoji/ directory.'
+  '8bit_set scale _' (scale + 3)
+  local 'file' ('[data:join]' '_emoji/' emoji '.bmp')
+  '8bit_set palette' ('8bit_palette from BMP file' file)
+  local 'offset' 3
+  if (scale == 1) {
+    offset = 18
+  } (scale == 2) {
+    offset = 12
+  } (scale == 3) {
+    offset = 8
+  } (scale == 4) {
+    offset = 5
+  }
+  '8bit_merge' ('8bit_bitmap from BMP file' file) offset offset
+  '8bit_draw buffer'
+  '[file:close]' file
+}
+
+to 'CoCube set wheel' speed_left speed_right {
+  if (and (speed_left == 0) (speed_right == 0)) {
+    'CoCube wheels stop'
+  } (and (speed_left == -99) (speed_right == -99)) {
+    'CoCube wheels break'
+  } else {
+    _cocube_pid_flag = (booleanConstant true)
+    _cocube_set_left_speed = speed_left
+    _cocube_set_right_speed = speed_right
+    sendBroadcast '_cocube_pid_control'
+  }
+}
+
+to 'CoCube track target' target_x target_y speed {
+  _cocube_target_x = target_x
+  _cocube_target_y = target_y
+  _cocube_target_speed = speed
+  sendBroadcast '_cocube_track_target'
+}
+
+to 'CoCube wheels break' {
+  _cocube_pid_flag = (booleanConstant false)
+  _cocube_move_flag = (booleanConstant false)
+  waitMillis 1
+  digitalWriteOp 9 true
+  digitalWriteOp 10 true
+  digitalWriteOp 26 true
+  digitalWriteOp 25 true
+  waitMillis 99
+  digitalWriteOp 9 false
+  digitalWriteOp 10 false
+  digitalWriteOp 26 false
+  digitalWriteOp 25 false
+}
+
+to 'CoCube wheels stop' {
+  _cocube_pid_flag = (booleanConstant false)
+  _cocube_move_flag = (booleanConstant false)
+  waitMillis 1
+  digitalWriteOp 9 false
+  digitalWriteOp 10 false
+  digitalWriteOp 26 false
+  digitalWriteOp 25 false
+}
+
+to '_cocube_calculate_angle_error_' angle {
+  _cocube_error_angle = ((angle % 360) - ('CoCube direction'))
+  if (_cocube_error_angle > 180) {
+    _cocube_error_angle += -360
+  } (_cocube_error_angle < -180) {
+    _cocube_error_angle += 360
+  }
+}
+
+to '_cocube_calculate_distance_error target_x _ target_y _' target_x target_y {
+  _cocube_error_x = (target_x - ('CoCube position_X'))
+  _cocube_error_y = (target_y - ('CoCube position_Y'))
+  _cocube_error_distance = ('[misc:sqrt]' ((_cocube_error_x * _cocube_error_x) + (_cocube_error_y * _cocube_error_y)))
+}
+
+to '_cocube_motors_speed' left_speed right_speed {
+  comment 'without pid control'
+  if (and (left_speed == 0) (right_speed == 0)) {
+    'CoCube wheels stop'
+  } else {
+    local 'var_left' ((4 * (absoluteValue left_speed)) + 36)
+    local 'var_right' ((4 * (absoluteValue right_speed)) + 36)
+    if (left_speed > 0) {
+      analogWriteOp 9 var_left
+      digitalWriteOp 10 false
+    } else {
+      digitalWriteOp 9 false
+      analogWriteOp 10 var_left
+    }
+    if (right_speed > 0) {
+      analogWriteOp 26 var_right
+      digitalWriteOp 25 false
+    } else {
+      digitalWriteOp 26 false
+      analogWriteOp 25 var_right
+    }
+  }
+}
+
+to '_cocube_pid_control' {
+  pid_resetPID 1
+  pid_resetPID 2
+  local 'pid_p' 320
+  local 'pid_i' 1
+  local 'pid_d' 3
+  local 'pid_ratio' 1000
+  local 'var_right' 0
+  local 'var_left' 0
+  forever {
+    if _cocube_pid_flag {
+      comment 'PID control'
+      var_left = ((((4 * (absoluteValue _cocube_set_left_speed)) + 36) + (pid_computePID 1 ((18 * (absoluteValue _cocube_set_left_speed)) - (callCustomReporter '[sensors:speed_left]')) pid_p pid_i pid_d 0)) / pid_ratio)
+      var_right = ((((4 * (absoluteValue _cocube_set_right_speed)) + 36) + (pid_computePID 2 ((18 * (absoluteValue _cocube_set_right_speed)) - (callCustomReporter '[sensors:speed_right]')) pid_p pid_i pid_d 0)) / pid_ratio)
+      if (_cocube_set_left_speed > 0) {
+        analogWriteOp 9 var_left
+        digitalWriteOp 10 false
+      } else {
+        digitalWriteOp 9 false
+        analogWriteOp 10 var_left
+      }
+      if (_cocube_set_right_speed > 0) {
+        digitalWriteOp 25 false
+        analogWriteOp 26 var_right
+      } else {
+        analogWriteOp 25 var_right
+        digitalWriteOp 26 false
+      }
+    } else {
+      exitLoop
+    }
+  }
+}
+
+to '_cocube_track_target' {
+  _cocube_move_flag = (booleanConstant true)
+  '_cocube_calculate_distance_error target_x _ target_y _' _cocube_target_x _cocube_target_y
+  if (_cocube_error_distance > 3) {
+    'CoCube point towards' _cocube_target_x _cocube_target_y _cocube_target_speed
+    repeatUntil (_cocube_error_distance < 3) {
+      if _cocube_move_flag {
+        '_cocube_calculate_distance_error target_x _ target_y _' _cocube_target_x _cocube_target_y
+        _cocube_target_angle = (('[misc:atan2]' _cocube_error_y _cocube_error_x) / 100)
+        '_cocube_calculate_angle_error_' _cocube_target_angle
+        'CoCube set wheel' (_cocube_target_speed - ((_cocube_target_speed * _cocube_error_angle) / 20)) (_cocube_target_speed + ((_cocube_target_speed * _cocube_error_angle) / 20))
+        waitMillis 10
+      } else {
+        exitLoop
+      }
+    }
+    'CoCube wheels break'
+  }
+  _cocube_move_flag = (booleanConstant false)
+}
+
+
+module 'CoCube Module'
+author 'Liang Shuai'
+version 1 15 
+depends _Servo NeoPixel 
+choices adc_channel A0 A1 A2 
+choices trackerMenu '1' '2' '3' '4' '5' all 
+description 'External modules of CoCube.
+
+CoCube is a tabletop modular multi-robot platform for education and research.
+https://www.cocubefun.com/
+https://wiki.cocube.fun/
+sliang23@m.fudan.edu.cn
+
+Note: All functions start by turning on pin 13 to power the module.
+The power pin is off by default and is also turned off by the IDE stop button.'
+variables _cc_cam_init_flag _cc_asr_snc _cc_PCF8574_address 
+
+  spec ' ' 'ccmodule_gripper open' 'gripper open'
+  spec ' ' 'ccmodule_gripper close' 'gripper close'
+  spec ' ' 'ccmodule_gripper degree' 'gripper degrees _ (0 to 70)' 'num' 0
+  spec ' ' 'ccmodule_gripper stop' 'gripper stop'
+  space
+  spec ' ' 'ccmodule_attach NeoPixels' 'attach NeoPixels'
+  spec ' ' 'ccmodule_set all NeoPixels color' 'set all NeoPixels color _' 'color'
+  spec ' ' 'ccmodule_clear NeoPixels' 'clear NeoPixels'
+  space
+  spec 'r' 'ccmodule_ToF connected' 'ToF connected'
+  spec 'r' 'ccmodule_ToF distance' 'ToF distance (mm)'
+  space
+  spec 'r' 'ccmodule_DLight level' 'DLight level'
+  space
+  spec 'r' 'ccmodule_ASR get command' 'ASR get command'
+  spec ' ' 'ccmodule_ASR play command' 'ASR play command _' 'num' 19
+  space
+  spec 'r' 'ccmodule_tracker on black' 'Tracker _ on black' 'menu.trackerMenu' 1
+  spec 'r' 'ccmodule_tracker on white' 'Tracker _ on white' 'menu.trackerMenu' 1
+  space
+  spec 'r' 'ccmodule_adc_connected' 'ADC connected'
+  spec 'r' 'ccmodule_adc_voltage' 'ADC _ voltage (mV)' 'menu.adc_channel' 'A0'
+  space
+  spec ' ' 'ccmodule_power on module' 'power on module'
+  space
+  spec ' ' '_ccmodule_check_camera' 'check_camera'
+
+to '_ccmodule_check_camera' {
+  if (_cc_cam_init_flag == 1) {
+    '[sensors:i2cWrite]' (hexToInt '58') ('[data:asByteArray]' ('[data:makeList]' (hexToInt '3') 255))
+  } else {
+    stopServo 22
+    digitalWriteOp 13 true
+  }
+}
+
+to 'ccmodule_ASR get command' {
+  '_ccmodule_check_camera'
+  waitMillis 30
+  '[sensors:i2cWrite]' (hexToInt '64') (hexToInt '2') false
+  local 'data' (newList 2)
+  '[sensors:i2cRead]' (hexToInt '64') data
+  local 'new_asr_snc' (at 1 data)
+  if (_cc_asr_snc != new_asr_snc) {
+    _cc_asr_snc = new_asr_snc
+    return (at 2 data)
+  } else {
+    return 0
+  }
+}
+
+to 'ccmodule_ASR play command' id {
+  '_ccmodule_check_camera'
+  '[sensors:i2cWrite]' (hexToInt '64') ('[data:asByteArray]' ('[data:makeList]' (hexToInt '3') id (id + 3) (hexToInt '5A')))
+}
+
+to 'ccmodule_DLight level' {
+  if (_cc_cam_init_flag == 1) {
+    '[sensors:i2cWrite]' (hexToInt '58') ('[data:asByteArray]' ('[data:makeList]' (hexToInt '3') 255))
+  } else {
+    stopServo 22
+    digitalWriteOp 13 true
+  }
+  i2cSet (hexToInt '23') 23 (hexToInt '21')
+  read = (newList 2)
+  '[sensors:i2cRead]' (hexToInt '23') read
+  return (((at 1 read) << 8) | (at 2 read))
+}
+
+to 'ccmodule_ToF connected' {
+  '_ccmodule_check_camera'
+  return ((i2cGet 41 (hexToInt 'C0')) == (hexToInt 'EE'))
+}
+
+to 'ccmodule_ToF distance' {
+  '_ccmodule_check_camera'
+  i2cSet 41 0 1
+  waitMillis 70
+  if (((i2cGet 41 (hexToInt '14')) & 1) == 1) {
+    '[sensors:i2cWrite]' 41 ('[data:makeList]' (hexToInt '14'))
+    local 'buf' (newList 12)
+    '[sensors:i2cRead]' 41 buf
+    if ((at 1 buf) == 95) {
+      return (((at 11 buf) << 8) | (at 12 buf))
+    } else {
+      return -1
+    }
+  } else {
+    return -2
+  }
+}
+
+to ccmodule_adc_connected {
+  digitalWriteOp 13 true
+  return ('[sensors:i2cExists]' (hexToInt '48'))
+}
+
+to ccmodule_adc_voltage channel {
+  if (not (ccmodule_adc_connected)) {return 0}
+  local 'config_high' (hexToInt 'C1')
+  if (channel == 'A1') {
+    config_high = (hexToInt 'D1')
+  } (channel == 'A2') {
+    config_high = (hexToInt 'E1')
+  }
+  '[sensors:i2cWrite]' (hexToInt '48') ('[data:makeList]' 1 config_high (hexToInt '83'))
+  waitMillis 9
+  '[sensors:i2cWrite]' (hexToInt '48') ('[data:makeList]' 0)
+  local 'buffer' ('[data:newByteArray]' 2)
+  '[sensors:i2cRead]' (hexToInt '48') buffer
+  local 'raw' (((at 1 buffer) << 8) | (at 2 buffer))
+  if (raw >= 32768) {
+    raw = (raw - 65536)
+  }
+  return (((maximum 0 raw) * 3) / 16)
+}
+
+to 'ccmodule_attach NeoPixels' {
+  if (_cc_cam_init_flag == 1) {
+    sayIt 'AI camera doesn''t support this module. Please connect directly.'
+  } else {
+    stopServo 22
+    digitalWriteOp 13 true
+    waitMillis 10
+    neoPixelAttach 48 22
+  }
+}
+
+to 'ccmodule_clear NeoPixels' {
+  digitalWriteOp 13 true
+  clearNeoPixels
+}
+
+to 'ccmodule_gripper close' {
+  if (_cc_cam_init_flag == 1) {
+    '[sensors:i2cWrite]' (hexToInt '58') ('[data:asByteArray]' ('[data:makeList]' (hexToInt '2') 0 28))
+  } else {
+    digitalWriteOp 13 true
+    setServoAngle 22 -70
+  }
+}
+
+to 'ccmodule_gripper degree' degree {
+  if (_cc_cam_init_flag == 1) {
+    stopServo 22
+    local 'hex' (7168 - ((degree * 2048) / 70))
+    '[sensors:i2cWrite]' (hexToInt '58') ('[data:asByteArray]' ('[data:makeList]' (hexToInt '2') (hex & (hexToInt 'FF')) (hex >> 8)))
+  } else {
+    digitalWriteOp 13 true
+    local 'var' (degree - 70)
+    if (var < -70) {
+      setServoAngle 22 -70
+    } (var > 0) {
+      setServoAngle 22 0
+    } else {
+      setServoAngle 22 var
+    }
+  }
+}
+
+to 'ccmodule_gripper open' {
+  if (_cc_cam_init_flag == 1) {
+    '[sensors:i2cWrite]' (hexToInt '58') ('[data:asByteArray]' ('[data:makeList]' (hexToInt '2') 0 20))
+  } else {
+    digitalWriteOp 13 true
+    setServoAngle 22 0
+  }
+}
+
+to 'ccmodule_gripper stop' {
+  if (_cc_cam_init_flag == 1) {
+    '[sensors:i2cWrite]' (hexToInt '58') ('[data:asByteArray]' ('[data:makeList]' (hexToInt '2') 0 0))
+  } else {
+    digitalWriteOp 13 true
+    stopServo 22
+  }
+}
+
+to 'ccmodule_power on module' {
+  digitalWriteOp 13 true
+}
+
+to 'ccmodule_set all NeoPixels color' color {
+  digitalWriteOp 13 true
+  neoPixelSetAllToColor color
+}
+
+to 'ccmodule_tracker on black' which {
+  if (_cc_PCF8574_address != 32) {
+    stopServo 22
+    digitalWriteOp 13 true
+    waitMillis 100
+    _cc_PCF8574_address = 32
+    if ((i2cGet _cc_PCF8574_address 0) < 0) {
+      sayIt 'init fail, please check i2c address and try again.'
+      return 0
+    }
+    '[sensors:i2cWrite]' _cc_PCF8574_address ('[data:makeList]' (hexToInt 'FF'))
+  }
+  local 'var' (newList 1)
+  '[sensors:i2cRead]' _cc_PCF8574_address var
+  if ('all' == which) {
+    if ((at 1 var) == 7) {return (booleanConstant true)}
+  } else {
+    return (not ('[data:convertType]' (1 & ((at 1 var) >> (8 - which))) 'boolean'))
+  }
+}
+
+to 'ccmodule_tracker on white' which {
+  if (_cc_PCF8574_address != 32) {
+    stopServo 22
+    digitalWriteOp 13 true
+    waitMillis 100
+    _cc_PCF8574_address = 32
+    if ((i2cGet _cc_PCF8574_address 0) < 0) {
+      sayIt 'init fail, please check i2c address and try again.'
+      return 0
+    }
+    '[sensors:i2cWrite]' _cc_PCF8574_address ('[data:makeList]' (hexToInt 'FF'))
+  }
+  local 'var' (newList 1)
+  '[sensors:i2cRead]' _cc_PCF8574_address var
+  if ('all' == which) {
+    if ((at 1 var) == 255) {return (booleanConstant true)}
+  } else {
+    return ('[data:convertType]' (1 & ((at 1 var) >> (8 - which))) 'boolean')
+  }
+}
+
+
+module Files Data
+author MicroBlocks
+version 1 5 
+description 'Flash file system operations. Currently supports the LittleFS file system on ESP8266 and ESP32 boards. The GnuBlocks virtual machine (Linux and Raspberry Pi) supports the native system.'
+
+  spec ' ' '[file:open]' 'open file _' 'str'
+  spec ' ' '[file:close]' 'close file _' 'str'
+  spec ' ' '[file:delete]' 'delete file _' 'str'
+  space
+  spec ' ' '[file:appendLine]' 'append line _ to file _' 'str str'
+  spec ' ' '[file:appendBytes]' 'append bytes _ to file _' 'str str'
+  space
+  spec 'r' '[file:fileSize]' 'size of file _' 'str'
+  spec 'r' 'file_contents' 'contents of file _ : binary _' 'str bool' '' false
+  space
+  spec 'r' '[file:readLine]' 'next line of file _' 'str'
+  spec 'r' '[file:readBytes]' 'next _ bytes of file _ : starting at _' 'num str num' 100 '' 0
+  spec 'r' '[file:readInto]' 'read into _ from file _' 'str str' 'a ByteArray' ''
+  spec 'r' '[file:endOfFile]' 'end of file _' 'str'
+  space
+  spec 'r' '[file:readPosition]' 'read position of file _' 'str'
+  spec ' ' '[file:setReadPosition]' 'set read position _ of file _' 'num str' 0 ''
+  spec ' ' 'file_SkipBytes' 'skip _ bytes of file _' 'num str' 4 ''
+  space
+  spec 'r' 'file names' 'file names : in directory _' 'str'
+  spec 'r' 'file directories' 'directory names : in directory _' 'str'
+  space
+  spec 'r' '[file:systemInfo]' 'file system info'
+
+to 'file directories' dir {
+  '[file:startList]' dir
+  local 'result' ('[data:makeList]')
+  local 'fileName' ('[file:nextDirInList]')
+  repeatUntil (fileName == '') {
+    '[data:addLast]' fileName result
+    fileName = ('[file:nextDirInList]')
+  }
+  return result
+}
+
+to 'file names' dir {
+  '[file:startList]' dir
+  local 'result' ('[data:makeList]')
+  local 'fileName' ('[file:nextInList]')
+  repeatUntil (fileName == '') {
+    '[data:addLast]' fileName result
+    fileName = ('[file:nextInList]')
+  }
+  return result
+}
+
+to file_SkipBytes offset file {
+  local 'newPosition' (('[file:readPosition]' file) + offset)
+  '[file:setReadPosition]' newPosition file
+}
+
+to file_contents fileName optionBinary {
+  local 'binary' (argOrDefault 2 (booleanConstant false))
+  local 'byteCount' ('[file:fileSize]' fileName)
+  local 'result' ('[data:newByteArray]' byteCount)
+  local 'i' 1
+  '[file:open]' fileName
+  repeatUntil (i > byteCount) {
+    i += ('[file:readInto]' result fileName)
+  }
+  '[file:close]' fileName
+  return (ifExpression binary result ('[data:convertType]' result 'string'))
+}
+
+
+module PID Operators
+author 'Russell Owen'
+version 0 9 
+description 'PID Control Loop'
+variables _pid__initialized _pid__numPIDs _pid__prevError _pid__prevMicros _pid__prevIntegral 
+
+  spec 'r' 'pid_computePID' 'compute pid at index _ error _ p coeff _ i coeff _ d coeff _ max integral _ (ignored if 0)' 'num num num num num num' 1 0 1 0 0 0
+  spec ' ' 'pid_resetPID' 'reset pid at index _' 'num' 1
+  space
+  spec 'r' 'pid_constrainValue' 'constrain value _ deadband _ minimum _ maximum _' 'num num num num' 0 0 0 1000
+  spec 'r' 'pid_applySign' 'apply sign of _ to value _' 'num num' 1 0
+  space
+  spec ' ' '_pid_extendPIDLists' '_extend pid lists; index _' 'num' 1
+  spec ' ' '_pid_initLibrary' '_init pid library'
+
+to '_pid_extendPIDLists' index {
+  comment 'Extend global list variables, if needed,
+so that they are large enough to use the specified index.'
+  '_pid_initLibrary'
+  repeatUntil ((size _pid__prevError) >= index) {
+    '[data:addLast]' 0 _pid__prevError
+    '[data:addLast]' -1 _pid__prevMicros
+    '[data:addLast]' 0 _pid__prevIntegral
+  }
+  comment 'Set _pid__numPIDs so pid_computePID can efficiently decide if the list needs to be extended'
+  _pid__numPIDs = (size _pid__prevError)
+}
+
+to '_pid_initLibrary' {
+  comment 'Create global lists.'
+  if (not _pid__initialized) {
+    _pid__prevError = (newList 0)
+    _pid__prevMicros = (newList 0)
+    _pid__prevIntegral = (newList 0)
+    _pid__initialized = (booleanConstant true)
+  }
+}
+
+to pid_applySign sign value {
+  comment 'If sign < 0 return -value else return value'
+  return (ifExpression (sign >= 0) value (0 - value))
+}
+
+to pid_computePID index error pCoeff iCoeff dCoeff maxIntegral {
+  comment 'Compute the next PID value value, using inputs:
+* index: index of the PID loop
+* error: error to correct
+* pCoeff: proportional coefficient (corr/error)
+* iCoeff: integral coefficient (corr-msec/error)
+* dCoeff: derivitive coefficient (corr/error-msec)
+* maxIntegral: maximum absolute value of the integrated error; ignored if 0'
+  if (_pid__numPIDs < index) {
+    '_pid_extendPIDLists' index
+  }
+  local 'pValue' 0
+  local 'iValue' 0
+  local 'dValue' 0
+  local 'integral' 0
+  local 'currMicros' (microsOp)
+  local 'prevMicros' (at index _pid__prevMicros)
+  pValue = (pCoeff * error)
+  if (prevMicros >= 0) {
+    comment 'We have old data for this PID loop, so compute derivitive and integral contributions.'
+    local 'deltaMicros' (microsSince prevMicros currMicros)
+    local 'deltaErrorr' (error - (at index _pid__prevError))
+    dValue = (((dCoeff * deltaErrorr) * 1000) / deltaMicros)
+    integral = (((error * deltaMicros) / 1000) + (at index _pid__prevIntegral))
+    if (and (maxIntegral > 0) ((absoluteValue integral) > maxIntegral)) {
+      integral = (pid_applySign integral maxIntegral)
+    }
+    iValue = (iCoeff * integral)
+  }
+  atPut index _pid__prevMicros currMicros
+  atPut index _pid__prevError error
+  atPut index _pid__prevIntegral integral
+  return (pValue + (iValue + dValue))
+}
+
+to pid_constrainValue value deadband minimum maximum {
+  comment 'Constrain a value as follows:
+If |value| < deadband: return 0.
+If |value| < minimum: return minimum with sign of value.
+If |value| > maximum: return maximum with sign of value.'
+  local 'absValue' (absoluteValue value)
+  if (absValue < deadband) {
+    return 0
+  } (absValue < minimum) {
+    return (pid_applySign value minimum)
+  } (absValue > maximum) {
+    return (pid_applySign value maximum)
+  } else {
+    return value
+  }
+}
+
+to pid_resetPID index {
+  comment 'Zero the recorded error data for a specific PID loop.
+Call this before starting each move, to avoid unwanted values
+from the integral and derivitive terms.'
+  if (_pid__numPIDs < index) {
+    '_pid_extendPIDLists' index
+  }
+  atPut index _pid__prevError 0
+  atPut index _pid__prevMicros -1
+  atPut index _pid__prevIntegral 0
+}
+
+
+module Servo Output
+author MicroBlocks
+version 1 4 
+tags servo motor angle rotation position 
+description 'Control both positional (angle) and rotational servo motors.
+'
+variables _servoPin _servoPulseWidth 
+
+  spec ' ' 'setServoAngle' 'set servo _ to _ degrees (-90 to 90)' 'num num' 1 90
+  spec ' ' 'setServoSpeed' 'set servo _ to speed _ (-100 to 100)' 'num num' 1 100
+  spec ' ' 'stopServo' 'stop servo _' 'num' 1
+  spec 'r' '_servoIndex' '_servoIndex _' 'num' 1
+  spec ' ' '_servoPulse' '_servoPulse pin _ usecs _' 'num num' 1 1500
+  spec ' ' '_servoUpdateLoop' '_servoUpdateLoop'
+
+to '_servoIndex' which {
+  if (_servoPin == 0) {
+    _servoPin = ('[data:makeList]')
+    _servoPulseWidth = ('[data:makeList]')
+    sendBroadcast '_servoUpdateLoop'
+  }
+  local 'i' ('[data:find]' which _servoPin)
+  if (i < 0) {
+    comment 'Add new pin'
+    '[data:addLast]' which _servoPin
+    '[data:addLast]' 1500 _servoPulseWidth
+    i = (size _servoPin)
+  }
+  return i
+}
+
+to '_servoPulse' pin usecs {
+  if (usecs == 0) {
+    comment 'Servo stopped; do nothing'
+    return 0
+  }
+  usecs = (maximum 500 (minimum usecs 2900))
+  comment 'Split wait into a long wait followed by a wait of <= 30 usecs for greater accuracy'
+  local 'endTime' ((microsOp) + usecs)
+  digitalWriteOp pin true
+  waitMicros (usecs - 30)
+  waitMicros (endTime - (microsOp))
+  digitalWriteOp pin false
+}
+
+to '_servoUpdateLoop' {
+  forever {
+    if (_servoPin != 0) {
+      comment 'If the _servoPin list is not 0, update the servos'
+      for i (size _servoPin) {
+        local 'pin' (at i _servoPin)
+        local 'usecs' (at i _servoPulseWidth)
+        if (and (pin >= 0) (usecs != 0)) {
+          '_servoPulse' pin usecs
+        }
+      }
+      waitMillis 15
+    }
+  }
+}
+
+to setServoAngle which degrees optionalReverse {
+  local 'reversed' false
+  if ((pushArgCount) > 2) {
+    reversed = optionalReverse
+  }
+  if reversed {
+    degrees = (0 - degrees)
+  }
+  local 'pulseWidth' (1500 - (10 * degrees))
+  if ('[io:hasServo]') {
+    '[io:setServo]' which pulseWidth
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth pulseWidth
+  }
+}
+
+to setServoSpeed which speed optionalReverse {
+  local 'reversed' false
+  if ((pushArgCount) > 2) {
+    reversed = optionalReverse
+  }
+  if reversed {
+    speed = (0 - speed)
+  }
+  local 'pulseWidth' (1500 - (10 * speed))
+  if ((absoluteValue speed) < 2) {
+    pulseWidth = 0
+  }
+  if ('[io:hasServo]') {
+    '[io:setServo]' which pulseWidth
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth pulseWidth
+  }
+}
+
+to stopServo which {
+  if ('[io:hasServo]') {
+    '[io:setServo]' which 0
+  } else {
+    atPut ('_servoIndex' which) _servoPulseWidth 0
+  }
+}
+
+
+module TFT Output
+author MicroBlocks
+version 1 19 
+description 'Draw graphics and write text on boards with a TFT display, such as the M5Stack, M5Stick, Citilab ED1 or (discontinued) IoT-Bus.'
+
+  spec ' ' '[tft:clear]' 'clear TFT display'
+  space
+  spec ' ' '[tft:rect]' 'draw rectangle on TFT at x _ y _ width _ height _ color _ : filled _' 'num num num num color bool' 10 10 40 30 nil true
+  spec ' ' '[tft:roundedRect]' 'draw rounded rectangle on TFT at x _ y _ width _ height _ radius _ color _ : filled _' 'num num num num num color bool' 10 10 40 30 8 nil true
+  spec ' ' '[tft:circle]' 'draw circle on TFT at x _ y _ radius _ color _ : filled _' 'num num num color bool' 40 40 30 nil true
+  spec ' ' '[tft:triangle]' 'draw triangle on TFT at x _ y _ , x _ y _ , x _ y _ color _ : filled _' 'num num num num num num color bool' 20 20 30 80 60 5 nil true
+  spec ' ' '[tft:line]' 'draw line on TFT from x _ y _ to x _ y _ color _' 'num num num num color' 12 8 25 15
+  spec ' ' 'tft_drawVector' 'draw vector x _ y _ angle _ length _ color _' 'num num num num color' 40 40 45 40
+  space
+  spec ' ' '[tft:text]' 'write _ on TFT at x _ y _ color _ : scale _ wrap _ : bg color _' 'str num num color num bool color' 'Hello World!' 5 5 nil 2 true
+  spec ' ' 'tft_drawText' 'draw text _ on TFT at x _ y _ color _ : scale _ : bg color _' 'str num num color num color' 'Line 1
+Line 2' 50 20 nil 2
+  space
+  spec ' ' '[tft:setPixel]' 'set TFT pixel x _ y _ to _' 'num num color' 10 10
+  spec ' ' '[tft:pixelRow]' 'draw pixel row _ x _ y _ : bytes per pixel _ : palette _' 'auto num num num str' 'aList' 0 0 4
+  spec ' ' '[tft:drawBitmap]' 'draw bitmap _ palette _ on TFT at x _ y _' 'str str num num' 'aBitmap' 'a list of colors' 10 10
+  space
+  spec 'r' 'tft_colorSwatch' '_' 'color'
+  spec 'r' 'makeColor' 'color r _ g _ b _ (0-255)' 'num num num' 0 100 100
+  spec 'r' 'makeGray' 'gray _ %' 'num' 50
+  spec 'r' 'randomColor' 'random color'
+  space
+  spec ' ' 'tft_drawImage' 'draw image _ on TFT at x _ y _ color _ : #BR# scale _' 'str num num color num' '' 0 0 nil 1
+  spec 'r' 'tft_image' 'image _' 'str' '00000
+01010
+00000
+10001
+01110'
+  space
+  spec 'r' '[tft:getWidth]' 'TFT width'
+  spec 'r' '[tft:getHeight]' 'TFT height'
+  space
+  spec ' ' '[tft:setBacklight]' 'set TFT backlight _ (0-10)' 'num' 10
+  spec ' ' '[tft:invertDisplay]' 'invert TFT display _' 'bool' false
+  advanced
+  spec ' ' 'tft_deferOLEDDisplayUpdates' 'defer OLED display updates'
+  spec ' ' 'tft_resumeOLEDDisplayUpdates' 'resume OLED display updates'
+  space
+  spec ' ' '_deferMonochromeDisplayUpdates' '_defer monochrome display updates'
+  spec ' ' '_resumeMonochromeDisplayUpdates' '_resume monochrome display updates'
+
+to '_deferMonochromeDisplayUpdates' {
+  '[tft:deferUpdates]'
+}
+
+to '_resumeMonochromeDisplayUpdates' {
+  '[tft:resumeUpdates]'
+}
+
+to makeColor r g b {
+  r = (maximum 0 (minimum r 255))
+  g = (maximum 0 (minimum g 255))
+  b = (maximum 0 (minimum b 255))
+  return ((r << 16) | ((g << 8) | b))
+}
+
+to makeGray percent {
+  gray = ((percent * 255) / 100)
+  gray = (maximum 0 (minimum gray 255))
+  return ((gray << 16) | ((gray << 8) | gray))
+}
+
+to randomColor {
+  local 'n1' (random 100 200)
+  local 'n2' (random 0 100)
+  if (1 == (random 1 3)) {
+    return ((n1 << 16) | (n2 << 8))
+  } (1 == (random 1 2)) {
+    return ((n2 << 16) | n1)
+  } else {
+    return ((n1 << 8) | n2)
+  }
+}
+
+to tft_colorSwatch color {
+  return color
+}
+
+to tft_deferOLEDDisplayUpdates {
+  '[tft:deferUpdates]'
+}
+
+to tft_drawImage imageString x y c optionalScale {
+  comment 'Draw an image at the given position. An image is represented by a multi-line string
+of 0 and 1 characters where each line is one row of the image. 1 means that pixel on (lit).'
+  local 'scale' (argOrDefault 5 1)
+  local 'left' x
+  for ch ('[data:convertType]' imageString 'byte array') {
+    if (ch == 10) {
+      y += scale
+      x = left
+    } else {
+      if (ch == 49) {'[tft:rect]' x y scale scale c}
+      x += scale
+    }
+  }
+}
+
+to tft_drawText s x y color optionalScale optionalBGColor {
+  s = ('[data:convertType]' s 'string')
+  local 'scale' (argOrDefault 5 2)
+  local 'bgColor' (argOrDefault 6 '')
+  local 'lines' ('[data:split]' s ('[data:unicodeString]' 10))
+  for line ('[data:split]' s ('[data:unicodeString]' 10)) {
+    if (isType bgColor 'number') {
+      '[tft:text]' line x y color scale false bgColor
+    } else {
+      '[tft:text]' line x y color scale false
+    }
+    y += (8 * scale)
+  }
+}
+
+to tft_drawVector x y angle length color {
+  local 'endX' (x + ((length * ('[misc:sin]' (100 * (angle + 90)))) >> 14))
+  local 'endY' (y + ((length * ('[misc:sin]' (100 * angle))) >> 14))
+  '[tft:line]' x y endX endY color
+}
+
+to tft_image s {
+  return ('[data:convertType]' s 'string')
+}
+
+to tft_resumeOLEDDisplayUpdates {
+  '[tft:resumeUpdates]'
+}
+
+
+module UDP Comm
+author MicroBlocks
+version 1 0 
+depends WiFi 
+tags udp network 
+description 'Blocks to send and receive UDP packets.'
+
+  spec ' ' '[net:udpStart]' 'UDP start port _' 'auto' 5000
+  spec ' ' '[net:udpStop]' 'UDP stop'
+  spec ' ' '[net:udpSendPacket]' 'UDP send packet _ to ip _ port _' 'auto auto num' 'Hello!' '255.255.255.255' 5000
+  spec 'r' '[net:udpReceivePacket]' 'UDP receive packet : binary data _' 'bool' false
+  spec 'r' '[net:udpRemoteIPAddress]' 'UDP remote IP address'
+  spec 'r' '[net:udpRemotePort]' 'UDP remote port'
+
+module WiFi Comm
+author MicroBlocks
+version 1 10 
+tags communication network 
+description 'Connect to a WiFi network. Used in conjunction with other network libraries, such as HTTP client, HTTP server or Web Thing.
+'
+
+  spec ' ' 'wifiConnect' 'wifi connect to _ password _ : IP _ gateway _ subnet _' 'str str auto auto auto' 'Network_Name' '' '192.168.1.42' '192.168.1.1' '255.255.255.0'
+  spec ' ' 'wifiCreateHotspot' 'wifi create hotspot _ password _' 'str str' 'Network_Name' 'Network_Password'
+  spec ' ' '[net:stopWiFi]' 'stop wifi'
+  space
+  spec ' ' '[net:setDomainName]' 'wifi set local domain name _ .local' 'str' 'microblocks'
+  space
+  spec 'r' 'getIPAddress' 'IP address'
+  spec 'r' '[net:myMAC]' 'MAC address'
+  space
+  spec ' ' '[net:allowWiFiAndBLE]' 'allow WiFi while using BLE _' 'bool' true
+
+to getIPAddress {
+  return ('[net:myIPAddress]')
+}
+
+to wifiConnect ssid password fixedIP gatewayIP subnetIP {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:stopWiFi]'
+  if ((pushArgCount) < 5) {
+    '[net:startWiFi]' ssid password
+  } else {
+    '[net:startWiFi]' ssid password false fixedIP gatewayIP subnetIP
+  }
+  local 'startMSecs' (millisOp)
+  repeatUntil (('[net:myIPAddress]') != '0.0.0.0') {
+    comment 'Timeout after N seconds'
+    if (((millisOp) - startMSecs) > 30000) {
+      sayIt 'Could not connect'
+      return 0
+    }
+    comment 'Slow blink while trying to connect'
+    setUserLED true
+    waitMillis 300
+    setUserLED false
+    waitMillis 300
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  '[net:setDomainName]' 'microblocks'
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+to wifiCreateHotspot ssid password {
+  if (not ('[net:hasWiFi]')) {return}
+  if ((size password) < 8) {
+    sayIt 'Password must be at least 8 characters'
+    return 0
+  }
+  '[net:startWiFi]' ssid password true
+  if ('Connected' != ('[net:wifiStatus]')) {
+    sayIt 'Could not create hotspot'
+    return 0
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  '[net:setDomainName]' 'microblocks'
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
