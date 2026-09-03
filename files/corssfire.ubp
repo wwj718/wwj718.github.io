@@ -2,25 +2,34 @@ module main
 author unknown
 version 1 0 
 description ''
-variables message handle_message 
+variables message handle_message cmd_name 
 
-script 50 40 {
+  spec ' ' 'rotate' 'rotate _' 'auto' '10'
+  spec ' ' 'run_away' 'run'
+
+to rotate value {
+  if (value >= 0) {
+    'CoCube set wheel' ('[misc:rescale]' value 0 90 30 80) 30
+  } else {
+    'CoCube set wheel' 30 ('[misc:rescale]' value 0 -90 30 80)
+  }
+}
+
+to run_away {
+}
+
+script 48 40 {
 whenStarted
 wifiConnect 'yidan' 'yidan88888888'
+comment '等待连接 wifi'
 waitUntil ((getIPAddress) != '0.0.0.0')
 '[net:udpStart]' 5000
 sendBroadcast 'go!'
 }
 
-script 406 164 {
-whenButtonPressed 'B'
-comment '是否接收消息'
-handle_message = (not handle_message)
-'CoCube wheels stop'
-}
-
-script 49 239 {
+script 42 286 {
 whenBroadcastReceived 'go!'
+comment 'handle_message 决定是否接收消息'
 handle_message = (booleanConstant true)
 forever {
   waitUntil handle_message
@@ -29,14 +38,27 @@ forever {
     sayIt message
     '[tft:clear]'
     '[tft:text]' message 5 5 (colorSwatch 255 17 81 255) 5 true
-    local 'int_message' ('[data:convertType]' message 'number')
-    if (int_message >= 0) {
-      'CoCube set wheel' ('[misc:rescale]' int_message 0 90 30 80) 30
-    } else {
-      'CoCube set wheel' int_message ('[misc:rescale]' 3 0 -90 30 80)
+    comment '消息结构 cmd_name, args 
+eg: rotate, 10'
+    cmd_name = (at 1 ('[data:split]' message ','))
+    if (cmd_name == 'rotate') {
+      rotate ('[data:convertType]' (at 2 ('[data:split]' message ',')) 'number')
+    }
+    if (cmd_name == 'run') {
+      'CoCube move for msecs' 'cocube;forward' 40 1000
     }
   }
 }
+}
+
+script 450 455 {
+whenButtonPressed 'B'
+handle_message = (not handle_message)
+'CoCube wheels stop'
+}
+
+script 48 1091 {
+to rotate {}
 }
 
 
