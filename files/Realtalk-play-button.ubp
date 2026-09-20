@@ -4,13 +4,13 @@ version 1 0
 description ''
 variables button_state 
 
-script 136 46 {
+script 144 40 {
 comment 'Readme
 
 firmware url: https://wwj718.github.io/files/m5atom-lite-411.bin'
 }
 
-script 40 124 {
+script 48 118 {
 whenStarted
 button_state = (booleanConstant false)
 neoPixelAttach 1 26
@@ -19,11 +19,18 @@ waitUntil ((getIPAddress) != '0.0.0.0')
 'connect to' '192.168.1.193'
 }
 
-script 568 268 {
-disconnect
+script 505 163 {
+whenButtonPressed 'A'
+if ((getIPAddress) != '0.0.0.0') {
+  if (connected?) {
+    disconnect
+  } else {
+    'connect to' '192.168.1.193'
+  }
+}
 }
 
-script 41 363 {
+script 49 356 {
 whenCondition (not (digitalReadOp 32))
 button_state = (not button_state)
 sayIt button_state
@@ -437,6 +444,7 @@ to 'connect to' host {
   if (connected?) {
     '_go to area'
     '_Claim2 (you) is a "MicroBlocks agent".'
+    setUserLED true
   } else {
     sayIt 'Could not connect to' host
   }
@@ -448,6 +456,7 @@ to connected? {
 
 to disconnect {
   '[net:tcpClose]'
+  setUserLED false
 }
 
 to 'forget has value' sensor {
