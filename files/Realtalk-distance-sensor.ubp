@@ -1,0 +1,578 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables button_state host 
+
+script 159 40 {
+comment 'Readme
+
+firmware url: https://wwj718.github.io/files/m5stick-plus-411.bin'
+}
+
+script 63 118 {
+whenStarted
+host = '192.168.1.193'
+wifiConnect 'yidan' ''
+neoPixelAttach 1 26
+waitUntil ((getIPAddress) != '0.0.0.0')
+'connect to' host
+sendBroadcast 'go!'
+}
+
+script 520 163 {
+whenButtonPressed 'A'
+if ((getIPAddress) != '0.0.0.0') {
+  if (connected?) {
+    disconnect
+  } else {
+    'connect to' host
+  }
+}
+}
+
+script 52 384 {
+whenBroadcastReceived 'go!'
+'[tft:clear]'
+forever {
+  if ('VL53L0X connected') {
+    local 'distance' ('VL53L0X distance (mm)')
+    Remember 'distance sensor' distance
+    '[tft:clear]'
+    '[tft:text]' distance 5 5 (colorSwatch 255 17 81 255) 3 true
+  } else {
+    'forget has value' 'distance sensor'
+  }
+  waitMillis 100
+}
+}
+
+
+module 'Distance (VL53L0X)' Input
+author 'José García Yeste'
+version 1 2 
+tags sensor distance 
+description 'Support for VL53L0X distance sensor.
+TOF laser based.
+Range 3-200mm.
+
+Tested on:
+https://shop.m5stack.com/products/tof-sensor-unit (take Kapton tape on sensor!)
+'
+
+  spec 'r' 'VL53L0X connected' 'VL53L0X connected'
+  spec 'r' 'VL53L0X distance (mm)' 'VL53L0X distance (mm)'
+
+to 'VL53L0X connected' {
+  return ((i2cGet 41 (hexToInt 'C0')) == (hexToInt 'EE'))
+}
+
+to 'VL53L0X distance (mm)' {
+  i2cSet 41 0 1
+  waitMillis 70
+  if (((i2cGet 41 (hexToInt '14')) & 1) == 1) {
+    '[sensors:i2cWrite]' 41 ('[data:makeList]' (hexToInt '14'))
+    local 'buf' (newList 12)
+    '[sensors:i2cRead]' 41 buf
+    if ((at 1 buf) == 95) {
+      return (((at 11 buf) << 8) | (at 12 buf))
+    } else {
+      return -1
+    }
+  } else {
+    return -2
+  }
+}
+
+
+module 'JSON Encode' Data
+author MicroBlocks
+version 1 0 
+description 'Convert a MicroBlocks list into a JSON string.
+Lists are encoded as JSON arrays; lists whose items are all
+two-item [key, value] lists are encoded as JSON objects.
+Numbers, strings, booleans, and nested lists are supported.
+'
+
+  spec 'r' 'list to JSON' 'list _ to JSON' 'auto' 'aList'
+  space
+  spec 'r' '_JSON encode value' '_JSON encode value _' 'auto' 0
+  spec 'r' '_JSON encode list' '_JSON encode list _' 'auto' 'aList'
+  spec 'r' '_JSON isEntryList' '_JSON isEntryList _' 'auto' 'aList'
+  spec 'r' '_JSON encode string' '_JSON encode string _' 'str' 'abc'
+  spec 'r' '_JSON twoDigitHex' '_JSON twoDigitHex _' 'num' 5
+  spec 'r' '_JSON backslash' '_JSON backslash'
+
+to '_JSON backslash' {
+  comment 'Return a one-character string containing a single backslash.
+Built from its Unicode code point (92) to avoid escaping ambiguity
+in this .ubl source file.'
+  return ('[data:unicodeString]' 92)
+}
+
+to '_JSON encode list' aList {
+  comment 'Encode a list as either a JSON object (if every item is a
+[key, value] pair) or a JSON array (otherwise).'
+  if ('_JSON isEntryList' aList) {
+    local 'parts' ('[data:makeList]')
+    for entry aList {
+      '[data:addLast]' ('[data:join]' ('_JSON encode string' ('[data:toString]' (at 1 entry))) ':' ('_JSON encode value' (at 2 entry))) parts
+    }
+    return ('[data:join]' '{' ('[data:joinStrings]' parts ',') '}')
+  } else {
+    local 'parts' ('[data:makeList]')
+    for item aList {
+      '[data:addLast]' ('_JSON encode value' item) parts
+    }
+    return ('[data:join]' '[' ('[data:joinStrings]' parts ',') ']')
+  }
+}
+
+to '_JSON encode string' s {
+  comment 'Return s as a double-quoted JSON string with the
+required characters escaped.'
+  local 'bs' ('_JSON backslash')
+  local 'result' ('[data:makeList]')
+  '[data:addLast]' '"' result
+  for i (size s) {
+    local 'ch' (at i s)
+    local 'code' ('[data:unicodeAt]' 1 ch)
+    if (ch == '"') {
+      '[data:addLast]' ('[data:join]' bs '"') result
+    } (ch == bs) {
+      '[data:addLast]' ('[data:join]' bs bs) result
+    } (code == 10) {
+      '[data:addLast]' ('[data:join]' bs 'n') result
+    } (code == 13) {
+      '[data:addLast]' ('[data:join]' bs 'r') result
+    } (code == 9) {
+      '[data:addLast]' ('[data:join]' bs 't') result
+    } (code < 32) {
+      comment 'Other control characters: encode as \u00XX'
+      '[data:addLast]' ('[data:join]' bs 'u00' ('_JSON twoDigitHex' code)) result
+    } else {
+      '[data:addLast]' ch result
+    }
+  }
+  '[data:addLast]' '"' result
+  return ('[data:joinStrings]' result '')
+}
+
+to '_JSON encode value' val {
+  comment 'Encode a single MicroBlocks value (number, string, boolean,
+or list) as a JSON value string.'
+  if (isType val 'list') {
+    return ('_JSON encode list' val)
+  } (isType val 'boolean') {
+    return (ifExpression val 'true' 'false')
+  } (isType val 'number') {
+    return ('[data:toString]' val)
+  } (isType val 'byte array') {
+    return ('_JSON encode list' ('[data:convertType]' val 'list'))
+  } else {
+    return ('_JSON encode string' ('[data:toString]' val))
+  }
+}
+
+to '_JSON isEntryList' aList {
+  comment 'Return true if aList is non-empty and every item is a
+two-item list [key, value], so it can be encoded as a JSON object.'
+  if ((size aList) == 0) {
+    return false
+  }
+  for item aList {
+    if (not (isType item 'list')) {return false}
+    if ((size item) != 2) {return false}
+  }
+  return true
+}
+
+to '_JSON twoDigitHex' n {
+  comment 'Return the two-digit hexadecimal representation of n (0-255).'
+  local 'digits' '0123456789ABCDEF'
+  return ('[data:join]' (at ((n / 16) + 1) digits) (at ((n % 16) + 1) digits))
+}
+
+to 'list to JSON' aList {
+  comment 'Convert a MicroBlocks list into a JSON string.
+A list of [key, value] pairs becomes a JSON object;
+any other list becomes a JSON array.'
+  if (not (isType aList 'list')) {
+    return ('_JSON encode value' aList)
+  }
+  return ('_JSON encode list' aList)
+}
+
+
+module 'Realtalk client'
+author '作者 作者 作者 种瓜'
+version 1 0 
+depends 'TCP client' 
+description 'Realtalk client
+'
+variables _Realtalk_message 
+
+  spec ' ' 'connect to' 'connect to _' 'str' '192.168.1.193'
+  spec 'r' 'connected?' 'connected?'
+  spec ' ' 'disconnect' 'disconnect'
+  spec ' ' 'Remember' 'Remember [transiently] _ has value _ .' 'str num' 'button1' -1
+  spec ' ' 'forget has value' 'Forget _ has value /anything/.' 'str' 'button1'
+  spec ' ' '_go to area' '_go to area'
+  spec ' ' '_send' '_rt_send _' 'auto' 'hi'
+  spec 'r' '_rt_you' '_rt_you'
+  spec 'r' '_rt_machine_name' '_rt_machine_name'
+  spec 'r' '_rt_your_area' '_rt_your_area'
+  spec ' ' '_Claim2 (you) is a "MicroBlocks agent".' '_Claim (you) is a "MicroBlocks agent".'
+  spec ' ' '_Claim has value' '_Claim _ has value _ .' 'str bool' 'button1' true
+  spec ' ' '_remove statement' '_remove statement'
+
+to Remember sensor value {
+  _Realtalk_message = ('list to JSON' ('[data:makeList]' ('[data:makeList]' 'what' 'remember') ('[data:makeList]' 'expressions' ('[data:makeList]' sensor value)) ('[data:makeList]' 'text' 'Remember [transiently] (key _rt_expr[1]) has value (_rt_expr[2]).')))
+  '_send' _Realtalk_message
+}
+
+to '_Claim has value' sensor value {
+  _Realtalk_message = ('list to JSON' ('[data:makeList]' ('[data:makeList]' 'what' 'add statement') ('[data:makeList]' 'statement_id' ('[data:toString]' '1')) ('[data:makeList]' 'expressions' ('[data:makeList]' sensor value)) ('[data:makeList]' 'text' 'Claim (_rt_expr[1]) has value (_rt_expr[2]).')))
+  '_send' _Realtalk_message
+}
+
+to '_Claim2 (you) is a "MicroBlocks agent".' {
+  _Realtalk_message = '{"what":"add statement", "statement_id": "0", "expressions":[],"text":"Claim (you) is a \"MicroBlocks agent\"." }'
+  '_send' _Realtalk_message
+}
+
+to '_go to area' {
+  _Realtalk_message = ('list to JSON' ('[data:makeList]' ('[data:makeList]' 'what' 'go to area') ('[data:makeList]' 'guest' ('_rt_you')) ('[data:makeList]' 'area' ('_rt_your_area'))))
+  '_send' _Realtalk_message
+}
+
+to '_remove statement' {
+  comment 'remove claim'
+  _Realtalk_message = '{"what":"remove statement", "statement_id": "1"}'
+  '_send' _Realtalk_message
+}
+
+to '_rt_machine_name' {
+  return 'cydf6'
+}
+
+to '_rt_you' {
+  return ('[data:join]' '*MicroBlocks agent ' ('[misc:bleID]') '*')
+}
+
+to '_rt_your_area' {
+  return ('[data:join]' '<Area main@' ('_rt_machine_name') '.dynamic.land>')
+}
+
+to '_send' msg {
+  if (connected?) {
+    tcpWriteLine ('[data:join]' '[' msg ']')
+  } else {
+    sayIt 'Not connected'
+  }
+}
+
+to 'connect to' host {
+  if (connected?) {
+    sayIt 'Connected!'
+  } else {
+    connectToTCP host 8023
+  }
+  if (connected?) {
+    '_go to area'
+    '_Claim2 (you) is a "MicroBlocks agent".'
+    setUserLED true
+  } else {
+    sayIt 'Could not connect to' host
+  }
+}
+
+to connected? {
+  return ('[net:tcpIsConnected]')
+}
+
+to disconnect {
+  '[net:tcpClose]'
+  setUserLED false
+}
+
+to 'forget has value' sensor {
+  _Realtalk_message = ('list to JSON' ('[data:makeList]' ('[data:makeList]' 'what' 'remember') ('[data:makeList]' 'expressions' ('[data:makeList]' sensor)) ('[data:makeList]' 'text' 'Forget (_rt_expr[1]) has value /anything/.')))
+  '_send' _Realtalk_message
+}
+
+
+module 'TCP client' Comm
+author MicroBlocks
+version 1 0 
+depends WiFi 
+tags tcp socket network client 
+description 'Open a raw TCP socket connection to a server and send/receive bytes or text. Unlike the HTTP Client library, no HTTP framing (request lines, headers) is added -- this is for talking to arbitrary TCP servers using your own protocol.
+'
+
+  spec ' ' 'connectToTCP' 'connect to TCP host _ : port _' 'str num' 'microblocks.fun' 80
+  spec 'r' '[net:tcpIsConnected]' 'is TCP connected?'
+  spec ' ' '[net:tcpClose]' 'TCP close'
+  space
+  spec ' ' '[net:tcpWrite]' 'TCP write _' 'auto' 'Hello!'
+  spec ' ' 'tcpWriteLine' 'TCP write line _' 'str' 'Hello!'
+  spec 'r' '[net:tcpRead]' 'TCP read : binary data _' 'bool' false
+  spec 'r' 'tcp read all' 'TCP read all : binary data _' 'bool' false
+
+to connectToTCP host optionalPort {
+  comment 'Connect to a TCP server. Returns true if the connection succeeded, false
+  otherwise. If the connection fails, shows an error bubble like the WiFi blocks do.'
+  local 'port' (argOrDefault 2 80)
+  if (not ('[net:hasWiFi]')) {
+    sayIt 'This board does not support WiFi'
+    return (booleanConstant false)
+  }
+  if ('Connected' != ('[net:wifiStatus]')) {
+    sayIt 'Not connected to WiFi'
+    return (booleanConstant false)
+  }
+  '[net:tcpConnect]' host port
+  if (not ('[net:tcpIsConnected]')) {
+    sayIt 'Could not connect to' host ':' port
+    return (booleanConstant false)
+  }
+  return (booleanConstant true)
+}
+
+to 'tcp read all' optionalBinary {
+  comment 'Read all data currently available from the TCP connection, waiting up to
+  half a second after the last received chunk for more data to arrive.'
+  local 'useBinary' (argOrDefault 1 (booleanConstant false))
+  local 'result' (ifExpression useBinary ('[data:asByteArray]' '') '')
+  local 'lastChunkTime' (millisOp)
+  repeatUntil (((millisOp) - lastChunkTime) > 500) {
+    local 'chunk' ('[net:tcpRead]' useBinary)
+    if ((size chunk) > 0) {
+      result = ('[data:join]' result chunk)
+      lastChunkTime = (millisOp)
+    }
+    if (not ('[net:tcpIsConnected]')) {
+      return result
+    }
+    waitMillis 20
+  }
+  return result
+}
+
+to tcpWriteLine text {
+  comment 'Write text to the TCP connection followed by a newline character (ASCII 10).
+  Useful for line-oriented text protocols, since typing \n inside a MicroBlocks
+  string is just the two characters backslash-n, not an actual newline byte.'
+  '[net:tcpWrite]' ('[data:join]' text ('[data:unicodeString]' 10))
+}
+
+
+module TFT Output
+author MicroBlocks
+version 1 19 
+description 'Draw graphics and write text on boards with a TFT display, such as the M5Stack, M5Stick, Citilab ED1 or (discontinued) IoT-Bus.'
+
+  spec ' ' '[tft:clear]' 'clear TFT display'
+  space
+  spec ' ' '[tft:rect]' 'draw rectangle on TFT at x _ y _ width _ height _ color _ : filled _' 'num num num num color bool' 10 10 40 30 nil true
+  spec ' ' '[tft:roundedRect]' 'draw rounded rectangle on TFT at x _ y _ width _ height _ radius _ color _ : filled _' 'num num num num num color bool' 10 10 40 30 8 nil true
+  spec ' ' '[tft:circle]' 'draw circle on TFT at x _ y _ radius _ color _ : filled _' 'num num num color bool' 40 40 30 nil true
+  spec ' ' '[tft:triangle]' 'draw triangle on TFT at x _ y _ , x _ y _ , x _ y _ color _ : filled _' 'num num num num num num color bool' 20 20 30 80 60 5 nil true
+  spec ' ' '[tft:line]' 'draw line on TFT from x _ y _ to x _ y _ color _' 'num num num num color' 12 8 25 15
+  spec ' ' 'tft_drawVector' 'draw vector x _ y _ angle _ length _ color _' 'num num num num color' 40 40 45 40
+  space
+  spec ' ' '[tft:text]' 'write _ on TFT at x _ y _ color _ : scale _ wrap _ : bg color _' 'str num num color num bool color' 'Hello World!' 5 5 nil 2 true
+  spec ' ' 'tft_drawText' 'draw text _ on TFT at x _ y _ color _ : scale _ : bg color _' 'str num num color num color' 'Line 1
+Line 2' 50 20 nil 2
+  space
+  spec ' ' '[tft:setPixel]' 'set TFT pixel x _ y _ to _' 'num num color' 10 10
+  spec ' ' '[tft:pixelRow]' 'draw pixel row _ x _ y _ : bytes per pixel _ : palette _' 'auto num num num str' 'aList' 0 0 4
+  spec ' ' '[tft:drawBitmap]' 'draw bitmap _ palette _ on TFT at x _ y _' 'str str num num' 'aBitmap' 'a list of colors' 10 10
+  space
+  spec 'r' 'tft_colorSwatch' '_' 'color'
+  spec 'r' 'makeColor' 'color r _ g _ b _ (0-255)' 'num num num' 0 100 100
+  spec 'r' 'makeGray' 'gray _ %' 'num' 50
+  spec 'r' 'randomColor' 'random color'
+  space
+  spec ' ' 'tft_drawImage' 'draw image _ on TFT at x _ y _ color _ : #BR# scale _' 'str num num color num' '' 0 0 nil 1
+  spec 'r' 'tft_image' 'image _' 'str' '00000
+01010
+00000
+10001
+01110'
+  space
+  spec 'r' '[tft:getWidth]' 'TFT width'
+  spec 'r' '[tft:getHeight]' 'TFT height'
+  space
+  spec ' ' '[tft:setBacklight]' 'set TFT backlight _ (0-10)' 'num' 10
+  spec ' ' '[tft:invertDisplay]' 'invert TFT display _' 'bool' false
+  advanced
+  spec ' ' 'tft_deferOLEDDisplayUpdates' 'defer OLED display updates'
+  spec ' ' 'tft_resumeOLEDDisplayUpdates' 'resume OLED display updates'
+  space
+  spec ' ' '_deferMonochromeDisplayUpdates' '_defer monochrome display updates'
+  spec ' ' '_resumeMonochromeDisplayUpdates' '_resume monochrome display updates'
+
+to '_deferMonochromeDisplayUpdates' {
+  '[tft:deferUpdates]'
+}
+
+to '_resumeMonochromeDisplayUpdates' {
+  '[tft:resumeUpdates]'
+}
+
+to makeColor r g b {
+  r = (maximum 0 (minimum r 255))
+  g = (maximum 0 (minimum g 255))
+  b = (maximum 0 (minimum b 255))
+  return ((r << 16) | ((g << 8) | b))
+}
+
+to makeGray percent {
+  gray = ((percent * 255) / 100)
+  gray = (maximum 0 (minimum gray 255))
+  return ((gray << 16) | ((gray << 8) | gray))
+}
+
+to randomColor {
+  local 'n1' (random 100 200)
+  local 'n2' (random 0 100)
+  if (1 == (random 1 3)) {
+    return ((n1 << 16) | (n2 << 8))
+  } (1 == (random 1 2)) {
+    return ((n2 << 16) | n1)
+  } else {
+    return ((n1 << 8) | n2)
+  }
+}
+
+to tft_colorSwatch color {
+  return color
+}
+
+to tft_deferOLEDDisplayUpdates {
+  '[tft:deferUpdates]'
+}
+
+to tft_drawImage imageString x y c optionalScale {
+  comment 'Draw an image at the given position. An image is represented by a multi-line string
+of 0 and 1 characters where each line is one row of the image. 1 means that pixel on (lit).'
+  local 'scale' (argOrDefault 5 1)
+  local 'left' x
+  for ch ('[data:convertType]' imageString 'byte array') {
+    if (ch == 10) {
+      y += scale
+      x = left
+    } else {
+      if (ch == 49) {'[tft:rect]' x y scale scale c}
+      x += scale
+    }
+  }
+}
+
+to tft_drawText s x y color optionalScale optionalBGColor {
+  s = ('[data:convertType]' s 'string')
+  local 'scale' (argOrDefault 5 2)
+  local 'bgColor' (argOrDefault 6 '')
+  local 'lines' ('[data:split]' s ('[data:unicodeString]' 10))
+  for line ('[data:split]' s ('[data:unicodeString]' 10)) {
+    if (isType bgColor 'number') {
+      '[tft:text]' line x y color scale false bgColor
+    } else {
+      '[tft:text]' line x y color scale false
+    }
+    y += (8 * scale)
+  }
+}
+
+to tft_drawVector x y angle length color {
+  local 'endX' (x + ((length * ('[misc:sin]' (100 * (angle + 90)))) >> 14))
+  local 'endY' (y + ((length * ('[misc:sin]' (100 * angle))) >> 14))
+  '[tft:line]' x y endX endY color
+}
+
+to tft_image s {
+  return ('[data:convertType]' s 'string')
+}
+
+to tft_resumeOLEDDisplayUpdates {
+  '[tft:resumeUpdates]'
+}
+
+
+module WiFi Comm
+author MicroBlocks
+version 1 10 
+tags communication network 
+description 'Connect to a WiFi network. Used in conjunction with other network libraries, such as HTTP client, HTTP server or Web Thing.
+'
+
+  spec ' ' 'wifiConnect' 'wifi connect to _ password _ : IP _ gateway _ subnet _' 'str str auto auto auto' 'Network_Name' '' '192.168.1.42' '192.168.1.1' '255.255.255.0'
+  spec ' ' 'wifiCreateHotspot' 'wifi create hotspot _ password _' 'str str' 'Network_Name' 'Network_Password'
+  spec ' ' '[net:stopWiFi]' 'stop wifi'
+  space
+  spec ' ' '[net:setDomainName]' 'wifi set local domain name _ .local' 'str' 'microblocks'
+  space
+  spec 'r' 'getIPAddress' 'IP address'
+  spec 'r' '[net:myMAC]' 'MAC address'
+  space
+  spec ' ' '[net:allowWiFiAndBLE]' 'allow WiFi while using BLE _' 'bool' true
+
+to getIPAddress {
+  return ('[net:myIPAddress]')
+}
+
+to wifiConnect ssid password fixedIP gatewayIP subnetIP {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:stopWiFi]'
+  if ((pushArgCount) < 5) {
+    '[net:startWiFi]' ssid password
+  } else {
+    '[net:startWiFi]' ssid password false fixedIP gatewayIP subnetIP
+  }
+  local 'startMSecs' (millisOp)
+  repeatUntil (('[net:myIPAddress]') != '0.0.0.0') {
+    comment 'Timeout after N seconds'
+    if (((millisOp) - startMSecs) > 30000) {
+      sayIt 'Could not connect'
+      return 0
+    }
+    comment 'Slow blink while trying to connect'
+    setUserLED true
+    waitMillis 300
+    setUserLED false
+    waitMillis 300
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  '[net:setDomainName]' 'microblocks'
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+to wifiCreateHotspot ssid password {
+  if (not ('[net:hasWiFi]')) {return}
+  if ((size password) < 8) {
+    sayIt 'Password must be at least 8 characters'
+    return 0
+  }
+  '[net:startWiFi]' ssid password true
+  if ('Connected' != ('[net:wifiStatus]')) {
+    sayIt 'Could not create hotspot'
+    return 0
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  '[net:setDomainName]' 'microblocks'
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
