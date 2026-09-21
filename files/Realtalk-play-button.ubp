@@ -2,7 +2,7 @@ module main
 author unknown
 version 1 0 
 description ''
-variables button_state 
+variables button_state host 
 
 script 144 40 {
 comment 'Readme
@@ -12,11 +12,12 @@ firmware url: https://wwj718.github.io/files/m5atom-lite-411.bin'
 
 script 48 118 {
 whenStarted
+host = '192.168.1.193'
+wifiConnect 'yidan' ''
 button_state = (booleanConstant false)
 neoPixelAttach 1 26
-wifiConnect 'yidan' ''
 waitUntil ((getIPAddress) != '0.0.0.0')
-'connect to' '192.168.1.193'
+'connect to' host
 }
 
 script 505 163 {
@@ -25,12 +26,12 @@ if ((getIPAddress) != '0.0.0.0') {
   if (connected?) {
     disconnect
   } else {
-    'connect to' '192.168.1.193'
+    'connect to' host
   }
 }
 }
 
-script 49 356 {
+script 45 397 {
 whenCondition (not (digitalReadOp 32))
 button_state = (not button_state)
 sayIt button_state
