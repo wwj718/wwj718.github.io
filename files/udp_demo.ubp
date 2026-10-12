@@ -4,12 +4,22 @@ version 1 0
 description ''
 variables message 
 
+  spec ' ' 'send' 'send _ to _' 'auto auto' 'distance, 10' '192.168.1.193'
+
+to send message ip {
+  if ((getIPAddress) != '0.0.0.0') {'[net:udpSendPacket]' ('[data:join]' message ('[data:unicodeString]' 10)) ip 5000}
+}
+
 script 50 40 {
 whenStarted
 wifiConnect 'yidan' ''
 waitUntil ((getIPAddress) != '0.0.0.0')
 '[net:udpStart]' 5000
 sendBroadcast 'go!'
+}
+
+script 461 168 {
+send 'distance, 10' '192.168.1.193'
 }
 
 script 49 239 {
