@@ -1,0 +1,149 @@
+module main
+author unknown
+version 1 0 
+description ''
+
+script 52 40 {
+whenStarted
+'[net:ESPNowSetGroup]' 101
+}
+
+script 54 127 {
+whenCondition (not (digitalReadOp 41))
+'press key' 10
+waitMillis 500
+}
+
+script 526 235 {
+'press key' 'v' 'kbd;Control'
+}
+
+script 49 287 {
+whenCondition (espNow_receive_pair)
+sayIt (espNow_last_string) (espNow_last_number)
+if ((espNow_last_string) == 'press') {
+  'press key' (espNow_last_number)
+}
+if ((espNow_last_string) == 'hold') {
+  '[hid:holdKey]' (espNow_last_number)
+}
+if ((espNow_last_string) == 'release') {
+  '[hid:releaseKey]' (espNow_last_number)
+}
+if ((espNow_last_string) == 'releaseall') {
+  '[hid:releaseKeys]'
+}
+}
+
+script 530 305 {
+'[hid:holdKey]' 128
+'press key' 'v'
+}
+
+
+module 'ESP Now' Comm
+author MicroBlocks
+version 1 3 
+description 'Support for ESP Now peer-to-peer messaging for ESP boards.
+Unencrypted messages are broadcast to all peers within range, so pairing is not necessary and there is no limit to the number of peers.
+
+Delivery is unreliable; messages may be lost, especially when there is a lot of other WiFi and Bluetooth traffic in the 2.4 GHz band. The best channel is one without much traffic.
+
+The "pair" blocks provide functionality similar to the various Radio Libraries with data transported via ESP Now messages.
+
+When using WiFi and ESP Now at the same time, the ESP32 forces ESP Now to use the same channel as WiFi. The ESP8266 allows ESP Now and WiFi to use different channels.
+'
+variables _espNow_lastNumber _espNow_lastString 
+
+  spec ' ' 'espNow_send_pair' 'espNow send pair _ = _' 'str num' 'light' 10
+  spec 'r' 'espNow_receive_pair' 'espNow pair received?'
+  spec 'r' 'espNow_last_number' 'espNow last number'
+  spec 'r' 'espNow_last_string' 'espNow last string'
+  space
+  spec ' ' '[net:ESPNowSetGroup]' 'espNow set group _ (0-255)' 'num' 0
+  spec 'r' '[net:ESPNowGroup]' 'espNow group'
+  space
+  advanced
+  spec ' ' 'espNow_send' 'espNow send raw _' 'str' 'Hello, ESP Now!'
+  spec 'r' '[net:ESPNowReceive]' 'espNow receive raw'
+  space
+  spec ' ' '[net:ESPNowSetChannel]' 'espNow set channel _' 'menu.range:1-13' 1
+  spec 'r' '[net:ESPNowChannel]' 'espNow channel'
+
+to espNow_last_number {
+  return _espNow_lastNumber
+}
+
+to espNow_last_string {
+  return _espNow_lastString
+}
+
+to espNow_receive_pair {
+  comment 'Format of ESP Now "pair" messages:
+	tag: ''NOW'' (3 bytes)
+	separator: |
+	number n as String (variable length)
+	separator: |
+	string data s (variable length)
+Messages that are not in this format are discarded.'
+  local 'msg' ('[net:ESPNowReceive]')
+  if (or ((size msg) < 5) ('NOW' != ('[data:copyFromTo]' msg 1 3))) {
+    return (booleanConstant false)
+  }
+  local 'parts' ('[data:split]' msg '|')
+  if ((size parts) != 3) {
+    return (booleanConstant false)
+  }
+  _espNow_lastNumber = ('[data:convertType]' (at 2 parts) 'number')
+  _espNow_lastString = (at 3 parts)
+  return (booleanConstant true)
+}
+
+to espNow_send msg {
+  comment 'Send an uninterpreted string via ESP Now. Allows users to define their own protocols.'
+  '[net:ESPNowSend]' ('[data:convertType]' msg 'string')
+}
+
+to espNow_send_pair s n {
+  espNow_send ('[data:join]' 'NOW' '|' ('[data:toString]' n) '|' s)
+}
+
+
+module 'Keyboard and Mouse' Comm
+author MicroBlocks
+version 1 8 
+choices keyModifiers 'kbd;Shift' 'kbd;Control' 'kbd;Alt / ⌥' 'kbd;Logo / ⌘' 'kbd;AltGr' 
+choices mouseButtons 'mouse;left' 'mouse;right' 'mouse;middle' 'mouse;both' 
+choices specialKeys 'kbd;enter:10' 'kbd;tab:9' 'kbd;backspace:8' 'kbd;ESC:177' 'kbd;insert:209' 'kbd;delete:212' 'kbd;home:210' 'kbd;end:213' 'kbd;PgUp:211' 'kbd;PgDown:214' '→:215' '←:216' '↓:217' '↑:218' 'F1:194' 'F2:195' 'F3:196' 'F4:197' 'F5:198' 'F6:199' 'F7:200' 'F8:201' 'F9:202' 'F10:203' 'F11:204' 'F12:205' 'kbd;PrintScreen:206' 
+description 'This library can send mouse and keyboard events to a computer over USB (i.e. it emulates a USB HID device) on boards with the necessary hardware. It currently works on RP2040 and SAMD21 boards such as the Adafruit Circuit Playground Express, Trinket M0, and Metro M0 Express. It also works on the MakerPort.
+
+It is based on the Arduino Mouse and Keyboard libraries. The list of special, non-ascii keys and modifiers is here:
+
+https://www.arduino.cc/reference/en/language/functions/usb/keyboard/keyboardmodifiers/
+'
+
+  spec ' ' 'press key' 'press key _ : while holding _' 'auto.specialKeys menu.keyModifiers' 'n' 'kbd;Shift'
+  spec ' ' '[hid:holdKey]' 'hold key _' 'auto.specialKeys' 'A'
+  spec ' ' '[hid:releaseKey]' 'release key _' 'auto.specialKeys' 'A'
+  spec ' ' '[hid:releaseKeys]' 'release all keys'
+  space
+  spec ' ' 'mouse click' '_ mouse click' 'menu.mouseButtons' 'mouse;left'
+  spec ' ' '[hid:mouseMove]' 'move mouse pointer by _ , _' 'num num' 10 -20
+  spec ' ' '[hid:mouseScroll]' 'scroll mouse by _' 'num' -5
+  spec ' ' 'mouse hold' 'hold _ mouse button' 'menu.mouseButtons' 'mouse;left'
+  spec ' ' '[hid:mouseRelease]' 'release mouse buttons'
+
+to 'mouse click' which {
+  '[hid:mousePress]' ('[data:find]' which ('[data:makeList]' 'mouse;left' 'mouse;right' 'mouse;both' 'mouse;middle'))
+  waitMillis 50
+  '[hid:mouseRelease]'
+}
+
+to 'mouse hold' which {
+  '[hid:mousePress]' ('[data:find]' which ('[data:makeList]' 'mouse;left' 'mouse;right' 'mouse;both' 'mouse;middle'))
+}
+
+to 'press key' key modifier {
+  '[hid:pressKey]' key ('[data:find]' modifier ('[data:makeList]' 'kbd;Shift' 'kbd;Control' 'kbd;Alt / ⌥' 'kbd;Logo / ⌘' 'kbd;AltGr'))
+}
+

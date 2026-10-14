@@ -1,0 +1,348 @@
+module main
+author MicroBlocks
+version 1 0 
+description 'StickS3 hold-to-record UDP microphone. Edit the WiFi name, password and computer IPv4 address in the startup script. Run udp_microphone_server.py on the computer first. Hold A to record, release A to save WAV, B to stop. Includes I2S Sound 1.2.'
+
+script 40 40 {
+whenStarted
+micUDP_start 'yidan' 'yidan88888888' '192.168.1.193'
+}
+
+
+module 'I2S Sound'
+author MicroBlocks
+version 1 2 
+choices i2s_channel left right both 
+description 'I2S audio input and output. StickS3 built-in audio: 22050 Hz, BCLK 17, LRCK 15, PDM false. Playback: input -1, output 14. Recording: input 16, output -1. Full duplex is not yet supported on StickS3.'
+variables _i2sFrequencies _i2sSampleRate _i2sHalfPeriod 
+
+  spec ' ' 'i2s_start' 'start i2s sample rate _ #BR# bit clock pin _ word clock pin _ #BR# data in pin _ data out pin _ : #BR# use PDM _ : buffer size _ samples' 'num num num num num bool num' 16000 1 2 -1 -1 false 512
+  spec ' ' 'i2s_stop' 'stop i2s'
+  space
+  spec 'r' 'i2s_readSamples' 'i2s read _ samples from channel _' 'num menu.i2s_channel' 256 'both'
+  spec ' ' 'i2s_writeSamples' 'i2s write sample list _' 'str' 'aList'
+  space
+  spec ' ' 'i2s_playMIDIKey' 'i2s play midi key _' 'num' 60
+  spec ' ' 'i2s_stopTone' 'i2s stop tone'
+  space
+  spec ' ' '_i2s_toneLoop' '_i2s_toneLoop'
+
+to '_i2s_toneLoop' {
+  comment 'Tone loop for I2S.
+Assumes that I2S output has been started.'
+  if (0 == _i2sSampleRate) {
+    comment 'I2S output is not started.'
+    return 0
+  }
+  local 'sampleMicros' (1000000 / _i2sSampleRate)
+  local 'out' (newList 30)
+  '[data:delete]' 'all' out
+  local 'isHigh' (booleanConstant false)
+  local 'usecsRemaining' _i2sHalfPeriod
+  repeatUntil (_i2sHalfPeriod <= 0) {
+    if (_i2sHalfPeriod > 0) {
+      usecsRemaining += (0 - sampleMicros)
+      if (usecsRemaining < 0) {
+        isHigh = (not isHigh)
+        usecsRemaining += _i2sHalfPeriod
+      }
+      '[data:addLast]' (ifExpression isHigh 1000 -1000) out
+      if ((size out) >= 64) {
+        i2s_writeSamples out
+        '[data:delete]' 'all' out
+      }
+    }
+  }
+  if (_i2sSampleRate > 0) {
+    local 'silence' (newList 128)
+    i2s_writeSamples silence
+  }
+}
+
+to i2s_playMIDIKey key {
+  if (_i2sFrequencies == 0) {_i2sFrequencies = ('[data:makeList]' 261626 277183 293665 311127 329628 349228 369994 391995 415305 440000 466164 493883 246942 277183 277183 311127 311127 349228 329628 369994 369994 415305 415305 466164 466164 523252)}
+  local 'freq' (at ((key % 12) + 1) _i2sFrequencies)
+  local 'octave' ((key / 12) - 5)
+  if (octave < 0) {
+    repeat (absoluteValue octave) {
+      freq = (freq / 2)
+    }
+  }
+  repeat octave {
+    freq = (freq * 2)
+  }
+  _i2sHalfPeriod = (500000000 / freq)
+  sendBroadcast '_i2s_toneLoop'
+}
+
+to i2s_readSamples sampleCount optionalChannel {
+  comment 'Read the given number of samples from the I2S input device.
+Optional stereo channel argument is 0 - mixed, 1- left, 2 - right
+Result is a monophonic list of signed 16-bit samples.
+Note: This will fail if there is not enough memory to store
+the result plus a small read buffer.'
+  local 'selection' (argOrDefault 2 'both')
+  local 'channel' 0
+  if (or (selection == 'left') (selection == 1)) {
+    channel = 1
+  }
+  if (or (selection == 'right') (selection == 2)) {
+    channel = 2
+  }
+  local 'samples' (newList sampleCount)
+  '[data:delete]' 'all' samples
+  local 'buffer' (newList 128)
+  repeatUntil ((size samples) >= sampleCount) {
+    '[data:delete]' 'all' buffer
+    local 'deadlineStart' (millisOp)
+    repeatUntil ((size buffer) > 0) {
+      '[sound:i2sRead]' buffer channel (sampleCount - (size samples))
+      if ((millisSince deadlineStart) > 2000) {
+        sayIt 'I2S input timed out'
+        stopTask
+      }
+      waitMillis 1
+    }
+    for s buffer {
+      '[data:addLast]' s samples
+    }
+  }
+  return samples
+}
+
+to i2s_start sampleRate bitClockPin wordClockPin inputPin outputPin optionalPDM optionalBufferSize {
+  comment 'Start the I2S device for input, output, or both (full duplex).
+For input-only or output-only use -1 for the unused pin.
+PDM microphone input is supported only on ESP32 boards.'
+  local 'usePDM' (argOrDefault 6 false)
+  local 'bufferSize' (argOrDefault 7 512)
+  i2s_stop
+  '[sound:i2sBegin]' sampleRate bitClockPin wordClockPin inputPin outputPin usePDM bufferSize
+  _i2sSampleRate = sampleRate
+}
+
+to i2s_stop {
+  _i2sHalfPeriod = 0
+  _i2sSampleRate = 0
+  '[sound:i2sEnd]'
+}
+
+to i2s_stopTone {
+  _i2sHalfPeriod = 0
+}
+
+to i2s_writeSamples sampleList {
+  local 'written' 0
+  local 'progressTime' (millisOp)
+  repeatUntil (written == (size sampleList)) {
+    local 'n' ('[sound:i2sWrite]' sampleList (written + 1))
+    if (n > 0) {
+      progressTime = (millisOp)
+    } else {
+      if ((millisSince progressTime) > 2000) {
+        sayIt 'I2S output timed out'
+        stopTask
+      }
+      waitMillis 1
+    }
+    written += n
+  }
+}
+
+
+module 'StickS3 UDP Microphone' Comm
+author MicroBlocks
+version 1 0 
+depends WiFi UDP 'I2S Sound' 
+description 'Hold button A to stream microphone audio to udp_microphone_server.py; release A to save a WAV. Load I2S Sound 1.2 and the matching firmware. Start with your WiFi name/password and computer IPv4 address. UDP port 5005. Audio is mono PCM16 little-endian, 22050 Hz. Run only one audio script at a time. Button B stops this example. UDP loss creates silence in the WAV; sustained sampling speed must be checked on hardware.'
+variables _micUDP_running _micUDP_host _micUDP_session 
+
+  spec ' ' 'micUDP_start' 'start UDP microphone wifi _ password _ computer IP _' 'str str str' 'YOUR_WIFI' 'YOUR_PASSWORD' '192.168.1.100'
+  spec ' ' 'micUDP_stop' 'stop UDP microphone'
+  advanced
+  spec ' ' '_micUDP_put32' '_UDP put integer _ in _ at _' 'num auto num' 0 '' 5
+  spec ' ' '_micUDP_sendControl' '_UDP control _ position _' 'num num' 1 0
+
+to '_micUDP_put32' value packet offset {
+  repeat 4 {
+    atPut offset packet (value & 255)
+    value = (value >> 8)
+    offset += 1
+  }
+}
+
+to '_micUDP_sendControl' kind position {
+  local 'packet' ('[data:newByteArray]' 16)
+  atPut 1 packet 77
+  atPut 2 packet 66
+  atPut 3 packet 77
+  atPut 4 packet 49
+  '_micUDP_put32' _micUDP_session packet 5
+  '_micUDP_put32' position packet 9
+  atPut 13 packet kind
+  atPut 14 packet 1
+  '[net:udpSendPacket]' packet _micUDP_host 5005
+}
+
+to micUDP_start ssid password computerIP {
+  if ((boardType) != 'M5StickS3') {
+    sayIt 'This example requires M5StickS3'
+    stopTask
+  }
+  _micUDP_running = false
+  _micUDP_host = computerIP
+  wifiConnect ssid password
+  if ((getIPAddress) == '0.0.0.0') {
+    return
+  }
+  '[net:udpStart]' 5005
+  i2s_start 22050 17 15 16 -1 false 512
+  waitMillis 1200
+  _micUDP_running = true
+  local 'packet' ('[data:newByteArray]' 528)
+  atPut 1 packet 77
+  atPut 2 packet 66
+  atPut 3 packet 77
+  atPut 4 packet 49
+  atPut 13 packet 2
+  atPut 14 packet 1
+  atPut 15 packet 0
+  atPut 16 packet 1
+  sayIt 'Ready: hold A to record; release A to save; B stops'
+  repeatUntil (not _micUDP_running) {
+    comment 'Drain idle samples so a press does not transmit an old DMA backlog.'
+    local 'idle' (i2s_readSamples 256 'both')
+    if (buttonB) {
+      _micUDP_running = false
+    }
+    if (and _micUDP_running (buttonA)) {
+      _micUDP_session = ((millisOp) & 1073741823)
+      '_micUDP_put32' _micUDP_session packet 5
+      '_micUDP_sendControl' 1 0
+      local 'position' 0
+      repeatUntil (or (not (buttonA)) (not _micUDP_running)) {
+        local 'samples' (i2s_readSamples 256 'both')
+        local 'offset' 17
+        for sample samples {
+          atPut offset packet (sample & 255)
+          atPut (offset + 1) packet ((sample >> 8) & 255)
+          offset += 2
+        }
+        '_micUDP_put32' position packet 9
+        '[net:udpSendPacket]' packet _micUDP_host 5005
+        position += 256
+        if (buttonB) {
+          _micUDP_running = false
+        }
+        if (position >= 6615040) {
+          _micUDP_running = false
+        }
+      }
+      comment 'Repeat the end notification to tolerate a dropped UDP control packet.'
+      repeat 3 {
+        '_micUDP_sendControl' 3 position
+        waitMillis 30
+      }
+      sayIt 'Recording sent; Python saves the WAV'
+    }
+  }
+  i2s_stop
+  '[net:udpStop]'
+  sayIt 'UDP microphone stopped'
+}
+
+to micUDP_stop {
+  _micUDP_running = false
+}
+
+
+module UDP Comm
+author MicroBlocks
+version 1 0 
+depends WiFi 
+tags udp network 
+description 'Blocks to send and receive UDP packets.'
+
+  spec ' ' '[net:udpStart]' 'UDP start port _' 'auto' 5000
+  spec ' ' '[net:udpStop]' 'UDP stop'
+  spec ' ' '[net:udpSendPacket]' 'UDP send packet _ to ip _ port _' 'auto auto num' 'Hello!' '255.255.255.255' 5000
+  spec 'r' '[net:udpReceivePacket]' 'UDP receive packet : binary data _' 'bool' false
+  spec 'r' '[net:udpRemoteIPAddress]' 'UDP remote IP address'
+  spec 'r' '[net:udpRemotePort]' 'UDP remote port'
+
+module WiFi Comm
+author MicroBlocks
+version 1 10 
+tags communication network 
+description 'Connect to a WiFi network. Used in conjunction with other network libraries, such as HTTP client, HTTP server or Web Thing.
+'
+
+  spec ' ' 'wifiConnect' 'wifi connect to _ password _ : IP _ gateway _ subnet _' 'str str auto auto auto' 'Network_Name' '' '192.168.1.42' '192.168.1.1' '255.255.255.0'
+  spec ' ' 'wifiCreateHotspot' 'wifi create hotspot _ password _' 'str str' 'Network_Name' 'Network_Password'
+  spec ' ' '[net:stopWiFi]' 'stop wifi'
+  space
+  spec ' ' '[net:setDomainName]' 'wifi set local domain name _ .local' 'str' 'microblocks'
+  space
+  spec 'r' 'getIPAddress' 'IP address'
+  spec 'r' '[net:myMAC]' 'MAC address'
+  space
+  spec ' ' '[net:allowWiFiAndBLE]' 'allow WiFi while using BLE _' 'bool' true
+
+to getIPAddress {
+  return ('[net:myIPAddress]')
+}
+
+to wifiConnect ssid password fixedIP gatewayIP subnetIP {
+  if (not ('[net:hasWiFi]')) {return}
+  '[net:stopWiFi]'
+  if ((pushArgCount) < 5) {
+    '[net:startWiFi]' ssid password
+  } else {
+    '[net:startWiFi]' ssid password false fixedIP gatewayIP subnetIP
+  }
+  local 'startMSecs' (millisOp)
+  repeatUntil (('[net:myIPAddress]') != '0.0.0.0') {
+    comment 'Timeout after N seconds'
+    if (((millisOp) - startMSecs) > 30000) {
+      sayIt 'Could not connect'
+      return 0
+    }
+    comment 'Slow blink while trying to connect'
+    setUserLED true
+    waitMillis 300
+    setUserLED false
+    waitMillis 300
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  '[net:setDomainName]' 'microblocks'
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
+to wifiCreateHotspot ssid password {
+  if (not ('[net:hasWiFi]')) {return}
+  if ((size password) < 8) {
+    sayIt 'Password must be at least 8 characters'
+    return 0
+  }
+  '[net:startWiFi]' ssid password true
+  if ('Connected' != ('[net:wifiStatus]')) {
+    sayIt 'Could not create hotspot'
+    return 0
+  }
+  repeat 6 {
+    comment 'Quick blinks when connected'
+    setUserLED true
+    waitMillis 50
+    setUserLED false
+    waitMillis 50
+  }
+  '[net:setDomainName]' 'microblocks'
+  sayIt 'My IP address is:' ('[net:myIPAddress]')
+}
+
