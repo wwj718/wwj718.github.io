@@ -131,11 +131,11 @@
             <details><summary>恢复与维护</summary><div class="actions"><button id="reboot" type="button" data-device disabled>重启设备</button><button id="rollback" type="button" data-device disabled>恢复上一版并运行</button><button id="deleteScript" type="button" class="danger" data-device disabled>删除设备脚本</button></div><p class="hint">恢复使用设备上的备份；编辑器中的文本不会改变。</p></details>
           </div>
         </section>
-        <section class="card guide"><div class="card-head"><h3>开始使用</h3></div><div class="card-body"><ol class="steps"><li>设备启动后广播 ESP32-Lua。</li><li>点击扫描并连接，在浏览器列表中选择设备。</li><li>验证设备令牌，然后编辑或上传 <code>.lua</code> 文件。</li></ol><p class="hint">闪灯示例使用 AtomS3-Lite 板载 RGB 灯，需支持 rgb.set 的固件。呼吸灯示例使用 GPIO2 外接 LED。</p></div></section>
+        <section class="card guide"><div class="card-head"><h3>开始使用</h3></div><div class="card-body"><ol class="steps"><li>设备启动后广播 ESP32-Lua。</li><li>点击扫描并连接，在浏览器列表中选择设备。</li><li>验证设备令牌，然后编辑或上传 <code>.lua</code> 文件。</li></ol><p class="hint">闪灯示例使用 AtomS3-Lite 板载 RGB 灯，需支持 rgb.set 的固件。</p></div></section>
       </aside>
       <div class="workspace">
         <section class="card">
-          <div class="card-head"><span class="filename"><span class="file-dot"></span><span id="fileName">main.lua</span></span><div class="editor-tools"><select id="example" aria-label="加载示例"><option value="">加载示例…</option value="pwm">PWM 呼吸灯</option><option value="hello">Hello / 计数器</option><option value="blink">GPIO 闪灯</option></select><button id="openFile" type="button">打开文件</button><button id="download" type="button">下载代码</button></div></div>
+          <div class="card-head"><span class="filename"><span class="file-dot"></span><span id="fileName">main.lua</span></span><div class="editor-tools"><select id="example" aria-label="加载示例"><option value="">加载示例…</option><option value="blink" selected>GPIO 闪灯</option><option value="hello">Hello / 计数器</option></select><button id="openFile" type="button">打开文件</button><button id="download" type="button">下载代码</button></div></div>
           <input id="fileInput" type="file" accept=".lua,text/plain" hidden>
           <div class="editor"><pre id="lineNumbers" aria-hidden="true">1</pre><textarea id="editor" aria-label="Lua 脚本编辑器" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea></div>
           <div class="editor-meta"><span id="editorStats">0 行 · 0 bytes</span><span>Lua 5.4 · UTF-8</span></div>
@@ -171,7 +171,7 @@
     }
     function decodeStatus(value) {
       const view = value instanceof DataView ? value : new DataView(value.buffer, value.byteOffset, value.byteLength);
-      if (view.byteLength !== 20) throw new DeviceError("设备状态长度不正确，需要本项目的 BLE Lua 固件.");
+      if (view.byteLength !== 20) throw new DeviceError("设备状态长度不正确，需要本项目的 BLE Lua 固件。");
       if (view.getUint8(0) !== 1) throw new DeviceError("设备协议版本不兼容。");
       return {version:1, flags:view.getUint8(1), operation:view.getUint8(2), error:view.getUint8(3), sequence:view.getUint16(4,true), received:view.getUint32(8,true), total:view.getUint32(12,true), maximum:view.getUint32(16,true)};
     }
@@ -324,7 +324,6 @@
     const {Client,OP,parseToken,discoveryOptions,UploadCancelled} = LuaBLE;
     const encoder = new TextEncoder();
     const examples = {
-      pwm:`-- GPIO2 外接普通 LED，串联限流电阻\nlocal pin = 2\npwm.setup(pin, 5000, 8)\nprint("PWM breathing LED started on GPIO", pin)\n\nwhile true do\n    for duty = 0, 255 do\n        pwm.set_duty(pin, duty)\n        delay(10)\n    end\n    for duty = 255, 0, -1 do\n        pwm.set_duty(pin, duty)\n        delay(10)\n    end\nend\n`,
       hello:`print("Hello from ESP32-S3!")\nlocal count = 0\n\nwhile true do\n    count = count + 1\n    print("Count:", count)\n    delay(1000)\nend\n`,
       blink:`-- AtomS3-Lite onboard RGB LED (GPIO35); requires firmware with rgb.set.\nprint("AtomS3-Lite onboard RGB blink started")\nwhile true do\n    rgb.set(0, 32, 0)\n    delay(500)\n    rgb.set(0, 0, 0)\n    delay(500)\nend\n`
     };
@@ -395,7 +394,7 @@
       $("lineNumbers").style.height = `${$("editor").offsetHeight}px`;
       $("lineNumbers").scrollTop = $("editor").scrollTop;
     }
-    $("editor").value = examples.pwm;
+    $("editor").value = examples.blink;
     $("editor").addEventListener("input", editorChanged);
     $("editor").addEventListener("scroll", () => $("lineNumbers").scrollTop = $("editor").scrollTop);
     $("editor").addEventListener("keydown", event => {
