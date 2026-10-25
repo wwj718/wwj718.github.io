@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="通过 Web Bluetooth 为 ESP32-S3 上传、保存和运行 Lua 脚本。">
+  <title>Lua Link · ESP32-S3 BLE 工作台</title>
+  <style>
+    :root { --ink:#202334; --muted:#727687; --line:#e3e5ed; --paper:#fff; --bg:#f4f5f9; --accent:#6554c0; --accent-dark:#51409e; --green:#167553; --mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    button,input,select,textarea { font:inherit; }
+    button { cursor:pointer; border:1px solid var(--line); border-radius:8px; padding:8px 13px; background:#fff; color:var(--ink); font-weight:550; transition:background .15s; }
+    button:hover:not(:disabled) { background:#f0eef9; border-color:#c5bde6; }
+    button:disabled { opacity:.42; cursor:not-allowed; }
+    button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+    button.primary:hover:not(:disabled) { background:var(--accent-dark); }
+    button.danger { color:#a23943; }
+    :focus-visible { outline:3px solid #b9a9f4; outline-offset:3px; }
+    input,select { border:1px solid #d7dae6; border-radius:8px; padding:9px 10px; background:#fff; color:var(--ink); min-width:0; }
+    header { background:#252637; color:#f8f8fc; padding:22px 32px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .brand { display:flex; align-items:center; gap:13px; }
+    .mark { width:43px; height:43px; display:grid; place-items:center; border:1px solid #6c648e; border-radius:12px; color:#d2c6ff; font:700 23px var(--mono); }
+    h1 { font-size:20px; line-height:1.3; letter-spacing:-.5px; margin:0; }
+    .subtitle { color:#b9bbce; margin:3px 0 0; font-size:12px; }
+    .header-note { color:#d0cde2; font-size:12px; border:1px solid #4b4b60; padding:5px 11px; border-radius:20px; white-space:nowrap; }
+    main { max-width:1440px; margin:0 auto; padding:28px 30px 38px; }
+    .intro { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:21px; }
+    .intro p { margin:0; color:var(--muted); }
+    .eyebrow { font-size:11px; color:var(--accent); text-transform:uppercase; font-weight:750; letter-spacing:1.6px; margin-bottom:4px; }
+    h2 { font-size:17px; margin:0; }
+    h3 { font-size:14px; margin:0; }
+    .grid { display:grid; grid-template-columns:300px minmax(0,1fr); gap:20px; align-items:start; }
+    .sidebar,.workspace { display:grid; gap:20px; min-width:0; }
+    .card { background:var(--paper); border:1px solid var(--line); border-radius:13px; overflow:hidden; }
+    .card-head { padding:16px 19px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .card-body { padding:19px; }
+    .small { font-size:12px; color:var(--muted); }
+    .hint { font-size:12px; color:var(--muted); margin:9px 0 0; }
+    .badge { display:inline-flex; align-items:center; gap:6px; border-radius:20px; padding:3px 9px; background:#f0f1f5; color:#626778; font-size:11px; white-space:nowrap; }
+    .badge::before { content:""; width:6px; height:6px; background:currentColor; border-radius:50%; }
+    .badge.online { background:#e7f4ec; color:var(--green); }
+    label.field { display:block; font-size:12px; font-weight:600; margin-bottom:7px; }
+    .token-row { display:flex; gap:6px; }
+    #token { width:100%; font:12px var(--mono); }
+    .token-row button { font-size:12px; padding:7px 9px; white-space:nowrap; }
+    .connect-row { display:flex; gap:8px; margin-top:17px; }
+    .connect-row .primary { flex:1; }
+    #authenticate { width:100%; margin-top:10px; }
+    .device { padding:12px; background:#f7f7fb; border-radius:8px; margin-bottom:17px; }
+    #deviceName { font-weight:650; overflow-wrap:anywhere; }
+    #deviceDetail { margin-top:3px; }
+    .status-list { margin:0; }
+    .status-list div { display:flex; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .status-list div:last-child { margin:0; }
+    .status-list dt { color:var(--muted); }
+    .status-list dd { margin:0; text-align:right; font-size:13px; }
+    .actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:17px; }
+    .actions button { font-size:12px; }
+    details { border-top:1px solid var(--line); margin-top:18px; padding-top:13px; }
+    summary { cursor:pointer; font-size:12px; color:var(--muted); }
+    details .actions { margin-top:12px; }
+    .steps { margin:0; padding-left:19px; font-size:12px; color:#666b7c; }
+    .steps li { margin:0 0 9px; }
+    .steps li:last-child { margin:0; }
+    code { font-family:var(--mono); font-size:.95em; }
+    .editor-tools { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+    .editor-tools button,.editor-tools select { font-size:12px; padding:6px 10px; }
+    .filename { font:13px var(--mono); font-weight:600; }
+    .file-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#a499d1; margin-right:7px; }
+    .editor { display:flex; background:#fcfcfe; min-height:330px; }
+    #lineNumbers { margin:0; padding:19px 12px 19px 16px; color:#a4a7b5; text-align:right; font:13px/1.8 var(--mono); overflow:hidden; user-select:none; background:#f6f7fa; width:52px; flex-shrink:0; height:360px; }
+    #editor { border:0; border-radius:0; margin:0; width:100%; min-width:0; resize:vertical; height:360px; min-height:240px; padding:19px 18px; background:transparent; font:13px/1.8 var(--mono); color:#34334b; white-space:pre; overflow:auto; tab-size:4; }
+    #editor:focus { outline:none; box-shadow:inset 0 0 0 2px #c6b9ed; }
+    .editor-meta { padding:8px 17px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font:11px var(--mono); color:var(--muted); }
+    .upload-panel { padding:16px 19px; border-top:1px solid var(--line); }
+    .upload-row { display:flex; align-items:center; flex-wrap:wrap; gap:9px; }
+    .upload-row label { font-size:12px; color:var(--muted); }
+    .upload-row select { font-size:12px; padding:7px 9px; margin-right:auto; }
+    .progress-top { margin-top:15px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:12px; }
+    #progressText { color:var(--muted); }
+    progress { appearance:none; -webkit-appearance:none; height:5px; width:100%; display:block; margin-top:8px; border:0; border-radius:8px; background:#eeedf5; }
+    progress::-webkit-progress-bar { background:#eeedf5; border-radius:8px; }
+    progress::-webkit-progress-value { background:var(--accent); border-radius:8px; }
+    progress::-moz-progress-bar { background:var(--accent); border-radius:8px; }
+    .console-card { background:#242635; border-color:#242635; color:#e2e4ef; }
+    .console-card .card-head { border-color:#393c4e; padding:12px 19px; }
+    .console-tools { display:flex; align-items:center; gap:13px; }
+    .console-tools label { color:#b8bbce; font-size:11px; display:flex; align-items:center; gap:5px; }
+    .console-tools button { color:#b8bbce; background:transparent; border-color:#4b4d61; padding:3px 9px; font-size:11px; }
+    #console { height:215px; overflow:auto; margin:0; padding:16px 19px; font:12px/1.8 var(--mono); color:#d1d8e8; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .banner { border:1px solid #dcd5f1; color:#5c4b8d; background:#f0ebfa; padding:11px 15px; border-radius:9px; margin-bottom:20px; font-size:12px; }
+    .banner.error { background:#fff0f0; border-color:#edc9cd; color:#9a3442; }
+    [hidden] { display:none!important; }
+    .foot { font-size:11px; color:#8b8e9d; margin-top:19px; text-align:center; }
+    @media(max-width:850px) { .grid { grid-template-columns:1fr; } .sidebar { grid-template-columns:1fr 1fr; } .sidebar .guide { display:none; } header { padding:19px 20px; } main { padding:21px 17px; } }
+    @media(max-width:560px) { .sidebar { grid-template-columns:1fr; } .intro { display:block; } .intro p { margin-top:6px; font-size:12px; } .header-note { display:none; } .card-head { flex-wrap:wrap; } .editor-tools { width:100%; } .upload-row .primary { flex:1; } #editor { font-size:12px; padding-left:12px; } #lineNumbers { width:42px; font-size:12px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><div class="mark" aria-hidden="true">λ</div><div><h1>Lua Link</h1><p class="subtitle">ESP32-S3 · 无线脚本工作台</p></div></div>
+    <span class="header-note">Web Bluetooth · 本地运行</span>
+  </header>
+  <main>
+    <div class="intro"><div><div class="eyebrow">Write. Connect. Run.</div><h2>把想法写进你的设备</h2></div><p>编辑 Lua，通过蓝牙保存，重启后自动运行。</p></div>
+    <div id="compatibility" class="banner" role="status" hidden></div>
+    <div id="errorBanner" class="banner error" role="alert" hidden></div>
+    <div class="grid">
+      <aside class="sidebar">
+        <section class="card">
+          <div class="card-head"><h3>设备连接</h3><span id="connectionBadge" class="badge">未连接</span></div>
+          <div class="card-body">
+            <div class="device"><div id="deviceName">ESP32-Lua</div><div id="deviceDetail" class="small">等待选择附近的设备</div></div>
+            <label class="small"><input id="showAll" type="checkbox" aria-describedby="scanHint"> 显示所有 BLE 设备（排查扫描问题）</label>
+            <p id="scanHint" class="hint">默认按 Lua 服务 UUID 扫描，无需匹配设备名称。扫描不到时可勾选上方选项重试。</p>
+            <div class="connect-row"><button id="connect" class="primary" type="button">扫描并连接设备</button><button id="disconnect" type="button" disabled>断开</button></div>
+            <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+            <label class="field" for="token">设备令牌</label>
+            <div class="token-row"><input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="32 位十六进制令牌" maxlength="32" aria-describedby="tokenHint"><button id="toggleToken" type="button" aria-label="显示设备令牌" aria-pressed="false">显示</button></div>
+            <p id="tokenHint" class="hint">连接后验证令牌，授权上传与控制。令牌来自 USB 串口中的 LUA_BLE_TOKEN。</p>
+            <button id="authenticate" type="button" disabled>验证令牌，启用上传</button>
+          </div>
+        </section>
+        <section class="card">
+          <div class="card-head"><h3>运行控制</h3><button id="refresh" type="button" class="small" data-device disabled>刷新</button></div>
+          <div class="card-body">
+            <dl class="status-list"><div><dt>Lua 状态</dt><dd id="runtimeStatus">—</dd></div><div><dt>文件系统</dt><dd id="filesystemStatus">—</dd></div><div><dt>启动模式</dt><dd id="safeStatus">—</dd></div><div><dt>脚本上限</dt><dd id="limitStatus">64 KiB</dd></div></dl>
+            <div class="actions"><button id="run" type="button" data-device disabled>▶ 运行已保存脚本</button><button id="stop" type="button" data-device disabled>■ 停止脚本</button></div>
+            <details><summary>恢复与维护</summary><div class="actions"><button id="reboot" type="button" data-device disabled>重启设备</button><button id="rollback" type="button" data-device disabled>恢复上一版并运行</button><button id="deleteScript" type="button" class="danger" data-device disabled>删除设备脚本</button></div><p class="hint">恢复使用设备上的备份；编辑器中的文本不会改变。</p></details>
+          </div>
+        </section>
+        <section class="card guide"><div class="card-head"><h3>开始使用</h3></div><div class="card-body"><ol class="steps"><li>设备启动后广播 ESP32-Lua。</li><li>点击扫描并连接，在浏览器列表中选择设备。</li><li>验证设备令牌，然后编辑或上传 <code>.lua</code> 文件。</li></ol><p class="hint">闪灯示例使用 AtomS3-Lite 板载 RGB 灯，需支持 rgb.set 的固件。呼吸灯示例使用 GPIO2 外接 LED。</p></div></section>
+      </aside>
+      <div class="workspace">
+        <section class="card">
+          <div class="card-head"><span class="filename"><span class="file-dot"></span><span id="fileName">main.lua</span></span><div class="editor-tools"><select id="example" aria-label="加载示例"><option value="">加载示例…</option value="pwm">PWM 呼吸灯</option><option value="hello">Hello / 计数器</option><option value="blink">GPIO 闪灯</option></select><button id="openFile" type="button">打开文件</button><button id="download" type="button">下载代码</button></div></div>
+          <input id="fileInput" type="file" accept=".lua,text/plain" hidden>
+          <div class="editor"><pre id="lineNumbers" aria-hidden="true">1</pre><textarea id="editor" aria-label="Lua 脚本编辑器" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea></div>
+          <div class="editor-meta"><span id="editorStats">0 行 · 0 bytes</span><span>Lua 5.4 · UTF-8</span></div>
+          <div class="upload-panel">
+            <div class="upload-row"><label for="afterUpload">上传后</label><select id="afterUpload"><option value="run">立即运行，保持蓝牙连接</option><option value="reboot">重启设备后运行</option><option value="save">仅保存，保持停止</option></select><button id="cancelUpload" type="button" hidden>取消上传</button><button id="upload" class="primary" type="button" data-device disabled>↑ 上传 main.lua</button></div>
+            <div class="progress-top"><span id="progressLabel" role="status">等待上传</span><span id="progressText">0%</span></div><progress id="progress" value="0" max="100" aria-label="脚本传输进度"></progress>
+            <p class="hint">保存到设备 Flash，开机自动执行。校验或语法检查失败会保留原文件。</p>
+          </div>
+        </section>
+        <section class="card console-card"><div class="card-head"><h3>设备输出</h3><div class="console-tools"><label><input id="autoScroll" type="checkbox" checked>自动滚动</label><button id="clearConsole" type="button">清空</button></div></div><pre id="console" role="log" aria-label="连接日志和 Lua 输出" tabindex="0"></pre></section>
+      </div>
+    </div>
+    <p class="foot">无需服务器处理代码 · 无外部依赖 · 使用 Chrome / Edge，通过 localhost 或 HTTPS 访问</p>
+  </main>
+
+  <script id="ble-protocol">
+  "use strict";
+  const LuaBLE = (() => {
+    const UUID = Object.freeze({service:"e7a10000-7a1e-4b18-9c6a-52bd32a9f001", control:"e7a10001-7a1e-4b18-9c6a-52bd32a9f001", data:"e7a10002-7a1e-4b18-9c6a-52bd32a9f001", output:"e7a10003-7a1e-4b18-9c6a-52bd32a9f001"});
+    const OP = Object.freeze({AUTH:1, BEGIN:2, HASH:3, DATA:4, END:5, RUN:6, STOP:7, REBOOT:8, DELETE:9, ABORT:10, ROLLBACK:11});
+    const ERRORS = {1:"设备拒绝了数据帧。", 2:"设备认证失败，请核对 USB 串口中的令牌。", 3:"设备状态不允许此操作，或脚本／备份不存在。", 4:"文件长度或校验数据不完整。", 5:"设备收到的数据偏移不正确。", 6:"设备文件系统读写失败，请查看 USB 串口。", 7:"SHA-256 校验失败，原文件已保留。", 8:"Lua 语法检查失败或编译内存不足，请查看 USB 串口。", 9:"Lua 脚本无法停止，请重启设备，必要时按住用户按钮进入安全模式。", 10:"设备内部错误。"};
+    class DeviceError extends Error { constructor(message) { super(message); this.name = "DeviceError"; } }
+    class UploadCancelled extends Error { constructor() { super("已取消上传，设备原脚本未被替换。"); this.name = "UploadCancelled"; } }
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    function checkCancelled(signal) { if (signal?.aborted) throw new UploadCancelled(); }
+    function parseToken(text) {
+      if (!/^[0-9a-fA-F]{32}$/.test(text.trim())) throw new DeviceError("请输入 32 位十六进制设备令牌。");
+      return Uint8Array.from(text.trim().match(/../g), pair => parseInt(pair, 16));
+    }
+    function discoveryOptions(showAll = false) {
+      return showAll ? {acceptAllDevices:true, optionalServices:[UUID.service]} :
+        {filters:[{services:[UUID.service]}]};
+    }
+    function decodeStatus(value) {
+      const view = value instanceof DataView ? value : new DataView(value.buffer, value.byteOffset, value.byteLength);
+      if (view.byteLength !== 20) throw new DeviceError("设备状态长度不正确，需要本项目的 BLE Lua 固件。");
+      if (view.getUint8(0) !== 1) throw new DeviceError("设备协议版本不兼容。");
+      return {version:1, flags:view.getUint8(1), operation:view.getUint8(2), error:view.getUint8(3), sequence:view.getUint16(4,true), received:view.getUint32(8,true), total:view.getUint32(12,true), maximum:view.getUint32(16,true)};
+    }
+    class Client {
+      constructor({onStatus=()=>{}, onOutput=()=>{}, onDisconnect=()=>{}, timeout=15000, pollInterval=25} = {}) {
+        Object.assign(this, {onStatus,onOutput,onDisconnect,timeout,pollInterval});
+        this.device = this.control = this.data = this.output = null;
+        this.authenticated = false; this.sequence = 0;
+        this.decoder = new TextDecoder();
+        this.handleOutput = event => this.onOutput(this.decoder.decode(event.target.value, {stream:true}));
+        this.handleDisconnect = () => this.reset();
+      }
+      get connected() { return Boolean(this.device?.gatt?.connected && this.authenticated); }
+      get transportConnected() { return Boolean(this.device?.gatt?.connected); }
+      reset() {
+        this.output?.removeEventListener("characteristicvaluechanged", this.handleOutput);
+        this.device?.removeEventListener("gattserverdisconnected", this.handleDisconnect);
+        const tail = this.decoder.decode();
+        if (tail) this.onOutput(tail);
+        this.decoder = new TextDecoder();
+        this.authenticated = false;
+        this.device = this.control = this.data = this.output = null;
+        this.onDisconnect();
+      }
+      disconnect() {
+        const device = this.device;
+        this.reset();
+        if (device?.gatt?.connected) device.gatt.disconnect();
+      }
+      async gatt(promise) {
+        let timer;
+        try {
+          return await Promise.race([promise, new Promise((_, reject) => {
+            timer = setTimeout(() => {
+              this.disconnect();
+              reject(new DeviceError("蓝牙操作超时，连接已断开，请重新连接后重试。"));
+            }, this.timeout);
+          })]);
+        } finally { clearTimeout(timer); }
+      }
+      async open(device) {
+        this.device = device;
+        device.addEventListener("gattserverdisconnected", this.handleDisconnect);
+        try {
+          const server = await this.gatt(device.gatt.connect());
+          const service = await this.gatt(server.getPrimaryService(UUID.service));
+          this.control = await this.gatt(service.getCharacteristic(UUID.control));
+          this.data = await this.gatt(service.getCharacteristic(UUID.data));
+          this.output = await this.gatt(service.getCharacteristic(UUID.output));
+        } catch (error) { this.disconnect(); throw error; }
+      }
+      async authenticate(token) {
+        if (!this.transportConnected) throw new DeviceError("请先扫描并连接设备。");
+        try {
+          this.sequence = (await this.status()).sequence;
+          const state = await this.command(OP.AUTH, token);
+          if (!(state.flags & 1)) throw new DeviceError("设备未确认认证成功。");
+          this.authenticated = true;
+          this.decoder = new TextDecoder();
+          this.output.addEventListener("characteristicvaluechanged", this.handleOutput);
+          await this.gatt(this.output.startNotifications());
+          return state;
+        } catch (error) { this.authenticated = false; throw error; }
+      }
+      async connect(device, token) {
+        try { await this.open(device); return await this.authenticate(token); }
+        catch (error) { this.disconnect(); throw error; }
+      }
+      async status() {
+        if (!this.control || !this.device?.gatt?.connected) throw new DeviceError("蓝牙连接已断开，请重新连接。");
+        const state = decodeStatus(await this.gatt(this.control.readValue()));
+        this.onStatus(state);
+        return state;
+      }
+      async send(operation, payload = new Uint8Array(), {data=false, signal} = {}) {
+        checkCancelled(signal);
+        if (!this.control || !this.device?.gatt?.connected) throw new DeviceError("请先连接设备。");
+        this.sequence = this.sequence % 65535 + 1;
+        const sequence = this.sequence;
+        const frame = new Uint8Array((data ? 2 : 3) + payload.byteLength);
+        const view = new DataView(frame.buffer);
+        if (data) view.setUint16(0, sequence, true);
+        else { view.setUint8(0, operation); view.setUint16(1, sequence, true); }
+        frame.set(payload, data ? 2 : 3);
+        if (frame.length > 20) throw new DeviceError("数据帧超过兼容模式的 20 字节上限。");
+        const characteristic = data ? this.data : this.control;
+        await this.gatt(characteristic.writeValueWithResponse(frame));
+        const deadline = performance.now() + this.timeout;
+        while (performance.now() < deadline) {
+          checkCancelled(signal);
+          const state = await this.status();
+          if (state.sequence === sequence && state.operation === operation) {
+            if (state.error) throw new DeviceError(ERRORS[state.error] || `设备错误 ${state.error}`);
+            return state;
+          }
+          await sleep(this.pollInterval);
+        }
+        // A request may still be in flight. Disconnect rather than overlap it with a new upload.
+        this.disconnect();
+        throw new DeviceError("设备未返回执行确认，已断开连接。请重新连接检查状态。");
+      }
+      command(operation, payload, options) { return this.send(operation, payload, options); }
+      async upload(bytes, {signal, onProgress=()=>{}, onStage=()=>{}} = {}) {
+        checkCancelled(signal);
+        const state = await this.status();
+        if (!bytes.length || bytes.length > state.maximum) throw new DeviceError(`脚本大小须为 1–${state.maximum} 字节。`);
+        if (!(state.flags & 16)) throw new DeviceError("LittleFS 未挂载，请查看设备 USB 串口。");
+        onStage("hashing");
+        const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+        checkCancelled(signal);
+        const length = new Uint8Array(4);
+        new DataView(length.buffer).setUint32(0, bytes.length, true);
+        try {
+          await this.command(OP.BEGIN, length, {signal});
+          for (const offset of [0,16]) {
+            const hash = new Uint8Array(17);
+            hash[0] = offset; hash.set(digest.subarray(offset, offset+16),1);
+            await this.command(OP.HASH, hash, {signal});
+          }
+          onStage("sending");
+          for (let offset = 0; offset < bytes.length; offset += 14) {
+            const part = bytes.subarray(offset, offset+14);
+            const payload = new Uint8Array(4 + part.length);
+            new DataView(payload.buffer).setUint32(0, offset, true);
+            payload.set(part,4);
+            const ack = await this.send(OP.DATA, payload, {data:true, signal});
+            if (ack.received !== offset + part.length) throw new DeviceError("设备确认的文件偏移不正确，上传已停止。");
+            onProgress(ack.received, bytes.length);
+          }
+          checkCancelled(signal);
+          onStage("validating");
+          // Once END begins, cancellation cannot promise to preserve the old file.
+          await this.command(OP.END);
+          onStage("saved");
+        } catch (error) {
+          if (this.connected) {
+            try { await this.command(OP.ABORT); } catch (_) { /* Preserve the original error. */ }
+          }
+          throw error;
+        }
+      }
+    }
+    return {UUID,OP,Client,DeviceError,UploadCancelled,parseToken,decodeStatus,discoveryOptions};
+  })();
+  </script>
+  <script id="ble-ui">
+  "use strict";
+  (() => {
+    const $ = id => document.getElementById(id);
+    const {Client,OP,parseToken,discoveryOptions,UploadCancelled} = LuaBLE;
+    const encoder = new TextEncoder();
+    const examples = {
+      pwm:`-- GPIO2 外接普通 LED，串联限流电阻\nlocal pin = 2\npwm.setup(pin, 5000, 8)\nprint("PWM breathing LED started on GPIO", pin)\n\nwhile true do\n    for duty = 0, 255 do\n        pwm.set_duty(pin, duty)\n        delay(10)\n    end\n    for duty = 255, 0, -1 do\n        pwm.set_duty(pin, duty)\n        delay(10)\n    end\nend\n`,
+      hello:`print("Hello from ESP32-S3!")\nlocal count = 0\n\nwhile true do\n    count = count + 1\n    print("Count:", count)\n    delay(1000)\nend\n`,
+      blink:`-- AtomS3-Lite onboard RGB LED (GPIO35); requires firmware with rgb.set.\nprint("AtomS3-Lite onboard RGB blink started")\nwhile true do\n    rgb.set(0, 32, 0)\n    delay(500)\n    rgb.set(0, 0, 0)\n    delay(500)\nend\n`
+    };
+    let busy = false, controller = null, filename = "main.lua";
+    const supported = Boolean(window.isSecureContext && navigator.bluetooth && window.crypto?.subtle);
+    function append(text) {
+      if (!text) return;
+      const terminal = $("console");
+      terminal.textContent = (terminal.textContent + text).slice(-100000);
+      if ($("autoScroll").checked) terminal.scrollTop = terminal.scrollHeight;
+    }
+    function log(text) { append(`\n[${new Date().toLocaleTimeString("zh-CN", {hour12:false})}] ${text}\n`); }
+    function showError(error) {
+      let message = error.message || String(error);
+      if (error.name === "NotFoundError") message = "没有选择设备，或设备服务不可用。请确认已烧录本项目固件。";
+      if (error.name === "SecurityError" || error.name === "NotAllowedError") message += " 请允许浏览器使用蓝牙，必要时先在操作系统中配对设备。";
+      $("errorBanner").textContent = message;
+      $("errorBanner").hidden = false;
+      log(message);
+    }
+    function renderControls() {
+      document.querySelectorAll("[data-device]").forEach(button => button.disabled = busy || !client.connected);
+      $("connect").disabled = busy || client.transportConnected || !supported;
+      $("showAll").disabled = busy || client.transportConnected;
+      $("authenticate").disabled = busy || !client.transportConnected || client.connected;
+      $("disconnect").disabled = !client.device;
+      $("token").disabled = busy || client.connected;
+      for (const id of ["openFile","example","download","afterUpload"]) $(id).disabled = busy;
+      $("editor").readOnly = busy;
+    }
+    const client = new Client({
+      onStatus(state) {
+        $("runtimeStatus").textContent = state.flags & 4 ? "运行中" : "已停止";
+        $("filesystemStatus").textContent = state.flags & 16 ? "已挂载" : "不可用";
+        $("safeStatus").textContent = state.flags & 8 ? "安全模式" : "正常启动";
+        $("limitStatus").textContent = `${state.maximum / 1024} KiB`;
+      },
+      onOutput:append,
+      onDisconnect() {
+        controller?.abort();
+        $("connectionBadge").className = "badge";
+        $("connectionBadge").textContent = "未连接";
+        $("deviceDetail").textContent = "蓝牙连接已断开，可重新选择设备";
+        for (const id of ["runtimeStatus","filesystemStatus","safeStatus"]) $(id).textContent = "—";
+        renderControls();
+        log("设备已断开连接。");
+      }
+    });
+    async function perform(action) {
+      if (busy) return;
+      busy = true; $("errorBanner").hidden = true; renderControls();
+      try { await action(); }
+      catch (error) {
+        if (error instanceof UploadCancelled) {
+          $("progressLabel").textContent = "上传已取消";
+          log(error.message);
+        } else showError(error);
+      } finally {
+        busy = false; controller = null;
+        $("cancelUpload").hidden = true;
+        renderControls();
+      }
+    }
+    function editorChanged() {
+      const lines = $("editor").value.split("\n").length;
+      $("editorStats").textContent = `${lines} 行 · ${encoder.encode($("editor").value).length} bytes`;
+      $("lineNumbers").textContent = Array.from({length:lines},(_,i)=>i+1).join("\n");
+      $("lineNumbers").style.height = `${$("editor").offsetHeight}px`;
+      $("lineNumbers").scrollTop = $("editor").scrollTop;
+    }
+    $("editor").value = examples.pwm;
+    $("editor").addEventListener("input", editorChanged);
+    $("editor").addEventListener("scroll", () => $("lineNumbers").scrollTop = $("editor").scrollTop);
+    $("editor").addEventListener("keydown", event => {
+      if (event.key !== "Tab" || $("editor").readOnly) return;
+      event.preventDefault();
+      const editor = $("editor");
+      editor.setRangeText("    ", editor.selectionStart, editor.selectionEnd, "end");
+      editorChanged();
+    });
+    if (window.ResizeObserver) new ResizeObserver(editorChanged).observe($("editor"));
+    editorChanged();
+    $("toggleToken").addEventListener("click", () => {
+      const visible = $("token").type === "password";
+      $("token").type = visible ? "text" : "password";
+      $("toggleToken").textContent = visible ? "隐藏" : "显示";
+      $("toggleToken").setAttribute("aria-label", visible ? "隐藏设备令牌" : "显示设备令牌");
+      $("toggleToken").setAttribute("aria-pressed", String(visible));
+    });
+    async function authenticate() {
+      await client.authenticate(parseToken($("token").value));
+      $("connectionBadge").className = "badge online";
+      $("connectionBadge").textContent = "已认证";
+      $("deviceDetail").textContent = "已订阅 Lua 输出，可以上传脚本";
+      log("设备认证成功，已开启输出通知。");
+    }
+    $("connect").addEventListener("click", () => perform(async () => {
+      const options = discoveryOptions($("showAll").checked);
+      // Keep the picker directly within the user gesture; do not await before it.
+      const device = await navigator.bluetooth.requestDevice(options);
+      $("deviceName").textContent = device.name || "ESP32-Lua";
+      $("deviceDetail").textContent = "已发现广播，正在连接…";
+      log(`正在连接 ${device.name || "ESP32-Lua"}…`);
+      await client.open(device);
+      $("connectionBadge").className = "badge online";
+      $("connectionBadge").textContent = "已连接 · 待认证";
+      $("deviceDetail").textContent = "已连接，请验证令牌以启用上传与控制";
+      log("设备已连接。验证令牌后可上传脚本。");
+      if ($("token").value.trim()) await authenticate();
+    }));
+    $("authenticate").addEventListener("click", () => perform(authenticate));
+    $("disconnect").addEventListener("click", () => client.disconnect());
+    $("refresh").addEventListener("click", () => perform(async () => { await client.status(); log("设备状态已刷新。"); }));
+    async function control(operation, message) {
+      await client.command(operation);
+      log(message);
+      if (operation !== OP.REBOOT) {
+        await new Promise(resolve => setTimeout(resolve, 120));
+        await client.status();
+      }
+    }
+    $("run").addEventListener("click", () => perform(() => control(OP.RUN,"已请求运行设备上保存的 main.lua。")));
+    $("stop").addEventListener("click", () => perform(() => control(OP.STOP,"脚本已停止，文件仍保留在设备上。")));
+    $("reboot").addEventListener("click", () => perform(() => control(OP.REBOOT,"设备正在重启，连接将断开。")));
+    $("rollback").addEventListener("click", () => perform(async () => {
+      await client.command(OP.ROLLBACK);
+      log("设备已恢复上一版脚本。");
+      await control(OP.RUN,"已请求运行恢复后的脚本。");
+    }));
+    $("deleteScript").addEventListener("click", () => {
+      if (window.confirm("停止并删除设备上的 main.lua？上一版备份会保留。"))
+        perform(() => control(OP.DELETE,"设备上的 main.lua 已删除，上一版备份仍保留。"));
+    });
+    $("openFile").addEventListener("click", () => $("fileInput").click());
+    $("fileInput").addEventListener("change", async event => {
+      const file = event.target.files[0];
+      event.target.value = "";
+      if (!file || busy) return;
+      try {
+        if (file.size > 65536) throw new Error("文件超过 64 KiB 上限。");
+        const text = new TextDecoder("utf-8", {fatal:true}).decode(await file.arrayBuffer());
+        if (busy) return;
+        $("editor").value = text; filename = file.name;
+        $("fileName").textContent = `${filename} → main.lua`;
+        $("example").value = ""; editorChanged();
+        log(`已打开 ${filename}，上传时保存为设备上的 main.lua。`);
+      } catch (error) { showError(error); }
+    });
+    $("example").addEventListener("change", event => {
+      const text = examples[event.target.value];
+      if (!text) return;
+      $("editor").value = text; filename = "main.lua";
+      $("fileName").textContent = filename; editorChanged();
+      log("示例已加载到编辑器，尚未上传。");
+    });
+    $("download").addEventListener("click", () => {
+      const url = URL.createObjectURL(new Blob([$("editor").value], {type:"text/plain;charset=utf-8"}));
+      const link = document.createElement("a");
+      link.href = url; link.download = filename.endsWith(".lua") ? filename : "main.lua";
+      link.click(); setTimeout(() => URL.revokeObjectURL(url),1000);
+    });
+    $("clearConsole").addEventListener("click", () => $("console").textContent = "");
+    $("cancelUpload").addEventListener("click", () => {
+      controller?.abort();
+      $("cancelUpload").disabled = true;
+      $("progressLabel").textContent = "正在取消，等待当前数据包处理完成…";
+    });
+    $("upload").addEventListener("click", () => perform(async () => {
+      const bytes = encoder.encode($("editor").value);
+      const mode = $("afterUpload").value;
+      controller = new AbortController();
+      $("progress").value = 0; $("progressText").textContent = "0%";
+      $("cancelUpload").hidden = false; $("cancelUpload").disabled = false;
+      log(`开始上传 ${bytes.length} 字节到 main.lua…`);
+      try {
+        await client.upload(bytes, {
+          signal:controller.signal,
+          onProgress(done,total) {
+            const percent = Math.floor(done / total * 100);
+            $("progress").value = percent;
+            $("progressText").textContent = `${done} / ${total} bytes · ${percent}%`;
+          },
+          onStage(stage) {
+            const labels = {hashing:"正在计算 SHA-256…",sending:"正在传输 Lua 脚本…",validating:"传输完成，等待设备校验与保存…",saved:"已通过校验，main.lua 已保存"};
+            $("progressLabel").textContent = labels[stage];
+            if (stage === "validating" || stage === "saved") $("cancelUpload").disabled = true;
+          }
+        });
+      } catch (error) {
+        $("progressLabel").textContent = error instanceof UploadCancelled ? "上传已取消" : "上传未确认成功，请查看下方错误信息";
+        throw error;
+      }
+      $("cancelUpload").hidden = true;
+      log("设备确认：SHA-256 与 Lua 语法检查通过，main.lua 已保存到 Flash。");
+      if (mode === "run") await control(OP.RUN,"已请求运行新脚本；设备输出将显示在此窗口。");
+      else if (mode === "reboot") await control(OP.REBOOT,"设备将重启并自动执行 main.lua，请稍后重新连接。");
+      else log("脚本保持停止，下次开机自动运行，也可点击「运行已保存脚本」。");
+    }));
+    if (!supported) {
+      $("compatibility").hidden = false;
+      $("compatibility").textContent = !window.isSecureContext ?
+        "当前地址不是安全上下文。请使用 http://localhost:8000/web-ble.html 或 HTTPS。" :
+        "当前浏览器未提供 Web Bluetooth 或 Web Crypto，请使用支持蓝牙的桌面版 Chrome / Edge 或 Android Chrome。";
+    }
+    log("工作台已就绪。默认按 Lua 服务 UUID 扫描，点击「扫描并连接设备」选择附近设备。");
+    renderControls();
+    window.addEventListener("pagehide", () => { if (client.device) client.disconnect(); });
+  })();
+  </script>
+</body>
+</html>
