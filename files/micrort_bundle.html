@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="通过 Web Bluetooth 为 ESP32-S3 上传、保存和运行 Lua 脚本。">
+  <title>MicroRT Editor · ESP32-S3 BLE 工作台</title>
+  <style>
+
+    :root { --ink:#2d3042; --muted:#71758a; --line:#d9dce5; --paper:#f5f5f8; --bg:#e9eaee; --accent:#198ed1; --accent-dark:#1274ae; --green:#167553; --chrome:#2d3042; --yellow:#ffda18; --mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace; }
+    * { box-sizing:border-box; }
+    [hidden] { display:none!important; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; height:100vh; height:100dvh; display:flex; flex-direction:column; }
+    button,input,select,textarea { font:inherit; }
+    button { cursor:pointer; border:1px solid var(--line); border-radius:5px; padding:6px 10px; color:inherit; background:#fff; font-weight:550; }
+    button:hover:not(:disabled) { background:#e3eaf2; }
+    button:disabled { opacity:.42; cursor:not-allowed; }
+    button.primary { background:var(--accent); border-color:var(--accent); color:white; }
+    button.primary:hover:not(:disabled) { background:var(--accent-dark); }
+    button.danger { color:#b53c50; }
+    :focus-visible { outline:3px solid #268fdf; outline-offset:2px; }
+    input,select { min-width:0; padding:6px 8px; border:1px solid var(--line); border-radius:4px; background:#fff; color:var(--ink); }
+    h1,h2,h3,p,pre { margin:0; }
+    h1 { font-size:22px; letter-spacing:-.6px; } h2 { font-size:16px; } h3 { font-size:13px; }
+    .topbar { position:relative; z-index:10; flex-shrink:0; min-height:64px; display:flex; align-items:center; gap:12px; background:var(--chrome); color:#f4f4f7; border-bottom:1px solid #44485f; padding:0 16px 0 20px; }
+    .brand { display:flex; align-items:center; gap:12px; width:176px; flex-shrink:0; color:inherit; text-decoration:none; }
+    .mark { color:var(--yellow); font:700 38px var(--mono); }
+    .top-menus,.top-actions,.run-controls { display:flex; align-items:center; gap:6px; }
+    .top-menus { border-left:1px solid #44485f; padding-left:12px; }
+    .top-actions { margin-left:auto; gap:14px; }
+    .topbar button { background:transparent; color:#d7dae6; border-color:transparent; }
+    .topbar button:hover:not(:disabled),.topbar button[aria-expanded="true"] { background:#42475f; color:var(--yellow); }
+    .topbar :focus-visible { outline-color:var(--yellow); }
+    .connection-trigger { display:flex; align-items:center; gap:8px; font-size:16px; }
+    .plug { display:grid; place-items:center; background:var(--yellow); color:var(--chrome); border-radius:50%; width:34px; height:34px; font-size:24px; }
+    .run-controls { border-left:1px solid #44485f; padding-left:12px; }
+    .run-controls button { font-size:28px; padding:0 8px; width:44px; height:44px; line-height:1; }
+    #run { color:var(--yellow); } #stop { color:#b5bad1; }
+    .badge { font-size:12px; color:#b7bdd1; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+    .badge::before { content:""; width:7px; height:7px; border-radius:50%; background:currentColor; }
+    .badge.online { color:#85dbac; }
+    .popover { position:absolute; top:calc(100% + 6px); width:350px; max-width:calc(100vw - 24px); max-height:calc(100dvh - 90px); overflow:auto; padding:18px; background:#252737; border:1px solid #44485f; box-shadow:0 8px 24px #15172540; color:#f4f4f7; }
+    .file-menu { left:208px; width:230px; display:grid; gap:6px; }
+    .file-menu button { text-align:left; padding:10px; }
+    .device-menu { left:270px; } .help-menu { left:330px; } .connection-menu { right:120px; }
+    .popover h2 { margin-bottom:14px; } .popover .hint,.popover .small,.popover dt,.popover summary { color:#b8bdd0; }
+    .popover button { border-color:#535971; } .popover button.primary { background:var(--yellow); border-color:var(--yellow); color:#252737; }
+    .popover button.danger { color:#ffabb5; }
+    .popover .device { padding:12px; background:#303448; margin-bottom:14px; }
+    .popover input { width:100%; } .popover input[type="checkbox"] { width:auto; }
+    .panel-heading { display:flex; justify-content:space-between; gap:8px; align-items:baseline; }
+    .small,.hint { font-size:12px; color:var(--muted); } .hint { margin-top:8px; }
+    .token-row,.connect-row { display:flex; gap:6px; } .token-row button { white-space:nowrap; } .connect-row { margin-top:14px; } .connect-row .primary { flex:1; }
+    #token { font:12px var(--mono); min-width:0; } label.field { display:block; font-size:12px; margin-bottom:6px; } #authenticate { width:100%; margin-top:10px; }
+    .status-list { margin:0; } .status-list div { display:flex; justify-content:space-between; gap:10px; margin-bottom:8px; } .status-list dd { margin:0; }
+    .actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0; }
+    .popover details { border-top:1px solid #44485f; margin-top:14px; padding-top:12px; } summary { cursor:pointer; }
+    .steps { padding-left:20px; font-size:13px; } .steps li { margin-bottom:8px; } code { font-family:var(--mono); }
+    .app-shell { flex:1; display:flex; flex-direction:column; min-height:0; }
+    .notifications { flex-shrink:0; } .banner { padding:9px 18px; color:#365b84; background:#e3effb; border-bottom:1px solid #c4d6ed; font-size:12px; max-height:100px; overflow:auto; }
+    .banner.error { color:#97334a; background:#fff0f2; border-color:#edc9cd; }
+    .workbench { display:grid; grid-template-columns:128px 260px minmax(0,1fr); flex:1; min-height:0; }
+    .navigation { background:var(--chrome); color:#f4f4f7; padding:22px 0 16px 12px; display:flex; flex-direction:column; gap:22px; overflow:auto; }
+    .navigation button { color:inherit; background:transparent; border:0; text-align:left; }
+    #resourceToggle { font-size:12px; color:#b8bdd0; margin-right:10px; }
+    .resource-tabs { display:flex; flex-direction:column; gap:10px; }
+    .resource-tabs button { border-radius:20px 0 0 20px; padding:8px 14px; font-size:14px; }
+    #librariesTab { border-left:4px solid #198ed1; } #examplesTab { border-left:4px solid #d48b1d; }
+    #librariesTab[aria-pressed="true"] { background:#198ed1; } #examplesTab[aria-pressed="true"] { background:#d48b1d; }
+    .navigation button:hover { background:#42475f; } .navigation-foot { margin-top:auto; padding-left:14px; font:11px var(--mono); color:#a2a8bd; } .navigation-foot span { display:block; margin-top:6px; }
+    .resource-panel { background:var(--bg); border-right:1px solid var(--line); overflow:auto; min-width:0; }
+    .resources .card-head { padding:16px 14px; } .resources .card-body { padding:14px; }
+    .resources .card-head { align-items:baseline; flex-wrap:wrap; }
+    .resource-filters { display:flex; flex-wrap:wrap; gap:6px; } .resource-filters input { width:100%; } .resource-filters select { flex:1; font-size:11px; width:46%; }
+    .resource-list { display:flex; flex-direction:column; gap:7px; padding:16px 0; max-height:40vh; overflow:auto; }
+    .resource-list button { text-align:left; font-size:12px; overflow-wrap:anywhere; border-left:3px solid var(--accent); }
+    .resource-preview { margin-top:12px; padding:10px; background:#f5f5f8; max-height:220px; overflow:auto; white-space:pre; font:11px/1.6 var(--mono); }
+    #resourceAction { margin-top:10px; font-size:12px; }
+    .workspace { display:flex; flex-direction:column; min-width:0; min-height:0; overflow:auto; background:var(--paper); }
+    .card { min-width:0; } .card-head { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 16px; border-bottom:1px solid var(--line); }
+    .editor-card { display:flex; flex-direction:column; flex:1 0 300px; min-height:300px; }
+    .editor-heading { min-height:43px; } .filename { font:12px var(--mono); overflow-wrap:anywhere; } .file-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--accent); margin-right:8px; }
+    #example { max-width:50%; font-size:12px; } .editor-command-bar { padding:7px 16px; border-bottom:1px solid var(--line); }
+    .upload-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; } .upload-row label { font-size:12px; color:var(--muted); } .upload-row select { font-size:12px; margin-right:auto; } .upload-row button { font-size:12px; }
+    .editor { display:flex; flex:1; min-height:140px; overflow:hidden; }
+    #lineNumbers { width:48px; flex-shrink:0; padding:14px 10px; text-align:right; background:#edeef3; color:#959bad; font:13px/1.8 var(--mono); overflow:hidden; user-select:none; }
+    #editor { width:100%; min-width:0; min-height:140px; border:0; border-radius:0; resize:none; padding:14px 16px; color:#34364b; background:transparent; font:13px/1.8 var(--mono); white-space:pre; overflow:auto; tab-size:4; }
+    #editor:focus-visible { outline:none; box-shadow:inset 0 0 0 2px #65a8dd; }
+    .editor-meta { display:flex; justify-content:space-between; gap:10px; padding:5px 16px; border-top:1px solid var(--line); font:11px var(--mono); color:var(--muted); }
+    #buildInfo,#entryInfo { margin:0; padding:2px 16px!important; font-size:11px; overflow-wrap:anywhere; }
+    .upload-panel { padding:4px 16px 7px; } .upload-panel .hint { font-size:10px; margin-top:4px; } .progress-top { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); }
+    progress { display:block; appearance:none; -webkit-appearance:none; height:3px; width:100%; border:0; margin-top:4px; background:#dce0e9; } progress::-webkit-progress-bar { background:#dce0e9; } progress::-webkit-progress-value { background:var(--accent); } progress::-moz-progress-bar { background:var(--accent); }
+    .console-card { flex-shrink:0; color:#e2e4ef; background:#252737; border-top:1px solid #44485f; }
+    .console-card summary { padding:6px 16px; font-size:12px; background:#303448; } .fold-hint { float:right; font-size:10px; color:#a9aec3; }
+    .console-card .card-head { padding:4px 16px; border-color:#44485f; } .console-card h3 { font-size:11px; color:#b8bdd0; }
+    .console-tools { display:flex; align-items:center; gap:10px; } .console-tools label { font-size:11px; color:#b8bdd0; } .console-tools button { padding:2px 8px; background:transparent; color:#cbd0df; border-color:#535971; font-size:11px; }
+    #console { height:160px; min-height:48px; resize:vertical; overflow:auto; padding:8px 16px; white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.7 var(--mono); }
+    #replOutput { height:48px; min-height:48px; resize:vertical; overflow:auto; padding:6px 16px; white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.6 var(--mono); }
+    .repl-input-row { display:flex; gap:8px; align-items:flex-end; padding:6px 16px; }
+    #replInput { flex:1; width:100%; min-height:44px; max-height:180px; resize:vertical; background:#1e2030; border:1px solid #535971; border-radius:4px; color:#f4f4f7; padding:6px 10px; font:12px/1.5 var(--mono); }
+    .repl-card .hint { margin:0; padding:0 16px 6px; max-height:36px; overflow:auto; color:#b8bdd0; font-size:10px; }
+    .workbench.resources-collapsed { grid-template-columns:128px minmax(0,1fr); } .resources-collapsed .resource-panel { display:none; }
+    @media(max-width:1199px) { .workbench { grid-template-columns:104px 220px minmax(0,1fr); } .workbench.resources-collapsed { grid-template-columns:104px minmax(0,1fr); } .navigation { padding-left:6px; } .resource-tabs button { padding-left:8px; font-size:12px; } }
+    @media(max-width:849px) { body { height:auto; min-height:100vh; min-height:100dvh; } .topbar { position:sticky; top:0; padding:0 10px; gap:4px; } .brand { width:auto; margin-right:8px; gap:6px; } h1 { font-size:18px; } .mark { font-size:30px; } .top-menus { gap:0; padding-left:4px; } .top-menus button { padding:6px; } .top-actions { gap:6px; } .badge { font-size:10px; } .connection-trigger { font-size:13px; } .plug { width:26px; height:26px; font-size:20px; } .run-controls { padding-left:4px; gap:0; } .run-controls button { width:34px; font-size:24px; } .workbench,.workbench.resources-collapsed { grid-template-columns:minmax(0,1fr); } .navigation { flex-direction:row; align-items:center; padding:8px 10px; gap:8px; overflow:visible; } .resource-tabs { flex-direction:row; gap:6px; } .resource-tabs button { border-radius:20px; padding:5px 14px; } .navigation-foot { display:none; } .resource-panel { max-height:380px; border-bottom:1px solid var(--line); } .resource-list { max-height:160px; } .resources .card-head { padding:8px 14px; } .workspace { overflow:visible; } .editor-card { flex:none; height:520px; } #console { height:160px; } #replOutput { height:80px; } .file-menu { left:12px; } .device-menu { left:20px; } .help-menu { left:30px; } .connection-menu { right:12px; } }
+    @media(max-width:559px) { .topbar { flex-wrap:wrap; padding:6px 10px; gap:4px; } .brand { margin-right:auto; } .top-actions { justify-content:flex-end; gap:8px; } .top-menus { order:3; width:100%; border-left:0; border-top:1px solid #44485f; padding:3px 0 0; } .top-menus button { flex:1; } h1 { font-size:16px; } .connection-trigger { padding:3px!important; } .badge { max-width:68px; white-space:normal; font-size:10px; } .run-controls button { width:30px; } .plug { display:none; } .upload-row select { flex:1; width:160px; } #upload { width:100%; } .editor-heading { flex-wrap:wrap; } #example { max-width:65%; } .editor-command-bar { padding:8px 10px; } .console-card .card-head { flex-wrap:wrap; gap:4px; } .popover { max-height:calc(100dvh - 120px); } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="MicroRT Editor"><span class="mark" aria-hidden="true"></span><h1>MicroRT Editor</h1></a>
+    <nav class="top-menus" aria-label="工作台菜单">
+      <button id="fileMenuButton" type="button" aria-expanded="false" aria-controls="fileMenu">文件 <span aria-hidden="true">▾</span></button>
+      <button id="deviceMenuButton" type="button" aria-expanded="false" aria-controls="deviceMenu">设备 <span aria-hidden="true">▾</span></button>
+      <button id="helpMenuButton" type="button" aria-expanded="false" aria-controls="helpMenu">帮助 <span aria-hidden="true">▾</span></button>
+    </nav>
+    <div class="top-actions"><span id="connectionBadge" class="badge" role="status">未连接</span><button id="connectionMenuButton" class="connection-trigger" type="button" aria-expanded="false" aria-controls="connectionMenu"><span class="plug" aria-hidden="true">↗</span> 连接 <span aria-hidden="true">▾</span></button><div class="run-controls"><button id="run" title="运行设备已保存脚本（不上传编辑内容）" aria-label="运行设备已保存脚本" type="button" data-device disabled><span aria-hidden="true">▶</span></button><button id="stop" title="停止脚本" aria-label="停止脚本" type="button" data-device disabled><span aria-hidden="true">■</span></button></div></div>
+    <section id="fileMenu" class="popover file-menu" aria-label="文件操作" hidden><button id="openFile" type="button">打开文件</button><button id="download" type="button">下载源码</button><button id="downloadBundle" type="button">下载可上传脚本</button><button id="downloadMap" type="button">下载源码映射</button></section>
+    <section id="deviceMenu" class="popover device-menu" aria-label="设备状态与维护" hidden><div class="panel-heading"><h2>设备状态</h2><div><button id="diagnose" type="button" data-device disabled>诊断</button> <button id="refresh" type="button" data-device disabled>刷新</button></div></div>
+            <dl class="status-list"><div><dt>Lua 状态</dt><dd id="runtimeStatus">—</dd></div><div><dt>文件系统</dt><dd id="filesystemStatus">—</dd></div><div><dt>启动模式</dt><dd id="safeStatus">—</dd></div><div><dt>脚本上限</dt><dd id="limitStatus">64 KiB</dd></div></dl>
+
+            <details id="diagnosticsDetails"><summary>设备诊断详情</summary><pre id="diagnosticsView" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px">连接并认证后，点击「诊断」读取设备状态、最近错误和统计。</pre></details>
+            <details><summary>恢复与维护</summary><div class="actions"><button id="reboot" type="button" data-device disabled>重启设备</button><button id="rollback" type="button" data-device disabled>恢复上一版并运行</button><button id="deleteScript" type="button" class="danger" data-device disabled>删除设备脚本</button></div><p class="hint">恢复使用设备上的备份；编辑器中的文本不会改变。</p></details>
+          </section>
+    <section id="helpMenu" class="popover help-menu" aria-label="使用帮助" hidden>
+      <h2>开始使用</h2>
+      <p class="hint">使用支持 Web Bluetooth 的 Chrome / Edge，通过 localhost 或 HTTPS 打开编辑器。设备需先烧录 MicroRT 固件。</p>
+      <ol class="steps">
+        <li>给设备上电，等待启动完成。M5StickS3 会先滚动显示 3 位设备 ID。</li>
+        <li>打开右上角「连接」，点击「扫描并连接设备」，选择对应的 <code>MicroRT ABC</code>（ABC 为设备 ID）。</li>
+        <li>填入 USB 串口输出的 <code>LUA_BLE_TOKEN</code>，点击「验证令牌，启用上传」。浏览器会记住最近一次验证成功的令牌。</li>
+        <li>从左侧 Examples 加载适合板型的示例，或通过「文件 → 打开文件」载入自己的 Lua 脚本。Libraries 可查看库说明并插入 <code>require</code>，上传时自动收集依赖。</li>
+        <li>编辑代码，选择「上传后」的操作，再点击「↑ 上传 main.lua」。默认保存并立即运行；展开下方「设备输出」查看日志。</li>
+      </ol>
+      <p class="hint">首次尝试可使用默认的用户灯示例：AtomS3-Lite 闪烁板载灯，M5StickS3 显示屏幕指示。</p>
+      <p class="hint">顶栏 ▶ 运行设备已保存的脚本；编辑后的代码需要重新上传。■ 停止脚本。</p>
+      <p class="hint">调试时，展开页面底部「Lua REPL」，点击「调试 main.lua」重新运行已保存脚本，再输入命令查看变量或调用函数。</p>
+      <p class="hint">网页客户端 <span id="clientVersion"></span></p>
+    </section>
+    <section id="connectionMenu" class="popover connection-menu" aria-label="蓝牙连接与认证" hidden><h2>连接设备</h2>
+            <div class="device"><div id="deviceName">MicroRT</div><div id="deviceDetail" class="small">等待选择附近的设备</div><div class="small">固件版本：<span id="firmwareVersion" aria-live="polite">待连接</span></div></div>
+            <label class="small"><input id="showAll" type="checkbox" aria-describedby="scanHint"> 显示所有 BLE 设备（排查扫描问题）</label>
+            <p id="scanHint" class="hint">默认按 Lua 服务 UUID 扫描，无需匹配设备名称。扫描不到时可勾选上方选项重试。</p>
+            <div class="connect-row"><button id="connect" class="primary" type="button">扫描并连接设备</button><button id="disconnect" type="button" disabled>断开</button></div>
+            <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+            <label class="field" for="token">设备令牌</label>
+            <div class="token-row"><input id="token" type="password" value="bd8acb2997417da6c05a23bb97d0ef4c" autocomplete="off" spellcheck="false" placeholder="32 位十六进制令牌" maxlength="32" aria-describedby="tokenHint"><button id="toggleToken" type="button" aria-label="显示设备令牌" aria-pressed="false">显示</button></div>
+            <p id="tokenHint" class="hint">令牌来自 USB 串口中的 LUA_BLE_TOKEN。浏览器会在本地记住最近一次成功验证的令牌，下次打开自动填入。</p>
+            <button id="authenticate" type="button" disabled>验证令牌，启用上传</button>
+          </section>
+  </header>
+  <main class="app-shell">
+    <div class="notifications"><div id="compatibility" class="banner" role="status" hidden></div><div id="errorBanner" class="banner error" role="alert" hidden></div></div>
+    <div class="workbench" id="workbench">
+      <aside class="navigation" aria-label="资源分类"><button id="resourceToggle" type="button" aria-expanded="true" aria-controls="resourcePanel">资源 <span aria-hidden="true">☰</span></button><div class="resource-tabs"><button id="librariesTab" type="button" aria-pressed="true">Libraries</button><button id="examplesTab" type="button" aria-pressed="false">Examples</button></div><div class="navigation-foot">Lua 5.4<span>ESP32-S3</span></div></aside>
+      <aside id="resourcePanel" class="resource-panel" aria-label="Lua 资源"><section class="card resources" aria-label="Lua 资源">
+          <div class="card-head"><h3>资源浏览</h3></div>
+          <div class="card-body">
+
+            <div class="resource-filters"><input id="resourceSearch" type="search" placeholder="搜索库或示例" aria-label="搜索资源"><select id="resourceBoard" aria-label="筛选板型"><option value="">全部板型</option><option>ESP32-S3</option><option>AtomS3-Lite</option><option>M5StickS3</option></select><select id="resourceCapability" aria-label="筛选能力"><option value="">全部能力</option><option value="lcd">屏幕</option><option value="hid">USB 键盘</option></select></div>
+            <div id="resourceList" class="resource-list"></div>
+            <p id="resourceInfo" class="hint">选择资源查看说明和源码。</p>
+            <pre id="resourcePreview" class="resource-preview" hidden></pre>
+            <button id="resourceAction" type="button" hidden>插入 require</button>
+          </div>
+        </section></aside>
+      <div class="workspace"><section class="card editor-card">
+          <div class="card-head editor-heading"><span class="filename"><span class="file-dot"></span><span id="fileName">main.lua</span></span><select id="example" aria-label="加载示例"></select></div><div class="editor-command-bar"><div class="upload-row"><label for="afterUpload">上传后</label><select id="afterUpload"><option value="run">立即运行，保持蓝牙连接</option><option value="reboot">重启设备后运行</option><option value="save">仅保存，保持停止</option></select><button id="cancelUpload" type="button" hidden>取消上传</button><button id="upload" class="primary" type="button" data-device disabled>↑ 上传 main.lua</button></div></div>
+          <input id="fileInput" type="file" accept=".lua,text/plain" hidden>
+          <div class="editor"><pre id="lineNumbers" aria-hidden="true">1</pre><textarea id="editor" aria-label="Lua 脚本编辑器" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea></div>
+          <div class="editor-meta"><span id="editorStats">0 行 · 0 bytes</span><span>Lua 5.4 · UTF-8</span></div>
+          <p id="buildInfo" class="hint" style="padding:0 19px">尚未构建。require 依赖将自动从内置 Libraries 收集。</p>
+          <p id="entryInfo" class="hint" style="padding:0 19px"></p>
+          <div class="upload-panel">
+
+            <div class="progress-top"><span id="progressLabel" role="status">等待上传</span><span id="progressText">0%</span></div><progress id="progress" value="0" max="100" aria-label="脚本传输进度"></progress>
+            <p class="hint">保存到设备 Flash，开机自动执行。</p>
+          </div>
+        </section><details class="card console-card"><summary>设备输出<span class="fold-hint">展开 / 收起</span></summary><div class="card-head"><h3>设备输出</h3><div class="console-tools"><label><input id="autoScroll" type="checkbox" checked>自动滚动</label><button id="clearConsole" type="button">清空</button></div></div><pre id="console" role="log" aria-label="连接日志和 Lua 输出" tabindex="0"></pre></details><details class="card console-card repl-card" aria-label="Lua REPL"><summary>Lua REPL · 调试 main.lua<span class="fold-hint">展开 / 收起</span></summary>
+      <div class="card-head"><h3>Lua REPL · 调试 main.lua</h3><div class="console-tools"><button id="replDebug" type="button" disabled>调试 main.lua</button><button id="replStop" type="button" data-device disabled>停止并重置</button><button id="replClear" type="button">清空显示</button></div></div>
+      <pre id="replOutput" role="log" aria-label="REPL 输出" tabindex="0"></pre>
+      <div class="repl-input-row"><textarea id="replInput" aria-label="REPL Lua 输入" placeholder="例如：1 + 2 或 print(123)" spellcheck="false" autocapitalize="off" autocomplete="off" rows="2"></textarea><button id="replSend" type="button" class="primary" disabled>执行</button></div>
+      <p id="replHint" class="hint">连接并验证后，点击「调试 main.lua」重新运行已保存脚本；REPL 共享它的变量和已加载的库。Enter 执行，Shift+Enter 换行。</p>
+    </details></div>
+    </div>
+  </main>
+
+  <script id="lua-catalog" type="application/json">
+{"version":1,"modules":{"_led_font":{"path":"libraries/_led_font.lua","source":"-- This Source Code Form is subject to the terms of the Mozilla Public\n-- License, v. 2.0. If a copy of the MPL was not distributed with this\n-- file, You can obtain one at https://mozilla.org/MPL/2.0/.\n-- Copyright 2018 John Maloney, Bernat Romagosa, and Jens Mönig.\n-- Derived from smallvm/vm/outputPrims.cpp, pendolino3 (micro:bit 5x5 font).\n-- Upstream font reference: lancaster-university/microbit-dal, MicroBitFont.cpp.\n-- ASCII 32..126; bit 0 is the top-left pixel, rows run left to right.\nreturn {\n    0, -- ASCII 32\n    2099266, -- ASCII 33\n    330, -- ASCII 34\n    11512810, -- ASCII 35\n    15514222, -- ASCII 36\n    26808627, -- ASCII 37\n    23370022, -- ASCII 38\n    66, -- ASCII 39\n    4261956, -- ASCII 40\n    2232450, -- ASCII 41\n    332096, -- ASCII 42\n    145536, -- ASCII 43\n    2228224, -- ASCII 44\n    14336, -- ASCII 45\n    65536, -- ASCII 46\n    1118480, -- ASCII 47\n    6595878, -- ASCII 48\n    14815428, -- ASCII 49\n    15767815, -- ASCII 50\n    6590735, -- ASCII 51\n    9413964, -- ASCII 52\n    16268351, -- ASCII 53\n    15251592, -- ASCII 54\n    1118495, -- ASCII 55\n    15252014, -- ASCII 56\n    2243118, -- ASCII 57\n    65600, -- ASCII 58\n    2228352, -- ASCII 59\n    8521864, -- ASCII 60\n    459200, -- ASCII 61\n    2236546, -- ASCII 62\n    4207150, -- ASCII 63\n    7132718, -- ASCII 64\n    9747750, -- ASCII 65\n    7642407, -- ASCII 66\n    14713902, -- ASCII 67\n    7644455, -- ASCII 68\n    15768623, -- ASCII 69\n    1088559, -- ASCII 70\n    15262766, -- ASCII 71\n    9747753, -- ASCII 72\n    7407687, -- ASCII 73\n    6594847, -- ASCII 74\n    9604265, -- ASCII 75\n    15762465, -- ASCII 76\n    18405233, -- ASCII 77\n    18667121, -- ASCII 78\n    6595878, -- ASCII 79\n    1088807, -- ASCII 80\n    12789030, -- ASCII 81\n    18128167, -- ASCII 82\n    7608366, -- ASCII 83\n    4329631, -- ASCII 84\n    6595881, -- ASCII 85\n    4539953, -- ASCII 86\n    18732593, -- ASCII 87\n    9738537, -- ASCII 88\n    4329809, -- ASCII 89\n    15763599, -- ASCII 90\n    14747726, -- ASCII 91\n    17043521, -- ASCII 92\n    14950670, -- ASCII 93\n    324, -- ASCII 94\n    32505856, -- ASCII 95\n    130, -- ASCII 96\n    31761856, -- ASCII 97\n    7642145, -- ASCII 98\n    14714304, -- ASCII 99\n    14989576, -- ASCII 100\n    14720294, -- ASCII 101\n    2169932, -- ASCII 102\n    6568238, -- ASCII 103\n    9739297, -- ASCII 104\n    2164738, -- ASCII 105\n    6561800, -- ASCII 106\n    9604257, -- ASCII 107\n    12650562, -- ASCII 108\n    18405216, -- ASCII 109\n    9741536, -- ASCII 110\n    6595776, -- ASCII 111\n    1287392, -- ASCII 112\n    8857024, -- ASCII 113\n    1082816, -- ASCII 114\n    3279232, -- ASCII 115\n    29440066, -- ASCII 116\n    31761696, -- ASCII 117\n    4539936, -- ASCII 118\n    29017632, -- ASCII 119\n    9640224, -- ASCII 120\n    3287584, -- ASCII 121\n    15798752, -- ASCII 122\n    12720268, -- ASCII 123\n    2164802, -- ASCII 124\n    3217475, -- ASCII 125\n    792576, -- ASCII 126\n}\n","sha256":"bcbab304a9cc97e8eb12c04380fc4fb05f3b74b676ca7f7fd0300576352dac91","title":"_led_font","description":"","boards":[],"capabilities":[],"firmware":null,"name":"_led_font","public":false},"_led_images":{"path":"libraries/_led_images.lua","source":"-- This Source Code Form is subject to the terms of the Mozilla Public\n-- License, v. 2.0. If a copy of the MPL was not distributed with this\n-- file, You can obtain one at https://mozilla.org/MPL/2.0/.\n-- Ported image data from smallvm/Libraries/LED Display.ubl, author MicroBlocks.\nreturn {\n    [\"heart\"] = 4685802,\n    [\"small heart\"] = 145728,\n    [\"yes\"] = 2269696,\n    [\"no\"] = 18157905,\n    [\"happy\"] = 15237440,\n    [\"sad\"] = 18284864,\n    [\"confused\"] = 22348096,\n    [\"angry\"] = 23036241,\n    [\"asleep\"] = 459616,\n    [\"surprised\"] = 4526090,\n    [\"silly\"] = 25984017,\n    [\"fabulous\"] = 15008639,\n    [\"meh\"] = 2236443,\n    [\"t-shirt\"] = 15154043,\n    [\"roller skate\"] = 11534104,\n    [\"duck\"] = 489702,\n    [\"house\"] = 10976708,\n    [\"tortoise\"] = 359872,\n    [\"butterfly\"] = 29332475,\n    [\"stick figure\"] = 18158564,\n    [\"ghost\"] = 23068334,\n    [\"sword\"] = 4657284,\n    [\"giraffe\"] = 10946627,\n    [\"skull\"] = 15171246,\n    [\"umbrella\"] = 6460398,\n    [\"snake\"] = 469859,\n    [\"rabbit\"] = 16104613,\n    [\"cow\"] = 4685361,\n    [\"quarter note\"] = 7573636,\n    [\"eight note\"] = 7590276,\n    [\"pitchfork\"] = 4357813,\n    [\"target\"] = 4681156,\n    [\"triangle\"] = 1026176,\n    [\"left triangle\"] = 32805985,\n    [\"chess board\"] = 11184810,\n    [\"diamond\"] = 4539716,\n    [\"small diamond\"] = 141440,\n    [\"square\"] = 33080895,\n    [\"small square\"] = 469440,\n    [\"scissors\"] = 20287859,\n}\n","sha256":"091c91a3afcb8afb04d9332cf9cdca3b2ce7f16e9a5d457ab1bd73a120783f6c","title":"_led_images","description":"","boards":[],"capabilities":[],"firmware":null,"name":"_led_images","public":false},"led_display":{"path":"libraries/led_display.lua","source":"-- @title LED Display\n-- @description 5×5 图案、数字与滚动文字\n-- @boards M5StickS3\n-- @firmware 0.3.0\n-- @capabilities lcd\n-- This Source Code Form is subject to the terms of the Mozilla Public\n-- License, v. 2.0. If a copy of the MPL was not distributed with this\n-- file, You can obtain one at https://mozilla.org/MPL/2.0/.\n-- Lua adaptation of smallvm/Libraries/LED Display.ubl (author MicroBlocks).\n-- Uses the existing M5StickS3 display API; loading has no drawing side effects.\nlocal screen = assert(display, \"led_display requires a 5x5 LED matrix or TFT; use M5StickS3 (AtomS3-Lite has only one RGB LED)\")\nlocal font = require(\"_led_font\")\nlocal images = require(\"_led_images\")\nlocal led = {}\nlocal bits, color = 0, 0x07e0\nlocal scrolling, layout\nlocal MAX_IMAGE = 0x1ffffff\nlocal digits = {3247203,2164802,3181635,3214403,2165793,3214371,3247139,2164803,3244131,3214435}\n\nlocal function integer(value, low, high, name)\n    assert(math.type(value) == \"integer\" and value \u003e= low and value \u003c= high,\n           (name or \"value\") .. \" must be an integer in \" .. low .. \"..\" .. high)\n    return value\nend\n\nlocal function coordinate(value, name)\n    return integer(value, -32768, 32767, name)\nend\n\nlocal function image(value)\n    return integer(value, 0, MAX_IMAGE, \"image\")\nend\n\nlocal function geometry()\n    assert(screen.ready(), \"display initialization failed; check USB serial logs\")\n    local w, h = screen.width(), screen.height()\n    local rotation = screen.get_rotation and screen.get_rotation() or nil\n    local changed = not layout or w ~= layout.w or h ~= layout.h or rotation ~= layout.rotation\n    local side = math.min(w, h)\n    local gap = side \u003e 60 and 3 or 1\n    local size = (side - 6 * gap) // 5\n    assert(size \u003e 0, \"display is too small for a 5x5 LED matrix\")\n    layout = {w=w, h=h, rotation=rotation, x=(w-side)//2, y=(h-side)//2, gap=gap, size=size}\n    if changed then screen.clear(0) end\n    return changed\nend\n\nlocal function draw_cell(x, y)\n    local g = layout\n    local on = (bits \u0026 (1 \u003c\u003c ((y-1)*5+x-1))) ~= 0\n    screen.rect(g.x+(x-1)*g.size+x*g.gap, g.y+(y-1)*g.size+y*g.gap,\n                g.size, g.size, on and color or 0, true)\nend\n\nlocal function render()\n    geometry()\n    for y=1,5 do for x=1,5 do draw_cell(x,y) end end\nend\n\nlocal function text_value(value)\n    assert(type(value)==\"string\" or type(value)==\"number\" or type(value)==\"boolean\",\n           \"text must be a string, number or boolean\")\n    local text = tostring(value)\n    assert(#text \u003c= 1024, \"text exceeds 1024 UTF-8 bytes\")\n    assert(utf8.len(text), \"text must be valid UTF-8\")\n    return text\nend\n\nlocal function glyph(code)\n    return code \u003e= 32 and code \u003c= 126 and font[code-31] or 0\nend\n\nlocal function blit(frame, shape, x, y)\n    for sy=0,4 do for sx=0,4 do\n        local dx, dy = x+sx, y+sy\n        if dx\u003e=1 and dx\u003c=5 and dy\u003e=1 and dy\u003c=5 then\n            local mask = 1 \u003c\u003c ((dy-1)*5+dx-1)\n            if (shape \u0026 (1 \u003c\u003c (sy*5+sx))) ~= 0 then frame = frame | mask\n            else frame = frame \u0026 ~mask end\n        end\n    end end\n    -- smallvm clears the inter-character column when a glyph exits to the left.\n    if x\u003e=-4 and x\u003c=0 and y==1 then\n        for row=0,4 do frame = frame \u0026 ~(1 \u003c\u003c (row*5+4+x)) end\n    end\n    return frame\nend\n\nfunction led.image(value) return image(value) end\nfunction led.named_image(name)\n    assert(type(name)==\"string\", \"image name must be a string\")\n    return images[name] or 0\nend\nfunction led.image_names()\n    local names = {}\n    for name in pairs(images) do names[#names+1] = name end\n    table.sort(names)\n    return names\nend\nfunction led.state() return bits end\nfunction led.show(value)\n    bits = image(value)\n    if bits==0 then led.clear() else render() end\nend\nfunction led.clear()\n    geometry()\n    screen.clear(0)\n    bits = 0\nend\nfunction led.display_image(value, x, y)\n    local shape = type(value)==\"string\" and led.named_image(value) or image(value)\n    x = coordinate(x==nil and 1 or x, \"x\")\n    y = coordinate(y==nil and 1 or y, \"y\")\n    bits = blit(bits,shape,x,y)\n    render()\nend\nlocal function plot(x, y, on)\n    coordinate(x,\"x\"); coordinate(y,\"y\")\n    if x\u003c1 or x\u003e5 or y\u003c1 or y\u003e5 then return end\n    local mask = 1 \u003c\u003c ((y-1)*5+x-1)\n    if on then bits = bits | mask else bits = bits \u0026 ~mask end\n    if geometry() then render() else draw_cell(x,y) end\nend\nfunction led.plot(x,y) plot(x,y,true) end\nfunction led.unplot(x,y) plot(x,y,false) end\nfunction led.set_color(rgb)\n    integer(rgb,0,0xffffff,\"color\")\n    color = ((rgb \u003e\u003e 19) \u003c\u003c 11) | (((rgb \u003e\u003e 10) \u0026 63) \u003c\u003c 5) | ((rgb \u003e\u003e 3) \u0026 31)\n    render()\nend\nfunction led.character_shape(value)\n    if math.type(value)==\"integer\" then return glyph(value) end\n    local text = text_value(value)\n    return #text\u003e0 and glyph(utf8.codepoint(text)) or 0\nend\nfunction led.display_character(value)\n    local text = text_value(value)\n    if #text==0 then led.clear() else led.display_image(led.character_shape(text)) end\nend\nfunction led.display_number(number)\n    integer(number,0,99,\"number\")\n    bits = blit(blit(0,digits[number//10+1],1,1),digits[number%10+1],4,1)\n    render()\nend\n\nfunction led.start_scrolling(value, pause_ms)\n    local text = text_value(value)\n    local pause = integer(pause_ms==nil and 100 or pause_ms,0,300000,\"pause_ms\")\n    local shapes = {}\n    for _,code in utf8.codes(text) do shapes[#shapes+1] = glyph(code) end\n    scrolling = {shapes=shapes, position=0, last=#shapes*6+6, pause=pause}\nend\nfunction led.step_scrolling()\n    local scroll = scrolling\n    if not scroll then return false end\n    scroll.position = scroll.position+1\n    local frame = 0\n    local first = math.max(1,(scroll.position-1)//6)\n    local last = math.min(#scroll.shapes,(scroll.position+3)//6)\n    for i=first,last do\n        frame = blit(frame,scroll.shapes[i],i*6+2-scroll.position,1)\n    end\n    bits = frame\n    render()\n    delay(scroll.pause)\n    if scrolling==scroll and scroll.position\u003e=scroll.last then scrolling=nil end\n    return scrolling==scroll\nend\nfunction led.scroll_text(value,pause_ms)\n    led.start_scrolling(value,pause_ms)\n    while led.step_scrolling() do end\nend\nfunction led.stop_scrolling()\n    scrolling = nil\n    led.clear()\nend\n\n-- Familiar names from the source library, alongside the Lua snake_case API.\nled.display = led.show\nled.led_image = led.image\nled.led_displayImage = led.display_image\nled.displayCharacter = led.display_character\nled.display2x5Number = led.display_number\nled.stopScrollingText = led.stop_scrolling\nreturn led\n","sha256":"3f272c453ab880f6846b4af10178cf73d6ca55ba1a187dfc3d2dbfab4722e6cb","title":"LED Display","description":"5×5 图案、数字与滚动文字","boards":["M5StickS3"],"capabilities":["lcd"],"firmware":"0.3.0","name":"led_display","public":true},"tcp":{"path":"libraries/tcp.lua","source":"-- @title TCP Client\n-- @description 连接 TCP 服务端，非阻塞发送和接收字节流\n-- @boards ESP32-S3,AtomS3-Lite,M5StickS3\n-- @firmware 0.5.2\n-- Connect Wi-Fi or start an access point with wifi before using TCP.\nrequire(\"wifi\")\nlocal net = assert(_net, \"firmware does not support network libraries; update firmware\")\nassert(net.tcp_start, \"firmware does not support TCP; rebuild and update firmware\")\nlocal tcp = {max_chunk = net.max_packet}\nfunction tcp.start(ipv4, port) return net.tcp_start(ipv4, port) end\nfunction tcp.poll() return net.tcp_poll() end\nfunction tcp.close() return net.tcp_close() end\nfunction tcp.send(data) return net.tcp_send(data) end\nfunction tcp.receive(max_bytes) return net.tcp_receive(max_bytes) end\nfunction tcp.connect(ipv4, port, timeout_ms)\n    if timeout_ms == nil then timeout_ms = 10000 end\n    assert(math.type(timeout_ms) == \"integer\" and timeout_ms \u003e= 1 and timeout_ms \u003c= 300000,\n        \"timeout_ms must be an integer in 1..300000\")\n    local ok, err = tcp.start(ipv4, port)\n    if not ok then return nil, err end\n    local start = net.ticks_ms()\n    while true do\n        ok, err = tcp.poll()\n        if ok then return true end\n        if err ~= \"again\" then tcp.close(); return nil, err end\n        if ((net.ticks_ms() - start) \u0026 0x3fffffff) \u003e= timeout_ms then\n            tcp.close()\n            return nil, \"timeout\"\n        end\n        delay(20)\n    end\nend\nreturn tcp\n","sha256":"3d62e2399a020b864498cd56750eba30d29195c760552c567acbe1677531ba5c","title":"TCP Client","description":"连接 TCP 服务端，非阻塞发送和接收字节流","boards":["ESP32-S3","AtomS3-Lite","M5StickS3"],"capabilities":[],"firmware":"0.5.2","name":"tcp","public":true},"udp":{"path":"libraries/udp.lua","source":"-- @title UDP\n-- @description 发送和接收非阻塞 UDP 数据报\n-- @boards ESP32-S3,AtomS3-Lite,M5StickS3\n-- @firmware 0.2.0\n-- Lua strings preserve binary datagrams, including embedded NUL bytes.\n-- Connect Wi-Fi or start an access point with wifi before using UDP.\nrequire(\"wifi\")\nlocal net = assert(_net, \"firmware does not support network libraries; update firmware\")\nlocal udp = {max_packet = net.max_packet}\nfunction udp.open(port) return net.udp_open(port) end\nfunction udp.close() return net.udp_close() end\nfunction udp.send(data, ipv4, port) return net.udp_send(data, ipv4, port) end\nfunction udp.receive() return net.udp_receive() end\nreturn udp\n","sha256":"ffc40ef3595945c074f0738dec8db6bbc9dfae489c43b8ed5c021427d1a023df","title":"UDP","description":"发送和接收非阻塞 UDP 数据报","boards":["ESP32-S3","AtomS3-Lite","M5StickS3"],"capabilities":[],"firmware":"0.2.0","name":"udp","public":true},"wifi":{"path":"libraries/wifi.lua","source":"-- @title Wi-Fi\n-- @description 连接 Wi-Fi、创建热点和查询状态\n-- @boards ESP32-S3,AtomS3-Lite,M5StickS3\n-- @firmware 0.2.0\n-- Network policy runs in Lua; the firmware owns the radio and monotonic clock.\nlocal net = assert(_net, \"firmware does not support network libraries; update firmware\")\nlocal wifi = {}\nlocal function timeout(value, default)\n    if value == nil then value = default end\n    assert(math.type(value) == \"integer\" and value \u003e= 1 and value \u003c= 300000,\n        \"timeout_ms must be an integer in 1..300000\")\n    return value\nend\nlocal function elapsed(start) return (net.ticks_ms() - start) \u0026 0x3fffffff end\nfunction wifi.status() return net.wifi_status() end\nfunction wifi.ip() return wifi.status().ip end\nfunction wifi.start(ssid, password)\n    if password == nil then password = \"\" end\n    return net.wifi_start(ssid, password, false)\nend\nfunction wifi.stop(timeout_ms)\n    timeout_ms = timeout(timeout_ms, 1500)\n    net.wifi_stop()\n    local start = net.ticks_ms()\n    while true do\n        local state = wifi.status().state\n        if state == \"stopped\" then return true end\n        if state == \"failed\" then return nil, \"stop_failed\" end\n        if elapsed(start) \u003e= timeout_ms then return nil, \"timeout\" end\n        delay(20)\n    end\nend\nlocal function wait_ready(timeout_ms)\n    local start = net.ticks_ms()\n    repeat\n        local state = wifi.status()\n        if state.ready then return state.ip end\n        if state.state == \"failed\" then net.wifi_stop(); return nil, \"connect_failed\" end\n        if state.state == \"stopped\" or state.state == \"stopping\" then return nil, \"disconnected\" end\n        if elapsed(start) \u003e= timeout_ms then net.wifi_stop(); return nil, \"timeout\" end\n        delay(20)\n    until false\nend\nfunction wifi.connect(ssid, password, timeout_ms)\n    timeout_ms = timeout(timeout_ms, 30000)\n    local ok, err = wifi.start(ssid, password)\n    if not ok then return nil, err end\n    return wait_ready(timeout_ms)\nend\nfunction wifi.start_ap(ssid, password, timeout_ms)\n    timeout_ms = timeout(timeout_ms, 5000)\n    local ok, err = net.wifi_start(ssid, password, true)\n    if not ok then return nil, err end\n    return wait_ready(timeout_ms)\nend\nreturn wifi\n","sha256":"b72547d068c9899663ccec743955f901a912f7b1400661f49cc835c98bfda7f8","title":"Wi-Fi","description":"连接 Wi-Fi、创建热点和查询状态","boards":["ESP32-S3","AtomS3-Lite","M5StickS3"],"capabilities":[],"firmware":"0.2.0","name":"wifi","public":true}},"examples":[{"path":"examples/display.lua","source":"-- @title 屏幕绘图\n-- @description M5StickS3 文字、图形和计数器\n-- @boards M5StickS3\n-- @firmware 0.1.1\n-- @capabilities lcd\n-- M5StickS3: pio run -e M5StickS3 -t upload\n-- python3 python-editor/upload.py examples/display.lua --monitor\nassert(display and display.ready(), \"M5StickS3 display is unavailable\")\n\nlocal white = display.rgb(255, 255, 255)\nlocal green = display.rgb(0, 220, 100)\nlocal blue = display.rgb(40, 140, 255)\ndisplay.clear()\ndisplay.text(\"Hello, Lua!\", 12, 10, white, 2)\ndisplay.line(12, 32, display.width() - 12, 32, blue)\ndisplay.rect(12, 44, 64, 32, green)\ndisplay.circle(106, 60, 16, blue, true)\nprint(\"Display ready:\", display.width(), display.height())\n\nlocal count = 0\nwhile true do\n    display.rect(12, 94, 216, 24, 0, true)\n    display.text(\"Count: \" .. count, 12, 94, white, 2)\n    count = count + 1\n    delay(1000)\nend\n","sha256":"b4cf7ccd17a4f9e1e519f22ee33fd37be2aa7780572c798a5cd7e9c127697adc","title":"屏幕绘图","description":"M5StickS3 文字、图形和计数器","boards":["M5StickS3"],"capabilities":["lcd"],"firmware":"0.1.1"},{"path":"examples/hello.lua","source":"-- @title Hello / 计数器\n-- @description 验证串口和 BLE 输出\n-- @boards ESP32-S3,AtomS3-Lite,M5StickS3\n-- @firmware 0.1.1\nprint(\"Hello from PUC-Lua on ESP32-S3!\")\nlocal count = 0\nwhile true do\n    count = count + 1\n    print(\"Count:\", count)\n    delay(1000)\nend\n","sha256":"85f8e2536c8cc98d161c73bff2b2da187eda7e6a594334101434501060aba332","title":"Hello / 计数器","description":"验证串口和 BLE 输出","boards":["ESP32-S3","AtomS3-Lite","M5StickS3"],"capabilities":[],"firmware":"0.1.1"},{"path":"examples/keyboard.lua","source":"-- @title USB 键盘\n-- @description 向已连接电脑输入文字；使用 HID 固件\n-- @boards ESP32-S3,AtomS3-Lite\n-- @firmware 0.1.1\n-- @capabilities hid\n-- Build/upload firmware with: pio run -e esp32s3-hid -t upload\n-- Open an empty text editor and focus it during the five-second delay.\nwhile not keyboard.ready() do\n    delay(100)\nend\nprint(\"USB keyboard ready; typing into the focused window in 5 seconds...\")\ndelay(5000)\nkeyboard.write(\"Hello from ESP32-S3 Lua!\")\nkeyboard.press(keyboard.RETURN)\nkeyboard.release(keyboard.RETURN)\nkeyboard.release_all()\nprint(\"Keyboard example finished\")\n","sha256":"7145a29c66cd12f144d0869ddb74d98f09d6bcd2477e9e9519c534b28097afc2","title":"USB 键盘","description":"向已连接电脑输入文字；使用 HID 固件","boards":["ESP32-S3","AtomS3-Lite"],"capabilities":["hid"],"firmware":"0.1.1"},{"path":"examples/led_display/main.lua","source":"-- @title LED Display 演示\n-- @description 图案、两位数字和滚动文字\n-- @boards M5StickS3\n-- @firmware 0.3.0\n-- @capabilities lcd\nlocal led = require(\"led_display\")\nled.set_color(0x00ff00)\nled.display_image(\"heart\")\ndelay(1000)\nled.display_image(\"happy\")\ndelay(1000)\nled.display_number(42)\ndelay(1000)\nled.scroll_text(\"HELLO MicroRT!\",100)\n-- Keep the final image visible until STOP or the next upload.\nled.display_image(\"heart\")","sha256":"3bd829821c57f01832fe7aa26d0c6473a29ca5c0df93e284362ee8d890434af4","title":"LED Display 演示","description":"图案、两位数字和滚动文字","boards":["M5StickS3"],"capabilities":["lcd"],"firmware":"0.3.0"},{"path":"examples/tcp_client/main.lua","source":"-- @title TCP 客户端\n-- @description 连接电脑的 TCP 回显服务，发送并接收二进制数据\n-- @boards ESP32-S3,AtomS3-Lite,M5StickS3\n-- @firmware 0.5.2\nlocal wifi = require(\"wifi\")\nlocal tcp = require(\"tcp\")\nlocal ip, err = wifi.connect(\"xxx\", \"xxx\")\nassert(ip, err)\nprint(\"ip:\", ip)\nassert(tcp.connect(\"172.20.10.2\", 5005, 10000)) -- Replace with the computer's IPv4.\nlocal message = \"hello\\0MicroRT\"\nlocal sent, reply = 0, \"\"\nlocal elapsed = 0\nwhile #reply \u003c #message do\n    if sent \u003c #message then\n        local n, why = tcp.send(message:sub(sent + 1, sent + tcp.max_chunk))\n        if n then sent = sent + n elseif why ~= \"again\" then error(why) end\n    end\n    local data, why = tcp.receive(#message - #reply)\n    if data then reply = reply .. data elseif why ~= \"again\" then error(why) end\n    if #reply \u003c #message then\n        assert(elapsed \u003c 10000, \"echo timeout\")\n        delay(20)\n        elapsed = elapsed + 20\n    end\nend\nassert(reply == message, \"echo mismatch\")\nprint(\"TCP echo received:\", #reply, \"bytes\")\nassert(tcp.close())\n","sha256":"b5c08b4b164fc75b3b47c8e0c6b7915b757fdf2bcfc007f31e779bc7020083be","title":"TCP 客户端","description":"连接电脑的 TCP 回显服务，发送并接收二进制数据","boards":["ESP32-S3","AtomS3-Lite","M5StickS3"],"capabilities":[],"firmware":"0.5.2"},{"path":"examples/udp_echo/main.lua","source":"-- @title UDP 回显\n-- @description 接收数据并原样回传\n-- @boards ESP32-S3,AtomS3-Lite,M5StickS3\n-- @firmware 0.2.0\nlocal wifi = require(\"wifi\")\nlocal udp = require(\"udp\")\nlocal ip, err = wifi.connect(\"YOUR_SSID\", \"YOUR_PASSWORD\")\n-- For an independent access point instead:\n-- local ip, err = wifi.start_ap(\"MicroRT-Demo\", \"change-me-123\")\nassert(ip, err)\nassert(udp.open(5000))\nprint(\"UDP echo ready:\", ip, 5000)\nwhile true do\n    local data, remote_ip, remote_port = udp.receive()\n    if data ~= nil then\n        local sent, why = udp.send(data, remote_ip, remote_port)\n        if not sent then print(\"UDP send:\", why) end\n    elseif remote_ip ~= \"again\" then\n        error(\"UDP receive: \" .. remote_ip)\n    end\n    delay(20)\nend\n","sha256":"577d163a8a52f142a4764938776aa25f84d638ddd81aff85384cb59f0d1a06c7","title":"UDP 回显","description":"接收数据并原样回传","boards":["ESP32-S3","AtomS3-Lite","M5StickS3"],"capabilities":[],"firmware":"0.2.0"},{"path":"examples/udp_send/main.lua","source":"-- @title UDP 发送\n-- @description 发送序号并接收电脑回显\n-- @boards ESP32-S3,AtomS3-Lite,M5StickS3\n-- @firmware 0.2.0\nlocal wifi = require(\"wifi\")\nlocal udp = require(\"udp\")\nlocal ssid, password = \"xxx\", \"xxx\"\nlocal peer = \"172.20.10.15\" -- computer running tools/udp_echo.py\nlocal sequence = 0\nwhile true do\n    if not wifi.status().ready then\n        local ip, err = wifi.connect(ssid, password, 10000)\n        print(\"Wi-Fi:\", ip or err)\n        print(\"test1\")\n    end\n    if wifi.status().ready then\n        local opened, err = udp.open(5001)\n        if opened then\n            sequence = sequence + 1\n            local sent, why = udp.send(tostring(sequence) .. \"\\0hello\", peer, 5000)\n            if not sent then print(\"UDP send:\", why) end\n            local data, remote_ip, remote_port = udp.receive()\n            if data ~= nil then print(\"Reply:\", #data, remote_ip, remote_port) end\n        else print(\"UDP open:\", err) end\n    end\n    delay(1000)\nend\n","sha256":"a3f7780c98d1a446723fbdf6c8f18521b72d1f7ea5afcf0adf8cdec6fb8e60a0","title":"UDP 发送","description":"发送序号并接收电脑回显","boards":["ESP32-S3","AtomS3-Lite","M5StickS3"],"capabilities":[],"firmware":"0.2.0"},{"path":"examples/user_led.lua","source":"-- @title 用户灯\n-- @description 打开和关闭板载灯或屏幕指示\n-- @boards AtomS3-Lite,M5StickS3\n-- @firmware 0.3.0\n-- AtomS3-Lite: onboard blue LED; M5StickS3: green square on the display.\n-- Requires firmware with set_user_led; no Lua libraries are needed.\nwhile true do\n    set_user_led(true)\n    delay(500)\n    set_user_led(false)\n    delay(500)\nend\n","sha256":"9235e87730157feeb7ef2fa41245b99db1e09ce93a906a764a9a932cca59e718","title":"用户灯","description":"打开和关闭板载灯或屏幕指示","boards":["AtomS3-Lite","M5StickS3"],"capabilities":[],"firmware":"0.3.0"},{"path":"examples/wifi_connect/main.lua","source":"-- @title Wi-Fi 连接\n-- @description 填写 SSID 和密码后连接\n-- @boards ESP32-S3,AtomS3-Lite,M5StickS3\n-- @firmware 0.2.0\nlocal wifi = require(\"wifi\")\nlocal ip, err = wifi.connect(\"YOUR_SSID\", \"YOUR_PASSWORD\")\nassert(ip, err)\nprint(\"Wi-Fi ready:\", ip)\nassert(wifi.stop())\n-- Network resources are also released when the script exits or is stopped.\n","sha256":"2c2c32277a739f12578dc50e3b25ebd8cde5a0f143a9d252df57361cf93ad610","title":"Wi-Fi 连接","description":"填写 SSID 和密码后连接","boards":["ESP32-S3","AtomS3-Lite","M5StickS3"],"capabilities":[],"firmware":"0.2.0"}],"prelude":"-- Generated by MicroRT bundle; edit the source files instead.\nlocal __factories, __cache, __loaded, __loading, __chain = {}, {}, {}, {}, {}\nlocal function __require(name)\n    if type(name) ~= \"string\" then error(\"require expects a module name\", 2) end\n    if __loaded[name] then return __cache[name] end\n    if __loading[name] then\n        error(\"circular dependency: \" .. table.concat(__chain, \" -\u003e \") .. \" -\u003e \" .. name, 2)\n    end\n    local factory = __factories[name]\n    if not factory then\n        error(\"module not declared: \" .. name .. \" (loading \" .. table.concat(__chain, \" -\u003e \") .. \")\", 2)\n    end\n    __loading[name] = true\n    __chain[#__chain + 1] = name\n    local ok, result = pcall(factory, __require)\n    __chain[#__chain] = nil\n    __loading[name] = nil\n    if not ok then error(result, 0) end\n    if result == nil then result = true end\n    __cache[name], __loaded[name] = result, true\n    return result\nend","maximum":65536,"hash":"56df3c1ccc3d0275665bbc372af4bcd327b5e481a23f7613e0002fd9a70573e9"}
+  </script>
+  <script id="lua-bundle">
+/* Embedded by web-editor/build_web.py; no runtime network dependencies. */
+"use strict";
+const LuaBundle = (() => {
+  const encoder = new TextEncoder();
+  const namePattern = /^[A-Za-z_][A-Za-z_0-9]*(?:\.[A-Za-z_][A-Za-z_0-9]*)*$/;
+  const normalize = text => text.replace(/^\uFEFF/, "").replace(/\r\n?/g,"\n");
+  const hash = async text => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", encoder.encode(text))),x=>x.toString(16).padStart(2,"0")).join("");
+  function tokens(text) {
+    const result=[];
+    for(let i=0;i<text.length;) {
+      if (/\s/u.test(text[i])) {i++; continue;}
+      const comment=text.startsWith("--",i), start=i+(comment?2:0);
+      const long=/^\[(=*)\[/.exec(text.slice(start));
+      if(long) {
+        const marker="]"+long[1]+"]", content=start+long[0].length, end=text.indexOf(marker,content);
+        if(end<0) {result.push(["invalid",text.slice(i),i]);return result;}
+        if(!comment) result.push(["string",text.slice(content,end).replace(/^\n/,""),i]);
+        i=end+marker.length;
+      } else if(comment) {
+        const end=text.indexOf("\n",start); i=end<0?text.length:end;
+      } else if(text[i]==="'"||text[i]==='"') {
+        const quote=text[i],begin=i++;let invalid=false;
+        while(i<text.length && text[i]!==quote) {
+          if(text[i]==="\\") {i+=2;continue;}
+          if(text[i]==="\n"||text[i]==="\r") {invalid=true;break;}
+          i++;
+        }
+        if(invalid||i>=text.length) {result.push(["invalid",text.slice(begin),begin]);return result;}
+        result.push(["string",text.slice(begin+1,i),begin]);i++;
+      } else {
+        const identifier=/^[A-Za-z_][A-Za-z_0-9]*/.exec(text.slice(i));
+        const value=identifier?identifier[0]:text[i];
+        result.push([identifier?"name":"symbol",value,i]);i+=value.length;
+      }
+    }
+    return result;
+  }
+  function requirements(text,source="main.lua") {
+    const list=tokens(text), names=[];
+    list.forEach(([kind,value,offset],i)=>{
+      if(kind!=="name"||value!=="require"||[".",":"].includes(list[i-1]?.[1])) return;
+      let j=i+1;const paren=list[j]?.[1]==="(";if(paren) j++;
+      if(list[j]?.[0]==="invalid"||(paren&&!list[j])) return;
+      if(list[j]?.[0]!=="string"||(paren&&list[j+1]&&list[j+1][1]!==")"))
+        throw Error(`${source}:${text.slice(0,offset).split("\n").length}: use require("module") with a literal module name`);
+      const name=list[j][1];if(!namePattern.test(name)) throw Error(`${source}: invalid module name: ${name}`);
+      names.push(name);
+    });
+    return names;
+  }
+  function annotate(artifact,text) {
+    return text.replace(/(?<![\w.])(?:[\w./-]*\/)?main\.lua(?:\.tmp)?:(\d+):/g,(raw,number)=>{
+      const line=Number(number), region=artifact.map.regions.find(r=>r.start<=line&&line<=r.end);
+      return region?`${raw} [${region.source}:${line-region.start+1}]`:raw;
+    });
+  }
+  async function build(original,entry,catalog,maximum=65536) {
+    const inputs=new Map(), selected=new Map(), knownHashes=new Map();
+    function source(text,path) {
+      const clean=normalize(text);
+      if(clean.startsWith("#!")||clean.includes("\0")) throw Error(`${path}: shebang/NUL not supported`);
+      inputs.set(path,text);return [path,clean];
+    }
+    function discover([path,text]) {
+      for(const name of requirements(text,path)) {
+        if(selected.has(name)) continue;
+        const mod=Object.hasOwn(catalog.modules,name)?catalog.modules[name]:null;
+        if(!mod) throw Error(`${path}: module '${name}' not found: libraries/${name.replaceAll(".","/")}.lua`);
+        if(inputs.has(mod.path)) throw Error(`duplicate source file for module: ${name}`);
+        const item=source(mod.source,mod.path);if(mod.sha256) knownHashes.set(mod.path,mod.sha256);selected.set(name,item);discover(item);
+      }
+    }
+    const item=source(original,entry);discover(item);
+    const dependencies=[...selected.keys()].sort(), regions=[];
+    let text=original, sourceHash;
+    if(dependencies.length) {
+      const chunks=dependencies.map(name=>[name,...selected.get(name)]), lines=catalog.prelude.split("\n");
+      for(const [name,path,code] of [...chunks,[null,...item]]) {
+        lines.push(name===null?"local function __entry(require)":`__factories[${JSON.stringify(name)}] = function(require)`);
+        const start=lines.length+1;lines.push(...code.split("\n"));
+        regions.push({start,end:lines.length,source:path});lines.push("end");
+      }
+      sourceHash=await hash(JSON.stringify([chunks,item]));
+      lines.push(`print("MicroRT bundle started: ${sourceHash}")`,"return __entry(__require)");text=lines.join("\n")+"\n";
+    } else sourceHash=await hash(text);
+    const bytes=encoder.encode(text), limit=Math.min(maximum,catalog.maximum||65536,65536);
+    if(!bytes.length||bytes.length>limit) throw Error(`产物 ${bytes.length} bytes；允许 1..${limit} bytes。源文件 ${[...inputs].map(([p,t])=>`${p}: ${encoder.encode(t).length}`).join(", ")}`);
+    const sources={};for(const [path,code] of inputs) sources[path]=knownHashes.get(path)||await hash(code);
+    return {bytes,text,dependencies,map:{version:1,sha256:await hash(text),source_hash:sourceHash,regions,sources}};
+  }
+  class OutputMapper {
+    constructor(){this.clear();this.buffer="";}
+    clear(){this.active=this.pending=null;this.traceback=false;}
+    arm(artifact){this.clear();this.pending=artifact;}
+    line(text){
+      if(this.pending&&text==="MicroRT bundle started: "+this.pending.map.source_hash) {this.active=this.pending;this.pending=null;}
+      if(text.startsWith("Lua error: ")||text==="stack traceback:") this.traceback=true;
+      else if(!text.startsWith("\t")) this.traceback=false;
+      return this.active&&this.traceback?annotate(this.active,text):text;
+    }
+    push(text){this.buffer+=text;const lines=this.buffer.split("\n");this.buffer=lines.pop();return lines.map(x=>this.line(x)+"\n").join("");}
+    flush(){const tail=this.line(this.buffer);this.buffer="";this.clear();return tail;}
+  }
+  function compatibility(item,snapshot) {
+    if(!snapshot) return [];
+    const reasons=[];
+    if(item.boards?.length&&snapshot.board&&!item.boards.includes(snapshot.board)) reasons.push(`需要 ${item.boards.join(" / ")}`);
+    for(const cap of item.capabilities||[]) {
+      const key={hid:"hid_enabled",lcd:"lcd_compiled"}[cap];
+      if(key&&snapshot[key]===false) reasons.push(`需要 ${cap.toUpperCase()}`);
+    }
+    if(item.firmware&&snapshot.firmware_version) {
+      const required=item.firmware.split(".").map(Number), actual=snapshot.firmware_version.split(".").map(Number);
+      for(let i=0;i<3;i++){if(actual[i]>required[i]) break;if(actual[i]<required[i]){reasons.push(`需要固件 ≥ ${item.firmware}`);break;}}
+    }
+    return reasons;
+  }
+  return {build,requirements,annotate,OutputMapper,compatibility};
+})();
+
+  </script>
+  <script id="ble-protocol">
+  "use strict";
+  const LuaBLE = (() => {
+    const CLIENT_VERSION = "0.5.1";
+    const UUID = Object.freeze({service:"e7a10000-7a1e-4b18-9c6a-52bd32a9f001", control:"e7a10001-7a1e-4b18-9c6a-52bd32a9f001", data:"e7a10002-7a1e-4b18-9c6a-52bd32a9f001", output:"e7a10003-7a1e-4b18-9c6a-52bd32a9f001", transport:"e7a10004-7a1e-4b18-9c6a-52bd32a9f001", diagnostics:"e7a10005-7a1e-4b18-9c6a-52bd32a9f001"});
+    const OP = Object.freeze({AUTH:1, BEGIN:2, HASH:3, DATA:4, END:5, RUN:6, STOP:7, REBOOT:8, DELETE:9, ABORT:10, ROLLBACK:11, REPL:12, DEBUG:13});
+    const ERRORS = {1:"设备拒绝了数据帧。", 2:"设备认证失败，请核对 USB 串口中的令牌。", 3:"设备状态不允许此操作，或脚本／备份不存在。", 4:"文件长度或校验数据不完整。", 5:"设备收到的数据偏移不正确。", 6:"设备文件系统读写失败，请查看 USB 串口。", 7:"SHA-256 校验失败，原文件已保留。", 8:"Lua 语法检查失败或编译内存不足，请查看 USB 串口。", 9:"Lua 脚本无法停止，请重启设备，必要时按住用户按钮进入安全模式。", 10:"设备内部错误。"};
+    class DeviceError extends Error { constructor(message,code=null,operation=null) { super(message); this.name = "DeviceError"; this.code=code; this.operation=operation; } }
+    class UploadCancelled extends Error { constructor() { super("已取消上传，设备原脚本未被替换。"); this.name = "UploadCancelled"; } }
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    function checkCancelled(signal) { if (signal?.aborted) throw new UploadCancelled(); }
+    function parseToken(text) {
+      if (!/^[0-9a-fA-F]{32}$/.test(text.trim())) throw new DeviceError("请输入 32 位十六进制设备令牌。");
+      return Uint8Array.from(text.trim().match(/../g), pair => parseInt(pair, 16));
+    }
+    function discoveryOptions(showAll = false) {
+      return showAll ? {acceptAllDevices:true, optionalServices:[UUID.service]} :
+        {filters:[{services:[UUID.service]}]};
+    }
+    function decodeStatus(value) {
+      const view = value instanceof DataView ? value : new DataView(value.buffer, value.byteOffset, value.byteLength);
+      if (view.byteLength !== 20) throw new DeviceError("设备状态长度不正确，需要本项目的 BLE Lua 固件。");
+      if (view.getUint8(0) !== 1) throw new DeviceError("设备协议版本不兼容。");
+      return {version:1, flags:view.getUint8(1), operation:view.getUint8(2), error:view.getUint8(3), sequence:view.getUint16(4,true), received:view.getUint32(8,true), total:view.getUint32(12,true), maximum:view.getUint32(16,true)};
+    }
+    function decodeDiagnostics(value) {
+      const view = value instanceof DataView ? value : new DataView(value.buffer,value.byteOffset,value.byteLength);
+      if (view.byteLength !== 384 || view.getUint8(0) !== 1) throw new DeviceError("设备诊断格式不兼容，需要 384 字节的 v1 快照。");
+      const metrics = ["uptime_ms","run_id","run_ms","lua_used","lua_peak","lua_limit","internal_free","internal_largest","psram_total","psram_free","connects","disconnects","disconnect_reason","mtu","queue_peak","queue_rejected","invalid_frames","commands","last_op","last_result","command_us","max_command_us","upload_bytes","upload_frames","upload_ms","commit_ms","output_queued_bytes","output_dropped_bytes","output_notify_failures","ack_notify_failures","last_failure"];
+      const result = Object.fromEntries(metrics.map((name,index)=>[name,view.getUint32(4+index*4,true)]));
+      const label = (names,index)=>names[index] ?? `unknown:${index}`;
+      const text = (offset,size)=>{
+        const bytes = new Uint8Array(view.buffer,view.byteOffset+offset,size);
+        const end = bytes.indexOf(0);
+        return new TextDecoder().decode(end < 0 ? bytes : bytes.subarray(0,end));
+      };
+      return Object.assign(result,{version:1,
+        runtime_state:label(["idle","pending","running","finished","stopped","error","stop_timeout"],view.getUint8(1)),
+        filesystem_state:label(["uninitialized","mounted","created","partition_missing","flash_read_failed","existing_data_preserved","format_failed","remount_failed"],view.getUint8(2)),
+        upload_state:label(["idle","receiving","saved","failed","aborted","timeout"],(view.getUint8(3)>>3)&7),
+        safe_mode:Boolean(view.getUint8(3)&1),hid_enabled:Boolean(view.getUint8(3)&2),lcd_compiled:Boolean(view.getUint8(3)&4),script_present:Boolean(view.getUint8(3)&64),
+        board:text(128,24),build:text(152,32),
+        firmware_version:/^v(\d+\.\d+\.\d+) /.exec(text(152,32))?.[1] || null,runtime_error:text(184,128),validation_error:text(312,64),
+        reset_reason:view.getUint32(376,true),filesystem_offset:view.getUint32(380,true),
+        last_failure_op:result.last_failure&255,last_failure_result:(result.last_failure>>8)&255});
+    }
+    class Client {
+      constructor({onStatus=()=>{}, onOutput=()=>{}, onDisconnect=()=>{}, onConnectionStage=()=>{}, timeout=15000, pollInterval=25, pollAcks=false} = {}) {
+        Object.assign(this, {onStatus,onOutput,onDisconnect,onConnectionStage,timeout,pollInterval,pollAcks});
+        this.device = this.control = this.data = this.output = null;
+        this.transport = this.diagnosticsCharacteristic = null; this.frameMax = 20; this.replSupported = false; this.notifyAcks = false; this.pendingAck = null;
+        this.authenticated = false; this.sequence = 0;
+        this.decoder = new TextDecoder();
+        this.handleOutput = event => this.onOutput(this.decoder.decode(event.target.value, {stream:true}));
+        this.handleDisconnect = () => this.reset();
+        this.handleStatus = event => {
+          let state;
+          try { state = decodeStatus(event.target.value); } catch (_) { return; }
+          const pending = this.pendingAck;
+          if (pending && pending.sequence === state.sequence && pending.operation === state.operation) {
+            pending.state = state;
+            pending.wake?.();
+          }
+        };
+      }
+      get connected() { return Boolean(this.device?.gatt?.connected && this.authenticated); }
+      get transportConnected() { return Boolean(this.device?.gatt?.connected); }
+      reset() {
+        this.output?.removeEventListener("characteristicvaluechanged", this.handleOutput);
+        this.control?.removeEventListener("characteristicvaluechanged", this.handleStatus);
+        this.device?.removeEventListener("gattserverdisconnected", this.handleDisconnect);
+        const tail = this.decoder.decode();
+        if (tail) this.onOutput(tail);
+        this.decoder = new TextDecoder();
+        this.authenticated = false;
+        this.pendingAck?.wake?.();
+        this.pendingAck = null; this.transport = this.diagnosticsCharacteristic = null; this.frameMax = 20; this.replSupported = false; this.notifyAcks = false;
+        this.device = this.control = this.data = this.output = null;
+        this.onDisconnect();
+      }
+      disconnect() {
+        const device = this.device;
+        this.reset();
+        if (device?.gatt?.connected) device.gatt.disconnect();
+      }
+      async gatt(promise) {
+        let timer;
+        try {
+          return await Promise.race([promise, new Promise((_, reject) => {
+            timer = setTimeout(() => {
+              this.disconnect();
+              reject(new DeviceError("蓝牙操作超时，连接已断开，请重新连接后重试。"));
+            }, this.timeout);
+          })]);
+        } finally { clearTimeout(timer); }
+      }
+      async open(device) {
+        this.device = device;
+        device.addEventListener("gattserverdisconnected", this.handleDisconnect);
+        let stage = "建立蓝牙连接";
+        try {
+          this.onConnectionStage(stage);
+          const server = await this.gatt(device.gatt.connect());
+          stage = "发现 Lua 服务";
+          this.onConnectionStage(stage);
+          const service = await this.gatt(server.getPrimaryService(UUID.service));
+          stage = "获取上传与输出接口";
+          this.onConnectionStage(stage);
+          this.control = await this.gatt(service.getCharacteristic(UUID.control));
+          this.data = await this.gatt(service.getCharacteristic(UUID.data));
+          this.output = await this.gatt(service.getCharacteristic(UUID.output));
+          // Enumerate once so legacy firmware lacking the optional characteristic
+          // falls back without hiding genuine connection/read errors.
+          stage = "发现传输能力接口";
+          this.onConnectionStage(stage);
+          const characteristics = await this.gatt(service.getCharacteristics());
+          this.transport = characteristics.find(item => item.uuid === UUID.transport) || null;
+          this.diagnosticsCharacteristic = characteristics.find(item => item.uuid === UUID.diagnostics) || null;
+        } catch (error) {
+          this.disconnect();
+          const failure = new DeviceError(`${stage}失败（${error.name || "Error"}）：${error.message || String(error)}`);
+          failure.stage = stage;
+          failure.cause = error;
+          throw failure;
+        }
+      }
+      async authenticate(token) {
+        if (!this.transportConnected) throw new DeviceError("请先扫描并连接设备。");
+        try {
+          this.sequence = (await this.status()).sequence;
+          const state = await this.command(OP.AUTH, token);
+          if (!(state.flags & 1)) throw new DeviceError("设备未确认认证成功。");
+          this.authenticated = true;
+          await this.configureTransport();
+          this.decoder = new TextDecoder();
+          this.output.addEventListener("characteristicvaluechanged", this.handleOutput);
+          await this.gatt(this.output.startNotifications());
+          return state;
+        } catch (error) { this.authenticated = false; throw error; }
+      }
+      async connect(device, token) {
+        try { await this.open(device); return await this.authenticate(token); }
+        catch (error) { this.disconnect(); throw error; }
+      }
+      async configureTransport() {
+        if (!this.transport) return;
+        const value = await this.gatt(this.transport.readValue());
+        if (value.byteLength !== 4 || value.getUint8(0) !== 1) throw new DeviceError("设备传输能力格式不兼容。");
+        const maximum = value.getUint16(2,true);
+        if (maximum < 20 || maximum > 244) throw new DeviceError("设备报告的包长无效。");
+        this.frameMax = maximum;
+        this.replSupported = Boolean(value.getUint8(1) & 2) && Boolean(value.getUint8(1) & 4);
+        if ((value.getUint8(1) & 1) && !this.pollAcks && !this.notifyAcks) {
+          this.control.addEventListener("characteristicvaluechanged", this.handleStatus);
+          await this.gatt(this.control.startNotifications());
+          this.notifyAcks = true;
+        }
+      }
+      async status() {
+        if (!this.control || !this.device?.gatt?.connected) throw new DeviceError("蓝牙连接已断开，请重新连接。");
+        const state = decodeStatus(await this.gatt(this.control.readValue()));
+        this.onStatus(state);
+        return state;
+      }
+      async diagnostics() {
+        if (!this.connected) throw new DeviceError("请先连接并验证设备令牌。");
+        if (!this.diagnosticsCharacteristic) return null;
+        return decodeDiagnostics(await this.gatt(this.diagnosticsCharacteristic.readValue()));
+      }
+      async send(operation, payload = new Uint8Array(), {data=false, signal} = {}) {
+        checkCancelled(signal);
+        if (!this.control || !this.device?.gatt?.connected) throw new DeviceError("请先连接设备。");
+        if (this.pendingAck) throw new DeviceError("上一条操作尚未完成。");
+        this.sequence = this.sequence % 65535 + 1;
+        const sequence = this.sequence;
+        const frame = new Uint8Array((data ? 2 : 3) + payload.byteLength);
+        const view = new DataView(frame.buffer);
+        if (data) view.setUint16(0, sequence, true);
+        else { view.setUint8(0, operation); view.setUint16(1, sequence, true); }
+        frame.set(payload, data ? 2 : 3);
+        if (frame.length > this.frameMax) throw new DeviceError(`数据帧超过连接的 ${this.frameMax} 字节上限。`);
+        const characteristic = data ? this.data : this.control;
+        const pending = {sequence,operation,state:null,wake:null};
+        this.pendingAck = pending; // Before writing: an ACK may precede the ATT response.
+        try {
+          await this.gatt(characteristic.writeValueWithResponse(frame));
+          const deadline = performance.now() + this.timeout;
+          while (performance.now() < deadline) {
+            checkCancelled(signal);
+            if (!this.transportConnected) throw new DeviceError("蓝牙连接已断开，请重新连接。");
+            if (this.notifyAcks && !pending.state) {
+              let timer;
+              try {
+                await new Promise(resolve => {
+                  pending.wake = resolve;
+                  timer = setTimeout(resolve, Math.min(150, Math.max(0,deadline-performance.now())));
+                });
+              } finally { clearTimeout(timer); pending.wake = null; }
+            }
+            checkCancelled(signal);
+            const state = pending.state || await this.status();
+            if (state.sequence === sequence && state.operation === operation) {
+              if (state.error) throw new DeviceError(ERRORS[state.error] || `设备错误 ${state.error}`,state.error,operation);
+              this.onStatus(state);
+              return state;
+            }
+            if (!this.notifyAcks) await sleep(this.pollInterval);
+          }
+          // A request may still be in flight. Disconnect instead of sending ABORT.
+          this.disconnect();
+          throw new DeviceError("设备未返回执行确认，已断开连接。请重新连接检查状态。");
+        } finally {
+          if (this.pendingAck === pending) this.pendingAck = null;
+        }
+      }
+      command(operation, payload, options) { return this.send(operation, payload, options); }
+      async startDebug() {
+        if (!this.connected) throw new DeviceError("请先连接并验证设备令牌。");
+        if (!this.replSupported) throw new DeviceError("设备暂不支持调试 main.lua。");
+        return this.command(OP.DEBUG);
+      }
+      async repl(source) {
+        if (!this.connected) throw new DeviceError("请先连接并验证设备令牌。");
+        if (!this.replSupported) throw new DeviceError("设备暂不支持调试 main.lua。");
+        const bytes = new TextEncoder().encode(source);
+        if (!source.trim() || bytes.length > 4096) throw new DeviceError("REPL 输入须为 1–4096 字节。");
+        const chunk = this.frameMax - 6;
+        for (let offset = 0; offset < bytes.length; offset += chunk) {
+          const end = Math.min(offset + chunk, bytes.length);
+          const payload = new Uint8Array(3 + end - offset);
+          payload[0] = (offset === 0 ? 1 : 0) | (end === bytes.length ? 2 : 0);
+          new DataView(payload.buffer).setUint16(1, offset, true);
+          payload.set(bytes.subarray(offset, end), 3);
+          try { await this.command(OP.REPL, payload); }
+          catch (error) {
+            if (error.code === 3) throw new DeviceError("请先点击「调试 main.lua」启动调试环境；文件上传期间无法执行 REPL。", 3, OP.REPL);
+            if (error.code === 9) throw new DeviceError("上一条 REPL 输入仍在执行。请稍后重试或点击停止。", 9, OP.REPL);
+            throw error;
+          }
+        }
+      }
+      async upload(bytes, {signal, onProgress=()=>{}, onStage=()=>{}, chunkSize=null} = {}) {
+        const started = performance.now();
+        checkCancelled(signal);
+        const state = await this.status();
+        if (!bytes.length || bytes.length > state.maximum) throw new DeviceError(`脚本大小须为 1–${state.maximum} 字节。`);
+        if (!(state.flags & 16)) throw new DeviceError("LittleFS 未挂载，请查看设备 USB 串口。");
+        if (chunkSize !== null && (!Number.isInteger(chunkSize) || chunkSize < 1 || chunkSize > 238)) throw new DeviceError("数据块大小须为 1–238 字节。");
+        chunkSize = Math.min(chunkSize ?? 238,this.frameMax-6);
+        onStage("hashing");
+        const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+        checkCancelled(signal);
+        const length = new Uint8Array(4);
+        new DataView(length.buffer).setUint32(0, bytes.length, true);
+        try {
+          await this.command(OP.BEGIN, length, {signal});
+          for (const offset of [0,16]) {
+            const hash = new Uint8Array(17);
+            hash[0] = offset; hash.set(digest.subarray(offset, offset+16),1);
+            await this.command(OP.HASH, hash, {signal});
+          }
+          onStage("sending");
+          const dataStarted = performance.now();
+          let frames = 0;
+          for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+            const part = bytes.subarray(offset, offset+chunkSize);
+            const payload = new Uint8Array(4 + part.length);
+            new DataView(payload.buffer).setUint32(0, offset, true);
+            payload.set(part,4);
+            const ack = await this.send(OP.DATA, payload, {data:true, signal});
+            if (ack.received !== offset + part.length) throw new DeviceError("设备确认的文件偏移不正确，上传已停止。");
+            onProgress(ack.received, bytes.length);
+            frames++;
+          }
+          checkCancelled(signal);
+          onStage("validating");
+          // Once END begins, cancellation cannot promise to preserve the old file.
+          const commitStarted = performance.now();
+          await this.command(OP.END);
+          const finished = performance.now();
+          onStage("saved");
+          return {size:bytes.length,chunkSize,frames,seconds:(finished-started)/1000,
+            dataSeconds:(commitStarted-dataStarted)/1000,commitSeconds:(finished-commitStarted)/1000,
+            notifyAcks:this.notifyAcks,bytesPerSecond:bytes.length/Math.max((finished-started)/1000,1e-9)};
+        } catch (error) {
+          if (this.connected) {
+            try { await this.command(OP.ABORT); } catch (_) { /* Preserve the original error. */ }
+          }
+          throw error;
+        }
+      }
+    }
+    return {CLIENT_VERSION,UUID,OP,Client,DeviceError,UploadCancelled,parseToken,decodeStatus,decodeDiagnostics,discoveryOptions};
+  })();
+  </script>
+  <script id="ble-ui">
+  "use strict";
+  (() => {
+    const $ = id => document.getElementById(id);
+    const {CLIENT_VERSION,Client,OP,parseToken,discoveryOptions,UploadCancelled} = LuaBLE;
+    // Menus retain the original controls and their authentication/busy rules.
+    const menuNames = ["file", "device", "help", "connection"];
+    let activeMenu = null;
+    function closeMenu(restoreFocus = false) {
+      if (!activeMenu) return;
+      const name = activeMenu;
+      $(name + "Menu").hidden = true;
+      $(name + "MenuButton").setAttribute("aria-expanded", "false");
+      activeMenu = null;
+      if (restoreFocus) $(name + "MenuButton").focus();
+    }
+    for (const name of menuNames) {
+      $(name + "MenuButton").addEventListener("click", () => {
+        const opening = activeMenu !== name;
+        closeMenu();
+        if (opening) {
+          activeMenu = name;
+          $(name + "Menu").hidden = false;
+          $(name + "MenuButton").setAttribute("aria-expanded", "true");
+          $(name + "Menu").querySelector("button:not(:disabled), input:not(:disabled), summary")?.focus();
+        }
+      });
+    }
+    document.addEventListener("click", event => {
+      if (activeMenu && !$(activeMenu + "Menu").contains(event.target) &&
+          !$(activeMenu + "MenuButton").contains(event.target)) closeMenu();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && activeMenu) { event.preventDefault(); closeMenu(true); }
+    });
+    let resourcesVisible = !window.matchMedia("(max-width: 849px)").matches;
+    function renderResourcePanel() {
+      $("workbench").classList.toggle("resources-collapsed", !resourcesVisible);
+      $("resourceToggle").setAttribute("aria-expanded", String(resourcesVisible));
+    }
+    $("resourceToggle").addEventListener("click", () => { resourcesVisible = !resourcesVisible; renderResourcePanel(); });
+    for (const id of ["librariesTab", "examplesTab"]) $(id).addEventListener("click", () => {
+      resourcesVisible = true; renderResourcePanel();
+    });
+    renderResourcePanel();
+    const tokenStorageKey = "micrort.lastDeviceToken";
+    try {
+      const savedToken = window.localStorage.getItem(tokenStorageKey);
+      if (savedToken && /^[0-9a-fA-F]{32}$/.test(savedToken)) $("token").value = savedToken;
+    } catch (_) { /* Local storage may be unavailable, including for file URLs. */ }
+    const encoder = new TextEncoder();
+    if (!$("lua-catalog").textContent.trim()) {
+      $("compatibility").hidden = false;
+      $("compatibility").textContent = "这是网页源码模板。请先运行 python3 web-editor/build_web.py，再打开生成的 micrort_bundle.html。";
+      document.querySelectorAll("button,input,select,textarea").forEach(control => control.disabled = true);
+      return;
+    }
+    const catalog = JSON.parse($("lua-catalog").textContent);
+    const mapper = new LuaBundle.OutputMapper();
+    let busy = false, controller = null, filename = "examples/user_led.lua";
+    let snapshot = null, deviceMaximum = 65536, installedBundle = null;
+    let resourceTab = "libraries", selectedResource = null, cleanText = "", currentExample = null;
+    function clearMapping() { append(mapper.flush()); }
+    function loadEntry(text,path,item=null) {
+      if(busy) return false;
+      if($("editor").value!==cleanText && !window.confirm("当前代码尚未下载保存。放弃这些改动并加载新文件？")) return false;
+      $("editor").value=text; filename=path; currentExample=item; cleanText=text;
+      $("fileName").textContent=`${filename} → main.lua`;
+      $("example").value=item?.path || "";editorChanged();renderEntryInfo();
+      return true;
+    }
+    function resourceDescription(item) {
+      const reasons=LuaBundle.compatibility(item,snapshot);
+      return `${item.title} · ${item.boards?.join(" / ")||"板型未知"} · ${item.capabilities?.join(" / ")||"通用"}${reasons.length?" · 不兼容："+reasons.join("，"):""}${item.description?"\n"+item.description:""}${item.name?'\nlocal '+item.name.split(".").pop()+' = require("'+item.name+'")':""}`;
+    }
+    function renderEntryInfo() {
+      $("entryInfo").textContent=currentExample?resourceDescription(currentExample):"本地入口：依赖从内置 Libraries 解析，硬件兼容性由脚本决定。";
+    }
+    function renderResources() {
+      const search=$("resourceSearch").value.toLowerCase(), board=$("resourceBoard").value, cap=$("resourceCapability").value;
+      const items=resourceTab==="libraries"?Object.values(catalog.modules).filter(x=>x.public):catalog.examples;
+      $("resourceList").replaceChildren();
+      for(const item of items) {
+        if(!`${item.title} ${item.path} ${item.description}`.toLowerCase().includes(search)) continue;
+        if(board&&item.boards.length&&!item.boards.includes(board)) continue;
+        if(cap&&!item.capabilities.includes(cap)) continue;
+        const button=document.createElement("button"); button.type="button";
+        button.textContent=item.title+(LuaBundle.compatibility(item,snapshot).length?" · 不兼容":"");
+        button.addEventListener("click",()=>{
+          selectedResource=item;$("resourceInfo").textContent=resourceDescription(item);
+          $("resourcePreview").textContent=item.source;$("resourcePreview").hidden=false;
+          $("resourceAction").hidden=false;$("resourceAction").textContent=resourceTab==="libraries"?"插入 require":"加载示例";
+        });$("resourceList").append(button);
+      }
+      if(!$("resourceList").children.length) $("resourceList").textContent="没有匹配的资源。";
+      if(selectedResource) $("resourceInfo").textContent=resourceDescription(selectedResource);
+    }
+    function switchTab(tab) {
+      resourceTab=tab;selectedResource=null;$("resourcePreview").hidden=true;$("resourceAction").hidden=true;
+      $("librariesTab").setAttribute("aria-pressed",String(tab==="libraries"));
+      $("examplesTab").setAttribute("aria-pressed",String(tab==="examples"));renderResources();
+    }
+    $("librariesTab").addEventListener("click",()=>switchTab("libraries"));
+    $("examplesTab").addEventListener("click",()=>switchTab("examples"));
+    for(const id of ["resourceSearch","resourceBoard","resourceCapability"]) $(id).addEventListener("input",renderResources);
+    $("resourceAction").addEventListener("click",()=>{
+      if(busy||!selectedResource) return;
+      if(resourceTab==="examples") {if(loadEntry(selectedResource.source,selectedResource.path,selectedResource)) log("示例已加载，尚未上传。");return;}
+      try {
+        const name=selectedResource.name;
+        if(LuaBundle.requirements($("editor").value).includes(name)) return;
+        $("editor").value=`local ${name.split(".").pop()} = require("${name}")\n`+$("editor").value;
+        editorChanged();
+      } catch(error){showError(error);}
+    });
+    function download(data,name,type="text/plain;charset=utf-8") {
+      const url=URL.createObjectURL(new Blob([data],{type})), link=document.createElement("a");
+      link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }
+    async function buildCurrent() {
+      const artifact=await LuaBundle.build($("editor").value,filename,catalog,deviceMaximum);
+      const names=artifact.dependencies.filter(name=>catalog.modules[name].public);
+      $("buildInfo").textContent=`产物 ${artifact.bytes.length} bytes · Libraries: ${names.join("、")||"无"}`;
+      return artifact;
+    }
+    const supported = Boolean(window.isSecureContext && navigator.bluetooth && window.crypto?.subtle);
+    function append(text) {
+      if (!text) return;
+      const terminal = $("console");
+      terminal.textContent = (terminal.textContent + text).slice(-100000);
+      if ($("autoScroll").checked) terminal.scrollTop = terminal.scrollHeight;
+    }
+    function replAppend(text) {
+      const terminal = $("replOutput");
+      terminal.textContent = (terminal.textContent + text).slice(-80000);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+    function log(text) { append(`\n[${new Date().toLocaleTimeString("zh-CN", {hour12:false})}] ${text}\n`); }
+    function showError(error) {
+      let message = error.message || String(error);
+      if (error.name === "NotFoundError") message = "没有选择设备，或设备服务不可用。请确认已烧录本项目固件。";
+      if (error.name === "SecurityError" || error.name === "NotAllowedError") message += " 请允许浏览器使用蓝牙，必要时先在操作系统中配对设备。";
+      $("errorBanner").textContent = message;
+      $("errorBanner").hidden = false;
+      log(message);
+    }
+    function renderControls() {
+      document.querySelectorAll("[data-device]").forEach(button => button.disabled = busy || !client.connected);
+      $("connect").disabled = busy || client.transportConnected || !supported;
+      $("showAll").disabled = busy || client.transportConnected;
+      $("authenticate").disabled = busy || !client.transportConnected || client.connected;
+      $("disconnect").disabled = !client.device;
+      $("token").disabled = busy || client.connected;
+      for (const id of ["openFile","example","download","downloadBundle","downloadMap","resourceAction","afterUpload"]) $(id).disabled = busy;
+      $("editor").readOnly = busy;
+      $("replInput").readOnly = busy;
+      $("replSend").disabled = busy || !client.connected || !client.replSupported;
+      $("replDebug").disabled = busy || !client.connected || !client.replSupported;
+      $("replHint").textContent = (client.connected ?
+        (client.replSupported ? "点击「调试 main.lua」重新运行已保存脚本并保留调试环境。" : "设备暂不支持调试 main.lua。") : "请先连接并验证设备令牌。") +
+        " Enter 执行，Shift+Enter 换行，↑ / ↓ 浏览历史。输入共享 main.lua 的局部变量、全局变量和已加载的库。脚本结束后保留局部变量最后的值。停止、普通运行或上传替换会退出调试，不改写 main.lua。这里同时显示设备输出。";
+    }
+    const client = new Client({
+      onConnectionStage(stage) {
+        $("deviceDetail").textContent = `${stage}…`;
+        log(`${stage}…`);
+      },
+      onStatus(state) {
+        $("runtimeStatus").textContent = state.flags & 4 ? "运行中" : "已停止";
+        $("filesystemStatus").textContent = state.flags & 16 ? "已挂载" : "不可用";
+        $("safeStatus").textContent = state.flags & 8 ? "安全模式" : "正常启动";
+        deviceMaximum=state.maximum;
+        $("limitStatus").textContent = `${state.maximum / 1024} KiB`;
+      },
+      onOutput:text=>{ append(mapper.push(text)); replAppend(text); },
+      onDisconnect() {
+        clearMapping();installedBundle=null;snapshot=null;deviceMaximum=65536;renderResources();renderEntryInfo();
+        controller?.abort();
+        $("connectionBadge").className = "badge";
+        $("connectionBadge").textContent = "未连接";
+        $("deviceDetail").textContent = "蓝牙连接已断开，可重新选择设备";
+        $("firmwareVersion").textContent = "待连接";
+        $("firmwareVersion").title = "";
+        for (const id of ["runtimeStatus","filesystemStatus","safeStatus"]) $(id).textContent = "—";
+        renderControls();
+        log("设备已断开连接。");
+      }
+    });
+    async function perform(action) {
+      if (busy) return;
+      busy = true; $("errorBanner").hidden = true; renderControls();
+      try { await action(); }
+      catch (error) {
+        if (error instanceof UploadCancelled) {
+          $("progressLabel").textContent = "上传已取消";
+          log(error.message);
+        } else showError(error);
+      } finally {
+        busy = false; controller = null;
+        $("cancelUpload").hidden = true;
+        renderControls();
+      }
+    }
+    function editorChanged() {
+      $("buildInfo").textContent="尚未构建。require 依赖将自动从内置 Libraries 收集。";
+      const lines = $("editor").value.split("\n").length;
+      $("editorStats").textContent = `${lines} 行 · ${encoder.encode($("editor").value).length} bytes`;
+      $("lineNumbers").textContent = Array.from({length:lines},(_,i)=>i+1).join("\n");
+      $("lineNumbers").style.height = `${$("editor").offsetHeight}px`;
+      $("lineNumbers").scrollTop = $("editor").scrollTop;
+    }
+    for(const item of catalog.examples) {
+      const option=document.createElement("option");option.value=item.path;option.textContent=item.title;$("example").append(option);
+    }
+    const initial=catalog.examples.find(x=>x.path==="examples/user_led.lua")||catalog.examples[0];
+    if(initial) {$("editor").value=initial.source;filename=initial.path;cleanText=initial.source;currentExample=initial;$("example").value=initial.path;$("fileName").textContent=initial.path;}
+    renderResources();renderEntryInfo();
+    $("editor").addEventListener("input", editorChanged);
+    $("editor").addEventListener("scroll", () => $("lineNumbers").scrollTop = $("editor").scrollTop);
+    $("editor").addEventListener("keydown", event => {
+      if (event.key !== "Tab" || $("editor").readOnly) return;
+      event.preventDefault();
+      const editor = $("editor");
+      editor.setRangeText("    ", editor.selectionStart, editor.selectionEnd, "end");
+      editorChanged();
+    });
+    if (window.ResizeObserver) new ResizeObserver(editorChanged).observe($("editor"));
+    editorChanged();
+    const replHistory = [];
+    let replHistoryIndex = 0, replDraft = "";
+    async function submitRepl() {
+      const source = $("replInput").value;
+      if (!source.trim() || busy) return;
+      await perform(async () => {
+        replAppend(`\n> ${source.replace(/\n/g, "\n… ")}\n`);
+        try { await client.repl(source); }
+        catch(error) { replAppend(`${error.message || error}\n`); throw error; }
+        if (replHistory[replHistory.length - 1] !== source) replHistory.push(source);
+        if (replHistory.length > 100) replHistory.shift();
+        replHistoryIndex = replHistory.length; replDraft = "";
+        $("replInput").value = "";
+      });
+    }
+    $("replDebug").addEventListener("click", () => perform(async () => {
+      clearMapping();
+      if (installedBundle) mapper.arm(installedBundle);
+      await client.startDebug();
+      replAppend("\n已启动 main.lua 调试；脚本运行中的命令会在下一个安全检查点执行。\n");
+      log("已重新运行设备上的 main.lua 并启用 REPL 调试；脚本结束后继续保留环境。");
+    }));
+    $("replSend").addEventListener("click", submitRepl);
+    $("replInput").addEventListener("keydown", event => {
+      if (event.isComposing || busy) return;
+      if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); return submitRepl(); }
+      else if (["ArrowUp","ArrowDown"].includes(event.key) && (replHistoryIndex < replHistory.length || !$("replInput").value.includes("\n"))) {
+        event.preventDefault();
+        if (replHistoryIndex === replHistory.length) replDraft = $("replInput").value;
+        replHistoryIndex = Math.max(0, Math.min(replHistory.length, replHistoryIndex + (event.key === "ArrowUp" ? -1 : 1)));
+        $("replInput").value = replHistoryIndex === replHistory.length ? replDraft : replHistory[replHistoryIndex];
+      }
+    });
+    $("replInput").addEventListener("input", () => { replHistoryIndex = replHistory.length; replDraft = $("replInput").value; });
+    $("replClear").addEventListener("click", () => $("replOutput").textContent = "");
+    $("replStop").addEventListener("click", () => perform(async () => {
+      await client.command(OP.STOP);
+      replAppend("\nREPL 已停止，变量已重置；设备上的 main.lua 保持不变。\n");
+    }));
+    $("toggleToken").addEventListener("click", () => {
+      const visible = $("token").type === "password";
+      $("token").type = visible ? "text" : "password";
+      $("toggleToken").textContent = visible ? "隐藏" : "显示";
+      $("toggleToken").setAttribute("aria-label", visible ? "隐藏设备令牌" : "显示设备令牌");
+      $("toggleToken").setAttribute("aria-pressed", String(visible));
+    });
+    async function authenticate() {
+      const token = $("token").value.trim().toLowerCase();
+      await client.authenticate(parseToken(token));
+      try { window.localStorage.setItem(tokenStorageKey, token); }
+      catch (_) { /* Storage restrictions must not prevent device authentication. */ }
+      $("connectionBadge").className = "badge online";
+      $("connectionBadge").textContent = "已认证";
+      $("deviceDetail").textContent = "已订阅 Lua 输出，可以上传脚本";
+      log("设备认证成功，已开启输出通知。");
+      $("firmwareVersion").textContent = "读取中…";
+      try { await refreshDiagnostics(); }
+      catch (error) {
+        if (client.connected) $("firmwareVersion").textContent = "读取失败，可点击刷新重试";
+        log(`读取固件版本失败：${error.message || String(error)}`);
+      }
+    }
+    $("connect").addEventListener("click", () => perform(async () => {
+      const options = discoveryOptions($("showAll").checked);
+      // Keep the picker directly within the user gesture; do not await before it.
+      const device = await navigator.bluetooth.requestDevice(options);
+      $("deviceName").textContent = device.name || "MicroRT";
+      $("deviceDetail").textContent = "已发现广播，正在连接…";
+      log(`正在连接 ${device.name || "MicroRT"}…`);
+      await client.open(device);
+      $("connectionBadge").className = "badge online";
+      $("connectionBadge").textContent = "已连接 · 待认证";
+      $("deviceDetail").textContent = "已连接，请验证令牌以启用上传与控制";
+      $("firmwareVersion").textContent = "待认证";
+      log("设备已连接。验证令牌后可上传脚本。");
+      if ($("token").value.trim()) await authenticate();
+    }));
+    $("authenticate").addEventListener("click", () => perform(authenticate));
+    $("disconnect").addEventListener("click", () => client.disconnect());
+    function updateSnapshot(value) {snapshot=value;renderResources();renderEntryInfo();}
+    async function refreshDiagnostics() {
+      const snapshot = await client.diagnostics();
+      if (!client.connected) return;
+      if (!snapshot) {
+        updateSnapshot(null);
+        $("firmwareVersion").textContent = "未知（旧固件）";
+        $("firmwareVersion").title = "";
+        $("diagnosticsView").textContent = "此固件没有诊断接口，请烧录新固件。未连接时可在 USB 串口发送 d。";
+        return;
+      }
+      updateSnapshot(snapshot);
+      $("firmwareVersion").textContent = snapshot.firmware_version ? `v${snapshot.firmware_version}` : "未知（旧固件）";
+      $("firmwareVersion").title = snapshot.build || "";
+      const states = {idle:"尚未运行",pending:"等待启动",running:"运行中",finished:"正常结束",stopped:"已停止",error:"运行错误",stop_timeout:"停止超时"};
+      $("runtimeStatus").textContent = states[snapshot.runtime_state] || snapshot.runtime_state;
+      const fsStates = {uninitialized:"尚未初始化",mounted:"已挂载",created:"空分区初始化成功",partition_missing:"分区缺失",flash_read_failed:"Flash 读取失败",existing_data_preserved:"旧数据已保留，拒绝格式化",format_failed:"初始化失败",remount_failed:"初始化后挂载失败"};
+      $("filesystemStatus").textContent = fsStates[snapshot.filesystem_state] || snapshot.filesystem_state;
+      snapshot.client_version = CLIENT_VERSION;
+      $("diagnosticsView").textContent = JSON.stringify(snapshot,null,2);
+      log(`版本：固件 ${snapshot.firmware_version || "未知（旧固件）"}，构建 ${snapshot.build || "未知"}，网页 ${CLIENT_VERSION}。`);
+      log(`诊断：${snapshot.board}，运行 ${states[snapshot.runtime_state] || snapshot.runtime_state}，MTU ${snapshot.mtu}，输出丢弃 ${snapshot.output_dropped_bytes} 字节，队列拒绝 ${snapshot.queue_rejected} 次。`);
+      if (snapshot.runtime_error) log(`最近运行错误：${snapshot.runtime_error}`);
+      if (snapshot.validation_error) log(`最近语法检查错误：${snapshot.validation_error}`);
+    }
+    $("refresh").addEventListener("click", () => perform(async () => { await client.status(); await refreshDiagnostics(); log("设备状态已刷新。"); }));
+    $("diagnose").addEventListener("click", () => perform(async () => { $("diagnosticsDetails").open = true; await refreshDiagnostics(); }));
+    async function control(operation, message) {
+      if([OP.RUN,OP.REBOOT,OP.ROLLBACK,OP.DELETE].includes(operation)) {
+        clearMapping();
+        if(operation===OP.RUN&&installedBundle) mapper.arm(installedBundle);
+        if(operation===OP.ROLLBACK||operation===OP.DELETE) installedBundle=null;
+      }
+      try {await client.command(operation);}
+      catch(error) {if(operation===OP.RUN) clearMapping();throw error;}
+      log(message);
+      if (operation !== OP.REBOOT) {
+        await new Promise(resolve => setTimeout(resolve, 120));
+        await client.status();
+      }
+    }
+    $("run").addEventListener("click", () => perform(() => control(OP.RUN,"已请求运行设备上保存的 main.lua。")));
+    $("stop").addEventListener("click", () => perform(() => control(OP.STOP,"脚本已停止，文件仍保留在设备上。")));
+    $("reboot").addEventListener("click", () => perform(() => control(OP.REBOOT,"设备正在重启，连接将断开。")));
+    $("rollback").addEventListener("click", () => perform(async () => {
+      clearMapping();installedBundle=null;
+      await client.command(OP.ROLLBACK);
+      log("设备已恢复上一版脚本。");
+      await control(OP.RUN,"已请求运行恢复后的脚本。");
+    }));
+    $("deleteScript").addEventListener("click", () => {
+      if (window.confirm("停止并删除设备上的 main.lua？上一版备份会保留。"))
+        perform(() => control(OP.DELETE,"设备上的 main.lua 已删除，上一版备份仍保留。"));
+    });
+    $("openFile").addEventListener("click", () => $("fileInput").click());
+    $("fileInput").addEventListener("change", async event => {
+      const file = event.target.files[0];
+      event.target.value = "";
+      if (!file || busy) return;
+      try {
+        if (file.size > 65536) throw new Error("文件超过 64 KiB 上限。");
+        const text = new TextDecoder("utf-8", {fatal:true}).decode(await file.arrayBuffer());
+        if (busy) return;
+        if(!loadEntry(text,file.name)) return;
+        log(`已打开 ${filename}，上传时保存为设备上的 main.lua。`);
+      } catch (error) { showError(error); }
+    });
+    $("example").addEventListener("change", event => {
+      const item=catalog.examples.find(x=>x.path===event.target.value);
+      if(!item) return;
+      if(loadEntry(item.source,item.path,item)) log("示例已加载到编辑器，尚未上传。");
+      else $("example").value=currentExample?.path||"";
+    });
+    $("download").addEventListener("click", () => perform(async () => {
+      const text = $("editor").value;
+      let name = filename.split("/").pop() || "main.lua";
+      try {
+        if (typeof window.showSaveFilePicker === "function") {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: name,
+            types: [{description: "Lua 源码", accept: {"text/plain": [".lua"]}}]
+          });
+          const writable = await handle.createWritable();
+          try {
+            await writable.write(text);
+            await writable.close();
+          } catch (error) {
+            try { await writable.abort(); } catch (_) {}
+            throw error;
+          }
+          name = handle.name;
+        } else {
+          const chosen = window.prompt("保存 Lua 源码，输入文件名：", name);
+          if (chosen === null) return;
+          name = chosen.trim();
+          if (!name) throw new Error("请输入文件名。");
+          if (!name.toLowerCase().endsWith(".lua")) name += ".lua";
+          download(text, name);
+        }
+        cleanText = text;
+        log(`已保存源码 ${name}。`);
+      } catch (error) {
+        if (error.name !== "AbortError") throw error;
+      }
+    }));
+    $("downloadBundle").addEventListener("click",()=>perform(async()=>download((await buildCurrent()).bytes,"main.lua")));
+    $("downloadMap").addEventListener("click",()=>perform(async()=>download(JSON.stringify((await buildCurrent()).map,null,2)+"\n","main.lua.map.json","application/json")));
+    $("clearConsole").addEventListener("click", () => $("console").textContent = "");
+    $("cancelUpload").addEventListener("click", () => {
+      controller?.abort();
+      $("cancelUpload").disabled = true;
+      $("progressLabel").textContent = "正在取消，等待当前数据包处理完成…";
+    });
+    $("upload").addEventListener("click", () => perform(async () => {
+      const reasons=currentExample?LuaBundle.compatibility(currentExample,snapshot):[];
+      if(reasons.length) throw Error("当前示例与设备不兼容："+reasons.join("，"));
+      const mode = $("afterUpload").value;
+      const artifact=await buildCurrent(), bytes=artifact.bytes;
+      clearMapping();installedBundle=null;
+      controller = new AbortController();
+      $("progress").value = 0; $("progressText").textContent = "0%";
+      $("cancelUpload").hidden = false; $("cancelUpload").disabled = false;
+      const libraries=artifact.dependencies.filter(name=>catalog.modules[name].public);
+      log(`开始上传 ${bytes.length} 字节到 main.lua；Libraries: ${libraries.join("、")||"无"}…`);
+      try {
+        const stats = await client.upload(bytes, {
+          signal:controller.signal,
+          onProgress(done,total) {
+            const percent = Math.floor(done / total * 100);
+            $("progress").value = percent;
+            $("progressText").textContent = `${done} / ${total} bytes · ${percent}%`;
+          },
+          onStage(stage) {
+            const labels = {hashing:"正在计算 SHA-256…",sending:"正在传输 Lua 脚本…",validating:"传输完成，等待设备校验与保存…",saved:"已通过校验，main.lua 已保存"};
+            $("progressLabel").textContent = labels[stage];
+            if (stage === "validating" || stage === "saved") $("cancelUpload").disabled = true;
+          }
+        });
+        log(`上传耗时 ${stats.seconds.toFixed(3)} 秒，${Math.round(stats.bytesPerSecond)} B/s；DATA ${stats.frames} 包，每包最多 ${stats.chunkSize} 字节；保存校验 ${stats.commitSeconds.toFixed(3)} 秒。`);
+      } catch (error) {
+        if(error.code===8&&error.operation===OP.END) {
+          log("新代码语法检查失败，设备保留旧文件。");
+          try {const diagnostic=await client.diagnostics();if(diagnostic?.validation_error) log(LuaBundle.annotate(artifact,diagnostic.validation_error));} catch(_) {}
+        }
+        $("progressLabel").textContent = error instanceof UploadCancelled ? "上传已取消" : "上传未确认成功，请查看下方错误信息";
+        throw error;
+      }
+      $("cancelUpload").hidden = true;
+      installedBundle=artifact;
+      log("设备确认：SHA-256 校验通过，main.lua 已保存并替换旧程序。");
+      try {
+        const diagnostic=await client.diagnostics();
+        if(diagnostic?.validation_error) {
+          log("新文件已保存；编译检查提示（未阻止替换）：");
+          log(LuaBundle.annotate(artifact,diagnostic.validation_error));
+        }
+      } catch(_) { /* A diagnostic read failure does not undo a confirmed save. */ }
+      if (mode === "run") await control(OP.RUN,"已请求运行新脚本；设备输出将显示在此窗口。");
+      else if (mode === "reboot") await control(OP.REBOOT,"设备将重启并自动执行 main.lua，请稍后重新连接。");
+      else log("脚本保持停止，下次开机自动运行，也可点击「运行已保存脚本」。");
+    }));
+    if (!supported) {
+      $("compatibility").hidden = false;
+      $("compatibility").textContent = !window.isSecureContext ?
+        "当前地址不是安全上下文。请使用 http://localhost:8000/web-editor/micrort_bundle.html 或 HTTPS。" :
+        "当前浏览器未提供 Web Bluetooth 或 Web Crypto，请使用支持蓝牙的桌面版 Chrome / Edge 或 Android Chrome。";
+    }
+    $("clientVersion").textContent = `v${CLIENT_VERSION}`;
+    log(`网页客户端 v${CLIENT_VERSION}`);
+    log("工作台已就绪。默认按 Lua 服务 UUID 扫描，点击「扫描并连接设备」选择附近设备。");
+    renderControls();
+    window.addEventListener("pagehide", () => { if (client.device) client.disconnect(); });
+  })();
+  </script>
+</body>
+</html>
